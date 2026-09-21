@@ -1,0 +1,22 @@
+{
+  "tables": [
+    {
+      "name": "users",
+      "columns": [
+        { "name": "id", "type": "int" },
+        { "name": "age", "type": "int" },
+        { "name": "name", "type": "text" },
+        { "name": "city", "type": "text" }
+      ]
+    },
+    {
+      "name": "inventory",
+      "columns": [
+        { "name": "sku", "type": "int" },
+        { "name": "price", "type": "int" },
+        { "name": "quantity", "type": "int" },
+        { "name": "label", "type": "text" }
+      ]
+    }
+  ]
+}

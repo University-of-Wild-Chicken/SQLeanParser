@@ -1,0 +1,17 @@
+name = "sqlean"
+version = "0.1.0"
+defaultTargets = ["SQLean", "sqlean", "sqlean_tests"]
+
+[[lean_lib]]
+name = "SQLean"
+
+[[lean_exe]]
+name = "sqlean"
+root = "Main"
+
+[[lean_exe]]
+name = "sqlean_tests"
+root = "TestMain"
+
+[[lean_lib]]
+name = "Tests"
