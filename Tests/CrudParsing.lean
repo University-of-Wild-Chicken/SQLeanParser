@@ -26,13 +26,17 @@ private def accepted : List String := [
   "DELETE FROM users WHERE NOT (active = FALSE) AND age >= 18;",
   "/* start */ delete /* keyword */ FROM users -- comment\n WHERE id = 1 /* end */;",
   "insert INTO users (id, name) VALUES (1, '--; /* SQL */'), (2, 'λ🙂') -- end",
-  "UPDATE users SET age = -age * +2, active = NOT age > 21 AND active"
+  "UPDATE users SET age = -age * +2, active = NOT age > 21 AND active",
+  "SELECT *, id FROM users", "SELECT id, * FROM users",
+  "SELECT id IS NULL FROM users", "SELECT id AS label FROM users",
+  "SELECT users.id FROM users", "SELECT id FROM users JOIN other ON id = id",
+  "SELECT COUNT(id) FROM users"
 ]
 
 private def rejected : List String := [
   "", ";", "-- only comment", "SELECT", "INSERT", "UPDATE", "DELETE",
   "SELECT FROM users", "SELECT DISTINCT FROM users", "SELECT DISTINCT DISTINCT id FROM users",
-  "SELECT *, id FROM users", "SELECT id, * FROM users", "SELECT * + 1 FROM users",
+  "SELECT * + 1 FROM users",
   "SELECT id FROM users ORDER id", "SELECT id FROM users ORDER BY",
   "SELECT id FROM users ORDER BY id,", "SELECT id FROM users ORDER BY id ASC DESC",
   "SELECT id FROM users ORDER BY id WHERE active",
@@ -46,10 +50,8 @@ private def rejected : List String := [
   "SELECT id FROM users WHERE id = 1 = 2", "SELECT id FROM users WHERE NOT id < 1 < 2",
   "SELECT id = NOT active FROM users", "SELECT -NOT active FROM users",
   "SELECT TRUE FALSE FROM users", "SELECT NOT FROM users", "SELECT + FROM users",
-  "SELECT NULL FROM users", "SELECT id IS NULL FROM users", "SELECT id IN (1, 2) FROM users",
+  "SELECT NULL FROM users", "SELECT id IN (1, 2) FROM users",
   "SELECT order FROM users", "SELECT id FROM limit",
-  "SELECT id AS label FROM users", "SELECT users.id FROM users",
-  "SELECT id FROM users JOIN other ON id = id", "SELECT COUNT(id) FROM users",
   "INSERT users VALUES (1)", "INSERT INTO VALUES (1)", "INSERT INTO users",
   "INSERT INTO users () VALUES (1)", "INSERT INTO users (id,) VALUES (1)",
   "INSERT INTO users (id name) VALUES (1)", "INSERT INTO users VALUES",

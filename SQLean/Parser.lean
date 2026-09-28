@@ -1,6 +1,6 @@
 import SQLean.Lexer
 
-/-! Total, position-aware parsers for the SELECT and CRUD grammars in `SQLean.AST`.
+/-! Total, position-aware parsers for the SELECT, CRUD, and relational grammars in `SQLean.AST`.
 Recursion is bounded by a budget derived from the token count. The public entry
 points consume the entire input, including at most one optional semicolon.
 -/
@@ -43,6 +43,22 @@ def reservedWords : List String :=
 keeps its original identifier rules. -/
 def crudReservedWords : List String :=
   reservedWords ++ ["distinct", "order", "by", "asc", "desc", "limit", "offset", "default"]
+
+/-- Clause and join keywords for the relational SELECT grammar. -/
+def relationalReservedWords : List String :=
+  crudReservedWords ++ ["as", "join", "inner", "left", "right", "full", "outer", "cross",
+    "on", "group", "having", "is", "natural", "using", "with", "recursive"]
+
+private def relationalIdentifier : P Name := do
+  match (← peek).kind with
+  | .quotedIdent name => advance; return name
+  | .word name =>
+    if relationalReservedWords.contains name then
+      fail s!"expected identifier; '{name}' is reserved (use double quotes)"
+    else
+      advance
+      return name
+  | _ => fail "expected identifier"
 
 private def identifier (extended : Bool := false) : P Name := do
   match (← peek).kind with
@@ -206,6 +222,248 @@ private def selectStatement (budget : Nat) : P SelectQuery := do
   else pure none
   return { table, projection, whereClause, distinct, orderBy, limit, offset }
 
+private def aggregateFn : String → Option AggregateFn
+  | "count" => some .count
+  | "sum" => some .sum
+  | "avg" => some .avg
+  | "min" => some .min
+  | "max" => some .max
+  | _ => none
+
+mutual
+  private def relationalExpression (fuel : Nat) (minPrecedence : Nat := 0) : P RelExpr :=
+    match fuel with
+    | 0 => fail "expression nesting exceeds parser budget"
+    | fuel + 1 => do
+      let first ← relationalPrimary fuel minPrecedence
+      relationalBinaryTail fuel minPrecedence false first
+
+  private def relationalPrimary (fuel minPrecedence : Nat) : P RelExpr :=
+    match fuel with
+    | 0 => fail "expression nesting exceeds parser budget"
+    | fuel + 1 => do
+      match (← peek).kind with
+      | .number value => advance; return .literal (.int value)
+      | .string value => advance; return .literal (.text value)
+      | .word "true" | .word "false" =>
+        let value := (← peek).kind == .word "true"
+        advance
+        return .literal (.bool value)
+      | .word "not" =>
+        if minPrecedence <= 3 then
+          advance
+          return .unary .not (← relationalExpression fuel 3)
+        else fail "NOT must precede a comparison or parenthesized expression"
+      | .symbol "+" | .symbol "-" =>
+        let op := if (← peek).kind == .symbol "+" then UnOp.pos else UnOp.neg
+        advance
+        return .unary op (← relationalExpression fuel 6)
+      | .symbol "(" =>
+        advance
+        let inner ← relationalExpression fuel
+        symbol ")"
+        return inner
+      | .word name =>
+        let next := ((← get).drop 1).headD ⟨.eof, {}⟩
+        match aggregateFn name with
+        | some fn =>
+          if next.kind == .symbol "(" then
+            advance
+            symbol "("
+            let distinct ← accept (.word "distinct")
+            if ← accept (.symbol "*") then
+              if fn != .count || distinct then
+                fail "only COUNT(*) accepts a wildcard, without DISTINCT"
+              symbol ")"
+              return .countAll
+            let arg ← relationalExpression fuel
+            symbol ")"
+            return .aggregate fn arg distinct
+          else relationalColumn
+        | none => relationalColumn
+      | .quotedIdent _ => relationalColumn
+      | _ => fail "expected column, literal, aggregate, or parenthesized expression"
+
+  private def relationalBinaryTail (fuel : Nat) (minPrecedence : Nat)
+      (seenComparison : Bool) (left : RelExpr) : P RelExpr :=
+    match fuel with
+    | 0 => fail "expression length exceeds parser budget"
+    | fuel + 1 => do
+      if (← peek).kind == .word "is" then
+        if minPrecedence > 3 then return left
+        if seenComparison then
+          fail "comparison operators cannot be chained; use parentheses or AND"
+        advance
+        let negated ← accept (.word "not")
+        keyword "null"
+        relationalBinaryTail fuel minPrecedence true (.isNull left negated)
+      else
+        match binaryOperator true (← peek).kind with
+        | some (op, precedence) =>
+          if precedence < minPrecedence then return left
+          if precedence == 3 && seenComparison then
+            fail "comparison operators cannot be chained; use parentheses or AND"
+          advance
+          let right ← relationalExpression fuel (precedence + 1)
+          relationalBinaryTail fuel minPrecedence (seenComparison || precedence == 3)
+            (.binary op left right)
+        | none => return left
+
+  private def relationalColumn : P RelExpr := do
+    let first ← relationalIdentifier
+    if ← accept (.symbol ".") then
+      return .column (some first) (← relationalIdentifier)
+    return .column none first
+end
+
+private def optionalAlias : P (Option Name) := do
+  if ← accept (.word "as") then return some (← relationalIdentifier)
+  match (← peek).kind with
+  | .quotedIdent _ => return some (← relationalIdentifier)
+  | .word name =>
+    if relationalReservedWords.contains name then return none
+    return some (← relationalIdentifier)
+  | _ => return none
+
+private def relationalSelectItem (budget : Nat) : P SelectItem := do
+  if ← accept (.symbol "*") then return .all none
+  let tokens ← get
+  match tokens with
+  | first :: dot :: star :: _ =>
+    let isName := match first.kind with
+      | .word _ | .quotedIdent _ => true
+      | _ => false
+    if isName && dot.kind == .symbol "." && star.kind == .symbol "*" then
+      let qualifier ← relationalIdentifier
+      symbol "."
+      symbol "*"
+      return .all (some qualifier)
+  | _ => pure ()
+  let expr ← relationalExpression budget
+  return .expression expr (← optionalAlias)
+
+private def joinKind : P (Option JoinKind) := do
+  if ← accept (.word "join") then return some .inner
+  if ← accept (.word "inner") then
+    keyword "join"
+    return some .inner
+  if ← accept (.word "cross") then
+    keyword "join"
+    return some .cross
+  let kind ← match (← peek).kind with
+    | .word "left" => advance; pure (some JoinKind.left)
+    | .word "right" => advance; pure (some JoinKind.right)
+    | .word "full" => advance; pure (some JoinKind.full)
+    | _ => pure none
+  match kind with
+  | none => return none
+  | some kind =>
+    let _ ← accept (.word "outer")
+    keyword "join"
+    return some kind
+
+private def relationalOrderItem (budget : Nat) : P RelOrderBy := do
+  let expr ← relationalExpression budget
+  let descending ← if ← accept (.word "desc") then pure true else do
+    let _ ← accept (.word "asc")
+    pure false
+  return { expr, descending }
+
+mutual
+  private def relationalSelect (fuel : Nat) : P RelQuery :=
+    match fuel with
+    | 0 => fail "query nesting exceeds parser budget"
+    | budget + 1 => do
+      let ctes ← if ← accept (.word "with") then cteList budget [] else pure []
+      keyword "select"
+      let distinct ← accept (.word "distinct")
+      let selectList ← commaList "select list" budget (relationalSelectItem budget)
+      keyword "from"
+      let source ← relationalTableRef budget
+      let joins ← relationalJoinTail budget []
+      let whereClause ← if ← accept (.word "where") then
+        pure (some (← relationalExpression budget))
+      else pure none
+      let groupBy ← if ← accept (.word "group") then do
+        keyword "by"
+        commaList "GROUP BY list" budget (relationalExpression budget)
+      else pure []
+      let having ← if ← accept (.word "having") then
+        pure (some (← relationalExpression budget))
+      else pure none
+      let orderBy ← if ← accept (.word "order") then do
+        keyword "by"
+        commaList "ORDER BY list" budget (relationalOrderItem budget)
+      else pure []
+      let limit ← if ← accept (.word "limit") then
+        pure (some (← natural "LIMIT"))
+      else pure none
+      let offset ← if limit.isSome && (← accept (.word "offset")) then
+        pure (some (← natural "OFFSET"))
+      else pure none
+      return {
+        source := source, selectList := selectList, joins := joins,
+        whereClause := whereClause, groupBy := groupBy, having := having, distinct := distinct,
+        orderBy := orderBy, limit := limit, offset := offset, ctes := ctes }
+
+  private def relationalTableRef (fuel : Nat) : P TableRef :=
+    match fuel with
+    | 0 => fail "table expression nesting exceeds parser budget"
+    | fuel + 1 => do
+      if ← accept (.symbol "(") then
+        let derived ← relationalSelect fuel
+        symbol ")"
+        let alias ← optionalAlias
+        if alias.isNone then fail "derived tables require an alias"
+        return { name := "", alias, derived := some derived }
+      let name ← relationalIdentifier
+      return { name, alias := ← optionalAlias }
+
+  private def relationalJoinTail (fuel : Nat) (reversed : List Join) : P (List Join) :=
+    match fuel with
+    | 0 => fail "join list length exceeds parser budget"
+    | fuel + 1 => do
+      match ← joinKind with
+      | none => return reversed.reverse
+      | some kind =>
+        let table ← relationalTableRef fuel
+        let on ← if kind == .cross then pure none else do
+          keyword "on"
+          pure (some (← relationalExpression fuel))
+        relationalJoinTail fuel ({ kind, table, on } :: reversed)
+
+  private def cteList (fuel : Nat) (reversed : List CTE) : P (List CTE) :=
+    match fuel with
+    | 0 => fail "CTE list length exceeds parser budget"
+    | fuel + 1 => do
+      let cte ← cteItem fuel
+      if ← accept (.symbol ",") then cteList fuel (cte :: reversed)
+      else return (cte :: reversed).reverse
+
+  private def cteItem (fuel : Nat) : P CTE :=
+    match fuel with
+    | 0 => fail "CTE nesting exceeds parser budget"
+    | fuel + 1 => do
+      let name ← relationalIdentifier
+      let columns ← if ← accept (.symbol "(") then do
+        let columns ← commaList "CTE columns" fuel relationalIdentifier
+        symbol ")"
+        pure columns
+      else pure []
+      keyword "as"
+      symbol "("
+      let query ← relationalSelect fuel
+      symbol ")"
+      return { name, query, columns }
+end
+
+private def relationalQuery (budget : Nat) : P RelQuery := do
+  let result ← relationalSelect budget
+  let _ ← accept (.symbol ";")
+  unless (← peek).kind == .eof do
+    fail "expected end of input after relational SELECT query"
+  return result
+
 private def insertRow (budget : Nat) : P (List Expr) := do
   symbol "("
   let values ← commaList "VALUES row" budget (expression budget 0 true)
@@ -267,8 +525,7 @@ def parseTokens (tokens : List Token) : Except ParseError Query := do
     | _ => throw ⟨remaining.headD ⟨.eof, {}⟩ |>.position, "unexpected remaining tokens"⟩
   | _ => throw ⟨{}, "token stream must end with EOF"⟩
 
-/-- Parse exactly one CRUD statement from a token stream with one final EOF. -/
-def parseStatementTokens (tokens : List Token) : Except ParseError Statement := do
+private def parseLegacyStatementTokens (tokens : List Token) : Except ParseError Statement := do
   match tokens.reverse with
   | { kind := .eof, .. } :: rest =>
     if rest.any (fun token => token.kind == .eof) then
@@ -279,6 +536,28 @@ def parseStatementTokens (tokens : List Token) : Except ParseError Statement := 
     | _ => throw ⟨remaining.headD ⟨.eof, {}⟩ |>.position, "unexpected remaining tokens"⟩
   | _ => throw ⟨{}, "token stream must end with EOF"⟩
 
+/-- Parse exactly one relational SELECT from a token stream with one final EOF. -/
+def parseRelQueryTokens (tokens : List Token) : Except ParseError RelQuery := do
+  match tokens.reverse with
+  | { kind := .eof, .. } :: rest =>
+    if rest.any (fun token => token.kind == .eof) then
+      throw ⟨{}, "unexpected EOF token before end of token stream"⟩
+    let (result, remaining) ← (relationalQuery (4 * tokens.length + 16)).run tokens
+    match remaining with
+    | [{ kind := .eof, .. }] => return result
+    | _ => throw ⟨remaining.headD ⟨.eof, {}⟩ |>.position, "unexpected remaining tokens"⟩
+  | _ => throw ⟨{}, "token stream must end with EOF"⟩
+
+/-- Parse one CRUD or relational SELECT statement. Legacy SELECT queries retain
+their original AST, including the original identifier rules. -/
+def parseStatementTokens (tokens : List Token) : Except ParseError Statement :=
+  match parseLegacyStatementTokens tokens with
+  | .ok statement => .ok statement
+  | .error error =>
+    if [.word "select", .word "with"].contains (tokens.headD ⟨.eof, {}⟩).kind then
+      Statement.relational <$> parseRelQueryTokens tokens
+    else .error error
+
 end Parser
 
 /-- Parse exactly one SELECT query, optionally followed by one semicolon. -/
@@ -288,9 +567,15 @@ def parseQuery (input : String) : Except ParseError Query := do
 /-- Alias for `parseQuery`. -/
 def parse := parseQuery
 
-/-- Parse exactly one SELECT, INSERT, UPDATE, or DELETE statement, with one
-optional trailing semicolon. `parseQuery` preserves the original MVP grammar. -/
+/-- Parse exactly one SELECT (including WITH), INSERT, UPDATE, or DELETE
+statement, with one optional trailing semicolon. `parseQuery` preserves the
+original MVP grammar, and legacy SELECT inputs retain their original AST. -/
 def parseStatement (input : String) : Except ParseError Statement := do
   Parser.parseStatementTokens (← lex input)
+
+/-- Parse a SELECT into the relational AST, including simple queries, joins,
+aggregation, derived tables, and nonrecursive WITH clauses. -/
+def parseRelQuery (input : String) : Except ParseError RelQuery := do
+  Parser.parseRelQueryTokens (← lex input)
 
 end SQLean

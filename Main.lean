@@ -5,7 +5,8 @@ open SQLean
 
 private def usage : String :=
   "Usage: sqlean [--ast] [--schema schema.json] [--file query.sql | SQL]\n\
-   Parse one SELECT, INSERT, UPDATE, or DELETE. With no SQL or --file, read stdin.\n\
+   Parse one SELECT, INSERT, UPDATE, or DELETE. SELECT also supports WITH.\n\
+   With no SQL or --file, read stdin.\n\
    --ast                  Print the public Lean AST\n\
    --schema schema.json   Also certify table/column resolution and types\n\
    --help                 Show this help\n"
@@ -61,7 +62,7 @@ private def run (options : Options) : IO UInt32 := do
     match certifyStatement schema statement with
     | .ok certificate =>
       match statement with
-      | .select _ =>
+      | .select _ | .relational _ =>
         IO.println s!"Valid query. Output types: {String.intercalate ", " (certificate.outputTypes.map toSql)}"
       | .insert _ => IO.println "Valid INSERT statement."
       | .update _ => IO.println "Valid UPDATE statement."

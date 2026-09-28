@@ -4,4 +4,6 @@ import SQLean.Parser
 import SQLean.Pretty
 import SQLean.Validation
 import SQLean.CRUDValidation
+import SQLean.RelationalValidation
+import SQLean.NestedValidation
 import SQLean.API

@@ -1,4 +1,4 @@
-import SQLean.Validation
+import SQLean.NestedValidation
 
 /-! Declarative static validity and executable certificates for the CRUD subset.
 Mutation certificates establish column resolution, value typing, arity, and
@@ -145,6 +145,8 @@ inductive ValidStatement (schema : Schema) : Statement → List SqlType → Prop
       (found : schema.findTable query.table = some table)
       (filter : WhereValid table.columns query.whereClause) :
       ValidStatement schema (.delete query) []
+  | relational (valid : ValidRelQuery schema query types) :
+      ValidStatement schema (.relational query) types
 
 structure CertifiedStatement (schema : Schema) (statement : Statement) where
   outputTypes : List SqlType
@@ -226,6 +228,9 @@ def certifyStatement (schema : Schema) (statement : Statement) :
       let table ← certifyTable schema query.table
       let filter ← checkWhere table.val.columns query.whereClause
       pure ⟨[], .delete schemaValid.down table.property filter.down⟩
+  | .relational query => do
+      let result ← certifyRelQuery schema query
+      pure ⟨result.outputTypes, .relational result.valid⟩
 
 /-- SELECT yields its projection types; INSERT, UPDATE, and DELETE yield no columns. -/
 def checkStatement (schema : Schema) (statement : Statement) : Except ValidationError (List SqlType) :=
@@ -259,8 +264,12 @@ theorem certifyStatement_complete (valid : ValidStatement schema statement types
   | delete schemaValid found filter =>
       simp [certifyStatement, checkSchema, schemaValid, certifyTable_complete found,
         checkWhere_complete filter, pure, bind, Except.bind, Except.pure]
+  | relational valid =>
+      obtain ⟨names, derivation⟩ := valid
+      simp [certifyStatement, certifyRelQuery_complete derivation,
+        pure, bind, Except.bind, Except.pure]
 
-/-- Soundness and completeness for the entire supported static CRUD contract. -/
+/-- Soundness and completeness for the supported CRUD and nested relational static contract. -/
 theorem checkStatement_iff (schema : Schema) (statement : Statement) (types : List SqlType) :
     checkStatement schema statement = .ok types ↔ ValidStatement schema statement types := by
   constructor

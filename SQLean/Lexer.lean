@@ -72,7 +72,7 @@ private def readQuoted (delimiter : Char) (opening : SourcePos) (description : S
     else readQuoted delimiter opening description rest (advance pos c) (c :: acc)
 
 private def isSingleSymbol (c : Char) : Bool :=
-  c == '(' || c == ')' || c == ',' || c == ';' || c == '*' ||
+  c == '(' || c == ')' || c == ',' || c == ';' || c == '*' || c == '.' ||
   c == '/' || c == '+' || c == '-' || c == '=' || c == '<' || c == '>'
 
 private def isDoubleSymbol (c d : Char) : Bool :=

@@ -2,7 +2,8 @@ import Std
 
 /-! Public syntax and schema interfaces for the SQLean SQL subset.
 Identifiers are normalized by the lexer; manually built ASTs use exact names.
-All values are non-null. SQL NULL and three-valued logic are outside this subset.
+Base schema values are non-null. Advanced SELECT typing tracks nullable results
+introduced by outer joins and aggregate functions.
 -/
 
 namespace SQLean
@@ -10,7 +11,8 @@ namespace SQLean
 abbrev Name := String
 
 inductive SqlType where
-  | int | text | bool
+  | int | text | bool | real
+  | nullable (base : SqlType)
   deriving Repr, BEq, DecidableEq, Inhabited
 
 inductive Value where
@@ -108,12 +110,78 @@ structure DeleteQuery where
   whereClause : Option Expr := none
   deriving Repr, BEq, DecidableEq, Inhabited
 
+inductive AggregateFn where
+  | count | sum | avg | min | max
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+/-- Expressions for joins and aggregation; the existing `Expr` API is unchanged. -/
+inductive RelExpr where
+  | literal (value : Value)
+  | column (qualifier : Option Name) (name : Name)
+  | binary (op : BinOp) (left right : RelExpr)
+  | unary (op : UnOp) (arg : RelExpr)
+  | countAll
+  | aggregate (fn : AggregateFn) (arg : RelExpr) (distinct : Bool := false)
+  | isNull (arg : RelExpr) (negated : Bool := false)
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+inductive JoinKind where
+  | inner | left | right | full | cross
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+inductive SelectItem where
+  | all (qualifier : Option Name := none)
+  | expression (expr : RelExpr) (alias : Option Name := none)
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+structure RelOrderBy where
+  expr : RelExpr
+  descending : Bool := false
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+mutual
+  structure TableRef where
+    name : Name
+    alias : Option Name := none
+    /-- A derived table has an empty `name` and a required alias. -/
+    derived : Option RelQuery := none
+    deriving Repr, BEq, Inhabited
+
+  structure Join where
+    kind : JoinKind
+    table : TableRef
+    on : Option RelExpr := none
+    deriving Repr, BEq, Inhabited
+
+  structure RelQuery where
+    source : TableRef
+    selectList : List SelectItem
+    joins : List Join := []
+    whereClause : Option RelExpr := none
+    groupBy : List RelExpr := []
+    having : Option RelExpr := none
+    distinct : Bool := false
+    orderBy : List RelOrderBy := []
+    limit : Option Nat := none
+    offset : Option Nat := none
+    ctes : List CTE := []
+    deriving Repr, BEq, Inhabited
+
+  structure CTE where
+    name : Name
+    query : RelQuery
+    /-- Optional explicit output-column names, in projection order. -/
+    columns : List Name := []
+    deriving Repr, BEq, Inhabited
+end
+
 inductive Statement where
   | select (query : SelectQuery)
   | insert (query : InsertQuery)
   | update (query : UpdateQuery)
   | delete (query : DeleteQuery)
-  deriving Repr, BEq, DecidableEq, Inhabited
+  | relational (query : RelQuery)
+  deriving Repr, BEq, Inhabited
 
 def Schema.findTable (schema : Schema) (name : Name) : Option TableDef :=
   schema.find? (fun table => table.name == name)

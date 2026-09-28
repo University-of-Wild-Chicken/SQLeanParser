@@ -21,6 +21,7 @@ private def statementCategory : Statement → String
   | .insert _ => "insert"
   | .update _ => "update"
   | .delete _ => "delete"
+  | .relational _ => "relational"
 
 private def hasNewExprFeature : Expr → Bool
   | .literal (.bool _) => true
@@ -42,6 +43,8 @@ private def expectedOutputArity (statement : Statement) : Nat :=
     | .all => ((crudCorpusSchema.findTable query.table).map (·.columns.length)).getD 0
     | .expressions items => items.length
   | .insert _ | .update _ | .delete _ => 0
+  -- Relational statements fail this corpus's category check before arity checks.
+  | .relational _ => 0
 
 /-- Verify exactly 50 distinct examples for each introduced CRUD category.
 Every example receives a static-validity proof and survives a canonical SQL

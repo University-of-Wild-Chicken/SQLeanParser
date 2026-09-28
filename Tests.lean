@@ -6,6 +6,10 @@ import Tests.CrudParsing
 import Tests.CrudValidation
 import Tests.CrudCorpus
 import Tests.CrudAPI
+import Tests.RelationalParsing
+import Tests.RelationalValidation
+import Tests.NestedValidation
+import Tests.RelationalCorpus
 
 namespace SQLean.Tests
 
@@ -24,6 +28,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {crudAPI} CRUD public API cases"
   let crudCorpus ← crudCorpusTests
   IO.println s!"PASS: {crudCorpus} new CRUD examples (50 per category) parsed, certified, and round-tripped"
+  let relationalParsing ← relationalParsingTests
+  IO.println s!"PASS: {relationalParsing} relational parser and round-trip cases"
+  let relationalValidation ← relationalValidationTests
+  IO.println s!"PASS: {relationalValidation} join/group/type validity cases"
+  let nested ← nestedValidationTests
+  IO.println s!"PASS: {nested} nested query scope and certificate cases"
+  let relationalCorpus ← relationalCorpusTests
+  IO.println s!"PASS: {relationalCorpus} relational examples (50 per query class) certified and round-tripped"
   IO.println "All tests passed. Lean proof examples compiled successfully."
 
 end SQLean.Tests
