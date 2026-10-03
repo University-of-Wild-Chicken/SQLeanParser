@@ -312,22 +312,36 @@ theorem certifyRelJoins_complete (valid : RelJoinChain schema scope joins finalS
         pure, bind, Except.bind, Except.pure]
 
 inductive RelFromValid (schema : Schema) (query : RelQuery) (scope : RelScope) : Prop where
-  | intro (found : schema.findTable query.source.name = some table)
+  | absent (emptyName : query.source.name = "")
+      (plain : query.source.derived = none) (unaliased : query.source.alias = none)
+      (noJoins : query.joins = []) (emptyScope : scope = []) : RelFromValid schema query scope
+  | intro (nonempty : query.source.name ≠ "")
+      (found : schema.findTable query.source.name = some table)
       (nameValid : query.source.visibleName ≠ "")
       (joins : RelJoinChain schema (bindRelTable table query.source) query.joins scope) :
       RelFromValid schema query scope
 
 def certifyRelFrom (schema : Schema) (query : RelQuery) :
     Except ValidationError {scope : RelScope // RelFromValid schema query scope} := do
-  let table ← certifyTable schema query.source.name
-  let nameValid ← require (query.source.visibleName ≠ "") "empty relation alias"
-  let joins ← certifyRelJoins schema (bindRelTable table.val query.source) query.joins
-  pure ⟨joins.val, .intro table.property nameValid.down joins.property⟩
+  if emptyName : query.source.name = "" then
+    let plain ← require (query.source.derived = none) "unexpected derived source in flat query"
+    let unaliased ← require (query.source.alias = none) "SELECT without FROM cannot have a source alias"
+    let noJoins ← require (query.joins = []) "JOIN requires FROM"
+    pure ⟨[], .absent emptyName plain.down unaliased.down noJoins.down rfl⟩
+  else
+    let table ← certifyTable schema query.source.name
+    let nameValid ← require (query.source.visibleName ≠ "") "empty relation alias"
+    let joins ← certifyRelJoins schema (bindRelTable table.val query.source) query.joins
+    pure ⟨joins.val, .intro emptyName table.property nameValid.down joins.property⟩
 
 theorem certifyRelFrom_complete (valid : RelFromValid schema query scope) :
     certifyRelFrom schema query = .ok ⟨scope, valid⟩ := by
   cases valid with
-  | intro found nameValid joins => simp [certifyRelFrom, certifyTable_complete found,
+  | absent emptyName plain unaliased noJoins emptyScope =>
+      subst scope
+      simp [certifyRelFrom, emptyName, require_complete plain, require_complete unaliased,
+        require_complete noJoins, pure, bind, Except.bind, Except.pure]
+  | intro nonempty found nameValid joins => simp [certifyRelFrom, nonempty, certifyTable_complete found,
       require_complete nameValid, certifyRelJoins_complete joins, pure, bind, Except.bind, Except.pure]
 
 /-- Normalize each column to its unique visible relation name. This makes
@@ -471,11 +485,11 @@ instance (query : RelQuery) (elaborated : ElaboratedRelQuery) : Decidable (RelOp
 /-- Nested sources are handled by `NestedValidation`; the flat checker never
 silently drops a WITH binding or derived-table query. -/
 def FlatRelQuery (query : RelQuery) : Prop :=
-  query.ctes.isEmpty = true ∧ query.source.derived.isNone = true ∧
-  ∀ join ∈ query.joins, join.table.derived.isNone = true
+  query.ctes.isEmpty = true ∧ query.recursive = false ∧ query.unions.isEmpty = true ∧
+  query.source.derived.isNone = true ∧ ∀ join ∈ query.joins, join.table.derived.isNone = true
 
 instance (query : RelQuery) : Decidable (FlatRelQuery query) :=
-  inferInstanceAs (Decidable (_ ∧ _ ∧ _))
+  inferInstanceAs (Decidable (_ ∧ _ ∧ _ ∧ _ ∧ _))
 
 /-- Independent static contract: a well-formed schema, sequential join scope,
 explicit name elaboration, structurally typed clauses, aggregate placement,

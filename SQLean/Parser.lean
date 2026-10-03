@@ -47,7 +47,8 @@ def crudReservedWords : List String :=
 /-- Clause and join keywords for the relational SELECT grammar. -/
 def relationalReservedWords : List String :=
   crudReservedWords ++ ["as", "join", "inner", "left", "right", "full", "outer", "cross",
-    "on", "group", "having", "is", "natural", "using", "with", "recursive"]
+    "on", "group", "having", "is", "natural", "using", "with", "recursive",
+    "union", "all", "intersect", "except"]
 
 private def relationalIdentifier : P Name := do
   match (← peek).kind with
@@ -374,23 +375,12 @@ mutual
     match fuel with
     | 0 => fail "query nesting exceeds parser budget"
     | budget + 1 => do
-      let ctes ← if ← accept (.word "with") then cteList budget [] else pure []
-      keyword "select"
-      let distinct ← accept (.word "distinct")
-      let selectList ← commaList "select list" budget (relationalSelectItem budget)
-      keyword "from"
-      let source ← relationalTableRef budget
-      let joins ← relationalJoinTail budget []
-      let whereClause ← if ← accept (.word "where") then
-        pure (some (← relationalExpression budget))
-      else pure none
-      let groupBy ← if ← accept (.word "group") then do
-        keyword "by"
-        commaList "GROUP BY list" budget (relationalExpression budget)
-      else pure []
-      let having ← if ← accept (.word "having") then
-        pure (some (← relationalExpression budget))
-      else pure none
+      let (recursive, ctes) ← if ← accept (.word "with") then do
+        let recursive ← accept (.word "recursive")
+        pure (recursive, ← cteList budget [])
+      else pure (false, [])
+      let first ← relationalSelectCore budget
+      let unions ← relationalUnionTail budget []
       let orderBy ← if ← accept (.word "order") then do
         keyword "by"
         commaList "ORDER BY list" budget (relationalOrderItem budget)
@@ -401,10 +391,40 @@ mutual
       let offset ← if limit.isSome && (← accept (.word "offset")) then
         pure (some (← natural "OFFSET"))
       else pure none
-      return {
-        source := source, selectList := selectList, joins := joins,
-        whereClause := whereClause, groupBy := groupBy, having := having, distinct := distinct,
-        orderBy := orderBy, limit := limit, offset := offset, ctes := ctes }
+      return { first with ctes, recursive, unions, orderBy, limit, offset }
+
+  /-- An arm stops before set operations and final sorting/pagination. -/
+  private def relationalSelectCore (fuel : Nat) : P RelQuery :=
+    match fuel with
+    | 0 => fail "query nesting exceeds parser budget"
+    | budget + 1 => do
+      keyword "select"
+      let distinct ← accept (.word "distinct")
+      let selectList ← commaList "select list" budget (relationalSelectItem budget)
+      let hasFrom ← accept (.word "from")
+      let source ← if hasFrom then relationalTableRef budget else pure { name := "" }
+      let joins ← if hasFrom then relationalJoinTail budget [] else pure []
+      let whereClause ← if ← accept (.word "where") then
+        pure (some (← relationalExpression budget))
+      else pure none
+      let groupBy ← if ← accept (.word "group") then do
+        keyword "by"
+        commaList "GROUP BY list" budget (relationalExpression budget)
+      else pure []
+      let having ← if ← accept (.word "having") then
+        pure (some (← relationalExpression budget))
+      else pure none
+      return { source, selectList, joins, whereClause, groupBy, having, distinct }
+
+  private def relationalUnionTail (fuel : Nat) (reversed : List UnionBranch) : P (List UnionBranch) :=
+    match fuel with
+    | 0 => fail "UNION list length exceeds parser budget"
+    | fuel + 1 => do
+      if ← accept (.word "union") then
+        let all ← accept (.word "all")
+        let query ← relationalSelectCore fuel
+        relationalUnionTail fuel ({ all, query } :: reversed)
+      else return reversed.reverse
 
   private def relationalTableRef (fuel : Nat) : P TableRef :=
     match fuel with
@@ -574,7 +594,7 @@ def parseStatement (input : String) : Except ParseError Statement := do
   Parser.parseStatementTokens (← lex input)
 
 /-- Parse a SELECT into the relational AST, including simple queries, joins,
-aggregation, derived tables, and nonrecursive WITH clauses. -/
+aggregation, derived tables, compound UNION queries, and WITH [RECURSIVE] clauses. -/
 def parseRelQuery (input : String) : Except ParseError RelQuery := do
   Parser.parseRelQueryTokens (← lex input)
 

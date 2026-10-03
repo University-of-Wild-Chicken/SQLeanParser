@@ -51,7 +51,8 @@ private def accepted : List String := [
   "SELECT q.id FROM (WITH a AS (SELECT id FROM users) SELECT id FROM a) q",
   "WITH a AS (SELECT id FROM users) SELECT q.id FROM (SELECT id FROM a) q",
   "WITH \"group\" (\"ID\") AS (SELECT id FROM users) SELECT \"ID\" FROM \"group\";",
-  "WITH a AS (SELECT id FROM users ORDER BY id LIMIT 2) SELECT id FROM a ORDER BY id"
+  "WITH a AS (SELECT id FROM users ORDER BY id LIMIT 2) SELECT id FROM a ORDER BY id",
+  "WITH RECURSIVE a AS (SELECT id FROM users) SELECT id FROM a"
 ]
 
 private def rejected : List String := [
@@ -100,7 +101,6 @@ private def rejected : List String := [
   "WITH a AS (SELECT id FROM users), SELECT id FROM a",
   "WITH a () AS (SELECT id FROM users) SELECT id FROM a",
   "WITH a (id,) AS (SELECT id FROM users) SELECT id FROM a",
-  "WITH RECURSIVE a AS (SELECT id FROM users) SELECT id FROM a",
   "WITH a AS (DELETE FROM users) SELECT * FROM a"
 ]
 

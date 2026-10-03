@@ -149,17 +149,23 @@ instance : ToSql JoinKind where
 mutual
   /-- Render a query body without a terminator, for embedding as a subquery. -/
   def RelQuery.toSqlBody (query : RelQuery) : String :=
-    (if query.ctes.isEmpty then "" else "WITH " ++ commaSep (query.ctes.attach.map fun (cte : {c : CTE // c ∈ query.ctes}) =>
+    (if query.ctes.isEmpty then "" else "WITH " ++ (if query.recursive then "RECURSIVE " else "") ++ commaSep (query.ctes.attach.map fun (cte : {c : CTE // c ∈ query.ctes}) =>
       have : sizeOf cte.val < sizeOf query.ctes := List.sizeOf_lt_of_mem cte.property
       CTE.toSqlBody cte.val) ++ " ") ++
     "SELECT " ++ (if query.distinct then "DISTINCT " else "") ++
-    commaSep (query.selectList.map toSql) ++ " FROM " ++ query.source.toSql ++
+    commaSep (query.selectList.map toSql) ++
+    (if query.source.name.isEmpty && query.source.alias.isNone && query.source.derived.isNone
+      then "" else " FROM " ++ query.source.toSql) ++
     String.join (query.joins.attach.map fun (join : {j : Join // j ∈ query.joins}) =>
       have : sizeOf join.val < sizeOf query.joins := List.sizeOf_lt_of_mem join.property
       " " ++ join.val.toSql) ++
     (query.whereClause.map (fun e => " WHERE " ++ toSql e)).getD "" ++
     (if query.groupBy.isEmpty then "" else " GROUP BY " ++ commaSep (query.groupBy.map toSql)) ++
     (query.having.map (fun e => " HAVING " ++ toSql e)).getD "" ++
+    String.join (query.unions.attach.map fun (branch : {b : UnionBranch // b ∈ query.unions}) =>
+      have : sizeOf branch.val < sizeOf query.unions := List.sizeOf_lt_of_mem branch.property
+      have : sizeOf branch.val.query < sizeOf branch.val := by cases branch.val; simp
+      (if branch.val.all then " UNION ALL " else " UNION ") ++ branch.val.query.toSqlBody) ++
     (if query.orderBy.isEmpty then "" else " ORDER BY " ++ commaSep (query.orderBy.map toSql)) ++
     (query.limit.map (fun n => s!" LIMIT {n}")).getD "" ++
     (query.offset.map (fun n => s!" OFFSET {n}")).getD ""

@@ -26,7 +26,7 @@ def parseAndValidate (schema : Schema) (source : String) :
   let certificate ← (certifyQuery schema query).mapError QueryError.validation
   pure ⟨query, certificate⟩
 
-/-- A parsed CRUD statement and its certificate against the exact supplied schema. -/
+/-- A parsed SQL statement and its certificate against the exact supplied schema. -/
 structure CheckedStatement (schema : Schema) where
   statement : Statement
   certificate : CertifiedStatement schema statement
@@ -39,5 +39,19 @@ def parseAndValidateStatement (schema : Schema) (source : String) :
   let statement ← (parseStatement source).mapError QueryError.parse
   let certificate ← (certifyStatement schema statement).mapError QueryError.validation
   pure ⟨statement, certificate⟩
+
+/-- A relational AST with named result types and its static validity derivation. -/
+structure CheckedRelQuery (schema : Schema) where
+  query : RelQuery
+  certificate : CertifiedRelQuery schema query
+
+/-- Parse and certify a SELECT using the uniform relational AST, including WITH,
+recursive CTEs, and UNION. The certificate concerns static validity, not execution
+termination or the contents of the database. -/
+def parseAndValidateRelQuery (schema : Schema) (source : String) :
+    Except QueryError (CheckedRelQuery schema) := do
+  let query ← (parseRelQuery source).mapError QueryError.parse
+  let certificate ← (certifyRelQuery schema query).mapError QueryError.validation
+  pure ⟨query, certificate⟩
 
 end SQLean

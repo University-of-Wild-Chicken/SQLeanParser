@@ -5,7 +5,7 @@ open SQLean
 
 private def usage : String :=
   "Usage: sqlean [--ast] [--schema schema.json] [--file query.sql | SQL]\n\
-   Parse one SELECT, INSERT, UPDATE, or DELETE. SELECT also supports WITH.\n\
+   Parse one SELECT, INSERT, UPDATE, or DELETE. SELECT supports WITH RECURSIVE and UNION.\n\
    With no SQL or --file, read stdin.\n\
    --ast                  Print the public Lean AST\n\
    --schema schema.json   Also certify table/column resolution and types\n\

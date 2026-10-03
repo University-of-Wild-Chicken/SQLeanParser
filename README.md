@@ -1,6 +1,6 @@
 # SQLean
 
-A Lean 4 SQL parser with public AST interfaces, canonical SQL rendering, and proof-carrying static validation. It supports SELECT with joins, grouping, aggregates, derived tables, and nonrecursive CTEs, plus single-table INSERT, UPDATE, and DELETE. The project uses Lean **4.34.0**, with no external Lean package dependencies.
+A Lean 4 SQL parser with public AST interfaces, canonical SQL rendering, and proof-carrying static validation. It supports SELECT with joins, grouping, aggregates, derived tables, ordinary and recursive CTEs, UNION/UNION ALL, and queries without FROM, plus single-table INSERT, UPDATE, and DELETE. The project uses Lean **4.34.0**, with no external Lean package dependencies.
 
 Build and test from the repository root:
 
@@ -11,14 +11,19 @@ python3 scripts/generate_crud_examples.py --check
 python3 scripts/check_crud_cli.py
 python3 scripts/generate_relational_examples.py --check
 python3 scripts/check_relational_cli.py
+python3 scripts/generate_industrial_examples.py --check
+python3 scripts/check_industrial_cli.py
 ```
 
-The Lean test executable checks syntax, expression precedence, schema and type errors, certificates, and SQL round trips. The Python checks use only the standard library. The generators check that example files match their deterministic source; the CLI checks independently compile each example and its rendered SQL using SQLite `EXPLAIN`, without executing mutations.
+The Lean test executable checks syntax, expression precedence, schema and type errors, certificates, and SQL round trips. The Python checks use only the standard library. The generators check that example files match their deterministic source; the CLI checks independently compile each example and its rendered SQL using SQLite `EXPLAIN`, without executing mutations. The relational and industrial checks also compare SELECT results on empty and seeded SQLite databases. Recursive examples use finite data or explicit bounds, and the industrial checker caps SQLite execution work.
 
-There are **50 examples per new relational query category**, 50 per CRUD category, and the original 100 SELECT examples:
+There are **50 examples per new query category**, 50 per CRUD category, and the original 100 SELECT examples:
 
 | Category | Examples | New functionality |
 | --- | --- | --- |
+| Recursive CTEs | [50 examples](fixtures/industrial/recursive_ctes.sql) | Bounded sequences, employee hierarchies, graph reachability, and bills of materials. |
+| Unions | [50 examples](fixtures/industrial/unions.sql) | UNION/UNION ALL, multiple arms, global ordering/pagination, unions inside CTEs and derived tables. |
+| SELECT without FROM | [50 examples](fixtures/industrial/source_free.sql) | Constant projections, arithmetic, predicates, aggregate results, and constant seed relations. |
 | Joins | [50 examples](fixtures/relational/joins.sql) | INNER, LEFT, RIGHT, FULL, CROSS, aliases, qualified columns, wildcards, null checks. |
 | Grouping and aggregates | [50 examples](fixtures/relational/grouping.sql) | GROUP BY, HAVING, COUNT/SUM/AVG/MIN/MAX, DISTINCT aggregates, aliases and ordinals. |
 | Derived-table subqueries | [50 examples](fixtures/relational/subqueries.sql) | SELECT in FROM or JOIN, nested queries, named outputs, aggregate results. |
@@ -29,7 +34,7 @@ There are **50 examples per new relational query category**, 50 per CRUD categor
 | Delete / DELETE | [50 examples](fixtures/crud/delete.sql) | Optional filters, comparisons, boolean combinations. |
 | Original SELECT MVP | [100 examples](fixtures/queries.sql) | Regression coverage for the original expression grammar and API. |
 
-Every corpus statement is parsed, certified against its schema, rendered, and reparsed with equal ASTs. Each line is a separate input; passing an entire corpus file to the single-statement CLI is an error. Regenerate fixtures with `python3 scripts/generate_crud_examples.py` and `python3 scripts/generate_relational_examples.py`.
+Every corpus statement is parsed, certified against its schema, rendered, and reparsed with equal ASTs. Each line is a separate input; passing an entire corpus file to the single-statement CLI is an error. Regenerate fixtures with `python3 scripts/generate_crud_examples.py`, `python3 scripts/generate_relational_examples.py`, and `python3 scripts/generate_industrial_examples.py`.
 
 Use the CLI with one SQL argument, a file containing one statement, or standard input:
 
@@ -93,16 +98,49 @@ JOIN large_orders ON u.id = large_orders.customer_id;
 
 CTEs are checked sequentially: each can use earlier bindings and the outer schema. A binding shadows an outer relation with the same name; duplicate names in one WITH list are rejected. Derived tables and CTEs may nest. They expose the natural names of selected columns and explicit result aliases. Computed outputs at these boundaries require `AS name` (or a bare alias); a CTE's explicit column list can instead supply all output names. The column list must match the result arity. Duplicate output names are rejected at a derived-table/CTE boundary, so alias columns when a joined projection would otherwise repeat a name. Nested queries cannot refer to enclosing FROM aliases.
 
+Recursive CTEs support an anchor followed by one recursive step. For example, a bounded integer sequence works with an empty schema:
+
+```sql
+WITH RECURSIVE sequence(n) AS (
+  SELECT 1
+  UNION ALL
+  SELECT n + 1 FROM sequence WHERE n < 10
+)
+SELECT n FROM sequence ORDER BY n;
+```
+
+The same pattern follows a hierarchy using a join in the step:
+
+```sql
+WITH RECURSIVE team(id, manager_id, name, depth) AS (
+  SELECT id, manager_id, name, 0 FROM employees WHERE id = 1
+  UNION ALL
+  SELECT e.id, e.manager_id, e.name, t.depth + 1
+  FROM employees e JOIN team t ON e.manager_id = t.id
+  WHERE t.depth < 20
+)
+SELECT name, depth FROM team ORDER BY depth, name;
+```
+
+The supported recursive shape is `anchor UNION [ALL] step`. The anchor cannot refer to its own CTE. The recursive body cannot carry a top-level WITH, ORDER BY, LIMIT, or OFFSET; place final sorting and pagination on the outer SELECT. The step must reference the CTE exactly once directly in FROM or JOIN; it may use INNER/CROSS joins and filters. Recursive steps cannot contain aggregates, GROUP BY, HAVING, DISTINCT, nested sources/CTEs, or further unions. Anchor and step outputs must have identical type vectors, including nullability, and the CTE's output names come from its explicit column list or the anchor. Earlier CTEs are visible; forward and mutual recursion are rejected. Under WITH RECURSIVE, names of current and later bindings are reserved rather than resolved to equally named physical tables. Ordinary CTEs are also allowed in a WITH RECURSIVE list.
+
+`UNION` removes duplicate rows, while `UNION ALL` preserves them when executed by a database. Any number of nonrecursive arms can be combined. Validation requires equal arity and identical output types, including nullability; implicit database type coercions are outside this subset. Output names come from the first SELECT. A compound query's final ORDER BY accepts an unambiguous output name or a positive integer literal denoting a one-based output position; arbitrary expressions and source-qualified names are rejected. Final ORDER BY, LIMIT, and OFFSET apply to the whole compound. To sort or limit an individual input, wrap it in an aliased derived table.
+
+SELECT without FROM uses an empty column scope. Constants, expressions, filters, and supported aggregate expressions can be checked; unbound columns and wildcards are rejected. This supplies constant anchors and seed relations without requiring a physical table.
+
+This portable recursive shape follows the shared anchor/step structure documented by [PostgreSQL](https://www.postgresql.org/docs/current/queries-with.html) and [SQLite](https://www.sqlite.org/lang_with.html). Static certification does not establish termination or detect data cycles. A recursive query can be well typed and run indefinitely; callers must choose appropriate predicates or a suitable deduplicating UNION for their data.
+
 The extended grammar accepted by `parseStatement` is:
 
 ```ebnf
 statement = (select | insert | update | delete) [";"] ;
-select    = [WITH cte {"," cte}]
-            SELECT [DISTINCT] selectItem {"," selectItem}
-            FROM source {join}
-            [WHERE expr] [GROUP BY exprList] [HAVING expr]
+select    = [WITH [RECURSIVE] cte {"," cte}]
+            selectCore {UNION [ALL] selectCore}
             [ORDER BY orderItem {"," orderItem}]
             [LIMIT integer [OFFSET integer]] ;
+selectCore = SELECT [DISTINCT] selectItem {"," selectItem}
+             [FROM source {join}]
+             [WHERE expr] [GROUP BY exprList] [HAVING expr] ;
 cte       = identifier ["(" identifier {"," identifier} ")"] AS "(" select ")" ;
 source    = identifier [[AS] identifier] | "(" select ")" [AS] identifier ;
 join      = [INNER] JOIN source ON expr
@@ -139,7 +177,7 @@ GROUP BY and ORDER BY accept expressions, whole-key result aliases, or one-based
 
 An aggregate query's SELECT, HAVING, and ORDER BY expressions must use grouping keys, constants, aggregates, or expressions built from them. GROUP BY expressions are compared structurally after resolving column names, so an unqualified column and its uniquely resolved qualified form agree. Functional dependencies, such as assuming another column is determined by a grouped primary key, are not inferred. Aggregates are forbidden in WHERE, ON, GROUP BY, and arguments to other aggregates. HAVING also creates an aggregate query when GROUP BY is absent.
 
-This is a documented SQL subset, not complete compatibility with any database dialect. Unsupported forms include scalar/IN/EXISTS subqueries, correlated or LATERAL subqueries, WITH RECURSIVE, USING/NATURAL joins, set operations, window functions, general function calls, `RETURNING`, UPSERT, INSERT-SELECT, NULL/default literals, decimal literals, parameter placeholders, DDL, and transaction commands. IS NULL tests and nullable output types are supported despite NULL literals being outside the grammar. Exactly one statement and at most one trailing semicolon are accepted.
+This is a documented SQL subset, not complete compatibility with any database dialect. Unsupported forms include scalar/IN/EXISTS subqueries, correlated or LATERAL subqueries, USING/NATURAL joins, INTERSECT/EXCEPT, recursive SEARCH/CYCLE clauses, window functions, general function calls, `RETURNING`, UPSERT, INSERT-SELECT, NULL/default literals, decimal literals, parameter placeholders, DDL, and transaction commands. IS NULL tests and nullable output types are supported despite NULL literals being outside the grammar. Exactly one statement and at most one trailing semicolon are accepted.
 
 Keywords are case-insensitive. Unquoted identifiers use ASCII letters or `_`, followed by ASCII letters, digits, or `_`. Double-quoted identifiers preserve spelling and allow reserved words; see `Parser.crudReservedWords` and `Parser.relationalReservedWords`. Escape quotes by doubling them: `'O''Brien'` and `"a""b"`. Empty quoted identifiers are rejected. Strings and quoted identifiers support Unicode. `--` line comments and nonnested `/* ... */` comments are accepted. Parse errors carry a zero-based character offset and one-based line/column positions.
 
@@ -166,6 +204,11 @@ def users : Schema := [
   let query ← (parseRelQuery "SELECT AVG(age) AS mean_age FROM users").mapError toString
   (checkRelQuery users query).mapError toString  -- Except.ok [SqlType.nullable SqlType.real]
 
+-- A uniform relational AST and its certificate, including recursive CTEs.
+#eval (parseAndValidateRelQuery []
+  "WITH RECURSIVE s(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM s WHERE n < 5) SELECT n FROM s").map
+  (fun checked => checked.certificate.outputTypes)  -- Except.ok [SqlType.int]
+
 -- The original API still accepts the original, strict SELECT MVP grammar.
 #eval (parseQuery "SELECT id FROM users").map toSql
 #eval (parseAndValidate users "SELECT id FROM users WHERE age >= 18").map
@@ -176,7 +219,7 @@ def users : Schema := [
 | --- | --- |
 | `Statement`, `SelectQuery`, `InsertQuery`, `UpdateQuery`, `DeleteQuery` | Public CRUD syntax constructors. |
 | `Projection`, `OrderBy`, `Assignment`, `Expr`, `BinOp`, `UnOp`, `Value` | Public syntax components. |
-| `RelQuery`, `RelExpr`, `TableRef`, `Join`, `JoinKind`, `SelectItem`, `RelOrderBy`, `AggregateFn`, `CTE` | Public syntax for relational SELECTs and nested sources. |
+| `RelQuery`, `RelExpr`, `TableRef`, `Join`, `JoinKind`, `SelectItem`, `RelOrderBy`, `AggregateFn`, `CTE`, `UnionBranch` | Public syntax for relational SELECTs, nested sources, and compounds. |
 | `Schema`, `TableDef`, `ColumnDef`, `SqlType` | External table and column definitions. |
 | `parseStatement` | `String → Except ParseError Statement`; consumes the complete input. |
 | `parseRelQuery` | `String → Except ParseError RelQuery`; always returns the relational AST. |
@@ -184,11 +227,14 @@ def users : Schema := [
 | `certifyStatement schema statement` | `CertifiedStatement schema statement`, containing `outputTypes` and a validity proof. |
 | `checkStatement schema statement` | Output types or a validation error; mutations have no selected output columns. |
 | `parseAndValidateStatement schema source` | A parsed AST and its certificate packaged as `CheckedStatement schema`. |
+| `parseAndValidateRelQuery schema source` | A uniform relational AST and its certificate packaged as `CheckedRelQuery schema`. |
 | `certifyRelQuery schema query` | `CertifiedRelQuery schema query`, with output types, names, and proofs for the query and its nested sources. |
 | `checkRelQuery schema query` | Relational result types or a validation error. |
 | `Query`, `parseQuery` / `parse`, `certifyQuery`, `checkQuery`, `parseAndValidate` | The original SELECT API, retained for compatibility. |
 
-The original `parseQuery` source parser retains its strict MVP grammar and reserved-name policy. `parseStatement` returns `.select` for every previously accepted SELECT and `.relational` for the new syntax; INSERT/UPDATE/DELETE constructors are unchanged. Use `parseRelQuery` when callers need one consistent relational AST even for simple SELECTs. Low-level token APIs `Parser.parseTokens`, `Parser.parseStatementTokens`, and `Parser.parseRelQueryTokens` expect lexer-produced tokens with exactly one final EOF.
+The original `parseQuery` source parser retains its strict MVP grammar and reserved-name policy, including mandatory FROM. `parseStatement` returns `.select` for every previously accepted SELECT and `.relational` for the new syntax; INSERT/UPDATE/DELETE constructors are unchanged. Use `parseRelQuery` or `parseAndValidateRelQuery` when callers need one consistent relational AST even for simple SELECTs. Low-level token APIs `Parser.parseTokens`, `Parser.parseStatementTokens`, and `Parser.parseRelQueryTokens` expect lexer-produced tokens with exactly one final EOF.
+
+In the relational AST, `recursive` records the WITH RECURSIVE modifier, and `unions` holds the subsequent `UnionBranch` arms in order (`all = true` for UNION ALL). The root query owns global sorting and pagination. A source with an empty name, no alias, and no derived query denotes absent FROM. Validation rejects malformed hand-built AST combinations as well as invalid parsed queries.
 
 Static validity requires a well-formed schema, existing relations, and uniquely resolved, correctly typed expressions. A table alias hides that table's original qualifier. Unqualified column names must identify exactly one visible column; duplicate relation aliases are rejected. ON sees the preceding relations and the current JOIN source, so it cannot reference a later JOIN. CROSS JOIN forbids ON; all other supported joins require it.
 
@@ -213,6 +259,6 @@ checkStatement_iff:
   checkStatement schema statement = .ok types ↔ ValidStatement schema statement types
 ```
 
-The full relational certificate composes child query proofs, CTE scope extensions, output naming checks, and the flat core derivation. `checkRelQuery_iff` establishes that the full checker accepts exactly the queries satisfying `ValidRelQuery` for the supplied schema and AST. The statement certificate API and its equivalence theorem also cover relational SELECTs. These proofs use standard Lean axioms; there are no `sorry` placeholders or custom axioms.
+The full relational certificate composes child query proofs, CTE scope extensions, recursive anchor/step checks, compound output compatibility, output naming checks, and the flat core derivation. `checkRelQuery_iff` establishes that the full checker accepts exactly the queries satisfying `ValidRelQuery` for the supplied schema and AST. The statement certificate API and its equivalence theorem also cover relational SELECTs. These proofs use standard Lean axioms; there are no `sorry` placeholders or custom axioms.
 
-These are static guarantees. The parser/renderer have regression and round-trip tests, not general grammar-correctness or round-trip proofs. The library does not execute queries or prove row-level constraints, division safety, write effects, transaction behavior, or ACID properties. For example, `1 / 0` remains well typed. SQLite compilation of the examples is additional test evidence, not a formal semantic equivalence claim.
+These are static guarantees. The parser/renderer have regression and round-trip tests, not general grammar-correctness or round-trip proofs. The library does not execute queries or prove row-level constraints, division safety, recursive termination/cycle safety, write effects, transaction behavior, or ACID properties. For example, `1 / 0` remains well typed. SQLite compilation and result comparisons are additional test evidence, not a formal semantic equivalence claim.

@@ -10,6 +10,10 @@ import Tests.RelationalParsing
 import Tests.RelationalValidation
 import Tests.NestedValidation
 import Tests.RelationalCorpus
+import Tests.IndustrialParsing
+import Tests.IndustrialValidation
+import Tests.IndustrialCorpus
+import Tests.IndustrialAPI
 
 namespace SQLean.Tests
 
@@ -36,6 +40,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {nested} nested query scope and certificate cases"
   let relationalCorpus ← relationalCorpusTests
   IO.println s!"PASS: {relationalCorpus} relational examples (50 per query class) certified and round-tripped"
+  let industrialParsing ← industrialParsingTests
+  IO.println s!"PASS: {industrialParsing} recursive CTE, UNION, and source-free parsing cases"
+  let industrialValidation ← industrialValidationTests
+  IO.println s!"PASS: {industrialValidation} recursive scope, compound type, and certificate cases"
+  let industrialCorpus ← industrialCorpusTests
+  IO.println s!"PASS: {industrialCorpus} industrial examples (50 per query class) certified and round-tripped"
+  let industrialAPI ← industrialAPITests
+  IO.println s!"PASS: {industrialAPI} industrial public API cases"
   IO.println "All tests passed. Lean proof examples compiled successfully."
 
 end SQLean.Tests

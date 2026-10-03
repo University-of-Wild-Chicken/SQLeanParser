@@ -154,6 +154,7 @@ mutual
     deriving Repr, BEq, Inhabited
 
   structure RelQuery where
+    /-- An empty, unaliased, non-derived source denotes SELECT without FROM. -/
     source : TableRef
     selectList : List SelectItem
     joins : List Join := []
@@ -165,6 +166,10 @@ mutual
     limit : Option Nat := none
     offset : Option Nat := none
     ctes : List CTE := []
+    /-- The WITH RECURSIVE modifier applies to this query's CTE list. -/
+    recursive : Bool := false
+    /-- Left-associated UNION/UNION ALL arms; sorting and pagination apply globally. -/
+    unions : List UnionBranch := []
     deriving Repr, BEq, Inhabited
 
   structure CTE where
@@ -172,6 +177,11 @@ mutual
     query : RelQuery
     /-- Optional explicit output-column names, in projection order. -/
     columns : List Name := []
+    deriving Repr, BEq, Inhabited
+
+  structure UnionBranch where
+    all : Bool := false
+    query : RelQuery
     deriving Repr, BEq, Inhabited
 end
 
