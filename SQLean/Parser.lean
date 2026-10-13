@@ -42,13 +42,14 @@ def reservedWords : List String :=
 /-- Additional reserved words in the CRUD grammar. The original SELECT parser
 keeps its original identifier rules. -/
 def crudReservedWords : List String :=
-  reservedWords ++ ["distinct", "order", "by", "asc", "desc", "limit", "offset", "default"]
+  reservedWords ++ ["distinct", "order", "by", "asc", "desc", "limit", "offset", "default", "returning"]
 
 /-- Clause and join keywords for the relational SELECT grammar. -/
 def relationalReservedWords : List String :=
   crudReservedWords ++ ["as", "join", "inner", "left", "right", "full", "outer", "cross",
     "on", "group", "having", "is", "natural", "using", "with", "recursive",
-    "union", "all", "intersect", "except"]
+    "union", "all", "intersect", "except", "like", "ilike", "in", "between",
+    "cast", "filter", "nulls", "returning", "real", "double", "precision"]
 
 private def relationalIdentifier : P Name := do
   match (← peek).kind with
@@ -231,12 +232,23 @@ private def aggregateFn : String → Option AggregateFn
   | "max" => some .max
   | _ => none
 
+/-- Normalize aliases while retaining the precision of each numeric cast target. -/
+private def castType : P CastType := do
+  match (← peek).kind with
+  | .word "int" | .word "integer" => advance; return .int
+  | .word "text" => advance; return .text
+  | .word "bool" | .word "boolean" => advance; return .bool
+  | .word "real" => advance; return .real
+  | .word "double" => advance; keyword "precision"; return .doublePrecision
+  | _ => fail "expected INTEGER, TEXT, BOOLEAN, REAL, or DOUBLE PRECISION cast type"
+
 mutual
   private def relationalExpression (fuel : Nat) (minPrecedence : Nat := 0) : P RelExpr :=
     match fuel with
     | 0 => fail "expression nesting exceeds parser budget"
     | fuel + 1 => do
       let first ← relationalPrimary fuel minPrecedence
+      let first ← relationalPostfix fuel first
       relationalBinaryTail fuel minPrecedence false first
 
   private def relationalPrimary (fuel minPrecedence : Nat) : P RelExpr :=
@@ -250,6 +262,14 @@ mutual
         let value := (← peek).kind == .word "true"
         advance
         return .literal (.bool value)
+      | .word "cast" =>
+        advance
+        symbol "("
+        let arg ← relationalExpression fuel
+        keyword "as"
+        let target ← castType
+        symbol ")"
+        return .cast arg target
       | .word "not" =>
         if minPrecedence <= 3 then
           advance
@@ -276,21 +296,45 @@ mutual
               if fn != .count || distinct then
                 fail "only COUNT(*) accepts a wildcard, without DISTINCT"
               symbol ")"
-              return .countAll
-            let arg ← relationalExpression fuel
-            symbol ")"
-            return .aggregate fn arg distinct
+              relationalFilter fuel .countAll
+            else
+              let arg ← relationalExpression fuel
+              symbol ")"
+              relationalFilter fuel (.aggregate fn arg distinct)
           else relationalColumn
         | none => relationalColumn
       | .quotedIdent _ => relationalColumn
       | _ => fail "expected column, literal, aggregate, or parenthesized expression"
+
+  /-- FILTER is part of aggregate-call syntax, before any casts or parentheses. -/
+  private def relationalFilter (fuel : Nat) (call : RelExpr) : P RelExpr :=
+    match fuel with
+    | 0 => fail "aggregate filter nesting exceeds parser budget"
+    | fuel + 1 => do
+      if ← accept (.word "filter") then
+        symbol "("
+        keyword "where"
+        let predicate ← relationalExpression fuel
+        symbol ")"
+        return .filteredAggregate call predicate
+      return call
+
+  private def relationalPostfix (fuel : Nat) (left : RelExpr) : P RelExpr :=
+    match fuel with
+    | 0 => fail "postfix expression length exceeds parser budget"
+    | fuel + 1 => do
+      if ← accept (.symbol "::") then
+        let target ← castType
+        relationalPostfix fuel (.cast left target)
+      else return left
 
   private def relationalBinaryTail (fuel : Nat) (minPrecedence : Nat)
       (seenComparison : Bool) (left : RelExpr) : P RelExpr :=
     match fuel with
     | 0 => fail "expression length exceeds parser budget"
     | fuel + 1 => do
-      if (← peek).kind == .word "is" then
+      let token := (← peek).kind
+      if token == .word "is" then
         if minPrecedence > 3 then return left
         if seenComparison then
           fail "comparison operators cannot be chained; use parentheses or AND"
@@ -298,6 +342,32 @@ mutual
         let negated ← accept (.word "not")
         keyword "null"
         relationalBinaryTail fuel minPrecedence true (.isNull left negated)
+      else if [.word "like", .word "ilike", .word "in", .word "between",
+          .word "not"].contains token then
+        if minPrecedence > 3 then return left
+        if seenComparison then
+          fail "comparison operators cannot be chained; use parentheses or AND"
+        let negated ← accept (.word "not")
+        let result ← match (← peek).kind with
+          | .word "like" | .word "ilike" => do
+            let insensitive := (← peek).kind == .word "ilike"
+            advance
+            pure (.pattern left (← relationalExpression fuel 4) insensitive)
+          | .word "in" => do
+            advance
+            symbol "("
+            let values ← commaList "IN list" fuel (relationalExpression fuel)
+            symbol ")"
+            pure (left.inValues values)
+          | .word "between" => do
+            advance
+            let lower ← relationalExpression fuel 4
+            keyword "and"
+            let upper ← relationalExpression fuel 4
+            pure (left.between lower upper)
+          | _ => fail "expected LIKE, ILIKE, IN, or BETWEEN after NOT"
+        relationalBinaryTail fuel minPrecedence true
+          (if negated then .unary .not result else result)
       else
         match binaryOperator true (← peek).kind with
         | some (op, precedence) =>
@@ -368,7 +438,12 @@ private def relationalOrderItem (budget : Nat) : P RelOrderBy := do
   let descending ← if ← accept (.word "desc") then pure true else do
     let _ ← accept (.word "asc")
     pure false
-  return { expr, descending }
+  let nullsFirst ← if ← accept (.word "nulls") then do
+    if ← accept (.word "first") then pure (some true)
+    else if ← accept (.word "last") then pure (some false)
+    else fail "expected FIRST or LAST after NULLS"
+  else pure none
+  return { expr, descending, nullsFirst }
 
 mutual
   private def relationalSelect (fuel : Nat) : P RelQuery :=
@@ -399,7 +474,14 @@ mutual
     | 0 => fail "query nesting exceeds parser budget"
     | budget + 1 => do
       keyword "select"
-      let distinct ← accept (.word "distinct")
+      let hasDistinct ← accept (.word "distinct")
+      let distinctOn ← if hasDistinct && (← accept (.word "on")) then do
+        symbol "("
+        let keys ← commaList "DISTINCT ON list" budget (relationalExpression budget)
+        symbol ")"
+        pure keys
+      else pure []
+      let distinct := hasDistinct && distinctOn.isEmpty
       let selectList ← commaList "select list" budget (relationalSelectItem budget)
       let hasFrom ← accept (.word "from")
       let source ← if hasFrom then relationalTableRef budget else pure { name := "" }
@@ -414,7 +496,7 @@ mutual
       let having ← if ← accept (.word "having") then
         pure (some (← relationalExpression budget))
       else pure none
-      return { source, selectList, joins, whereClause, groupBy, having, distinct }
+      return { source, selectList, joins, whereClause, groupBy, having, distinct, distinctOn }
 
   private def relationalUnionTail (fuel : Nat) (reversed : List UnionBranch) : P (List UnionBranch) :=
     match fuel with
@@ -528,6 +610,15 @@ private def statement (budget : Nat) : P Statement := do
     | .word "update" => pure (Statement.update (← updateStatement budget))
     | .word "delete" => pure (Statement.delete (← deleteStatement budget))
     | _ => fail "expected SELECT, INSERT, UPDATE, or DELETE"
+  let result ← if ← accept (.word "returning") then do
+    let mutation ← match result with
+      | .insert query => pure (Mutation.insert query)
+      | .update query => pure (Mutation.update query)
+      | .delete query => pure (Mutation.delete query)
+      | _ => fail "RETURNING is only supported on INSERT, UPDATE, and DELETE"
+    let items ← commaList "RETURNING list" budget (relationalSelectItem budget)
+    pure (Statement.returning mutation items)
+  else pure result
   let _ ← accept (.symbol ";")
   unless (← peek).kind == .eof do
     fail "expected end of input after SQL statement"

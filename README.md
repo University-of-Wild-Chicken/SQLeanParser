@@ -1,6 +1,6 @@
 # SQLean
 
-A Lean 4 SQL parser with public AST interfaces, canonical SQL rendering, and proof-carrying static validation. It supports SELECT with joins, grouping, aggregates, derived tables, ordinary and recursive CTEs, UNION/UNION ALL, and queries without FROM, plus single-table INSERT, UPDATE, and DELETE. The project uses Lean **4.34.0**, with no external Lean package dependencies.
+A Lean 4 SQL parser with public AST interfaces, canonical SQL rendering, and proof-carrying static validation. It supports SELECT with joins, grouping, aggregates, derived tables, ordinary and recursive CTEs, UNION/UNION ALL, and queries without FROM, plus single-table INSERT, UPDATE, and DELETE. PostgreSQL extensions include DISTINCT ON, aggregate FILTER, casts, LIKE/ILIKE, IN/BETWEEN, NULLS ordering, and mutation RETURNING. The project uses Lean **4.34.0**, with no external Lean package dependencies.
 
 Build and test from the repository root:
 
@@ -13,14 +13,35 @@ python3 scripts/generate_relational_examples.py --check
 python3 scripts/check_relational_cli.py
 python3 scripts/generate_industrial_examples.py --check
 python3 scripts/check_industrial_cli.py
+python3 scripts/generate_postgresql_examples.py --check
 ```
 
-The Lean test executable checks syntax, expression precedence, schema and type errors, certificates, and SQL round trips. The Python checks use only the standard library. The generators check that example files match their deterministic source; the CLI checks independently compile each example and its rendered SQL using SQLite `EXPLAIN`, without executing mutations. The relational and industrial checks also compare SELECT results on empty and seeded SQLite databases. Recursive examples use finite data or explicit bounds, and the industrial checker caps SQLite execution work.
+To run the PostgreSQL oracle, supply a directory containing `initdb`, `pg_ctl`,
+and `psql` (for example, the output of `pg_config --bindir`):
+
+```sh
+python3 scripts/check_postgresql_cli.py --local-bin /usr/lib/postgresql/16/bin
+```
+
+The checker starts a temporary PostgreSQL cluster with Unix sockets only, tests
+original and rendered statements on empty and seeded tables, and removes the
+cluster afterward. RETURNING checks compare both result rows and table contents
+after each mutation, with savepoint rollbacks between runs. PostgreSQL 16 was
+used for this corpus. Alternatively, `--dsn` uses a fresh random schema inside a
+rolled-back transaction on a supplied test database; `--psql` selects its client.
+
+The Lean test executable checks syntax, expression precedence, schema and type errors, certificates, and SQL round trips. The Python checks use only the standard library. The generators check that example files match their deterministic source; the CRUD, relational, and industrial CLI checks independently compile each example and its rendered SQL using SQLite `EXPLAIN`, without executing mutations. The relational and industrial checks also compare SELECT results on empty and seeded SQLite databases. Recursive examples use finite data or explicit bounds, and the industrial checker caps SQLite execution work. The PostgreSQL checker performs 600 source/canonical result comparisons, 100 RETURNING mutation-state comparisons, and 36 independently specified result checks.
 
 There are **50 examples per new query category**, 50 per CRUD category, and the original 100 SELECT examples:
 
 | Category | Examples | New functionality |
 | --- | --- | --- |
+| DISTINCT ON | [50 examples](fixtures/postgresql/distinct_on.sql) | First row per key, expressions, aliases, ordinals, and grouping. |
+| Aggregate FILTER | [50 examples](fixtures/postgresql/aggregate_filter.sql) | Conditional COUNT/SUM/AVG/MIN/MAX in projections, HAVING, and sorting. |
+| Casts | [50 examples](fixtures/postgresql/casts.sql) | PostgreSQL `::` and standard CAST, with explicit scalar targets. |
+| Predicates | [50 examples](fixtures/postgresql/predicates.sql) | LIKE/ILIKE, IN lists, BETWEEN, and their NOT forms. |
+| NULLS ordering | [50 examples](fixtures/postgresql/null_ordering.sql) | FIRST/LAST with ascending/descending, outer joins, aggregates, and compounds. |
+| RETURNING | [50 examples](fixtures/postgresql/returning.sql) | INSERT/UPDATE/DELETE result projections, wildcards, aliases, and scalar expressions. |
 | Recursive CTEs | [50 examples](fixtures/industrial/recursive_ctes.sql) | Bounded sequences, employee hierarchies, graph reachability, and bills of materials. |
 | Unions | [50 examples](fixtures/industrial/unions.sql) | UNION/UNION ALL, multiple arms, global ordering/pagination, unions inside CTEs and derived tables. |
 | SELECT without FROM | [50 examples](fixtures/industrial/source_free.sql) | Constant projections, arithmetic, predicates, aggregate results, and constant seed relations. |
@@ -34,7 +55,7 @@ There are **50 examples per new query category**, 50 per CRUD category, and the 
 | Delete / DELETE | [50 examples](fixtures/crud/delete.sql) | Optional filters, comparisons, boolean combinations. |
 | Original SELECT MVP | [100 examples](fixtures/queries.sql) | Regression coverage for the original expression grammar and API. |
 
-Every corpus statement is parsed, certified against its schema, rendered, and reparsed with equal ASTs. Each line is a separate input; passing an entire corpus file to the single-statement CLI is an error. Regenerate fixtures with `python3 scripts/generate_crud_examples.py`, `python3 scripts/generate_relational_examples.py`, and `python3 scripts/generate_industrial_examples.py`.
+Every corpus statement is parsed, certified against its schema, rendered, and reparsed with equal ASTs using the corresponding API. PostgreSQL SELECT round trips use the uniform `parseRelQuery` interface, since normalized BETWEEN expressions can also fit the legacy grammar. Each line is a separate input; passing an entire corpus file to the single-statement CLI is an error. Regenerate fixtures with the corresponding `scripts/generate_*_examples.py` script.
 
 Use the CLI with one SQL argument, a file containing one statement, or standard input:
 
@@ -50,7 +71,7 @@ lake exe sqlean --file statement.sql
 printf '%s\n' 'SELECT id FROM users' | lake exe sqlean
 ```
 
-The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionally validates the statement and reports selected output types (or the mutation category). Syntax/validation failures exit with status 1; invalid CLI arguments exit with status 2. Parsing or certifying an INSERT, UPDATE, or DELETE does not execute it.
+The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionally validates the statement and reports selected/RETURNING output types (or the mutation category when no rows are returned). Syntax/validation failures exit with status 1; invalid CLI arguments exit with status 2. Parsing or certifying an INSERT, UPDATE, or DELETE does not execute it.
 
 Schemas are supplied externally as JSON:
 
@@ -130,6 +151,45 @@ SELECT without FROM uses an empty column scope. Constants, expressions, filters,
 
 This portable recursive shape follows the shared anchor/step structure documented by [PostgreSQL](https://www.postgresql.org/docs/current/queries-with.html) and [SQLite](https://www.sqlite.org/lang_with.html). Static certification does not establish termination or detect data cycles. A recursive query can be well typed and run indefinitely; callers must choose appropriate predicates or a suitable deduplicating UNION for their data.
 
+PostgreSQL's DISTINCT ON keeps the first row for each key. For deterministic choices, provide enough ORDER BY keys to break ties:
+
+```sql
+SELECT DISTINCT ON (user_id) user_id, id, amount
+FROM orders
+ORDER BY user_id, amount DESC, id;
+```
+
+DISTINCT ON keys are resolved like ORDER BY keys, including aliases and output positions. The initial ORDER BY keys must come from DISTINCT ON; all DISTINCT ON keys must have appeared before an unrelated sort key. Permutations, repeated keys, and shorter all-matching initial orders are accepted. Omitting ORDER BY is permitted but does not select a predictable representative. DISTINCT ON keys also obey expression typing and grouping rules; ordinary DISTINCT and DISTINCT ON cannot coexist in a hand-built AST. See PostgreSQL's [SELECT documentation](https://www.postgresql.org/docs/current/sql-select.html).
+
+FILTER selects the input rows for one aggregate:
+
+```sql
+SELECT user_id,
+       COUNT(*) FILTER (WHERE status = 'paid') AS paid_orders,
+       SUM(amount) FILTER (WHERE status = 'paid') AS paid_total
+FROM orders
+GROUP BY user_id
+ORDER BY paid_total DESC NULLS LAST, user_id;
+```
+
+FILTER attaches directly to COUNT(*) or COUNT/SUM/AVG/MIN/MAX, including DISTINCT arguments. Its predicate must be boolean and cannot contain aggregates. It does not change the aggregate's output type or make a nullable aggregate non-null. NULLS FIRST/LAST is stored independently of ASC/DESC and works on ordinary and compound query ordering. FILTER follows PostgreSQL's [aggregate-expression syntax](https://www.postgresql.org/docs/current/sql-expressions.html#SYNTAX-AGGREGATES).
+
+`expr::type` and `CAST(expr AS type)` accept INT/INTEGER, TEXT, BOOL/BOOLEAN, REAL, and DOUBLE PRECISION. `CastType` preserves REAL versus DOUBLE PRECISION so rendering preserves the requested precision; both belong to the static `SqlType.real` family. Supported conversions are identity, conversions to/from text, integer/real conversions, and integer/boolean conversions. Casts preserve nullability. Certification checks that a conversion is supported, not that textual values parse or numeric values fit at execution time. BIGINT, NUMERIC, typemods, arrays, and user-defined cast targets are outside this version.
+
+Relational expressions and RETURNING projections accept LIKE/ILIKE, nonempty IN expression lists, BETWEEN bounds, and their NOT variants. LIKE/ILIKE require text operands and propagate nullability. IN remains a dedicated AST node and renders as IN, preserving PostgreSQL's common-type coercion across its operands. BETWEEN normalizes into two inclusive comparisons joined by AND. This is appropriate for the supported pure expressions; volatile functions are not part of this grammar. IN subqueries, BETWEEN SYMMETRIC, and explicit ESCAPE clauses remain unsupported. PostgreSQL documents LIKE/ILIKE in [pattern matching](https://www.postgresql.org/docs/current/functions-matching.html).
+
+Mutation RETURNING exposes the affected row through the same rich projection syntax:
+
+```sql
+UPDATE users SET age = age + 1 WHERE id = 7
+RETURNING id, age, name ILIKE 'a%' AS starts_with_a;
+
+DELETE FROM orders WHERE status = 'cancelled'
+RETURNING orders.*, CAST(amount AS TEXT) AS amount_text;
+```
+
+The statement certificate validates the complete mutation before checking RETURNING. Projection names resolve against the target table; wildcards, qualified columns, aliases, and scalar expressions are supported. Aggregates are forbidden, and the projection must be nonempty. Bare mutations still return an empty output-type list; RETURNING statements report their projection types. The underlying INSERT values and UPDATE/DELETE expression grammar remain unchanged. Target aliases, old/new row aliases, ON CONFLICT, UPDATE FROM, DELETE USING, and RETURNING subqueries are not supported. The library does not execute mutations or model trigger effects. See PostgreSQL's [RETURNING documentation](https://www.postgresql.org/docs/current/dml-returning.html).
+
 The extended grammar accepted by `parseStatement` is:
 
 ```ebnf
@@ -138,7 +198,7 @@ select    = [WITH [RECURSIVE] cte {"," cte}]
             selectCore {UNION [ALL] selectCore}
             [ORDER BY orderItem {"," orderItem}]
             [LIMIT integer [OFFSET integer]] ;
-selectCore = SELECT [DISTINCT] selectItem {"," selectItem}
+selectCore = SELECT [DISTINCT [ON "(" exprList ")"]] selectItem {"," selectItem}
              [FROM source {join}]
              [WHERE expr] [GROUP BY exprList] [HAVING expr] ;
 cte       = identifier ["(" identifier {"," identifier} ")"] AS "(" select ")" ;
@@ -148,36 +208,42 @@ join      = [INNER] JOIN source ON expr
           | CROSS JOIN source ;
 selectItem = "*" | identifier "." "*" | expr [[AS] identifier] ;
 insert    = INSERT INTO identifier ["(" identifier {"," identifier} ")"]
-            VALUES row {"," row} ;
+            VALUES row {"," row} [returning] ;
 row       = "(" exprList ")" ;
-update    = UPDATE identifier SET assignment {"," assignment} [WHERE expr] ;
+update    = UPDATE identifier SET assignment {"," assignment} [WHERE expr] [returning] ;
 assignment = identifier "=" expr ;
-delete    = DELETE FROM identifier [WHERE expr] ;
-orderItem = expr [ASC | DESC] ;
+delete    = DELETE FROM identifier [WHERE expr] [returning] ;
+returning = RETURNING selectItem {"," selectItem} ;
+orderItem = expr [ASC | DESC] [NULLS (FIRST | LAST)] ;
 exprList  = expr {"," expr} ;
 expr      = orExpr ;
 orExpr    = andExpr {OR andExpr} ;
 andExpr   = notExpr {AND notExpr} ;
 notExpr   = {NOT} cmpExpr ;
 cmpExpr   = addExpr [("=" | "<>" | "!=" | "<" | "<=" | ">" | ">=") addExpr
-                    | IS [NOT] NULL] ;
+                    | IS [NOT] NULL | [NOT] (LIKE | ILIKE) addExpr
+                    | [NOT] IN "(" exprList ")" | [NOT] BETWEEN addExpr AND addExpr] ;
 addExpr   = mulExpr {("+" | "-") mulExpr} ;
 mulExpr   = unaryExpr {("*" | "/") unaryExpr} ;
 unaryExpr = {"+" | "-"} primary ;
-primary   = identifier ["." identifier] | integer | string | TRUE | FALSE
-          | "(" expr ")" | COUNT "(" "*" ")"
+primary   = atom {"::" castType} ;
+atom      = identifier ["." identifier] | integer | string | TRUE | FALSE
+          | "(" expr ")" | CAST "(" expr AS castType ")"
+          | aggregate [FILTER "(" WHERE expr ")"] ;
+aggregate = COUNT "(" "*" ")"
           | (COUNT | SUM | AVG | MIN | MAX) "(" [DISTINCT] expr ")" ;
+castType  = INT | INTEGER | TEXT | BOOL | BOOLEAN | REAL | DOUBLE PRECISION ;
 ```
 
-Qualification, IS NULL, and aggregate expressions extend SELECT only; INSERT, UPDATE, and DELETE retain their existing unqualified expression grammar. Aggregates take one expression, except COUNT(*). COUNT(DISTINCT *) is rejected. Ordinary columns named `count`, `sum`, `avg`, `min`, or `max` remain usable without parentheses. Nested SELECTs cannot contain semicolons.
+Qualification, PostgreSQL scalar expressions, IS NULL, and aggregates extend SELECT; RETURNING supports the scalar subset. INSERT values and UPDATE/DELETE clauses retain their existing unqualified expression grammar. Aggregates take one expression, except COUNT(*). COUNT(DISTINCT *) is rejected. Ordinary columns named `count`, `sum`, `avg`, `min`, or `max` remain usable without parentheses. Nested SELECTs cannot contain semicolons.
 
-Multiplication/division bind before addition/subtraction, then comparisons and IS NULL, `NOT`, `AND`, and `OR`. Unary signs bind most tightly. Binary chains associate left; comparison chains such as `a < b < c` are rejected. Integers are arbitrary-precision decimal numerals; a leading sign is a separate unary AST node. `LIMIT` and `OFFSET` take unsigned literals, and OFFSET requires LIMIT.
+Postfix casts bind before unary signs, followed by multiplication/division, addition/subtraction, the predicate/comparison tier, NOT, AND, and OR. Binary chains associate left. This subset uses a single nonchainable tier for comparison operators, LIKE/ILIKE, IN, BETWEEN, and IS NULL; use parentheses for mixed forms such as `(name LIKE 'a%') = TRUE`. It does not implement PostgreSQL's complete operator precedence table. Comparison chains such as `a < b < c` are rejected. Integers are arbitrary-precision decimal numerals; a leading sign is a separate unary AST node. `LIMIT` and `OFFSET` take unsigned literals, and OFFSET requires LIMIT.
 
-GROUP BY and ORDER BY accept expressions, whole-key result aliases, or one-based selected-column positions. Zero, negative, and out-of-range positions are rejected by validation. GROUP BY prefers an input column when its name conflicts with a result alias; ORDER BY prefers the result alias. Aliases inside larger expressions and aliases in HAVING are not substituted. With DISTINCT, sort expressions must occur in the selected projection after alias/ordinal expansion. Wildcards expand in FROM/JOIN column order.
+GROUP BY and ORDER BY accept expressions, whole-key result aliases, or one-based selected-column positions. Zero, negative, and out-of-range positions are rejected by validation. GROUP BY prefers an input column when its name conflicts with a result alias; ORDER BY prefers the output name. Output-name lookup includes natural bare-column names and explicit aliases; repeated names must denote identical expressions after column resolution. Aliases inside larger expressions and aliases in HAVING are not substituted. With DISTINCT, sort expressions must occur in the selected projection after alias/ordinal expansion. Wildcards expand in FROM/JOIN column order.
 
 An aggregate query's SELECT, HAVING, and ORDER BY expressions must use grouping keys, constants, aggregates, or expressions built from them. GROUP BY expressions are compared structurally after resolving column names, so an unqualified column and its uniquely resolved qualified form agree. Functional dependencies, such as assuming another column is determined by a grouped primary key, are not inferred. Aggregates are forbidden in WHERE, ON, GROUP BY, and arguments to other aggregates. HAVING also creates an aggregate query when GROUP BY is absent.
 
-This is a documented SQL subset, not complete compatibility with any database dialect. Unsupported forms include scalar/IN/EXISTS subqueries, correlated or LATERAL subqueries, USING/NATURAL joins, INTERSECT/EXCEPT, recursive SEARCH/CYCLE clauses, window functions, general function calls, `RETURNING`, UPSERT, INSERT-SELECT, NULL/default literals, decimal literals, parameter placeholders, DDL, and transaction commands. IS NULL tests and nullable output types are supported despite NULL literals being outside the grammar. Exactly one statement and at most one trailing semicolon are accepted.
+This is a documented SQL subset, not complete compatibility with PostgreSQL or any other dialect. Unsupported forms include scalar/IN/EXISTS subqueries, correlated or LATERAL subqueries, USING/NATURAL joins, INTERSECT/EXCEPT, recursive SEARCH/CYCLE clauses, window functions, general function calls, UPSERT, INSERT-SELECT, NULL/default literals, decimal literals, parameter placeholders, DDL, and transaction commands. IS NULL tests and nullable output types are supported despite NULL literals being outside the grammar. Exactly one statement and at most one trailing semicolon are accepted.
 
 Keywords are case-insensitive. Unquoted identifiers use ASCII letters or `_`, followed by ASCII letters, digits, or `_`. Double-quoted identifiers preserve spelling and allow reserved words; see `Parser.crudReservedWords` and `Parser.relationalReservedWords`. Escape quotes by doubling them: `'O''Brien'` and `"a""b"`. Empty quoted identifiers are rejected. Strings and quoted identifiers support Unicode. `--` line comments and nonnested `/* ... */` comments are accepted. Parse errors carry a zero-based character offset and one-based line/column positions.
 
@@ -197,6 +263,12 @@ def users : Schema := [
 #eval (parseAndValidateStatement users
   "SELECT age, COUNT(*) AS n FROM users GROUP BY age ORDER BY n DESC").map
   (fun checked => checked.certificate.outputTypes)  -- Except.ok [SqlType.int, SqlType.int]
+#eval (parseAndValidateStatement users
+  "UPDATE users SET age = age + 1 WHERE id = 7 RETURNING id, age::TEXT").map
+  (fun checked => checked.certificate.outputTypes)  -- Except.ok [SqlType.int, SqlType.text]
+#eval (parseAndValidateRelQuery users
+  "SELECT COUNT(*) FILTER (WHERE age >= 18) AS adults FROM users").map
+  (fun checked => checked.certificate.outputTypes)  -- Except.ok [SqlType.int]
 
 -- Request the relational AST even for a simple SELECT.
 #eval (parseRelQuery "SELECT id FROM users").map toSql
@@ -217,24 +289,26 @@ def users : Schema := [
 
 | Interface | Purpose |
 | --- | --- |
-| `Statement`, `SelectQuery`, `InsertQuery`, `UpdateQuery`, `DeleteQuery` | Public CRUD syntax constructors. |
+| `Statement`, `Mutation`, `SelectQuery`, `InsertQuery`, `UpdateQuery`, `DeleteQuery` | Public CRUD and RETURNING syntax constructors. |
 | `Projection`, `OrderBy`, `Assignment`, `Expr`, `BinOp`, `UnOp`, `Value` | Public syntax components. |
-| `RelQuery`, `RelExpr`, `TableRef`, `Join`, `JoinKind`, `SelectItem`, `RelOrderBy`, `AggregateFn`, `CTE`, `UnionBranch` | Public syntax for relational SELECTs, nested sources, and compounds. |
+| `RelQuery`, `RelExpr`, `CastType`, `TableRef`, `Join`, `JoinKind`, `SelectItem`, `RelOrderBy`, `AggregateFn`, `CTE`, `UnionBranch` | Public syntax for relational SELECTs, PostgreSQL expressions, nested sources, and compounds. |
 | `Schema`, `TableDef`, `ColumnDef`, `SqlType` | External table and column definitions. |
 | `parseStatement` | `String → Except ParseError Statement`; consumes the complete input. |
 | `parseRelQuery` | `String → Except ParseError RelQuery`; always returns the relational AST. |
 | `ToSql` / `toSql` | SQL rendering with escaped identifiers/strings and explicit parentheses. |
 | `certifyStatement schema statement` | `CertifiedStatement schema statement`, containing `outputTypes` and a validity proof. |
-| `checkStatement schema statement` | Output types or a validation error; mutations have no selected output columns. |
+| `checkStatement schema statement` | Output types or a validation error; mutations without RETURNING have no output columns. |
 | `parseAndValidateStatement schema source` | A parsed AST and its certificate packaged as `CheckedStatement schema`. |
 | `parseAndValidateRelQuery schema source` | A uniform relational AST and its certificate packaged as `CheckedRelQuery schema`. |
 | `certifyRelQuery schema query` | `CertifiedRelQuery schema query`, with output types, names, and proofs for the query and its nested sources. |
 | `checkRelQuery schema query` | Relational result types or a validation error. |
 | `Query`, `parseQuery` / `parse`, `certifyQuery`, `checkQuery`, `parseAndValidate` | The original SELECT API, retained for compatibility. |
 
-The original `parseQuery` source parser retains its strict MVP grammar and reserved-name policy, including mandatory FROM. `parseStatement` returns `.select` for every previously accepted SELECT and `.relational` for the new syntax; INSERT/UPDATE/DELETE constructors are unchanged. Use `parseRelQuery` or `parseAndValidateRelQuery` when callers need one consistent relational AST even for simple SELECTs. Low-level token APIs `Parser.parseTokens`, `Parser.parseStatementTokens`, and `Parser.parseRelQueryTokens` expect lexer-produced tokens with exactly one final EOF.
+The original `parseQuery` source parser retains its strict MVP grammar and reserved-name policy, including mandatory FROM. `parseStatement` tries the legacy SELECT grammar first, returning `.select` there and `.relational` for richer SELECT syntax. RETURNING is now reserved in the statement grammar; quote existing identifiers with that name. INSERT/UPDATE/DELETE constructors remain available, and `Statement.returning` wraps a `Mutation` and its output items. Use `parseRelQuery` or `parseAndValidateRelQuery` for a consistent relational AST; normalized BETWEEN SQL may fit the legacy grammar and switch statement variants if reparsed with `parseStatement`. Low-level token APIs `Parser.parseTokens`, `Parser.parseStatementTokens`, and `Parser.parseRelQueryTokens` expect lexer-produced tokens with exactly one final EOF.
 
 In the relational AST, `recursive` records the WITH RECURSIVE modifier, and `unions` holds the subsequent `UnionBranch` arms in order (`all = true` for UNION ALL). The root query owns global sorting and pagination. A source with an empty name, no alias, and no derived query denotes absent FROM. Validation rejects malformed hand-built AST combinations as well as invalid parsed queries.
+
+`RelQuery.distinctOn` holds DISTINCT ON keys and is mutually exclusive with `distinct = true`. `RelOrderBy.nullsFirst` distinguishes the default (`none`), FIRST (`some true`), and LAST (`some false`). `RelExpr.cast`, `pattern`, `filteredAggregate`, and `inList` preserve the corresponding PostgreSQL syntax. `RelExpr.between` supplies the normalized comparison AST; `RelExpr.inValues` builds an IN node whose list must be nonempty for certification.
 
 Static validity requires a well-formed schema, existing relations, and uniquely resolved, correctly typed expressions. A table alias hides that table's original qualifier. Unqualified column names must identify exactly one visible column; duplicate relation aliases are rejected. ON sees the preceding relations and the current JOIN source, so it cannot reference a later JOIN. CROSS JOIN forbids ON; all other supported joins require it.
 
@@ -261,4 +335,4 @@ checkStatement_iff:
 
 The full relational certificate composes child query proofs, CTE scope extensions, recursive anchor/step checks, compound output compatibility, output naming checks, and the flat core derivation. `checkRelQuery_iff` establishes that the full checker accepts exactly the queries satisfying `ValidRelQuery` for the supplied schema and AST. The statement certificate API and its equivalence theorem also cover relational SELECTs. These proofs use standard Lean axioms; there are no `sorry` placeholders or custom axioms.
 
-These are static guarantees. The parser/renderer have regression and round-trip tests, not general grammar-correctness or round-trip proofs. The library does not execute queries or prove row-level constraints, division safety, recursive termination/cycle safety, write effects, transaction behavior, or ACID properties. For example, `1 / 0` remains well typed. SQLite compilation and result comparisons are additional test evidence, not a formal semantic equivalence claim.
+These are static guarantees. The parser/renderer have regression and round-trip tests, not general grammar-correctness or round-trip proofs. The library does not execute queries or prove row-level constraints, division safety, recursive termination/cycle safety, write effects, transaction behavior, or ACID properties. For example, `1 / 0` remains well typed. SQLite and PostgreSQL checks provide additional test evidence, not a formal semantic equivalence claim.

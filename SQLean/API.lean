@@ -31,7 +31,7 @@ structure CheckedStatement (schema : Schema) where
   statement : Statement
   certificate : CertifiedStatement schema statement
 
-/-- Parse and certify SELECT, INSERT, UPDATE, or DELETE. The original
+/-- Parse and certify SELECT, INSERT, UPDATE, or DELETE, including RETURNING. The original
 `parseAndValidate` function retains its strict SELECT-only grammar.
 -/
 def parseAndValidateStatement (schema : Schema) (source : String) :

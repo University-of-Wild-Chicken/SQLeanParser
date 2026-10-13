@@ -14,6 +14,9 @@ private def validCases : List (String × List SqlType) := [
   ("SELECT DISTINCT * FROM users ORDER BY active", [.int, .text, .bool]),
   ("SELECT id, name FROM users ORDER BY +2, - -1", [.int, .text]),
   ("SELECT id FROM users ORDER BY + +1", [.int]),
+  ("SELECT id FROM users ORDER BY +0", [.int]),
+  ("SELECT id FROM users ORDER BY + +0", [.int]),
+  ("SELECT id FROM users ORDER BY + +2", [.int]),
   ("SELECT -id, +id, NOT active, TRUE, FALSE FROM users WHERE NOT active",
     [.int, .int, .bool, .bool, .bool]),
   ("SELECT id FROM users ORDER BY name, active, id + 1 LIMIT 0", [.int]),
@@ -70,9 +73,6 @@ private def invalidCases : List String := [
   "SELECT id FROM users ORDER BY 0",
   "SELECT id FROM users ORDER BY 2",
   "SELECT id FROM users ORDER BY -1",
-  "SELECT id FROM users ORDER BY +0",
-  "SELECT id FROM users ORDER BY + +0",
-  "SELECT id FROM users ORDER BY + +2",
   "SELECT id FROM users ORDER BY - -2",
   "SELECT DISTINCT id FROM users ORDER BY - -999"
 ]
@@ -122,16 +122,24 @@ private def deleteExample : Statement :=
   .delete { table := "users", whereClause := some (.column "active") }
 
 example : ValidStatement schema selectExample [.int, .text, .bool] :=
-  checkStatement_sound schema selectExample [.int, .text, .bool] rfl
+  checkStatement_sound schema selectExample [.int, .text, .bool] (by
+    simp only [checkStatement, selectExample, certifyStatement]
+    rfl)
 
 example : ValidStatement schema insertExample [] :=
-  checkStatement_sound schema insertExample [] rfl
+  checkStatement_sound schema insertExample [] (by
+    simp only [checkStatement, insertExample, certifyStatement]
+    rfl)
 
 example : ValidStatement schema updateExample [] :=
-  checkStatement_sound schema updateExample [] rfl
+  checkStatement_sound schema updateExample [] (by
+    simp only [checkStatement, updateExample, certifyStatement]
+    rfl)
 
 example : ValidStatement schema deleteExample [] :=
-  checkStatement_sound schema deleteExample [] rfl
+  checkStatement_sound schema deleteExample [] (by
+    simp only [checkStatement, deleteExample, certifyStatement]
+    rfl)
 
 example (schema : Schema) (statement : Statement) (types : List SqlType) :
     checkStatement schema statement = .ok types ↔ ValidStatement schema statement types :=

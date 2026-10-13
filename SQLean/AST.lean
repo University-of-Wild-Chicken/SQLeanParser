@@ -114,6 +114,17 @@ inductive AggregateFn where
   | count | sum | avg | min | max
   deriving Repr, BEq, DecidableEq, Inhabited
 
+/-- Preserve cast precision even though static result types use numeric families. -/
+inductive CastType where
+  | int | text | bool | real | doublePrecision
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+def CastType.resultType : CastType → SqlType
+  | .int => .int
+  | .text => .text
+  | .bool => .bool
+  | .real | .doublePrecision => .real
+
 /-- Expressions for joins and aggregation; the existing `Expr` API is unchanged. -/
 inductive RelExpr where
   | literal (value : Value)
@@ -123,7 +134,189 @@ inductive RelExpr where
   | countAll
   | aggregate (fn : AggregateFn) (arg : RelExpr) (distinct : Bool := false)
   | isNull (arg : RelExpr) (negated : Bool := false)
-  deriving Repr, BEq, DecidableEq, Inhabited
+  /-- PostgreSQL LIKE/ILIKE; NOT is represented by the ordinary unary operator. -/
+  | pattern (arg pattern : RelExpr) (insensitive : Bool := false)
+  | cast (arg : RelExpr) (target : CastType)
+  /-- The first operand must be COUNT(*) or an aggregate call. -/
+  | filteredAggregate (aggregate predicate : RelExpr)
+  /-- Retain IN so PostgreSQL applies common-type coercion across all operands. -/
+  | inList (arg : RelExpr) (values : List RelExpr)
+  deriving Repr, BEq, Inhabited
+
+/- Computable structural equality for the nested expression datatype. -/
+mutual
+  private def relExprDecEq : (left right : RelExpr) → Decidable (left = right)
+    | .literal value₁, .literal value₂ =>
+      decidable_of_iff (value₁ = value₂) (by simp)
+    | .column qualifier₁ name₁, .column qualifier₂ name₂ =>
+      decidable_of_iff (qualifier₁ = qualifier₂ ∧ name₁ = name₂) (by simp)
+    | .binary op₁ left₁ right₁, .binary op₂ left₂ right₂ =>
+      letI : Decidable (left₁ = left₂) := relExprDecEq left₁ left₂
+      letI : Decidable (right₁ = right₂) := relExprDecEq right₁ right₂
+      decidable_of_iff (op₁ = op₂ ∧ left₁ = left₂ ∧ right₁ = right₂) (by simp)
+    | .unary op₁ arg₁, .unary op₂ arg₂ =>
+      letI : Decidable (arg₁ = arg₂) := relExprDecEq arg₁ arg₂
+      decidable_of_iff (op₁ = op₂ ∧ arg₁ = arg₂) (by simp)
+    | .countAll, .countAll =>
+      isTrue rfl
+    | .aggregate fn₁ arg₁ distinct₁, .aggregate fn₂ arg₂ distinct₂ =>
+      letI : Decidable (arg₁ = arg₂) := relExprDecEq arg₁ arg₂
+      decidable_of_iff (fn₁ = fn₂ ∧ arg₁ = arg₂ ∧ distinct₁ = distinct₂) (by simp)
+    | .isNull arg₁ negated₁, .isNull arg₂ negated₂ =>
+      letI : Decidable (arg₁ = arg₂) := relExprDecEq arg₁ arg₂
+      decidable_of_iff (arg₁ = arg₂ ∧ negated₁ = negated₂) (by simp)
+    | .pattern arg₁ pat₁ insensitive₁, .pattern arg₂ pat₂ insensitive₂ =>
+      letI : Decidable (arg₁ = arg₂) := relExprDecEq arg₁ arg₂
+      letI : Decidable (pat₁ = pat₂) := relExprDecEq pat₁ pat₂
+      decidable_of_iff (arg₁ = arg₂ ∧ pat₁ = pat₂ ∧ insensitive₁ = insensitive₂) (by simp)
+    | .cast arg₁ target₁, .cast arg₂ target₂ =>
+      letI : Decidable (arg₁ = arg₂) := relExprDecEq arg₁ arg₂
+      decidable_of_iff (arg₁ = arg₂ ∧ target₁ = target₂) (by simp)
+    | .filteredAggregate call₁ predicate₁, .filteredAggregate call₂ predicate₂ =>
+      letI : Decidable (call₁ = call₂) := relExprDecEq call₁ call₂
+      letI : Decidable (predicate₁ = predicate₂) := relExprDecEq predicate₁ predicate₂
+      decidable_of_iff (call₁ = call₂ ∧ predicate₁ = predicate₂) (by simp)
+    | .inList arg₁ values₁, .inList arg₂ values₂ =>
+      letI : Decidable (arg₁ = arg₂) := relExprDecEq arg₁ arg₂
+      letI : Decidable (values₁ = values₂) := relExprListDecEq values₁ values₂
+      decidable_of_iff (arg₁ = arg₂ ∧ values₁ = values₂) (by simp)
+    | .literal _, .column _ _ => isFalse (by intro equality; cases equality)
+    | .literal _, .binary _ _ _ => isFalse (by intro equality; cases equality)
+    | .literal _, .unary _ _ => isFalse (by intro equality; cases equality)
+    | .literal _, .countAll => isFalse (by intro equality; cases equality)
+    | .literal _, .aggregate _ _ _ => isFalse (by intro equality; cases equality)
+    | .literal _, .isNull _ _ => isFalse (by intro equality; cases equality)
+    | .literal _, .pattern _ _ _ => isFalse (by intro equality; cases equality)
+    | .literal _, .cast _ _ => isFalse (by intro equality; cases equality)
+    | .literal _, .filteredAggregate _ _ => isFalse (by intro equality; cases equality)
+    | .literal _, .inList _ _ => isFalse (by intro equality; cases equality)
+    | .column _ _, .literal _ => isFalse (by intro equality; cases equality)
+    | .column _ _, .binary _ _ _ => isFalse (by intro equality; cases equality)
+    | .column _ _, .unary _ _ => isFalse (by intro equality; cases equality)
+    | .column _ _, .countAll => isFalse (by intro equality; cases equality)
+    | .column _ _, .aggregate _ _ _ => isFalse (by intro equality; cases equality)
+    | .column _ _, .isNull _ _ => isFalse (by intro equality; cases equality)
+    | .column _ _, .pattern _ _ _ => isFalse (by intro equality; cases equality)
+    | .column _ _, .cast _ _ => isFalse (by intro equality; cases equality)
+    | .column _ _, .filteredAggregate _ _ => isFalse (by intro equality; cases equality)
+    | .column _ _, .inList _ _ => isFalse (by intro equality; cases equality)
+    | .binary _ _ _, .literal _ => isFalse (by intro equality; cases equality)
+    | .binary _ _ _, .column _ _ => isFalse (by intro equality; cases equality)
+    | .binary _ _ _, .unary _ _ => isFalse (by intro equality; cases equality)
+    | .binary _ _ _, .countAll => isFalse (by intro equality; cases equality)
+    | .binary _ _ _, .aggregate _ _ _ => isFalse (by intro equality; cases equality)
+    | .binary _ _ _, .isNull _ _ => isFalse (by intro equality; cases equality)
+    | .binary _ _ _, .pattern _ _ _ => isFalse (by intro equality; cases equality)
+    | .binary _ _ _, .cast _ _ => isFalse (by intro equality; cases equality)
+    | .binary _ _ _, .filteredAggregate _ _ => isFalse (by intro equality; cases equality)
+    | .binary _ _ _, .inList _ _ => isFalse (by intro equality; cases equality)
+    | .unary _ _, .literal _ => isFalse (by intro equality; cases equality)
+    | .unary _ _, .column _ _ => isFalse (by intro equality; cases equality)
+    | .unary _ _, .binary _ _ _ => isFalse (by intro equality; cases equality)
+    | .unary _ _, .countAll => isFalse (by intro equality; cases equality)
+    | .unary _ _, .aggregate _ _ _ => isFalse (by intro equality; cases equality)
+    | .unary _ _, .isNull _ _ => isFalse (by intro equality; cases equality)
+    | .unary _ _, .pattern _ _ _ => isFalse (by intro equality; cases equality)
+    | .unary _ _, .cast _ _ => isFalse (by intro equality; cases equality)
+    | .unary _ _, .filteredAggregate _ _ => isFalse (by intro equality; cases equality)
+    | .unary _ _, .inList _ _ => isFalse (by intro equality; cases equality)
+    | .countAll, .literal _ => isFalse (by intro equality; cases equality)
+    | .countAll, .column _ _ => isFalse (by intro equality; cases equality)
+    | .countAll, .binary _ _ _ => isFalse (by intro equality; cases equality)
+    | .countAll, .unary _ _ => isFalse (by intro equality; cases equality)
+    | .countAll, .aggregate _ _ _ => isFalse (by intro equality; cases equality)
+    | .countAll, .isNull _ _ => isFalse (by intro equality; cases equality)
+    | .countAll, .pattern _ _ _ => isFalse (by intro equality; cases equality)
+    | .countAll, .cast _ _ => isFalse (by intro equality; cases equality)
+    | .countAll, .filteredAggregate _ _ => isFalse (by intro equality; cases equality)
+    | .countAll, .inList _ _ => isFalse (by intro equality; cases equality)
+    | .aggregate _ _ _, .literal _ => isFalse (by intro equality; cases equality)
+    | .aggregate _ _ _, .column _ _ => isFalse (by intro equality; cases equality)
+    | .aggregate _ _ _, .binary _ _ _ => isFalse (by intro equality; cases equality)
+    | .aggregate _ _ _, .unary _ _ => isFalse (by intro equality; cases equality)
+    | .aggregate _ _ _, .countAll => isFalse (by intro equality; cases equality)
+    | .aggregate _ _ _, .isNull _ _ => isFalse (by intro equality; cases equality)
+    | .aggregate _ _ _, .pattern _ _ _ => isFalse (by intro equality; cases equality)
+    | .aggregate _ _ _, .cast _ _ => isFalse (by intro equality; cases equality)
+    | .aggregate _ _ _, .filteredAggregate _ _ => isFalse (by intro equality; cases equality)
+    | .aggregate _ _ _, .inList _ _ => isFalse (by intro equality; cases equality)
+    | .isNull _ _, .literal _ => isFalse (by intro equality; cases equality)
+    | .isNull _ _, .column _ _ => isFalse (by intro equality; cases equality)
+    | .isNull _ _, .binary _ _ _ => isFalse (by intro equality; cases equality)
+    | .isNull _ _, .unary _ _ => isFalse (by intro equality; cases equality)
+    | .isNull _ _, .countAll => isFalse (by intro equality; cases equality)
+    | .isNull _ _, .aggregate _ _ _ => isFalse (by intro equality; cases equality)
+    | .isNull _ _, .pattern _ _ _ => isFalse (by intro equality; cases equality)
+    | .isNull _ _, .cast _ _ => isFalse (by intro equality; cases equality)
+    | .isNull _ _, .filteredAggregate _ _ => isFalse (by intro equality; cases equality)
+    | .isNull _ _, .inList _ _ => isFalse (by intro equality; cases equality)
+    | .pattern _ _ _, .literal _ => isFalse (by intro equality; cases equality)
+    | .pattern _ _ _, .column _ _ => isFalse (by intro equality; cases equality)
+    | .pattern _ _ _, .binary _ _ _ => isFalse (by intro equality; cases equality)
+    | .pattern _ _ _, .unary _ _ => isFalse (by intro equality; cases equality)
+    | .pattern _ _ _, .countAll => isFalse (by intro equality; cases equality)
+    | .pattern _ _ _, .aggregate _ _ _ => isFalse (by intro equality; cases equality)
+    | .pattern _ _ _, .isNull _ _ => isFalse (by intro equality; cases equality)
+    | .pattern _ _ _, .cast _ _ => isFalse (by intro equality; cases equality)
+    | .pattern _ _ _, .filteredAggregate _ _ => isFalse (by intro equality; cases equality)
+    | .pattern _ _ _, .inList _ _ => isFalse (by intro equality; cases equality)
+    | .cast _ _, .literal _ => isFalse (by intro equality; cases equality)
+    | .cast _ _, .column _ _ => isFalse (by intro equality; cases equality)
+    | .cast _ _, .binary _ _ _ => isFalse (by intro equality; cases equality)
+    | .cast _ _, .unary _ _ => isFalse (by intro equality; cases equality)
+    | .cast _ _, .countAll => isFalse (by intro equality; cases equality)
+    | .cast _ _, .aggregate _ _ _ => isFalse (by intro equality; cases equality)
+    | .cast _ _, .isNull _ _ => isFalse (by intro equality; cases equality)
+    | .cast _ _, .pattern _ _ _ => isFalse (by intro equality; cases equality)
+    | .cast _ _, .filteredAggregate _ _ => isFalse (by intro equality; cases equality)
+    | .cast _ _, .inList _ _ => isFalse (by intro equality; cases equality)
+    | .filteredAggregate _ _, .literal _ => isFalse (by intro equality; cases equality)
+    | .filteredAggregate _ _, .column _ _ => isFalse (by intro equality; cases equality)
+    | .filteredAggregate _ _, .binary _ _ _ => isFalse (by intro equality; cases equality)
+    | .filteredAggregate _ _, .unary _ _ => isFalse (by intro equality; cases equality)
+    | .filteredAggregate _ _, .countAll => isFalse (by intro equality; cases equality)
+    | .filteredAggregate _ _, .aggregate _ _ _ => isFalse (by intro equality; cases equality)
+    | .filteredAggregate _ _, .isNull _ _ => isFalse (by intro equality; cases equality)
+    | .filteredAggregate _ _, .pattern _ _ _ => isFalse (by intro equality; cases equality)
+    | .filteredAggregate _ _, .cast _ _ => isFalse (by intro equality; cases equality)
+    | .filteredAggregate _ _, .inList _ _ => isFalse (by intro equality; cases equality)
+    | .inList _ _, .literal _ => isFalse (by intro equality; cases equality)
+    | .inList _ _, .column _ _ => isFalse (by intro equality; cases equality)
+    | .inList _ _, .binary _ _ _ => isFalse (by intro equality; cases equality)
+    | .inList _ _, .unary _ _ => isFalse (by intro equality; cases equality)
+    | .inList _ _, .countAll => isFalse (by intro equality; cases equality)
+    | .inList _ _, .aggregate _ _ _ => isFalse (by intro equality; cases equality)
+    | .inList _ _, .isNull _ _ => isFalse (by intro equality; cases equality)
+    | .inList _ _, .pattern _ _ _ => isFalse (by intro equality; cases equality)
+    | .inList _ _, .cast _ _ => isFalse (by intro equality; cases equality)
+    | .inList _ _, .filteredAggregate _ _ => isFalse (by intro equality; cases equality)
+  termination_by left right => sizeOf left + sizeOf right
+  decreasing_by all_goals simp_all; omega
+
+  private def relExprListDecEq : (left right : List RelExpr) → Decidable (left = right)
+    | [], [] => isTrue rfl
+    | [], _ :: _ => isFalse (by intro equality; cases equality)
+    | _ :: _, [] => isFalse (by intro equality; cases equality)
+    | head :: tail, head' :: tail' =>
+      letI : Decidable (head = head') := relExprDecEq head head'
+      letI : Decidable (tail = tail') := relExprListDecEq tail tail'
+      decidable_of_iff (head = head' ∧ tail = tail') (by simp)
+  termination_by left right => sizeOf left + sizeOf right
+  decreasing_by all_goals simp_all; omega
+end
+
+instance : DecidableEq RelExpr := relExprDecEq
+
+
+
+
+/-- Build a finite IN expression. Validation requires a nonempty list. -/
+def RelExpr.inValues (arg : RelExpr) (values : List RelExpr) : RelExpr :=
+  .inList arg values
+
+/-- Normalize BETWEEN to its two inclusive comparisons. -/
+def RelExpr.between (arg lower upper : RelExpr) : RelExpr :=
+  .binary .and (.binary .ge arg lower) (.binary .le arg upper)
 
 inductive JoinKind where
   | inner | left | right | full | cross
@@ -137,6 +330,8 @@ inductive SelectItem where
 structure RelOrderBy where
   expr : RelExpr
   descending : Bool := false
+  /-- none follows the database's default; some true is NULLS FIRST. -/
+  nullsFirst : Option Bool := none
   deriving Repr, BEq, DecidableEq, Inhabited
 
 mutual
@@ -170,6 +365,8 @@ mutual
     recursive : Bool := false
     /-- Left-associated UNION/UNION ALL arms; sorting and pagination apply globally. -/
     unions : List UnionBranch := []
+    /-- Nonempty DISTINCT ON keys; mutually exclusive with ordinary DISTINCT. -/
+    distinctOn : List RelExpr := []
     deriving Repr, BEq, Inhabited
 
   structure CTE where
@@ -185,13 +382,30 @@ mutual
     deriving Repr, BEq, Inhabited
 end
 
+inductive Mutation where
+  | insert (query : InsertQuery)
+  | update (query : UpdateQuery)
+  | delete (query : DeleteQuery)
+  deriving Repr, BEq, DecidableEq, Inhabited
+
 inductive Statement where
   | select (query : SelectQuery)
   | insert (query : InsertQuery)
   | update (query : UpdateQuery)
   | delete (query : DeleteQuery)
   | relational (query : RelQuery)
+  | returning (mutation : Mutation) (items : List SelectItem)
   deriving Repr, BEq, Inhabited
+
+def Mutation.table : Mutation → Name
+  | .insert query => query.table
+  | .update query => query.table
+  | .delete query => query.table
+
+def Mutation.toStatement : Mutation → Statement
+  | .insert query => .insert query
+  | .update query => .update query
+  | .delete query => .delete query
 
 def Schema.findTable (schema : Schema) (name : Name) : Option TableDef :=
   schema.find? (fun table => table.name == name)

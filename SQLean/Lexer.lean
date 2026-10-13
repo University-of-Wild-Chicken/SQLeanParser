@@ -77,7 +77,7 @@ private def isSingleSymbol (c : Char) : Bool :=
 
 private def isDoubleSymbol (c d : Char) : Bool :=
   (c == '<' && (d == '=' || d == '>')) ||
-  ((c == '>' || c == '!') && d == '=')
+  ((c == '>' || c == '!') && d == '=') || (c == ':' && d == ':')
 
 private def lexLoop : Nat → List Char → SourcePos → List Token → Except ParseError (List Token)
   | 0, _, pos, _ => .error { position := pos, message := "lexer exhausted its input bound" }

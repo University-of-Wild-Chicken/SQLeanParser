@@ -75,7 +75,7 @@ def main() -> None:
         ("SELECT DISTINCT id FROM users ORDER BY name", "validation error"),
         ("SELECT id FROM users OFFSET 2", "parse error"),
         ("UPDATE users SET age = 1; DELETE FROM users", "parse error"),
-        ("DELETE FROM users RETURNING id", "parse error"),
+        ("DELETE FROM users RETURNING", "parse error"),
     ]
     for source, message in negative:
         run(["--schema", str(SCHEMA), source], 1, message)

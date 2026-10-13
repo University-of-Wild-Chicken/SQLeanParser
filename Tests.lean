@@ -14,6 +14,10 @@ import Tests.IndustrialParsing
 import Tests.IndustrialValidation
 import Tests.IndustrialCorpus
 import Tests.IndustrialAPI
+import Tests.PostgresParsing
+import Tests.PostgresValidation
+import Tests.PostgresReturning
+import Tests.PostgresCorpus
 
 namespace SQLean.Tests
 
@@ -48,6 +52,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {industrialCorpus} industrial examples (50 per query class) certified and round-tripped"
   let industrialAPI ← industrialAPITests
   IO.println s!"PASS: {industrialAPI} industrial public API cases"
+  let postgresParsing ← postgresParsingTests
+  IO.println s!"PASS: {postgresParsing} PostgreSQL syntax, precedence, and AST round-trip checks"
+  let postgresValidation ← postgresValidationTests
+  IO.println s!"PASS: {postgresValidation} PostgreSQL type, grouping, and option validity checks"
+  let postgresReturning ← postgresReturningTests
+  IO.println s!"PASS: {postgresReturning} RETURNING mutation, projection, and API checks"
+  let postgresCorpus ← postgresCorpusTests
+  IO.println s!"PASS: {postgresCorpus} PostgreSQL examples (50 per feature class) certified and round-tripped"
   IO.println "All tests passed. Lean proof examples compiled successfully."
 
 end SQLean.Tests

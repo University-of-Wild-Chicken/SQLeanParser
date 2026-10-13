@@ -14,8 +14,7 @@ def relOutputNames (schema : Schema) (query : RelQuery) :
     Except ValidationError (List (Option Name)) := do
   let scope ← certifyRelFrom schema query
   let items ← expandRelProjection scope.val query.selectList
-  pure (items.map fun item => item.alias.orElse fun _ =>
-    match item.expr with | .column _ name => some name | _ => none)
+  pure (items.map ExpandedRelItem.outputName)
 
 /-- Materialize only well-named relation outputs. This rejects ambiguous duplicate
 columns and unaliased computed outputs at a derived-table/CTE boundary. -/
@@ -103,7 +102,7 @@ def relAnchor (query : RelQuery) : RelQuery := { query with unions := [] }
 
 private theorem relAnchor_size (query : RelQuery) : sizeOf (relAnchor query) ≤ sizeOf query := by
   cases query
-  rename_i source selectList joins whereClause groupBy having distinct orderBy limit offset ctes recursive unions
+  rename_i source selectList joins whereClause groupBy having distinct orderBy limit offset ctes recursive unions distinctOn
   cases unions <;> simp [relAnchor] <;> omega
 
 private theorem unionQuery_size (query : RelQuery) (branch : UnionBranch)
@@ -143,7 +142,7 @@ instance (query : RelQuery) (names : List (Option Name)) : Decidable (RelCompoun
 /-- A conservative common recursive term: one direct reference, ordinary inner
 or cross joins, no aggregates, grouping, nested sources, or query modifiers. -/
 def RelRecursiveStepShape (name : Name) (query : RelQuery) : Prop :=
-  RelUnionArmShape query ∧ query.distinct = false ∧ query.groupBy = [] ∧ query.having = none ∧
+  RelUnionArmShape query ∧ query.distinct = false ∧ query.distinctOn = [] ∧ query.groupBy = [] ∧ query.having = none ∧
   query.source.derived = none ∧
   ((if query.source.name == name then 1 else 0) +
     (query.joins.filter (fun join => join.table.name == name)).length = 1) ∧
@@ -152,7 +151,7 @@ def RelRecursiveStepShape (name : Name) (query : RelQuery) : Prop :=
     | .all _ => true | .expression expr _ => !expr.hasAggregate)) = true
 
 instance (name : Name) (query : RelQuery) : Decidable (RelRecursiveStepShape name query) :=
-  inferInstanceAs (Decidable (_ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _))
+  inferInstanceAs (Decidable (_ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _))
 
 def RelRecursiveAnchorShape (name : Name) (query : RelQuery) : Prop :=
   query.ctes = [] ∧ query.recursive = false ∧ query.orderBy = [] ∧

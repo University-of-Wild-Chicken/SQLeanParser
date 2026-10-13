@@ -1,0 +1,101 @@
+{
+  "tables": [
+    {
+      "name": "users",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "age",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "text"
+        },
+        {
+          "name": "city",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "orders",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "user_id",
+          "type": "int"
+        },
+        {
+          "name": "amount",
+          "type": "int"
+        },
+        {
+          "name": "status",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "departments",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "name": "employees",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "department_id",
+          "type": "int"
+        },
+        {
+          "name": "manager_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "text"
+        },
+        {
+          "name": "salary",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "name": "flags",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        },
+        {
+          "name": "label",
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}

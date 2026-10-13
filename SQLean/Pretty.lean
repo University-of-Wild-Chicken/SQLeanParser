@@ -23,6 +23,15 @@ def SqlType.toSql : SqlType → String
 
 instance : ToSql SqlType := ⟨SqlType.toSql⟩
 
+def CastType.toSql : CastType → String
+  | .int => "INTEGER"
+  | .text => "TEXT"
+  | .bool => "BOOLEAN"
+  | .real => "REAL"
+  | .doublePrecision => "DOUBLE PRECISION"
+
+instance : ToSql CastType := ⟨CastType.toSql⟩
+
 instance : ToSql Value where
   toSql
     | .int n => toString n
@@ -127,6 +136,13 @@ def RelExpr.toSql : RelExpr → String
     SQLean.toSql fn ++ "(" ++ (if distinct then "DISTINCT " else "") ++ arg.toSql ++ ")"
   | .isNull arg negated =>
     "(" ++ arg.toSql ++ (if negated then " IS NOT NULL)" else " IS NULL)")
+  | .pattern arg pat insensitive =>
+    "(" ++ arg.toSql ++ (if insensitive then " ILIKE " else " LIKE ") ++ pat.toSql ++ ")"
+  | .cast arg target => "CAST(" ++ arg.toSql ++ " AS " ++ target.toSql ++ ")"
+  | .filteredAggregate call predicate =>
+    call.toSql ++ " FILTER (WHERE " ++ predicate.toSql ++ ")"
+  | .inList arg values =>
+    "(" ++ arg.toSql ++ " IN (" ++ commaSep (values.map RelExpr.toSql) ++ "))"
 
 instance : ToSql RelExpr := ⟨RelExpr.toSql⟩
 
@@ -136,7 +152,8 @@ instance : ToSql SelectItem where
     | .expression expr alias => toSql expr ++ (alias.map (fun a => " AS " ++ quoteIdent a)).getD ""
 
 instance : ToSql RelOrderBy where
-  toSql order := toSql order.expr ++ (if order.descending then " DESC" else " ASC")
+  toSql order := toSql order.expr ++ (if order.descending then " DESC" else " ASC") ++
+    (order.nullsFirst.map (fun first => if first then " NULLS FIRST" else " NULLS LAST")).getD ""
 
 instance : ToSql JoinKind where
   toSql
@@ -152,7 +169,8 @@ mutual
     (if query.ctes.isEmpty then "" else "WITH " ++ (if query.recursive then "RECURSIVE " else "") ++ commaSep (query.ctes.attach.map fun (cte : {c : CTE // c ∈ query.ctes}) =>
       have : sizeOf cte.val < sizeOf query.ctes := List.sizeOf_lt_of_mem cte.property
       CTE.toSqlBody cte.val) ++ " ") ++
-    "SELECT " ++ (if query.distinct then "DISTINCT " else "") ++
+    "SELECT " ++ (if query.distinct then "DISTINCT " else if query.distinctOn.isEmpty then ""
+      else "DISTINCT ON (" ++ commaSep (query.distinctOn.map toSql) ++ ") ") ++
     commaSep (query.selectList.map toSql) ++
     (if query.source.name.isEmpty && query.source.alias.isNone && query.source.derived.isNone
       then "" else " FROM " ++ query.source.toSql) ++
@@ -197,6 +215,12 @@ end
 instance : ToSql RelQuery where
   toSql query := query.toSqlBody ++ ";"
 
+/-- Mutation rendering without a terminator, so RETURNING can be appended. -/
+def Mutation.toSqlBody : Mutation → String
+  | .insert query => (SQLean.toSql query).dropEnd 1 |>.toString
+  | .update query => (SQLean.toSql query).dropEnd 1 |>.toString
+  | .delete query => (SQLean.toSql query).dropEnd 1 |>.toString
+
 instance : ToSql Statement where
   toSql
     | .select query => toSql query
@@ -204,5 +228,7 @@ instance : ToSql Statement where
     | .update query => toSql query
     | .delete query => toSql query
     | .relational query => toSql query
+    | .returning mutation items => mutation.toSqlBody ++ " RETURNING " ++
+      commaSep (items.map toSql) ++ ";"
 
 end SQLean

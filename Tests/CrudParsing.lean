@@ -30,7 +30,10 @@ private def accepted : List String := [
   "SELECT *, id FROM users", "SELECT id, * FROM users",
   "SELECT id IS NULL FROM users", "SELECT id AS label FROM users",
   "SELECT users.id FROM users", "SELECT id FROM users JOIN other ON id = id",
-  "SELECT COUNT(id) FROM users"
+  "SELECT COUNT(id) FROM users",
+  "SELECT id IN (1, 2) FROM users",
+  "INSERT INTO users VALUES (1) RETURNING id",
+  "UPDATE users SET id = 1 RETURNING id", "DELETE FROM users RETURNING id"
 ]
 
 private def rejected : List String := [
@@ -50,7 +53,7 @@ private def rejected : List String := [
   "SELECT id FROM users WHERE id = 1 = 2", "SELECT id FROM users WHERE NOT id < 1 < 2",
   "SELECT id = NOT active FROM users", "SELECT -NOT active FROM users",
   "SELECT TRUE FALSE FROM users", "SELECT NOT FROM users", "SELECT + FROM users",
-  "SELECT NULL FROM users", "SELECT id IN (1, 2) FROM users",
+  "SELECT NULL FROM users",
   "SELECT order FROM users", "SELECT id FROM limit",
   "INSERT users VALUES (1)", "INSERT INTO VALUES (1)", "INSERT INTO users",
   "INSERT INTO users () VALUES (1)", "INSERT INTO users (id,) VALUES (1)",
@@ -59,15 +62,15 @@ private def rejected : List String := [
   "INSERT INTO users VALUES (1),", "INSERT INTO users VALUES (1), ()",
   "INSERT INTO users VALUES 1", "INSERT INTO users VALUES ((1)",
   "INSERT INTO users VALUES (DEFAULT)", "INSERT INTO users DEFAULT VALUES",
-  "INSERT INTO users SELECT id FROM users", "INSERT INTO users VALUES (1) RETURNING id",
+  "INSERT INTO users SELECT id FROM users",
   "INSERT INTO users VALUES (1) ON CONFLICT (id) DO NOTHING",
   "UPDATE users", "UPDATE users SET", "UPDATE users SET = 1",
   "UPDATE users SET id", "UPDATE users SET id =", "UPDATE users SET id == 1",
   "UPDATE users SET id = 1,", "UPDATE users SET id = 1 name = 'Ada'",
   "UPDATE users SET id = 1 WHERE", "UPDATE users SET id = 1 ORDER BY id",
-  "UPDATE users SET id = 1 LIMIT 1", "UPDATE users SET id = 1 RETURNING id",
+  "UPDATE users SET id = 1 LIMIT 1",
   "DELETE users", "DELETE FROM", "DELETE FROM users WHERE",
-  "DELETE * FROM users", "DELETE FROM users LIMIT 1", "DELETE FROM users RETURNING id",
+  "DELETE * FROM users", "DELETE FROM users LIMIT 1",
   "CREATE TABLE users (id INT)", "DROP TABLE users", "BEGIN", "COMMIT", "ROLLBACK",
   "SELECT * FROM users;;", "INSERT INTO users VALUES (1);;",
   "UPDATE users SET id = 1;;", "DELETE FROM users;;",

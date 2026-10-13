@@ -49,7 +49,7 @@ private def validCases : List (String × List SqlType) := [
   ("SELECT name AS age, COUNT(*) FROM users GROUP BY name ORDER BY age", [.text, .int]),
   ("SELECT u.name AS id FROM users u JOIN orders o ON u.id = o.user_id ORDER BY id", [.text]),
   ("SELECT name, COUNT(*) FROM users GROUP BY 1 ORDER BY 2", [.text, .int]),
-  ("SELECT name, COUNT(*) FROM users GROUP BY +1 ORDER BY - -2", [.text, .int]),
+  ("SELECT name, COUNT(*) FROM users GROUP BY - -1 ORDER BY - -2", [.text, .int]),
   ("SELECT age AS bucket, COUNT(*) AS n FROM users GROUP BY bucket HAVING COUNT(*) > 1 ORDER BY n DESC LIMIT 5 OFFSET 1", [.int, .int]),
   ("SELECT COUNT(*) FROM users HAVING SUM(age) > 1", [.int]),
   ("SELECT 1 FROM users HAVING TRUE", [.int]),
@@ -169,16 +169,40 @@ def relationalValidationTests : IO Nat := do
 private def countExample : RelQuery :=
   { source := { name := "users" }, selectList := [.expression .countAll] }
 
-example : ValidRelQueryCore schema countExample [.int] :=
-  checkRelQueryCore_sound rfl
+example : ValidRelQueryCore schema countExample [.int] := by
+  refine .intro (scope := bindRelTable schema[0]! countExample.source)
+    (elaborated := ⟨[.countAll], [], none, [], []⟩)
+    (groupTypes := []) (orderTypes := []) (distinctTypes := [])
+    (by decide) (by decide) ?_ ?_ (.cons (.countAll rfl) .nil) .absent .nil .absent .nil .nil ?_ (by decide)
+  · exact .intro (by decide) (table := schema[0]!) rfl (by decide) .nil
+  · simp only [elaborateRelQuery, countExample, expandRelProjection, canonicalRelExpr]
+    rfl
+  · intro _ expr member
+    have same : expr = .countAll := by simpa using member
+    subst expr
+    simp [GroupCompatible]
 
 private def groupedExample : RelQuery :=
   { source := { name := "users", alias := some "u" },
     selectList := [.expression (.column (some "u") "name"), .expression (.aggregate .sum (.column none "age"))],
     groupBy := [.column none "name"] }
 
-example : ValidRelQueryCore schema groupedExample [.text, .nullable .int] :=
-  checkRelQueryCore_sound rfl
+example : ValidRelQueryCore schema groupedExample [.text, .nullable .int] := by
+  refine .intro (scope := bindRelTable schema[0]! groupedExample.source)
+    (elaborated := ⟨[.column (some "u") "name", .aggregate .sum (.column (some "u") "age")],
+      [.column (some "u") "name"], none, [], []⟩)
+    (groupTypes := [.text]) (orderTypes := []) (distinctTypes := [])
+    (by decide) (by decide) ?_ ?_ ?_ .absent ?_ .absent .nil .nil ?_ (by decide)
+  · exact .intro (by decide) (table := schema[0]!) rfl (by decide) .nil
+  · simp only [elaborateRelQuery, groupedExample, expandRelProjection,
+      List.mapM_cons, List.mapM_nil, elaborateRelKey, relOrderOrdinal, canonicalRelExpr]
+    rfl
+  · exact .cons (.column (column := ⟨"u", "name", .text⟩) rfl)
+      (.cons (.aggregate rfl (.column (column := ⟨"u", "age", .int⟩) rfl) rfl) .nil)
+  · exact .cons (.column (column := ⟨"u", "name", .text⟩) rfl) .nil
+  · intro _ expr member
+    simp only [List.append_nil, Option.toList_none, List.mem_cons, List.mem_nil_iff, or_false] at member
+    rcases member with rfl | rfl <;> simp [GroupCompatible]
 
 example (schema : Schema) (query : RelQuery) (types : List SqlType) :
     checkRelQueryCore schema query = .ok types ↔ ValidRelQueryCore schema query types :=

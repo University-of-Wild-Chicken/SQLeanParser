@@ -92,10 +92,10 @@ def Projection.expressionsFor (columns : List ColumnDef) : Projection → List E
   | .all => columns.map (fun column => .column column.name)
   | .expressions items => items
 
-/-- Bare signed integer sort keys denote result-column positions. -/
+/-- Integer literals (including a leading minus) denote result-column positions;
+unary plus is an expression in PostgreSQL, not an ordinal. -/
 def orderOrdinal : Expr → Option Int
   | .literal (.int value) => some (Int.ofNat value)
-  | .unary .pos arg => orderOrdinal arg
   | .unary .neg arg => (orderOrdinal arg).map Neg.neg
   | _ => none
 
@@ -126,6 +126,19 @@ inductive SelectValid (columns : List ColumnDef) (query : SelectQuery)
       (filter : WhereValid columns query.whereClause)
       (options : SelectOptionsValid columns query) : SelectValid columns query outputTypes
 
+/-- RETURNING uses the target relation's row scope, without aggregate evaluation. -/
+def returningQuery (mutation : Mutation) (items : List SelectItem) : RelQuery :=
+  { source := { name := mutation.table }, selectList := items }
+
+def ReturningItemsValid (items : List SelectItem) : Prop :=
+  items.all (fun item => match item with
+    | .all _ => true
+    | .expression expr _ => !expr.hasAggregate) = true
+
+instance (items : List SelectItem) : Decidable (ReturningItemsValid items) := by
+  unfold ReturningItemsValid
+  infer_instance
+
 /-- Schema-aware static CRUD validity, independent of the implementation of the checker. -/
 inductive ValidStatement (schema : Schema) : Statement → List SqlType → Prop where
   | select (schemaValid : WellFormedSchema schema)
@@ -147,6 +160,10 @@ inductive ValidStatement (schema : Schema) : Statement → List SqlType → Prop
       ValidStatement schema (.delete query) []
   | relational (valid : ValidRelQuery schema query types) :
       ValidStatement schema (.relational query) types
+  | returning (mutationValid : ValidStatement schema mutation.toStatement mutationTypes)
+      (scalars : ReturningItemsValid items)
+      (projection : ValidRelQueryCore schema (returningQuery mutation items) types) :
+      ValidStatement schema (.returning mutation items) types
 
 structure CertifiedStatement (schema : Schema) (statement : Statement) where
   outputTypes : List SqlType
@@ -231,8 +248,15 @@ def certifyStatement (schema : Schema) (statement : Statement) :
   | .relational query => do
       let result ← certifyRelQuery schema query
       pure ⟨result.outputTypes, .relational result.valid⟩
+  | .returning mutation items => do
+      let base ← certifyStatement schema mutation.toStatement
+      let scalars ← require (ReturningItemsValid items) "aggregates are forbidden in RETURNING"
+      let projection ← certifyRelQueryCore schema (returningQuery mutation items)
+      pure ⟨projection.outputTypes, .returning base.valid scalars.down projection.valid⟩
+termination_by sizeOf statement
+decreasing_by cases mutation <;> simp [Mutation.toStatement] <;> omega
 
-/-- SELECT yields its projection types; INSERT, UPDATE, and DELETE yield no columns. -/
+/-- SELECT and RETURNING yield projection types; other mutations yield no columns. -/
 def checkStatement (schema : Schema) (statement : Statement) : Except ValidationError (List SqlType) :=
   (certifyStatement schema statement).map CertifiedStatement.outputTypes
 
@@ -248,7 +272,7 @@ theorem checkStatement_sound (schema : Schema) (statement : Statement) (types : 
 /-- Every statement satisfying the declarative rules receives a certificate. -/
 theorem certifyStatement_complete (valid : ValidStatement schema statement types) :
     certifyStatement schema statement = .ok ⟨types, valid⟩ := by
-  cases valid with
+  induction valid with
   | select schemaValid found valid =>
       cases valid with
       | intro projection filter options =>
@@ -268,6 +292,9 @@ theorem certifyStatement_complete (valid : ValidStatement schema statement types
       obtain ⟨names, derivation⟩ := valid
       simp [certifyStatement, certifyRelQuery_complete derivation,
         pure, bind, Except.bind, Except.pure]
+  | returning mutationValid scalars projection ih =>
+      simp [certifyStatement, ih, require_complete scalars,
+        certifyRelQueryCore_complete projection, pure, bind, Except.bind, Except.pure]
 
 /-- Soundness and completeness for the supported CRUD and nested relational static contract. -/
 theorem checkStatement_iff (schema : Schema) (statement : Statement) (types : List SqlType) :

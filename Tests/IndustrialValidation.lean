@@ -127,7 +127,7 @@ def industrialValidationTests : IO Nat := do
     { one with source := { name := "", alias := some "absent" } },
     { one with joins := [⟨.cross, { name := "users" }, none⟩] },
     { compound with offset := some 1 },
-    { compound with unions := [⟨false, { one with orderBy := [⟨.column none "n", false⟩] }⟩] },
+    { compound with unions := [⟨false, { one with orderBy := [{ expr := .column none "n" }] }⟩] },
     { compound with unions := [⟨false, { one with limit := some 1 }⟩] },
     { compound with unions := [⟨false, { one with offset := some 1 }⟩] },
     { compound with unions := [⟨false, { one with ctes := [⟨"x", table, []⟩] }⟩] },
