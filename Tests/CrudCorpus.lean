@@ -23,6 +23,7 @@ private def statementCategory : Statement → String
   | .delete _ => "delete"
   | .relational _ => "relational"
   | .returning _ _ => "returning"
+  | .extended _ => "extended"
 
 private def hasNewExprFeature : Expr → Bool
   | .literal (.bool _) => true
@@ -45,7 +46,7 @@ private def expectedOutputArity (statement : Statement) : Nat :=
     | .expressions items => items.length
   | .insert _ | .update _ | .delete _ => 0
   -- Relational statements fail this corpus's category check before arity checks.
-  | .relational _ | .returning _ _ => 0
+  | .relational _ | .returning _ _ | .extended _ => 0
 
 /-- Verify exactly 50 distinct examples for each introduced CRUD category.
 Every example receives a static-validity proof and survives a canonical SQL

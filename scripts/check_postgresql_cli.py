@@ -17,8 +17,7 @@ from __future__ import annotations
 
 import argparse
 from contextlib import contextmanager
-import csv
-import io
+import re
 import json
 from pathlib import Path
 import shutil
@@ -44,7 +43,7 @@ SEED = {
 
 
 def run(command: list[str], **kwargs) -> subprocess.CompletedProcess:
-    result = subprocess.run(command, text=True, capture_output=True, check=False,
+    result = subprocess.run(command, text=kwargs.pop('text', True), capture_output=True, check=False,
                             timeout=kwargs.pop('timeout', 30), **kwargs)
     if result.returncode:
         raise RuntimeError(f"Command failed ({result.returncode}): {command[0]}\n{result.stdout[-3000:]}\n{result.stderr}")
@@ -129,25 +128,60 @@ def load_cases() -> list[tuple[str, int, str, str]]:
     return result
 
 
+# Keep CSV quoting as identity information. COPY FORCE_QUOTE quotes every
+# non-NULL value; only an unquoted NULL token denotes SQL NULL.
+CSV_FIELD = re.compile(r'(?:"((?:[^"]|"")*)"|([^",\r\n]*))(,|\r\n|\n)')
+
+
+def csv_record(output: str, position: int):
+    fields = []
+    while True:
+        match = CSV_FIELD.match(output, position)
+        if match is None:
+            raise ValueError(f'Malformed or truncated COPY CSV at offset {position}')
+        quoted, bare, separator = match.groups()
+        fields.append((quoted.replace('""', '"'), True) if quoted is not None else (bare, False))
+        position = match.end()
+        if separator != ',':
+            return fields, position
+
+
 def parse_results(output: str) -> dict[str, tuple[int, list[list[str | None]]]]:
-    sections: dict[str, list[str]] = {}
-    current = None
-    for line in output.splitlines():
-        if line.startswith('__SQLEAN_CASE_'):
-            current = line
-            assert current not in sections, current
-            sections[current] = []
-        elif current is not None:
-            sections[current].append(line)
     results = {}
-    for name, lines in sections.items():
-        rows = list(csv.reader(io.StringIO('\n'.join(lines) + '\n')))
-        assert rows, (name, lines)
-        arity = len(rows[0])
-        rows = [row if row else [''] for row in rows]
-        assert all(len(row) == arity for row in rows[1:]), (name, rows)
-        results[name] = (arity, [[None if cell == NULL else cell for cell in row] for row in rows[1:]])
+    position = 0
+    current = None
+    while position < len(output):
+        if output.startswith('__SQLEAN_CASE_', position):
+            end = output.find('\n', position)
+            if end < 0:
+                raise ValueError('Truncated case marker')
+            current = output[position:end].removesuffix('\r')
+            if current in results:
+                raise ValueError(f'Duplicate case marker: {current}')
+            # Consume the header immediately, even if its name resembles a marker.
+            header, position = csv_record(output, end + 1)
+            results[current] = (len(header), [])
+            continue
+        if current is None:
+            raise ValueError('COPY data before case marker')
+        fields, position = csv_record(output, position)
+        arity, rows = results[current]
+        if len(fields) != arity:
+            raise ValueError(f'Wrong result arity for {current}')
+        row = []
+        for value, quoted in fields:
+            if not quoted and value != NULL:
+                raise ValueError('Expected FORCE_QUOTE text or unquoted NULL')
+            row.append(value if quoted else None)
+        rows.append(row)
     return results
+
+
+def copy_result(sql: str) -> str:
+    # Inputs are single statements from the certified fixture corpus.
+    statement = sql.strip().removesuffix(';')
+    return (f'COPY ({statement}) TO STDOUT WITH '
+            f'(FORMAT CSV, HEADER TRUE, NULL {sql_literal(NULL)}, FORCE_QUOTE *);')
 
 
 def marker(category: str, index: int, populated: bool, form: str, state=False) -> str:
@@ -156,7 +190,7 @@ def marker(category: str, index: int, populated: bool, form: str, state=False) -
 
 def run_database(psql: list[str], cases) -> tuple[dict, str]:
     schema = json.loads((FIXTURES / 'schema.json').read_text())
-    commands = ['BEGIN;', "SET LOCAL statement_timeout = '5s';", "SET LOCAL client_min_messages = warning;"]
+    commands = ['\\encoding UTF8', 'BEGIN;', "SET LOCAL statement_timeout = '5s';", "SET LOCAL client_min_messages = warning;"]
     for populated in (False, True):
         namespace = 'sqlean_verify_' + uuid.uuid4().hex
         commands += [f'CREATE SCHEMA {sql_identifier(namespace)};',
@@ -165,13 +199,14 @@ def run_database(psql: list[str], cases) -> tuple[dict, str]:
         for category, index, source, canonical in cases:
             for form, sql in (('source', source), ('canonical', canonical)):
                 commands += ['SAVEPOINT sqlean_case;',
-                             '\\echo ' + marker(category, index, populated, form), sql]
+                             '\\echo ' + marker(category, index, populated, form), copy_result(sql)]
                 if category == 'returning':
-                    commands += ['\\echo ' + marker(category, index, populated, form, state=True), state_query()]
+                    commands += ['\\echo ' + marker(category, index, populated, form, state=True), copy_result(state_query())]
                 commands.append('ROLLBACK TO SAVEPOINT sqlean_case;')
     commands += ['ROLLBACK;']
-    output = run([*psql, '-X', '-q', '--csv', '-v', 'ON_ERROR_STOP=1', '-P', f'null={NULL}'],
-                 input='\n'.join(commands), timeout=180).stdout
+    output = run([*psql, '-X', '-q', '-v', 'ON_ERROR_STOP=1'],
+                 input='\n'.join(commands).encode('utf-8'), text=False,
+                 timeout=180).stdout.decode('utf-8')
     version = run([*psql, '-X', '-At', '-c', 'SHOW server_version;']).stdout.strip()
     return parse_results(output), version
 

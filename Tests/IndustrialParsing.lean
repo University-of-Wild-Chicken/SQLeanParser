@@ -36,17 +36,24 @@ private def accepted : List String := [
   "WITH /* mode */ RECURSIVE seq(n) AS (SELECT 1 -- anchor\nUNION ALL SELECT n + 1 FROM seq WHERE n < 3) SELECT n FROM seq"
 ]
 
+private def extendedAccepted : List String := [
+  "SELECT 1 OFFSET 2",
+  "SELECT 1 UNION DISTINCT SELECT 2",
+  "SELECT 1 UNION (SELECT 2)",
+  "(SELECT 1) UNION SELECT 2",
+  "SELECT 1 INTERSECT SELECT 2",
+  "SELECT 1 EXCEPT SELECT 2"
+]
+
 private def rejected : List String := [
   "SELECT", "SELECT FROM users", "SELECT 1,", "SELECT 1 FROM",
-  "SELECT 1 JOIN users ON TRUE", "SELECT 1 WHERE", "SELECT 1 OFFSET 2",
+  "SELECT 1 JOIN users ON TRUE", "SELECT 1 WHERE",
   "SELECT 1 UNION", "SELECT 1 UNION ALL", "SELECT 1 UNION DISTINCT",
-  "SELECT 1 UNION DISTINCT SELECT 2", "SELECT 1 UNION ALL DISTINCT SELECT 2", "SELECT 1 UNION DISTINCT ALL SELECT 2",
+  "SELECT 1 UNION ALL DISTINCT SELECT 2", "SELECT 1 UNION DISTINCT ALL SELECT 2",
   "SELECT 1 UNION UNION SELECT 2", "SELECT 1 UNION SELECT",
-  "SELECT 1 UNION (SELECT 2)", "(SELECT 1) UNION SELECT 2",
   "SELECT 1 ORDER BY 1 UNION SELECT 2", "SELECT 1 LIMIT 1 UNION ALL SELECT 2",
   "SELECT 1 UNION SELECT 2 ORDER BY 1 UNION SELECT 3",
   "SELECT 1 UNION WITH a AS (SELECT 2) SELECT 2",
-  "SELECT 1 INTERSECT SELECT 2", "SELECT 1 EXCEPT SELECT 2",
   "SELECT 1 UNION ALL SELECT 2;;", "SELECT 1; UNION SELECT 2",
   "WITH RECURSIVE", "WITH RECURSIVE SELECT 1",
   "WITH RECURSIVE RECURSIVE a AS (SELECT 1) SELECT 1",
@@ -64,6 +71,9 @@ def industrialParsingTests : IO Nat := do
     let rendered := toSql query
     let reparsed ← expectOk s!"industrial round trip: {rendered}" (parseRelQuery rendered)
     SQLean.Tests.assert (query == reparsed) s!"industrial rendering changed AST: {source}"
+  for source in extendedAccepted do
+    expectError "legacy relational API remains strict" (parseRelQuery source)
+    let _ ← expectOk "extended statement syntax" (parseStatement source)
   for source in rejected do
     expectError source (parseRelQuery source)
     expectError source (parseStatement source)
@@ -126,6 +136,6 @@ def industrialParsingTests : IO Nat := do
     SQLean.Tests.assert (error.position.line == 2 && error.position.column == 1)
       s!"missing UNION arm error position differs: {error}"
   | .ok _ => throw (IO.userError "accepted missing UNION arm")
-  pure (3 * accepted.length + 2 * rejected.length + 13)
+  pure (3 * accepted.length + 2 * (rejected.length + extendedAccepted.length) + 13)
 
 end SQLean.Tests

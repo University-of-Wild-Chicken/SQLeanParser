@@ -94,7 +94,7 @@ def main() -> None:
         ("SELECT u.id FROM users u JOIN orders o", "parse error"),
         ("SELECT u.id FROM users u CROSS JOIN orders o ON u.id = o.user_id", "parse error"),
         ("SELECT u.id FROM users u JOIN orders u ON u.id = u.user_id", "validation error"),
-        ("SELECT u.id FROM users u JOIN orders o USING (id)", "parse error"),
+        ("SELECT u.id FROM users u JOIN orders o USING ()", "parse error"),
         ("SELECT city, name, COUNT(*) FROM users GROUP BY city", "validation error"),
         ("SELECT SUM(name) FROM users", "validation error"),
         ("SELECT SUM(COUNT(*)) FROM users", "validation error"),

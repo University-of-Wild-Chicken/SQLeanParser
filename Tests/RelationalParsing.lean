@@ -55,6 +55,17 @@ private def accepted : List String := [
   "WITH RECURSIVE a AS (SELECT id FROM users) SELECT id FROM a"
 ]
 
+private def extendedAccepted : List String := [
+  "SELECT id FROM users NATURAL JOIN orders",
+  "SELECT id FROM users JOIN orders USING (id)",
+  "SELECT id FROM users, orders",
+  "SELECT -NOT TRUE FROM users",
+  "SELECT id = NOT TRUE FROM users",
+  "SELECT NULL FROM users",
+  "SELECT u.id FROM users u OFFSET 1",
+  "SELECT q.id FROM ((SELECT id FROM users)) q"
+]
+
 private def rejected : List String := [
   "SELECT * AS all_users FROM users", "SELECT u.* alias FROM users u",
   "SELECT u.* + 1 FROM users u", "SELECT u. FROM users u",
@@ -66,9 +77,7 @@ private def rejected : List String := [
   "SELECT id FROM users LEFT OUTER orders ON TRUE",
   "SELECT id FROM users OUTER JOIN orders ON TRUE",
   "SELECT id FROM users CROSS JOIN orders ON TRUE",
-  "SELECT id FROM users NATURAL JOIN orders",
-  "SELECT id FROM users JOIN orders USING (id)",
-  "SELECT id FROM users, orders",
+
   "SELECT id FROM users GROUP age", "SELECT id FROM users GROUP BY",
   "SELECT id FROM users GROUP BY age,", "SELECT id FROM users GROUP BY age DESC",
   "SELECT id FROM users HAVING", "SELECT id FROM users HAVING TRUE GROUP BY id",
@@ -82,17 +91,15 @@ private def rejected : List String := [
   "SELECT id IS TRUE FROM users", "SELECT id IS NOT FALSE FROM users",
   "SELECT id IS FROM users", "SELECT id IS NULL IS NULL FROM users",
   "SELECT id = 1 IS NULL FROM users", "SELECT id IS NULL = TRUE FROM users",
-  "SELECT -NOT TRUE FROM users", "SELECT id = NOT TRUE FROM users",
-  "SELECT id < age < 100 FROM users", "SELECT NULL FROM users",
+  "SELECT id < age < 100 FROM users",
   "SELECT * FROM users;;", "SELECT * FROM users; SELECT * FROM orders",
-  "SELECT u.id FROM users u LIMIT 1.5", "SELECT u.id FROM users u OFFSET 1",
+  "SELECT u.id FROM users u LIMIT 1.5",
   "SELECT id FROM (SELECT id FROM users)",
   "SELECT id FROM (SELECT id FROM users) AS",
   "SELECT q.id FROM (SELECT id FROM users;) q",
   "SELECT q.id FROM (SELECT id FROM users; SELECT id FROM users) q",
   "SELECT q.id FROM (SELECT id FROM users q",
   "SELECT q.id FROM () q", "SELECT q.id FROM (users) q",
-  "SELECT q.id FROM ((SELECT id FROM users)) q",
   "WITH", "WITH SELECT id FROM users",
   "WITH a SELECT id FROM users", "WITH a AS SELECT id FROM users",
   "WITH a AS () SELECT id FROM a",
@@ -114,6 +121,9 @@ def relationalParsingTests : IO Nat := do
     let rendered := toSql query
     let reparsed ← expectOk s!"relational round trip: {rendered}" (parseRelQuery rendered)
     SQLean.Tests.assert (query == reparsed) s!"relational SQL rendering changed AST: {source}"
+  for source in extendedAccepted do
+    expectError "legacy relational API remains strict" (parseRelQuery source)
+    let _ ← expectOk "extended statement syntax" (parseStatement source)
   for source in rejected do
     expectError source (parseRelQuery source)
     expectError source (parseStatement source)
@@ -200,6 +210,6 @@ def relationalParsingTests : IO Nat := do
   let cteDefs := String.intercalate ", " ((List.range 100).map fun n => s!"t{n} AS (SELECT id FROM t)")
   let manyCtes ← expectOk "100 CTE definitions" (parseRelQuery s!"WITH {cteDefs} SELECT id FROM t99")
   SQLean.Tests.assert (manyCtes.ctes.length == 100) "lost CTE definitions"
-  pure (3 * accepted.length + 2 * rejected.length + 16)
+  pure (3 * accepted.length + 2 * (rejected.length + extendedAccepted.length) + 16)
 
 end SQLean.Tests

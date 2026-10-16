@@ -18,6 +18,10 @@ import Tests.PostgresParsing
 import Tests.PostgresValidation
 import Tests.PostgresReturning
 import Tests.PostgresCorpus
+import Tests.AdvancedParsing
+import Tests.AdvancedValidation
+import Tests.AdvancedStatements
+import Tests.AdvancedCorpus
 
 namespace SQLean.Tests
 
@@ -60,6 +64,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {postgresReturning} RETURNING mutation, projection, and API checks"
   let postgresCorpus ← postgresCorpusTests
   IO.println s!"PASS: {postgresCorpus} PostgreSQL examples (50 per feature class) certified and round-tripped"
+  let advancedParsing ← advancedParsingTests
+  IO.println s!"PASS: {advancedParsing} advanced parser, parameter identity, and round-trip checks"
+  let advancedValidation ← advancedValidationTests
+  IO.println s!"PASS: {advancedValidation} advanced query scope, type, and parameter checks"
+  let advancedStatements ← advancedStatementTests
+  IO.println s!"PASS: {advancedStatements} advanced mutation, DDL, catalog, and API checks"
+  let advancedCorpus ← advancedCorpusTests
+  IO.println s!"PASS: {advancedCorpus} advanced examples (50 per query class) certified and round-tripped"
   IO.println "All tests passed. Lean proof examples compiled successfully."
 
 end SQLean.Tests

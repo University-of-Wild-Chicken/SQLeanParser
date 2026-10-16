@@ -1,4 +1,5 @@
 import SQLean.NestedValidation
+import SQLean.AdvancedValidation
 
 /-! Declarative static validity and executable certificates for the CRUD subset.
 Mutation certificates establish column resolution, value typing, arity, and
@@ -139,7 +140,8 @@ instance (items : List SelectItem) : Decidable (ReturningItemsValid items) := by
   unfold ReturningItemsValid
   infer_instance
 
-/-- Schema-aware static CRUD validity, independent of the implementation of the checker. -/
+/-- Legacy declarative validity plus the explicitly algorithmic static-check
+contract for advanced statements. -/
 inductive ValidStatement (schema : Schema) : Statement → List SqlType → Prop where
   | select (schemaValid : WellFormedSchema schema)
       (found : schema.findTable query.table = some table)
@@ -164,6 +166,8 @@ inductive ValidStatement (schema : Schema) : Statement → List SqlType → Prop
       (scalars : ReturningItemsValid items)
       (projection : ValidRelQueryCore schema (returningQuery mutation items) types) :
       ValidStatement schema (.returning mutation items) types
+  | extended (valid : Advanced.StatementValid (Advanced.Catalog.ofSchema schema) [] statement types) :
+      ValidStatement schema (.extended statement) types
 
 structure CertifiedStatement (schema : Schema) (statement : Statement) where
   outputTypes : List SqlType
@@ -253,6 +257,9 @@ def certifyStatement (schema : Schema) (statement : Statement) :
       let scalars ← require (ReturningItemsValid items) "aggregates are forbidden in RETURNING"
       let projection ← certifyRelQueryCore schema (returningQuery mutation items)
       pure ⟨projection.outputTypes, .returning base.valid scalars.down projection.valid⟩
+  | .extended statement => do
+      let result ← Advanced.certifyStatement (Advanced.Catalog.ofSchema schema) [] statement
+      pure ⟨result.outputTypes, .extended result.valid⟩
 termination_by sizeOf statement
 decreasing_by cases mutation <;> simp [Mutation.toStatement] <;> omega
 
@@ -295,6 +302,9 @@ theorem certifyStatement_complete (valid : ValidStatement schema statement types
   | returning mutationValid scalars projection ih =>
       simp [certifyStatement, ih, require_complete scalars,
         certifyRelQueryCore_complete projection, pure, bind, Except.bind, Except.pure]
+  | extended valid =>
+      simp [certifyStatement, Advanced.certifyStatement_complete valid,
+        pure, bind, Except.bind, Except.pure]
 
 /-- Soundness and completeness for the supported CRUD and nested relational static contract. -/
 theorem checkStatement_iff (schema : Schema) (statement : Statement) (types : List SqlType) :

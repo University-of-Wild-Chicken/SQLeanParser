@@ -1,0 +1,222 @@
+{
+  "tables": [
+    {
+      "name": "users",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "age",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "text"
+        },
+        {
+          "name": "city",
+          "type": "text"
+        }
+      ],
+      "uniqueKeys": [
+        [
+          "id"
+        ]
+      ]
+    },
+    {
+      "name": "orders",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "user_id",
+          "type": "int"
+        },
+        {
+          "name": "amount",
+          "type": "int"
+        },
+        {
+          "name": "status",
+          "type": "text"
+        }
+      ],
+      "uniqueKeys": [
+        [
+          "id"
+        ]
+      ]
+    },
+    {
+      "name": "departments",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "text"
+        }
+      ],
+      "uniqueKeys": [
+        [
+          "id"
+        ]
+      ]
+    },
+    {
+      "name": "employees",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "department_id",
+          "type": "int"
+        },
+        {
+          "name": "manager_id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "text"
+        },
+        {
+          "name": "salary",
+          "type": "int"
+        }
+      ],
+      "uniqueKeys": [
+        [
+          "id"
+        ]
+      ]
+    },
+    {
+      "name": "flags",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "enabled",
+          "type": "bool"
+        },
+        {
+          "name": "label",
+          "type": "text"
+        }
+      ],
+      "uniqueKeys": [
+        [
+          "id"
+        ]
+      ]
+    },
+    {
+      "name": "profiles",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "name": "rating",
+          "type": "real",
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": [
+        [
+          "id"
+        ]
+      ]
+    },
+    {
+      "name": "tags",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "label",
+          "type": "text"
+        }
+      ],
+      "uniqueKeys": [
+        [
+          "id"
+        ]
+      ]
+    },
+    {
+      "name": "archive",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "age",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "text"
+        },
+        {
+          "name": "city",
+          "type": "text"
+        }
+      ],
+      "uniqueKeys": [
+        [
+          "id"
+        ]
+      ]
+    },
+    {
+      "name": "scratch",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "score",
+          "type": "real",
+          "nullable": true
+        },
+        {
+          "name": "enabled",
+          "type": "bool",
+          "nullable": true
+        }
+      ],
+      "uniqueKeys": [
+        [
+          "id"
+        ]
+      ]
+    }
+  ]
+}

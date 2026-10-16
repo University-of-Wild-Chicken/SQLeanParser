@@ -136,7 +136,7 @@ def main() -> None:
         "SELECT missing",
         "SELECT users.id",
         "SELECT 1 WHERE 3",
-        "SELECT 1 OFFSET 2",
+        "SELECT 1 OFFSET -2",
         "WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 3) SELECT missing FROM x",
         "WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT 'text' FROM x) SELECT n FROM x",
         "WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n, n + 1 FROM x) SELECT n FROM x",

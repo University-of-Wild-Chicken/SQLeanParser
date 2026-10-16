@@ -66,6 +66,12 @@ private def returningAccepted : List String := [
   "UPDATE users SET \"returning\" = 1 RETURNING \"returning\""
 ]
 
+private def extendedAccepted : List String := [
+  "SELECT CAST(1 AS NUMERIC)",
+  "SELECT 1::BIGINT",
+  "SELECT id IN (SELECT id FROM users) FROM users"
+]
+
 private def rejected : List String := [
   "SELECT DISTINCT ON", "SELECT DISTINCT ON () id FROM users",
   "SELECT DISTINCT ON (id,) id FROM users", "SELECT DISTINCT ON id FROM users",
@@ -78,11 +84,11 @@ private def rejected : List String := [
   "SELECT (COUNT(*)) FILTER (WHERE TRUE) FROM users",
   "SELECT COUNT(*)::INTEGER FILTER (WHERE TRUE) FROM users",
   "SELECT CAST(1)", "SELECT CAST(1 INTEGER)", "SELECT CAST(1 AS)", "SELECT CAST(AS INTEGER)",
-  "SELECT CAST(1 AS INTEGER, TEXT)", "SELECT CAST(1 AS NUMERIC)", "SELECT CAST(1 AS INTEGER(3))",
+  "SELECT CAST(1 AS INTEGER, TEXT)", "SELECT CAST(1 AS INTEGER(3))",
   "SELECT 1::", "SELECT ::INTEGER", "SELECT 1:INTEGER", "SELECT 1:::INTEGER",
-  "SELECT 1::DOUBLE", "SELECT 1::BIGINT", "SELECT 1::TEXT[]",
+  "SELECT 1::DOUBLE", "SELECT 1::TEXT[]",
   "SELECT id IN () FROM users", "SELECT id IN (1,) FROM users", "SELECT id IN 1 FROM users",
-  "SELECT id IN (SELECT id FROM users) FROM users", "SELECT id NOT IN () FROM users",
+  "SELECT id NOT IN () FROM users",
   "SELECT id NOT LIKE FROM users", "SELECT id NOT ILIKE FROM users",
   "SELECT id LIKE 'x' ESCAPE '!' FROM users", "SELECT id NOT = 1 FROM users",
   "SELECT id BETWEEN 1 FROM users", "SELECT id BETWEEN AND 2 FROM users",
@@ -104,9 +110,7 @@ private def returningRejected : List String := [
   "DELETE FROM users RETURNING id WHERE id = 1", "DELETE FROM users RETURNING id ORDER BY id",
   "UPDATE users SET id = 1 RETURNING id LIMIT 1",
   "INSERT INTO users VALUES (1) RETURNING id; SELECT 1",
-  "INSERT INTO users VALUES (1::INTEGER) RETURNING id",
-  "UPDATE users SET id = id::INTEGER RETURNING id",
-  "DELETE FROM users WHERE id IN (1) RETURNING id",
+
   "DELETE FROM returning RETURNING *", "UPDATE users SET returning = 1 RETURNING *",
   "INSERT INTO users (returning) VALUES (1) RETURNING *",
   "DELETE FROM users WHERE RETURNING id", "UPDATE users SET id = RETURNING id"
@@ -132,9 +136,17 @@ def postgresParsingTests : IO Nat := do
     | _ => throw (IO.userError s!"RETURNING variant lost: {source}")
     let reparsed ← expectOk "PostgreSQL RETURNING roundtrip" (parseStatement (toSql statement))
     SQLean.Tests.assert (statement == reparsed) s!"RETURNING rendering changed AST: {source}"
+  for source in extendedAccepted do
+    expectError "legacy relational API remains strict" (parseRelQuery source)
+    let _ ← expectOk "extended statement syntax" (parseStatement source)
   for source in rejected do
     expectError source (parseRelQuery source)
     expectError source (parseStatement source)
+  for source in [
+      "INSERT INTO users VALUES (1::INTEGER) RETURNING id",
+      "UPDATE users SET id = id::INTEGER RETURNING id",
+      "DELETE FROM users WHERE id IN (1) RETURNING id"] do
+    let _ ← expectOk "extended mutation expressions" (parseStatement source)
   for source in returningRejected do
     expectError source (parseStatement source)
 
@@ -190,7 +202,7 @@ def postgresParsingTests : IO Nat := do
   let deepAgain ← expectOk "30 nested CAST renderings" (parseRelQuery (toSql deep))
   SQLean.Tests.assert (deep == deepAgain) "deep cast AST did not roundtrip"
 
-  pure (3 * accepted.length + 2 * returningAccepted.length + 2 * rejected.length +
-    returningRejected.length + 21)
+  pure (3 * accepted.length + 2 * returningAccepted.length + 2 * (rejected.length + extendedAccepted.length) +
+    returningRejected.length + 3 + 21)
 
 end SQLean.Tests

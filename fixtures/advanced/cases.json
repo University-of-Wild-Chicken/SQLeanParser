@@ -1,0 +1,4652 @@
+{
+  "in_subqueries": [
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT user_id FROM orders WHERE amount >= 25) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE status = 'paid' AND amount > 20) ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 IN (SELECT user_id FROM orders);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.id IN (SELECT o.user_id FROM orders o WHERE o.amount > u.age + 1) FROM users u ORDER BY u.id;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE u.city IN (SELECT p.city FROM profiles p WHERE p.id <= 1) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.name FROM users u WHERE u.id IN (SELECT o.user_id FROM orders o GROUP BY o.user_id HAVING COUNT(*) >= 1) ORDER BY u.id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 'Paris' IN (SELECT city FROM users WHERE age >= 18);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM flags WHERE enabled IN (SELECT age >= 18 FROM users WHERE id = 1) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT user_id FROM orders WHERE id IN (SELECT id FROM orders WHERE amount >= 30)) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE FALSE AND amount = 1) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT user_id FROM orders WHERE amount >= 50) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE status = 'paid' AND amount > 40) ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 2 IN (SELECT user_id FROM orders);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.id IN (SELECT o.user_id FROM orders o WHERE o.amount > u.age + 2) FROM users u ORDER BY u.id;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE u.city IN (SELECT p.city FROM profiles p WHERE p.id <= 2) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.name FROM users u WHERE u.id IN (SELECT o.user_id FROM orders o GROUP BY o.user_id HAVING COUNT(*) >= 2) ORDER BY u.id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 'Rome' IN (SELECT city FROM users WHERE age >= 18);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM flags WHERE enabled IN (SELECT age >= 18 FROM users WHERE id = 2) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT user_id FROM orders WHERE id IN (SELECT id FROM orders WHERE amount >= 60)) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE FALSE AND amount = 2) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT user_id FROM orders WHERE amount >= 75) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE status = 'paid' AND amount > 60) ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 3 IN (SELECT user_id FROM orders);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.id IN (SELECT o.user_id FROM orders o WHERE o.amount > u.age + 3) FROM users u ORDER BY u.id;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE u.city IN (SELECT p.city FROM profiles p WHERE p.id <= 3) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.name FROM users u WHERE u.id IN (SELECT o.user_id FROM orders o GROUP BY o.user_id HAVING COUNT(*) >= 3) ORDER BY u.id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT '' IN (SELECT city FROM users WHERE age >= 18);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM flags WHERE enabled IN (SELECT age >= 18 FROM users WHERE id = 3) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT user_id FROM orders WHERE id IN (SELECT id FROM orders WHERE amount >= 90)) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE FALSE AND amount = 3) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT user_id FROM orders WHERE amount >= 100) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE status = 'paid' AND amount > 80) ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 4 IN (SELECT user_id FROM orders);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.id IN (SELECT o.user_id FROM orders o WHERE o.amount > u.age + 4) FROM users u ORDER BY u.id;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE u.city IN (SELECT p.city FROM profiles p WHERE p.id <= 4) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.name FROM users u WHERE u.id IN (SELECT o.user_id FROM orders o GROUP BY o.user_id HAVING COUNT(*) >= 4) ORDER BY u.id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 'Oslo' IN (SELECT city FROM users WHERE age >= 18);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM flags WHERE enabled IN (SELECT age >= 18 FROM users WHERE id = 4) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT user_id FROM orders WHERE id IN (SELECT id FROM orders WHERE amount >= 120)) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE FALSE AND amount = 4) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT user_id FROM orders WHERE amount >= 125) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE status = 'paid' AND amount > 100) ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 5 IN (SELECT user_id FROM orders);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.id IN (SELECT o.user_id FROM orders o WHERE o.amount > u.age + 5) FROM users u ORDER BY u.id;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE u.city IN (SELECT p.city FROM profiles p WHERE p.id <= 5) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.name FROM users u WHERE u.id IN (SELECT o.user_id FROM orders o GROUP BY o.user_id HAVING COUNT(*) >= 5) ORDER BY u.id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 'Berlin' IN (SELECT city FROM users WHERE age >= 18);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM flags WHERE enabled IN (SELECT age >= 18 FROM users WHERE id = 5) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT user_id FROM orders WHERE id IN (SELECT id FROM orders WHERE amount >= 150)) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id NOT IN (SELECT user_id FROM orders WHERE FALSE AND amount = 5) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "exists": [
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 25) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.name FROM users u WHERE NOT EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.amount < 20) ORDER BY u.id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM users WHERE age > 15);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.id > 101) FROM users u ORDER BY u.id;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NOT EXISTS (SELECT id FROM users WHERE city = 'Paris');",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT d.id FROM departments d WHERE EXISTS (SELECT e.id FROM employees e WHERE e.department_id = d.id AND e.salary > 20) ORDER BY d.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND EXISTS (SELECT f.id FROM flags f WHERE f.id = u.id AND f.id <= 1)) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT COUNT(*) FROM orders WHERE amount > 100);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM orders WHERE FALSE AND id = 1);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.user_id FROM orders o WHERE o.user_id = u.id GROUP BY o.user_id HAVING COUNT(*) >= 1) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 50) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.name FROM users u WHERE NOT EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.amount < 40) ORDER BY u.id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM users WHERE age > 30);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.id > 102) FROM users u ORDER BY u.id;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NOT EXISTS (SELECT id FROM users WHERE city = 'Rome');",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT d.id FROM departments d WHERE EXISTS (SELECT e.id FROM employees e WHERE e.department_id = d.id AND e.salary > 40) ORDER BY d.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND EXISTS (SELECT f.id FROM flags f WHERE f.id = u.id AND f.id <= 2)) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT COUNT(*) FROM orders WHERE amount > 200);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM orders WHERE FALSE AND id = 2);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.user_id FROM orders o WHERE o.user_id = u.id GROUP BY o.user_id HAVING COUNT(*) >= 2) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 75) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.name FROM users u WHERE NOT EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.amount < 60) ORDER BY u.id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM users WHERE age > 45);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.id > 103) FROM users u ORDER BY u.id;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NOT EXISTS (SELECT id FROM users WHERE city = '');",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT d.id FROM departments d WHERE EXISTS (SELECT e.id FROM employees e WHERE e.department_id = d.id AND e.salary > 60) ORDER BY d.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND EXISTS (SELECT f.id FROM flags f WHERE f.id = u.id AND f.id <= 3)) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT COUNT(*) FROM orders WHERE amount > 300);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM orders WHERE FALSE AND id = 3);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.user_id FROM orders o WHERE o.user_id = u.id GROUP BY o.user_id HAVING COUNT(*) >= 3) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 100) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.name FROM users u WHERE NOT EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.amount < 80) ORDER BY u.id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM users WHERE age > 60);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.id > 104) FROM users u ORDER BY u.id;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NOT EXISTS (SELECT id FROM users WHERE city = 'Oslo');",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT d.id FROM departments d WHERE EXISTS (SELECT e.id FROM employees e WHERE e.department_id = d.id AND e.salary > 80) ORDER BY d.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND EXISTS (SELECT f.id FROM flags f WHERE f.id = u.id AND f.id <= 4)) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT COUNT(*) FROM orders WHERE amount > 400);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM orders WHERE FALSE AND id = 4);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.user_id FROM orders o WHERE o.user_id = u.id GROUP BY o.user_id HAVING COUNT(*) >= 4) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 125) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.name FROM users u WHERE NOT EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.amount < 100) ORDER BY u.id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM users WHERE age > 75);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND o.id > 105) FROM users u ORDER BY u.id;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NOT EXISTS (SELECT id FROM users WHERE city = 'Berlin');",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT d.id FROM departments d WHERE EXISTS (SELECT e.id FROM employees e WHERE e.department_id = d.id AND e.salary > 100) ORDER BY d.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.id FROM orders o WHERE o.user_id = u.id AND EXISTS (SELECT f.id FROM flags f WHERE f.id = u.id AND f.id <= 5)) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT COUNT(*) FROM orders WHERE amount > 500);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM orders WHERE FALSE AND id = 5);",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id FROM users u WHERE EXISTS (SELECT o.user_id FROM orders o WHERE o.user_id = u.id GROUP BY o.user_id HAVING COUNT(*) >= 5) ORDER BY u.id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "lateral": [
+    {
+      "sql": "SELECT u.id, q.amount FROM users u CROSS JOIN LATERAL (SELECT o.amount, o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 20) q ORDER BY u.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u LEFT JOIN LATERAL (SELECT o.amount, o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 20) q ON TRUE ORDER BY u.id, q.id;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.next_age FROM users u CROSS JOIN LATERAL (SELECT u.age + 1 AS next_age) q ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.total FROM users u JOIN LATERAL (SELECT COUNT(*) AS total FROM orders o WHERE o.user_id = u.id AND o.amount > 10) q ON TRUE ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.total FROM users u CROSS JOIN LATERAL (SELECT SUM(o.amount) AS total FROM orders o WHERE o.user_id = u.id AND o.amount > 10) q ORDER BY u.id;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u LEFT JOIN LATERAL (SELECT o.amount FROM orders o WHERE o.user_id = u.id ORDER BY o.amount DESC, o.id LIMIT 1) q ON TRUE ORDER BY u.id, q.amount;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.id, q.status FROM users u CROSS JOIN LATERAL (SELECT o.id, o.status FROM orders o WHERE o.user_id = u.id AND u.city <> 'Paris') q ORDER BY u.id, q.id;",
+      "types": "iit",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT d.id, q.id FROM departments d JOIN LATERAL (SELECT e.id FROM employees e WHERE e.department_id = d.id AND e.salary >= 15) q ON q.id > 0 ORDER BY d.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.id FROM users u CROSS JOIN LATERAL (SELECT f.id FROM flags f WHERE f.id <= 1) q ORDER BY u.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, a.x, b.y FROM users u CROSS JOIN LATERAL (SELECT u.age + 1 AS x) a CROSS JOIN LATERAL (SELECT a.x * 2 AS y) b ORDER BY u.id;",
+      "types": "iii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u CROSS JOIN LATERAL (SELECT o.amount, o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 40) q ORDER BY u.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u LEFT JOIN LATERAL (SELECT o.amount, o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 40) q ON TRUE ORDER BY u.id, q.id;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.next_age FROM users u CROSS JOIN LATERAL (SELECT u.age + 2 AS next_age) q ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.total FROM users u JOIN LATERAL (SELECT COUNT(*) AS total FROM orders o WHERE o.user_id = u.id AND o.amount > 20) q ON TRUE ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.total FROM users u CROSS JOIN LATERAL (SELECT SUM(o.amount) AS total FROM orders o WHERE o.user_id = u.id AND o.amount > 20) q ORDER BY u.id;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u LEFT JOIN LATERAL (SELECT o.amount FROM orders o WHERE o.user_id = u.id ORDER BY o.amount DESC, o.id LIMIT 2) q ON TRUE ORDER BY u.id, q.amount;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.id, q.status FROM users u CROSS JOIN LATERAL (SELECT o.id, o.status FROM orders o WHERE o.user_id = u.id AND u.city <> 'Rome') q ORDER BY u.id, q.id;",
+      "types": "iit",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT d.id, q.id FROM departments d JOIN LATERAL (SELECT e.id FROM employees e WHERE e.department_id = d.id AND e.salary >= 30) q ON q.id > 0 ORDER BY d.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.id FROM users u CROSS JOIN LATERAL (SELECT f.id FROM flags f WHERE f.id <= 2) q ORDER BY u.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, a.x, b.y FROM users u CROSS JOIN LATERAL (SELECT u.age + 2 AS x) a CROSS JOIN LATERAL (SELECT a.x * 2 AS y) b ORDER BY u.id;",
+      "types": "iii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u CROSS JOIN LATERAL (SELECT o.amount, o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 60) q ORDER BY u.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u LEFT JOIN LATERAL (SELECT o.amount, o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 60) q ON TRUE ORDER BY u.id, q.id;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.next_age FROM users u CROSS JOIN LATERAL (SELECT u.age + 3 AS next_age) q ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.total FROM users u JOIN LATERAL (SELECT COUNT(*) AS total FROM orders o WHERE o.user_id = u.id AND o.amount > 30) q ON TRUE ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.total FROM users u CROSS JOIN LATERAL (SELECT SUM(o.amount) AS total FROM orders o WHERE o.user_id = u.id AND o.amount > 30) q ORDER BY u.id;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u LEFT JOIN LATERAL (SELECT o.amount FROM orders o WHERE o.user_id = u.id ORDER BY o.amount DESC, o.id LIMIT 3) q ON TRUE ORDER BY u.id, q.amount;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.id, q.status FROM users u CROSS JOIN LATERAL (SELECT o.id, o.status FROM orders o WHERE o.user_id = u.id AND u.city <> '') q ORDER BY u.id, q.id;",
+      "types": "iit",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT d.id, q.id FROM departments d JOIN LATERAL (SELECT e.id FROM employees e WHERE e.department_id = d.id AND e.salary >= 45) q ON q.id > 0 ORDER BY d.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.id FROM users u CROSS JOIN LATERAL (SELECT f.id FROM flags f WHERE f.id <= 3) q ORDER BY u.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, a.x, b.y FROM users u CROSS JOIN LATERAL (SELECT u.age + 3 AS x) a CROSS JOIN LATERAL (SELECT a.x * 2 AS y) b ORDER BY u.id;",
+      "types": "iii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u CROSS JOIN LATERAL (SELECT o.amount, o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 80) q ORDER BY u.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u LEFT JOIN LATERAL (SELECT o.amount, o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 80) q ON TRUE ORDER BY u.id, q.id;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.next_age FROM users u CROSS JOIN LATERAL (SELECT u.age + 4 AS next_age) q ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.total FROM users u JOIN LATERAL (SELECT COUNT(*) AS total FROM orders o WHERE o.user_id = u.id AND o.amount > 40) q ON TRUE ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.total FROM users u CROSS JOIN LATERAL (SELECT SUM(o.amount) AS total FROM orders o WHERE o.user_id = u.id AND o.amount > 40) q ORDER BY u.id;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u LEFT JOIN LATERAL (SELECT o.amount FROM orders o WHERE o.user_id = u.id ORDER BY o.amount DESC, o.id LIMIT 4) q ON TRUE ORDER BY u.id, q.amount;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.id, q.status FROM users u CROSS JOIN LATERAL (SELECT o.id, o.status FROM orders o WHERE o.user_id = u.id AND u.city <> 'Oslo') q ORDER BY u.id, q.id;",
+      "types": "iit",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT d.id, q.id FROM departments d JOIN LATERAL (SELECT e.id FROM employees e WHERE e.department_id = d.id AND e.salary >= 60) q ON q.id > 0 ORDER BY d.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.id FROM users u CROSS JOIN LATERAL (SELECT f.id FROM flags f WHERE f.id <= 4) q ORDER BY u.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, a.x, b.y FROM users u CROSS JOIN LATERAL (SELECT u.age + 4 AS x) a CROSS JOIN LATERAL (SELECT a.x * 2 AS y) b ORDER BY u.id;",
+      "types": "iii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u CROSS JOIN LATERAL (SELECT o.amount, o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 100) q ORDER BY u.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u LEFT JOIN LATERAL (SELECT o.amount, o.id FROM orders o WHERE o.user_id = u.id AND o.amount >= 100) q ON TRUE ORDER BY u.id, q.id;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.next_age FROM users u CROSS JOIN LATERAL (SELECT u.age + 5 AS next_age) q ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.total FROM users u JOIN LATERAL (SELECT COUNT(*) AS total FROM orders o WHERE o.user_id = u.id AND o.amount > 50) q ON TRUE ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.total FROM users u CROSS JOIN LATERAL (SELECT SUM(o.amount) AS total FROM orders o WHERE o.user_id = u.id AND o.amount > 50) q ORDER BY u.id;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.amount FROM users u LEFT JOIN LATERAL (SELECT o.amount FROM orders o WHERE o.user_id = u.id ORDER BY o.amount DESC, o.id LIMIT 5) q ON TRUE ORDER BY u.id, q.amount;",
+      "types": "iI",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.id, q.status FROM users u CROSS JOIN LATERAL (SELECT o.id, o.status FROM orders o WHERE o.user_id = u.id AND u.city <> 'Berlin') q ORDER BY u.id, q.id;",
+      "types": "iit",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT d.id, q.id FROM departments d JOIN LATERAL (SELECT e.id FROM employees e WHERE e.department_id = d.id AND e.salary >= 75) q ON q.id > 0 ORDER BY d.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, q.id FROM users u CROSS JOIN LATERAL (SELECT f.id FROM flags f WHERE f.id <= 5) q ORDER BY u.id, q.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, a.x, b.y FROM users u CROSS JOIN LATERAL (SELECT u.age + 5 AS x) a CROSS JOIN LATERAL (SELECT a.x * 2 AS y) b ORDER BY u.id;",
+      "types": "iii",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "using_joins": [
+    {
+      "sql": "SELECT id, city, rating FROM users JOIN profiles USING (id, city) WHERE id <= 1 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users JOIN tags USING (id) WHERE age > 10 ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users LEFT JOIN tags USING (id) WHERE age >= 10 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name FROM users RIGHT JOIN tags USING (id) WHERE id <= 6 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name, tags.label FROM users FULL JOIN tags USING (id) WHERE id >= 1 ORDER BY id;",
+      "types": "iTT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, t.id FROM users u JOIN tags t USING (id) WHERE u.age > 5 ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users LEFT JOIN tags USING (id) WHERE id <= 1 ORDER BY id;",
+      "types": "iittT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.age, u.name, t.label FROM users u RIGHT JOIN tags t USING (id) WHERE t.id >= 1 ORDER BY t.id;",
+      "types": "IITt",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users JOIN tags USING (id) JOIN profiles USING (id) WHERE rating > 1.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users JOIN profiles USING (id, city) WHERE age > 10 ORDER BY id;",
+      "types": "ititR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users JOIN profiles USING (id, city) WHERE id <= 2 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users JOIN tags USING (id) WHERE age > 20 ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users LEFT JOIN tags USING (id) WHERE age >= 20 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name FROM users RIGHT JOIN tags USING (id) WHERE id <= 7 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name, tags.label FROM users FULL JOIN tags USING (id) WHERE id >= 2 ORDER BY id;",
+      "types": "iTT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, t.id FROM users u JOIN tags t USING (id) WHERE u.age > 10 ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users LEFT JOIN tags USING (id) WHERE id <= 2 ORDER BY id;",
+      "types": "iittT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.age, u.name, t.label FROM users u RIGHT JOIN tags t USING (id) WHERE t.id >= 2 ORDER BY t.id;",
+      "types": "IITt",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users JOIN tags USING (id) JOIN profiles USING (id) WHERE rating > 2.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users JOIN profiles USING (id, city) WHERE age > 20 ORDER BY id;",
+      "types": "ititR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users JOIN profiles USING (id, city) WHERE id <= 3 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users JOIN tags USING (id) WHERE age > 30 ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users LEFT JOIN tags USING (id) WHERE age >= 30 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name FROM users RIGHT JOIN tags USING (id) WHERE id <= 8 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name, tags.label FROM users FULL JOIN tags USING (id) WHERE id >= 3 ORDER BY id;",
+      "types": "iTT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, t.id FROM users u JOIN tags t USING (id) WHERE u.age > 15 ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users LEFT JOIN tags USING (id) WHERE id <= 3 ORDER BY id;",
+      "types": "iittT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.age, u.name, t.label FROM users u RIGHT JOIN tags t USING (id) WHERE t.id >= 3 ORDER BY t.id;",
+      "types": "IITt",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users JOIN tags USING (id) JOIN profiles USING (id) WHERE rating > 3.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users JOIN profiles USING (id, city) WHERE age > 30 ORDER BY id;",
+      "types": "ititR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users JOIN profiles USING (id, city) WHERE id <= 4 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users JOIN tags USING (id) WHERE age > 40 ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users LEFT JOIN tags USING (id) WHERE age >= 40 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name FROM users RIGHT JOIN tags USING (id) WHERE id <= 9 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name, tags.label FROM users FULL JOIN tags USING (id) WHERE id >= 4 ORDER BY id;",
+      "types": "iTT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, t.id FROM users u JOIN tags t USING (id) WHERE u.age > 20 ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users LEFT JOIN tags USING (id) WHERE id <= 4 ORDER BY id;",
+      "types": "iittT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.age, u.name, t.label FROM users u RIGHT JOIN tags t USING (id) WHERE t.id >= 4 ORDER BY t.id;",
+      "types": "IITt",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users JOIN tags USING (id) JOIN profiles USING (id) WHERE rating > 4.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users JOIN profiles USING (id, city) WHERE age > 40 ORDER BY id;",
+      "types": "ititR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users JOIN profiles USING (id, city) WHERE id <= 5 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users JOIN tags USING (id) WHERE age > 50 ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users LEFT JOIN tags USING (id) WHERE age >= 50 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name FROM users RIGHT JOIN tags USING (id) WHERE id <= 10 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name, tags.label FROM users FULL JOIN tags USING (id) WHERE id >= 5 ORDER BY id;",
+      "types": "iTT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, t.id FROM users u JOIN tags t USING (id) WHERE u.age > 25 ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users LEFT JOIN tags USING (id) WHERE id <= 5 ORDER BY id;",
+      "types": "iittT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, u.age, u.name, t.label FROM users u RIGHT JOIN tags t USING (id) WHERE t.id >= 5 ORDER BY t.id;",
+      "types": "IITt",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users JOIN tags USING (id) JOIN profiles USING (id) WHERE rating > 5.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users JOIN profiles USING (id, city) WHERE age > 50 ORDER BY id;",
+      "types": "ititR",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "natural_joins": [
+    {
+      "sql": "SELECT id, label FROM users NATURAL JOIN tags WHERE age > 10 ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users NATURAL LEFT JOIN tags WHERE age > 10 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name FROM users NATURAL RIGHT JOIN tags WHERE id <= 6 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name, tags.label FROM users NATURAL FULL JOIN tags WHERE id >= 1 ORDER BY id;",
+      "types": "iTT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users NATURAL JOIN profiles WHERE age > 10 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users NATURAL LEFT JOIN profiles WHERE id <= 1 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users NATURAL LEFT JOIN tags WHERE id <= 1 ORDER BY id;",
+      "types": "iittT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users NATURAL JOIN profiles WHERE age >= 10 ORDER BY id;",
+      "types": "ititR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, t.id FROM users u NATURAL JOIN tags t WHERE u.age > 10 ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users NATURAL JOIN tags NATURAL JOIN profiles WHERE rating > 1.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users NATURAL JOIN tags WHERE age > 20 ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users NATURAL LEFT JOIN tags WHERE age > 20 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name FROM users NATURAL RIGHT JOIN tags WHERE id <= 7 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name, tags.label FROM users NATURAL FULL JOIN tags WHERE id >= 2 ORDER BY id;",
+      "types": "iTT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users NATURAL JOIN profiles WHERE age > 20 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users NATURAL LEFT JOIN profiles WHERE id <= 2 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users NATURAL LEFT JOIN tags WHERE id <= 2 ORDER BY id;",
+      "types": "iittT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users NATURAL JOIN profiles WHERE age >= 20 ORDER BY id;",
+      "types": "ititR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, t.id FROM users u NATURAL JOIN tags t WHERE u.age > 20 ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users NATURAL JOIN tags NATURAL JOIN profiles WHERE rating > 2.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users NATURAL JOIN tags WHERE age > 30 ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users NATURAL LEFT JOIN tags WHERE age > 30 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name FROM users NATURAL RIGHT JOIN tags WHERE id <= 8 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name, tags.label FROM users NATURAL FULL JOIN tags WHERE id >= 3 ORDER BY id;",
+      "types": "iTT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users NATURAL JOIN profiles WHERE age > 30 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users NATURAL LEFT JOIN profiles WHERE id <= 3 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users NATURAL LEFT JOIN tags WHERE id <= 3 ORDER BY id;",
+      "types": "iittT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users NATURAL JOIN profiles WHERE age >= 30 ORDER BY id;",
+      "types": "ititR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, t.id FROM users u NATURAL JOIN tags t WHERE u.age > 30 ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users NATURAL JOIN tags NATURAL JOIN profiles WHERE rating > 3.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users NATURAL JOIN tags WHERE age > 40 ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users NATURAL LEFT JOIN tags WHERE age > 40 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name FROM users NATURAL RIGHT JOIN tags WHERE id <= 9 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name, tags.label FROM users NATURAL FULL JOIN tags WHERE id >= 4 ORDER BY id;",
+      "types": "iTT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users NATURAL JOIN profiles WHERE age > 40 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users NATURAL LEFT JOIN profiles WHERE id <= 4 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users NATURAL LEFT JOIN tags WHERE id <= 4 ORDER BY id;",
+      "types": "iittT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users NATURAL JOIN profiles WHERE age >= 40 ORDER BY id;",
+      "types": "ititR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, t.id FROM users u NATURAL JOIN tags t WHERE u.age > 40 ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users NATURAL JOIN tags NATURAL JOIN profiles WHERE rating > 4.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users NATURAL JOIN tags WHERE age > 50 ORDER BY id;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, label FROM users NATURAL LEFT JOIN tags WHERE age > 50 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name FROM users NATURAL RIGHT JOIN tags WHERE id <= 10 ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, users.name, tags.label FROM users NATURAL FULL JOIN tags WHERE id >= 5 ORDER BY id;",
+      "types": "iTT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users NATURAL JOIN profiles WHERE age > 50 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, city, rating FROM users NATURAL LEFT JOIN profiles WHERE id <= 5 ORDER BY id;",
+      "types": "itR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users NATURAL LEFT JOIN tags WHERE id <= 5 ORDER BY id;",
+      "types": "iittT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT * FROM users NATURAL JOIN profiles WHERE age >= 50 ORDER BY id;",
+      "types": "ititR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT u.id, t.id FROM users u NATURAL JOIN tags t WHERE u.age > 50 ORDER BY u.id;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users NATURAL JOIN tags NATURAL JOIN profiles WHERE rating > 5.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "intersect": [
+    {
+      "sql": "SELECT id FROM users WHERE age > 10 INTERSECT SELECT user_id FROM orders ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT user_id FROM orders INTERSECT ALL SELECT id FROM users WHERE id <= 1 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users INTERSECT SELECT city FROM profiles WHERE city <> 'Paris' ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id <= 1 INTERSECT SELECT id, name FROM employees ORDER BY 1, 2;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 INTERSECT SELECT id FROM users ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE FALSE INTERSECT SELECT id FROM flags WHERE id <= 1 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT id FROM flags WHERE FALSE AND id = 1 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT user_id FROM orders INTERSECT SELECT id FROM flags WHERE id <= 1 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users INTERSECT ALL SELECT city FROM profiles WHERE id < 4 ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT user_id FROM orders ORDER BY 1 LIMIT 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE age > 20 INTERSECT SELECT user_id FROM orders ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT user_id FROM orders INTERSECT ALL SELECT id FROM users WHERE id <= 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users INTERSECT SELECT city FROM profiles WHERE city <> 'Rome' ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id <= 2 INTERSECT SELECT id, name FROM employees ORDER BY 1, 2;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 2 INTERSECT SELECT id FROM users ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE FALSE INTERSECT SELECT id FROM flags WHERE id <= 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT id FROM flags WHERE FALSE AND id = 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT user_id FROM orders INTERSECT SELECT id FROM flags WHERE id <= 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users INTERSECT ALL SELECT city FROM profiles WHERE id < 5 ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT user_id FROM orders ORDER BY 1 LIMIT 2;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE age > 30 INTERSECT SELECT user_id FROM orders ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT user_id FROM orders INTERSECT ALL SELECT id FROM users WHERE id <= 3 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users INTERSECT SELECT city FROM profiles WHERE city <> '' ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id <= 3 INTERSECT SELECT id, name FROM employees ORDER BY 1, 2;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 3 INTERSECT SELECT id FROM users ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE FALSE INTERSECT SELECT id FROM flags WHERE id <= 3 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT id FROM flags WHERE FALSE AND id = 3 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT user_id FROM orders INTERSECT SELECT id FROM flags WHERE id <= 3 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users INTERSECT ALL SELECT city FROM profiles WHERE id < 6 ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT user_id FROM orders ORDER BY 1 LIMIT 3;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE age > 40 INTERSECT SELECT user_id FROM orders ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT user_id FROM orders INTERSECT ALL SELECT id FROM users WHERE id <= 4 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users INTERSECT SELECT city FROM profiles WHERE city <> 'Oslo' ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id <= 4 INTERSECT SELECT id, name FROM employees ORDER BY 1, 2;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 4 INTERSECT SELECT id FROM users ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE FALSE INTERSECT SELECT id FROM flags WHERE id <= 4 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT id FROM flags WHERE FALSE AND id = 4 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT user_id FROM orders INTERSECT SELECT id FROM flags WHERE id <= 4 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users INTERSECT ALL SELECT city FROM profiles WHERE id < 7 ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT user_id FROM orders ORDER BY 1 LIMIT 4;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE age > 50 INTERSECT SELECT user_id FROM orders ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT user_id FROM orders INTERSECT ALL SELECT id FROM users WHERE id <= 5 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users INTERSECT SELECT city FROM profiles WHERE city <> 'Berlin' ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 UNION SELECT 2 INTERSECT SELECT 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 INTERSECT SELECT 1 UNION SELECT 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "(SELECT 1 UNION SELECT 2) INTERSECT SELECT 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT id FROM flags WHERE FALSE AND id = 5 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT user_id FROM orders INTERSECT SELECT id FROM flags WHERE id <= 5 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users INTERSECT ALL SELECT city FROM profiles WHERE id < 8 ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users INTERSECT SELECT user_id FROM orders ORDER BY 1 LIMIT 5;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "except": [
+    {
+      "sql": "SELECT id FROM users WHERE age > 10 EXCEPT SELECT user_id FROM orders ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT user_id FROM orders EXCEPT ALL SELECT id FROM users WHERE id <= 1 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users EXCEPT SELECT city FROM profiles WHERE city <> 'Paris' ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id <= 1 EXCEPT SELECT id, name FROM employees ORDER BY 1, 2;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 EXCEPT SELECT id FROM users ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE FALSE EXCEPT SELECT id FROM flags WHERE id <= 1 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT id FROM flags WHERE FALSE AND id = 1 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT user_id FROM orders EXCEPT SELECT id FROM flags WHERE id <= 1 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users EXCEPT ALL SELECT city FROM profiles WHERE id < 4 ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT user_id FROM orders ORDER BY 1 LIMIT 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE age > 20 EXCEPT SELECT user_id FROM orders ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT user_id FROM orders EXCEPT ALL SELECT id FROM users WHERE id <= 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users EXCEPT SELECT city FROM profiles WHERE city <> 'Rome' ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id <= 2 EXCEPT SELECT id, name FROM employees ORDER BY 1, 2;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 2 EXCEPT SELECT id FROM users ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE FALSE EXCEPT SELECT id FROM flags WHERE id <= 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT id FROM flags WHERE FALSE AND id = 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT user_id FROM orders EXCEPT SELECT id FROM flags WHERE id <= 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users EXCEPT ALL SELECT city FROM profiles WHERE id < 5 ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT user_id FROM orders ORDER BY 1 LIMIT 2;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE age > 30 EXCEPT SELECT user_id FROM orders ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT user_id FROM orders EXCEPT ALL SELECT id FROM users WHERE id <= 3 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users EXCEPT SELECT city FROM profiles WHERE city <> '' ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id <= 3 EXCEPT SELECT id, name FROM employees ORDER BY 1, 2;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 3 EXCEPT SELECT id FROM users ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE FALSE EXCEPT SELECT id FROM flags WHERE id <= 3 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT id FROM flags WHERE FALSE AND id = 3 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT user_id FROM orders EXCEPT SELECT id FROM flags WHERE id <= 3 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users EXCEPT ALL SELECT city FROM profiles WHERE id < 6 ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT user_id FROM orders ORDER BY 1 LIMIT 3;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE age > 40 EXCEPT SELECT user_id FROM orders ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT user_id FROM orders EXCEPT ALL SELECT id FROM users WHERE id <= 4 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users EXCEPT SELECT city FROM profiles WHERE city <> 'Oslo' ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE id <= 4 EXCEPT SELECT id, name FROM employees ORDER BY 1, 2;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 4 EXCEPT SELECT id FROM users ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE FALSE EXCEPT SELECT id FROM flags WHERE id <= 4 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT id FROM flags WHERE FALSE AND id = 4 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT user_id FROM orders EXCEPT SELECT id FROM flags WHERE id <= 4 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users EXCEPT ALL SELECT city FROM profiles WHERE id < 7 ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT user_id FROM orders ORDER BY 1 LIMIT 4;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE age > 50 EXCEPT SELECT user_id FROM orders ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT user_id FROM orders EXCEPT ALL SELECT id FROM users WHERE id <= 5 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users EXCEPT SELECT city FROM profiles WHERE city <> 'Berlin' ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 UNION SELECT 2 EXCEPT SELECT 1 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 EXCEPT SELECT 1 UNION SELECT 2 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 EXCEPT (SELECT 1 EXCEPT SELECT 1);",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT id FROM flags WHERE FALSE AND id = 5 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT user_id FROM orders EXCEPT SELECT id FROM flags WHERE id <= 5 ORDER BY 1;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT city FROM users EXCEPT ALL SELECT city FROM profiles WHERE id < 8 ORDER BY 1;",
+      "types": "t",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users EXCEPT SELECT user_id FROM orders ORDER BY 1 LIMIT 5;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "upsert": [
+    {
+      "sql": "INSERT INTO departments (id, name) VALUES (1, 'Updated 1') ON CONFLICT (id) DO NOTHING RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (1, 'Updated 1') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO users VALUES (1, 21, 'New 1', 'Oslo') ON CONFLICT (id) DO UPDATE SET age = EXCLUDED.age RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO users VALUES (1, 21, 'New 1', 'Oslo') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, city = EXCLUDED.city RETURNING id, city;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (21, 'Inserted 1') ON CONFLICT DO NOTHING RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO orders VALUES (101, 1, 10, 'paid') ON CONFLICT (id) DO UPDATE SET amount = orders.amount + EXCLUDED.amount RETURNING amount;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO flags VALUES (1, TRUE, 'Flag 1') ON CONFLICT (id) DO UPDATE SET enabled = NOT flags.enabled RETURNING id, enabled;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags VALUES (1, 'Tag 1') ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label WHERE tags.id > 1 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (1, 'Existing 1'), (31, 'New 1') ON CONFLICT (id) DO NOTHING RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (1, 'No output 1') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments (id, name) VALUES (2, 'Updated 2') ON CONFLICT (id) DO NOTHING RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (2, 'Updated 2') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO users VALUES (2, 22, 'New 2', 'Oslo') ON CONFLICT (id) DO UPDATE SET age = EXCLUDED.age RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO users VALUES (2, 22, 'New 2', 'Oslo') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, city = EXCLUDED.city RETURNING id, city;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (22, 'Inserted 2') ON CONFLICT DO NOTHING RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO orders VALUES (102, 2, 20, 'paid') ON CONFLICT (id) DO UPDATE SET amount = orders.amount + EXCLUDED.amount RETURNING amount;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO flags VALUES (2, TRUE, 'Flag 2') ON CONFLICT (id) DO UPDATE SET enabled = NOT flags.enabled RETURNING id, enabled;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags VALUES (2, 'Tag 2') ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label WHERE tags.id > 1 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (2, 'Existing 2'), (32, 'New 2') ON CONFLICT (id) DO NOTHING RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (2, 'No output 2') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments (id, name) VALUES (3, 'Updated 3') ON CONFLICT (id) DO NOTHING RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (3, 'Updated 3') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO users VALUES (3, 23, 'New 3', 'Oslo') ON CONFLICT (id) DO UPDATE SET age = EXCLUDED.age RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO users VALUES (3, 23, 'New 3', 'Oslo') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, city = EXCLUDED.city RETURNING id, city;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (23, 'Inserted 3') ON CONFLICT DO NOTHING RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO orders VALUES (103, 3, 30, 'paid') ON CONFLICT (id) DO UPDATE SET amount = orders.amount + EXCLUDED.amount RETURNING amount;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO flags VALUES (3, TRUE, 'Flag 3') ON CONFLICT (id) DO UPDATE SET enabled = NOT flags.enabled RETURNING id, enabled;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags VALUES (3, 'Tag 3') ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label WHERE tags.id > 1 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (3, 'Existing 3'), (33, 'New 3') ON CONFLICT (id) DO NOTHING RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (3, 'No output 3') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments (id, name) VALUES (4, 'Updated 4') ON CONFLICT (id) DO NOTHING RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (4, 'Updated 4') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO users VALUES (4, 24, 'New 4', 'Oslo') ON CONFLICT (id) DO UPDATE SET age = EXCLUDED.age RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO users VALUES (4, 24, 'New 4', 'Oslo') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, city = EXCLUDED.city RETURNING id, city;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (24, 'Inserted 4') ON CONFLICT DO NOTHING RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO orders VALUES (104, 4, 40, 'paid') ON CONFLICT (id) DO UPDATE SET amount = orders.amount + EXCLUDED.amount RETURNING amount;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO flags VALUES (4, TRUE, 'Flag 4') ON CONFLICT (id) DO UPDATE SET enabled = NOT flags.enabled RETURNING id, enabled;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags VALUES (4, 'Tag 4') ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label WHERE tags.id > 1 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (4, 'Existing 4'), (34, 'New 4') ON CONFLICT (id) DO NOTHING RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (4, 'No output 4') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments (id, name) VALUES (5, 'Updated 5') ON CONFLICT (id) DO NOTHING RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (5, 'Updated 5') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO users VALUES (5, 25, 'New 5', 'Oslo') ON CONFLICT (id) DO UPDATE SET age = EXCLUDED.age RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO users VALUES (5, 25, 'New 5', 'Oslo') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name, city = EXCLUDED.city RETURNING id, city;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (25, 'Inserted 5') ON CONFLICT DO NOTHING RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO orders VALUES (105, 5, 50, 'paid') ON CONFLICT (id) DO UPDATE SET amount = orders.amount + EXCLUDED.amount RETURNING amount;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO flags VALUES (5, TRUE, 'Flag 5') ON CONFLICT (id) DO UPDATE SET enabled = NOT flags.enabled RETURNING id, enabled;",
+      "types": "ib",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags VALUES (5, 'Tag 5') ON CONFLICT (id) DO UPDATE SET label = EXCLUDED.label WHERE tags.id > 1 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (5, 'Existing 5'), (35, 'New 5') ON CONFLICT (id) DO NOTHING RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (5, 'No output 5') ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "insert_select": [
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE age >= 10 RETURNING *;",
+      "types": "iitt",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (id, age, name, city) SELECT id, age, name, city FROM users WHERE id <= 1 RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (id, age, name, city) SELECT id, age + 1, name, city FROM users;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags (id, label) SELECT id + 101, name FROM users WHERE age >= 18 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments (id, name) SELECT id + 101, city FROM users WHERE id <= 1 RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age * 1, name, city FROM users WHERE id IN (SELECT user_id FROM orders) RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE city = 'Paris' RETURNING id, city;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE FALSE AND id = 1 RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (age, id, city, name) SELECT age + 1, id, city, name FROM users RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags SELECT id + 201, name FROM departments ORDER BY id LIMIT 1 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE age >= 20 RETURNING *;",
+      "types": "iitt",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (id, age, name, city) SELECT id, age, name, city FROM users WHERE id <= 2 RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (id, age, name, city) SELECT id, age + 2, name, city FROM users;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags (id, label) SELECT id + 102, name FROM users WHERE age >= 18 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments (id, name) SELECT id + 102, city FROM users WHERE id <= 2 RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age * 2, name, city FROM users WHERE id IN (SELECT user_id FROM orders) RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE city = 'Rome' RETURNING id, city;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE FALSE AND id = 2 RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (age, id, city, name) SELECT age + 2, id, city, name FROM users RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags SELECT id + 202, name FROM departments ORDER BY id LIMIT 2 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE age >= 30 RETURNING *;",
+      "types": "iitt",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (id, age, name, city) SELECT id, age, name, city FROM users WHERE id <= 3 RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (id, age, name, city) SELECT id, age + 3, name, city FROM users;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags (id, label) SELECT id + 103, name FROM users WHERE age >= 18 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments (id, name) SELECT id + 103, city FROM users WHERE id <= 3 RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age * 3, name, city FROM users WHERE id IN (SELECT user_id FROM orders) RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE city = '' RETURNING id, city;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE FALSE AND id = 3 RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (age, id, city, name) SELECT age + 3, id, city, name FROM users RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags SELECT id + 203, name FROM departments ORDER BY id LIMIT 3 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE age >= 40 RETURNING *;",
+      "types": "iitt",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (id, age, name, city) SELECT id, age, name, city FROM users WHERE id <= 4 RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (id, age, name, city) SELECT id, age + 4, name, city FROM users;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags (id, label) SELECT id + 104, name FROM users WHERE age >= 18 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments (id, name) SELECT id + 104, city FROM users WHERE id <= 4 RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age * 4, name, city FROM users WHERE id IN (SELECT user_id FROM orders) RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE city = 'Oslo' RETURNING id, city;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE FALSE AND id = 4 RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (age, id, city, name) SELECT age + 4, id, city, name FROM users RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags SELECT id + 204, name FROM departments ORDER BY id LIMIT 4 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE age >= 50 RETURNING *;",
+      "types": "iitt",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (id, age, name, city) SELECT id, age, name, city FROM users WHERE id <= 5 RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (id, age, name, city) SELECT id, age + 5, name, city FROM users;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags (id, label) SELECT id + 105, name FROM users WHERE age >= 18 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO departments (id, name) SELECT id + 105, city FROM users WHERE id <= 5 RETURNING id, name;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age * 5, name, city FROM users WHERE id IN (SELECT user_id FROM orders) RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE city = 'Berlin' RETURNING id, city;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive SELECT id, age, name, city FROM users WHERE FALSE AND id = 5 RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO archive (age, id, city, name) SELECT age + 5, id, city, name FROM users RETURNING id, age;",
+      "types": "ii",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO tags SELECT id + 205, name FROM departments ORDER BY id LIMIT 5 RETURNING id, label;",
+      "types": "it",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "nulls": [
+    {
+      "sql": "SELECT NULL;",
+      "types": "T",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL::INTEGER;",
+      "types": "I",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT CAST(NULL AS TEXT);",
+      "types": "T",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL::BOOLEAN;",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL::DOUBLE PRECISION;",
+      "types": "R",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL + 1;",
+      "types": "I",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 2 - NULL;",
+      "types": "I",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL * 2.5;",
+      "types": "R",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 10 / NULL;",
+      "types": "I",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL = 1;",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 <> NULL;",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL < 4;",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL >= 4.5;",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL = 'hello';",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT TRUE AND NULL;",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT FALSE OR NULL;",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NOT NULL;",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL IS NULL;",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL IS NOT NULL;",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT (NULL + 1) IS NULL;",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 IN (NULL, 2);",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 2 IN (NULL, 2);",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1 NOT IN (NULL, 2);",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL IN (1, 2);",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL LIKE 'a%';",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 'Alice' ILIKE NULL;",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL BETWEEN 1 AND 3;",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, NULL FROM users ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, score FROM scratch ORDER BY id;",
+      "types": "iR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name FROM scratch ORDER BY id;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, enabled FROM scratch ORDER BY id;",
+      "types": "iB",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM scratch WHERE name IS NULL ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM scratch WHERE score IS NOT NULL ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM scratch WHERE enabled IS NULL ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM scratch WHERE enabled = NULL ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, score + 1.25 FROM scratch ORDER BY id;",
+      "types": "iR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, name LIKE 'a%' FROM scratch ORDER BY id;",
+      "types": "iB",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT COUNT(name) FROM scratch;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT SUM(score) FROM scratch;",
+      "types": "R",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT MIN(name) FROM scratch;",
+      "types": "T",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (SELECT NULL::INTEGER) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id NOT IN (SELECT NULL::INTEGER) ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT NULL IN (SELECT id FROM users);",
+      "types": "B",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO scratch VALUES (20, NULL, NULL, NULL) RETURNING *;",
+      "types": "iTRB",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "INSERT INTO scratch (id, name) VALUES (21, NULL) RETURNING id, name;",
+      "types": "iT",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "UPDATE scratch SET score = NULL WHERE id = 1 RETURNING id, score;",
+      "types": "iR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "UPDATE scratch SET enabled = NULL WHERE id = 2 RETURNING id, enabled;",
+      "types": "iB",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DELETE FROM scratch WHERE name IS NULL RETURNING id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM scratch WHERE score IS NULL OR score > 2.0 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT (NULL = NULL) IS NULL, (NULL IS NULL) IS NOT NULL;",
+      "types": "bb",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "floating": [
+    {
+      "sql": "SELECT 0.125;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT -0.125;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT +0.125;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 0.125 + 2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 5 * 0.125;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 0.125 / 2.0;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 0.125 > 0.25;",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, age + 0.125 FROM users ORDER BY id;",
+      "types": "ir",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM orders WHERE amount >= 0.125 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, score + 0.125 FROM scratch ORDER BY id;",
+      "types": "iR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT .5;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT -.5;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT +.5;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT .5 + 2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 5 * .5;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT .5 / 2.0;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT .5 > 0.25;",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, age + .5 FROM users ORDER BY id;",
+      "types": "ir",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM orders WHERE amount >= .5 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, score + .5 FROM scratch ORDER BY id;",
+      "types": "iR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 2.;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT -2.;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT +2.;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 2. + 2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 5 * 2.;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 2. / 2.0;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 2. > 0.25;",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, age + 2. FROM users ORDER BY id;",
+      "types": "ir",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM orders WHERE amount >= 2. ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, score + 2. FROM scratch ORDER BY id;",
+      "types": "iR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1.25e2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT -1.25e2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT +1.25e2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1.25e2 + 2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 5 * 1.25e2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1.25e2 / 2.0;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 1.25e2 > 0.25;",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, age + 1.25e2 FROM users ORDER BY id;",
+      "types": "ir",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM orders WHERE amount >= 1.25e2 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, score + 1.25e2 FROM scratch ORDER BY id;",
+      "types": "iR",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 3E-2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT -3E-2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT +3E-2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 3E-2 + 2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 5 * 3E-2;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 3E-2 / 2.0;",
+      "types": "r",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT 3E-2 > 0.25;",
+      "types": "b",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, age + 3E-2 FROM users ORDER BY id;",
+      "types": "ir",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id FROM orders WHERE amount >= 3E-2 ORDER BY id;",
+      "types": "i",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "SELECT id, score + 3E-2 FROM scratch ORDER BY id;",
+      "types": "iR",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "placeholders": [
+    {
+      "sql": "SELECT $1 AS integer_parameter;",
+      "types": "i",
+      "parameters": "i",
+      "values": [
+        3
+      ]
+    },
+    {
+      "sql": "SELECT $1 AS text_parameter, '?' AS question_text;",
+      "types": "tt",
+      "parameters": "t",
+      "values": [
+        "Paris"
+      ]
+    },
+    {
+      "sql": "SELECT $1 AS boolean_parameter;",
+      "types": "b",
+      "parameters": "b",
+      "values": [
+        true
+      ]
+    },
+    {
+      "sql": "SELECT $1 AS real_parameter;",
+      "types": "r",
+      "parameters": "r",
+      "values": [
+        1.25
+      ]
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id >= $1 ORDER BY id;",
+      "types": "i",
+      "parameters": "i",
+      "values": [
+        2
+      ]
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE city = $1 ORDER BY id;",
+      "types": "it",
+      "parameters": "t",
+      "values": [
+        "Paris"
+      ]
+    },
+    {
+      "sql": "SELECT id FROM flags WHERE enabled = $1 ORDER BY id;",
+      "types": "i",
+      "parameters": "b",
+      "values": [
+        true
+      ]
+    },
+    {
+      "sql": "SELECT id FROM orders WHERE amount > $1 ORDER BY id;",
+      "types": "i",
+      "parameters": "r",
+      "values": [
+        50.5
+      ]
+    },
+    {
+      "sql": "SELECT id, age + $1 FROM users ORDER BY id;",
+      "types": "ir",
+      "parameters": "r",
+      "values": [
+        0.5
+      ]
+    },
+    {
+      "sql": "SELECT $1 IN (SELECT user_id FROM orders);",
+      "types": "b",
+      "parameters": "i",
+      "values": [
+        3
+      ]
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM users WHERE id = $1);",
+      "types": "b",
+      "parameters": "i",
+      "values": [
+        2
+      ]
+    },
+    {
+      "sql": "SELECT id FROM users WHERE age BETWEEN $1 AND $2 ORDER BY id;",
+      "types": "i",
+      "parameters": "ii",
+      "values": [
+        18,
+        40
+      ]
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE city = $1 AND id > $2 ORDER BY id;",
+      "types": "it",
+      "parameters": "ti",
+      "values": [
+        "Paris",
+        1
+      ]
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN ($1, $2, $3) ORDER BY id;",
+      "types": "i",
+      "parameters": "iii",
+      "values": [
+        1,
+        3,
+        5
+      ]
+    },
+    {
+      "sql": "SELECT $1 ILIKE $2;",
+      "types": "b",
+      "parameters": "tt",
+      "values": [
+        "Alice",
+        "a%"
+      ]
+    },
+    {
+      "sql": "SELECT $1 + $2;",
+      "types": "r",
+      "parameters": "rr",
+      "values": [
+        1.25,
+        2.5
+      ]
+    },
+    {
+      "sql": "SELECT $2, $1, $2;",
+      "types": "iii",
+      "parameters": "ii",
+      "values": [
+        1,
+        2
+      ]
+    },
+    {
+      "sql": "SELECT $1::TEXT;",
+      "types": "t",
+      "parameters": "i",
+      "values": [
+        42
+      ]
+    },
+    {
+      "sql": "SELECT CAST($1 AS INTEGER);",
+      "types": "i",
+      "parameters": "t",
+      "values": [
+        "42"
+      ]
+    },
+    {
+      "sql": "SELECT COUNT(*) FILTER (WHERE age >= $1) FROM users;",
+      "types": "i",
+      "parameters": "i",
+      "values": [
+        20
+      ]
+    },
+    {
+      "sql": "SELECT u.id FROM users u CROSS JOIN LATERAL (SELECT u.city AS city) q WHERE q.city = $1 ORDER BY u.id;",
+      "types": "i",
+      "parameters": "t",
+      "values": [
+        "Paris"
+      ]
+    },
+    {
+      "sql": "INSERT INTO departments VALUES ($1, $2) RETURNING id, name;",
+      "types": "it",
+      "parameters": "it",
+      "values": [
+        40,
+        "Inserted"
+      ]
+    },
+    {
+      "sql": "UPDATE users SET age = $1 WHERE id = $2 RETURNING id, age;",
+      "types": "ii",
+      "parameters": "ii",
+      "values": [
+        50,
+        1
+      ]
+    },
+    {
+      "sql": "DELETE FROM users WHERE id = $1 RETURNING id;",
+      "types": "i",
+      "parameters": "i",
+      "values": [
+        2
+      ]
+    },
+    {
+      "sql": "INSERT INTO departments VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name RETURNING id, name;",
+      "types": "it",
+      "parameters": "it",
+      "values": [
+        1,
+        "Updated"
+      ]
+    },
+    {
+      "sql": "SELECT ? AS integer_parameter;",
+      "types": "i",
+      "parameters": "i",
+      "values": [
+        3
+      ]
+    },
+    {
+      "sql": "SELECT ? AS text_parameter, '?' AS question_text;",
+      "types": "tt",
+      "parameters": "t",
+      "values": [
+        "Paris"
+      ]
+    },
+    {
+      "sql": "SELECT ? AS boolean_parameter;",
+      "types": "b",
+      "parameters": "b",
+      "values": [
+        true
+      ]
+    },
+    {
+      "sql": "SELECT ? AS real_parameter;",
+      "types": "r",
+      "parameters": "r",
+      "values": [
+        1.25
+      ]
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id >= ? ORDER BY id;",
+      "types": "i",
+      "parameters": "i",
+      "values": [
+        2
+      ]
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE city = ? ORDER BY id;",
+      "types": "it",
+      "parameters": "t",
+      "values": [
+        "Paris"
+      ]
+    },
+    {
+      "sql": "SELECT id FROM flags WHERE enabled = ? ORDER BY id;",
+      "types": "i",
+      "parameters": "b",
+      "values": [
+        true
+      ]
+    },
+    {
+      "sql": "SELECT id FROM orders WHERE amount > ? ORDER BY id;",
+      "types": "i",
+      "parameters": "r",
+      "values": [
+        50.5
+      ]
+    },
+    {
+      "sql": "SELECT id, age + ? FROM users ORDER BY id;",
+      "types": "ir",
+      "parameters": "r",
+      "values": [
+        0.5
+      ]
+    },
+    {
+      "sql": "SELECT ? IN (SELECT user_id FROM orders);",
+      "types": "b",
+      "parameters": "i",
+      "values": [
+        3
+      ]
+    },
+    {
+      "sql": "SELECT EXISTS (SELECT id FROM users WHERE id = ?);",
+      "types": "b",
+      "parameters": "i",
+      "values": [
+        2
+      ]
+    },
+    {
+      "sql": "SELECT id FROM users WHERE age BETWEEN ? AND ? ORDER BY id;",
+      "types": "i",
+      "parameters": "ii",
+      "values": [
+        18,
+        40
+      ]
+    },
+    {
+      "sql": "SELECT id, name FROM users WHERE city = ? AND id > ? ORDER BY id;",
+      "types": "it",
+      "parameters": "ti",
+      "values": [
+        "Paris",
+        1
+      ]
+    },
+    {
+      "sql": "SELECT id FROM users WHERE id IN (?, ?, ?) ORDER BY id;",
+      "types": "i",
+      "parameters": "iii",
+      "values": [
+        1,
+        3,
+        5
+      ]
+    },
+    {
+      "sql": "SELECT ? ILIKE ?;",
+      "types": "b",
+      "parameters": "tt",
+      "values": [
+        "Alice",
+        "a%"
+      ]
+    },
+    {
+      "sql": "SELECT ? + ?;",
+      "types": "r",
+      "parameters": "rr",
+      "values": [
+        1.25,
+        2.5
+      ]
+    },
+    {
+      "sql": "SELECT ?, ?;",
+      "types": "ii",
+      "parameters": "ii",
+      "values": [
+        1,
+        2
+      ]
+    },
+    {
+      "sql": "SELECT ?::TEXT;",
+      "types": "t",
+      "parameters": "i",
+      "values": [
+        42
+      ]
+    },
+    {
+      "sql": "SELECT CAST(? AS INTEGER);",
+      "types": "i",
+      "parameters": "t",
+      "values": [
+        "42"
+      ]
+    },
+    {
+      "sql": "SELECT COUNT(*) FILTER (WHERE age >= ?) FROM users;",
+      "types": "i",
+      "parameters": "i",
+      "values": [
+        20
+      ]
+    },
+    {
+      "sql": "SELECT u.id FROM users u CROSS JOIN LATERAL (SELECT u.city AS city) q WHERE q.city = ? ORDER BY u.id;",
+      "types": "i",
+      "parameters": "t",
+      "values": [
+        "Paris"
+      ]
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (?, ?) RETURNING id, name;",
+      "types": "it",
+      "parameters": "it",
+      "values": [
+        40,
+        "Inserted"
+      ]
+    },
+    {
+      "sql": "UPDATE users SET age = ? WHERE id = ? RETURNING id, age;",
+      "types": "ii",
+      "parameters": "ii",
+      "values": [
+        50,
+        1
+      ]
+    },
+    {
+      "sql": "DELETE FROM users WHERE id = ? RETURNING id;",
+      "types": "i",
+      "parameters": "i",
+      "values": [
+        2
+      ]
+    },
+    {
+      "sql": "INSERT INTO departments VALUES (?, ?) ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name RETURNING id, name;",
+      "types": "it",
+      "parameters": "it",
+      "values": [
+        1,
+        "Updated"
+      ]
+    }
+  ],
+  "create_table": [
+    {
+      "sql": "CREATE TABLE made_1_plain (value INTEGER);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_1_required (value INTEGER NOT NULL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_1_default (value INTEGER DEFAULT 0);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_1_primary (id INTEGER PRIMARY KEY, value INTEGER);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_1_unique (id INTEGER UNIQUE, value INTEGER);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_1_table_primary (id INTEGER NOT NULL, value INTEGER, PRIMARY KEY (id));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_1_table_unique (id INTEGER NOT NULL, value INTEGER, UNIQUE (id));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_1_composite (id INTEGER NOT NULL, revision INTEGER NOT NULL, value INTEGER, PRIMARY KEY (id, revision));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_1_null (id INTEGER PRIMARY KEY, value INTEGER NULL DEFAULT NULL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_1_quoted (\"record id\" INTEGER PRIMARY KEY, \"stored value\" INTEGER);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE IF NOT EXISTS made_2_plain (value TEXT);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_2_required (value TEXT NOT NULL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_2_default (value TEXT DEFAULT 'ready');",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_2_primary (id INTEGER PRIMARY KEY, value TEXT);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_2_unique (id INTEGER UNIQUE, value TEXT);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_2_table_primary (id INTEGER NOT NULL, value TEXT, PRIMARY KEY (id));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_2_table_unique (id INTEGER NOT NULL, value TEXT, UNIQUE (id));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_2_composite (id INTEGER NOT NULL, revision INTEGER NOT NULL, value TEXT, PRIMARY KEY (id, revision));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_2_null (id INTEGER PRIMARY KEY, value TEXT NULL DEFAULT NULL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_2_quoted (\"record id\" INTEGER PRIMARY KEY, \"stored value\" TEXT);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_3_plain (value BOOLEAN);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_3_required (value BOOLEAN NOT NULL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_3_default (value BOOLEAN DEFAULT FALSE);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_3_primary (id INTEGER PRIMARY KEY, value BOOLEAN);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_3_unique (id INTEGER UNIQUE, value BOOLEAN);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_3_table_primary (id INTEGER NOT NULL, value BOOLEAN, PRIMARY KEY (id));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_3_table_unique (id INTEGER NOT NULL, value BOOLEAN, UNIQUE (id));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_3_composite (id INTEGER NOT NULL, revision INTEGER NOT NULL, value BOOLEAN, PRIMARY KEY (id, revision));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_3_null (id INTEGER PRIMARY KEY, value BOOLEAN NULL DEFAULT NULL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_3_quoted (\"record id\" INTEGER PRIMARY KEY, \"stored value\" BOOLEAN);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_4_plain (value REAL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_4_required (value REAL NOT NULL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_4_default (value REAL DEFAULT 1.5);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_4_primary (id INTEGER PRIMARY KEY, value REAL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_4_unique (id INTEGER UNIQUE, value REAL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_4_table_primary (id INTEGER NOT NULL, value REAL, PRIMARY KEY (id));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_4_table_unique (id INTEGER NOT NULL, value REAL, UNIQUE (id));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_4_composite (id INTEGER NOT NULL, revision INTEGER NOT NULL, value REAL, PRIMARY KEY (id, revision));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_4_null (id INTEGER PRIMARY KEY, value REAL NULL DEFAULT NULL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_4_quoted (\"record id\" INTEGER PRIMARY KEY, \"stored value\" REAL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE IF NOT EXISTS users (id INTEGER);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_5_required (value DOUBLE PRECISION NOT NULL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_5_default (value DOUBLE PRECISION DEFAULT 2.5e1);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_5_primary (id INTEGER PRIMARY KEY, value DOUBLE PRECISION);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_5_unique (id INTEGER UNIQUE, value DOUBLE PRECISION);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_5_table_primary (id INTEGER NOT NULL, value DOUBLE PRECISION, PRIMARY KEY (id));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_5_table_unique (id INTEGER NOT NULL, value DOUBLE PRECISION, UNIQUE (id));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_5_composite (id INTEGER NOT NULL, revision INTEGER NOT NULL, value DOUBLE PRECISION, PRIMARY KEY (id, revision));",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_5_null (id INTEGER PRIMARY KEY, value DOUBLE PRECISION NULL DEFAULT NULL);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "CREATE TABLE made_5_quoted (\"record id\" INTEGER PRIMARY KEY, \"stored value\" DOUBLE PRECISION);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "alter_table": [
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_1 INTEGER;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD added_default_1 INTEGER DEFAULT 0;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_required_1 INTEGER NOT NULL DEFAULT 0;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN IF NOT EXISTS added_optional_1 INTEGER;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME COLUMN name TO renamed_name_1;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME COLUMN score TO renamed_score_1;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME TO renamed_scratch_1;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN name SET DEFAULT 'default 1';",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_key_1 INTEGER UNIQUE;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch DROP COLUMN IF EXISTS missing_1;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_2 TEXT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD added_default_2 TEXT DEFAULT 'ready';",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_required_2 TEXT NOT NULL DEFAULT 'ready';",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch DROP COLUMN score;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME COLUMN name TO renamed_name_2;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch DROP COLUMN enabled RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME TO renamed_scratch_2;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN name SET DEFAULT 'default 2';",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN score TYPE DOUBLE PRECISION;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN name DROP DEFAULT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_3 BOOLEAN;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD added_default_3 BOOLEAN DEFAULT FALSE;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_required_3 BOOLEAN NOT NULL DEFAULT FALSE;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN id SET NOT NULL;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME COLUMN name TO renamed_name_3;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN name DROP NOT NULL;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME TO renamed_scratch_3;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN name SET DEFAULT 'default 3';",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN name TYPE TEXT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch DROP COLUMN name;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_4 REAL;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD added_default_4 REAL DEFAULT 1.5;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_required_4 REAL NOT NULL DEFAULT 1.5;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch DROP COLUMN score CASCADE;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME COLUMN name TO renamed_name_4;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN score DROP DEFAULT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME TO renamed_scratch_4;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN name SET DEFAULT 'default 4';",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN extra_flag BOOLEAN DEFAULT FALSE, ADD COLUMN extra_count INTEGER DEFAULT 0;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN score TYPE NUMERIC(10, 2);",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_5 DOUBLE PRECISION;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD added_default_5 DOUBLE PRECISION DEFAULT 2.5e1;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN added_required_5 DOUBLE PRECISION NOT NULL DEFAULT 2.5e1;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN enabled DROP DEFAULT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME COLUMN name TO renamed_name_5;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN enabled SET DEFAULT TRUE;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch RENAME TO renamed_scratch_5;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN name SET DEFAULT 'default 5';",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ALTER COLUMN score SET DEFAULT 1.25;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "ALTER TABLE scratch ADD COLUMN IF NOT EXISTS name TEXT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    }
+  ],
+  "drop_table": [
+    {
+      "sql": "DROP TABLE IF EXISTS absent_1_a;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_1_b;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_1_c;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_1_d;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_1_e;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE scratch;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE archive;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE profiles;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE tags;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE flags;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_2_a;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_2_b;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_2_c;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_2_d;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_2_e;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS scratch;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS archive;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS profiles;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS tags;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS flags;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_3_a;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_3_b;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_3_c;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_3_d;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_3_e;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE scratch RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE archive RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE profiles RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE tags RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE flags RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_4_a;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_4_b;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_4_c;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_4_d;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_4_e;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS scratch RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS archive RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS profiles RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS tags RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS flags RESTRICT;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_5_a;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_5_b;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_5_c;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_5_d;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE IF EXISTS absent_5_e;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE scratch CASCADE;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE archive CASCADE;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE profiles CASCADE;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE tags CASCADE;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    },
+    {
+      "sql": "DROP TABLE flags CASCADE;",
+      "types": "",
+      "parameters": "",
+      "values": []
+    }
+  ]
+}

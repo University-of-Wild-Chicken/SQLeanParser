@@ -36,6 +36,18 @@ private def accepted : List String := [
   "UPDATE users SET id = 1 RETURNING id", "DELETE FROM users RETURNING id"
 ]
 
+private def extendedAccepted : List String := [
+  "SELECT id FROM users OFFSET 1",
+  "SELECT id = NOT active FROM users",
+  "SELECT -NOT active FROM users",
+  "SELECT NULL FROM users",
+  "INSERT INTO users DEFAULT VALUES",
+  "INSERT INTO users SELECT id FROM users",
+  "INSERT INTO users VALUES (1) ON CONFLICT (id) DO NOTHING",
+  "CREATE TABLE users (id INT)",
+  "DROP TABLE users"
+]
+
 private def rejected : List String := [
   "", ";", "-- only comment", "SELECT", "INSERT", "UPDATE", "DELETE",
   "SELECT FROM users", "SELECT DISTINCT FROM users", "SELECT DISTINCT DISTINCT id FROM users",
@@ -46,14 +58,12 @@ private def rejected : List String := [
   "SELECT id FROM users LIMIT", "SELECT id FROM users LIMIT -1",
   "SELECT id FROM users LIMIT +1", "SELECT id FROM users LIMIT 1 + 2",
   "SELECT id FROM users LIMIT '1'", "SELECT id FROM users LIMIT 1.5",
-  "SELECT id FROM users OFFSET 1", "SELECT id FROM users LIMIT 1 OFFSET",
+  "SELECT id FROM users LIMIT 1 OFFSET",
   "SELECT id FROM users LIMIT 1 OFFSET -1", "SELECT id FROM users LIMIT 1 OFFSET +1",
   "SELECT id FROM users LIMIT 1 LIMIT 2", "SELECT id FROM users LIMIT 1 ORDER BY id",
   "SELECT id FROM users LIMIT 1 OFFSET 2 OFFSET 3",
   "SELECT id FROM users WHERE id = 1 = 2", "SELECT id FROM users WHERE NOT id < 1 < 2",
-  "SELECT id = NOT active FROM users", "SELECT -NOT active FROM users",
   "SELECT TRUE FALSE FROM users", "SELECT NOT FROM users", "SELECT + FROM users",
-  "SELECT NULL FROM users",
   "SELECT order FROM users", "SELECT id FROM limit",
   "INSERT users VALUES (1)", "INSERT INTO VALUES (1)", "INSERT INTO users",
   "INSERT INTO users () VALUES (1)", "INSERT INTO users (id,) VALUES (1)",
@@ -61,9 +71,8 @@ private def rejected : List String := [
   "INSERT INTO users VALUES ()", "INSERT INTO users VALUES (1,)",
   "INSERT INTO users VALUES (1),", "INSERT INTO users VALUES (1), ()",
   "INSERT INTO users VALUES 1", "INSERT INTO users VALUES ((1)",
-  "INSERT INTO users VALUES (DEFAULT)", "INSERT INTO users DEFAULT VALUES",
-  "INSERT INTO users SELECT id FROM users",
-  "INSERT INTO users VALUES (1) ON CONFLICT (id) DO NOTHING",
+  "INSERT INTO users VALUES (DEFAULT)",
+
   "UPDATE users", "UPDATE users SET", "UPDATE users SET = 1",
   "UPDATE users SET id", "UPDATE users SET id =", "UPDATE users SET id == 1",
   "UPDATE users SET id = 1,", "UPDATE users SET id = 1 name = 'Ada'",
@@ -71,7 +80,7 @@ private def rejected : List String := [
   "UPDATE users SET id = 1 LIMIT 1",
   "DELETE users", "DELETE FROM", "DELETE FROM users WHERE",
   "DELETE * FROM users", "DELETE FROM users LIMIT 1",
-  "CREATE TABLE users (id INT)", "DROP TABLE users", "BEGIN", "COMMIT", "ROLLBACK",
+  "BEGIN", "COMMIT", "ROLLBACK",
   "SELECT * FROM users;;", "INSERT INTO users VALUES (1);;",
   "UPDATE users SET id = 1;;", "DELETE FROM users;;",
   "SELECT * FROM users; DELETE FROM users",
@@ -86,6 +95,8 @@ private def bool (b : Bool) : Expr := .literal (.bool b)
 def crudParsingTests : IO Nat := do
   for source in accepted do
     let _ ← expectOk source (parseStatement source)
+  for source in extendedAccepted do
+    let _ ← expectOk "extended statement syntax" (parseStatement source)
   for source in rejected do
     expectError source (parseStatement source)
 
@@ -188,6 +199,6 @@ def crudParsingTests : IO Nat := do
 
   let nested := (List.range 40).foldl (fun text _ => s!"NOT ({text})") "TRUE"
   let _ ← expectOk "nested NOT expression" (parseStatement s!"DELETE FROM t WHERE {nested}")
-  pure (accepted.length + rejected.length + 21)
+  pure (accepted.length + extendedAccepted.length + rejected.length + 21)
 
 end SQLean.Tests

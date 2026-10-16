@@ -54,4 +54,18 @@ def parseAndValidateRelQuery (schema : Schema) (source : String) :
   let certificate ← (certifyRelQuery schema query).mapError QueryError.validation
   pure ⟨query, certificate⟩
 
+/-- The uniform advanced interface carries catalog effects and an explicit
+parameter environment. Its proof attests the bounded executable static check. -/
+structure CheckedAdvancedStatement (catalog : Advanced.Catalog) (params : Advanced.ParameterEnv) where
+  statement : Advanced.Statement
+  result : Advanced.StatementResult
+  checked : Advanced.checkStatementDetailed catalog params statement = .ok result
+
+def parseAndValidateAdvanced (catalog : Advanced.Catalog) (params : Advanced.ParameterEnv)
+    (source : String) : Except QueryError (CheckedAdvancedStatement catalog params) := do
+  let statement ← (Advanced.parse source).mapError QueryError.parse
+  match h : Advanced.checkStatementDetailed catalog params statement with
+  | .error error => .error (.validation error)
+  | .ok result => .ok ⟨statement, result, h⟩
+
 end SQLean

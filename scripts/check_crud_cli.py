@@ -73,7 +73,7 @@ def main() -> None:
         ("SELECT id FROM users ORDER BY 0", "validation error"),
         ("SELECT id FROM users ORDER BY 2", "validation error"),
         ("SELECT DISTINCT id FROM users ORDER BY name", "validation error"),
-        ("SELECT id FROM users OFFSET 2", "parse error"),
+        ("SELECT id FROM users OFFSET -2", "parse error"),
         ("UPDATE users SET age = 1; DELETE FROM users", "parse error"),
         ("DELETE FROM users RETURNING", "parse error"),
     ]

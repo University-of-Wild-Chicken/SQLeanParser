@@ -1,4 +1,5 @@
 import SQLean.AST
+import SQLean.AdvancedPretty
 
 /-! Canonical SQL rendering. Identifiers are quoted and strings use doubled-quote
 escaping. Rendering does not validate a manually constructed AST.
@@ -230,5 +231,8 @@ instance : ToSql Statement where
     | .relational query => toSql query
     | .returning mutation items => mutation.toSqlBody ++ " RETURNING " ++
       commaSep (items.map toSql) ++ ";"
+    | .extended statement => Advanced.render statement
+
+instance : ToSql Advanced.Statement := ⟨Advanced.render⟩
 
 end SQLean

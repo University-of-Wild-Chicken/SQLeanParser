@@ -1,4 +1,5 @@
 import SQLean.Lexer
+import SQLean.AdvancedParser
 
 /-! Total, position-aware parsers for the SELECT, CRUD, and relational grammars in `SQLean.AST`.
 Recursion is bounded by a budget derived from the token count. The public entry
@@ -681,8 +682,14 @@ def parse := parseQuery
 /-- Parse exactly one SELECT (including WITH), INSERT, UPDATE, or DELETE
 statement, with one optional trailing semicolon. `parseQuery` preserves the
 original MVP grammar, and legacy SELECT inputs retain their original AST. -/
-def parseStatement (input : String) : Except ParseError Statement := do
-  Parser.parseStatementTokens (← lex input)
+def parseStatement (input : String) : Except ParseError Statement :=
+  match lex input >>= Parser.parseStatementTokens with
+  | .ok statement => .ok statement
+  | .error legacyError =>
+    match Advanced.parse input with
+    | .ok statement => .ok (.extended statement)
+    | .error extendedError => .error
+      (if extendedError.position.offset > legacyError.position.offset then extendedError else legacyError)
 
 /-- Parse a SELECT into the relational AST, including simple queries, joins,
 aggregation, derived tables, compound UNION queries, and WITH [RECURSIVE] clauses. -/
