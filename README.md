@@ -18,6 +18,15 @@ python3 scripts/test_postgresql_results.py
 python3 scripts/generate_advanced_examples.py --check
 ```
 
+[GitHub Actions CI](.github/workflows/ci.yml) runs on pushes, pull requests, and
+manual dispatch. A Python job runs all offline regression tests and checks all
+five generated corpora. A second job builds the library, CLI, and test executable
+from scratch using `lean-toolchain`, runs the Lean and SQLite suites, then runs
+both PostgreSQL corpora and the actual parameter-execution check against
+PostgreSQL 16. Both jobs use Ubuntu 24.04 and Python 3.12. PostgreSQL checks use
+temporary private clusters; no database secrets are required. New runs cancel
+superseded runs for the same branch or pull request.
+
 To run the PostgreSQL oracle, supply a directory containing `initdb`, `pg_ctl`,
 and `psql` (for example, the output of `pg_config --bindir`):
 
@@ -325,6 +334,31 @@ python3 scripts/check_advanced_cli.py --local-bin /usr/lib/postgresql/16/bin
 ```
 
 The checker performs 1,500 source/canonical result/status comparisons (including 1,180 row-result comparisons), 526 mutation/DDL state comparisons, and 61 independent result/catalog oracles on empty and populated databases. DDL state checks include table/column names, types, defaults, nullability, constraints, and rows. Parameter cases use PostgreSQL PREPARE/EXECUTE as well as COPY result capture; question marks inside quoted text remain text. The script uses temporary databases and the NULL-preserving COPY decoder.
+
+For parameterized statements, `check_advanced_cli.py` currently discards the
+PREPARE/EXECUTE output and captures results from typed literal substitution.
+Its parameter result oracles therefore directly cover the literal path only.
+The separate bounded check below captures actual SQL EXECUTE rows through a
+typed PL/pgSQL set-returning bridge and the same NULL-preserving COPY protocol:
+
+```sh
+python3 scripts/test_parameter_execution.py  # offline wiring/oracle tests only
+python3 scripts/check_parameter_execution.py --local-bin /usr/lib/postgresql/16/bin
+# Or: python3 scripts/check_parameter_execution.py --dsn "$TEST_DATABASE_URL"
+```
+
+It selects 12 historical placeholder fixtures (2, 17, 22–25, 27, 42, 47–50)
+and adds one fixed NULL/marker-text/empty-string case without changing the
+historical corpus. On empty and seeded tables, each execution path must match
+handwritten expected rows and arity; RETURNING cases also compare database
+snapshots after each path. Each path starts from the same savepoint state.
+Repeated/out-of-order `$n`, quoted `?`, anonymous parameters, INSERT, UPDATE,
+DELETE and UPSERT RETURNING are included. The bridge issues the actual SQL
+`EXECUTE sqlean_parameters (...)`; it does not interpolate the prepared query.
+Offline tests do not establish PostgreSQL execution success. A successful database
+run would establish only these finite source-SQL checks, not CLI canonicalization,
+wire-protocol binding, arbitrary SQL adapter correctness, or general semantic
+equivalence. Use the local-cluster command as a non-root user.
 
 Advanced queries support correlated IN, NOT IN, EXISTS, NOT EXISTS, and scalar subqueries. IN and scalar subqueries require one output column; scalar subquery results are conservatively nullable, and the checker does not prove at-most-one-row cardinality. Inner scopes shadow outer names. A LATERAL derived table can see preceding sources; ordinary derived tables cannot see sibling sources. LEFT LATERAL joins propagate nullability. USING and NATURAL joins merge unqualified shared columns and wildcard outputs while retaining both qualified original columns. INTERSECT binds more tightly than UNION/EXCEPT; UNION and EXCEPT associate left. ALL variants preserve bag-operation syntax. Parenthesized operands retain their own sorting and pagination.
 
