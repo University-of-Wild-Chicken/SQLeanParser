@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  python:
+    name: Python regressions and fixtures
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+
+      - name: Run offline regressions
+        run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
+
+      - name: Check generated fixtures
+        run: |
+          for generator in scripts/generate_*_examples.py; do
+            python3 "$generator" --check
+          done
+
+  integration:
+    name: Lean and database integration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+
+      - name: Install PostgreSQL 16
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends postgresql-16 postgresql-client-16
+
+      - name: Build Lean library, CLI, and tests
+        uses: leanprover/lean-action@24581d74d674803a25a81b10b059c5c0cdd344c6 # v1
+        with:
+          auto-config: "false"
+          build: "true"
+          # This project uses an explicit test executable, not `lake test`.
+          test: "false"
+          lint: "false"
+          use-mathlib-cache: "false"
+          # Recompile proofs and executables on every run.
+          use-github-cache: "false"
+
+      - name: Run Lean tests and proof examples
+        run: lake exe sqlean_tests
+
+      - name: Check SQLite CLI compatibility
+        run: |
+          python3 scripts/check_crud_cli.py
+          python3 scripts/check_relational_cli.py
+          python3 scripts/check_industrial_cli.py
+
+      # Each checker creates and removes its own private Unix-socket cluster.
+      # Run as the normal runner user: PostgreSQL initdb refuses root.
+      - name: Check PostgreSQL corpus
+        run: python3 scripts/check_postgresql_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check advanced PostgreSQL corpus
+        run: python3 scripts/check_advanced_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check actual parameter execution
+        run: python3 scripts/check_parameter_execution.py --local-bin /usr/lib/postgresql/16/bin
