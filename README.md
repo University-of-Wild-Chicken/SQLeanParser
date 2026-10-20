@@ -27,6 +27,16 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.9 array-type increment](docs/array-types-contract-v0.9.md)
+adds built-in array types, repeated unsized suffixes, casts, catalog columns and
+typed parameters. Exact element types remain distinct while declared dimension
+counts normalize. It also corrects parameter modifier inference: PostgreSQL
+ignores modifiers on prepared parameter declarations, while explicit casts
+preserve them. Fifty synthetic certificates and 50 unchanged source examples
+are checked, with 126 native value/type observations and 126 exact prepared
+result descriptors. Array constructors and quantified comparisons follow
+as separate increments.
+
 The [v0.8 derived-source increment](docs/derived-contract-v0.8.md)
 adds recursively nested non-LATERAL SELECT sources and positional column
 renaming. Independent derivations retain exact output types, modifiers,
@@ -122,6 +132,7 @@ python3 scripts/check_locking_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_join_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_merged_join_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_derived_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_array_types_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -251,7 +262,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.8` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.9` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.
@@ -320,6 +331,12 @@ The current independent profile has the following explicit boundary:
   supported modifiers. Integer magnitudes choose INTEGER, BIGINT or NUMERIC;
   decimal/exponent literals have exact NUMERIC type. All supplied metadata
   must be supported, including unused declarations.
+- Arrays of the concrete built-in types support unsized `[]` suffixes,
+  casts, projections, typed bindings, NULL tests and covered comparison or
+  conditional signatures. Element modifiers are preserved for columns and
+  casts. A parameter expression has the unmodified OID type, for scalar and
+  array declarations alike. Array NULL elements do not make the outer value
+  nullable. SQLite rejects array types.
 - Explicit PostgreSQL scalar tables govern arithmetic, casts, comparisons,
   LIKE, IN and BETWEEN. JSON lacks comparison operators while JSONB admits
   them. Successful conversion and evaluation of actual values remain runtime

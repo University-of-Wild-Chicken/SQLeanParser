@@ -68,6 +68,7 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor using_contract --check
           python3 scripts/extract_factor_corpus.py --factor natural_contract --check
           python3 scripts/extract_factor_corpus.py --factor derived_contract --check
+          python3 scripts/extract_factor_corpus.py --factor array_types --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -154,6 +155,9 @@ jobs:
 
       - name: Check nested derived-source contracts and parameter order
         run: python3 scripts/check_derived_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check array types and exact prepared result descriptors
+        run: python3 scripts/check_array_types_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

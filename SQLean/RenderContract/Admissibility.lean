@@ -50,8 +50,9 @@ def numericLexeme (raw : String) : Bool :=
       (!whole.isEmpty || !digits.isEmpty) && (suffix.isEmpty || exponent suffix)
   | _ => !whole.isEmpty && exponent rest
 
-def checkDataType (type : DataType) : Except Failure Unit :=
-  match type.name, type.modifiers with
+def checkTypeName (name : TypeName) (modifiers : List Nat) : Except Failure Unit :=
+  match name, modifiers with
+  | .array element, modifiers => checkTypeName element modifiers
   | _, [] => pure ()
   | .varchar, [n] | .char, [n] =>
       if 0 < n && n ≤ 10485760 then pure ()
@@ -66,6 +67,16 @@ def checkDataType (type : DataType) : Except Failure Unit :=
       if p ≤ 6 then pure ()
       else invalid "representation.type-modifiers" "fractional-second precision must be between 0 and 6"
   | _, _ => invalid "representation.type-modifiers" "invalid modifiers for this type"
+
+def checkDataType (type : DataType) : Except Failure Unit :=
+  checkTypeName type.name type.modifiers
+
+/-- Array suffixes are represented recursively, and count toward the boundary
+that guards entry into serialization and reparsing. Scalar casts retain their
+existing depth. This is not a runtime array-rank constraint. -/
+def arrayTypeDepth : TypeName → Nat
+  | .array element => 1 + arrayTypeDepth element
+  | _ => 0
 
 structure Footprint where
   parameters : List Parameter := []
@@ -102,7 +113,9 @@ mutual
     | .binary _ left right | .pattern left right _ =>
         combine [inspectExpr left, inspectExpr right]
     | .unary _ arg | .aggregate _ arg _ | .isNull arg _ => combine [inspectExpr arg]
-    | .cast arg type => checkDataType type; combine [inspectExpr arg]
+    | .cast arg type =>
+        checkDataType type
+        combine [inspectExpr arg, .ok {depth := arrayTypeDepth type.name}]
     | .call name args =>
         if name.isEmpty || name.length > 3 then
           invalid "representation.function-name" "function names require one to three nonempty components"

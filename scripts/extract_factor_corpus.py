@@ -30,6 +30,7 @@ POPULATIONS = {
     "using_contract": {"postgres": 16, "sqlc": 3, "sqlite": 31},
     "natural_contract": {"postgres": 6, "sqlite": 44},
     "derived_contract": {"postgres": 47, "sqlc": 3},
+    "array_types": {"postgres": 42, "hatchet": 7, "sqlc": 1},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -38,6 +39,7 @@ LOCK_POLICIES = {"default", "nowait", "skip-locked"}
 JOIN_KINDS = {"cross", "inner", "left", "right", "full"}
 MERGED_FACTORS = {"using_contract": "using", "natural_contract": "natural"}
 JOIN_FACTORS = {"join_contract", *MERGED_FACTORS}
+ARRAY_ELEMENT_FAMILIES = {"int4", "int8", "text", "float8", "interval", "timestamptz", "uuid"}
 
 
 def validate_join_tree(tree: dict, *, root: bool = True, allow_merged: bool = False) -> set[str]:
@@ -164,6 +166,77 @@ def validate_derived_sources(sources: list[dict]) -> None:
             raise ValueError("invalid non-LATERAL derived source observation")
 
 
+def validate_array_types(types: list[dict]) -> None:
+    if not isinstance(types, list) or not types:
+        raise ValueError("array type factor is absent")
+    for entry in types:
+        if (not isinstance(entry, dict)
+                or set(entry) != {"element_type", "modifiers", "bounds"}
+                or not isinstance(entry["element_type"], str)
+                or entry["element_type"] not in NEW_FAMILIES | OLD_FAMILIES
+                or not isinstance(entry["modifiers"], list)
+                or not all(type(value) is int and value >= 0 for value in entry["modifiers"])
+                or not isinstance(entry["bounds"], list) or not entry["bounds"]
+                or not all(value is None or (type(value) is int and value >= 0)
+                           for value in entry["bounds"])):
+            raise ValueError("invalid array type observation")
+
+
+def observe_array_types(parsed: dict) -> list[dict]:
+    """Observe suffix declarations without admitting other array-expression forms.
+
+    Bounds describe source syntax, not a runtime rank/size constraint. This is
+    a finite source-population screen, not PostgreSQL's semantic analyzer.
+    """
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("array type source must be a SELECT")
+    result = []
+
+    def walk(value):
+        if isinstance(value, list):
+            for child in value:
+                walk(child)
+        elif isinstance(value, dict):
+            for kind, node in value.items():
+                if not isinstance(node, dict):
+                    walk(node)
+                    continue
+                if kind in {"A_ArrayExpr", "A_Indices", "A_Indirection", "RowExpr"}:
+                    raise ValueError("array constructor/subscript/row expression belongs to a later factor")
+                if kind == "A_Expr" and node.get("kind") in {"AEXPR_OP_ANY", "AEXPR_OP_ALL"}:
+                    raise ValueError("quantified comparison belongs to a later factor")
+                if kind == "SubLink" and (
+                        node.get("subLinkType") == "ARRAY_SUBLINK"
+                        or node.get("subLinkType") in {"ANY_SUBLINK", "ALL_SUBLINK"}):
+                    raise ValueError("array/quantified subquery belongs to a later factor")
+                if kind in {"TypeName", "typeName"} and node.get("arrayBounds"):
+                    names = [part.get("String", {}).get("sval") for part in node.get("names", [])]
+                    if (not names or names[-1] not in NEW_FAMILIES | OLD_FAMILIES
+                            or len(names) > 2 or (len(names) == 2 and names[0] != "pg_catalog")):
+                        raise ValueError("array element must be a supported built-in type")
+                    modifiers = []
+                    for modifier in node.get("typmods", []):
+                        literal = modifier.get("A_Const", {}).get("ival")
+                        if not isinstance(literal, dict):
+                            raise ValueError("non-integer array element type modifier")
+                        modifiers.append(literal.get("ival", 0))
+                    bounds = []
+                    for bound in node["arrayBounds"]:
+                        integer = bound.get("Integer")
+                        if not isinstance(integer, dict):
+                            raise ValueError("non-integer array type bound")
+                        number = integer.get("ival", 0)
+                        if type(number) is not int:
+                            raise ValueError("non-integer array type bound")
+                        bounds.append(None if number == -1 else number)
+                    result.append({"element_type": names[-1], "modifiers": modifiers, "bounds": bounds})
+                walk(node)
+
+    walk(parsed)
+    validate_array_types(result)
+    return result
+
+
 def observe_oracle(sql: str, factor: str) -> dict:
     import pglast
     from pglast import ast, enums, parse_sql, parser, visitors
@@ -179,7 +252,7 @@ def observe_oracle(sql: str, factor: str) -> dict:
             names = [part.sval for part in node.names or ()]
             if (not names or names[-1] not in NEW_FAMILIES | OLD_FAMILIES
                     or len(names) > 2 or (len(names) == 2 and names[0] != "pg_catalog")
-                    or node.arrayBounds):
+                    or (node.arrayBounds and factor != "array_types")):
                 raise ValueError("array/user-defined type belongs to a later factor")
 
         def visit_FuncCall(self, ancestors, node):
@@ -225,10 +298,12 @@ def observe_oracle(sql: str, factor: str) -> dict:
     observer.locks = []
     observer(tree)
     allowed = {"general-function-call", "comma-from", "expression-limit-offset", "extended-type"}
-    if factor in {"conditional", "locking", "derived_contract"} | JOIN_FACTORS:
+    if factor in {"conditional", "locking", "derived_contract", "array_types"} | JOIN_FACTORS:
         allowed.add("conditional-expression")
-    if factor == "locking":
+    if factor in {"locking", "array_types"}:
         allowed.add("row-locking")
+    if factor == "array_types":
+        allowed.add("array-or-subscripting")
     unexpected = set(features(json.loads(parser.parse_sql_json(sql)))) - allowed
     if unexpected:
         raise ValueError(f"source has later-factor dependencies: {sorted(unexpected)}")
@@ -284,6 +359,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["derived_sources"] = observe_derived_queries(parsed)
         validate_derived_sources(observation["derived_sources"])
+    if factor == "array_types":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation["array_types"] = observe_array_types(parsed)
     return observation
 
 
@@ -297,6 +375,7 @@ def validate_population(records: list[dict], factor: str) -> None:
         raise ValueError("case/whitespace duplicate factor SQL")
     forms, names, strengths, policies, join_kinds = set(), set(), set(), set(), set()
     derived_alias_cases, derived_max_depth = 0, 0
+    array_elements = set()
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -314,6 +393,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("join_tree")
         if factor == "derived_contract":
             expected_keys.add("derived_sources")
+        if factor == "array_types":
+            expected_keys.add("array_types")
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -352,6 +433,9 @@ def validate_population(records: list[dict], factor: str) -> None:
             validate_derived_sources(sources)
             derived_alias_cases += any(source["columns"] for source in sources)
             derived_max_depth = max(derived_max_depth, *(source["query_depth"] for source in sources))
+        if factor == "array_types":
+            validate_array_types(observation["array_types"])
+            array_elements.update(entry["element_type"] for entry in observation["array_types"])
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -366,6 +450,8 @@ def validate_population(records: list[dict], factor: str) -> None:
         raise ValueError("all four merged join kinds must be represented")
     if factor == "derived_contract" and (derived_alias_cases < 4 or derived_max_depth < 3):
         raise ValueError("derived population must retain column aliases and depth-three nesting")
+    if factor == "array_types" and array_elements != ARRAY_ELEMENT_FAMILIES:
+        raise ValueError("array type population must retain all seven pinned element families")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -384,7 +470,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract"} | JOIN_FACTORS:
+            if factor in {"locking", "derived_contract", "array_types"} | JOIN_FACTORS:
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -397,7 +483,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if factor not in MERGED_FACTORS or name != "sqlite":
                 raise ValueError("Tcl SQL selection is outside its explicit source factors")
             sql, line, detail = selected_tcl_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract"} | JOIN_FACTORS:
+        elif factor in {"locking", "derived_contract", "array_types"} | JOIN_FACTORS:
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])

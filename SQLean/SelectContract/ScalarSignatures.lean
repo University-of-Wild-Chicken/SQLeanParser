@@ -41,6 +41,7 @@ def typeCategory (type : ScalarType) : Nat :=
   | .bool => 2
   | .date | .time _ | .timeTZ _ | .timestamp _ | .timestampTZ _ => 3
   | .interval _ => 4
+  | .array _ => 6
   | _ => 5
 
 def preferredType (type : ScalarType) : Bool :=
@@ -50,17 +51,20 @@ def preferredType (type : ScalarType) : Bool :=
 
 /-- Catalog implicit casts, distinct from assignment and explicit casts. -/
 def implicitCast (source target : ScalarType) : Bool :=
-  let a := source.unmodified
-  let b := target.unmodified
-  a == b ||
-  (match a.numericRank, b.numericRank with
-   | some i, some j => i ≤ j
-   | _, _ => false) ||
-  (a.isString && b.isString) ||
-  (match a, b with
-   | .date, .timestamp _ | .date, .timestampTZ _ | .timestamp _, .timestampTZ _
-   | .time _, .timeTZ _ | .time _, .interval _ => true
-   | _, _ => false)
+  match source, target with
+  | .array a, .array b => implicitCast a b
+  | _, _ =>
+    let a := source.unmodified
+    let b := target.unmodified
+    a == b ||
+    (match a.numericRank, b.numericRank with
+     | some i, some j => i ≤ j
+     | _, _ => false) ||
+    (a.isString && b.isString) ||
+    (match a, b with
+     | .date, .timestamp _ | .date, .timestampTZ _ | .timestamp _, .timestampTZ _
+     | .time _, .timeTZ _ | .time _, .interval _ => true
+     | _, _ => false)
 
 def acceptsInput (input : ScalarInput) (target : ScalarType) : Bool :=
   match input with | .unknown _ => true | .known type => implicitCast type.base target
@@ -236,15 +240,24 @@ def equalityCatalog : List FunctionOverload :=
 /-- Binary operators first try an exact signature, assuming one unknown
 operand has its known partner's type, before ordinary overload resolution. -/
 def equalityOverload (left right : ScalarInput) : Option FunctionOverload :=
-  let assumed := match left.base, right.base with
-    | none, some type | some type, none => some type.unmodified
+  let arrayType := match left.base, right.base with
+    | some (.array a), some (.array b) =>
+        if a.unmodified == b.unmodified && a.orderable && b.orderable then some a.unmodified.asArray else none
+    | some (.array a), none | none, some (.array a) =>
+        if a.orderable then some a.unmodified.asArray else none
     | _, _ => none
-  match assumed with
-  | some type =>
-    match equalityCatalog.find? (fun signature => signature.inputs == [type, type]) with
-    | some signature => some signature
+  if left.base.any ScalarType.isArray || right.base.any ScalarType.isArray then
+    arrayType.map fun type => ⟨[type, type], .bool⟩
+  else
+    let assumed := match left.base, right.base with
+      | none, some type | some type, none => some type.unmodified
+      | _, _ => none
+    match assumed with
+    | some type =>
+      match equalityCatalog.find? (fun signature => signature.inputs == [type, type]) with
+      | some signature => some signature
+      | none => resolveOverload equalityCatalog [left, right]
     | none => resolveOverload equalityCatalog [left, right]
-  | none => resolveOverload equalityCatalog [left, right]
 
 def nullIfSignature (left right : ScalarInput) : Option ExactType := do
   let signature ← equalityOverload left right

@@ -485,6 +485,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
       | .binary op left right =>
         let left ← inferExpr fuel schema params scopes aggregates left
         let right ← inferExpr fuel schema params scopes aggregates right
+        ensure (!((left.toList ++ right.toList).any SqlType.isArray))
+          "array operators require exact element identities; use the independent contract tier"
         ensure (!(left.isNone && right.isNone &&
           (op == .add || op == .sub || op == .mul || op == .div)))
           "ambiguous arithmetic on two untyped NULL operands; add a cast"
@@ -547,17 +549,23 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         | none => invalid "unsupported scalar function/conditional signature"
       | .greatest args =>
         let types ← args.mapM (inferExpr fuel schema params scopes aggregates)
+        ensure (!(types.filterMap id).any SqlType.isArray)
+          "array ordering requires exact element identities; use the independent contract tier"
         match SelectContract.extremumSignature (SelectContract.scalarInputs args (types.map (Option.map familyExact))) with
         | some result => pure (familyResult (some result))
         | none => invalid "unsupported scalar function/conditional signature"
       | .least args =>
         let types ← args.mapM (inferExpr fuel schema params scopes aggregates)
+        ensure (!(types.filterMap id).any SqlType.isArray)
+          "array ordering requires exact element identities; use the independent contract tier"
         match SelectContract.extremumSignature (SelectContract.scalarInputs args (types.map (Option.map familyExact))) with
         | some result => pure (familyResult (some result))
         | none => invalid "unsupported scalar function/conditional signature"
       | .nullIf left right =>
         let ta ← inferExpr fuel schema params scopes aggregates left
         let tb ← inferExpr fuel schema params scopes aggregates right
+        ensure (!((ta.toList ++ tb.toList).any SqlType.isArray))
+          "array equality requires exact element identities; use the independent contract tier"
         match SelectContract.nullIfSignature (SelectContract.scalarInput left (ta.map familyExact))
             (SelectContract.scalarInput right (tb.map familyExact)) with
         | some result => pure (familyResult (some result))
@@ -565,6 +573,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
       | .caseExpr operand branches otherwise =>
         let operandType ← match operand with
           | none => pure none | some expr => inferExpr fuel schema params scopes aggregates expr
+        ensure (!operandType.toList.any SqlType.isArray)
+          "array CASE comparison requires exact element identities; use the independent contract tier"
         let branchTypes ← branches.mapM fun branch => do
           let condition ← inferExpr fuel schema params scopes aggregates branch.1
           let result ← inferExpr fuel schema params scopes aggregates branch.2

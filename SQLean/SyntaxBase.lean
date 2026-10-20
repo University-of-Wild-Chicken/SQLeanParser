@@ -25,6 +25,8 @@ inductive SqlType where
   /-- Concrete nonnumeric built-in identity retained by the expanded checker.
   The independent contract additionally preserves declaration modifiers. -/
   | opaque (name : OpaqueType)
+  /-- Array identity is distinct from its element's scalar family. -/
+  | array (element : SqlType)
   | nullable (base : SqlType)
   deriving Repr, BEq, DecidableEq, Inhabited
 

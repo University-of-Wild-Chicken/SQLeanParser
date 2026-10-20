@@ -8,6 +8,9 @@ inductive TypeName where
   | int | bigInt | text | varchar | bool | real | doublePrecision | numeric
   | smallInt | char | date | time | timeTZ | timestamp | timestampTZ
   | interval | uuid | json | jsonb | bytea
+  /-- Each wrapper retains one declared unsized array suffix. PostgreSQL does
+  not use the declared dimension count as a distinct runtime type. -/
+  | array (element : TypeName)
   deriving Repr, BEq, DecidableEq, Inhabited
 
 structure DataType where
@@ -15,8 +18,15 @@ structure DataType where
   modifiers : List Nat := []
   deriving Repr, BEq, DecidableEq, Inhabited
 
-def DataType.sqlType (type : DataType) : SqlType :=
-  match type.name with
+def TypeName.scalarBase : TypeName → TypeName
+  | .array element => element.scalarBase
+  | name => name
+
+def TypeName.isArray : TypeName → Bool
+  | .array _ => true
+  | _ => false
+
+def TypeName.sqlType : TypeName → SqlType
   | .smallInt | .int | .bigInt => .int
   | .text | .varchar | .char => .text
   | .bool => .bool
@@ -31,6 +41,12 @@ def DataType.sqlType (type : DataType) : SqlType :=
   | .json => .opaque .json
   | .jsonb => .opaque .jsonb
   | .bytea => .opaque .bytea
+  | .array element =>
+      match element.sqlType with
+      | .array base => .array base
+      | base => .array base
+
+def DataType.sqlType (type : DataType) : SqlType := type.name.sqlType
 
 /-- Anonymous ordinals count question marks in source order, beginning at one. -/
 inductive Parameter where

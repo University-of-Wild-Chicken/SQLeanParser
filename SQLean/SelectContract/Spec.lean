@@ -13,7 +13,7 @@ open Advanced
 
 /-- Well-formed metadata is distinct from support by the chosen scalar profile. -/
 def DataTypeWellFormed (type : DataType) : Prop :=
-  match type.name, type.modifiers with
+  match type.name.scalarBase, type.modifiers with
   | .varchar, [] | .char, [] | .numeric, [] => True
   | .varchar, [n] | .char, [n] => 0 < n ∧ n ≤ 10485760
   | .numeric, [p] => 0 < p ∧ p ≤ 1000
@@ -133,7 +133,7 @@ mutual
     | null : ExprValid params scope .null none []
     | parameter (present : binding ∈ params) (identity : binding.index = parameterIndex parameter)
         (supported : concreteType binding.type = some base) :
-        ExprValid params scope (.parameter parameter) (some ⟨base, binding.nullable⟩) [parameter]
+        ExprValid params scope (.parameter parameter) (some ⟨base.unmodified, binding.nullable⟩) [parameter]
     | column (resolved : Resolves scope qualifier name column) :
         ExprValid params scope (.column qualifier name) (some column.type) []
     | binary (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)

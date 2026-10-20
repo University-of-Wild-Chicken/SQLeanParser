@@ -107,7 +107,7 @@ def extendedTypeRenderingTests : IO Nat := do
     "CHARACTER 'abc'", "CHAR 'abc'", "INTERVAL '1' YEAR",
     "INTERVAL '1 day' DAY TO SECOND", "CAST('1' AS INTERVAL YEAR)",
     "CAST('1' AS \"int4\")", "CAST('1' AS \"DATE\")", "CAST('1' AS \"char\")",
-    "CAST('1' AS public.custom)", "CAST('1' AS INTEGER[])"] do
+    "CAST('1' AS public.custom)", "CAST('1' AS INTEGER[3])"] do
     expectError source (Advanced.parseExpression source)
     count := count + 1
   let columns ← expectOk "type keywords remain identifiers"

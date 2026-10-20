@@ -272,7 +272,8 @@ def load_cases(include_statement_families=True):
           for name in ["benchbase", "temporal", "river"]],
         *[ROOT / "fixtures" / factor / "concrete.jsonl"
           for factor in ["functions", "conditional", "pagination", "extended_types", "locking",
-                         "join_contract", "using_contract", "natural_contract", "derived_contract"]],
+                         "join_contract", "using_contract", "natural_contract", "derived_contract",
+                         "array_types"]],
     ]
     if include_statement_families:
         paths.append(ROOT / "fixtures/statement_families/concrete.jsonl")

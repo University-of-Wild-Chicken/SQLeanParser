@@ -19,12 +19,12 @@ private def baseSource : Advanced.From := .table "base_table" (some "inside")
 private def baseScope : Scope := .ofBindings [⟨"inside", ⟨"id", ⟨.int32, false⟩⟩⟩]
 
 private theorem base_valid :
-    SourceValid .basicV08 catalog params (some baseSource) baseScope [] :=
+    SourceValid .basicV09 catalog params (some baseSource) baseScope [] :=
   .table (table := table) (by simp [catalog]) rfl (by simp) (.cons rfl .nil)
 
 private def child : Advanced.Query := {
   body := .select {
-    items := [.expression (anon 2) (some "dup"),
+    items := [.expression (.cast (anon 2) ⟨.varchar, [5]⟩) (some "dup"),
       .expression (.cast .null ⟨.numeric, [8, 2]⟩) (some "dup"),
       .expression (.column (some "inside") "id") (some "tail")]
     source := some baseSource }
@@ -34,13 +34,14 @@ private def childOutput : List OutputColumn :=
     ⟨"tail", ⟨.int32, false⟩⟩]
 
 private theorem child_valid :
-    QueryValid .basicV08 catalog params child childOutput [.anonymous 2, .anonymous 3] := by
+    QueryValid .basicV09 catalog params child childOutput [.anonymous 2, .anonymous 3] := by
   apply QueryValid.basic (scope := baseScope) (sourceUses := [])
     (selectUses := [.anonymous 2]) (whereUses := []) (orderUses := [])
     (limitUses := [.anonymous 3]) (offsetUses := [])
   · exact base_valid
-  · exact .expression (expr := anon 2) (alias := some "dup")
-      (.parameter (binding := ⟨2, ⟨.varchar, [5]⟩, true⟩) (by simp [params]) rfl rfl)
+  · exact .expression (expr := .cast (anon 2) ⟨.varchar, [5]⟩) (alias := some "dup")
+      (.cast (.parameter (binding := ⟨2, ⟨.varchar, [5]⟩, true⟩)
+        (by simp [params]) rfl rfl) rfl (by decide) rfl)
       (by simp)
       (.expression (expr := .cast .null ⟨.numeric, [8, 2]⟩) (alias := some "dup")
         (.cast .null rfl (by decide) rfl) (by simp)
@@ -65,7 +66,7 @@ example : ¬ ParameterOrder [.anonymous 2, .anonymous 3] := by decide
 private def source : Advanced.From := .derived child "d" ["first"] false
 private def exposed : Scope := Scope.ofOutput "d" (renameOutput ["first"] childOutput)
 private theorem source_valid :
-    SourceValid .basicV08 catalog params (some source) exposed [.anonymous 2, .anonymous 3] :=
+    SourceValid .basicV09 catalog params (some source) exposed [.anonymous 2, .anonymous 3] :=
   .derived child_valid (by decide) (by decide) rfl
 
 example : exposed.output =
@@ -77,10 +78,10 @@ example : exposed.columns (some "d") = exposed.output := by decide
 example : Resolves exposed (some "d") "dup" ⟨"dup", ⟨.numeric [8, 2], true⟩⟩ := by decide
 
 /-- Duplicate labels and duplicate prefix aliases remain legal exposed rows. -/
-example : SourceValid .basicV08 catalog params (some (.derived child "d" [] false))
+example : SourceValid .basicV09 catalog params (some (.derived child "d" [] false))
     (Scope.ofOutput "d" childOutput) [.anonymous 2, .anonymous 3] :=
   .derived child_valid (by decide) (by decide) rfl
-example : SourceValid .basicV08 catalog params (some (.derived child "d" ["x", "x"] false))
+example : SourceValid .basicV09 catalog params (some (.derived child "d" ["x", "x"] false))
     (Scope.ofOutput "d" (renameOutput ["x", "x"] childOutput)) [.anonymous 2, .anonymous 3] :=
   .derived child_valid (by decide) (by decide) rfl
 example : ¬ Resolves (Scope.ofOutput "d" childOutput) (some "d") "dup"
@@ -91,7 +92,7 @@ example : ¬ ColumnAliasesValid [""] childOutput := by decide
 private def middle : Advanced.Query := {
   body := .select { items := [.all (some "d")], source := some source } }
 private theorem middle_valid :
-    QueryValid .basicV08 catalog params middle exposed.output [.anonymous 2, .anonymous 3] := by
+    QueryValid .basicV09 catalog params middle exposed.output [.anonymous 2, .anonymous 3] := by
   apply QueryValid.basic (scope := exposed) (sourceUses := [.anonymous 2, .anonymous 3])
     (selectUses := []) (whereUses := []) (orderUses := []) (limitUses := []) (offsetUses := [])
   · exact source_valid
@@ -110,13 +111,13 @@ private theorem middle_valid :
 private def nestedSource : Advanced.From := .derived middle "q" [] false
 private def nestedScope : Scope := Scope.ofOutput "q" exposed.output
 private theorem nested_valid :
-    SourceValid .basicV08 catalog params (some nestedSource) nestedScope [.anonymous 2, .anonymous 3] :=
+    SourceValid .basicV09 catalog params (some nestedSource) nestedScope [.anonymous 2, .anonymous 3] :=
   .derived middle_valid (by decide) (by decide) rfl
 
-example : SourceValid .basicV08 catalog params (some (translateSource nestedSource))
+example : SourceValid .basicV09 catalog params (some (translateSource nestedSource))
     nestedScope [.numbered 2, .numbered 3] :=
   source_valid_translated nested_valid
-example : QueryValid .basicV08 catalog params (translateParameters child)
+example : QueryValid .basicV09 catalog params (translateParameters child)
     childOutput [.numbered 2, .numbered 3] := query_valid_translated child_valid
 
 private def outer : Advanced.Query := {
@@ -125,7 +126,7 @@ private def outer : Advanced.Query := {
     source := some nestedSource } }
 private def output : List OutputColumn := ⟨"selected", ⟨.int32, false⟩⟩ :: exposed.output
 private theorem outer_derivation :
-    QueryValid .basicV08 catalog params outer output [.anonymous 1, .anonymous 2, .anonymous 3] := by
+    QueryValid .basicV09 catalog params outer output [.anonymous 1, .anonymous 2, .anonymous 3] := by
   apply QueryValid.basic (scope := nestedScope) (sourceUses := [.anonymous 2, .anonymous 3])
     (selectUses := [.anonymous 1]) (whereUses := []) (orderUses := []) (limitUses := []) (offsetUses := [])
   · exact nested_valid
@@ -143,9 +144,9 @@ private theorem outer_derivation :
   · rfl
   · rfl
 
-private theorem outer_valid : SelectValid .basicV08 catalog params outer output :=
+private theorem outer_valid : SelectValid .basicV09 catalog params outer output :=
   .certified (by decide) (by decide) outer_derivation (Or.inr rfl)
-example : SelectValid .basicV08 catalog params (translateParameters outer) output :=
+example : SelectValid .basicV09 catalog params (translateParameters outer) output :=
   translateParameters_valid outer_valid
 
 /-- A derived alias is not silently promoted to a base-table lock target.
@@ -153,7 +154,7 @@ A distinct base sibling remains lockable without propagating locks into the
 derived query. -/
 private def sibling : Advanced.From := .table "base_table" (some "b")
 private def combined : Advanced.From := .join .cross nestedSource sibling .none
-example : SourceValid .basicV08 catalog params (some combined)
+example : SourceValid .basicV09 catalog params (some combined)
     (nestedScope ++ Scope.ofOutput "b" [⟨"id", ⟨.int32, false⟩⟩])
     [.anonymous 2, .anonymous 3] :=
   .cross nested_valid

@@ -11,11 +11,11 @@ formalization of PostgreSQL's general overload-resolution algorithm. -/
 namespace SQLean.SelectContract
 
 inductive Profile where
-  | basicV08
+  | basicV09
   deriving Repr, BEq, DecidableEq, Inhabited
 
 def Profile.name : Profile → String
-  | .basicV08 => "sqlean-basic-select-v0.8"
+  | .basicV09 => "sqlean-basic-select-v0.9"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes
@@ -32,7 +32,32 @@ inductive ScalarType where
   | timestampTZ (modifiers : List Nat := [])
   | interval (modifiers : List Nat := [])
   | uuid | json | jsonb | bytea
+  | array (element : ScalarType)
   deriving Repr, BEq, DecidableEq, Inhabited
+
+/-- Array rank is syntax/value information, not a PostgreSQL type identity.
+Certified array types contain precisely one wrapper around a scalar leaf. -/
+def ScalarType.arrayElement : ScalarType → ScalarType
+  | .array element => element.arrayElement
+  | type => type
+
+def ScalarType.asArray (type : ScalarType) : ScalarType := .array type.arrayElement
+
+def ScalarType.isArray : ScalarType → Bool
+  | .array _ => true
+  | _ => false
+
+@[simp] theorem ScalarType.arrayElement_not_array (type : ScalarType) :
+    type.arrayElement.isArray = false := by
+  induction type <;> simp_all [arrayElement, isArray]
+
+@[simp] theorem ScalarType.arrayElement_idempotent (type : ScalarType) :
+    type.arrayElement.arrayElement = type.arrayElement := by
+  induction type <;> simp_all [arrayElement]
+
+@[simp] theorem ScalarType.asArray_idempotent (type : ScalarType) :
+    type.asArray.asArray = type.asArray := by
+  simp [asArray, arrayElement]
 
 def ScalarType.dataType : ScalarType → Advanced.DataType
   | .smallInt => ⟨.smallInt, []⟩ | .int32 => ⟨.int, []⟩ | .int64 => ⟨.bigInt, []⟩
@@ -43,12 +68,15 @@ def ScalarType.dataType : ScalarType → Advanced.DataType
   | .timestamp m => ⟨.timestamp, m⟩ | .timestampTZ m => ⟨.timestampTZ, m⟩
   | .interval m => ⟨.interval, m⟩
   | .uuid => ⟨.uuid, []⟩ | .json => ⟨.json, []⟩ | .jsonb => ⟨.jsonb, []⟩ | .bytea => ⟨.bytea, []⟩
+  | .array element => let type := element.dataType; ⟨.array type.name, type.modifiers⟩
 
 def ScalarType.unmodified : ScalarType → ScalarType
   | .numeric _ => .numeric [] | .varchar _ => .varchar [] | .char _ => .char []
   | .time _ => .time [] | .timeTZ _ => .timeTZ []
   | .timestamp _ => .timestamp [] | .timestampTZ _ => .timestampTZ []
-  | .interval _ => .interval [] | type => type
+  | .interval _ => .interval []
+  | .array element => element.unmodified.asArray
+  | type => type
 
 def ScalarType.numericRank : ScalarType → Option Nat
   | .smallInt => some 0 | .int32 => some 1 | .int64 => some 2
@@ -58,7 +86,14 @@ def ScalarType.isString : ScalarType → Bool
   | .text | .varchar _ | .char _ => true | _ => false
 
 def ScalarType.orderable : ScalarType → Bool
-  | .json => false | _ => true
+  | .json => false
+  | .array element => element.orderable
+  | _ => true
+
+/-- PostgreSQL resolves polymorphic array operators before checking element
+operator availability. This profile does not certify that later runtime gap. -/
+def ScalarType.arrayOperatorGap (type : ScalarType) : Bool :=
+  type.isArray && !type.orderable
 
 structure ExactType where
   base : ScalarType
@@ -114,19 +149,30 @@ def Scope.columns (scope : Scope) : Option Name → List OutputColumn
 
 /-- Concrete conversion preserves declaration modifiers. Well-formedness is a
 separate prerequisite, not a family-level erasure through DataType.sqlType. -/
-def concreteType : Advanced.DataType → Option ScalarType
-  | ⟨.smallInt, []⟩ => some .smallInt
-  | ⟨.int, []⟩ => some .int32 | ⟨.bigInt, []⟩ => some .int64
-  | ⟨.text, []⟩ => some .text | ⟨.bool, []⟩ => some .bool
-  | ⟨.real, []⟩ => some .real | ⟨.doublePrecision, []⟩ => some .doublePrecision
-  | ⟨.numeric, m⟩ => some (.numeric m) | ⟨.varchar, m⟩ => some (.varchar m)
-  | ⟨.char, []⟩ => some (.char [1]) | ⟨.char, m⟩ => some (.char m)
-  | ⟨.date, []⟩ => some .date | ⟨.time, m⟩ => some (.time m)
-  | ⟨.timeTZ, m⟩ => some (.timeTZ m) | ⟨.timestamp, m⟩ => some (.timestamp m)
-  | ⟨.timestampTZ, m⟩ => some (.timestampTZ m) | ⟨.interval, m⟩ => some (.interval m)
-  | ⟨.uuid, []⟩ => some .uuid | ⟨.json, []⟩ => some .json
-  | ⟨.jsonb, []⟩ => some .jsonb | ⟨.bytea, []⟩ => some .bytea
-  | _ => none
+def concreteTypeName : Advanced.TypeName → List Nat → Option ScalarType
+  | .array element, modifiers => (concreteTypeName element modifiers).map ScalarType.asArray
+  | .smallInt, [] => some .smallInt
+  | .int, [] => some .int32 | .bigInt, [] => some .int64
+  | .text, [] => some .text | .bool, [] => some .bool
+  | .real, [] => some .real | .doublePrecision, [] => some .doublePrecision
+  | .numeric, m => some (.numeric m) | .varchar, m => some (.varchar m)
+  | .char, [] => some (.char [1]) | .char, m => some (.char m)
+  | .date, [] => some .date | .time, m => some (.time m)
+  | .timeTZ, m => some (.timeTZ m) | .timestamp, m => some (.timestamp m)
+  | .timestampTZ, m => some (.timestampTZ m) | .interval, m => some (.interval m)
+  | .uuid, [] => some .uuid | .json, [] => some .json
+  | .jsonb, [] => some .jsonb | .bytea, [] => some .bytea
+  | _, _ => none
+
+def concreteType (type : Advanced.DataType) : Option ScalarType :=
+  concreteTypeName type.name type.modifiers
+
+/-- Repeated declared dimensions do not create a different concrete type. -/
+theorem concreteType_array_rank (element : Advanced.TypeName) (modifiers : List Nat) :
+    concreteType ⟨.array (.array element), modifiers⟩ =
+      concreteType ⟨.array element, modifiers⟩ := by
+  simp only [concreteType, concreteTypeName]
+  cases concreteTypeName element modifiers <;> simp
 
 def ExprType.nullable : ExprType → Bool
   | none => true | some type => type.nullable
@@ -240,26 +286,31 @@ instance (op : UnOp) (arg : Advanced.Expr) : Decidable (OrdinaryUnary op arg) :=
 /-- Explicit casts from pg_cast.dat, plus PostgreSQL's documented CoerceViaIO
 rule for string-category sources or targets. This is not a common-type rule. -/
 def explicitCastAllowed (source target : ScalarType) : Bool :=
-  source.unmodified == target.unmodified ||
-  (source.numericRank.isSome && target.numericRank.isSome) ||
-  source.isString || target.isString ||
-  match source.unmodified, target.unmodified with
-  | .int32, .bool | .bool, .int32 => true
-  | .date, .timestamp _ | .date, .timestampTZ _
-  | .time _, .interval _ | .time _, .timeTZ _
-  | .timestamp _, .date | .timestamp _, .time _ | .timestamp _, .timestampTZ _
-  | .timestampTZ _, .date | .timestampTZ _, .time _ | .timestampTZ _, .timestamp _ | .timestampTZ _, .timeTZ _
-  | .interval _, .time _ | .timeTZ _, .time _
-  | .json, .jsonb | .jsonb, .json
-  | .jsonb, .bool | .jsonb, .smallInt | .jsonb, .int32 | .jsonb, .int64
-  | .jsonb, .numeric _ | .jsonb, .real | .jsonb, .doublePrecision => true
-  | _, _ => false
+  match source, target with
+  | .array sourceElement, .array targetElement => explicitCastAllowed sourceElement targetElement
+  | _, _ =>
+    source.unmodified == target.unmodified ||
+    (source.numericRank.isSome && target.numericRank.isSome) ||
+    source.isString || target.isString ||
+    match source.unmodified, target.unmodified with
+    | .int32, .bool | .bool, .int32 => true
+    | .date, .timestamp _ | .date, .timestampTZ _
+    | .time _, .interval _ | .time _, .timeTZ _
+    | .timestamp _, .date | .timestamp _, .time _ | .timestamp _, .timestampTZ _
+    | .timestampTZ _, .date | .timestampTZ _, .time _ | .timestampTZ _, .timestamp _ | .timestampTZ _, .timeTZ _
+    | .interval _, .time _ | .timeTZ _, .time _
+    | .json, .jsonb | .jsonb, .json
+    | .jsonb, .bool | .jsonb, .smallInt | .jsonb, .int32 | .jsonb, .int64
+    | .jsonb, .numeric _ | .jsonb, .real | .jsonb, .doublePrecision => true
+    | _, _ => false
 
 def castAllowed (arg : ExprType) (target : ScalarType) : Bool :=
   match arg with | none => true | some type => explicitCastAllowed type.base target
 
-/-- JSONB scalar casts can turn JSON null into SQL NULL even for a NOT NULL
-input. Other covered casts are strict and do not manufacture SQL NULL. -/
+/-- Scalar JSONB conversion keeps a conservative nullable result flag.
+PostgreSQL 16 rejects JSON null in numeric/Boolean conversion at execution;
+the flag does not promise successful conversion. Array casts propagate only
+the outer array's nullability, independently of SQL NULL elements. -/
 def castSignature (arg : ExprType) (target : ScalarType) : ExprType :=
   let jsonNull := match arg with
     | some type => type.base == .jsonb && (target == .bool || target.numericRank.isSome)

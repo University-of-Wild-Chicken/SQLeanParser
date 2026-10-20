@@ -32,7 +32,7 @@ private def literalQuery : Advanced.Query := {
 
 /-- A kernel-checked rule derivation independent of all checker execution. -/
 private theorem literalQuery_valid :
-    SelectContract.SelectValid .basicV08 [] [] literalQuery
+    SelectContract.SelectValid .basicV09 [] [] literalQuery
       [⟨"seven", ⟨.int32, false⟩⟩] := by
   apply SelectContract.SelectValid.certified (uses := [])
   · decide
@@ -55,7 +55,7 @@ private theorem literalQuery_valid :
   · decide
 
 private def literalCertificate :
-    SelectContract.Certificate .basicV08 [] [] literalQuery :=
+    SelectContract.Certificate .basicV09 [] [] literalQuery :=
   ⟨[⟨"seven", ⟨.int32, false⟩⟩], literalQuery_valid⟩
 
 /-- SQL UNKNOWN remains nullable when a Boolean context supplies its type. -/
@@ -105,14 +105,14 @@ private def checkContractCase (label : String) (expected : String)
     (catalog : Advanced.Catalog) (params : SelectContract.ParameterEnv)
     (query : Advanced.Query) (fuel : Nat := 1024)
     (columns : Option (List SelectContract.OutputColumn) := none) : IO Unit := do
-  let outcome := Assurance.checkContract .basicV08 catalog params query fuel
+  let outcome := Assurance.checkContract .basicV09 catalog params query fuel
   SQLean.Tests.assert (outcomeName outcome == expected)
     s!"{label}: expected {expected}, got {outcomeName outcome}"
   match outcome with
   | .valid certificate =>
       -- These terms cannot type check if the result is merely checker equality
       -- or if any catalog/parameter/query index was lost.
-      have _derivation : SelectContract.SelectValid .basicV08 catalog params query certificate.output :=
+      have _derivation : SelectContract.SelectValid .basicV09 catalog params query certificate.output :=
         certificate.valid
       have _unchanged : certificate.outputCatalog = catalog :=
         certificate.catalog_unchanged
@@ -144,8 +144,8 @@ private structure RawCase where
 private def scalarProjection (expr : Advanced.Expr) : Advanced.Query :=
   { body := .select { items := [.expression expr (some "v")] } }
 
-/-- Authored exact declarations exercise the three places where typmods must
-survive: catalog projection, parameters, and explicit casts. JSON's missing
+/-- Authored exact declarations exercise preserved catalog/cast modifiers and
+PostgreSQL parameter OID semantics, which discard parameter declaration typmods. JSON's missing
 comparison operators are tested through each query-level use as well. -/
 private def scalarContractTests : IO Nat := do
   let declarations : List (Advanced.DataType × SelectContract.ScalarType) := [
@@ -173,7 +173,7 @@ private def scalarContractTests : IO Nat := do
     let params : SelectContract.ParameterEnv := [⟨1, declaration, true⟩]
     let parameter := Advanced.Expr.parameter (.numbered 1)
     checkContractCase s!"{label}: exact nullable parameter" "valid" [] params (scalarProjection parameter)
-      (columns := some [⟨"v", ⟨exact, true⟩⟩])
+      (columns := some [⟨"v", ⟨exact.unmodified, true⟩⟩])
     checkContractCase s!"{label}: exact NULL cast" "valid" [] [] (scalarProjection (.cast .null declaration))
       (columns := some [⟨"v", ⟨exact, true⟩⟩])
     let compared := scalarProjection (.binary .eq parameter parameter)
@@ -356,7 +356,7 @@ def selectContractTests : IO Nat := do
     (columnQuery (some "x") "id" (some "x"))
     (columns := some [⟨"id", ⟨.int32, false⟩⟩])
   let parsed ← expectOk "contract parsing API"
-    (Assurance.parseContract .basicV08 contractCatalog []
+    (Assurance.parseContract .basicV09 contractCatalog []
       "SELECT label FROM t WHERE label IS NOT NULL")
   checkContractCase "nullable filter does not refine output" "valid" contractCatalog [] parsed.query
     (columns := some [⟨"label", ⟨.text, true⟩⟩])
@@ -384,16 +384,16 @@ def selectContractTests : IO Nat := do
     limit := some (.parameter (.anonymous 2))
     offset := some (.binary .add (.parameter (.anonymous 3)) 1) }
   let bounds ← expectOk "pagination-only certificate for an unsupported body"
-    ((SelectContract.checkPaginationBounds .basicV08 rowCountParams boundsQuery).mapError reprStr)
-  have _boundsDerivation : SelectContract.PaginationBoundsValid .basicV08 rowCountParams
+    ((SelectContract.checkPaginationBounds .basicV09 rowCountParams boundsQuery).mapError reprStr)
+  have _boundsDerivation : SelectContract.PaginationBoundsValid .basicV09 rowCountParams
       boundsQuery bounds.limitUses bounds.offsetUses := bounds.valid
   SQLean.Tests.assert (bounds.limitUses == [.anonymous 2] && bounds.offsetUses == [.anonymous 3])
     "pagination-only certificate preserves identities without claiming whole-query notation"
   checkContractCase "bounds evidence does not certify aggregate body" "unsupported" [] rowCountParams boundsQuery
-  match SelectContract.checkPaginationBounds .basicV08 rowCountParams boundsQuery 0 with
+  match SelectContract.checkPaginationBounds .basicV09 rowCountParams boundsQuery 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "pagination-only zero budget must be inconclusive")
-  match SelectContract.checkPaginationBounds .basicV08
+  match SelectContract.checkPaginationBounds .basicV09
       [{ index := 0, type := ⟨.int, []⟩ }] literalQuery with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "pagination-only certificate must validate parameter metadata")

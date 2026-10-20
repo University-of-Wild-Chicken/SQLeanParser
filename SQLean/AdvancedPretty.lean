@@ -21,16 +21,26 @@ def lockingClauseSql (clause : LockingClause) : String :=
 def lockingSql (clauses : List LockingClause) : String :=
   String.join (clauses.map fun clause => " " ++ lockingClauseSql clause)
 
+/-- Modifiers belong to the scalar element declaration. Array brackets follow
+the complete declaration, including any time-zone qualifier. -/
+def TypeName.toSql (name : TypeName) (modifiers : List Nat) : String :=
+  let suffix := if modifiers.isEmpty then "" else paren (comma (modifiers.map toString))
+  match name with
+  | .array element => element.toSql modifiers ++ "[]"
+  | .smallInt => "SMALLINT" ++ suffix | .int => "INTEGER" ++ suffix
+  | .bigInt => "BIGINT" ++ suffix | .text => "TEXT" ++ suffix
+  | .varchar => "VARCHAR" ++ suffix | .char => "CHAR" ++ suffix
+  | .bool => "BOOLEAN" ++ suffix | .real => "REAL" ++ suffix
+  | .doublePrecision => "DOUBLE PRECISION" ++ suffix | .numeric => "NUMERIC" ++ suffix
+  | .date => "DATE" ++ suffix | .time => "TIME" ++ suffix
+  | .timeTZ => "TIME" ++ suffix ++ " WITH TIME ZONE"
+  | .timestamp => "TIMESTAMP" ++ suffix
+  | .timestampTZ => "TIMESTAMP" ++ suffix ++ " WITH TIME ZONE"
+  | .interval => "INTERVAL" ++ suffix | .uuid => "UUID" ++ suffix
+  | .json => "JSON" ++ suffix | .jsonb => "JSONB" ++ suffix | .bytea => "BYTEA" ++ suffix
+
 def DataType.toSql (type : DataType) : String :=
-  (match type.name with
-   | .smallInt => "SMALLINT" | .int => "INTEGER" | .bigInt => "BIGINT"
-   | .text => "TEXT" | .varchar => "VARCHAR" | .char => "CHAR"
-   | .bool => "BOOLEAN" | .real => "REAL" | .doublePrecision => "DOUBLE PRECISION" | .numeric => "NUMERIC"
-   | .date => "DATE" | .time | .timeTZ => "TIME"
-   | .timestamp | .timestampTZ => "TIMESTAMP" | .interval => "INTERVAL"
-   | .uuid => "UUID" | .json => "JSON" | .jsonb => "JSONB" | .bytea => "BYTEA") ++
-  (if type.modifiers.isEmpty then "" else paren (comma (type.modifiers.map toString))) ++
-  (match type.name with | .timeTZ | .timestampTZ => " WITH TIME ZONE" | _ => "")
+  type.name.toSql type.modifiers
 private def binSql : BinOp → String
   | .eq => "=" | .ne => "<>" | .lt => "<" | .le => "<=" | .gt => ">" | .ge => ">="
   | .and => "AND" | .or => "OR" | .add => "+" | .sub => "-" | .mul => "*" | .div => "/"

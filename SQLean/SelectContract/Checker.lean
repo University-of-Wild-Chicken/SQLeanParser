@@ -20,6 +20,13 @@ private def missingSignature (hasUnknownString : Bool) (code message : String) :
     unsupported "unknown_string_context" "Contextual type resolution of an uncast string literal is outside this profile"
   else invalid code message
 
+private def operatorFailure (types : List ExprType) (hasUnknownString : Bool)
+    (code message : String) : Failure :=
+  if types.any (fun type => type.any (fun type => type.base.arrayOperatorGap)) then
+    unsupported "array_element_operator"
+      "This array element type has no certified comparison operator; PostgreSQL may defer that check until execution"
+  else missingSignature hasUnknownString code message
+
 private def hasUncoveredArithmetic : ExprType → Bool
   | none => false
   | some type => match type.base with
@@ -34,7 +41,10 @@ private def binaryFailure (op : BinOp) (a b : Advanced.Expr) (ta tb : ExprType) 
         if hasUncoveredArithmetic ta || hasUncoveredArithmetic tb then
           unsupported "operator_signature" "This temporal/JSONB overload is outside the explicit signature table"
         else invalid "operator_signature" "Binary operands have no applicable PostgreSQL scalar signature"
-    | _ => invalid "operator_signature" "Binary operands have no applicable PostgreSQL scalar signature"
+    | .eq | .ne | .lt | .le | .gt | .ge =>
+        operatorFailure [ta, tb] false "operator_signature"
+        "Binary operands have no applicable PostgreSQL scalar signature"
+    | .and | .or => invalid "operator_signature" "Boolean operators require Boolean operands"
 
 structure ExprCertificate (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) where
   type : ExprType
@@ -85,7 +95,7 @@ mutual
               have facts := List.mem_filter.mp member
               match supported : concreteType binding.type with
               | none => .error (unsupported "parameter_type" "Parameter type is outside the concrete PostgreSQL scalar profile")
-              | some base => .ok ⟨some ⟨base, binding.nullable⟩, [parameter],
+              | some base => .ok ⟨some ⟨base.unmodified, binding.nullable⟩, [parameter],
                   .parameter facts.1 (by simpa using facts.2) supported⟩
           | _ => .error (invalid "parameter_binding" "Parameter must resolve to exactly one declared binding")
       | .column qualifier name =>
@@ -146,18 +156,21 @@ mutual
       | .greatest args => do
           let argsTyped ← checkExprList fuel params scope args
           match signature : extremumSignature (scalarInputs args argsTyped.types) with
-          | none => .error (invalid "conditional_signature" "GREATEST requires a nonempty common orderable type")
+          | none => .error (operatorFailure argsTyped.types false "conditional_signature"
+              "GREATEST requires a nonempty common orderable type")
           | some result => .ok ⟨some result, argsTyped.uses, .greatest argsTyped.valid signature⟩
       | .least args => do
           let argsTyped ← checkExprList fuel params scope args
           match signature : extremumSignature (scalarInputs args argsTyped.types) with
-          | none => .error (invalid "conditional_signature" "LEAST requires a nonempty common orderable type")
+          | none => .error (operatorFailure argsTyped.types false "conditional_signature"
+              "LEAST requires a nonempty common orderable type")
           | some result => .ok ⟨some result, argsTyped.uses, .least argsTyped.valid signature⟩
       | .nullIf left right => do
           let leftTyped ← checkExpr fuel params scope left
           let rightTyped ← checkExpr fuel params scope right
           match signature : nullIfSignature (scalarInput left leftTyped.type) (scalarInput right rightTyped.type) with
-          | none => .error (invalid "conditional_signature" "NULLIF requires a unique equality operator")
+          | none => .error (operatorFailure [leftTyped.type, rightTyped.type] false
+              "conditional_signature" "NULLIF requires a unique equality operator")
           | some result => .ok ⟨some result, leftTyped.uses ++ rightTyped.uses,
               .nullIf leftTyped.valid rightTyped.valid signature⟩
       | .caseExpr operand branches otherwise => do
@@ -168,8 +181,11 @@ mutual
               (scalarInputs (branches.map Prod.fst) branchesTyped.conditions)
               (scalarInputs (branches.map Prod.snd) branchesTyped.results)
               ((otherwise.map fun expr => scalarInput expr otherwiseTyped.type).getD (.unknown true)) with
-          | none => .error (invalid "case_signature"
-              "CASE requires valid conditions and branches with one implicit common result type")
+          | none => .error (if operand.isSome then
+              operatorFailure (operandTyped.type :: branchesTyped.conditions) false "case_signature"
+                "CASE requires valid conditions and branches with one implicit common result type"
+            else invalid "case_signature"
+              "CASE requires Boolean conditions and branches with one implicit common result type")
           | some result => .ok ⟨some result, operandTyped.uses ++ branchesTyped.uses ++ otherwiseTyped.uses,
               .caseExpr operandTyped.valid branchesTyped.valid otherwiseTyped.valid signature⟩
       | .inList a values => do
@@ -177,7 +193,7 @@ mutual
             let arg ← checkExpr fuel params scope a
             let items ← checkExprList fuel params scope values
             match signature : comparisonListSignature (arg.type :: items.types) with
-            | none => .error (missingSignature (uncontextualizedString a || values.any uncontextualizedString)
+            | none => .error (operatorFailure (arg.type :: items.types) (uncontextualizedString a || values.any uncontextualizedString)
                 "comparison_signature" "IN operands have no covered common comparison signature")
             | some type => .ok ⟨type, arg.uses ++ items.uses, .inList arg.valid items.valid nonempty signature⟩
           else .error (invalid "empty_in_list" "IN requires at least one value")
@@ -186,7 +202,7 @@ mutual
           let lower ← checkExpr fuel params scope b
           let upper ← checkExpr fuel params scope c
           match signature : comparisonListSignature [arg.type, lower.type, upper.type] with
-          | none => .error (missingSignature
+          | none => .error (operatorFailure [arg.type, lower.type, upper.type]
               (uncontextualizedString a || uncontextualizedString b || uncontextualizedString c)
               "comparison_signature" "BETWEEN operands have no covered common comparison signature")
           | some type => .ok ⟨type, arg.uses ++ lower.uses ++ upper.uses,
@@ -261,7 +277,7 @@ private def checkJoinKeys (kind : JoinKind) (left right : List OutputColumn)
         match rightResolved : right.filter (fun col => col.name == key) with
         | [rightColumn] =>
           match equality : equalityOverload (.known leftColumn.type) (.known rightColumn.type) with
-          | none => .error (invalid "join_key_equality" s!"JOIN key '{key}' has no supported equality operator")
+          | none => .error (operatorFailure [some leftColumn.type, some rightColumn.type] false "join_key_equality" s!"JOIN key '{key}' has no supported equality operator")
           | some _operator =>
             match common : conditionalBase [.known leftColumn.type, .known rightColumn.type] with
             | none => .error (invalid "join_key_common_type" s!"JOIN key '{key}' has no common PostgreSQL scalar type")
@@ -320,20 +336,23 @@ private def checkSort (fuel : Nat) (params : ParameterEnv) (scope : Scope) (outp
       if positive : 0 < n then
         if inRange : n ≤ output.length then
           if orderable : OrdinalOrderable output n then .ok ⟨[], .ordinal positive inRange orderable⟩
-          else .error (invalid "order_type" "ORDER BY output type has no PostgreSQL ordering operator")
+          else .error (operatorFailure [((output[n - 1]?).map OutputColumn.type)] false
+              "order_type" "ORDER BY output type has no PostgreSQL ordering operator")
         else .error (invalid "order_position" "ORDER BY position exceeds expanded output width")
       else .error (invalid "order_position" "ORDER BY positions are one-based")
   | .column none name =>
       match found : output.filter (·.name == name) with
       | [column] =>
           if orderable : column.type.base.orderable = true then .ok ⟨[], .outputName found orderable⟩
-          else .error (invalid "order_type" "ORDER BY output type has no PostgreSQL ordering operator")
+          else .error (operatorFailure [some column.type] false
+              "order_type" "ORDER BY output type has no PostgreSQL ordering operator")
       | [] => do
           if ordinary : distinct = false then
             let typed ← checkExpr fuel params scope (.column none name)
             if orderable : typed.type.orderable = true then
               .ok ⟨typed.uses, .inputName found ordinary typed.valid orderable⟩
-            else .error (invalid "order_type" "ORDER BY input type has no PostgreSQL ordering operator")
+            else .error (operatorFailure [typed.type] false
+                "order_type" "ORDER BY input type has no PostgreSQL ordering operator")
           else .error (unsupported "distinct_order_expression" "DISTINCT ordering by an input name requires projected-expression identity rules; use an output label or position")
       | _ => .error (invalid "ambiguous_output" s!"ORDER BY label '{name}' is ambiguous")
   | expr => do
@@ -342,7 +361,8 @@ private def checkSort (fuel : Nat) (params : ParameterEnv) (scope : Scope) (outp
           let typed ← checkExpr fuel params scope expr
           if orderable : typed.type.orderable = true then
             .ok ⟨typed.uses, .expression ordinary typed.valid category orderable⟩
-          else .error (invalid "order_type" "ORDER BY expression type has no PostgreSQL ordering operator")
+          else .error (operatorFailure [typed.type] false
+              "order_type" "ORDER BY expression type has no PostgreSQL ordering operator")
         else .error (invalid "order_category" "Unclassified ORDER BY syntax")
       else .error (unsupported "distinct_order_expression" "This milestone supports DISTINCT ordering by output name or position")
 
@@ -609,7 +629,8 @@ mutual
                           exact .basic source.valid items.valid nonempty distinctComparable predicate.property
                             orders.property checkedLimit.property checkedOffset.property checkedLocking.valid
                             noGrouping noHaving noDistinctOn⟩
-                      else .error (invalid "distinct_type" "DISTINCT output type has no PostgreSQL equality operator")
+                      else .error (operatorFailure (items.output.map (fun column => some column.type)) false
+                        "distinct_type" "DISTINCT output type has no PostgreSQL equality operator")
                     else .error (invalid "empty_projection" "SELECT must produce at least one output column")
                   else .error (unsupported "distinct_on" "DISTINCT ON requires a separate dialect extension")
                 else .error (unsupported "having" "Independent HAVING and grouped-query rules are not implemented yet")

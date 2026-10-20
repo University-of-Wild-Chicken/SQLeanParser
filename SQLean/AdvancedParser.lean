@@ -139,11 +139,11 @@ private def lexLoop (sqlite : Bool) : Nat → List Char → SourcePos → Nat �
               (c == '!' && d == '=') || (c == ':' && d == ':') then
             lexLoop sqlite fuel ds (advance (advance p c) d) anonymous numbered
               ({kind := .symbol (String.ofList [c,d]), position := p} :: acc)
-          else if "(),;*./+-=<>".contains c then
+          else if "(),;*./+-=<>[]".contains c then
             lexLoop sqlite fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
           else throw {position := p, message := s!"unsupported character '{c}'"}
         | [] =>
-          if "(),;*./+-=<>".contains c then
+          if "(),;*./+-=<>[]".contains c then
             lexLoop sqlite fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
           else throw {position := p, message := s!"unsupported character '{c}'"}
 
@@ -201,6 +201,15 @@ private def names (fuel : Nat) : Parser (List Name) := do
 private def optionalNames (fuel : Nat) : Parser (List Name) := do
   if ← isAt "(" then names fuel else pure []
 
+private def arraySuffixes : Nat → TypeName → Parser TypeName
+  | 0, _ => fail "array type nesting exceeds parser budget"
+  | fuel + 1, name => do
+      if ← eat "[" then
+        if ← read then fail "array types are not supported by the SQLite profile"
+        expect "]"
+        arraySuffixes fuel (.array name)
+      else pure name
+
 private def dataType (fuel : Nat) : Parser DataType := do
   let token ← pop
   let name ← match token.kind.keyword with
@@ -253,6 +262,7 @@ private def dataType (fuel : Nat) : Parser DataType := do
   | .time, [p] | .timeTZ, [p] | .timestamp, [p] | .timestampTZ, [p] | .interval, [p] =>
       if p > 6 then fail "fractional-second precision must be between 0 and 6"
   | _, _ => fail "invalid type modifiers"
+  let name ← arraySuffixes fuel name
   pure {name, modifiers}
 
 private def binInfo (token : Lexeme) : Option (BinOp × Nat) := match token.keyword with
@@ -289,6 +299,8 @@ CAST(string AS type). Bare CHARACTER constants are excluded: unlike a bare
 CHAR cast they do not supply an implicit length of one. -/
 private def typedString (fuel : Nat) : Parser Expr := do
   let type ← dataType fuel
+  if type.name.isArray then
+    fail "array typed-string constants require CAST or ::"
   let value ← match (← pop).kind with
     | .text value => pure value
     | _ => fail "expected string after SQL type"

@@ -25,10 +25,13 @@ def SqlType.asNullable (type : SqlType) : SqlType := .nullable type.base
 
 def SqlType.numeric (type : SqlType) : Bool := type.base == .int || type.base == .real
 
+def SqlType.isArray (type : SqlType) : Bool :=
+  match type.base with | .array _ => true | _ => false
+
 /-- PostgreSQL JSON has no ordinary equality/ordering operators; JSONB does.
 The other concrete types introduced here have both operators. -/
 def SqlType.equalityComparable (type : SqlType) : Bool :=
-  type.base != .opaque .json
+  !type.isArray && type.base != .opaque .json
 
 def SqlType.ordered (type : SqlType) : Bool :=
   match type.base with

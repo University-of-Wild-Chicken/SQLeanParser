@@ -13,6 +13,7 @@ private def advancedSchema : Schema := [
 private def typeCode : SqlType → String
   | .int => "i" | .text => "t" | .bool => "b" | .real => "r"
   | .opaque name => s!"[{name.name}]"
+  | .array element => typeCode element ++ "[]"
   | .nullable type => (typeCode type).toUpper
 
 private def acceptedAdvanced : List (String × String) := [

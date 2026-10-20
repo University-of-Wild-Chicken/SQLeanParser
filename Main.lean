@@ -166,9 +166,14 @@ private def contractColumnJson (column : SelectContract.OutputColumn) : Lean.Jso
   Lean.Json.mkObj [("name", toJson column.name), ("type", toJson name),
     ("nullable", toJson column.type.nullable)]
 
+private def expandedTypeName : SqlType → String
+  | .int => "int" | .text => "text" | .bool => "bool" | .real => "real"
+  | .opaque name => name.name
+  | .nullable base => expandedTypeName base
+  | .array element => expandedTypeName element ++ "[]"
+
 private def expandedColumnJson (column : ColumnDef) : Lean.Json :=
-  let name := match column.type.base with
-    | .int => "int" | .text => "text" | .bool => "bool" | .opaque name => name.name | _ => "real"
+  let name := expandedTypeName column.type.base
   Lean.Json.mkObj [("name", toJson column.name), ("type", toJson name),
     ("nullable", toJson column.type.isNullable)]
 
@@ -176,7 +181,7 @@ private def report (level : Assurance.Level) (status : String)
     (columns : Option (List Lean.Json) := none) (diagnostic : Option SelectContract.Diagnostic := none)
     (catalogUnchanged : Bool := false) : IO UInt32 := do
   let profile := match level with
-    | .declarative => SelectContract.Profile.basicV08.name
+    | .declarative => SelectContract.Profile.basicV09.name
     | .executable => "sqlean-expanded-v0"
     | .syntax => "sqlean-syntax-v0"
   let evidence := match status with
@@ -214,7 +219,7 @@ private def runAssurance (options : Options) (level : Assurance.Level) (source :
       | .error error => return ← report level "invalid" none (some ⟨"environment.parameters", error⟩)
     match statement with
     | .query query =>
-      match Assurance.checkContract .basicV08 catalog params query fuel with
+      match Assurance.checkContract .basicV09 catalog params query fuel with
       | .valid certificate => report level "valid" (some (certificate.output.map contractColumnJson)) none true
       | .invalid diagnostic => report level "invalid" none (some diagnostic)
       | .unsupported diagnostic => report level "unsupported" none (some diagnostic)

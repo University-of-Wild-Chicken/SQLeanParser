@@ -44,6 +44,8 @@ import Tests.MergedJoinPreservation
 import Tests.MergedJoinContract
 import Tests.DerivedContract
 import Tests.DerivedPreservation
+import Tests.ArrayTypeContract
+import Tests.ArrayTypeRendering
 
 namespace SQLean.Tests
 
@@ -134,6 +136,12 @@ def run : IO Unit := do
   IO.println s!"PASS: {derivedContract} nested derived-source scope and parameter checks"
   let derivedCorpus ← derivedCorpusTests
   IO.println s!"PASS: {derivedCorpus} derived-source full-query and renderer certificates"
+  let arrayTypeContract ← arrayTypeContractTests
+  IO.println s!"PASS: {arrayTypeContract} exact array type and parameter modifier checks"
+  let arrayTypeCorpus ← arrayTypeCorpusTests
+  IO.println s!"PASS: {arrayTypeCorpus} array type full-query and renderer certificates"
+  let arrayTypeRendering ← arrayTypeRenderingTests
+  IO.println s!"PASS: {arrayTypeRendering} array type parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

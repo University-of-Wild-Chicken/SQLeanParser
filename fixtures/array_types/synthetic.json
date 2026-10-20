@@ -1,0 +1,1132 @@
+[
+  {
+    "id": "array-types-01-literal-cast",
+    "source_kind": "synthetic",
+    "shape": "literal-cast",
+    "sql": "SELECT CAST('{1,NULL,3}' AS integer[]) AS v;",
+    "sqlite_sql": "SELECT CAST('{1,NULL,3}' AS integer[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "integer[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "integer[]",
+    "expected_value": "{1,NULL,3}",
+    "postgres_display_type": "integer[]",
+    "declared_element": "integer",
+    "binding_element": "integer"
+  },
+  {
+    "id": "array-types-01-array-binding",
+    "source_kind": "synthetic",
+    "shape": "array-binding",
+    "sql": "SELECT $1 AS v WHERE CAST(NULL AS integer[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 AS v WHERE CAST(NULL AS integer[]) IS NULL;",
+    "parameter_types": "integer[]",
+    "parameter_values": [
+      "{1,NULL,3}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "integer[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "integer[]",
+    "expected_value": "{1,NULL,3}",
+    "postgres_display_type": "integer[]",
+    "declared_element": "integer",
+    "binding_element": "integer"
+  },
+  {
+    "id": "array-types-01-rank-spelling",
+    "source_kind": "synthetic",
+    "shape": "rank-spelling",
+    "sql": "SELECT CAST(? AS integer[][]) AS v;",
+    "sqlite_sql": "SELECT CAST(? AS integer[][]) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "{1,NULL,3}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "integer[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "integer[]",
+    "expected_value": "{1,NULL,3}",
+    "postgres_display_type": "integer[]",
+    "declared_element": "integer",
+    "binding_element": "integer"
+  },
+  {
+    "id": "array-types-01-nullable-coalesce",
+    "source_kind": "synthetic",
+    "shape": "nullable-coalesce",
+    "sql": "SELECT COALESCE($1, CAST('{1,NULL,3}' AS integer[])) AS v;",
+    "sqlite_sql": "SELECT COALESCE(?1, CAST('{1,NULL,3}' AS integer[])) AS v;",
+    "parameter_types": "integer[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "integer[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "integer[]",
+    "expected_value": "{1,NULL,3}",
+    "postgres_display_type": "integer[]",
+    "declared_element": "integer",
+    "binding_element": "integer"
+  },
+  {
+    "id": "array-types-01-outer-null-test",
+    "source_kind": "synthetic",
+    "shape": "outer-null-test",
+    "sql": "SELECT $1 IS NOT NULL AS v WHERE CAST(NULL AS integer[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 IS NOT NULL AS v WHERE CAST(NULL AS integer[]) IS NULL;",
+    "parameter_types": "integer[]",
+    "parameter_values": [
+      "{1,NULL,3}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "postgres_display_type": "boolean",
+    "declared_element": "integer",
+    "binding_element": "integer"
+  },
+  {
+    "id": "array-types-02-literal-cast",
+    "source_kind": "synthetic",
+    "shape": "literal-cast",
+    "sql": "SELECT CAST('{2147483648,NULL,7}' AS bigint[]) AS v;",
+    "sqlite_sql": "SELECT CAST('{2147483648,NULL,7}' AS bigint[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bigint[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bigint[]",
+    "expected_value": "{2147483648,NULL,7}",
+    "postgres_display_type": "bigint[]",
+    "declared_element": "bigint",
+    "binding_element": "bigint"
+  },
+  {
+    "id": "array-types-02-array-binding",
+    "source_kind": "synthetic",
+    "shape": "array-binding",
+    "sql": "SELECT $1 AS v WHERE CAST(NULL AS bigint[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 AS v WHERE CAST(NULL AS bigint[]) IS NULL;",
+    "parameter_types": "bigint[]",
+    "parameter_values": [
+      "{2147483648,NULL,7}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bigint[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bigint[]",
+    "expected_value": "{2147483648,NULL,7}",
+    "postgres_display_type": "bigint[]",
+    "declared_element": "bigint",
+    "binding_element": "bigint"
+  },
+  {
+    "id": "array-types-02-rank-spelling",
+    "source_kind": "synthetic",
+    "shape": "rank-spelling",
+    "sql": "SELECT CAST(? AS bigint[][]) AS v;",
+    "sqlite_sql": "SELECT CAST(? AS bigint[][]) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "{2147483648,NULL,7}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bigint[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bigint[]",
+    "expected_value": "{2147483648,NULL,7}",
+    "postgres_display_type": "bigint[]",
+    "declared_element": "bigint",
+    "binding_element": "bigint"
+  },
+  {
+    "id": "array-types-02-nullable-coalesce",
+    "source_kind": "synthetic",
+    "shape": "nullable-coalesce",
+    "sql": "SELECT COALESCE($1, CAST('{2147483648,NULL,7}' AS bigint[])) AS v;",
+    "sqlite_sql": "SELECT COALESCE(?1, CAST('{2147483648,NULL,7}' AS bigint[])) AS v;",
+    "parameter_types": "bigint[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bigint[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bigint[]",
+    "expected_value": "{2147483648,NULL,7}",
+    "postgres_display_type": "bigint[]",
+    "declared_element": "bigint",
+    "binding_element": "bigint"
+  },
+  {
+    "id": "array-types-02-outer-null-test",
+    "source_kind": "synthetic",
+    "shape": "outer-null-test",
+    "sql": "SELECT $1 IS NOT NULL AS v WHERE CAST(NULL AS bigint[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 IS NOT NULL AS v WHERE CAST(NULL AS bigint[]) IS NULL;",
+    "parameter_types": "bigint[]",
+    "parameter_values": [
+      "{2147483648,NULL,7}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "postgres_display_type": "boolean",
+    "declared_element": "bigint",
+    "binding_element": "bigint"
+  },
+  {
+    "id": "array-types-03-literal-cast",
+    "source_kind": "synthetic",
+    "shape": "literal-cast",
+    "sql": "SELECT CAST('{1.234,NULL,5.678}' AS numeric(6,2)[]) AS v;",
+    "sqlite_sql": "SELECT CAST('{1.234,NULL,5.678}' AS numeric(6,2)[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric(6,2)[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric[]",
+    "expected_value": "{1.23,NULL,5.68}",
+    "postgres_display_type": "numeric(6,2)[]",
+    "declared_element": "numeric(6,2)",
+    "binding_element": "numeric"
+  },
+  {
+    "id": "array-types-03-array-binding",
+    "source_kind": "synthetic",
+    "shape": "array-binding",
+    "sql": "SELECT $1 AS v WHERE CAST(NULL AS numeric(6,2)[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 AS v WHERE CAST(NULL AS numeric(6,2)[]) IS NULL;",
+    "parameter_types": "numeric[]",
+    "parameter_values": [
+      "{1.234,NULL,5.678}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric[]",
+    "expected_value": "{1.234,NULL,5.678}",
+    "postgres_display_type": "numeric[]",
+    "declared_element": "numeric(6,2)",
+    "binding_element": "numeric"
+  },
+  {
+    "id": "array-types-03-rank-spelling",
+    "source_kind": "synthetic",
+    "shape": "rank-spelling",
+    "sql": "SELECT CAST(? AS numeric(6,2)[][]) AS v;",
+    "sqlite_sql": "SELECT CAST(? AS numeric(6,2)[][]) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "{1.234,NULL,5.678}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric(6,2)[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric[]",
+    "expected_value": "{1.23,NULL,5.68}",
+    "postgres_display_type": "numeric(6,2)[]",
+    "declared_element": "numeric(6,2)",
+    "binding_element": "numeric"
+  },
+  {
+    "id": "array-types-03-nullable-coalesce",
+    "source_kind": "synthetic",
+    "shape": "nullable-coalesce",
+    "sql": "SELECT COALESCE($1, CAST('{1.234,NULL,5.678}' AS numeric[])) AS v;",
+    "sqlite_sql": "SELECT COALESCE(?1, CAST('{1.234,NULL,5.678}' AS numeric[])) AS v;",
+    "parameter_types": "numeric[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric[]",
+    "expected_value": "{1.234,NULL,5.678}",
+    "postgres_display_type": "numeric[]",
+    "declared_element": "numeric(6,2)",
+    "binding_element": "numeric"
+  },
+  {
+    "id": "array-types-03-outer-null-test",
+    "source_kind": "synthetic",
+    "shape": "outer-null-test",
+    "sql": "SELECT $1 IS NOT NULL AS v WHERE CAST(NULL AS numeric(6,2)[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 IS NOT NULL AS v WHERE CAST(NULL AS numeric(6,2)[]) IS NULL;",
+    "parameter_types": "numeric[]",
+    "parameter_values": [
+      "{1.234,NULL,5.678}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "postgres_display_type": "boolean",
+    "declared_element": "numeric(6,2)",
+    "binding_element": "numeric"
+  },
+  {
+    "id": "array-types-04-literal-cast",
+    "source_kind": "synthetic",
+    "shape": "literal-cast",
+    "sql": "SELECT CAST('{\"alpha\",NULL,\"beta\"}' AS varchar(8)[]) AS v;",
+    "sqlite_sql": "SELECT CAST('{\"alpha\",NULL,\"beta\"}' AS varchar(8)[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(8)[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "character varying[]",
+    "expected_value": "{alpha,NULL,beta}",
+    "postgres_display_type": "character varying(8)[]",
+    "declared_element": "varchar(8)",
+    "binding_element": "varchar"
+  },
+  {
+    "id": "array-types-04-array-binding",
+    "source_kind": "synthetic",
+    "shape": "array-binding",
+    "sql": "SELECT $1 AS v WHERE CAST(NULL AS varchar(8)[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 AS v WHERE CAST(NULL AS varchar(8)[]) IS NULL;",
+    "parameter_types": "varchar[]",
+    "parameter_values": [
+      "{\"alpha\",NULL,\"beta\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "character varying[]",
+    "expected_value": "{alpha,NULL,beta}",
+    "postgres_display_type": "character varying[]",
+    "declared_element": "varchar(8)",
+    "binding_element": "varchar"
+  },
+  {
+    "id": "array-types-04-rank-spelling",
+    "source_kind": "synthetic",
+    "shape": "rank-spelling",
+    "sql": "SELECT CAST(? AS varchar(8)[][]) AS v;",
+    "sqlite_sql": "SELECT CAST(? AS varchar(8)[][]) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "{\"alpha\",NULL,\"beta\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(8)[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "character varying[]",
+    "expected_value": "{alpha,NULL,beta}",
+    "postgres_display_type": "character varying(8)[]",
+    "declared_element": "varchar(8)",
+    "binding_element": "varchar"
+  },
+  {
+    "id": "array-types-04-nullable-coalesce",
+    "source_kind": "synthetic",
+    "shape": "nullable-coalesce",
+    "sql": "SELECT COALESCE($1, CAST('{\"alpha\",NULL,\"beta\"}' AS varchar[])) AS v;",
+    "sqlite_sql": "SELECT COALESCE(?1, CAST('{\"alpha\",NULL,\"beta\"}' AS varchar[])) AS v;",
+    "parameter_types": "varchar[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "character varying[]",
+    "expected_value": "{alpha,NULL,beta}",
+    "postgres_display_type": "character varying[]",
+    "declared_element": "varchar(8)",
+    "binding_element": "varchar"
+  },
+  {
+    "id": "array-types-04-outer-null-test",
+    "source_kind": "synthetic",
+    "shape": "outer-null-test",
+    "sql": "SELECT $1 IS NOT NULL AS v WHERE CAST(NULL AS varchar(8)[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 IS NOT NULL AS v WHERE CAST(NULL AS varchar(8)[]) IS NULL;",
+    "parameter_types": "varchar[]",
+    "parameter_values": [
+      "{\"alpha\",NULL,\"beta\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "postgres_display_type": "boolean",
+    "declared_element": "varchar(8)",
+    "binding_element": "varchar"
+  },
+  {
+    "id": "array-types-05-literal-cast",
+    "source_kind": "synthetic",
+    "shape": "literal-cast",
+    "sql": "SELECT CAST('{\"a,b\",NULL,\"NULL\"}' AS text[]) AS v;",
+    "sqlite_sql": "SELECT CAST('{\"a,b\",NULL,\"NULL\"}' AS text[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text[]",
+    "expected_value": "{\"a,b\",NULL,\"NULL\"}",
+    "postgres_display_type": "text[]",
+    "declared_element": "text",
+    "binding_element": "text"
+  },
+  {
+    "id": "array-types-05-array-binding",
+    "source_kind": "synthetic",
+    "shape": "array-binding",
+    "sql": "SELECT $1 AS v WHERE CAST(NULL AS text[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 AS v WHERE CAST(NULL AS text[]) IS NULL;",
+    "parameter_types": "text[]",
+    "parameter_values": [
+      "{\"a,b\",NULL,\"NULL\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text[]",
+    "expected_value": "{\"a,b\",NULL,\"NULL\"}",
+    "postgres_display_type": "text[]",
+    "declared_element": "text",
+    "binding_element": "text"
+  },
+  {
+    "id": "array-types-05-rank-spelling",
+    "source_kind": "synthetic",
+    "shape": "rank-spelling",
+    "sql": "SELECT CAST(? AS text[][]) AS v;",
+    "sqlite_sql": "SELECT CAST(? AS text[][]) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "{\"a,b\",NULL,\"NULL\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text[]",
+    "expected_value": "{\"a,b\",NULL,\"NULL\"}",
+    "postgres_display_type": "text[]",
+    "declared_element": "text",
+    "binding_element": "text"
+  },
+  {
+    "id": "array-types-05-nullable-coalesce",
+    "source_kind": "synthetic",
+    "shape": "nullable-coalesce",
+    "sql": "SELECT COALESCE($1, CAST('{\"a,b\",NULL,\"NULL\"}' AS text[])) AS v;",
+    "sqlite_sql": "SELECT COALESCE(?1, CAST('{\"a,b\",NULL,\"NULL\"}' AS text[])) AS v;",
+    "parameter_types": "text[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text[]",
+    "expected_value": "{\"a,b\",NULL,\"NULL\"}",
+    "postgres_display_type": "text[]",
+    "declared_element": "text",
+    "binding_element": "text"
+  },
+  {
+    "id": "array-types-05-outer-null-test",
+    "source_kind": "synthetic",
+    "shape": "outer-null-test",
+    "sql": "SELECT $1 IS NOT NULL AS v WHERE CAST(NULL AS text[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 IS NOT NULL AS v WHERE CAST(NULL AS text[]) IS NULL;",
+    "parameter_types": "text[]",
+    "parameter_values": [
+      "{\"a,b\",NULL,\"NULL\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "postgres_display_type": "boolean",
+    "declared_element": "text",
+    "binding_element": "text"
+  },
+  {
+    "id": "array-types-06-literal-cast",
+    "source_kind": "synthetic",
+    "shape": "literal-cast",
+    "sql": "SELECT CAST('{true,NULL,false}' AS boolean[]) AS v;",
+    "sqlite_sql": "SELECT CAST('{true,NULL,false}' AS boolean[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "boolean[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean[]",
+    "expected_value": "{t,NULL,f}",
+    "postgres_display_type": "boolean[]",
+    "declared_element": "boolean",
+    "binding_element": "boolean"
+  },
+  {
+    "id": "array-types-06-array-binding",
+    "source_kind": "synthetic",
+    "shape": "array-binding",
+    "sql": "SELECT $1 AS v WHERE CAST(NULL AS boolean[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 AS v WHERE CAST(NULL AS boolean[]) IS NULL;",
+    "parameter_types": "boolean[]",
+    "parameter_values": [
+      "{true,NULL,false}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "boolean[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean[]",
+    "expected_value": "{t,NULL,f}",
+    "postgres_display_type": "boolean[]",
+    "declared_element": "boolean",
+    "binding_element": "boolean"
+  },
+  {
+    "id": "array-types-06-rank-spelling",
+    "source_kind": "synthetic",
+    "shape": "rank-spelling",
+    "sql": "SELECT CAST(? AS boolean[][]) AS v;",
+    "sqlite_sql": "SELECT CAST(? AS boolean[][]) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "{true,NULL,false}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "boolean[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean[]",
+    "expected_value": "{t,NULL,f}",
+    "postgres_display_type": "boolean[]",
+    "declared_element": "boolean",
+    "binding_element": "boolean"
+  },
+  {
+    "id": "array-types-06-nullable-coalesce",
+    "source_kind": "synthetic",
+    "shape": "nullable-coalesce",
+    "sql": "SELECT COALESCE($1, CAST('{true,NULL,false}' AS boolean[])) AS v;",
+    "sqlite_sql": "SELECT COALESCE(?1, CAST('{true,NULL,false}' AS boolean[])) AS v;",
+    "parameter_types": "boolean[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "boolean[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean[]",
+    "expected_value": "{t,NULL,f}",
+    "postgres_display_type": "boolean[]",
+    "declared_element": "boolean",
+    "binding_element": "boolean"
+  },
+  {
+    "id": "array-types-06-outer-null-test",
+    "source_kind": "synthetic",
+    "shape": "outer-null-test",
+    "sql": "SELECT $1 IS NOT NULL AS v WHERE CAST(NULL AS boolean[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 IS NOT NULL AS v WHERE CAST(NULL AS boolean[]) IS NULL;",
+    "parameter_types": "boolean[]",
+    "parameter_values": [
+      "{true,NULL,false}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "postgres_display_type": "boolean",
+    "declared_element": "boolean",
+    "binding_element": "boolean"
+  },
+  {
+    "id": "array-types-07-literal-cast",
+    "source_kind": "synthetic",
+    "shape": "literal-cast",
+    "sql": "SELECT CAST('{2024-01-02,NULL,2024-02-29}' AS date[]) AS v;",
+    "sqlite_sql": "SELECT CAST('{2024-01-02,NULL,2024-02-29}' AS date[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "date[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "date[]",
+    "expected_value": "{2024-01-02,NULL,2024-02-29}",
+    "postgres_display_type": "date[]",
+    "declared_element": "date",
+    "binding_element": "date"
+  },
+  {
+    "id": "array-types-07-array-binding",
+    "source_kind": "synthetic",
+    "shape": "array-binding",
+    "sql": "SELECT $1 AS v WHERE CAST(NULL AS date[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 AS v WHERE CAST(NULL AS date[]) IS NULL;",
+    "parameter_types": "date[]",
+    "parameter_values": [
+      "{2024-01-02,NULL,2024-02-29}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "date[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "date[]",
+    "expected_value": "{2024-01-02,NULL,2024-02-29}",
+    "postgres_display_type": "date[]",
+    "declared_element": "date",
+    "binding_element": "date"
+  },
+  {
+    "id": "array-types-07-rank-spelling",
+    "source_kind": "synthetic",
+    "shape": "rank-spelling",
+    "sql": "SELECT CAST(? AS date[][]) AS v;",
+    "sqlite_sql": "SELECT CAST(? AS date[][]) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "{2024-01-02,NULL,2024-02-29}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "date[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "date[]",
+    "expected_value": "{2024-01-02,NULL,2024-02-29}",
+    "postgres_display_type": "date[]",
+    "declared_element": "date",
+    "binding_element": "date"
+  },
+  {
+    "id": "array-types-07-nullable-coalesce",
+    "source_kind": "synthetic",
+    "shape": "nullable-coalesce",
+    "sql": "SELECT COALESCE($1, CAST('{2024-01-02,NULL,2024-02-29}' AS date[])) AS v;",
+    "sqlite_sql": "SELECT COALESCE(?1, CAST('{2024-01-02,NULL,2024-02-29}' AS date[])) AS v;",
+    "parameter_types": "date[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "date[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "date[]",
+    "expected_value": "{2024-01-02,NULL,2024-02-29}",
+    "postgres_display_type": "date[]",
+    "declared_element": "date",
+    "binding_element": "date"
+  },
+  {
+    "id": "array-types-07-outer-null-test",
+    "source_kind": "synthetic",
+    "shape": "outer-null-test",
+    "sql": "SELECT $1 IS NOT NULL AS v WHERE CAST(NULL AS date[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 IS NOT NULL AS v WHERE CAST(NULL AS date[]) IS NULL;",
+    "parameter_types": "date[]",
+    "parameter_values": [
+      "{2024-01-02,NULL,2024-02-29}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "postgres_display_type": "boolean",
+    "declared_element": "date",
+    "binding_element": "date"
+  },
+  {
+    "id": "array-types-08-literal-cast",
+    "source_kind": "synthetic",
+    "shape": "literal-cast",
+    "sql": "SELECT CAST('{00000000-0000-0000-0000-000000000001,NULL}' AS uuid[]) AS v;",
+    "sqlite_sql": "SELECT CAST('{00000000-0000-0000-0000-000000000001,NULL}' AS uuid[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "uuid[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "uuid[]",
+    "expected_value": "{00000000-0000-0000-0000-000000000001,NULL}",
+    "postgres_display_type": "uuid[]",
+    "declared_element": "uuid",
+    "binding_element": "uuid"
+  },
+  {
+    "id": "array-types-08-array-binding",
+    "source_kind": "synthetic",
+    "shape": "array-binding",
+    "sql": "SELECT $1 AS v WHERE CAST(NULL AS uuid[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 AS v WHERE CAST(NULL AS uuid[]) IS NULL;",
+    "parameter_types": "uuid[]",
+    "parameter_values": [
+      "{00000000-0000-0000-0000-000000000001,NULL}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "uuid[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "uuid[]",
+    "expected_value": "{00000000-0000-0000-0000-000000000001,NULL}",
+    "postgres_display_type": "uuid[]",
+    "declared_element": "uuid",
+    "binding_element": "uuid"
+  },
+  {
+    "id": "array-types-08-rank-spelling",
+    "source_kind": "synthetic",
+    "shape": "rank-spelling",
+    "sql": "SELECT CAST(? AS uuid[][]) AS v;",
+    "sqlite_sql": "SELECT CAST(? AS uuid[][]) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "{00000000-0000-0000-0000-000000000001,NULL}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "uuid[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "uuid[]",
+    "expected_value": "{00000000-0000-0000-0000-000000000001,NULL}",
+    "postgres_display_type": "uuid[]",
+    "declared_element": "uuid",
+    "binding_element": "uuid"
+  },
+  {
+    "id": "array-types-08-nullable-coalesce",
+    "source_kind": "synthetic",
+    "shape": "nullable-coalesce",
+    "sql": "SELECT COALESCE($1, CAST('{00000000-0000-0000-0000-000000000001,NULL}' AS uuid[])) AS v;",
+    "sqlite_sql": "SELECT COALESCE(?1, CAST('{00000000-0000-0000-0000-000000000001,NULL}' AS uuid[])) AS v;",
+    "parameter_types": "uuid[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "uuid[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "uuid[]",
+    "expected_value": "{00000000-0000-0000-0000-000000000001,NULL}",
+    "postgres_display_type": "uuid[]",
+    "declared_element": "uuid",
+    "binding_element": "uuid"
+  },
+  {
+    "id": "array-types-08-outer-null-test",
+    "source_kind": "synthetic",
+    "shape": "outer-null-test",
+    "sql": "SELECT $1 IS NOT NULL AS v WHERE CAST(NULL AS uuid[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 IS NOT NULL AS v WHERE CAST(NULL AS uuid[]) IS NULL;",
+    "parameter_types": "uuid[]",
+    "parameter_values": [
+      "{00000000-0000-0000-0000-000000000001,NULL}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "postgres_display_type": "boolean",
+    "declared_element": "uuid",
+    "binding_element": "uuid"
+  },
+  {
+    "id": "array-types-09-literal-cast",
+    "source_kind": "synthetic",
+    "shape": "literal-cast",
+    "sql": "SELECT CAST('{\"{\\\"a\\\":1}\",NULL,\"null\"}' AS jsonb[]) AS v;",
+    "sqlite_sql": "SELECT CAST('{\"{\\\"a\\\":1}\",NULL,\"null\"}' AS jsonb[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb[]",
+    "expected_value": "{\"{\\\"a\\\": 1}\",NULL,\"null\"}",
+    "postgres_display_type": "jsonb[]",
+    "declared_element": "jsonb",
+    "binding_element": "jsonb"
+  },
+  {
+    "id": "array-types-09-array-binding",
+    "source_kind": "synthetic",
+    "shape": "array-binding",
+    "sql": "SELECT $1 AS v WHERE CAST(NULL AS jsonb[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 AS v WHERE CAST(NULL AS jsonb[]) IS NULL;",
+    "parameter_types": "jsonb[]",
+    "parameter_values": [
+      "{\"{\\\"a\\\":1}\",NULL,\"null\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb[]",
+    "expected_value": "{\"{\\\"a\\\": 1}\",NULL,\"null\"}",
+    "postgres_display_type": "jsonb[]",
+    "declared_element": "jsonb",
+    "binding_element": "jsonb"
+  },
+  {
+    "id": "array-types-09-rank-spelling",
+    "source_kind": "synthetic",
+    "shape": "rank-spelling",
+    "sql": "SELECT CAST(? AS jsonb[][]) AS v;",
+    "sqlite_sql": "SELECT CAST(? AS jsonb[][]) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "{\"{\\\"a\\\":1}\",NULL,\"null\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb[]",
+    "expected_value": "{\"{\\\"a\\\": 1}\",NULL,\"null\"}",
+    "postgres_display_type": "jsonb[]",
+    "declared_element": "jsonb",
+    "binding_element": "jsonb"
+  },
+  {
+    "id": "array-types-09-nullable-coalesce",
+    "source_kind": "synthetic",
+    "shape": "nullable-coalesce",
+    "sql": "SELECT COALESCE($1, CAST('{\"{\\\"a\\\":1}\",NULL,\"null\"}' AS jsonb[])) AS v;",
+    "sqlite_sql": "SELECT COALESCE(?1, CAST('{\"{\\\"a\\\":1}\",NULL,\"null\"}' AS jsonb[])) AS v;",
+    "parameter_types": "jsonb[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb[]",
+    "expected_value": "{\"{\\\"a\\\": 1}\",NULL,\"null\"}",
+    "postgres_display_type": "jsonb[]",
+    "declared_element": "jsonb",
+    "binding_element": "jsonb"
+  },
+  {
+    "id": "array-types-09-outer-null-test",
+    "source_kind": "synthetic",
+    "shape": "outer-null-test",
+    "sql": "SELECT $1 IS NOT NULL AS v WHERE CAST(NULL AS jsonb[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 IS NOT NULL AS v WHERE CAST(NULL AS jsonb[]) IS NULL;",
+    "parameter_types": "jsonb[]",
+    "parameter_values": [
+      "{\"{\\\"a\\\":1}\",NULL,\"null\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "postgres_display_type": "boolean",
+    "declared_element": "jsonb",
+    "binding_element": "jsonb"
+  },
+  {
+    "id": "array-types-10-literal-cast",
+    "source_kind": "synthetic",
+    "shape": "literal-cast",
+    "sql": "SELECT CAST('{\"\\\\x00\",NULL,\"\\\\x6162\"}' AS bytea[]) AS v;",
+    "sqlite_sql": "SELECT CAST('{\"\\\\x00\",NULL,\"\\\\x6162\"}' AS bytea[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea[]",
+    "expected_value": "{\"\\\\x00\",NULL,\"\\\\x6162\"}",
+    "postgres_display_type": "bytea[]",
+    "declared_element": "bytea",
+    "binding_element": "bytea"
+  },
+  {
+    "id": "array-types-10-array-binding",
+    "source_kind": "synthetic",
+    "shape": "array-binding",
+    "sql": "SELECT $1 AS v WHERE CAST(NULL AS bytea[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 AS v WHERE CAST(NULL AS bytea[]) IS NULL;",
+    "parameter_types": "bytea[]",
+    "parameter_values": [
+      "{\"\\\\x00\",NULL,\"\\\\x6162\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea[]",
+    "expected_value": "{\"\\\\x00\",NULL,\"\\\\x6162\"}",
+    "postgres_display_type": "bytea[]",
+    "declared_element": "bytea",
+    "binding_element": "bytea"
+  },
+  {
+    "id": "array-types-10-rank-spelling",
+    "source_kind": "synthetic",
+    "shape": "rank-spelling",
+    "sql": "SELECT CAST(? AS bytea[][]) AS v;",
+    "sqlite_sql": "SELECT CAST(? AS bytea[][]) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "{\"\\\\x00\",NULL,\"\\\\x6162\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea[]",
+    "expected_value": "{\"\\\\x00\",NULL,\"\\\\x6162\"}",
+    "postgres_display_type": "bytea[]",
+    "declared_element": "bytea",
+    "binding_element": "bytea"
+  },
+  {
+    "id": "array-types-10-nullable-coalesce",
+    "source_kind": "synthetic",
+    "shape": "nullable-coalesce",
+    "sql": "SELECT COALESCE($1, CAST('{\"\\\\x00\",NULL,\"\\\\x6162\"}' AS bytea[])) AS v;",
+    "sqlite_sql": "SELECT COALESCE(?1, CAST('{\"\\\\x00\",NULL,\"\\\\x6162\"}' AS bytea[])) AS v;",
+    "parameter_types": "bytea[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea[]",
+    "expected_value": "{\"\\\\x00\",NULL,\"\\\\x6162\"}",
+    "postgres_display_type": "bytea[]",
+    "declared_element": "bytea",
+    "binding_element": "bytea"
+  },
+  {
+    "id": "array-types-10-outer-null-test",
+    "source_kind": "synthetic",
+    "shape": "outer-null-test",
+    "sql": "SELECT $1 IS NOT NULL AS v WHERE CAST(NULL AS bytea[]) IS NULL;",
+    "sqlite_sql": "SELECT ?1 IS NOT NULL AS v WHERE CAST(NULL AS bytea[]) IS NULL;",
+    "parameter_types": "bytea[]",
+    "parameter_values": [
+      "{\"\\\\x00\",NULL,\"\\\\x6162\"}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "postgres_display_type": "boolean",
+    "declared_element": "bytea",
+    "binding_element": "bytea"
+  }
+]

@@ -15,8 +15,12 @@ def CatalogTable.toTableDef (table : CatalogTable) : TableDef :=
 
 def Catalog.toSchema (catalog : Catalog) : Schema := catalog.map CatalogTable.toTableDef
 
-def DataType.ofSqlType (type : SqlType) : DataType :=
-  ⟨match type.base with
+def DataType.ofSqlType : SqlType → DataType
+  | .nullable base => ofSqlType base
+  | .array element =>
+      let type := ofSqlType element
+      { type with name := .array type.name }
+  | type => ⟨match type with
    | .opaque name => match name with
      | .date => .date | .time => .time | .timeTZ => .timeTZ
      | .timestamp => .timestamp | .timestampTZ => .timestampTZ
@@ -43,7 +47,7 @@ def CatalogTable.keys (table : CatalogTable) : List (List Name) :=
   (table.columns.filter (fun col => col.primaryKey || col.unique)).map (fun col => [col.name])
 
 def validDataType (type : DataType) : Bool :=
-  match type.name, type.modifiers with
+  match type.name.scalarBase, type.modifiers with
   | .varchar, [] | .char, [] | .numeric, [] => true
   | .varchar, [length] | .char, [length] => length > 0 && length ≤ 10485760
   | .numeric, [precision] => precision > 0 && precision ≤ 1000

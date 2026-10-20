@@ -21,6 +21,7 @@ PostgreSQL temporal, identifier, JSON and binary types are excluded instead of
 being silently interpreted as SQLite NUMERIC affinity. -/
 def checkSQLiteDataType (type : DataType) : Except Failure Unit :=
   match type.name with
+  | .array _ => unsupported "array-type"
   | .date | .time | .timeTZ | .timestamp | .timestampTZ | .interval
   | .uuid | .json | .jsonb | .bytea => unsupported "PostgreSQL-type"
   | _ => pure ()
