@@ -26,7 +26,7 @@ private def jsonCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "JSON extraction SELECT"
-    ((SelectContract.checkQuery .basicV17 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV18 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "JSON extraction identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -112,7 +112,7 @@ def jsonExtractionContractTests : IO Nat := do
           SQLean.Tests.assert ((← jsonCertificate query) == [⟨"v", ⟨output, true⟩⟩])
             s!"extraction implicit key/path coercion: {sql}"
         else
-          match SelectContract.checkQuery .basicV17 [] [] query with
+          match SelectContract.checkQuery .basicV18 [] [] query with
           | .error (.invalid _) => pure ()
           | _ => throw (IO.userError s!"invalid extraction key type accepted: {sql}")
         count := count + 1
@@ -139,14 +139,14 @@ def jsonExtractionContractTests : IO Nat := do
     for source in ["NULL", "'{}'", "'null'"] do
       let sql := s!"SELECT {source} {spelling} {key}"
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV17 [] [] query with
+      match SelectContract.checkQuery .basicV18 [] [] query with
       | .error (.invalid _) => pure ()
       | _ => throw (IO.userError s!"ambiguous unknown extraction input must be Invalid: {sql}")
       count := count + 1
     for source in ["TEXT", "INTEGER", "BYTEA", "BOOLEAN", "UUID", "JSON[]", "JSONB[]"] do
       let sql := s!"SELECT NULL::{source} {spelling} {key}"
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV17 [] [] query with
+      match SelectContract.checkQuery .basicV18 [] [] query with
       | .error (.invalid _) => pure ()
       | _ => throw (IO.userError s!"non-JSON extraction input must be Invalid: {sql}")
       count := count + 1
@@ -190,7 +190,7 @@ def jsonExtractionContractTests : IO Nat := do
       "SELECT '[1]'::JSONB -> 2147483648",
       "SELECT '[1]'::JSONB -> -2147483649"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV17 [] [] query with
+    match SelectContract.checkQuery .basicV18 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"extraction enclosing/INTEGER boundary must be Invalid: {sql}")
     count := count + 1
@@ -200,7 +200,7 @@ def jsonExtractionContractTests : IO Nat := do
       "SELECT unknown_function() -> 'a'",
       "SELECT ROW(1,2) -> 'a'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV17 [] [] query with
+    match SelectContract.checkQuery .basicV18 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"extraction child coverage must stay Unsupported: {sql}")
     count := count + 1
@@ -215,12 +215,12 @@ def jsonExtractionContractTests : IO Nat := do
   let params ← expectOk "extraction parameters" (Assurance.parseContractParameterTypes "jsonb,text")
   let bad : Advanced.Query := { body := .select { items := [.expression
     (.jsonAccess .field (.parameter (.numbered 1)) (.parameter (.anonymous 2)))] } }
-  match SelectContract.checkQuery .basicV17 [] params bad with
+  match SelectContract.checkQuery .basicV18 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "mixed extraction parameter styles must be Invalid")
   count := count + 1
   let query ← expectOk "extraction exhaustion" (Advanced.parseQuery "SELECT '{}'::JSONB -> 'a'")
-  match SelectContract.checkQuery .basicV17 [] [] query 1 with
+  match SelectContract.checkQuery .basicV18 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "extraction exhaustion must be Inconclusive")
   count := count + 1

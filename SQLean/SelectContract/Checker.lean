@@ -141,12 +141,15 @@ mutual
           | some selected => .ok ⟨some ⟨selected.output,
                 (scalarInput a left.type).nullable || (scalarInput b right.type).nullable⟩,
               left.uses ++ right.uses, .concat left.valid right.valid signature⟩
-          | none => .error (if (left.type.any fun type => type.base.isArray) ||
-                (right.type.any fun type => type.base.isArray) then
-              unsupported "array_concatenation"
-                "Array concatenation, append and prepend require separate polymorphic and NULL rules"
-            else invalid "concatenation_signature"
-              "No admitted PostgreSQL scalar concatenation operator accepts these input types")
+          | none =>
+              match arraySignature :
+                  arrayConcatSignature (scalarInput a left.type) (scalarInput b right.type) with
+              | some selected => .ok ⟨some ⟨selected.output,
+                    selected.operator.nullable (scalarInput a left.type).nullable
+                      (scalarInput b right.type).nullable⟩, left.uses ++ right.uses,
+                  .arrayConcat left.valid right.valid arraySignature⟩
+              | none => .error (invalid "concatenation_signature"
+                  "No admitted PostgreSQL scalar or compatible-array concatenation operator accepts these input types")
       | .unary .neg (.literal (.int 2147483648)) => .ok ⟨some ⟨.int32, false⟩, [], .minInt32⟩
       | .unary .neg (.literal (.int 9223372036854775808)) => .ok ⟨some ⟨.int64, false⟩, [], .minInt64⟩
       | .unary op a => do

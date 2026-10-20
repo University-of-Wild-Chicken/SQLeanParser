@@ -25,7 +25,7 @@ private def concatCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "concatenation SELECT"
-    ((SelectContract.checkQuery .basicV17 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV18 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "concatenation identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -156,19 +156,25 @@ def concatenationContractTests : IO Nat := do
       "SELECT '{}'::JSON || '{}'::JSONB", "SELECT 'a'::BYTEA || 1",
       "SELECT 'a'::BYTEA || '{}'::JSONB", "SELECT DATE '2024-01-01' || DATE '2024-01-02'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV17 [] [] query with
+    match SelectContract.checkQuery .basicV18 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid concat operands: {sql}")
     count := count + 1
+  for (sql, element) in [
+      ("SELECT ARRAY[1] || ARRAY[2]", SelectContract.ScalarType.int32),
+      ("SELECT ARRAY[1] || 2", .int32), ("SELECT 1 || ARRAY[2]", .int32),
+      ("SELECT ARRAY[1] || NULL", .int32), ("SELECT NULL || ARRAY[1]", .int32),
+      ("SELECT ARRAY[1] || '{2}'", .int32), ("SELECT '{1}' || ARRAY[2]", .int32),
+      ("SELECT 'x'::TEXT || ARRAY['y']", .text),
+      ("SELECT ARRAY['x'] || 'y'::TEXT", .text)] do
+    SQLean.Tests.assert ((← concatOutput sql) == [⟨"?column?", ⟨element.asArray, false⟩⟩])
+      s!"promoted array concatenation exact output: {sql}"
+    count := count + 1
   for sql in [
-      "SELECT ARRAY[1] || ARRAY[2]", "SELECT ARRAY[1] || 2", "SELECT 1 || ARRAY[2]",
-      "SELECT ARRAY[1] || NULL", "SELECT NULL || ARRAY[1]",
-      "SELECT ARRAY[1] || '{2}'", "SELECT '{1}' || ARRAY[2]",
-      "SELECT 'x'::TEXT || ARRAY['y']", "SELECT ARRAY['x'] || 'y'::TEXT",
       "SELECT ROW(1,2) || 'x'", "SELECT 'x' || ROW(1,2)",
       "SELECT (SELECT 'x') || 'y'", "SELECT 'x' || unknown_function()"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV17 [] [] query with
+    match SelectContract.checkQuery .basicV18 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported concat context: {sql}")
     count := count + 1
@@ -183,12 +189,12 @@ def concatenationContractTests : IO Nat := do
   let params ← expectOk "concat parameters" (Assurance.parseContractParameterTypes "text,text")
   let bad : Advanced.Query := { body := .select { items := [
     .expression (.concat (.parameter (.anonymous 2)) (.parameter (.anonymous 1)))] } }
-  match SelectContract.checkQuery .basicV17 [] params bad with
+  match SelectContract.checkQuery .basicV18 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "concat swapped anonymous ordinals must be Invalid")
   count := count + 1
   let query ← expectOk "concat exhaustion" (Advanced.parseQuery "SELECT 'a' || ('b' || 'c')")
-  match SelectContract.checkQuery .basicV17 [] [] query 1 with
+  match SelectContract.checkQuery .basicV18 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "concat exhaustion must be Inconclusive")
   count := count + 1

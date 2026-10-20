@@ -349,8 +349,9 @@ class ConcatenationCliTests(unittest.TestCase):
         self.assertEqual(len(invoke.call_args_list), 3)
         self.assertTrue(all(call.args[0][:2] == ["--render-assurance", "identity"]
                             for call in invoke.call_args_list))
-        self.assertEqual(sum(call.args[1] == "invalid" for call in reports.call_args_list), 7)
-        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 6)
+        self.assertEqual(sum(call.args[1] == "invalid" for call in reports.call_args_list), 8)
+        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 2)
+        self.assertEqual(sum(call.args[1] == "valid" for call in reports.call_args_list), 3)
         for code, status, diagnostic in ((0, "rendered", "input.parse"),
                                          (1, "invalid", "resource.depth"),
                                          (3, "unsupported", "input.parse")):

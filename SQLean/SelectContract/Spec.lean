@@ -163,6 +163,12 @@ mutual
         ExprValid params scope (.concat a b)
           (some ⟨selected.output, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩)
           (ua ++ ub)
+    | arrayConcat (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+        (signature : arrayConcatSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
+        ExprValid params scope (.concat a b)
+          (some ⟨selected.output,
+            selected.operator.nullable (scalarInput a ta).nullable (scalarInput b tb).nullable⟩)
+          (ua ++ ub)
     | rowComparison (left : ExprListValid params scope a ta ua)
         (right : ExprListValid params scope b tb ub)
         (signature : rowComparisonSignature op (scalarInputs a ta) (scalarInputs b tb) = some selected) :

@@ -41,6 +41,7 @@ POPULATIONS = {
     "regex": {"postgres": 50},
     "json_extraction": {"postgres": 50},
     "json_containment": {"postgres": 50},
+    "array_concatenation": {"postgres": 8, "risingwave": 42},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -50,7 +51,8 @@ JOIN_KINDS = {"cross", "inner", "left", "right", "full"}
 MERGED_FACTORS = {"using_contract": "using", "natural_contract": "natural"}
 JOIN_FACTORS = {"join_contract", *MERGED_FACTORS}
 ARRAY_ELEMENT_FAMILIES = {"int4", "int8", "text", "float8", "interval", "timestamptz", "uuid"}
-ARRAY_FACTORS = {"array_types", "array_constructors", "array_quantified", "array_subscripts"}
+ARRAY_FACTORS = {"array_types", "array_constructors", "array_quantified", "array_subscripts",
+                "array_concatenation"}
 COMPARISON_OPERATORS = {"=", "<>", "<", "<=", ">", ">="}
 
 
@@ -588,6 +590,90 @@ def observe_concatenations(parsed: dict) -> list[dict]:
     return result
 
 
+ARRAY_CONCATENATION_TYPES = {
+    "pg_catalog.int2", "pg_catalog.int4", "pg_catalog.int8", "pg_catalog.numeric",
+    "pg_catalog.float4", "pg_catalog.varchar", "pg_catalog.timestamp", "date",
+}
+
+
+def validate_array_concatenations(entries: list[dict]) -> None:
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("array concatenation factor is absent")
+    for entry in entries:
+        if not isinstance(entry, dict) or set(entry) != {"left", "right"}:
+            raise ValueError("invalid array concatenation observation")
+        for side in ("left", "right"):
+            operand = entry[side]
+            if (not isinstance(operand, dict)
+                    or set(operand) != {"form", "declared_type", "array_rank"}
+                    or operand["form"] not in ("A_ArrayExpr", "TypeCast", "A_Const", "A_Expr")):
+                raise ValueError("invalid array concatenation operand observation")
+            if operand["form"] == "TypeCast":
+                if (operand["declared_type"] not in ARRAY_CONCATENATION_TYPES
+                        or type(operand["array_rank"]) is not int or operand["array_rank"] not in (0, 1)):
+                    raise ValueError("invalid explicit array concatenation cast")
+            elif operand["declared_type"] is not None or operand["array_rank"] is not None:
+                raise ValueError("array concatenation observation cannot infer an operand type or rank")
+
+
+def observe_array_concatenations(parsed: dict) -> dict:
+    """Record cast syntax and node forms; do not select polymorphic overloads."""
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("array concatenation source must be a SELECT")
+    query = parsed["SelectStmt"]
+    if any(query.get(key) for key in ("fromClause", "withClause", "larg", "rarg", "valuesLists")):
+        raise ValueError("array concatenation population requires source-free SELECTs")
+    entries = []
+
+    def operand(value):
+        if not isinstance(value, dict) or len(value) != 1:
+            raise ValueError("array concatenation requires two expression operands")
+        form = next(iter(value))
+        declared, rank = None, None
+        if form == "TypeCast":
+            name = value[form].get("typeName", {})
+            declared = ".".join(part.get("String", {}).get("sval", "") for part in name.get("names", []))
+            bounds = name.get("arrayBounds", [])
+            if any(bound != {"Integer": {"ival": -1}} for bound in bounds):
+                raise ValueError("sized declaration is outside this array concatenation population")
+            rank = len(bounds)
+        return {"form": form, "declared_type": declared, "array_rank": rank}
+
+    def has_array_syntax(value):
+        if isinstance(value, list):
+            return any(has_array_syntax(child) for child in value)
+        if isinstance(value, dict):
+            return ("A_ArrayExpr" in value
+                    or bool(value.get("TypeCast", {}).get("typeName", {}).get("arrayBounds"))
+                    or any(has_array_syntax(child) for child in value.values()))
+        return False
+
+    def walk(value):
+        if isinstance(value, list):
+            for child in value:
+                walk(child)
+        elif isinstance(value, dict):
+            for kind, node in value.items():
+                if not isinstance(node, dict):
+                    walk(node)
+                    continue
+                if kind in {"ColumnRef", "ParamRef", "FuncCall", "SubLink", "RowExpr",
+                            "A_Indirection", "A_Indices"}:
+                    raise ValueError("catalog/call/subquery/row/access dependency is outside this array concatenation population")
+                if kind == "A_Expr":
+                    names = [part.get("String", {}).get("sval") for part in node.get("name", [])]
+                    if node.get("kind") != "AEXPR_OP" or names != ["||"]:
+                        raise ValueError("another operator is outside this array concatenation population")
+                    if not has_array_syntax(node.get("lexpr")) and not has_array_syntax(node.get("rexpr")):
+                        raise ValueError("concatenation has no explicit array syntax")
+                    entries.append({"left": operand(node.get("lexpr")), "right": operand(node.get("rexpr"))})
+                walk(node)
+
+    walk(parsed)
+    validate_array_concatenations(entries)
+    return {"source_free": True, "array_concatenations": entries}
+
+
 PATTERN_OPERATORS = {"ilike": {"ILIKE", "NOT ILIKE"}, "regex": {"~", "~*", "!~", "!~*"}}
 PATTERN_OPERAND_FORMS = {"A_Const", "ColumnRef", "TypeCast", "A_Expr", "FuncCall"}
 
@@ -918,7 +1004,7 @@ def observe_oracle(sql: str, factor: str) -> dict:
         allowed.add("quantified-comparison")
     if factor == "row_comparisons":
         allowed.add("row-constructor")
-    if factor in {"concatenation", "ilike", "regex", "json_extraction", "json_containment"}:
+    if factor in {"concatenation", "array_concatenation", "ilike", "regex", "json_extraction", "json_containment"}:
         allowed.add("extended-operator")
     unexpected = set(features(json.loads(parser.parse_sql_json(sql)))) - allowed
     if unexpected:
@@ -993,6 +1079,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "concatenation":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["concatenations"] = observe_concatenations(parsed)
+    if factor == "array_concatenation":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation.update(observe_array_concatenations(parsed))
     if factor in PATTERN_OPERATORS:
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["pattern_matches"] = observe_pattern_matches(parsed, factor)
@@ -1055,6 +1144,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("row_comparisons")
         if factor == "concatenation":
             expected_keys.add("concatenations")
+        if factor == "array_concatenation":
+            expected_keys.update(("array_concatenations", "source_free"))
         if factor in PATTERN_OPERATORS:
             expected_keys.add("pattern_matches")
         if factor == "json_extraction":
@@ -1136,6 +1227,16 @@ def validate_population(records: list[dict], factor: str) -> None:
             concat_right.update(entry["right"]["form"] for entry in entries)
             concat_casts.update(entry[side]["declared_type"] for entry in entries for side in ("left", "right")
                                 if entry[side]["declared_type"] is not None)
+        if factor == "array_concatenation":
+            if observation["source_free"] is not True:
+                raise ValueError("array concatenation source must be source-free")
+            entries = observation["array_concatenations"]
+            validate_array_concatenations(entries)
+            concat_left.update(entry["left"]["form"] for entry in entries)
+            concat_right.update(entry["right"]["form"] for entry in entries)
+            concat_casts.update((entry[side]["declared_type"], entry[side]["array_rank"])
+                                for entry in entries for side in ("left", "right")
+                                if entry[side]["declared_type"] is not None)
         if factor in PATTERN_OPERATORS:
             entries = observation["pattern_matches"]
             validate_pattern_matches(entries, factor)
@@ -1205,6 +1306,16 @@ def validate_population(records: list[dict], factor: str) -> None:
             or concat_casts != {"jsonb": 42, "text": 4, "pg_catalog.bpchar": 2,
                                 "pg_catalog.varchar": 1, "bytea": 1}):
         raise ValueError("concatenation population must retain its 86 nodes and declared casts")
+    if factor == "array_concatenation" and (
+            concat_left != {"TypeCast": 41, "A_ArrayExpr": 7, "A_Const": 2, "A_Expr": 2}
+            or concat_right != {"TypeCast": 41, "A_ArrayExpr": 9, "A_Const": 2}
+            or concat_casts != {
+                ("pg_catalog.int2", 1): 12, ("pg_catalog.int4", 1): 12, ("pg_catalog.int8", 1): 12,
+                ("pg_catalog.numeric", 1): 8, ("pg_catalog.float4", 1): 8,
+                ("pg_catalog.int2", 0): 6, ("pg_catalog.int4", 0): 6, ("pg_catalog.int8", 0): 6,
+                ("pg_catalog.numeric", 0): 4, ("pg_catalog.float4", 0): 4,
+                ("pg_catalog.varchar", 0): 2, ("pg_catalog.timestamp", 1): 1, ("date", 0): 1}):
+        raise ValueError("array concatenation population must retain its 52 nodes and declared casts")
     if factor == "ilike" and (
             pattern_operators != {"ILIKE": 43, "NOT ILIKE": 7}
             or pattern_left != {"ColumnRef": 26, "A_Const": 24}
@@ -1262,7 +1373,9 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                 raise ValueError("Tcl SQL selection is outside its explicit source factors")
             sql, line, detail = selected_tcl_sql(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "sqllogic_query":
-            if factor not in {"array_subscripts", "ilike"} or name != "duckdb":
+            if ((factor, name) not in {
+                    ("array_subscripts", "duckdb"), ("ilike", "duckdb"),
+                    ("array_concatenation", "risingwave")}):
                 raise ValueError("SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_sqllogic_sql(files[key], selection["selector"])
         elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():

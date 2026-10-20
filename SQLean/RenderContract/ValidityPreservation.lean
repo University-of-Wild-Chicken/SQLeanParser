@@ -105,6 +105,10 @@ mutual
         simpa only [translateExpr, List.map_append, scalar_input_translated] using
           ExprValid.concat (expr_valid_translated left) (expr_valid_translated right)
             (by simpa only [scalar_input_translated] using signature)
+    | arrayConcat left right signature =>
+        simpa only [translateExpr, List.map_append, scalar_input_translated] using
+          ExprValid.arrayConcat (expr_valid_translated left) (expr_valid_translated right)
+            (by simpa only [scalar_input_translated] using signature)
     | rowComparison left right signature =>
         simpa only [translateExpr, List.attach_map_val, List.map_append] using
           ExprValid.rowComparison (expr_list_valid_translated left) (expr_list_valid_translated right)

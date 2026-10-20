@@ -1,0 +1,23 @@
+[
+  {
+    "operator": "||",
+    "left": "anycompatiblearray",
+    "right": "anycompatiblearray",
+    "output": "anycompatiblearray",
+    "function": "array_cat"
+  },
+  {
+    "operator": "||",
+    "left": "anycompatiblearray",
+    "right": "anycompatible",
+    "output": "anycompatiblearray",
+    "function": "array_append"
+  },
+  {
+    "operator": "||",
+    "left": "anycompatible",
+    "right": "anycompatiblearray",
+    "output": "anycompatiblearray",
+    "function": "array_prepend"
+  }
+]

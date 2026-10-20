@@ -408,6 +408,62 @@ def conditionalBase (args : List ScalarInput) : Option ScalarType := do
   else if args.all (fun arg => arg.base == some candidate) then some candidate
   else some candidate.unmodified
 
+/-- PostgreSQL's non-strict array concatenation families are separate from
+the scalar concatenation declarations and their strict NULL behavior. -/
+inductive ArrayConcatOperator where
+  | cat | append | prepend
+  deriving Repr, BEq, DecidableEq
+
+def arrayConcatOperators : List ArrayConcatOperator := [.cat, .append, .prepend]
+
+def ArrayConcatOperator.catalogInputs : ArrayConcatOperator → List String
+  | .cat => ["anycompatiblearray", "anycompatiblearray"]
+  | .append => ["anycompatiblearray", "anycompatible"]
+  | .prepend => ["anycompatible", "anycompatiblearray"]
+
+def ArrayConcatOperator.catalogOutput (_ : ArrayConcatOperator) : String := "anycompatiblearray"
+
+def ArrayConcatOperator.functionName : ArrayConcatOperator → String
+  | .cat => "array_cat" | .append => "array_append" | .prepend => "array_prepend"
+
+/-- Concatenating two NULL arrays returns NULL; either non-NULL array suffices.
+Append/prepend replace a NULL array with an empty array and insert even a NULL
+element, so successful results are always non-NULL arrays. -/
+def ArrayConcatOperator.nullable (operator : ArrayConcatOperator) (left right : Bool) : Bool :=
+  match operator with | .cat => left && right | .append | .prepend => false
+
+structure ArrayConcatSignature where
+  operator : ArrayConcatOperator
+  inputs : List ScalarType
+  output : ScalarType
+  deriving Repr, BEq, DecidableEq
+
+/-- Exact instantiations of the three anycompatible-array declarations.
+A single unknown operand next to an array receives the array type, selecting
+array_cat. Known scalar/array operands instead select append or prepend.
+Common-type selection is directional over scalar element types; result and
+declared argument typmods are erased even when both input modifiers agree.
+No equality/comparison operation is required, including for JSON elements.
+Array dimensions, extents and bounds remain value-dependent obligations. -/
+def arrayConcatSignature (left right : ScalarInput) : Option ArrayConcatSignature := do
+  match left.base.map ScalarType.unmodified, right.base.map ScalarType.unmodified with
+  | some (.array a), none
+  | none, some (.array a) =>
+      some ⟨.cat, [a.asArray, a.asArray], a.asArray⟩
+  | some (.array a), some (.array b) =>
+      let common ← conditionalBase [.known ⟨a, false⟩, .known ⟨b, false⟩]
+      let array := common.unmodified.asArray
+      some ⟨.cat, [array, array], array⟩
+  | some (.array a), some b =>
+      let common ← conditionalBase [.known ⟨a, false⟩, .known ⟨b, false⟩]
+      let element := common.unmodified
+      some ⟨.append, [element.asArray, element], element.asArray⟩
+  | some a, some (.array b) =>
+      let common ← conditionalBase [.known ⟨a, false⟩, .known ⟨b, false⟩]
+      let element := common.unmodified
+      some ⟨.prepend, [element, element.asArray], element.asArray⟩
+  | _, _ => none
+
 /-- An inferred array constructor uses PostgreSQL common-type selection and
 retains common element modifiers. NULL elements do not make the array NULL. -/
 def arraySignature (args : List ScalarInput) : Option ExactType := do

@@ -27,6 +27,14 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.18 array-concatenation increment](docs/array-concatenation-contract-v0.18.md)
+adds array concatenation, append and prepend with exact common-element types
+and separate NULL rules for their three native declarations. All 50 synthetic
+queries and 50 unchanged source queries receive full static and rendering
+certificates. Native checks cover 100 value/type observations, 100 SQL NULL
+observations, 112 prepared result descriptors and 14 expected runtime errors.
+Array dimensions and input conversion remain runtime obligations.
+
 The [v0.17 JSONB containment increment](docs/json-containment-contract-v0.17.md)
 adds `@>` and `<@` with exact JSONB signatures, unknown-input disambiguation
 and strict NULL propagation. Fifty synthetic queries and 42 of the 50
@@ -59,7 +67,7 @@ It preserves operator selection, nullable metadata and dialect-specific
 precedence. Fifty synthetic certificates and 50 unchanged sources accompany
 100 PostgreSQL value/type observations, 110 descriptors, five native
 overload checks, ten expected errors and 40 separate SQLite observations.
-Array concatenation remains a separate contract.
+Array concatenation has a separate contract in v0.18.
 
 The [v0.13 row-comparison increment](docs/row-comparisons-contract-v0.13.md)
 adds all six comparison operators between explicit `ROW(...)` or implicit
@@ -340,7 +348,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.17` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.18` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

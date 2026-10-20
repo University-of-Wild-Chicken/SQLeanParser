@@ -138,14 +138,15 @@ def boundaries():
         "SELECT 1 || 2", "SELECT 1.2 || 2.3", "SELECT TRUE || FALSE",
         "SELECT '{}'::JSON || '{}'::JSON", "SELECT '{}'::JSONB || 1",
         "SELECT '\\x61'::BYTEA || 1", "SELECT '{}'::JSONB || '\\x61'::BYTEA",
+        "SELECT 'x'::TEXT || ARRAY[1]",
     ]
+    valid = ["SELECT ARRAY[1] || ARRAY[2]", "SELECT ARRAY[1] || 2", "SELECT 1 || ARRAY[2]"]
     unsupported = [
-        "SELECT ARRAY[1] || ARRAY[2]", "SELECT ARRAY[1] || 2", "SELECT 1 || ARRAY[2]",
-        "SELECT 'x'::TEXT || ARRAY[1]", "SELECT ROW(1,2) || 'x'::TEXT",
+        "SELECT ROW(1,2) || 'x'::TEXT",
         "SELECT (SELECT 'x') || 'y'",
     ]
     syntax = ["SELECT 'x' | 'y'", "SELECT 'x' ||| 'y'", "SELECT 'x' ||"]
-    for status, queries in (("invalid", invalid), ("unsupported", unsupported)):
+    for status, queries in (("invalid", invalid), ("unsupported", unsupported), ("valid", valid)):
         for sql in queries:
             assert_report(["--assurance", "contract", sql], status, "contract")
     for sql in syntax:
@@ -153,7 +154,7 @@ def boundaries():
         report = json.loads(result.stdout)
         assert (result.returncode, report["status"], report["diagnostic"]["code"]) == (1, "invalid", "input.parse"), report
     assert_report(["--assurance", "checked", "SELECT 'x' || 'y'"], "rejected", "checked")
-    return len(invalid) + len(unsupported) + len(syntax) + 1
+    return len(invalid) + len(unsupported) + len(valid) + len(syntax) + 1
 
 
 def main():
