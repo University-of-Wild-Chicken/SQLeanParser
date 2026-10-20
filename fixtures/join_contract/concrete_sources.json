@@ -1,0 +1,1740 @@
+{
+  "format_version": 1,
+  "factor": "join_contract",
+  "expected_count": 50,
+  "expected_sources": {
+    "hatchet": 1,
+    "sqlc": 19,
+    "postgres": 30
+  },
+  "sources": {
+    "hatchet": {
+      "repository": "https://github.com/hatchet-dev/hatchet",
+      "commit": "392e7c472221cdab235cca674640e98f904e1ea0",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/hatchet-LICENSE.txt",
+      "license_sha256": "7388b34bd1ad4b9db3c72dcb73f434ea27c88e5ca8f02a24d4f970c906d79be3",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "pkg/repository/sqlcv1/workers.sql.go",
+          "sha256": "66b3e2518cab2f497148ab2c524167305db1cfbf76eac48e2a946014c3a8b4d5",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/workers.sql.go"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/analyze_select/postgresql/query.sql",
+          "sha256": "c369a8cc2e95d2c18637da293d163bdbd11d1820b3f88a608bc5e753c1ce2473",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/analyze_select/postgresql/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/array_text_join/pgx/v5/query.sql",
+          "sha256": "e2e7bb86c945146f198d66929b7ae68453453bb61c52b09dad9bb75f6db95c27",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/array_text_join/pgx/v5/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/coalesce_join/postgresql/query.sql",
+          "sha256": "6b518097663e9827abfa6d8e0173e803eecdc5b9fc12135ba9cf08c52b01957a",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/coalesce_join/postgresql/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_alias/postgresql/pgx/v5/query.sql",
+          "sha256": "85ca534cc2349d97b01ab8d17faf22a7a283bec9749c0dd18e699f7bfae93287",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/join_alias/postgresql/pgx/v5/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_clauses_order/postgresql/query.sql",
+          "sha256": "f611f6680a35c0d7f35b8afecabd66523920dd07bcc9c9530153263fe3a5c333",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/join_clauses_order/postgresql/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_full/postgresql/query.sql",
+          "sha256": "a5d8b889905abfd1a6220e31c56cf6d814c18db155d2107253259823f4b990bf",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/join_full/postgresql/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_left/postgresql/query.sql",
+          "sha256": "aa93d6dadc8ae7058ae3d641b01c35343627848442f9d2b21293600908982a2d",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/join_left/postgresql/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_left_table_alias/postgresql/pgx/query.sql",
+          "sha256": "cca45b1aa0be73bd2e22aa14f1bb5c63877efe2cb909bcd6ca095ad0f23cc0d0",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/join_left_table_alias/postgresql/pgx/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_order_by/postgresql/pgx/query.sql",
+          "sha256": "218f1b83109bc299b146e5bbbf7ab1b874e2ba4d00b24533f2e6e2457f4a968c",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/join_order_by/postgresql/pgx/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_right/postgresql/query.sql",
+          "sha256": "f97b74a98a64cd20e7a6f92a0f0d1fdedb379ba1262a54e378abf9ec339ea64a",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/join_right/postgresql/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_table_name/postgresql/pgx/v5/query.sql",
+          "sha256": "aa9ba5990cbbf17dca8b14241c716dcdc045b4baf049b23470f4955f8a118c53",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/join_table_name/postgresql/pgx/v5/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_two_tables/postgresql/pgx/v5/query.sql",
+          "sha256": "6dd33bc94e9445569b204a3b3e92e3a11a1ba9d6e1dbb8f2caa5e734bd302e24",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/join_two_tables/postgresql/pgx/v5/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_where_clause/postgresql/pgx/v5/query.sql",
+          "sha256": "4bf7b1078bece75efb747803d5a35417bc77608f584e19377b50a1aef6ccd10f",
+          "local_path": "fixtures/join_contract/sources/sqlc/internal/endtoend/testdata/join_where_clause/postgresql/pgx/v5/query.sql"
+        }
+      ]
+    },
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/join.sql",
+          "sha256": "426e69145b95ab27c49ede14006891a5558022023ed55c89b6ff8faa1d443fb3",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/join.sql"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getWorkerForEngine"
+      },
+      "sql_sha256": "97b1d824ac3d010fa57ced4c81735c5b617e05e11e1c3030a81aeecbfbc67693",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "Worker",
+            "alias": "w"
+          },
+          "right": {
+            "kind": "table",
+            "name": "Dispatcher",
+            "alias": "d"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/analyze_select/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 139,
+        "end": 222,
+        "statement_index": 2
+      },
+      "sql_sha256": "444baa8e8c800b35bc24effb7f68ba8d902b4bf7e4b33b01af4271d36d35418a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "users",
+            "alias": "u"
+          },
+          "right": {
+            "kind": "table",
+            "name": "posts",
+            "alias": "p"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/array_text_join/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 29,
+        "end": 83,
+        "statement_index": 0
+      },
+      "sql_sha256": "8ff425b9acc13882aac380b128adb7796608d6d24ac2de4a48f968dd10a9ad3d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "foo",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "bar",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/coalesce_join/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22,
+        "end": 108,
+        "statement_index": 0
+      },
+      "sql_sha256": "48d8ba2366978a6206303481eec805cf2b7004f76a1834a19ad21727115d3d14",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "foo",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "bar",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_alias/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 25,
+        "end": 99,
+        "statement_index": 0
+      },
+      "sql_sha256": "c0da30ce8fb6b4f882a93702018b67a17dd496679096b3f498d49604cf6ffa0a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "foo",
+            "alias": "f"
+          },
+          "right": {
+            "kind": "table",
+            "name": "bar",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_alias/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 128,
+        "end": 190,
+        "statement_index": 1
+      },
+      "sql_sha256": "ac14ce0f3962f7e8b33f093ee6fdffb14e19328c7aa5b63e71f3f11289b4239e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "foo",
+            "alias": "f"
+          },
+          "right": {
+            "kind": "table",
+            "name": "bar",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_clauses_order/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 29,
+        "end": 116,
+        "statement_index": 0
+      },
+      "sql_sha256": "c68edfd76c97370c091261c0ab5ef0247ac5fc0e0a8c82088b70a8f688260e91",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "left",
+            "condition": "on",
+            "left": {
+              "kind": "table",
+              "name": "a",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "b",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "c",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_clauses_order/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 147,
+        "end": 234,
+        "statement_index": 1
+      },
+      "sql_sha256": "d2f72d8e81db25e0ea1a941e3081f7486346fd7176356a2e3afb2b6533f44c2c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "inner",
+            "condition": "on",
+            "left": {
+              "kind": "table",
+              "name": "a",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "b",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "c",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_clauses_order/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 274,
+        "end": 430,
+        "statement_index": 2
+      },
+      "sql_sha256": "513d74c7fb486c9a2ce06798241a107ccba600ab16088c8f055e084d73786c30",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "left",
+            "condition": "on",
+            "left": {
+              "kind": "inner",
+              "condition": "on",
+              "left": {
+                "kind": "left",
+                "condition": "on",
+                "left": {
+                  "kind": "table",
+                  "name": "a",
+                  "alias": null
+                },
+                "right": {
+                  "kind": "table",
+                  "name": "b",
+                  "alias": null
+                }
+              },
+              "right": {
+                "kind": "table",
+                "name": "c",
+                "alias": null
+              }
+            },
+            "right": {
+              "kind": "table",
+              "name": "d",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "e",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_clauses_order/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 470,
+        "end": 626,
+        "statement_index": 3
+      },
+      "sql_sha256": "329af5e258e101cabb7e9cf3fc62c171e7bdf3c2676320827814f010b6510f80",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "inner",
+            "condition": "on",
+            "left": {
+              "kind": "left",
+              "condition": "on",
+              "left": {
+                "kind": "inner",
+                "condition": "on",
+                "left": {
+                  "kind": "table",
+                  "name": "a",
+                  "alias": null
+                },
+                "right": {
+                  "kind": "table",
+                  "name": "b",
+                  "alias": null
+                }
+              },
+              "right": {
+                "kind": "table",
+                "name": "c",
+                "alias": null
+              }
+            },
+            "right": {
+              "kind": "table",
+              "name": "d",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "e",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_full/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24,
+        "end": 120,
+        "statement_index": 0
+      },
+      "sql_sha256": "70940af429d471f1a06eb948c5a11a59e97e87641d71507a37d906c283452c06",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "foo",
+            "alias": "f"
+          },
+          "right": {
+            "kind": "table",
+            "name": "bar",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_left/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 327,
+        "end": 417,
+        "statement_index": 2
+      },
+      "sql_sha256": "d3a291622434105e9473254908f2c190c7fab8ac795e96fcdef5a2a2de45caac",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "authors",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "authors",
+            "alias": "p"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_left/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 578,
+        "end": 675,
+        "statement_index": 4
+      },
+      "sql_sha256": "15d318889ec67a5eeb0d3d141173767a4549b650024b9b2ec315109995202d46",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "authors",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "authors",
+            "alias": "p"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_left_table_alias/postgresql/pgx/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22,
+        "end": 86,
+        "statement_index": 0
+      },
+      "sql_sha256": "a9604429aea4f8cc966c592147fe1c7dbca8b45e46c10bb9d511733db7c0153a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "foo",
+            "alias": "f"
+          },
+          "right": {
+            "kind": "table",
+            "name": "bar",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_left_table_alias/postgresql/pgx/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 115,
+        "end": 181,
+        "statement_index": 1
+      },
+      "sql_sha256": "f6df08bb772d939c2be9ff9e5e64df6486fa7c39256b77041d6e9a02a42f2cf2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "foo",
+            "alias": "f"
+          },
+          "right": {
+            "kind": "table",
+            "name": "bar",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_order_by/postgresql/pgx/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24,
+        "end": 97,
+        "statement_index": 0
+      },
+      "sql_sha256": "ab11a8f3ee517297d9c2fe430cf814d1e87301aaa811264ff286efafa8204ea1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "authors",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "authors",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_right/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 25,
+        "end": 116,
+        "statement_index": 0
+      },
+      "sql_sha256": "8b92d47caecadda047b3e4c1d976d5720038ea038c597ef295d52a3514b22e60",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "right",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "foo",
+            "alias": "f"
+          },
+          "right": {
+            "kind": "table",
+            "name": "bar",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_table_name/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24,
+        "end": 110,
+        "statement_index": 0
+      },
+      "sql_sha256": "a6b5694c817f70c9d8bf52fe1f2b7e2b2637e9eeb46d3762d29a726552a51704",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "foo",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "bar",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_two_tables/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24,
+        "end": 102,
+        "statement_index": 0
+      },
+      "sql_sha256": "7acb131ed21b6f16fd521281bae6330b7c041ea1585ecc5028423401aae80d2f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "inner",
+            "condition": "on",
+            "left": {
+              "kind": "table",
+              "name": "foo",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "bar",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "baz",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_where_clause/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 233,
+        "end": 303,
+        "statement_index": 2
+      },
+      "sql_sha256": "a70ddf33a22af42f5d4d6b8bd8256adb9879629fa460da51109a6d1ec3a78f39",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "cross",
+          "condition": "none",
+          "left": {
+            "kind": "table",
+            "name": "foo",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "bar",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1598,
+        "end": 1639,
+        "statement_index": 31
+      },
+      "sql_sha256": "bf57370034ce706b42cf476168bf082c229fb1b503a60df769946617af95eed5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "cross",
+          "condition": "none",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1661,
+        "end": 1708,
+        "statement_index": 32
+      },
+      "sql_sha256": "8ddda7856c6fcd18b133a06355c31c76d4bf384c336b924afef26e52bcc8d5e4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "cross",
+          "condition": "none",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1769,
+        "end": 1825,
+        "statement_index": 33
+      },
+      "sql_sha256": "3d5624bbf5de36e34a8edb920ded525e27bb1d76547958b30ee38f782022cb51",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "cross",
+          "condition": "none",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": "t1"
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": "t2"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2031,
+        "end": 2094,
+        "statement_index": 36
+      },
+      "sql_sha256": "063b64e009356578ee139afe7763e4ef209d80a791001519cae3a9a0d4dc10b3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "cross",
+          "condition": "none",
+          "left": {
+            "kind": "cross",
+            "condition": "none",
+            "left": {
+              "kind": "table",
+              "name": "j1_tbl",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "j2_tbl",
+              "alias": "a"
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3950,
+        "end": 4010,
+        "statement_index": 55
+      },
+      "sql_sha256": "2cfa86454bb24b8b42fee2ceeace2d295f425c74a74b1dfd201d411354948529",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4012,
+        "end": 4072,
+        "statement_index": 56
+      },
+      "sql_sha256": "e3dbe7480533d699169426536403e8e46a0a7b7c15ecc43be159032fb39e83ad",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4100,
+        "end": 4161,
+        "statement_index": 57
+      },
+      "sql_sha256": "b083f388c422d26556a00f6b07b2d0869fff23c337c149b2e0a01bcdb84967ef",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7839,
+        "end": 7899,
+        "statement_index": 102
+      },
+      "sql_sha256": "f806d6682399a08bff2b4981828e3d3108f7d6fede5237b2c6376c439ee3548f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "x",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "y",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7900,
+        "end": 7960,
+        "statement_index": 103
+      },
+      "sql_sha256": "0dd8ed69e5c817f5f6acf8a52ab7573b8558067cfe7c6181360fd7c319c826db",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "x",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "y",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9762,
+        "end": 9872,
+        "statement_index": 119
+      },
+      "sql_sha256": "820469790ed676e436bc6e1781a22c7fb4325e418e9026877f3013ebd8b30128",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "right",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "tenk1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "b_star",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17022,
+        "end": 17069,
+        "statement_index": 177
+      },
+      "sql_sha256": "e387d612dbb297ebd13e138b625f6ce538c655a9f6fdcbd2ca1b3a6f13fcb6d9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17121,
+        "end": 17166,
+        "statement_index": 178
+      },
+      "sql_sha256": "4b808bea8a256d10641bc9e82b3d5023e09a273ab950eaa7889e48ba30a2c6e3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t3",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18183,
+        "end": 18255,
+        "statement_index": 192
+      },
+      "sql_sha256": "9462b6d6a1e5a52392ca8d265ed0bf303dd050fce7e217da966da97535958d19",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "tt1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "tt2",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18257,
+        "end": 18330,
+        "statement_index": 193
+      },
+      "sql_sha256": "2ca54a5262b326ab35f8332db880fce65d52d2ebeda9e0a8a3150e17cbd5c036",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "right",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "tt2",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "tt1",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 23369,
+        "end": 23463,
+        "statement_index": 258
+      },
+      "sql_sha256": "b6686abb15059d2594b30e3314aeb264493389a2e31422c5f77a491533644523",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "left",
+            "condition": "on",
+            "left": {
+              "kind": "table",
+              "name": "zt2",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "zt3",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "zt1",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 23531,
+        "end": 23625,
+        "statement_index": 260
+      },
+      "sql_sha256": "2c271356a1ec4133578ed8c8675b94d8cad9780526245ffc9c9bfc697bc5a713",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "left",
+            "condition": "on",
+            "left": {
+              "kind": "table",
+              "name": "zt2",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "zt3",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "zv1",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 23741,
+        "end": 23940,
+        "statement_index": 261
+      },
+      "sql_sha256": "74ccc550a33cf6cc313376e9a50335c8173998bbdee10ba675cc7338a8866ce5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "tenk1",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "tenk1",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24482,
+        "end": 24539,
+        "statement_index": 271
+      },
+      "sql_sha256": "774bc576c5eb0498ec1c4107eee202dd89a692ea7a72b76cfb8bac99b1ca14ec",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "a",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "b",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 33737,
+        "end": 33791,
+        "statement_index": 335
+      },
+      "sql_sha256": "2cabd40cd52c51dc9fa8ba3e5e84f4725ad848fdf3bbc2beffb22167050e384f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "int4_tbl",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "int4_tbl",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 33792,
+        "end": 33847,
+        "statement_index": 336
+      },
+      "sql_sha256": "0aab110e0a9527d6215b2a421d670683cd902843cf3515251c41bd8ded5deba3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "int4_tbl",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "int4_tbl",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 45916,
+        "end": 46150,
+        "statement_index": 405
+      },
+      "sql_sha256": "74a49505e778b66947e82f30399c9f09b24aa4a7ebbc989f56b0bc23c22a0da3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "right",
+          "condition": "on",
+          "left": {
+            "kind": "inner",
+            "condition": "on",
+            "left": {
+              "kind": "left",
+              "condition": "on",
+              "left": {
+                "kind": "inner",
+                "condition": "on",
+                "left": {
+                  "kind": "table",
+                  "name": "tenk1",
+                  "alias": "a"
+                },
+                "right": {
+                  "kind": "table",
+                  "name": "tenk1",
+                  "alias": "b"
+                }
+              },
+              "right": {
+                "kind": "table",
+                "name": "tenk1",
+                "alias": "c"
+              }
+            },
+            "right": {
+              "kind": "table",
+              "name": "int4_tbl",
+              "alias": "i1"
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "int4_tbl",
+            "alias": "i2"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 47152,
+        "end": 47309,
+        "statement_index": 411
+      },
+      "sql_sha256": "8ebb11b2bf1bdc449672fd4b29128ff2a743cf4d00b7fce377f7c9654be7e655",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "int8_tbl",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "tenk1",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 48091,
+        "end": 48395,
+        "statement_index": 415
+      },
+      "sql_sha256": "8c4841a23907a0c040af8b1a05ddf0e67cdd6140ce890c6b50f30bd6cee09ddf",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "left",
+            "condition": "on",
+            "left": {
+              "kind": "table",
+              "name": "tenk1",
+              "alias": "a"
+            },
+            "right": {
+              "kind": "table",
+              "name": "tenk1",
+              "alias": "b"
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "tenk1",
+            "alias": "c"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 52355,
+        "end": 52513,
+        "statement_index": 429
+      },
+      "sql_sha256": "5d018eb9c8a98991688e82ab71ab7d8866373f944876dfec7d63fdd49525440d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "right",
+            "condition": "on",
+            "left": {
+              "kind": "inner",
+              "condition": "on",
+              "left": {
+                "kind": "table",
+                "name": "text_tbl",
+                "alias": "t1"
+              },
+              "right": {
+                "kind": "table",
+                "name": "int8_tbl",
+                "alias": "i8"
+              }
+            },
+            "right": {
+              "kind": "table",
+              "name": "text_tbl",
+              "alias": "t2"
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "int4_tbl",
+            "alias": "i4"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 59375,
+        "end": 59490,
+        "statement_index": 462
+      },
+      "sql_sha256": "57893fd0bf5cfc1137ac14e4e96987f7f27fecae9ace107478cbbdd23b2c7153",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "int8_tbl",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "int8_tbl",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 60128,
+        "end": 60235,
+        "statement_index": 468
+      },
+      "sql_sha256": "a31e25c06b086a9d9ecc52f90b6c99b00b4d358b3282f013969e098d3d0357fa",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "onek",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "onek",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 60366,
+        "end": 60473,
+        "statement_index": 470
+      },
+      "sql_sha256": "4ee0960478f11f05a726e8ad665a47f905026e1555c6c88b9de6b68a7dcd2024",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "onek",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "onek",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 60623,
+        "end": 60749,
+        "statement_index": 472
+      },
+      "sql_sha256": "ccfa835654d97adf6a82c849e034915b5416a397ee459347ab42454af484750b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "onek",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "onek",
+            "alias": "b"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 72277,
+        "end": 72335,
+        "statement_index": 530
+      },
+      "sql_sha256": "8214532ec2f6c87639901b4a1f53f605e75cf54899f81d3b376bebe2f6240746",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "parent",
+            "alias": "p"
+          },
+          "right": {
+            "kind": "table",
+            "name": "child",
+            "alias": "c"
+          }
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 72765,
+        "end": 72853,
+        "statement_index": 534
+      },
+      "sql_sha256": "076e7ba99ea317545ab83baba3937a7b590cc21f57a21c87ac21b4928f2eec41",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "on",
+          "left": {
+            "kind": "table",
+            "name": "parent",
+            "alias": "p"
+          },
+          "right": {
+            "kind": "table",
+            "name": "child",
+            "alias": "c"
+          }
+        }
+      }
+    }
+  ]
+}

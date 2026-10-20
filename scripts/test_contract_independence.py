@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ALLOWED = {
     'SQLean.SelectContract.Spec',
     'SQLean.SelectContract.Profile',
+    'SQLean.SelectContract.ScalarSignatures',
     'SQLean.CatalogSyntax',
     'SQLean.AdvancedSyntax',
     'SQLean.SyntaxBase',

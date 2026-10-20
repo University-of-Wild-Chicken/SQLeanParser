@@ -1,0 +1,22 @@
+BenchBase SQL template corpus
+
+Source: https://github.com/cmu-db/benchbase
+Revision: 33c00473807ebd49304d114a6d769d2d2b2bbb34
+Copyright 2021 by OLTPBenchmark Project (upstream LICENSE)
+Copyright 2020 by OLTPBenchmark Project (Java source headers)
+License: Apache License, Version 2.0; see Apache-2.0.txt.
+The upstream LICENSE is copied verbatim as benchbase-LICENSE.
+No upstream NOTICE file is present at this revision. This attribution file was
+created by SQLean and is not an upstream NOTICE.
+
+These are extracted and modified source templates. Java literal expressions and
+static defaults were decoded, PostgreSQL XML overrides were applied, SQLStmt
+placeholder lists were expanded using declared defaults, and JDBC bind markers
+were converted to PostgreSQL occurrence-numbered parameters outside quoted SQL
+and comments. Per-record transformations and original SQL are retained.
+
+The selected workloads are SmallBank, TATP, TPC-C, TPC-H, Twitter and YCSB.
+The extraction is not a claim of compliance with official TPC benchmarks or a
+performance result. No upstream program or SQL statement was executed by the
+extractor. Runtime parameter values, transaction schedules and loaders are not
+included. Mutable static fields use their source initializer defaults only.

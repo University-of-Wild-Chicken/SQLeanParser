@@ -1,0 +1,2119 @@
+{
+  "format_version": 1,
+  "factor": "using_contract",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 16,
+    "sqlc": 3,
+    "sqlite": 31
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/join.sql",
+          "sha256": "426e69145b95ab27c49ede14006891a5558022023ed55c89b6ff8faa1d443fb3",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/join.sql"
+        },
+        {
+          "path": "src/test/regress/sql/privileges.sql",
+          "sha256": "19bda1b46a8331a71f3f764a5caac58708584075af882c4eef27ed403f3da07c",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/privileges.sql"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/join_left/postgresql/query.sql",
+          "sha256": "aa93d6dadc8ae7058ae3d641b01c35343627848442f9d2b21293600908982a2d",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/join_left/postgresql/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/join_left_same_table/postgres/query.sql",
+          "sha256": "7a1d7342d0c9ba9bc43254c401cdc1301c4a2d7466b5c6fedb4a91da7cdcd36e",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/join_left_same_table/postgres/query.sql"
+        }
+      ]
+    },
+    "sqlite": {
+      "repository": "https://github.com/sqlite/sqlite",
+      "commit": "5484850c7a2cd90f2a06b8d4f3453b259aefc1e1",
+      "ref": "master",
+      "license": "Public Domain",
+      "license_file": "fixtures/factor_sources/licenses/sqlite-LICENSE.md",
+      "license_sha256": "c9053892d578840a196d588ff68baa9bc0f5240eb215fb9cf91cd6b0b3209305",
+      "source_kind": "engine-regression",
+      "source_dialect": "sqlite",
+      "files": [
+        {
+          "path": "test/join.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/join.test",
+          "sha256": "1628296fe67e3c5beb5172ead40983908c80f506497cc517db52f7ae1224e621"
+        },
+        {
+          "path": "test/join6.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/join6.test",
+          "sha256": "57d41b57d697d0e4b48679e14b4071e319cf84e947e3d8653266cd0bd80acc0d"
+        },
+        {
+          "path": "test/join9.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/join9.test",
+          "sha256": "7f87c444b0509a1da0ccef5d9c8bdf3e3b2417a34fba9c0023ed4510d896c4d8"
+        },
+        {
+          "path": "test/joinA.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/joinA.test",
+          "sha256": "47cfe41f51ea1a5854f72652d2d65b096f2d97946e4dcbe0ef8d71262b48a5c7"
+        },
+        {
+          "path": "test/joinH.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/joinH.test",
+          "sha256": "8ba879923e875a894e7c920adefd98e89c78fea45438dad54048d918d6ab0ae4"
+        },
+        {
+          "path": "test/joinI.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/joinI.test",
+          "sha256": "a0b5e809e62ccef60e78a0f24bac7cc0240ac4402c17bb59d8348f50b28ccb67"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_left/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 25,
+        "end": 145,
+        "statement_index": 0
+      },
+      "sql_sha256": "f7745b76e2e1b99f9d6dfc3b1f37243b6f61c4caf89a4a145e7af398a9f22192",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "left",
+            "condition": "using",
+            "left": {
+              "kind": "table",
+              "name": "users",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "cities",
+              "alias": null
+            },
+            "columns": [
+              "city_id"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "mayors",
+            "alias": null
+          },
+          "columns": [
+            "mayor_id"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_left/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 180,
+        "end": 299,
+        "statement_index": 1
+      },
+      "sql_sha256": "feea682c216b79e857ddd168791428edf19609ac913aea4974e3a41d35f40da1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "left",
+            "condition": "using",
+            "left": {
+              "kind": "table",
+              "name": "users",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "cities",
+              "alias": null
+            },
+            "columns": [
+              "city_id"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "mayors",
+            "alias": null
+          },
+          "columns": [
+            "mayor_id"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_left_same_table/postgres/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 26,
+        "end": 175,
+        "statement_index": 0
+      },
+      "sql_sha256": "ecea4c054973c548d882d7e3f17bfcffbbf76ba734b44beaa27e65195e27c7f4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "authors",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "authors",
+            "alias": "p"
+          },
+          "columns": [
+            "parent_id"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2361,
+        "end": 2412,
+        "statement_index": 37
+      },
+      "sql_sha256": "e236c839f65ee515887a0ac027c59c8f0d24f686b042e3c89c6a8cd22cb6282f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2458,
+        "end": 2503,
+        "statement_index": 38
+      },
+      "sql_sha256": "5bdc5dbcccf3ef6de7b1ce112384aea04e40c578a9c93d427d6f68ba3b3bba99",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2707,
+        "end": 2773,
+        "statement_index": 41
+      },
+      "sql_sha256": "e60b1d91656d53a7610741f2806fdf116300e1846592d6a3eff3bc829661a764",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4221,
+        "end": 4296,
+        "statement_index": 58
+      },
+      "sql_sha256": "54af9e91090435e9507a188833f5e9c7430489f20fc6a2c31ab2a58e81d8831d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4298,
+        "end": 4367,
+        "statement_index": 59
+      },
+      "sql_sha256": "ec8e073ff5ccd68d59a2e25887c8acbe4a4261483ae7b9bbf04d79c58c36e3e1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4369,
+        "end": 4426,
+        "statement_index": 60
+      },
+      "sql_sha256": "3bca46dc57473bff50e6bfd14dc8fdc3193131bbfe38975a33f08133d6781b43",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "right",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4428,
+        "end": 4479,
+        "statement_index": 61
+      },
+      "sql_sha256": "9c92e1c01b151fc6e1dbd5e782e82f09f11c4ab30abb12be035ef9b87d1b674d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "right",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4481,
+        "end": 4556,
+        "statement_index": 62
+      },
+      "sql_sha256": "29f1619122f8843331ca2878416c7088582108214c7c15d985571dc7184836de",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4558,
+        "end": 4627,
+        "statement_index": 63
+      },
+      "sql_sha256": "3789d5916c6252ce0ba553682ebeff83ae1c2937271fea63394d273741f717a3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4629,
+        "end": 4693,
+        "statement_index": 64
+      },
+      "sql_sha256": "6c2cb406c287252fb211bee1990e64b006376ace5959c08939c6534ee3ea4975",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4695,
+        "end": 4759,
+        "statement_index": 65
+      },
+      "sql_sha256": "12bf2a4ee47855b2479ce8af5424112fa1275ae6fd84f293be16269ab48c1c74",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "j1_tbl",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "j2_tbl",
+            "alias": null
+          },
+          "columns": [
+            "i"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5442,
+        "end": 5511,
+        "statement_index": 77
+      },
+      "sql_sha256": "ded30c1298cfed3af7eb6dded4b70b83b5c9a12d21b41706018dd1ad0745430e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "using",
+          "left": {
+            "kind": "full",
+            "condition": "using",
+            "left": {
+              "kind": "table",
+              "name": "t1",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t2",
+              "alias": null
+            },
+            "columns": [
+              "name"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "t3",
+            "alias": null
+          },
+          "columns": [
+            "name"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18776,
+        "end": 18825,
+        "statement_index": 326
+      },
+      "sql_sha256": "82de9761b8af59ba5ef18055fea416a77ff10cfbd2e60b4d63b656bbb816d8a1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "atest5",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "atest5",
+            "alias": "b"
+          },
+          "columns": [
+            "one"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18832,
+        "end": 18881,
+        "statement_index": 327
+      },
+      "sql_sha256": "8294e8b83fb0415db0f7d7c97230ed69429b5863b56af71081a015ca95060927",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "atest5",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "atest5",
+            "alias": "b"
+          },
+          "columns": [
+            "two"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19592,
+        "end": 19643,
+        "statement_index": 338
+      },
+      "sql_sha256": "5d808fd99d487c93f5b28c1200298708780d406b598fa4cdb878ff0762f20358",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "atest5",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "atest5",
+            "alias": "b"
+          },
+          "columns": [
+            "one"
+          ]
+        }
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19652,
+        "end": 19705,
+        "statement_index": 339
+      },
+      "sql_sha256": "f8f2d89f9e98e34720af6380d0263ca70fb271d87c9fbdf5854b32aa95a7c5e1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "atest5",
+            "alias": "a"
+          },
+          "right": {
+            "kind": "table",
+            "name": "atest5",
+            "alias": "b"
+          },
+          "columns": [
+            "one"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 3281,
+        "block_start": 3292,
+        "block_end": 3334,
+        "start": 3297,
+        "end": 3331,
+        "statement_index": 0
+      },
+      "sql_sha256": "e46ee72e1952f0573adf61d13700662f481b4357da20afffe40f019e72f16d7f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          },
+          "columns": [
+            "b"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinH.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 5275,
+        "block_start": 5297,
+        "block_end": 5340,
+        "start": 5300,
+        "end": 5339,
+        "statement_index": 0
+      },
+      "sql_sha256": "62f0069d40cc3b52f0fac9add722aa4d9f43b68a77c173e9562d9bf73f94f1a7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "x1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "x2",
+            "alias": null
+          },
+          "columns": [
+            "rowid"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinI.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 5982,
+        "block_start": 6003,
+        "block_end": 6169,
+        "start": 6120,
+        "end": 6168,
+        "statement_index": 4
+      },
+      "sql_sha256": "00842133314335d1bac99358e3f0ddf2741dcfb19784f438d04c65a0d3d0de54",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          },
+          "columns": [
+            "x"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join6.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 2503,
+        "block_start": 2514,
+        "block_end": 2572,
+        "start": 2519,
+        "end": 2569,
+        "statement_index": 0
+      },
+      "sql_sha256": "20c39a3d05094cccdd6c92788ce4f0b65fe788f9f7ba10f4b1665e8ec9351954",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "natural",
+          "left": {
+            "kind": "inner",
+            "condition": "using",
+            "left": {
+              "kind": "table",
+              "name": "t1",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t2",
+              "alias": null
+            },
+            "columns": [
+              "y"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "t3",
+            "alias": null
+          }
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join9.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 18341,
+        "block_start": 18375,
+        "block_end": 18476,
+        "start": 18380,
+        "end": 18473,
+        "statement_index": 0
+      },
+      "sql_sha256": "e95f340013db6852aa4b6d7e6a21da6f5e32c70514cbbf2a82625edfa08be9be",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "full",
+            "condition": "using",
+            "left": {
+              "kind": "table",
+              "name": "t4",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t5",
+              "alias": null
+            },
+            "columns": [
+              "id"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "t6",
+            "alias": null
+          },
+          "columns": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinA.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 3154,
+        "block_start": 3187,
+        "block_end": 3389,
+        "start": 3192,
+        "end": 3386,
+        "statement_index": 0
+      },
+      "sql_sha256": "d82790a7c683695f9e82dfe9eb4031ed127b7af24b317f9e031b4eb46f22879f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "left",
+            "condition": "using",
+            "left": {
+              "kind": "left",
+              "condition": "using",
+              "left": {
+                "kind": "table",
+                "name": "t1",
+                "alias": null
+              },
+              "right": {
+                "kind": "table",
+                "name": "t2",
+                "alias": null
+              },
+              "columns": [
+                "c",
+                "d"
+              ]
+            },
+            "right": {
+              "kind": "table",
+              "name": "t3",
+              "alias": null
+            },
+            "columns": [
+              "a",
+              "b",
+              "f"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "t4",
+            "alias": null
+          },
+          "columns": [
+            "a",
+            "c",
+            "d",
+            "f"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 7799,
+        "block_start": 7811,
+        "block_end": 7853,
+        "start": 7816,
+        "end": 7850,
+        "statement_index": 0
+      },
+      "sql_sha256": "4d8e720510a1e7da1838c7ef47f3324706c9564d9244214501b66515d862e4ce",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          },
+          "columns": [
+            "a"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 7947,
+        "block_start": 7959,
+        "block_end": 8001,
+        "start": 7964,
+        "end": 7998,
+        "statement_index": 0
+      },
+      "sql_sha256": "096431aa61bb085c816a7857edcda8c68928e1fbcbb8dc40847e884741ece6ca",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          },
+          "columns": [
+            "d"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 38326,
+        "block_start": 38353,
+        "block_end": 38397,
+        "start": 38356,
+        "end": 38396,
+        "statement_index": 0
+      },
+      "sql_sha256": "7d4edea8cf4a12e735bf5cd3adcfd9a71e89985153aa290ae7707887d29b6eef",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t5",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "columns": [
+            "c0"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinH.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 5415,
+        "block_start": 5437,
+        "block_end": 5481,
+        "start": 5440,
+        "end": 5480,
+        "statement_index": 0
+      },
+      "sql_sha256": "1189b1575301aadd875317a96445b8a02598080138197de040ae48e8b0677e1f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "wo2",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "x2",
+            "alias": null
+          },
+          "columns": [
+            "rowid"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 4268,
+        "block_start": 4279,
+        "block_end": 4329,
+        "start": 4284,
+        "end": 4326,
+        "statement_index": 0
+      },
+      "sql_sha256": "9ba7f6785373819a2c04819378675f4e3af33321d5c0f3e3222e24056b0d7174",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          },
+          "columns": [
+            "b",
+            "c"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join6.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 2725,
+        "block_start": 2736,
+        "block_end": 2794,
+        "start": 2741,
+        "end": 2791,
+        "statement_index": 0
+      },
+      "sql_sha256": "59f6f352fce4dcf7aea01fa31e2a7d87a6ab61f5fe46f1139303424781b10ff3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "inner",
+            "condition": "natural",
+            "left": {
+              "kind": "table",
+              "name": "t1",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t2",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "t3",
+            "alias": null
+          },
+          "columns": [
+            "x"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join6.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 2838,
+        "block_start": 2849,
+        "block_end": 2907,
+        "start": 2854,
+        "end": 2904,
+        "statement_index": 0
+      },
+      "sql_sha256": "9706caf0a42fe2de0dee1765efe2f12842a63d4fcb1c9d0f1d77ae9ca6b53d6c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "inner",
+            "condition": "natural",
+            "left": {
+              "kind": "table",
+              "name": "t1",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t2",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "t3",
+            "alias": null
+          },
+          "columns": [
+            "z"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join6.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 1364,
+        "block_start": 1375,
+        "block_end": 1767,
+        "start": 1712,
+        "end": 1764,
+        "statement_index": 12
+      },
+      "sql_sha256": "4d19f6c6921e0a35d51f40dc3ea05e22aed832f2916c4462c2ac03984b96b065",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "inner",
+            "condition": "using",
+            "left": {
+              "kind": "table",
+              "name": "t1",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t2",
+              "alias": null
+            },
+            "columns": [
+              "y"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "t3",
+            "alias": null
+          },
+          "columns": [
+            "x"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join6.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 2613,
+        "block_start": 2624,
+        "block_end": 2684,
+        "start": 2629,
+        "end": 2681,
+        "statement_index": 0
+      },
+      "sql_sha256": "f519ffbdb22c9373cbc0130be774da369c45efada83579611deb2fda4647ca11",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "inner",
+            "condition": "natural",
+            "left": {
+              "kind": "table",
+              "name": "t1",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t2",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "t3",
+            "alias": null
+          },
+          "columns": [
+            "x",
+            "z"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinI.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 6175,
+        "block_start": 6196,
+        "block_end": 6253,
+        "start": 6199,
+        "end": 6252,
+        "statement_index": 0
+      },
+      "sql_sha256": "e807bcfaa83752cf3a98e5a37f1b29f06fa66571fb0520845cac2f1700fb727e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          },
+          "columns": [
+            "x"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinI.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 6344,
+        "block_start": 6365,
+        "block_end": 6422,
+        "start": 6368,
+        "end": 6421,
+        "statement_index": 0
+      },
+      "sql_sha256": "0ea7595e20b6bb8bd3e864e7bce103478765049c0c007dfa114d3c810557e529",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          },
+          "columns": [
+            "x"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinI.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 6259,
+        "block_start": 6280,
+        "block_end": 6338,
+        "start": 6283,
+        "end": 6337,
+        "statement_index": 0
+      },
+      "sql_sha256": "c57badedd7b0c44609c007f5a6ccab8d0eee5dd261ac0bd38df9453b76f432e2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "right",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          },
+          "columns": [
+            "x"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 45219,
+        "block_start": 45246,
+        "block_end": 45309,
+        "start": 45249,
+        "end": 45308,
+        "statement_index": 0
+      },
+      "sql_sha256": "48ca0337a6db14394771e1231ae488c0940a014a5776ba833fc76fe27b0a90d4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "columns": [
+            "a",
+            "b"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 45072,
+        "block_start": 45099,
+        "block_end": 45163,
+        "start": 45102,
+        "end": 45162,
+        "statement_index": 0
+      },
+      "sql_sha256": "0426905d9ed1abda94b82757a9e835a430c217ad6ed62be8b05fbaf5f1c47be5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "right",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "right": {
+            "kind": "table",
+            "name": "t2",
+            "alias": null
+          },
+          "columns": [
+            "a",
+            "b"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 38413,
+        "block_start": 38440,
+        "block_end": 38505,
+        "start": 38443,
+        "end": 38504,
+        "statement_index": 0
+      },
+      "sql_sha256": "3241bd1ad8efbaa102134fc942a8ec5869496f99f364d40f0eb0a01a1ae15d63",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "left",
+            "condition": "on",
+            "left": {
+              "kind": "table",
+              "name": "t3",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t2",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "columns": [
+            "c0"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join6.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 847,
+        "block_start": 858,
+        "block_end": 1064,
+        "start": 1000,
+        "end": 1061,
+        "statement_index": 5
+      },
+      "sql_sha256": "5429b7900b8801f02633ff09af02b094c537382f5e0c96a01f63d842d9d3796b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "left",
+            "condition": "using",
+            "left": {
+              "kind": "table",
+              "name": "t1",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t2",
+              "alias": null
+            },
+            "columns": [
+              "a"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "t3",
+            "alias": null
+          },
+          "columns": [
+            "a"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 38000,
+        "block_start": 38027,
+        "block_end": 38093,
+        "start": 38030,
+        "end": 38092,
+        "statement_index": 0
+      },
+      "sql_sha256": "2097475856a6af1848d65f6082739d73482fff9ad89b66d875f5133922a32d1b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "right",
+            "condition": "on",
+            "left": {
+              "kind": "table",
+              "name": "t2",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t3",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "columns": [
+            "c0"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 38216,
+        "block_start": 38243,
+        "block_end": 38310,
+        "start": 38246,
+        "end": 38309,
+        "statement_index": 0
+      },
+      "sql_sha256": "c9fdbb4fec2a7451ddd0e899b77d4b11ee7ea7f046a28a6e965984cc068f7855",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "right",
+            "condition": "on",
+            "left": {
+              "kind": "table",
+              "name": "t2n",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t3",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "t1",
+            "alias": null
+          },
+          "columns": [
+            "c0"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join9.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 18119,
+        "block_start": 18153,
+        "block_end": 18256,
+        "start": 18158,
+        "end": 18253,
+        "statement_index": 0
+      },
+      "sql_sha256": "9ff83ca8ab34f9396d11000a79e562359c266434b3ce993ac37e2474a32947f9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "inner",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t4",
+            "alias": null
+          },
+          "right": {
+            "kind": "full",
+            "condition": "using",
+            "left": {
+              "kind": "table",
+              "name": "t5",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t6",
+              "alias": null
+            },
+            "columns": [
+              "id"
+            ]
+          },
+          "columns": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join9.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 5920,
+        "block_start": 5953,
+        "block_end": 6068,
+        "start": 5958,
+        "end": 6065,
+        "statement_index": 0
+      },
+      "sql_sha256": "aa7ebfaa9d1427c13dbf166946a1dbbd8891d25086c1ccb02216d0aa170b04d0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "left",
+            "condition": "using",
+            "left": {
+              "kind": "table",
+              "name": "t4",
+              "alias": null
+            },
+            "right": {
+              "kind": "table",
+              "name": "t5",
+              "alias": null
+            },
+            "columns": [
+              "id"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "t6",
+            "alias": null
+          },
+          "columns": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join9.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 11396,
+        "block_start": 11429,
+        "block_end": 11585,
+        "start": 11434,
+        "end": 11582,
+        "statement_index": 0
+      },
+      "sql_sha256": "2beedc2f7bca8d28606f9719f16765524a472f3fb4639689d36c005d42d6344c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "using",
+          "left": {
+            "kind": "full",
+            "condition": "natural",
+            "left": {
+              "kind": "full",
+              "condition": "using",
+              "left": {
+                "kind": "table",
+                "name": "t3",
+                "alias": null
+              },
+              "right": {
+                "kind": "table",
+                "name": "t4",
+                "alias": null
+              },
+              "columns": [
+                "id"
+              ]
+            },
+            "right": {
+              "kind": "table",
+              "name": "t5",
+              "alias": null
+            }
+          },
+          "right": {
+            "kind": "table",
+            "name": "t6",
+            "alias": null
+          },
+          "columns": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join9.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 14823,
+        "block_start": 14856,
+        "block_end": 15043,
+        "start": 14861,
+        "end": 15040,
+        "statement_index": 0
+      },
+      "sql_sha256": "37cc0fc01a5eb761639b526775e40d348daf464f433e4f2e21015e22afe39a02",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "using",
+          "left": {
+            "kind": "table",
+            "name": "t3",
+            "alias": null
+          },
+          "right": {
+            "kind": "full",
+            "condition": "using",
+            "left": {
+              "kind": "table",
+              "name": "t4",
+              "alias": null
+            },
+            "right": {
+              "kind": "full",
+              "condition": "using",
+              "left": {
+                "kind": "table",
+                "name": "t5",
+                "alias": null
+              },
+              "right": {
+                "kind": "table",
+                "name": "t6",
+                "alias": null
+              },
+              "columns": [
+                "id"
+              ]
+            },
+            "columns": [
+              "id"
+            ]
+          },
+          "columns": [
+            "id"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinA.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 5998,
+        "block_start": 6031,
+        "block_end": 6233,
+        "start": 6036,
+        "end": 6230,
+        "statement_index": 0
+      },
+      "sql_sha256": "6df5bbc1c22444a0f1ac60b03f19acec049825afb2f33909f2acebe768319edd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "full",
+          "condition": "using",
+          "left": {
+            "kind": "full",
+            "condition": "using",
+            "left": {
+              "kind": "full",
+              "condition": "using",
+              "left": {
+                "kind": "table",
+                "name": "t1",
+                "alias": null
+              },
+              "right": {
+                "kind": "table",
+                "name": "t2",
+                "alias": null
+              },
+              "columns": [
+                "c",
+                "d"
+              ]
+            },
+            "right": {
+              "kind": "table",
+              "name": "t3",
+              "alias": null
+            },
+            "columns": [
+              "a",
+              "b",
+              "f"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "t4",
+            "alias": null
+          },
+          "columns": [
+            "a",
+            "c",
+            "d",
+            "f"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinA.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 3532,
+        "block_start": 3565,
+        "block_end": 3768,
+        "start": 3570,
+        "end": 3765,
+        "statement_index": 0
+      },
+      "sql_sha256": "f852dc856981369765a0923d2e42d9dade5b621855a2132edf975125bb9e9689",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "left",
+          "condition": "using",
+          "left": {
+            "kind": "right",
+            "condition": "using",
+            "left": {
+              "kind": "left",
+              "condition": "using",
+              "left": {
+                "kind": "table",
+                "name": "t1",
+                "alias": null
+              },
+              "right": {
+                "kind": "table",
+                "name": "t2",
+                "alias": null
+              },
+              "columns": [
+                "c",
+                "d"
+              ]
+            },
+            "right": {
+              "kind": "table",
+              "name": "t3",
+              "alias": null
+            },
+            "columns": [
+              "a",
+              "b",
+              "f"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "t4",
+            "alias": null
+          },
+          "columns": [
+            "a",
+            "c",
+            "d",
+            "f"
+          ]
+        }
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinA.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 4263,
+        "block_start": 4296,
+        "block_end": 4499,
+        "start": 4301,
+        "end": 4496,
+        "statement_index": 0
+      },
+      "sql_sha256": "dc03e73ab68d0c460b53c5bf3adffbb0abb5e801c9f3923925d559520fbbd2a8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "join_tree": {
+          "kind": "right",
+          "condition": "using",
+          "left": {
+            "kind": "left",
+            "condition": "using",
+            "left": {
+              "kind": "full",
+              "condition": "using",
+              "left": {
+                "kind": "table",
+                "name": "t1",
+                "alias": null
+              },
+              "right": {
+                "kind": "table",
+                "name": "t2",
+                "alias": null
+              },
+              "columns": [
+                "c",
+                "d"
+              ]
+            },
+            "right": {
+              "kind": "table",
+              "name": "t3",
+              "alias": null
+            },
+            "columns": [
+              "a",
+              "b",
+              "f"
+            ]
+          },
+          "right": {
+            "kind": "table",
+            "name": "t4",
+            "alias": null
+          },
+          "columns": [
+            "a",
+            "c",
+            "d",
+            "f"
+          ]
+        }
+      }
+    }
+  ]
+}

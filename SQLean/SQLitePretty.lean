@@ -46,6 +46,31 @@ mutual
     | .isNull arg negated => paren (exprSql arg ++ if negated then " IS NOT NULL" else " IS NULL")
     | .pattern arg pattern insensitive => paren (exprSql arg ++ (if insensitive then " ILIKE " else " LIKE ") ++ exprSql pattern)
     | .cast arg type => "CAST(" ++ exprSql arg ++ " AS " ++ type.toSql ++ ")"
+    | .call name args => String.intercalate "." (name.map quoteName) ++ paren (comma
+        (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          exprSql arg.val))
+    | .coalesce args => "COALESCE" ++ paren (comma
+        (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          exprSql arg.val))
+    | .greatest args => "GREATEST" ++ paren (comma
+        (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          exprSql arg.val))
+    | .least args => "LEAST" ++ paren (comma
+        (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          exprSql arg.val))
+    | .nullIf left right => "NULLIF(" ++ exprSql left ++ ", " ++ exprSql right ++ ")"
+    | .caseExpr operand branches otherwise => paren ("CASE" ++
+        (match _h : operand with | none => "" | some arg => " " ++ exprSql arg) ++
+        String.join (branches.attach.map fun (branch : {b : Expr × Expr // b ∈ branches}) =>
+          have : sizeOf branch.val < sizeOf branches := List.sizeOf_lt_of_mem branch.property
+          have : sizeOf branch.val.1 < sizeOf branch.val := by cases branch.val; simp; omega
+          have : sizeOf branch.val.2 < sizeOf branch.val := by cases branch.val; simp; omega
+          " WHEN " ++ exprSql branch.val.1 ++ " THEN " ++ exprSql branch.val.2) ++
+        (match _h : otherwise with | none => "" | some arg => " ELSE " ++ exprSql arg) ++ " END")
     | .filteredAggregate aggregate predicate => exprSql aggregate ++ " FILTER (WHERE " ++ exprSql predicate ++ ")"
     | .inList arg values => paren (exprSql arg ++ " IN " ++ paren (comma
         (values.attach.map fun (value : {v : Expr // v ∈ values}) =>
@@ -117,8 +142,13 @@ mutual
         have : sizeOf order.val.expr < sizeOf order.val := by cases order.val; simp; omega
         exprSql order.val.expr ++ (if order.val.descending then " DESC" else " ASC") ++
         (order.val.nullsFirst.map (fun first => if first then " NULLS FIRST" else " NULLS LAST")).getD "")) ++
-    (query.limit.map (fun n => " LIMIT " ++ toString n)).getD "" ++
-    (query.offset.map (fun n => " OFFSET " ++ toString n)).getD ""
+    (if query.offsetFirst then
+      (match _h : query.offset with | none => "" | some expr => " OFFSET " ++ exprSql expr) ++
+      (match _h : query.limit with | none => "" | some expr => " LIMIT " ++ exprSql expr)
+     else
+      (match _h : query.limit with | none => "" | some expr => " LIMIT " ++ exprSql expr) ++
+      (match _h : query.offset with | none => "" | some expr => " OFFSET " ++ exprSql expr)) ++
+    lockingSql query.locking
   termination_by sizeOf query
   decreasing_by all_goals cases query; simp_all; omega
 end

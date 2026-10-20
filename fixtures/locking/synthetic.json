@@ -1,0 +1,1807 @@
+[
+  {
+    "id": "locking-synthetic-01",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR UPDATE;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR UPDATE;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-02",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR UPDATE OF u;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR UPDATE OF u;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-03",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR UPDATE;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR UPDATE;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-04",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR UPDATE OF u OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR UPDATE OF u OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-05",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR UPDATE NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR UPDATE NOWAIT;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-06",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR UPDATE OF u NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR UPDATE OF u NOWAIT;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-07",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR UPDATE NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR UPDATE NOWAIT;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-08",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR UPDATE OF u NOWAIT OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR UPDATE OF u NOWAIT OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-09",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR UPDATE SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR UPDATE SKIP LOCKED;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-10",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR UPDATE OF u SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR UPDATE OF u SKIP LOCKED;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-11",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR UPDATE SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR UPDATE SKIP LOCKED;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-12",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR UPDATE OF u SKIP LOCKED OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR UPDATE OF u SKIP LOCKED OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-13",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR NO KEY UPDATE;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR NO KEY UPDATE;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-14",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR NO KEY UPDATE OF u;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR NO KEY UPDATE OF u;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-15",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR NO KEY UPDATE;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR NO KEY UPDATE;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-16",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR NO KEY UPDATE OF u OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR NO KEY UPDATE OF u OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-17",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR NO KEY UPDATE NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR NO KEY UPDATE NOWAIT;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-18",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR NO KEY UPDATE OF u NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR NO KEY UPDATE OF u NOWAIT;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-19",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR NO KEY UPDATE NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR NO KEY UPDATE NOWAIT;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-20",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR NO KEY UPDATE OF u NOWAIT OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR NO KEY UPDATE OF u NOWAIT OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-21",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR NO KEY UPDATE SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR NO KEY UPDATE SKIP LOCKED;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-22",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR NO KEY UPDATE OF u SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR NO KEY UPDATE OF u SKIP LOCKED;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-23",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR NO KEY UPDATE SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR NO KEY UPDATE SKIP LOCKED;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-24",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR NO KEY UPDATE OF u SKIP LOCKED OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR NO KEY UPDATE OF u SKIP LOCKED OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-25",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR SHARE;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR SHARE;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-26",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR SHARE OF u;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR SHARE OF u;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-27",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR SHARE;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR SHARE;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-28",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR SHARE OF u OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR SHARE OF u OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-29",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR SHARE NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR SHARE NOWAIT;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-30",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR SHARE OF u NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR SHARE OF u NOWAIT;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-31",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR SHARE NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR SHARE NOWAIT;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-32",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR SHARE OF u NOWAIT OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR SHARE OF u NOWAIT OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-33",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR SHARE SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR SHARE SKIP LOCKED;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-34",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR SHARE OF u SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR SHARE OF u SKIP LOCKED;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-35",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR SHARE SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR SHARE SKIP LOCKED;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-36",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR SHARE OF u SKIP LOCKED OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR SHARE OF u SKIP LOCKED OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-37",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR KEY SHARE;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR KEY SHARE;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-38",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR KEY SHARE OF u;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR KEY SHARE OF u;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-39",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR KEY SHARE;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR KEY SHARE;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-40",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR KEY SHARE OF u OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR KEY SHARE OF u OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-41",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR KEY SHARE NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR KEY SHARE NOWAIT;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-42",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR KEY SHARE OF u NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR KEY SHARE OF u NOWAIT;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-43",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR KEY SHARE NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR KEY SHARE NOWAIT;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-44",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR KEY SHARE OF u NOWAIT OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR KEY SHARE OF u NOWAIT OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-45",
+    "source_kind": "synthetic",
+    "sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR KEY SHARE SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "filtered-base-table",
+    "sqlite_sql": "SELECT id FROM users WHERE age >= 18 ORDER BY id FOR KEY SHARE SKIP LOCKED;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-46",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = $1 ORDER BY u.id FOR KEY SHARE OF u SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "alias-and-text-parameter",
+    "sqlite_sql": "SELECT u.id AS user_id, u.name AS user_name FROM users AS u WHERE u.city = ?1 ORDER BY u.id FOR KEY SHARE OF u SKIP LOCKED;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "Paris"
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "user_name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Alice"
+      ],
+      [
+        2,
+        "Bob"
+      ],
+      [
+        6,
+        "Fran"
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-47",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age FROM users WHERE age >= $3 ORDER BY id OFFSET $2 LIMIT $1 FOR KEY SHARE SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "numbered-offset-first",
+    "sqlite_sql": "SELECT id, age FROM users WHERE age >= ?3 ORDER BY id OFFSET ?2 LIMIT ?1 FOR KEY SHARE SKIP LOCKED;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        38
+      ],
+      [
+        4,
+        71
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-48",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR KEY SHARE OF u SKIP LOCKED OFFSET ? LIMIT ?;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "anonymous-leading-lock-offset-first",
+    "sqlite_sql": "SELECT u.id AS id, (u.age + ?) AS next_age FROM users AS u WHERE u.id >= ? ORDER BY u.id FOR KEY SHARE OF u SKIP LOCKED OFFSET ? LIMIT ?;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      5,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "next_age",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        43
+      ],
+      [
+        4,
+        76
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-49",
+    "source_kind": "synthetic",
+    "sql": "SELECT id, age >= 18 AS adult FROM users WHERE id <= 3 ORDER BY id FOR SHARE OF users NOWAIT FOR UPDATE OF users SKIP LOCKED;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "multiple-strengths-and-policies",
+    "sqlite_sql": "SELECT id, age >= 18 AS adult FROM users WHERE id <= 3 ORDER BY id FOR SHARE OF users NOWAIT FOR UPDATE OF users SKIP LOCKED;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "adult",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        true
+      ],
+      [
+        2,
+        false
+      ],
+      [
+        3,
+        true
+      ]
+    ]
+  },
+  {
+    "id": "locking-synthetic-50",
+    "source_kind": "synthetic",
+    "sql": "SELECT u.name AS name FROM users AS u WHERE u.id >= $1 ORDER BY u.id LIMIT $2 OFFSET $3 FOR NO KEY UPDATE OF u FOR KEY SHARE OF u NOWAIT;",
+    "catalogFile": "fixtures/schema.json",
+    "shape": "multiple-clauses-aliased-text",
+    "sqlite_sql": "SELECT u.name AS name FROM users AS u WHERE u.id >= ?1 ORDER BY u.id LIMIT ?2 OFFSET ?3 FOR NO KEY UPDATE OF u FOR KEY SHARE OF u NOWAIT;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      4,
+      2,
+      0
+    ],
+    "output_columns": [
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "Dora"
+      ],
+      [
+        "O'Brien"
+      ]
+    ]
+  }
+]

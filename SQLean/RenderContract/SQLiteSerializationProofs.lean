@@ -29,6 +29,65 @@ mutual
     | isNull arg negated => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
     | pattern arg pattern insensitive => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, exprSql_translated pattern]
     | cast arg target => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
+    | call name args =>
+        have mapped : args.map (fun arg => Advanced.SQLite.exprSql (translateExpr arg)) = args.map (Advanced.SQLite.exprSql) :=
+          List.map_congr_left fun arg member =>
+            have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+            exprSql_translated arg
+        simp only [translateExpr, Advanced.SQLite.exprSql, List.attach_map_val, List.map_map, Function.comp_def, mapped]
+    | coalesce args =>
+        have mapped : args.map (fun arg => Advanced.SQLite.exprSql (translateExpr arg)) = args.map (Advanced.SQLite.exprSql) :=
+          List.map_congr_left fun arg member =>
+            have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+            exprSql_translated arg
+        simp only [translateExpr, Advanced.SQLite.exprSql, List.attach_map_val, List.map_map, Function.comp_def, mapped]
+    | greatest args =>
+        have mapped : args.map (fun arg => Advanced.SQLite.exprSql (translateExpr arg)) = args.map (Advanced.SQLite.exprSql) :=
+          List.map_congr_left fun arg member =>
+            have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+            exprSql_translated arg
+        simp only [translateExpr, Advanced.SQLite.exprSql, List.attach_map_val, List.map_map, Function.comp_def, mapped]
+    | least args =>
+        have mapped : args.map (fun arg => Advanced.SQLite.exprSql (translateExpr arg)) = args.map (Advanced.SQLite.exprSql) :=
+          List.map_congr_left fun arg member =>
+            have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+            exprSql_translated arg
+        simp only [translateExpr, Advanced.SQLite.exprSql, List.attach_map_val, List.map_map, Function.comp_def, mapped]
+    | nullIf left right =>
+        simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated left, exprSql_translated right]
+    | caseExpr operand branches otherwise =>
+        have operandEq :
+            (match _h : (match _h : operand with | none => none | some arg => some (translateExpr arg)) with
+             | none => "" | some arg => " " ++ Advanced.SQLite.exprSql arg) =
+            (match _h : operand with | none => "" | some arg => " " ++ Advanced.SQLite.exprSql arg) := by
+          cases operand with
+          | none => rfl
+          | some arg => simp only [exprSql_translated arg]
+        have otherwiseEq :
+            (match _h : (match _h : otherwise with | none => none | some arg => some (translateExpr arg)) with
+             | none => "" | some arg => " ELSE " ++ Advanced.SQLite.exprSql arg) =
+            (match _h : otherwise with | none => "" | some arg => " ELSE " ++ Advanced.SQLite.exprSql arg) := by
+          cases otherwise with
+          | none => rfl
+          | some arg => simp only [exprSql_translated arg]
+        have branchesEq : branches.map
+            (fun pair => " WHEN " ++ Advanced.SQLite.exprSql (translateExpr pair.1) ++ " THEN " ++ Advanced.SQLite.exprSql (translateExpr pair.2)) =
+            branches.map (fun pair => " WHEN " ++ Advanced.SQLite.exprSql pair.1 ++ " THEN " ++ Advanced.SQLite.exprSql pair.2) :=
+          List.map_congr_left fun pair member => by
+            have : sizeOf pair < sizeOf branches := List.sizeOf_lt_of_mem member
+            have : sizeOf pair.1 < sizeOf pair := by cases pair; simp; omega
+            have : sizeOf pair.2 < sizeOf pair := by cases pair; simp; omega
+            simp only [exprSql_translated pair.1, exprSql_translated pair.2]
+        rw [translateExpr.eq_def, Advanced.SQLite.exprSql.eq_def]
+        conv => rhs; rw [Advanced.SQLite.exprSql.eq_def]
+        simp only [List.attach_map_val (f := fun pair : Advanced.Expr × Advanced.Expr =>
+          (translateExpr pair.1, translateExpr pair.2)),
+          List.attach_map_val (f := fun pair : Advanced.Expr × Advanced.Expr =>
+            " WHEN " ++ Advanced.SQLite.exprSql pair.1 ++ " THEN " ++ Advanced.SQLite.exprSql pair.2),
+          List.map_map, Function.comp_def]
+        congr 1
+        refine append_congr (append_congr (append_congr (append_congr rfl operandEq) ?_) otherwiseEq) rfl
+        exact congrArg String.join branchesEq
     | filteredAggregate aggregate predicate =>
         simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated aggregate, exprSql_translated predicate]
     | inList arg values =>
@@ -130,30 +189,43 @@ mutual
   theorem querySql_translated (query : Advanced.Query) :
       Advanced.SQLite.querySql (translateParameters query) = Advanced.SQLite.querySql query := by
     cases query with
-    | mk body ctes recursive orderBy limit offset =>
+    | mk body ctes recursive orderBy limit offset locking offsetFirst =>
+      have limitEq :
+          (match _h : (match _h : limit with | none => none | some expr => some (translateExpr expr)) with
+           | none => "" | some expr => " LIMIT " ++ Advanced.SQLite.exprSql expr) =
+          (match _h : limit with | none => "" | some expr => " LIMIT " ++ Advanced.SQLite.exprSql expr) := by
+        cases limit with
+        | none => rfl
+        | some expr => simp only [exprSql_translated expr]
+      have offsetEq :
+          (match _h : (match _h : offset with | none => none | some expr => some (translateExpr expr)) with
+           | none => "" | some expr => " OFFSET " ++ Advanced.SQLite.exprSql expr) =
+          (match _h : offset with | none => "" | some expr => " OFFSET " ++ Advanced.SQLite.exprSql expr) := by
+        cases offset with
+        | none => rfl
+        | some expr => simp only [exprSql_translated expr]
       rw [translateParameters]
       simp only [List.attach_map_val]
       rw [Advanced.SQLite.querySql]
       conv => rhs; rw [Advanced.SQLite.querySql]
       simp only [List.attach_map, List.map_map, Function.comp_def, List.isEmpty_map,
         translateCTE, translateOrderBy]
-      congr 3
-      · congr 1
-        · split
-          · rfl
-          · congr 3
-            apply List.map_congr_left
-            intro cte _member
-            have : sizeOf cte.val < sizeOf ctes := List.sizeOf_lt_of_mem cte.property
-            have : sizeOf cte.val.query < sizeOf cte.val := by cases cte.val; simp; omega
-            simp only [querySql_translated cte.val.query]
-        · cases body with
-          | select select =>
-            rw [translateQueryBody]
-            exact selectSql_translated select
-          | set op all left right =>
-            rw [translateQueryBody]
-            simp only [querySql_translated left, querySql_translated right]
+      refine append_congr (append_congr (append_congr (append_congr ?_ ?_) ?_) ?_) rfl
+      · split
+        · rfl
+        · congr 3
+          apply List.map_congr_left
+          intro cte _member
+          have : sizeOf cte.val < sizeOf ctes := List.sizeOf_lt_of_mem cte.property
+          have : sizeOf cte.val.query < sizeOf cte.val := by cases cte.val; simp; omega
+          simp only [querySql_translated cte.val.query]
+      · cases body with
+        | select select =>
+          rw [translateQueryBody]
+          exact selectSql_translated select
+        | set op all left right =>
+          rw [translateQueryBody]
+          simp only [querySql_translated left, querySql_translated right]
       · split
         · rfl
         · congr 2
@@ -162,6 +234,9 @@ mutual
           have : sizeOf order.val < sizeOf orderBy := List.sizeOf_lt_of_mem order.property
           have : sizeOf order.val.expr < sizeOf order.val := by cases order.val; simp; omega
           simp only [exprSql_translated order.val.expr]
+      · cases offsetFirst with
+        | false => exact append_congr limitEq offsetEq
+        | true => exact append_congr offsetEq limitEq
   termination_by sizeOf query
   decreasing_by all_goals (simp_all <;> omega)
 end

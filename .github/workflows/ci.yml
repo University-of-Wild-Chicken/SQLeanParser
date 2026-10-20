@@ -35,8 +35,18 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install pinned grammar generator dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends bison
+
       - name: Run offline regressions
         run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
+
+      - name: Verify PostgreSQL grammar inventory and Lean tables
+        run: |
+          python3 scripts/inventory_postgresql_grammar.py --check
+          python3 scripts/generate_postgresql_grammar.py --check
 
       - name: Reject Lean proof placeholders and bypasses
         run: python3 scripts/check_lean_trust.py --source-only
@@ -46,6 +56,19 @@ jobs:
           for generator in scripts/generate_*_examples.py; do
             python3 "$generator" --check
           done
+
+      - name: Verify unchanged source statements and provenance
+        run: |
+          python3 scripts/extract_pagination_corpus.py --check
+          python3 scripts/extract_extended_type_corpus.py --check
+          python3 scripts/extract_factor_corpus.py --factor functions --check
+          python3 scripts/extract_factor_corpus.py --factor conditional --check
+          python3 scripts/extract_factor_corpus.py --factor locking --check
+          python3 scripts/extract_factor_corpus.py --factor join_contract --check
+          python3 scripts/extract_factor_corpus.py --factor using_contract --check
+          python3 scripts/extract_factor_corpus.py --factor natural_contract --check
+          python3 scripts/extract_factor_corpus.py --factor derived_contract --check
+          python3 scripts/extract_statement_corpus.py --check
 
   integration:
     name: Lean and database integration
@@ -90,6 +113,9 @@ jobs:
       - name: Check SELECT assurance tiers
         run: python3 scripts/check_assurance_cli.py
 
+      - name: Check full PostgreSQL grammar and exact source certificates
+        run: python3 scripts/check_postgresql_grammar_cli.py
+
       - name: Check renderer profiles across the SELECT syntax corpus
         run: python3 scripts/check_renderer_corpus.py
 
@@ -110,6 +136,27 @@ jobs:
         run: |
           python3 -c 'import sqlite3; print("SQLite runtime:", sqlite3.sqlite_version); assert sqlite3.sqlite_version_info >= (3, 39, 0), "SQLite 3.39+ required"'
           python3 scripts/check_dialect_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check expression pagination contracts and bound execution
+        run: python3 scripts/check_pagination_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check scalar functions and conditional contracts
+        run: python3 scripts/check_scalar_forms_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check row-locking contracts and native lock observations
+        run: python3 scripts/check_locking_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check independent JOIN contracts and native row observations
+        run: python3 scripts/check_join_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check USING and NATURAL contracts and merged columns
+        run: python3 scripts/check_merged_join_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check nested derived-source contracts and parameter order
+        run: python3 scripts/check_derived_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check exact scalar types and native PostgreSQL type results
+        run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check PostgreSQL corpus
         run: python3 scripts/check_postgresql_cli.py --local-bin /usr/lib/postgresql/16/bin

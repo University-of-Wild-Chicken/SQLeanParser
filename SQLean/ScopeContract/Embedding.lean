@@ -43,4 +43,16 @@ def AdvancedNameValid (schema : Schema) (q : Advanced.Query) : Prop :=
 theorem embedding_valid {schema q} (h : NameValid schema q) :
     AdvancedNameValid schema q.toAdvanced := ⟨q, rfl, h⟩
 
+/-- This name-only fragment has no row-lock targets. Exact embedding prevents
+an Advanced query with locking clauses from obtaining its name certificate. -/
+theorem advancedNameValid_noLocking {schema q} (valid : AdvancedNameValid schema q) :
+    q.locking = [] := by
+  obtain ⟨fragment, equality, _⟩ := valid
+  rw [← equality]
+  rfl
+
+theorem locking_not_embedded {schema q} (nonempty : q.locking ≠ []) :
+    ¬ AdvancedNameValid schema q :=
+  fun valid => nonempty (advancedNameValid_noLocking valid)
+
 end SQLean.ScopeContract

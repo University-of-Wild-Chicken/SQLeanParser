@@ -1,0 +1,3974 @@
+[
+  {
+    "id": "derived-0-projection",
+    "source_kind": "synthetic",
+    "shape": "projection",
+    "minimum": 0,
+    "sql": "SELECT d.id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d;",
+    "sqlite_sql": "SELECT d.id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-0-nested",
+    "source_kind": "synthetic",
+    "shape": "nested",
+    "minimum": 0,
+    "sql": "SELECT d.id, d.points + 1 AS adjusted FROM (SELECT x.id, COALESCE(x.score, 0) AS points FROM (SELECT id, score, name FROM items WHERE id >= 0) AS x) AS d;",
+    "sqlite_sql": "SELECT d.id, d.points + 1 AS adjusted FROM (SELECT x.id, COALESCE(x.score, 0) AS points FROM (SELECT id, score, name FROM items WHERE id >= 0) AS x) AS d;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "adjusted",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        41
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          11
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          11
+        ],
+        [
+          4,
+          41
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          11
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          11
+        ],
+        [
+          4,
+          41
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-0-prefix-alias",
+    "source_kind": "synthetic",
+    "shape": "prefix-alias",
+    "minimum": 0,
+    "sql": "SELECT d.key_id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d(key_id);",
+    "sqlite_sql": "SELECT d.key_id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d(key_id);",
+    "sqlite_supported": false,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-0-full-alias",
+    "source_kind": "synthetic",
+    "shape": "full-alias",
+    "minimum": 0,
+    "sql": "SELECT d.* FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d(key_id, points, label);",
+    "sqlite_sql": "SELECT d.* FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d(key_id, points, label);",
+    "sqlite_supported": false,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "points",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "label",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-0-anonymous-order",
+    "source_kind": "synthetic",
+    "shape": "anonymous-order",
+    "minimum": 0,
+    "sql": "SELECT ? AS marker, d.id, d.score FROM (SELECT id, score, name FROM items WHERE id >= 0 AND id >= ?) AS d WHERE COALESCE(d.score, 0) >= ? ORDER BY d.id LIMIT ? OFFSET ?;",
+    "sqlite_sql": "SELECT ? AS marker, d.id, d.score FROM (SELECT id, score, name FROM items WHERE id >= 0 AND id >= ?) AS d WHERE COALESCE(d.score, 0) >= ? ORDER BY d.id LIMIT ? OFFSET ?;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "int,int,int,int,int",
+    "parameter_values": [
+      7,
+      1,
+      0,
+      2,
+      0
+    ],
+    "output_columns": [
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        7,
+        1,
+        10
+      ],
+      [
+        7,
+        2,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          7,
+          1,
+          10
+        ],
+        [
+          7,
+          2,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          7,
+          1,
+          10
+        ],
+        [
+          7,
+          2,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-0-left-join",
+    "source_kind": "synthetic",
+    "shape": "left-join",
+    "minimum": 0,
+    "sql": "SELECT d.id, l.category FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d LEFT JOIN labels AS l ON d.id = l.id;",
+    "sqlite_sql": "SELECT d.id, l.category FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d LEFT JOIN labels AS l ON d.id = l.id;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "A"
+      ],
+      [
+        1,
+        "B"
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        3,
+        "C"
+      ],
+      [
+        4,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          null
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          "A"
+        ],
+        [
+          1,
+          "B"
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          "C"
+        ],
+        [
+          4,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-0-full-using",
+    "source_kind": "synthetic",
+    "shape": "full-using",
+    "minimum": 0,
+    "sql": "SELECT id AS merged_id, i.id AS original_id, d.category FROM items AS i FULL JOIN (SELECT id, category FROM labels WHERE id >= 0) AS d USING (id);",
+    "sqlite_sql": "SELECT id AS merged_id, i.id AS original_id, d.category FROM items AS i FULL JOIN (SELECT id, category FROM labels WHERE id >= 0) AS d USING (id);",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "merged_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "original_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1,
+        "A"
+      ],
+      [
+        1,
+        1,
+        "B"
+      ],
+      [
+        2,
+        2,
+        null
+      ],
+      [
+        3,
+        3,
+        "C"
+      ],
+      [
+        4,
+        4,
+        null
+      ],
+      [
+        5,
+        null,
+        "E"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          1,
+          null
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          null
+        ],
+        [
+          4,
+          4,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          null,
+          "A"
+        ],
+        [
+          1,
+          null,
+          "B"
+        ],
+        [
+          3,
+          null,
+          "C"
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          1,
+          "A"
+        ],
+        [
+          1,
+          1,
+          "B"
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          "C"
+        ],
+        [
+          4,
+          4,
+          null
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-0-two-derived",
+    "source_kind": "synthetic",
+    "shape": "two-derived",
+    "minimum": 0,
+    "sql": "SELECT d.id, p.marker FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d CROSS JOIN (SELECT $1 AS marker) AS p;",
+    "sqlite_sql": "SELECT d.id, p.marker FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d CROSS JOIN (SELECT ?1 AS marker) AS p;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      9
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        3,
+        9
+      ],
+      [
+        4,
+        9
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          9
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          3,
+          9
+        ],
+        [
+          4,
+          9
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          9
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          3,
+          9
+        ],
+        [
+          4,
+          9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-0-child-distinct-pagination",
+    "source_kind": "synthetic",
+    "shape": "child-distinct-pagination",
+    "minimum": 0,
+    "sql": "SELECT d.score FROM (SELECT DISTINCT score FROM items WHERE id >= 0 ORDER BY score NULLS LAST LIMIT 2) AS d WHERE d.score IS NOT NULL;",
+    "sqlite_sql": "SELECT d.score FROM (SELECT DISTINCT score FROM items WHERE id >= 0 ORDER BY score NULLS LAST LIMIT 2) AS d WHERE d.score IS NOT NULL;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        10
+      ],
+      [
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-0-natural-qualified-star",
+    "source_kind": "synthetic",
+    "shape": "natural-qualified-star",
+    "minimum": 0,
+    "sql": "SELECT d.*, l.category FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d NATURAL LEFT JOIN labels AS l;",
+    "sqlite_sql": "SELECT d.*, l.category FROM (SELECT id, score, name FROM items WHERE id >= 0) AS d NATURAL LEFT JOIN labels AS l;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada",
+        "A"
+      ],
+      [
+        1,
+        10,
+        "Ada",
+        "B"
+      ],
+      [
+        2,
+        null,
+        "Bea",
+        null
+      ],
+      [
+        3,
+        10,
+        "Cy",
+        "C"
+      ],
+      [
+        4,
+        40,
+        "Di",
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada",
+          null
+        ],
+        [
+          2,
+          null,
+          "Bea",
+          null
+        ],
+        [
+          3,
+          10,
+          "Cy",
+          null
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada",
+          "A"
+        ],
+        [
+          1,
+          10,
+          "Ada",
+          "B"
+        ],
+        [
+          2,
+          null,
+          "Bea",
+          null
+        ],
+        [
+          3,
+          10,
+          "Cy",
+          "C"
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-1-projection",
+    "source_kind": "synthetic",
+    "shape": "projection",
+    "minimum": 1,
+    "sql": "SELECT d.id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d;",
+    "sqlite_sql": "SELECT d.id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-1-nested",
+    "source_kind": "synthetic",
+    "shape": "nested",
+    "minimum": 1,
+    "sql": "SELECT d.id, d.points + 1 AS adjusted FROM (SELECT x.id, COALESCE(x.score, 0) AS points FROM (SELECT id, score, name FROM items WHERE id >= 1) AS x) AS d;",
+    "sqlite_sql": "SELECT d.id, d.points + 1 AS adjusted FROM (SELECT x.id, COALESCE(x.score, 0) AS points FROM (SELECT id, score, name FROM items WHERE id >= 1) AS x) AS d;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "adjusted",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        41
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          11
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          11
+        ],
+        [
+          4,
+          41
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          11
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          11
+        ],
+        [
+          4,
+          41
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-1-prefix-alias",
+    "source_kind": "synthetic",
+    "shape": "prefix-alias",
+    "minimum": 1,
+    "sql": "SELECT d.key_id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d(key_id);",
+    "sqlite_sql": "SELECT d.key_id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d(key_id);",
+    "sqlite_supported": false,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-1-full-alias",
+    "source_kind": "synthetic",
+    "shape": "full-alias",
+    "minimum": 1,
+    "sql": "SELECT d.* FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d(key_id, points, label);",
+    "sqlite_sql": "SELECT d.* FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d(key_id, points, label);",
+    "sqlite_supported": false,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "points",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "label",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-1-anonymous-order",
+    "source_kind": "synthetic",
+    "shape": "anonymous-order",
+    "minimum": 1,
+    "sql": "SELECT ? AS marker, d.id, d.score FROM (SELECT id, score, name FROM items WHERE id >= 1 AND id >= ?) AS d WHERE COALESCE(d.score, 0) >= ? ORDER BY d.id LIMIT ? OFFSET ?;",
+    "sqlite_sql": "SELECT ? AS marker, d.id, d.score FROM (SELECT id, score, name FROM items WHERE id >= 1 AND id >= ?) AS d WHERE COALESCE(d.score, 0) >= ? ORDER BY d.id LIMIT ? OFFSET ?;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "int,int,int,int,int",
+    "parameter_values": [
+      7,
+      1,
+      0,
+      2,
+      0
+    ],
+    "output_columns": [
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        7,
+        1,
+        10
+      ],
+      [
+        7,
+        2,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          7,
+          1,
+          10
+        ],
+        [
+          7,
+          2,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          7,
+          1,
+          10
+        ],
+        [
+          7,
+          2,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-1-left-join",
+    "source_kind": "synthetic",
+    "shape": "left-join",
+    "minimum": 1,
+    "sql": "SELECT d.id, l.category FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d LEFT JOIN labels AS l ON d.id = l.id;",
+    "sqlite_sql": "SELECT d.id, l.category FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d LEFT JOIN labels AS l ON d.id = l.id;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "A"
+      ],
+      [
+        1,
+        "B"
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        3,
+        "C"
+      ],
+      [
+        4,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          null
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          "A"
+        ],
+        [
+          1,
+          "B"
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          "C"
+        ],
+        [
+          4,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-1-full-using",
+    "source_kind": "synthetic",
+    "shape": "full-using",
+    "minimum": 1,
+    "sql": "SELECT id AS merged_id, i.id AS original_id, d.category FROM items AS i FULL JOIN (SELECT id, category FROM labels WHERE id >= 1) AS d USING (id);",
+    "sqlite_sql": "SELECT id AS merged_id, i.id AS original_id, d.category FROM items AS i FULL JOIN (SELECT id, category FROM labels WHERE id >= 1) AS d USING (id);",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "merged_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "original_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1,
+        "A"
+      ],
+      [
+        1,
+        1,
+        "B"
+      ],
+      [
+        2,
+        2,
+        null
+      ],
+      [
+        3,
+        3,
+        "C"
+      ],
+      [
+        4,
+        4,
+        null
+      ],
+      [
+        5,
+        null,
+        "E"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          1,
+          null
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          null
+        ],
+        [
+          4,
+          4,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          null,
+          "A"
+        ],
+        [
+          1,
+          null,
+          "B"
+        ],
+        [
+          3,
+          null,
+          "C"
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          1,
+          "A"
+        ],
+        [
+          1,
+          1,
+          "B"
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          "C"
+        ],
+        [
+          4,
+          4,
+          null
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-1-two-derived",
+    "source_kind": "synthetic",
+    "shape": "two-derived",
+    "minimum": 1,
+    "sql": "SELECT d.id, p.marker FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d CROSS JOIN (SELECT $1 AS marker) AS p;",
+    "sqlite_sql": "SELECT d.id, p.marker FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d CROSS JOIN (SELECT ?1 AS marker) AS p;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      9
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        9
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        3,
+        9
+      ],
+      [
+        4,
+        9
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          9
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          3,
+          9
+        ],
+        [
+          4,
+          9
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          9
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          3,
+          9
+        ],
+        [
+          4,
+          9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-1-child-distinct-pagination",
+    "source_kind": "synthetic",
+    "shape": "child-distinct-pagination",
+    "minimum": 1,
+    "sql": "SELECT d.score FROM (SELECT DISTINCT score FROM items WHERE id >= 1 ORDER BY score NULLS LAST LIMIT 2) AS d WHERE d.score IS NOT NULL;",
+    "sqlite_sql": "SELECT d.score FROM (SELECT DISTINCT score FROM items WHERE id >= 1 ORDER BY score NULLS LAST LIMIT 2) AS d WHERE d.score IS NOT NULL;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        10
+      ],
+      [
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-1-natural-qualified-star",
+    "source_kind": "synthetic",
+    "shape": "natural-qualified-star",
+    "minimum": 1,
+    "sql": "SELECT d.*, l.category FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d NATURAL LEFT JOIN labels AS l;",
+    "sqlite_sql": "SELECT d.*, l.category FROM (SELECT id, score, name FROM items WHERE id >= 1) AS d NATURAL LEFT JOIN labels AS l;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada",
+        "A"
+      ],
+      [
+        1,
+        10,
+        "Ada",
+        "B"
+      ],
+      [
+        2,
+        null,
+        "Bea",
+        null
+      ],
+      [
+        3,
+        10,
+        "Cy",
+        "C"
+      ],
+      [
+        4,
+        40,
+        "Di",
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada",
+          null
+        ],
+        [
+          2,
+          null,
+          "Bea",
+          null
+        ],
+        [
+          3,
+          10,
+          "Cy",
+          null
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada",
+          "A"
+        ],
+        [
+          1,
+          10,
+          "Ada",
+          "B"
+        ],
+        [
+          2,
+          null,
+          "Bea",
+          null
+        ],
+        [
+          3,
+          10,
+          "Cy",
+          "C"
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-2-projection",
+    "source_kind": "synthetic",
+    "shape": "projection",
+    "minimum": 2,
+    "sql": "SELECT d.id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d;",
+    "sqlite_sql": "SELECT d.id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-2-nested",
+    "source_kind": "synthetic",
+    "shape": "nested",
+    "minimum": 2,
+    "sql": "SELECT d.id, d.points + 1 AS adjusted FROM (SELECT x.id, COALESCE(x.score, 0) AS points FROM (SELECT id, score, name FROM items WHERE id >= 2) AS x) AS d;",
+    "sqlite_sql": "SELECT d.id, d.points + 1 AS adjusted FROM (SELECT x.id, COALESCE(x.score, 0) AS points FROM (SELECT id, score, name FROM items WHERE id >= 2) AS x) AS d;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "adjusted",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        41
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          11
+        ],
+        [
+          4,
+          41
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          11
+        ],
+        [
+          4,
+          41
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-2-prefix-alias",
+    "source_kind": "synthetic",
+    "shape": "prefix-alias",
+    "minimum": 2,
+    "sql": "SELECT d.key_id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d(key_id);",
+    "sqlite_sql": "SELECT d.key_id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d(key_id);",
+    "sqlite_supported": false,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-2-full-alias",
+    "source_kind": "synthetic",
+    "shape": "full-alias",
+    "minimum": 2,
+    "sql": "SELECT d.* FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d(key_id, points, label);",
+    "sqlite_sql": "SELECT d.* FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d(key_id, points, label);",
+    "sqlite_supported": false,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "points",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "label",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-2-anonymous-order",
+    "source_kind": "synthetic",
+    "shape": "anonymous-order",
+    "minimum": 2,
+    "sql": "SELECT ? AS marker, d.id, d.score FROM (SELECT id, score, name FROM items WHERE id >= 2 AND id >= ?) AS d WHERE COALESCE(d.score, 0) >= ? ORDER BY d.id LIMIT ? OFFSET ?;",
+    "sqlite_sql": "SELECT ? AS marker, d.id, d.score FROM (SELECT id, score, name FROM items WHERE id >= 2 AND id >= ?) AS d WHERE COALESCE(d.score, 0) >= ? ORDER BY d.id LIMIT ? OFFSET ?;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "int,int,int,int,int",
+    "parameter_values": [
+      7,
+      1,
+      0,
+      2,
+      0
+    ],
+    "output_columns": [
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        7,
+        2,
+        null
+      ],
+      [
+        7,
+        3,
+        10
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          7,
+          2,
+          null
+        ],
+        [
+          7,
+          3,
+          10
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          7,
+          2,
+          null
+        ],
+        [
+          7,
+          3,
+          10
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-2-left-join",
+    "source_kind": "synthetic",
+    "shape": "left-join",
+    "minimum": 2,
+    "sql": "SELECT d.id, l.category FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d LEFT JOIN labels AS l ON d.id = l.id;",
+    "sqlite_sql": "SELECT d.id, l.category FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d LEFT JOIN labels AS l ON d.id = l.id;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        2,
+        null
+      ],
+      [
+        3,
+        "C"
+      ],
+      [
+        4,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          "C"
+        ],
+        [
+          4,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-2-full-using",
+    "source_kind": "synthetic",
+    "shape": "full-using",
+    "minimum": 2,
+    "sql": "SELECT id AS merged_id, i.id AS original_id, d.category FROM items AS i FULL JOIN (SELECT id, category FROM labels WHERE id >= 2) AS d USING (id);",
+    "sqlite_sql": "SELECT id AS merged_id, i.id AS original_id, d.category FROM items AS i FULL JOIN (SELECT id, category FROM labels WHERE id >= 2) AS d USING (id);",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "merged_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "original_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1,
+        null
+      ],
+      [
+        2,
+        2,
+        null
+      ],
+      [
+        3,
+        3,
+        "C"
+      ],
+      [
+        4,
+        4,
+        null
+      ],
+      [
+        5,
+        null,
+        "E"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          1,
+          null
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          null
+        ],
+        [
+          4,
+          4,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          3,
+          null,
+          "C"
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          1,
+          null
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          "C"
+        ],
+        [
+          4,
+          4,
+          null
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-2-two-derived",
+    "source_kind": "synthetic",
+    "shape": "two-derived",
+    "minimum": 2,
+    "sql": "SELECT d.id, p.marker FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d CROSS JOIN (SELECT $1 AS marker) AS p;",
+    "sqlite_sql": "SELECT d.id, p.marker FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d CROSS JOIN (SELECT ?1 AS marker) AS p;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      9
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        2,
+        9
+      ],
+      [
+        3,
+        9
+      ],
+      [
+        4,
+        9
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          2,
+          9
+        ],
+        [
+          3,
+          9
+        ],
+        [
+          4,
+          9
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          2,
+          9
+        ],
+        [
+          3,
+          9
+        ],
+        [
+          4,
+          9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-2-child-distinct-pagination",
+    "source_kind": "synthetic",
+    "shape": "child-distinct-pagination",
+    "minimum": 2,
+    "sql": "SELECT d.score FROM (SELECT DISTINCT score FROM items WHERE id >= 2 ORDER BY score NULLS LAST LIMIT 2) AS d WHERE d.score IS NOT NULL;",
+    "sqlite_sql": "SELECT d.score FROM (SELECT DISTINCT score FROM items WHERE id >= 2 ORDER BY score NULLS LAST LIMIT 2) AS d WHERE d.score IS NOT NULL;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        10
+      ],
+      [
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-2-natural-qualified-star",
+    "source_kind": "synthetic",
+    "shape": "natural-qualified-star",
+    "minimum": 2,
+    "sql": "SELECT d.*, l.category FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d NATURAL LEFT JOIN labels AS l;",
+    "sqlite_sql": "SELECT d.*, l.category FROM (SELECT id, score, name FROM items WHERE id >= 2) AS d NATURAL LEFT JOIN labels AS l;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        2,
+        null,
+        "Bea",
+        null
+      ],
+      [
+        3,
+        10,
+        "Cy",
+        "C"
+      ],
+      [
+        4,
+        40,
+        "Di",
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          2,
+          null,
+          "Bea",
+          null
+        ],
+        [
+          3,
+          10,
+          "Cy",
+          null
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          2,
+          null,
+          "Bea",
+          null
+        ],
+        [
+          3,
+          10,
+          "Cy",
+          "C"
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-3-projection",
+    "source_kind": "synthetic",
+    "shape": "projection",
+    "minimum": 3,
+    "sql": "SELECT d.id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d;",
+    "sqlite_sql": "SELECT d.id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-3-nested",
+    "source_kind": "synthetic",
+    "shape": "nested",
+    "minimum": 3,
+    "sql": "SELECT d.id, d.points + 1 AS adjusted FROM (SELECT x.id, COALESCE(x.score, 0) AS points FROM (SELECT id, score, name FROM items WHERE id >= 3) AS x) AS d;",
+    "sqlite_sql": "SELECT d.id, d.points + 1 AS adjusted FROM (SELECT x.id, COALESCE(x.score, 0) AS points FROM (SELECT id, score, name FROM items WHERE id >= 3) AS x) AS d;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "adjusted",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        11
+      ],
+      [
+        4,
+        41
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          11
+        ],
+        [
+          4,
+          41
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          11
+        ],
+        [
+          4,
+          41
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-3-prefix-alias",
+    "source_kind": "synthetic",
+    "shape": "prefix-alias",
+    "minimum": 3,
+    "sql": "SELECT d.key_id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d(key_id);",
+    "sqlite_sql": "SELECT d.key_id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d(key_id);",
+    "sqlite_supported": false,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-3-full-alias",
+    "source_kind": "synthetic",
+    "shape": "full-alias",
+    "minimum": 3,
+    "sql": "SELECT d.* FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d(key_id, points, label);",
+    "sqlite_sql": "SELECT d.* FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d(key_id, points, label);",
+    "sqlite_supported": false,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "points",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "label",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-3-anonymous-order",
+    "source_kind": "synthetic",
+    "shape": "anonymous-order",
+    "minimum": 3,
+    "sql": "SELECT ? AS marker, d.id, d.score FROM (SELECT id, score, name FROM items WHERE id >= 3 AND id >= ?) AS d WHERE COALESCE(d.score, 0) >= ? ORDER BY d.id LIMIT ? OFFSET ?;",
+    "sqlite_sql": "SELECT ? AS marker, d.id, d.score FROM (SELECT id, score, name FROM items WHERE id >= 3 AND id >= ?) AS d WHERE COALESCE(d.score, 0) >= ? ORDER BY d.id LIMIT ? OFFSET ?;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "int,int,int,int,int",
+    "parameter_values": [
+      7,
+      1,
+      0,
+      2,
+      0
+    ],
+    "output_columns": [
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        7,
+        3,
+        10
+      ],
+      [
+        7,
+        4,
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          7,
+          3,
+          10
+        ],
+        [
+          7,
+          4,
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          7,
+          3,
+          10
+        ],
+        [
+          7,
+          4,
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-3-left-join",
+    "source_kind": "synthetic",
+    "shape": "left-join",
+    "minimum": 3,
+    "sql": "SELECT d.id, l.category FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d LEFT JOIN labels AS l ON d.id = l.id;",
+    "sqlite_sql": "SELECT d.id, l.category FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d LEFT JOIN labels AS l ON d.id = l.id;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        "C"
+      ],
+      [
+        4,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          "C"
+        ],
+        [
+          4,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-3-full-using",
+    "source_kind": "synthetic",
+    "shape": "full-using",
+    "minimum": 3,
+    "sql": "SELECT id AS merged_id, i.id AS original_id, d.category FROM items AS i FULL JOIN (SELECT id, category FROM labels WHERE id >= 3) AS d USING (id);",
+    "sqlite_sql": "SELECT id AS merged_id, i.id AS original_id, d.category FROM items AS i FULL JOIN (SELECT id, category FROM labels WHERE id >= 3) AS d USING (id);",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "merged_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "original_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1,
+        null
+      ],
+      [
+        2,
+        2,
+        null
+      ],
+      [
+        3,
+        3,
+        "C"
+      ],
+      [
+        4,
+        4,
+        null
+      ],
+      [
+        5,
+        null,
+        "E"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          1,
+          null
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          null
+        ],
+        [
+          4,
+          4,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          3,
+          null,
+          "C"
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          1,
+          null
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          "C"
+        ],
+        [
+          4,
+          4,
+          null
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-3-two-derived",
+    "source_kind": "synthetic",
+    "shape": "two-derived",
+    "minimum": 3,
+    "sql": "SELECT d.id, p.marker FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d CROSS JOIN (SELECT $1 AS marker) AS p;",
+    "sqlite_sql": "SELECT d.id, p.marker FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d CROSS JOIN (SELECT ?1 AS marker) AS p;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      9
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        9
+      ],
+      [
+        4,
+        9
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          9
+        ],
+        [
+          4,
+          9
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          9
+        ],
+        [
+          4,
+          9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-3-child-distinct-pagination",
+    "source_kind": "synthetic",
+    "shape": "child-distinct-pagination",
+    "minimum": 3,
+    "sql": "SELECT d.score FROM (SELECT DISTINCT score FROM items WHERE id >= 3 ORDER BY score NULLS LAST LIMIT 2) AS d WHERE d.score IS NOT NULL;",
+    "sqlite_sql": "SELECT d.score FROM (SELECT DISTINCT score FROM items WHERE id >= 3 ORDER BY score NULLS LAST LIMIT 2) AS d WHERE d.score IS NOT NULL;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        10
+      ],
+      [
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-3-natural-qualified-star",
+    "source_kind": "synthetic",
+    "shape": "natural-qualified-star",
+    "minimum": 3,
+    "sql": "SELECT d.*, l.category FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d NATURAL LEFT JOIN labels AS l;",
+    "sqlite_sql": "SELECT d.*, l.category FROM (SELECT id, score, name FROM items WHERE id >= 3) AS d NATURAL LEFT JOIN labels AS l;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        10,
+        "Cy",
+        "C"
+      ],
+      [
+        4,
+        40,
+        "Di",
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy",
+          null
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy",
+          "C"
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-4-projection",
+    "source_kind": "synthetic",
+    "shape": "projection",
+    "minimum": 4,
+    "sql": "SELECT d.id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d;",
+    "sqlite_sql": "SELECT d.id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-4-nested",
+    "source_kind": "synthetic",
+    "shape": "nested",
+    "minimum": 4,
+    "sql": "SELECT d.id, d.points + 1 AS adjusted FROM (SELECT x.id, COALESCE(x.score, 0) AS points FROM (SELECT id, score, name FROM items WHERE id >= 4) AS x) AS d;",
+    "sqlite_sql": "SELECT d.id, d.points + 1 AS adjusted FROM (SELECT x.id, COALESCE(x.score, 0) AS points FROM (SELECT id, score, name FROM items WHERE id >= 4) AS x) AS d;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "adjusted",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        4,
+        41
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          4,
+          41
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          4,
+          41
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-4-prefix-alias",
+    "source_kind": "synthetic",
+    "shape": "prefix-alias",
+    "minimum": 4,
+    "sql": "SELECT d.key_id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d(key_id);",
+    "sqlite_sql": "SELECT d.key_id, d.score, d.name FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d(key_id);",
+    "sqlite_supported": false,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-4-full-alias",
+    "source_kind": "synthetic",
+    "shape": "full-alias",
+    "minimum": 4,
+    "sql": "SELECT d.* FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d(key_id, points, label);",
+    "sqlite_sql": "SELECT d.* FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d(key_id, points, label);",
+    "sqlite_supported": false,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "points",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "label",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-4-anonymous-order",
+    "source_kind": "synthetic",
+    "shape": "anonymous-order",
+    "minimum": 4,
+    "sql": "SELECT ? AS marker, d.id, d.score FROM (SELECT id, score, name FROM items WHERE id >= 4 AND id >= ?) AS d WHERE COALESCE(d.score, 0) >= ? ORDER BY d.id LIMIT ? OFFSET ?;",
+    "sqlite_sql": "SELECT ? AS marker, d.id, d.score FROM (SELECT id, score, name FROM items WHERE id >= 4 AND id >= ?) AS d WHERE COALESCE(d.score, 0) >= ? ORDER BY d.id LIMIT ? OFFSET ?;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "int,int,int,int,int",
+    "parameter_values": [
+      7,
+      1,
+      0,
+      2,
+      0
+    ],
+    "output_columns": [
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        7,
+        4,
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          7,
+          4,
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          7,
+          4,
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-4-left-join",
+    "source_kind": "synthetic",
+    "shape": "left-join",
+    "minimum": 4,
+    "sql": "SELECT d.id, l.category FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d LEFT JOIN labels AS l ON d.id = l.id;",
+    "sqlite_sql": "SELECT d.id, l.category FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d LEFT JOIN labels AS l ON d.id = l.id;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        4,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          4,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          4,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-4-full-using",
+    "source_kind": "synthetic",
+    "shape": "full-using",
+    "minimum": 4,
+    "sql": "SELECT id AS merged_id, i.id AS original_id, d.category FROM items AS i FULL JOIN (SELECT id, category FROM labels WHERE id >= 4) AS d USING (id);",
+    "sqlite_sql": "SELECT id AS merged_id, i.id AS original_id, d.category FROM items AS i FULL JOIN (SELECT id, category FROM labels WHERE id >= 4) AS d USING (id);",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "merged_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "original_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1,
+        null
+      ],
+      [
+        2,
+        2,
+        null
+      ],
+      [
+        3,
+        3,
+        null
+      ],
+      [
+        4,
+        4,
+        null
+      ],
+      [
+        5,
+        null,
+        "E"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          1,
+          null
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          null
+        ],
+        [
+          4,
+          4,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          5,
+          null,
+          "E"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          1,
+          null
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          null
+        ],
+        [
+          4,
+          4,
+          null
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-4-two-derived",
+    "source_kind": "synthetic",
+    "shape": "two-derived",
+    "minimum": 4,
+    "sql": "SELECT d.id, p.marker FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d CROSS JOIN (SELECT $1 AS marker) AS p;",
+    "sqlite_sql": "SELECT d.id, p.marker FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d CROSS JOIN (SELECT ?1 AS marker) AS p;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      9
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        4,
+        9
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          4,
+          9
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          4,
+          9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-4-child-distinct-pagination",
+    "source_kind": "synthetic",
+    "shape": "child-distinct-pagination",
+    "minimum": 4,
+    "sql": "SELECT d.score FROM (SELECT DISTINCT score FROM items WHERE id >= 4 ORDER BY score NULLS LAST LIMIT 2) AS d WHERE d.score IS NOT NULL;",
+    "sqlite_sql": "SELECT d.score FROM (SELECT DISTINCT score FROM items WHERE id >= 4 ORDER BY score NULLS LAST LIMIT 2) AS d WHERE d.score IS NOT NULL;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "derived-4-natural-qualified-star",
+    "source_kind": "synthetic",
+    "shape": "natural-qualified-star",
+    "minimum": 4,
+    "sql": "SELECT d.*, l.category FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d NATURAL LEFT JOIN labels AS l;",
+    "sqlite_sql": "SELECT d.*, l.category FROM (SELECT id, score, name FROM items WHERE id >= 4) AS d NATURAL LEFT JOIN labels AS l;",
+    "sqlite_supported": true,
+    "catalogFile": "fixtures/derived_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        4,
+        40,
+        "Di",
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ]
+    }
+  }
+]

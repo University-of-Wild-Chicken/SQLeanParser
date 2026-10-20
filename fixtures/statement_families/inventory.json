@@ -1,0 +1,1288 @@
+{
+  "format_version": 1,
+  "postgresql_grammar_commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+  "scope": "finite unchanged source statements; no static validity or execution claim",
+  "mining_population": {
+    "input_files": 909,
+    "raw_parser": "pglast v7.21 / PostgreSQL 17.7",
+    "unique_raw_parser_accepted": 42967,
+    "by_source": {
+      "hatchet": 548,
+      "postgres": 41834,
+      "sqlc": 585
+    },
+    "exclusions": {
+      "conservative-duplicate": 11977,
+      "raw-parser-rejected": 1841,
+      "source-extraction-failure": 1
+    },
+    "boundary": "finite pinned file search; psql meta-commands are not interpreted; no SQL execution",
+    "source_catalog_sha256": "0ae7ed7f791e18e6988c9fb2d03459c07d605afb85f8f3bc34220b658c51a249",
+    "grammar_accepted": 42964,
+    "grammar_rejected": 3,
+    "outer_family_counts": {
+      "AlterCollationStmt": 2,
+      "AlterCompositeTypeStmt": 25,
+      "AlterDatabaseSetStmt": 2,
+      "AlterDatabaseStmt": 3,
+      "AlterDefaultPrivilegesStmt": 27,
+      "AlterDomainStmt": 32,
+      "AlterEnumStmt": 49,
+      "AlterEventTrigStmt": 4,
+      "AlterExtensionContentsStmt": 46,
+      "AlterExtensionStmt": 9,
+      "AlterFdwStmt": 19,
+      "AlterForeignServerStmt": 59,
+      "AlterFunctionStmt": 25,
+      "AlterGroupStmt": 4,
+      "AlterObjectDependsStmt": 4,
+      "AlterObjectSchemaStmt": 62,
+      "AlterOpFamilyStmt": 42,
+      "AlterOperatorStmt": 13,
+      "AlterOwnerStmt": 82,
+      "AlterPolicyStmt": 14,
+      "AlterPublicationStmt": 99,
+      "AlterRoleSetStmt": 40,
+      "AlterRoleStmt": 73,
+      "AlterSeqStmt": 27,
+      "AlterStatsStmt": 3,
+      "AlterSubscriptionStmt": 26,
+      "AlterSystemStmt": 33,
+      "AlterTSConfigurationStmt": 17,
+      "AlterTSDictionaryStmt": 14,
+      "AlterTableStmt": 1780,
+      "AlterTblSpcStmt": 4,
+      "AlterTypeStmt": 4,
+      "AlterUserMappingStmt": 31,
+      "AnalyzeStmt": 188,
+      "CallStmt": 45,
+      "CheckPointStmt": 1,
+      "ClosePortalStmt": 31,
+      "ClusterStmt": 26,
+      "CommentStmt": 120,
+      "ConstraintsSetStmt": 7,
+      "CopyStmt": 157,
+      "CreateAmStmt": 7,
+      "CreateAsStmt": 146,
+      "CreateCastStmt": 23,
+      "CreateConversionStmt": 7,
+      "CreateDomainStmt": 111,
+      "CreateEventTrigStmt": 28,
+      "CreateExtensionStmt": 89,
+      "CreateFdwStmt": 22,
+      "CreateForeignServerStmt": 43,
+      "CreateForeignTableStmt": 118,
+      "CreateFunctionStmt": 1029,
+      "CreateGroupStmt": 4,
+      "CreateMatViewStmt": 55,
+      "CreateOpClassStmt": 17,
+      "CreateOpFamilyStmt": 19,
+      "CreatePLangStmt": 2,
+      "CreatePolicyStmt": 108,
+      "CreatePublicationStmt": 77,
+      "CreateRoleStmt": 192,
+      "CreateSchemaStmt": 144,
+      "CreateSeqStmt": 69,
+      "CreateStatsStmt": 106,
+      "CreateStmt": 3582,
+      "CreateSubscriptionStmt": 32,
+      "CreateTableSpaceStmt": 8,
+      "CreateTransformStmt": 9,
+      "CreateTrigStmt": 400,
+      "CreateUserMappingStmt": 47,
+      "CreateUserStmt": 60,
+      "CreatedbStmt": 4,
+      "DeallocateStmt": 33,
+      "DeclareCursorStmt": 98,
+      "DefineStmt": 432,
+      "DeleteStmt": 448,
+      "DiscardStmt": 3,
+      "DoStmt": 74,
+      "DropCastStmt": 9,
+      "DropOpClassStmt": 10,
+      "DropOpFamilyStmt": 21,
+      "DropOwnedStmt": 26,
+      "DropRoleStmt": 267,
+      "DropStmt": 1748,
+      "DropSubscriptionStmt": 5,
+      "DropTableSpaceStmt": 5,
+      "DropTransformStmt": 7,
+      "DropUserMappingStmt": 35,
+      "DropdbStmt": 8,
+      "ExecuteStmt": 68,
+      "ExplainStmt": 1785,
+      "FetchStmt": 152,
+      "GrantRoleStmt": 58,
+      "GrantStmt": 301,
+      "ImportForeignSchemaStmt": 12,
+      "IndexStmt": 783,
+      "InsertStmt": 5223,
+      "ListenStmt": 3,
+      "LoadStmt": 6,
+      "LockStmt": 40,
+      "MergeStmt": 139,
+      "NotifyStmt": 3,
+      "PrepareStmt": 77,
+      "ReassignOwnedStmt": 8,
+      "RefreshMatViewStmt": 33,
+      "ReindexStmt": 100,
+      "RemoveAggrStmt": 15,
+      "RemoveFuncStmt": 351,
+      "RemoveOperStmt": 27,
+      "RenameStmt": 198,
+      "RevokeRoleStmt": 28,
+      "RevokeStmt": 130,
+      "RuleStmt": 134,
+      "SecLabelStmt": 74,
+      "SelectStmt": 17721,
+      "TransactionStmt": 153,
+      "TransactionStmtLegacy": 12,
+      "TruncateStmt": 105,
+      "UnlistenStmt": 2,
+      "UpdateStmt": 873,
+      "VacuumStmt": 153,
+      "VariableResetStmt": 80,
+      "VariableSetStmt": 642,
+      "VariableShowStmt": 22,
+      "ViewStmt": 417
+    },
+    "selected_count": 3924,
+    "selection": "cap 50 per outer family; greedy new production IDs, source kind, SQL length, stable ID"
+  },
+  "selected_count": 3924,
+  "negative_count": 3,
+  "source_counts": {
+    "hatchet": 73,
+    "postgres": 3824,
+    "sqlc": 27
+  },
+  "families_with_fifty_sources": 53,
+  "families_with_any_sources": 124,
+  "families": [
+    {
+      "name": "TransactionStmtLegacy",
+      "category": "transaction-and-locking",
+      "entry_production": 10,
+      "available": 12,
+      "selected": 12,
+      "shortfall_to_fifty": 38,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterEventTrigStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 11,
+      "available": 4,
+      "selected": 4,
+      "shortfall_to_fifty": 46,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterCollationStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 12,
+      "available": 2,
+      "selected": 2,
+      "shortfall_to_fifty": 48,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterDatabaseStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 13,
+      "available": 3,
+      "selected": 3,
+      "shortfall_to_fifty": 47,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterDatabaseSetStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 14,
+      "available": 2,
+      "selected": 2,
+      "shortfall_to_fifty": 48,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterDefaultPrivilegesStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 15,
+      "available": 27,
+      "selected": 27,
+      "shortfall_to_fifty": 23,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterDomainStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 16,
+      "available": 32,
+      "selected": 32,
+      "shortfall_to_fifty": 18,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterEnumStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 17,
+      "available": 49,
+      "selected": 49,
+      "shortfall_to_fifty": 1,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterExtensionStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 18,
+      "available": 9,
+      "selected": 9,
+      "shortfall_to_fifty": 41,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterExtensionContentsStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 19,
+      "available": 46,
+      "selected": 46,
+      "shortfall_to_fifty": 4,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterFdwStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 20,
+      "available": 19,
+      "selected": 19,
+      "shortfall_to_fifty": 31,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterForeignServerStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 21,
+      "available": 59,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterFunctionStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 22,
+      "available": 25,
+      "selected": 25,
+      "shortfall_to_fifty": 25,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterGroupStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 23,
+      "available": 4,
+      "selected": 4,
+      "shortfall_to_fifty": 46,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterObjectDependsStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 24,
+      "available": 4,
+      "selected": 4,
+      "shortfall_to_fifty": 46,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterObjectSchemaStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 25,
+      "available": 62,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterOwnerStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 26,
+      "available": 82,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterOperatorStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 27,
+      "available": 13,
+      "selected": 13,
+      "shortfall_to_fifty": 37,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterTypeStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 28,
+      "available": 4,
+      "selected": 4,
+      "shortfall_to_fifty": 46,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterPolicyStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 29,
+      "available": 14,
+      "selected": 14,
+      "shortfall_to_fifty": 36,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterSeqStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 30,
+      "available": 27,
+      "selected": 27,
+      "shortfall_to_fifty": 23,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterSystemStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 31,
+      "available": 33,
+      "selected": 33,
+      "shortfall_to_fifty": 17,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterTableStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 32,
+      "available": 1780,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterTblSpcStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 33,
+      "available": 4,
+      "selected": 4,
+      "shortfall_to_fifty": 46,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterCompositeTypeStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 34,
+      "available": 25,
+      "selected": 25,
+      "shortfall_to_fifty": 25,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterPublicationStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 35,
+      "available": 99,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterRoleSetStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 36,
+      "available": 40,
+      "selected": 40,
+      "shortfall_to_fifty": 10,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterRoleStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 37,
+      "available": 73,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterSubscriptionStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 38,
+      "available": 26,
+      "selected": 26,
+      "shortfall_to_fifty": 24,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterStatsStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 39,
+      "available": 3,
+      "selected": 3,
+      "shortfall_to_fifty": 47,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterTSConfigurationStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 40,
+      "available": 17,
+      "selected": 17,
+      "shortfall_to_fifty": 33,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterTSDictionaryStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 41,
+      "available": 14,
+      "selected": 14,
+      "shortfall_to_fifty": 36,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterUserMappingStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 42,
+      "available": 31,
+      "selected": 31,
+      "shortfall_to_fifty": 19,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AnalyzeStmt",
+      "category": "maintenance",
+      "entry_production": 43,
+      "available": 188,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CallStmt",
+      "category": "procedural-invocation",
+      "entry_production": 44,
+      "available": 45,
+      "selected": 45,
+      "shortfall_to_fifty": 5,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CheckPointStmt",
+      "category": "maintenance",
+      "entry_production": 45,
+      "available": 1,
+      "selected": 1,
+      "shortfall_to_fifty": 49,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "ClosePortalStmt",
+      "category": "cursor",
+      "entry_production": 46,
+      "available": 31,
+      "selected": 31,
+      "shortfall_to_fifty": 19,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "ClusterStmt",
+      "category": "maintenance",
+      "entry_production": 47,
+      "available": 26,
+      "selected": 26,
+      "shortfall_to_fifty": 24,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CommentStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 48,
+      "available": 120,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "ConstraintsSetStmt",
+      "category": "transaction-and-locking",
+      "entry_production": 49,
+      "available": 7,
+      "selected": 7,
+      "shortfall_to_fifty": 43,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CopyStmt",
+      "category": "copy",
+      "entry_production": 50,
+      "available": 157,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateAmStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 51,
+      "available": 7,
+      "selected": 7,
+      "shortfall_to_fifty": 43,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateAsStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 52,
+      "available": 146,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateAssertionStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 53,
+      "available": 0,
+      "selected": 0,
+      "shortfall_to_fifty": 50,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateCastStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 54,
+      "available": 23,
+      "selected": 23,
+      "shortfall_to_fifty": 27,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateConversionStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 55,
+      "available": 7,
+      "selected": 7,
+      "shortfall_to_fifty": 43,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateDomainStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 56,
+      "available": 111,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateExtensionStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 57,
+      "available": 89,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateFdwStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 58,
+      "available": 22,
+      "selected": 22,
+      "shortfall_to_fifty": 28,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateForeignServerStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 59,
+      "available": 43,
+      "selected": 43,
+      "shortfall_to_fifty": 7,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateForeignTableStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 60,
+      "available": 118,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateFunctionStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 61,
+      "available": 1029,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateGroupStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 62,
+      "available": 4,
+      "selected": 4,
+      "shortfall_to_fifty": 46,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateMatViewStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 63,
+      "available": 55,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateOpClassStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 64,
+      "available": 17,
+      "selected": 17,
+      "shortfall_to_fifty": 33,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateOpFamilyStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 65,
+      "available": 19,
+      "selected": 19,
+      "shortfall_to_fifty": 31,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreatePublicationStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 66,
+      "available": 77,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "AlterOpFamilyStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 67,
+      "available": 42,
+      "selected": 42,
+      "shortfall_to_fifty": 8,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreatePolicyStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 68,
+      "available": 108,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreatePLangStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 69,
+      "available": 2,
+      "selected": 2,
+      "shortfall_to_fifty": 48,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateSchemaStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 70,
+      "available": 144,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateSeqStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 71,
+      "available": 69,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 72,
+      "available": 3582,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateSubscriptionStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 73,
+      "available": 32,
+      "selected": 32,
+      "shortfall_to_fifty": 18,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateStatsStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 74,
+      "available": 106,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateTableSpaceStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 75,
+      "available": 8,
+      "selected": 8,
+      "shortfall_to_fifty": 42,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateTransformStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 76,
+      "available": 9,
+      "selected": 9,
+      "shortfall_to_fifty": 41,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateTrigStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 77,
+      "available": 400,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateEventTrigStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 78,
+      "available": 28,
+      "selected": 28,
+      "shortfall_to_fifty": 22,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateRoleStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 79,
+      "available": 192,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateUserStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 80,
+      "available": 60,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreateUserMappingStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 81,
+      "available": 47,
+      "selected": 47,
+      "shortfall_to_fifty": 3,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "CreatedbStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 82,
+      "available": 4,
+      "selected": 4,
+      "shortfall_to_fifty": 46,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DeallocateStmt",
+      "category": "prepared-statement",
+      "entry_production": 83,
+      "available": 33,
+      "selected": 33,
+      "shortfall_to_fifty": 17,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DeclareCursorStmt",
+      "category": "cursor",
+      "entry_production": 84,
+      "available": 98,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DefineStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 85,
+      "available": 432,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DeleteStmt",
+      "category": "mutation",
+      "entry_production": 86,
+      "available": 448,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DiscardStmt",
+      "category": "session",
+      "entry_production": 87,
+      "available": 3,
+      "selected": 3,
+      "shortfall_to_fifty": 47,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DoStmt",
+      "category": "procedural-invocation",
+      "entry_production": 88,
+      "available": 74,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropCastStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 89,
+      "available": 9,
+      "selected": 9,
+      "shortfall_to_fifty": 41,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropOpClassStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 90,
+      "available": 10,
+      "selected": 10,
+      "shortfall_to_fifty": 40,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropOpFamilyStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 91,
+      "available": 21,
+      "selected": 21,
+      "shortfall_to_fifty": 29,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropOwnedStmt",
+      "category": "privilege-and-ownership",
+      "entry_production": 92,
+      "available": 26,
+      "selected": 26,
+      "shortfall_to_fifty": 24,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 93,
+      "available": 1748,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropSubscriptionStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 94,
+      "available": 5,
+      "selected": 5,
+      "shortfall_to_fifty": 45,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropTableSpaceStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 95,
+      "available": 5,
+      "selected": 5,
+      "shortfall_to_fifty": 45,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropTransformStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 96,
+      "available": 7,
+      "selected": 7,
+      "shortfall_to_fifty": 43,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropRoleStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 97,
+      "available": 267,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropUserMappingStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 98,
+      "available": 35,
+      "selected": 35,
+      "shortfall_to_fifty": 15,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "DropdbStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 99,
+      "available": 8,
+      "selected": 8,
+      "shortfall_to_fifty": 42,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "ExecuteStmt",
+      "category": "prepared-statement",
+      "entry_production": 100,
+      "available": 68,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "ExplainStmt",
+      "category": "explain",
+      "entry_production": 101,
+      "available": 1785,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "FetchStmt",
+      "category": "cursor",
+      "entry_production": 102,
+      "available": 152,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "GrantStmt",
+      "category": "privilege-and-ownership",
+      "entry_production": 103,
+      "available": 301,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "GrantRoleStmt",
+      "category": "privilege-and-ownership",
+      "entry_production": 104,
+      "available": 58,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "ImportForeignSchemaStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 105,
+      "available": 12,
+      "selected": 12,
+      "shortfall_to_fifty": 38,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "IndexStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 106,
+      "available": 783,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "InsertStmt",
+      "category": "mutation",
+      "entry_production": 107,
+      "available": 5223,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "ListenStmt",
+      "category": "notification",
+      "entry_production": 108,
+      "available": 3,
+      "selected": 3,
+      "shortfall_to_fifty": 47,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "RefreshMatViewStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 109,
+      "available": 33,
+      "selected": 33,
+      "shortfall_to_fifty": 17,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "LoadStmt",
+      "category": "procedural-invocation",
+      "entry_production": 110,
+      "available": 6,
+      "selected": 6,
+      "shortfall_to_fifty": 44,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "LockStmt",
+      "category": "transaction-and-locking",
+      "entry_production": 111,
+      "available": 40,
+      "selected": 40,
+      "shortfall_to_fifty": 10,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "MergeStmt",
+      "category": "mutation",
+      "entry_production": 112,
+      "available": 139,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "NotifyStmt",
+      "category": "notification",
+      "entry_production": 113,
+      "available": 3,
+      "selected": 3,
+      "shortfall_to_fifty": 47,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "PrepareStmt",
+      "category": "prepared-statement",
+      "entry_production": 114,
+      "available": 77,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "ReassignOwnedStmt",
+      "category": "privilege-and-ownership",
+      "entry_production": 115,
+      "available": 8,
+      "selected": 8,
+      "shortfall_to_fifty": 42,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "ReindexStmt",
+      "category": "maintenance",
+      "entry_production": 116,
+      "available": 100,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "RemoveAggrStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 117,
+      "available": 15,
+      "selected": 15,
+      "shortfall_to_fifty": 35,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "RemoveFuncStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 118,
+      "available": 351,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "RemoveOperStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 119,
+      "available": 27,
+      "selected": 27,
+      "shortfall_to_fifty": 23,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "RenameStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 120,
+      "available": 198,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "RevokeStmt",
+      "category": "privilege-and-ownership",
+      "entry_production": 121,
+      "available": 130,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "RevokeRoleStmt",
+      "category": "privilege-and-ownership",
+      "entry_production": 122,
+      "available": 28,
+      "selected": 28,
+      "shortfall_to_fifty": 22,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "RuleStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 123,
+      "available": 134,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "SecLabelStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 124,
+      "available": 74,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "SelectStmt",
+      "category": "query",
+      "entry_production": 125,
+      "available": 17721,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "TransactionStmt",
+      "category": "transaction-and-locking",
+      "entry_production": 126,
+      "available": 153,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "TruncateStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 127,
+      "available": 105,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "UnlistenStmt",
+      "category": "notification",
+      "entry_production": 128,
+      "available": 2,
+      "selected": 2,
+      "shortfall_to_fifty": 48,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "UpdateStmt",
+      "category": "mutation",
+      "entry_production": 129,
+      "available": 873,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "VacuumStmt",
+      "category": "maintenance",
+      "entry_production": 130,
+      "available": 153,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "VariableResetStmt",
+      "category": "session",
+      "entry_production": 131,
+      "available": 80,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "VariableSetStmt",
+      "category": "session",
+      "entry_production": 132,
+      "available": 642,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "VariableShowStmt",
+      "category": "session",
+      "entry_production": 133,
+      "available": 22,
+      "selected": 22,
+      "shortfall_to_fifty": 28,
+      "coverage_claim": "finite-witnesses-only"
+    },
+    {
+      "name": "ViewStmt",
+      "category": "schema-and-object-definition",
+      "entry_production": 134,
+      "available": 417,
+      "selected": 50,
+      "shortfall_to_fifty": 0,
+      "coverage_claim": "finite-witnesses-only"
+    }
+  ]
+}

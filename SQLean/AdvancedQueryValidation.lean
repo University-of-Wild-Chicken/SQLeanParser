@@ -1,5 +1,6 @@
 import SQLean.AdvancedSyntax
 import SQLean.AdvancedCatalog
+import SQLean.SelectContract.ScalarSignatures
 
 /-! Bounded, schema-aware checks for the advanced query syntax. Certificates in
 this module certify the stated executable static checks. They do not establish
@@ -99,6 +100,17 @@ private def contextual (type : ExprType) (expected : SqlType) : SqlType :=
 private def boolean (type : ExprType) : Bool :=
   type.isNone || (finishType type).base == .bool
 
+/-- The compatibility tier retains its old numeric families, while preserving
+the new opaque built-ins. Consult the independent scalar signatures for their
+temporal operations and casts; this bridge is not an independent certificate. -/
+private def familyExact (type : SqlType) : SelectContract.ExactType :=
+  ⟨(SelectContract.concreteType (DataType.ofSqlType type)).getD .text, type.isNullable⟩
+
+private def familyResult (type : SelectContract.ExprType) : ExprType :=
+  type.map fun type =>
+    let base := type.base.dataType.sqlType
+    if type.nullable then base.asNullable else base
+
 /-- Resolves one lexical scope at a time. A local qualifier shadows outer scopes
 also when its requested column does not exist. Ambiguity never falls through. -/
 def resolveColumn : List Scope → Option Name → Name → Except ValidationError (Binding × Nat)
@@ -152,6 +164,7 @@ private def mergeJoin (kind : JoinKind) (left right : Scope) (names : List Name)
     let (rc, _) ← resolveColumn [right] none name
     let type ← commonType (some lc.type) (some rc.type)
     let base := (finishType type).base
+    ensure base.equalityComparable "USING/NATURAL requires equality-comparable columns"
     let nullable := match kind with
       | .left => lc.type.isNullable
       | .right => rc.type.isNullable
@@ -170,6 +183,9 @@ private def expressionName : Expr → Name
   | .aggregate .avg _ _ => "avg"
   | .aggregate .min _ _ => "min"
   | .aggregate .max _ _ => "max"
+  | .call name _ => name.getLastD "?column?"
+  | .caseExpr .. => "case" | .coalesce .. => "coalesce" | .nullIf .. => "nullif"
+  | .greatest .. => "greatest" | .least .. => "least"
   | .cast arg _ | .filteredAggregate arg _ => expressionName arg
   | _ => "?column?"
 
@@ -190,8 +206,12 @@ private def hasAggregate : Nat → Expr → Bool
   | 0, _ => true
   | fuel + 1, expr => match expr with
     | .countAll | .aggregate .. | .filteredAggregate .. => true
-    | .binary _ left right | .pattern left right _ => hasAggregate fuel left || hasAggregate fuel right
+    | .binary _ left right | .pattern left right _ | .nullIf left right => hasAggregate fuel left || hasAggregate fuel right
     | .unary _ arg | .isNull arg _ | .cast arg _ => hasAggregate fuel arg
+    | .call _ args | .coalesce args | .greatest args | .least args => args.any (hasAggregate fuel)
+    | .caseExpr operand branches otherwise => operand.any (hasAggregate fuel) ||
+        branches.any (fun branch => hasAggregate fuel branch.1 || hasAggregate fuel branch.2) ||
+        otherwise.any (hasAggregate fuel)
     | .inList arg values => hasAggregate fuel arg || values.any (hasAggregate fuel)
     | .between arg lower upper _ => hasAggregate fuel arg || hasAggregate fuel lower || hasAggregate fuel upper
     | .inQuery arg _ => hasAggregate fuel arg
@@ -216,6 +236,14 @@ private def canonical : Nat → List Scope → Expr → Expr
     | .pattern arg pattern insensitive => .pattern (canonical fuel scopes arg) (canonical fuel scopes pattern) insensitive
     | .aggregate fn arg distinct => .aggregate fn (canonical fuel scopes arg) distinct
     | .filteredAggregate arg pred => .filteredAggregate (canonical fuel scopes arg) (canonical fuel scopes pred)
+    | .call name args => .call name (args.map (canonical fuel scopes))
+    | .coalesce args => .coalesce (args.map (canonical fuel scopes))
+    | .greatest args => .greatest (args.map (canonical fuel scopes))
+    | .least args => .least (args.map (canonical fuel scopes))
+    | .nullIf left right => .nullIf (canonical fuel scopes left) (canonical fuel scopes right)
+    | .caseExpr operand branches otherwise => .caseExpr (operand.map (canonical fuel scopes))
+        (branches.map fun branch => (canonical fuel scopes branch.1, canonical fuel scopes branch.2))
+        (otherwise.map (canonical fuel scopes))
     | .inList arg values => .inList (canonical fuel scopes arg) (values.map (canonical fuel scopes))
     | .between arg lower upper negated => .between (canonical fuel scopes arg)
         (canonical fuel scopes lower) (canonical fuel scopes upper) negated
@@ -276,6 +304,8 @@ mutual
     | fuel + 1, query =>
       query.ctes.flatMap (fun c => queryTables fuel c.query) ++
       query.orderBy.flatMap (fun o => exprTables fuel o.expr) ++
+      query.limit.toList.flatMap (exprTables fuel) ++
+      query.offset.toList.flatMap (exprTables fuel) ++
       match query.body with
       | .set _ _ left right => queryTables fuel left ++ queryTables fuel right
       | .select select =>
@@ -286,8 +316,12 @@ mutual
   private def exprTables : Nat → Expr → List Name
     | 0, _ => []
     | fuel + 1, expr => match expr with
-      | .binary _ l r | .pattern l r _ | .filteredAggregate l r => exprTables fuel l ++ exprTables fuel r
+      | .binary _ l r | .pattern l r _ | .filteredAggregate l r | .nullIf l r => exprTables fuel l ++ exprTables fuel r
       | .unary _ e | .isNull e _ | .cast e _ | .aggregate _ e _ => exprTables fuel e
+      | .call _ args | .coalesce args | .greatest args | .least args => args.flatMap (exprTables fuel)
+      | .caseExpr operand branches otherwise => operand.toList.flatMap (exprTables fuel) ++
+          branches.flatMap (fun branch => exprTables fuel branch.1 ++ exprTables fuel branch.2) ++
+          otherwise.toList.flatMap (exprTables fuel)
       | .inList arg values => exprTables fuel arg ++ values.flatMap (exprTables fuel)
       | .between arg lower upper _ => exprTables fuel arg ++ exprTables fuel lower ++ exprTables fuel upper
       | .inQuery arg query => exprTables fuel arg ++ queryTables fuel query
@@ -314,21 +348,120 @@ private def simpleRecursiveExpr : Nat → Expr → Bool
   | 0, _ => false
   | fuel + 1, expr => match expr with
     | .exists _ | .scalarQuery _ | .inQuery .. | .countAll | .aggregate .. | .filteredAggregate .. => false
-    | .binary _ left right | .pattern left right _ => simpleRecursiveExpr fuel left && simpleRecursiveExpr fuel right
+    | .binary _ left right | .pattern left right _ | .nullIf left right => simpleRecursiveExpr fuel left && simpleRecursiveExpr fuel right
     | .unary _ e | .cast e _ | .isNull e _ => simpleRecursiveExpr fuel e
+    | .call _ args | .coalesce args | .greatest args | .least args => args.all (simpleRecursiveExpr fuel)
+    | .caseExpr operand branches otherwise => operand.all (simpleRecursiveExpr fuel) &&
+        branches.all (fun branch => simpleRecursiveExpr fuel branch.1 && simpleRecursiveExpr fuel branch.2) &&
+        otherwise.all (simpleRecursiveExpr fuel)
     | .inList arg values => simpleRecursiveExpr fuel arg && values.all (simpleRecursiveExpr fuel)
     | .between arg lower upper _ => simpleRecursiveExpr fuel arg &&
         simpleRecursiveExpr fuel lower && simpleRecursiveExpr fuel upper
     | _ => true
 
 private def recursiveStepShape (fuel : Nat) (query : Query) : Bool :=
-  query.ctes.isEmpty && query.orderBy.isEmpty && query.limit.isNone && query.offset.isNone &&
+  query.ctes.isEmpty && query.orderBy.isEmpty && query.limit.isNone && query.offset.isNone && query.locking.isEmpty &&
   match query.body with
   | .set .. => false
   | .select select => select.groupBy.isEmpty && select.having.isNone && !select.distinct &&
     select.distinctOn.isEmpty && select.source.all (simpleRecursiveSource fuel) &&
     select.items.all (fun i => match i with | .all _ => true | .expression e _ => simpleRecursiveExpr fuel e) &&
     select.whereClause.all (simpleRecursiveExpr fuel)
+
+/-- Visible source name, nullable outer-join side, and derived-source flag. -/
+private def lockingRelations : Nat → Bool → From → Except ValidationError (List (Name × Bool × Bool))
+  | 0, _, _ => invalid "advanced validation depth exhausted"
+  | _ + 1, nullable, .table name alias _ => pure [(alias.getD name, nullable, false)]
+  | _ + 1, nullable, .derived _ alias _ _ => pure [(alias, nullable, true)]
+  | fuel + 1, nullable, .join kind left right _ => do
+    let left ← lockingRelations fuel (nullable || kind == .right || kind == .full) left
+    let right ← lockingRelations fuel (nullable || kind == .left || kind == .full) right
+    pure (left ++ right)
+
+private def checkRowLocks (fuel : Nat) (select : Select) (grouped : Bool)
+    (locking : List LockingClause) : Except ValidationError Unit := do
+  if locking.isEmpty then return ()
+  ensure (!select.distinct && select.distinctOn.isEmpty) "row locking is forbidden with DISTINCT"
+  ensure (!grouped) "row locking is forbidden with grouping, HAVING, or aggregates"
+  let relations ← match select.source with
+    | none => pure [] | some source => lockingRelations fuel false source
+  for clause in locking do
+    let selected ← if clause.targets.isEmpty then pure relations else
+      clause.targets.mapM fun target => do
+        ensure (target != "") "empty row-lock target"
+        match relations.filter (fun relation => relation.1 == target) with
+        | [relation] => pure relation
+        | _ => invalid s!"unknown or ambiguous row-lock target '{target}'"
+    for relation in selected do
+      ensure (!relation.2.1) "row locking cannot target a nullable outer-join side"
+      ensure (!relation.2.2) "derived-source row-lock propagation is outside the executable profile"
+
+/- Keep CTE provenance separate from the legacy column-only schema. Explicit
+OF targets cannot name CTE bindings, including from nested query scopes.
+Targetless locks do not propagate into a CTE's defining query. -/
+mutual
+  private def cteSourceNames : Nat → List Name → From → Except ValidationError (List Name)
+    | 0, _, _ => invalid "advanced validation depth exhausted"
+    | _ + 1, names, .table name alias _ =>
+      pure (if names.contains name then [alias.getD name] else [])
+    | _ + 1, _, .derived .. => pure []
+    | fuel + 1, names, .join _ left right _ => do
+      pure ((← cteSourceNames fuel names left) ++ (← cteSourceNames fuel names right))
+
+  private def checkCTELockExpr : Nat → List Name → Expr → Except ValidationError Unit
+    | 0, _, _ => invalid "advanced validation depth exhausted"
+    | fuel + 1, names, expr => do
+      match expr with
+      | .inQuery arg query => checkCTELockExpr fuel names arg; checkCTELockQuery fuel names query
+      | .exists query | .scalarQuery query => checkCTELockQuery fuel names query
+      | _ =>
+        let children : List Expr := match expr with
+          | .binary _ a b | .pattern a b _ | .nullIf a b | .filteredAggregate a b => [a, b]
+          | .unary _ a | .cast a _ | .isNull a _ | .aggregate _ a _ => [a]
+          | .call _ args | .coalesce args | .greatest args | .least args => args
+          | .caseExpr operand branches otherwise =>
+            operand.toList ++ branches.flatMap (fun (branch : Expr × Expr) => [branch.1, branch.2]) ++ otherwise.toList
+          | .inList arg values => arg :: values
+          | .between arg lower upper _ => [arg, lower, upper]
+          | _ => []
+        children.forM (checkCTELockExpr fuel names)
+
+  private def checkCTELockSource : Nat → List Name → From → Except ValidationError Unit
+    | 0, _, _ => invalid "advanced validation depth exhausted"
+    | _ + 1, _, .table .. => pure ()
+    | fuel + 1, names, .derived query _ _ _ => checkCTELockQuery fuel names query
+    | fuel + 1, names, .join _ left right condition => do
+      checkCTELockSource fuel names left
+      checkCTELockSource fuel names right
+      match condition with | .on expr => checkCTELockExpr fuel names expr | _ => pure ()
+
+  private def checkCTELockQuery : Nat → List Name → Query → Except ValidationError Unit
+    | 0, _, _ => invalid "advanced validation depth exhausted"
+    | fuel + 1, outerNames, query => do
+      let names := query.ctes.map CTE.name ++ outerNames
+      if query.recursive then
+        query.ctes.forM fun cte => checkCTELockQuery fuel names cte.query
+      else
+        let mut visible := outerNames
+        for cte in query.ctes do
+          checkCTELockQuery fuel visible cte.query
+          visible := cte.name :: visible
+      match query.body with
+      | .set _ _ left right => checkCTELockQuery fuel names left; checkCTELockQuery fuel names right
+      | .select select =>
+        let targets ← match select.source with
+          | none => pure [] | some source => cteSourceNames fuel names source
+        for clause in query.locking do
+          ensure (clause.targets.all fun target => !targets.contains target)
+            "row locking OF cannot target a WITH query"
+        select.source.toList.forM (checkCTELockSource fuel names)
+        let expressions := select.items.filterMap (fun item => match item with
+            | .all _ => none | .expression expr _ => some expr) ++
+          select.whereClause.toList ++ select.groupBy ++ select.having.toList ++ select.distinctOn
+        expressions.forM (checkCTELockExpr fuel names)
+      (query.orderBy.map OrderBy.expr ++ query.limit.toList ++ query.offset.toList).forM
+        (checkCTELockExpr fuel names)
+end
 
 mutual
   /-- Infer an expression under inner-to-outer lexical scopes. Fuel exhaustion is
@@ -363,20 +496,30 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         let right := contextual right left.base
         match relBinaryResult op left right with
         | some type => pure (some type)
-        | none => invalid "incompatible binary operand types"
+        | none =>
+          match SelectContract.binarySignature op (some (familyExact left)) (some (familyExact right)) with
+          | some type => pure (familyResult type)
+          | none => invalid "incompatible binary operand types"
       | .unary op arg =>
         let arg ← inferExpr fuel schema params scopes aggregates arg
         ensure (!(arg.isNone && op == .neg)) "ambiguous negation of untyped NULL; add a cast"
         let arg := contextual arg (if op == .not then .bool else if op == .pos then .real else .int)
         match relUnaryResult op arg with
         | some type => pure (some type)
-        | none => invalid "incompatible unary operand type"
+        | none =>
+          match SelectContract.unarySignature op (some (familyExact arg)) with
+          | some type => pure (familyResult type)
+          | none => invalid "incompatible unary operand type"
       | .isNull arg _ =>
         let _ ← inferExpr fuel schema params scopes aggregates arg
         pure (some .bool)
-      | .pattern arg pattern _ =>
+      | .pattern arg pattern insensitive =>
         let arg ← inferExpr fuel schema params scopes aggregates arg
         let pattern ← inferExpr fuel schema params scopes aggregates pattern
+        if (finishType arg).base == .opaque .bytea && (finishType pattern).base == .opaque .bytea then
+          ensure (!insensitive) "BYTEA has LIKE but no ILIKE signature"
+          return some (if (finishType arg).isNullable || (finishType pattern).isNullable
+            then .nullable .bool else .bool)
         match relPatternResult (contextual arg .text) (contextual pattern .text) with
         | some type => pure (some type)
         | none => invalid "LIKE/ILIKE requires text operands"
@@ -387,10 +530,54 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         match arg with
         | none => pure (some type.asNullable)
         | some arg =>
-          ensure (arg.base == type || arg.base == .text || type == .text ||
-            (arg.numeric && type.numeric) || (arg.base == .int && type == .bool) ||
-            (arg.base == .bool && type == .int)) "unsupported cast signature"
-          pure (some (if arg.isNullable then type.asNullable else type))
+          ensure (SelectContract.explicitCastAllowed (familyExact arg).base (familyExact type).base)
+            "unsupported cast signature"
+          let nullable := arg.isNullable ||
+            (arg.base == .opaque .jsonb && (type.numeric || type == .bool))
+          pure (some (if nullable then type.asNullable else type))
+      | .call name args =>
+        let types ← args.mapM (inferExpr fuel schema params scopes aggregates)
+        match SelectContract.callSignature name (SelectContract.scalarInputs args (types.map (Option.map familyExact))) with
+        | some result => pure (familyResult (some result))
+        | none => invalid "unsupported scalar function/conditional signature"
+      | .coalesce args =>
+        let types ← args.mapM (inferExpr fuel schema params scopes aggregates)
+        match SelectContract.coalesceSignature (SelectContract.scalarInputs args (types.map (Option.map familyExact))) with
+        | some result => pure (familyResult (some result))
+        | none => invalid "unsupported scalar function/conditional signature"
+      | .greatest args =>
+        let types ← args.mapM (inferExpr fuel schema params scopes aggregates)
+        match SelectContract.extremumSignature (SelectContract.scalarInputs args (types.map (Option.map familyExact))) with
+        | some result => pure (familyResult (some result))
+        | none => invalid "unsupported scalar function/conditional signature"
+      | .least args =>
+        let types ← args.mapM (inferExpr fuel schema params scopes aggregates)
+        match SelectContract.extremumSignature (SelectContract.scalarInputs args (types.map (Option.map familyExact))) with
+        | some result => pure (familyResult (some result))
+        | none => invalid "unsupported scalar function/conditional signature"
+      | .nullIf left right =>
+        let ta ← inferExpr fuel schema params scopes aggregates left
+        let tb ← inferExpr fuel schema params scopes aggregates right
+        match SelectContract.nullIfSignature (SelectContract.scalarInput left (ta.map familyExact))
+            (SelectContract.scalarInput right (tb.map familyExact)) with
+        | some result => pure (familyResult (some result))
+        | none => invalid "unsupported NULLIF equality signature"
+      | .caseExpr operand branches otherwise =>
+        let operandType ← match operand with
+          | none => pure none | some expr => inferExpr fuel schema params scopes aggregates expr
+        let branchTypes ← branches.mapM fun branch => do
+          let condition ← inferExpr fuel schema params scopes aggregates branch.1
+          let result ← inferExpr fuel schema params scopes aggregates branch.2
+          pure (condition, result)
+        let elseType ← match otherwise with
+          | none => pure none | some expr => inferExpr fuel schema params scopes aggregates expr
+        match SelectContract.caseSignature
+            (operand.map fun expr => SelectContract.scalarInput expr (operandType.map familyExact))
+            (SelectContract.scalarInputs (branches.map Prod.fst) (branchTypes.map fun types => types.1.map familyExact))
+            (SelectContract.scalarInputs (branches.map Prod.snd) (branchTypes.map fun types => types.2.map familyExact))
+            ((otherwise.map fun expr => SelectContract.scalarInput expr (elseType.map familyExact)).getD (.unknown true)) with
+        | some result => pure (familyResult (some result))
+        | none => invalid "incompatible CASE conditions or results"
       | .countAll =>
         ensure aggregates "aggregate forbidden in this clause"
         pure (some .int)
@@ -413,6 +600,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         ensure (!values.isEmpty) "IN requires a nonempty list"
         let arg ← inferExpr fuel schema params scopes aggregates arg
         let values ← values.mapM (inferExpr fuel schema params scopes aggregates)
+        ensure ((arg.toList ++ values.filterMap id).all SqlType.equalityComparable)
+          "IN requires equality-comparable operands"
         -- PostgreSQL can use individual comparisons when the bare NULL's
         -- list has no common type (for example NULL IN (1, TRUE)).
         if arg.isNone then pure (some (.nullable .bool))
@@ -426,16 +615,20 @@ an explicit validation error. Parameter declarations are supplied by the caller.
           then .nullable .bool else .bool))
       | .inQuery arg query =>
         let arg ← inferExpr fuel schema params scopes aggregates arg
+        checkCTELockQuery fuel [] query
         let columns ← checkQueryTypes fuel schema params scopes query
         match columns with
         | [column] =>
           let common ← commonType arg (some column.column.type)
+          ensure (finishType common).equalityComparable "IN requires an equality-comparable type"
           pure (some (if (finishType common).isNullable then .nullable .bool else .bool))
         | _ => invalid "IN subquery must return exactly one column"
       | .exists query =>
+        checkCTELockQuery fuel [] query
         let _ ← checkQueryTypes fuel schema params scopes query
         pure (some .bool)
       | .scalarQuery query =>
+        checkCTELockQuery fuel [] query
         let columns ← checkQueryTypes fuel schema params scopes query
         match columns with
         | [column] => pure (some column.column.type.asNullable)
@@ -486,10 +679,18 @@ an explicit validation error. Parameter declarations are supplied by the caller.
       | .column qualifier name =>
         let (_, depth) ← resolveColumn scopes qualifier name
         ensure (depth > 0) s!"ungrouped column '{name}'"
-      | .binary _ left right | .pattern left right _ =>
+      | .binary _ left right | .pattern left right _ | .nullIf left right =>
         checkGrouped fuel schema params scopes groups left
         checkGrouped fuel schema params scopes groups right
       | .unary _ arg | .isNull arg _ | .cast arg _ => checkGrouped fuel schema params scopes groups arg
+      | .call _ args | .coalesce args | .greatest args | .least args =>
+        args.forM (checkGrouped fuel schema params scopes groups)
+      | .caseExpr operand branches otherwise =>
+        operand.toList.forM (checkGrouped fuel schema params scopes groups)
+        branches.forM fun branch => do
+          checkGrouped fuel schema params scopes groups branch.1
+          checkGrouped fuel schema params scopes groups branch.2
+        otherwise.toList.forM (checkGrouped fuel schema params scopes groups)
       | .inList arg values =>
         checkGrouped fuel schema params scopes groups arg
         values.forM (checkGrouped fuel schema params scopes groups)
@@ -505,9 +706,10 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         let _ ← checkQueryTypes fuel schema params (groupedScopes fuel scopes groups) query
         pure ()
 
-  private def checkSelect : Nat → Schema → ParameterEnv → List Scope → Select → List OrderBy → Except ValidationError (List TypedOutput)
-    | 0, _, _, _, _, _ => invalid "advanced validation depth exhausted"
-    | fuel + 1, schema, params, outer, select, orderBy => do
+  private def checkSelect : Nat → Schema → ParameterEnv → List Scope → Select → List OrderBy →
+      List LockingClause → Except ValidationError (List TypedOutput)
+    | 0, _, _, _, _, _, _ => invalid "advanced validation depth exhausted"
+    | fuel + 1, schema, params, outer, select, orderBy, locking => do
       ensure (!select.items.isEmpty) "SELECT list must be nonempty"
       let scope : Scope ← match select.source with
         | none => pure ({} : Scope)
@@ -531,18 +733,22 @@ an explicit validation error. Parameter declarations are supplied by the caller.
           pure (columns.map fun c => { name := c.name, type := some c.type, expr := .column c.qualifier c.name })
       let groups ← select.groupBy.mapM (fun expr => selectExpression items scopes expr true)
       for group in groups do
-        let _ ← inferExpr fuel schema params scopes false group
+        let type ← inferExpr fuel schema params scopes false group
+        ensure (finishType type).equalityComparable "GROUP BY requires an equality-comparable type"
       let order ← orderBy.mapM (fun item => selectExpression items scopes item.expr false)
       for expr in order do
-        let _ ← inferExpr fuel schema params scopes true expr
+        let type ← inferExpr fuel schema params scopes true expr
+        ensure (finishType type).equalityComparable "ORDER BY requires an orderable type"
       let keys ← select.distinctOn.mapM (fun expr => selectExpression items scopes expr false)
       for expr in keys do
-        let _ ← inferExpr fuel schema params scopes true expr
+        let type ← inferExpr fuel schema params scopes true expr
+        ensure (finishType type).equalityComparable "DISTINCT ON requires an equality-comparable type"
       if let some predicate := select.having then
         let type ← inferExpr fuel schema params scopes true predicate
         ensure (boolean type) "HAVING requires Boolean predicate"
       let grouped := !groups.isEmpty || select.having.isSome ||
         items.any (fun item => hasAggregate fuel item.expr) || order.any (hasAggregate fuel) || keys.any (hasAggregate fuel)
+      checkRowLocks fuel select grouped locking
       if grouped then
         items.forM (fun item => checkGrouped fuel schema params scopes groups item.expr)
         order.forM (checkGrouped fuel schema params scopes groups)
@@ -550,6 +756,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         select.having.toList.forM (checkGrouped fuel schema params scopes groups)
       ensure (!(select.distinct && !keys.isEmpty)) "DISTINCT and DISTINCT ON cannot be combined"
       if select.distinct then
+        ensure (items.all (fun item => (finishType item.type).equalityComparable))
+          "DISTINCT requires equality-comparable output types"
         ensure (order.all (fun expr => items.any (fun item => canonical fuel scopes item.expr == canonical fuel scopes expr)))
           "SELECT DISTINCT ORDER BY expressions must occur in the output"
       if !keys.isEmpty then
@@ -571,7 +779,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
       for cte in query.ctes do
         let selfReferences := (queryTables fuel cte.query).filter (· == cte.name)
         let columns ← if query.recursive && !selfReferences.isEmpty then do
-          ensure (cte.query.ctes.isEmpty && cte.query.orderBy.isEmpty && cte.query.limit.isNone && cte.query.offset.isNone)
+          ensure (cte.query.ctes.isEmpty && cte.query.orderBy.isEmpty && cte.query.limit.isNone &&
+              cte.query.offset.isNone && cte.query.locking.isEmpty)
             "recursive CTE cannot have local WITH or top-level ordering/limits"
           match cte.query.body with
           | .set .union _ anchor step =>
@@ -593,22 +802,38 @@ an explicit validation error. Parameter declarations are supplied by the caller.
           renameColumns (columns.map TypedOutput.column) cte.columns
         ensure (distinctNames (columns.map ColumnDef.name)) "CTE output names must be distinct and nonempty"
         schema := ⟨cte.name, columns⟩ :: schema.filter (·.name != cte.name)
+      -- Pagination has no access to this SELECT's input columns or output
+      -- aliases. Correlated outer references keep their owning query scope.
+      -- Negative values and NULL behavior are execution/dialect obligations.
+      for bound in query.limit.toList ++ query.offset.toList do
+        let type ← inferExpr fuel schema params outer false bound
+        ensure (type.isNone || (finishType type).numeric)
+          "pagination requires a numeric or NULL expression outside local row scope"
       match query.body with
-      | .select select => checkSelect fuel schema params outer select query.orderBy
-      | .set _ _ left right =>
+      | .select select => checkSelect fuel schema params outer select query.orderBy query.locking
+      | .set op all left right =>
+        ensure query.locking.isEmpty "row locking is forbidden on set-operation results"
         let left ← checkQueryTypes fuel schema params outer left
         let right ← checkQueryTypes fuel schema params outer right
         ensure (left.length == right.length) "set-operation arity mismatch"
         let columns ← (left.zip right).mapM fun (left, right) => do
           let type ← commonType left.type right.type
+          ensure ((op == .union && all) || (finishType type).equalityComparable)
+            "this set operation requires equality-comparable output types"
           pure { left with type := some (finishType type) }
         for item in query.orderBy do
           if (outputOrdinal item.expr).isSome then
-            let _ ← selectExpression columns [] item.expr false
+            let expr ← selectExpression columns [] item.expr false
+            let matching := columns.filter (fun column => column.expr == expr)
+            ensure (matching.all (fun column => (finishType column.type).equalityComparable))
+              "set-operation ORDER BY requires an orderable type"
             pure ()
           else match item.expr with
           | .column none name =>
             ensure ((columns.filter (·.name == name)).length == 1) "unknown or ambiguous set-operation output name"
+            ensure ((columns.filter (·.name == name)).all
+              (fun column => (finishType column.type).equalityComparable))
+              "set-operation ORDER BY requires an orderable type"
           | _ => invalid "set-operation ORDER BY requires an output name or ordinal"
         pure columns
 end
@@ -618,9 +843,13 @@ mutual
     | 0, _ => []
     | fuel + 1, expr => match expr with
       | .parameter parameter => [parameter]
-      | .binary _ left right | .pattern left right _ | .filteredAggregate left right =>
+      | .binary _ left right | .pattern left right _ | .filteredAggregate left right | .nullIf left right =>
         expressionParameters fuel left ++ expressionParameters fuel right
       | .unary _ arg | .cast arg _ | .isNull arg _ | .aggregate _ arg _ => expressionParameters fuel arg
+      | .call _ args | .coalesce args | .greatest args | .least args => args.flatMap (expressionParameters fuel)
+      | .caseExpr operand branches otherwise => operand.toList.flatMap (expressionParameters fuel) ++
+          branches.flatMap (fun branch => expressionParameters fuel branch.1 ++ expressionParameters fuel branch.2) ++
+          otherwise.toList.flatMap (expressionParameters fuel)
       | .inList arg values => expressionParameters fuel arg ++ values.flatMap (expressionParameters fuel)
       | .between arg lower upper _ => expressionParameters fuel arg ++
         expressionParameters fuel lower ++ expressionParameters fuel upper
@@ -641,7 +870,10 @@ mutual
         select.whereClause.toList.flatMap (expressionParameters fuel) ++
         select.groupBy.flatMap (expressionParameters fuel) ++
         select.having.toList.flatMap (expressionParameters fuel)) ++
-      query.orderBy.flatMap (fun item => expressionParameters fuel item.expr)
+      query.orderBy.flatMap (fun item => expressionParameters fuel item.expr) ++
+      (if query.offsetFirst then
+        query.offset.toList.flatMap (expressionParameters fuel) ++ query.limit.toList.flatMap (expressionParameters fuel)
+       else query.limit.toList.flatMap (expressionParameters fuel) ++ query.offset.toList.flatMap (expressionParameters fuel))
   def sourceParameters : Nat → From → List Parameter
     | 0, _ => []
     | fuel + 1, source => match source with
@@ -665,7 +897,8 @@ def checkParameterUses (uses : List Parameter) : Except ValidationError Unit := 
 /-- Named output columns under an explicit outer scope. NULL-only projections are
 resolved to nullable text at the query boundary, as PostgreSQL does. -/
 def checkQueryFuel (fuel : Nat) (schema : Schema) (params : ParameterEnv)
-    (outer : List Scope) (query : Query) : Except ValidationError (List ColumnDef) :=
+    (outer : List Scope) (query : Query) : Except ValidationError (List ColumnDef) := do
+  checkCTELockQuery fuel [] query
   (checkQueryTypes fuel schema params outer query).map (List.map TypedOutput.column)
 
 /-- Public static query checker. Parameter types must be declared explicitly. -/
@@ -683,6 +916,7 @@ def checkQueryAgainst (schema : Schema) (params : ParameterEnv) (query : Query)
   let _ ← checkSchema schema
   checkParameters params
   checkParameterUses (queryParameters 1024 query)
+  checkCTELockQuery 1024 [] query
   let columns ← checkQueryTypes 1024 schema params [] query
   ensure (columns.length == targets.length) "INSERT SELECT arity mismatch"
   ensure ((columns.zip targets).all (fun (column, target) => assignmentCompatible column.type target))

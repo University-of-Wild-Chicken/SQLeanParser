@@ -1,5 +1,6 @@
 import SQLean
 import SQLean.SchemaJson
+import SQLean.PostgresGrammar.Report
 import Lean.Data.Json
 
 open SQLean
@@ -13,6 +14,8 @@ private def usage : String :=
    --schema schema.json   Also certify table/column resolution and types\n\
    --param-types TYPES    Parameter types in position order (int,text,bool,real; suffix ? permits NULL)\n\
    --postgres             Render anonymous ? parameters as PostgreSQL $n\n\
+   --postgres-grammar     Emit a pinned PostgreSQL 16 grammar certificate report\n\
+   --max-transitions N    PostgreSQL grammar LR transition budget (default 1000000)\n\
    --assurance LEVEL      Emit a JSON assurance report (contract, checked, or syntax)\n\
    --render-assurance MODE  Emit checked SELECT serialization and parameter-map JSON\n\
    --max-depth N          SELECT assurance depth budget (default 1024; zero is inconclusive)\n\
@@ -29,12 +32,19 @@ private structure Options where
   assurance : Option Assurance.Level := none
   renderAssurance : Option RenderContract.Profile := none
   maxDepth : Option Nat := none
+  postgresGrammar : Bool := false
+  maxTransitions : Option Nat := none
 
 private def parseArgs : List String → Options → Except String Options
   | [], options => pure options
   | "--help" :: rest, options => parseArgs rest { options with help := true }
   | "--ast" :: rest, options => parseArgs rest { options with ast := true }
   | "--postgres" :: rest, options => parseArgs rest { options with postgres := true }
+  | "--postgres-grammar" :: rest, options => parseArgs rest { options with postgresGrammar := true }
+  | "--max-transitions" :: value :: rest, options => do
+      if options.maxTransitions.isSome then throw "--max-transitions may only be specified once"
+      let some fuel := value.toNat? | throw "--max-transitions requires a nonnegative integer"
+      parseArgs rest { options with maxTransitions := some fuel }
   | "--render-assurance" :: mode :: rest, options => do
       if options.renderAssurance.isSome then throw "--render-assurance may only be specified once"
       let profile ← match mode with
@@ -69,6 +79,7 @@ private def parseArgs : List String → Options → Except String Options
   | "--assurance" :: [], _ => throw "--assurance requires contract, checked, or syntax"
   | "--render-assurance" :: [], _ => throw "--render-assurance requires identity, postgres, or sqlite"
   | "--max-depth" :: [], _ => throw "--max-depth requires a nonnegative integer"
+  | "--max-transitions" :: [], _ => throw "--max-transitions requires a nonnegative integer"
   | "--param-types" :: [], _ => throw "--param-types requires comma-separated types"
   | "--file" :: [], _ => throw "--file requires a path"
   | arg :: rest, options =>
@@ -78,6 +89,12 @@ private def parseArgs : List String → Options → Except String Options
       else parseArgs rest { options with source := some arg }
 
 private def validateOptions (options : Options) : Except String Options := do
+  if options.postgresGrammar &&
+      (options.ast || options.postgres || options.assurance.isSome || options.renderAssurance.isSome ||
+       options.schemaFile.isSome || options.parameterTypes.isSome || options.maxDepth.isSome) then
+    throw "--postgres-grammar is a separate grammar/source report; incompatible validation/output option"
+  if options.maxTransitions.isSome && !options.postgresGrammar then
+    throw "--max-transitions requires --postgres-grammar"
   if options.renderAssurance.isSome &&
       (options.assurance.isSome || options.ast || options.postgres ||
        options.schemaFile.isSome || options.parameterTypes.isSome) then
@@ -143,13 +160,15 @@ private def diagnosticJson (diagnostic : SelectContract.Diagnostic) : Lean.Json 
   Lean.Json.mkObj [("code", toJson diagnostic.code), ("message", toJson diagnostic.message)]
 
 private def contractColumnJson (column : SelectContract.OutputColumn) : Lean.Json :=
-  let name := match column.type.base with | .int32 => "int32" | .text => "text" | .bool => "bool"
+  let name := match column.type.base with
+    | .int32 => "int32" | .text => "text" | .bool => "bool"
+    | type => type.dataType.toSql.toLower.replace ", " ","
   Lean.Json.mkObj [("name", toJson column.name), ("type", toJson name),
     ("nullable", toJson column.type.nullable)]
 
 private def expandedColumnJson (column : ColumnDef) : Lean.Json :=
   let name := match column.type.base with
-    | .int => "int" | .text => "text" | .bool => "bool" | _ => "real"
+    | .int => "int" | .text => "text" | .bool => "bool" | .opaque name => name.name | _ => "real"
   Lean.Json.mkObj [("name", toJson column.name), ("type", toJson name),
     ("nullable", toJson column.type.isNullable)]
 
@@ -157,7 +176,7 @@ private def report (level : Assurance.Level) (status : String)
     (columns : Option (List Lean.Json) := none) (diagnostic : Option SelectContract.Diagnostic := none)
     (catalogUnchanged : Bool := false) : IO UInt32 := do
   let profile := match level with
-    | .declarative => SelectContract.Profile.basicV01.name
+    | .declarative => SelectContract.Profile.basicV08.name
     | .executable => "sqlean-expanded-v0"
     | .syntax => "sqlean-syntax-v0"
   let evidence := match status with
@@ -195,7 +214,7 @@ private def runAssurance (options : Options) (level : Assurance.Level) (source :
       | .error error => return ← report level "invalid" none (some ⟨"environment.parameters", error⟩)
     match statement with
     | .query query =>
-      match Assurance.checkContract .basicV01 catalog params query fuel with
+      match Assurance.checkContract .basicV08 catalog params query fuel with
       | .valid certificate => report level "valid" (some (certificate.output.map contractColumnJson)) none true
       | .invalid diagnostic => report level "invalid" none (some diagnostic)
       | .unsupported diagnostic => report level "unsupported" none (some diagnostic)
@@ -232,11 +251,17 @@ private def readStdin : IO String := do
     chunks := chunks.push line
   pure (String.join chunks.toList)
 
+private def runPostgresGrammar (options : Options) (source : String) : IO UInt32 := do
+  let (report, code) := PostgresGrammar.report source (options.maxTransitions.getD 1000000)
+  IO.println report.compress
+  pure code
+
 private def run (options : Options) : IO UInt32 := do
   let source ← match options.source, options.queryFile with
     | some source, _ => pure source
     | _, some path => IO.FS.readFile path
     | _, _ => readStdin
+  if options.postgresGrammar then return ← runPostgresGrammar options source
   if let some profile := options.renderAssurance then return ← runRenderAssurance options profile source
   if let some level := options.assurance then return ← runAssurance options level source
   let statement ← match parseStatement source with

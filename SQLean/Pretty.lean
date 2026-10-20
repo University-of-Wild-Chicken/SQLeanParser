@@ -20,6 +20,7 @@ def SqlType.toSql : SqlType → String
   | .text => "TEXT"
   | .bool => "BOOLEAN"
   | .real => "REAL"
+  | .opaque name => name.name.toUpper
   | .nullable base => "NULLABLE(" ++ base.toSql ++ ")"
 
 instance : ToSql SqlType := ⟨SqlType.toSql⟩

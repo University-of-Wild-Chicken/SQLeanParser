@@ -1,0 +1,698 @@
+{
+  "corpus_sha256": "2d096ede54dac15d6db0088a1f7db48a977f322887a9d9ad865951a58f643986",
+  "extraction": {
+    "constructor_count": 104,
+    "constructors_by_workload": {
+      "smallbank": 21,
+      "tatp": 12,
+      "tpcc": 33,
+      "tpch": 24,
+      "twitter": 7,
+      "ycsb": 7
+    },
+    "parameter_rule": "JDBC '?' outside quotes/comments becomes occurrence-numbered '$n'; SQLStmt '??' lists first expand with recorded constructor counts.",
+    "postgres_overrides_applied": 18,
+    "script": "scripts/extract_benchbase_corpus.py",
+    "skipped_inputs": [],
+    "static_defaults_used": [
+      {
+        "final": true,
+        "name": "SmallBankConstants.TABLENAME_ACCOUNTS",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/smallbank/SmallBankConstants.java",
+        "source_line": 34,
+        "value": "accounts"
+      },
+      {
+        "final": true,
+        "name": "SmallBankConstants.TABLENAME_CHECKING",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/smallbank/SmallBankConstants.java",
+        "source_line": 36,
+        "value": "checking"
+      },
+      {
+        "final": true,
+        "name": "SmallBankConstants.TABLENAME_SAVINGS",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/smallbank/SmallBankConstants.java",
+        "source_line": 35,
+        "value": "savings"
+      },
+      {
+        "final": true,
+        "name": "TATPConstants.TABLENAME_ACCESS_INFO",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tatp/TATPConstants.java",
+        "source_line": 41,
+        "value": "access_info"
+      },
+      {
+        "final": true,
+        "name": "TATPConstants.TABLENAME_CALL_FORWARDING",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tatp/TATPConstants.java",
+        "source_line": 43,
+        "value": "call_forwarding"
+      },
+      {
+        "final": true,
+        "name": "TATPConstants.TABLENAME_SPECIAL_FACILITY",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tatp/TATPConstants.java",
+        "source_line": 42,
+        "value": "special_facility"
+      },
+      {
+        "final": true,
+        "name": "TATPConstants.TABLENAME_SUBSCRIBER",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tatp/TATPConstants.java",
+        "source_line": 40,
+        "value": "subscriber"
+      },
+      {
+        "final": true,
+        "name": "TPCCConstants.TABLENAME_CUSTOMER",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java",
+        "source_line": 25,
+        "value": "customer"
+      },
+      {
+        "final": true,
+        "name": "TPCCConstants.TABLENAME_DISTRICT",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java",
+        "source_line": 21,
+        "value": "district"
+      },
+      {
+        "final": true,
+        "name": "TPCCConstants.TABLENAME_HISTORY",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java",
+        "source_line": 26,
+        "value": "history"
+      },
+      {
+        "final": true,
+        "name": "TPCCConstants.TABLENAME_ITEM",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java",
+        "source_line": 23,
+        "value": "item"
+      },
+      {
+        "final": true,
+        "name": "TPCCConstants.TABLENAME_NEWORDER",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java",
+        "source_line": 29,
+        "value": "new_order"
+      },
+      {
+        "final": true,
+        "name": "TPCCConstants.TABLENAME_OPENORDER",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java",
+        "source_line": 27,
+        "value": "oorder"
+      },
+      {
+        "final": true,
+        "name": "TPCCConstants.TABLENAME_ORDERLINE",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java",
+        "source_line": 28,
+        "value": "order_line"
+      },
+      {
+        "final": true,
+        "name": "TPCCConstants.TABLENAME_STOCK",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java",
+        "source_line": 24,
+        "value": "stock"
+      },
+      {
+        "final": true,
+        "name": "TPCCConstants.TABLENAME_WAREHOUSE",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java",
+        "source_line": 22,
+        "value": "warehouse"
+      },
+      {
+        "final": false,
+        "name": "TwitterConstants.LIMIT_FOLLOWERS",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/twitter/TwitterConstants.java",
+        "source_line": 47,
+        "value": 20
+      },
+      {
+        "final": false,
+        "name": "TwitterConstants.LIMIT_TWEETS_FOR_UID",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/twitter/TwitterConstants.java",
+        "source_line": 46,
+        "value": 10
+      },
+      {
+        "final": true,
+        "name": "TwitterConstants.TABLENAME_ADDED_TWEETS",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/twitter/TwitterConstants.java",
+        "source_line": 26,
+        "value": "added_tweets"
+      },
+      {
+        "final": true,
+        "name": "TwitterConstants.TABLENAME_FOLLOWERS",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/twitter/TwitterConstants.java",
+        "source_line": 25,
+        "value": "followers"
+      },
+      {
+        "final": true,
+        "name": "TwitterConstants.TABLENAME_FOLLOWS",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/twitter/TwitterConstants.java",
+        "source_line": 24,
+        "value": "follows"
+      },
+      {
+        "final": true,
+        "name": "TwitterConstants.TABLENAME_TWEETS",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/twitter/TwitterConstants.java",
+        "source_line": 23,
+        "value": "tweets"
+      },
+      {
+        "final": true,
+        "name": "TwitterConstants.TABLENAME_USER",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/twitter/TwitterConstants.java",
+        "source_line": 22,
+        "value": "user_profiles"
+      },
+      {
+        "final": true,
+        "name": "YCSBConstants.TABLE_NAME",
+        "source_file": "src/main/java/com/oltpbenchmark/benchmarks/ycsb/YCSBConstants.java",
+        "source_line": 37,
+        "value": "usertable"
+      }
+    ],
+    "upstream_code_executed": false
+  },
+  "format_version": 1,
+  "inputs": [
+    {
+      "bytes": 565,
+      "path": "LICENSE",
+      "role": "license",
+      "sha256": "a415084b0eee34d9f54709e6190359069a8f4768cd45cb678cd05dd8fc22d0aa",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/LICENSE"
+    },
+    {
+      "bytes": 7222,
+      "path": "src/main/java/com/oltpbenchmark/api/Procedure.java",
+      "role": "runtime_reference",
+      "sha256": "507da9323f02009166f36e1d502e93f99daf65373eb629d417d094d1c326cd02",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/api/Procedure.java"
+    },
+    {
+      "bytes": 2335,
+      "path": "src/main/java/com/oltpbenchmark/api/SQLStmt.java",
+      "role": "runtime_reference",
+      "sha256": "f0789aac91b7b7bf606506df55cdfbe4149e22423585ba50e6e1bee992b22917",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/api/SQLStmt.java"
+    },
+    {
+      "bytes": 2958,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/smallbank/SmallBankConstants.java",
+      "role": "static_defaults",
+      "sha256": "1962deeea8e6de78d3be271453a5073f2948e77ed387a89a56518963b7d7c958",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/smallbank/SmallBankConstants.java"
+    },
+    {
+      "bytes": 5144,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/Amalgamate.java",
+      "role": "procedure",
+      "sha256": "a25b6522aa3791efee1a45f5b65217d2cd4bd6ea4bae6f7c5beccbcd167b8716",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/Amalgamate.java"
+    },
+    {
+      "bytes": 3497,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/Balance.java",
+      "role": "procedure",
+      "sha256": "fce80fbe14478c52844d68cf7bd16e3437dd5cde22cf346dc15580a417ed9217",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/Balance.java"
+    },
+    {
+      "bytes": 2733,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/DepositChecking.java",
+      "role": "procedure",
+      "sha256": "45f14f2338043ac5e1b72207b8ff3db06d6d5796c798dbf6c166ff70984786af",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/DepositChecking.java"
+    },
+    {
+      "bytes": 4035,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/SendPayment.java",
+      "role": "procedure",
+      "sha256": "8f108c88be1b45585ce0060a99bdcb5bcce0cd699011fb0d93f868ae9e4ccedc",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/SendPayment.java"
+    },
+    {
+      "bytes": 3609,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/TransactSavings.java",
+      "role": "procedure",
+      "sha256": "e8dc43c8fa9338bc849b62daa919cf408bb07579333fe17e91916ec303069528",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/TransactSavings.java"
+    },
+    {
+      "bytes": 4240,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/WriteCheck.java",
+      "role": "procedure",
+      "sha256": "6de54ca6c6c11ffa79b67b923ce665ae8c5c35b4719517f77bc2f6e72517c462",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/smallbank/procedures/WriteCheck.java"
+    },
+    {
+      "bytes": 2118,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tatp/TATPConstants.java",
+      "role": "static_defaults",
+      "sha256": "e1ec725c86be8d54971c66aa1c6d41cbea750ea4154cb74d1401f4507d72a98b",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tatp/TATPConstants.java"
+    },
+    {
+      "bytes": 2182,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/DeleteCallForwarding.java",
+      "role": "procedure",
+      "sha256": "7bf12cefaecaf18dc99ba9443fed60713b1d9d6a065d9985de0a8556e19d2b93",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/DeleteCallForwarding.java"
+    },
+    {
+      "bytes": 1518,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/GetAccessData.java",
+      "role": "procedure",
+      "sha256": "8742887d16ea57e56a8b67bf24af1b669a41927fc7def52391555be01409931d",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/GetAccessData.java"
+    },
+    {
+      "bytes": 2027,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/GetNewDestination.java",
+      "role": "procedure",
+      "sha256": "6331fb863ef10aa46ad4db237e4873f838715467294f1013c854d25ebc375e3f",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/GetNewDestination.java"
+    },
+    {
+      "bytes": 1395,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/GetSubscriberData.java",
+      "role": "procedure",
+      "sha256": "b3764c0cda66789059f84410c870ea6b93d3744a55ef132f96c99709fa2445aa",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/GetSubscriberData.java"
+    },
+    {
+      "bytes": 2715,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/InsertCallForwarding.java",
+      "role": "procedure",
+      "sha256": "c564a17de2d214f043eccd09318356ee7aaaa32b90a0248c64f87a0147e114ed",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/InsertCallForwarding.java"
+    },
+    {
+      "bytes": 1872,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/UpdateLocation.java",
+      "role": "procedure",
+      "sha256": "607ea3288b5935c8c6c9cdb576081539331e897f8fcb951067f9be17ca29f10a",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/UpdateLocation.java"
+    },
+    {
+      "bytes": 2035,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/UpdateSubscriberData.java",
+      "role": "procedure",
+      "sha256": "55e811085a81dcc86e81d80c5326893cd09a9577bf5299b60bc32c22f242e267",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tatp/procedures/UpdateSubscriberData.java"
+    },
+    {
+      "bytes": 1243,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java",
+      "role": "static_defaults",
+      "sha256": "def393f8fec016e4f560c15729541f6e98eb5a10afb14df8fe929c860f82f416",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpcc/TPCCConstants.java"
+    },
+    {
+      "bytes": 10674,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/Delivery.java",
+      "role": "procedure",
+      "sha256": "e26ef94219703d1fc14f17919292a0ab88f9f9ed8ec1fc36c85e49b932f70755",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/Delivery.java"
+    },
+    {
+      "bytes": 13244,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/NewOrder.java",
+      "role": "procedure",
+      "sha256": "6ff6687d1fa011f5e43cbd91e9d3f86ccfa918eed8be2fa6b6204420c530e745",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/NewOrder.java"
+    },
+    {
+      "bytes": 10041,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/OrderStatus.java",
+      "role": "procedure",
+      "sha256": "d3936075af748759c08bb1d33f48cc95ce4133564687657720b611d5326130f1",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/OrderStatus.java"
+    },
+    {
+      "bytes": 20092,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/Payment.java",
+      "role": "procedure",
+      "sha256": "d8c67e2c9a6aeecb01090054e428188146d1cd617b411b65d27b867efc753d79",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/Payment.java"
+    },
+    {
+      "bytes": 4326,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/StockLevel.java",
+      "role": "procedure",
+      "sha256": "3608df293e5ea6b002b61cbae3d2799375f5aa86c6fcd0f9ab9dc46c3f54f7c1",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/StockLevel.java"
+    },
+    {
+      "bytes": 1145,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/TPCCProcedure.java",
+      "role": "procedure",
+      "sha256": "a7f1f38dbc6429ea623c8e8c2d49919989bba7c13d3ea23950af3d2e1377df26",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/TPCCProcedure.java"
+    },
+    {
+      "bytes": 4030,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/TPCHConstants.java",
+      "role": "static_defaults",
+      "sha256": "a9e4442596b6ce89a15356cc89e10c66152c6217526ac127f047048ddea9b99e",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/TPCHConstants.java"
+    },
+    {
+      "bytes": 1746,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/GenericQuery.java",
+      "role": "procedure",
+      "sha256": "3270ebd75d6153a79190ac8edf234b8ca595209a4d1ce887b67d4068ddf5c7c7",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/GenericQuery.java"
+    },
+    {
+      "bytes": 2132,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q1.java",
+      "role": "procedure",
+      "sha256": "65cbfdc143b0f9e3e1c1a13f7130e925aa938690391f1dc762e8dd0ae148f8bd",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q1.java"
+    },
+    {
+      "bytes": 2522,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q10.java",
+      "role": "procedure",
+      "sha256": "bc9e2529b61a7bcd4b5b5b68a951b9fa0553e32db7b21278c55a83038a329b29",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q10.java"
+    },
+    {
+      "bytes": 2446,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q11.java",
+      "role": "procedure",
+      "sha256": "82643add4f3c2893a396389e67b560dcf215d04530a32381550055985028e9f7",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q11.java"
+    },
+    {
+      "bytes": 3366,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q12.java",
+      "role": "procedure",
+      "sha256": "a95701634c130ba5e7018c00cedd43e606d2e1694b634fb71d33f9ee9b5892c5",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q12.java"
+    },
+    {
+      "bytes": 2421,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q13.java",
+      "role": "procedure",
+      "sha256": "48f93949353e76e7a27778f27203dde9a9eadafba573711274d50e6cb9ebb69b",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q13.java"
+    },
+    {
+      "bytes": 2107,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q14.java",
+      "role": "procedure",
+      "sha256": "964bed7441e7ea963d73b393db50f87c4fedee9bfc345ecbd51f115c7176ce38",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q14.java"
+    },
+    {
+      "bytes": 3155,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q15.java",
+      "role": "procedure",
+      "sha256": "58697c55463249ad23617deef2f4a69c6b2fb77e80562593a7d3ec2b13d2ee0a",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q15.java"
+    },
+    {
+      "bytes": 3167,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q16.java",
+      "role": "procedure",
+      "sha256": "63a6c0b48839ee8580fbcafdf44f0cf577f8519beb6c45fc09f7f9bc7e30ef76",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q16.java"
+    },
+    {
+      "bytes": 2258,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q17.java",
+      "role": "procedure",
+      "sha256": "f217e30c8f8079bc6a8b5b94f1235345dc8666919e9ff32a1e4b3940f0438278",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q17.java"
+    },
+    {
+      "bytes": 2260,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q18.java",
+      "role": "procedure",
+      "sha256": "142259fe176236b54687e86cd706a01ce156a9a6c6b3943c76a4d759d3ceb229",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q18.java"
+    },
+    {
+      "bytes": 3639,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q19.java",
+      "role": "procedure",
+      "sha256": "36da0db9a6983ea08496e33d3a5930291f0fec439b1e410a45a6446f2f0f6d5e",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q19.java"
+    },
+    {
+      "bytes": 2945,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q2.java",
+      "role": "procedure",
+      "sha256": "7543d28b982488ddd6c1d9722ee9717c6d4716a14bfb5a1ba35343a7bea9ba93",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q2.java"
+    },
+    {
+      "bytes": 3163,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q20.java",
+      "role": "procedure",
+      "sha256": "5482eec87cfbaae51e01e67ce5f0d1894d8cd72033cdc638a99d2ae559ed11f6",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q20.java"
+    },
+    {
+      "bytes": 2754,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q21.java",
+      "role": "procedure",
+      "sha256": "c919e8d1d6931a04a8277518bac3120f008c230bad41bb2328fa587407b3afaf",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q21.java"
+    },
+    {
+      "bytes": 3377,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q22.java",
+      "role": "procedure",
+      "sha256": "893492d3d1b5cc7ba728caee96c136f4866a8c36379002ffaf485b4c9d8c2c2b",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q22.java"
+    },
+    {
+      "bytes": 2351,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q3.java",
+      "role": "procedure",
+      "sha256": "46fe002f51153d37d2b1f34a560d9552ab7ca21998f36a08e20ced532f7de99d",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q3.java"
+    },
+    {
+      "bytes": 2088,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q4.java",
+      "role": "procedure",
+      "sha256": "bb84a5a2436c1be658466ae21cf55960aae5695f379b2aab90e59a0c79a19391",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q4.java"
+    },
+    {
+      "bytes": 2379,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q5.java",
+      "role": "procedure",
+      "sha256": "02bd25a0076e5315b0436f560f787319cf33b9e4f0171826ce9b4feef449d34d",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q5.java"
+    },
+    {
+      "bytes": 2140,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q6.java",
+      "role": "procedure",
+      "sha256": "cddff7b392a34fe0553421dd3af2c7049fda6b74ef8609e9f24e5d71dd3378d7",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q6.java"
+    },
+    {
+      "bytes": 3402,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q7.java",
+      "role": "procedure",
+      "sha256": "a839d9c842726dfe1c6ec4c58baaf32eca6792b529051a39692b36b2de38f15b",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q7.java"
+    },
+    {
+      "bytes": 3748,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q8.java",
+      "role": "procedure",
+      "sha256": "1699910b5f439c7b7bc39d1fddd8ded6294a68277ebf517250036cb675594b79",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q8.java"
+    },
+    {
+      "bytes": 2780,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q9.java",
+      "role": "procedure",
+      "sha256": "bcdacd4776448854b491f7826d2f7c15130020f1eba67e4ecd5af562a9b3a89a",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/Q9.java"
+    },
+    {
+      "bytes": 1675,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/twitter/TwitterConstants.java",
+      "role": "static_defaults",
+      "sha256": "7e8009783a0971c0f90964d8c076b3db7d41629cfbfe49a085c6af3bc46485c5",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/twitter/TwitterConstants.java"
+    },
+    {
+      "bytes": 2457,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/twitter/procedures/GetFollowers.java",
+      "role": "procedure",
+      "sha256": "3ca57a881de0cba3c6a66008617c92918d34362a8a5359999d71b8bb886a5e52",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/twitter/procedures/GetFollowers.java"
+    },
+    {
+      "bytes": 1374,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/twitter/procedures/GetTweet.java",
+      "role": "procedure",
+      "sha256": "13864b8186e297c963787079c901578338163b8a2a1e4be85093d1d5cd721329",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/twitter/procedures/GetTweet.java"
+    },
+    {
+      "bytes": 2479,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/twitter/procedures/GetTweetsFromFollowing.java",
+      "role": "procedure",
+      "sha256": "2ef46d9119893000533cd95cc2174cae179eb531ca0ac4292e76563f47ac2d74",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/twitter/procedures/GetTweetsFromFollowing.java"
+    },
+    {
+      "bytes": 1478,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/twitter/procedures/GetUserTweets.java",
+      "role": "procedure",
+      "sha256": "f58939c14cbc78e42787b4a3c10e0325678e63c53a50a072cdbaa1ce2a411a71",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/twitter/procedures/GetUserTweets.java"
+    },
+    {
+      "bytes": 1626,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/twitter/procedures/InsertTweet.java",
+      "role": "procedure",
+      "sha256": "4d94a62c45bd857d921c0b98bcb89f8119b728edba3a65e0bc232fc2244be9bf",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/twitter/procedures/InsertTweet.java"
+    },
+    {
+      "bytes": 1207,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/ycsb/YCSBConstants.java",
+      "role": "static_defaults",
+      "sha256": "9d453e75ab67aa08414d6dfe8bd6d651f856514fd1d27a9325c3aa4adbc307f3",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/ycsb/YCSBConstants.java"
+    },
+    {
+      "bytes": 1331,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/DeleteRecord.java",
+      "role": "procedure",
+      "sha256": "c88ddd120317fd47adaedb59600f6f63b98fae135d35e90f448aa1ff87c0296d",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/DeleteRecord.java"
+    },
+    {
+      "bytes": 1465,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/InsertRecord.java",
+      "role": "procedure",
+      "sha256": "5c8458711ecad676c303fe00bd46bb26d6969e35d764b6eaffbdc4625836bf9e",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/InsertRecord.java"
+    },
+    {
+      "bytes": 2217,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/ReadModifyWriteRecord.java",
+      "role": "procedure",
+      "sha256": "dcd1a8b7a4be288f6a5b22be867cdeb21f90da36913263ccc34eb4875a41d557",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/ReadModifyWriteRecord.java"
+    },
+    {
+      "bytes": 1613,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/ReadRecord.java",
+      "role": "procedure",
+      "sha256": "b6adb5fb0a29bf69ec9a6c1bd13bf8cae24f3a38e9eb1ffb9046639d3b0b9b07",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/ReadRecord.java"
+    },
+    {
+      "bytes": 1790,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/ScanRecord.java",
+      "role": "procedure",
+      "sha256": "09d4e5410057e94e60c7ea21f66f043454d6635933ed34eca629eef7515442a8",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/ScanRecord.java"
+    },
+    {
+      "bytes": 1555,
+      "path": "src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/UpdateRecord.java",
+      "role": "procedure",
+      "sha256": "5a013bf44720bb136b3758ad561b8ad8c8bbb1e867486ea2934360be065d2dd0",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/java/com/oltpbenchmark/benchmarks/ycsb/procedures/UpdateRecord.java"
+    },
+    {
+      "bytes": 5776,
+      "path": "src/main/resources/benchmarks/tpch/dialect-postgres.xml",
+      "role": "postgres_override",
+      "sha256": "1287ced75487c52c9c49dd68124e9a34d1c4bc4c7798d8d10ffe0887bb9db164",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/resources/benchmarks/tpch/dialect-postgres.xml"
+    },
+    {
+      "bytes": 1361,
+      "path": "src/main/resources/benchmarks/twitter/dialect-postgres.xml",
+      "role": "postgres_override",
+      "sha256": "bf88801b31c848b5974d276223d29b5aaa7148a9273963ca6ce8e54644c98d31",
+      "source_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/src/main/resources/benchmarks/twitter/dialect-postgres.xml"
+    }
+  ],
+  "license": {
+    "attribution": "licenses/benchbase-ATTRIBUTION",
+    "copyright": [
+      "Copyright 2021 by OLTPBenchmark Project",
+      "Copyright 2020 by OLTPBenchmark Project (Java source headers)"
+    ],
+    "license_text": "licenses/Apache-2.0.txt",
+    "spdx": "Apache-2.0",
+    "upstream_license_copy": "licenses/benchbase-LICENSE",
+    "upstream_license_url": "https://github.com/cmu-db/benchbase/blob/33c00473807ebd49304d114a6d769d2d2b2bbb34/LICENSE",
+    "upstream_notice_file": null
+  },
+  "license_file_sha256": {
+    "licenses/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "licenses/benchbase-ATTRIBUTION": "613f80703b40fe85b9d292332bba343e4a27361657b1ba27f6d298e5d196be60",
+    "licenses/benchbase-LICENSE": "a415084b0eee34d9f54709e6190359069a8f4768cd45cb678cd05dd8fc22d0aa"
+  },
+  "record_count": 104,
+  "records_by_workload": {
+    "benchbase:smallbank": 21,
+    "benchbase:tatp": 12,
+    "benchbase:tpcc": 33,
+    "benchbase:tpch": 24,
+    "benchbase:twitter": 7,
+    "benchbase:ycsb": 7
+  },
+  "repository": "https://github.com/cmu-db/benchbase",
+  "revision": "33c00473807ebd49304d114a6d769d2d2b2bbb34",
+  "revision_date": "2025-12-13T21:00:56Z",
+  "selection": {
+    "no_constructor_files": [
+      "src/main/java/com/oltpbenchmark/benchmarks/tpcc/procedures/TPCCProcedure.java",
+      "src/main/java/com/oltpbenchmark/benchmarks/tpch/procedures/GenericQuery.java"
+    ],
+    "not_in_scope": [
+      "Other BenchBase workloads, loader-generated SQL and schema DDL.",
+      "Runtime-generated SQL outside SQLStmt constructors and non-PostgreSQL overrides.",
+      "All possible settings of mutable static fields; declared defaults are recorded.",
+      "Native database execution, parameter values, data generation and transaction scheduling."
+    ],
+    "scope": "Every SQLStmt constructor in every procedures/*.java file of the six selected families, with the families' PostgreSQL XML overrides.",
+    "workloads": [
+      "smallbank",
+      "tatp",
+      "tpcc",
+      "tpch",
+      "twitter",
+      "ycsb"
+    ]
+  },
+  "statement_kinds": {
+    "CREATE": 1,
+    "DELETE": 3,
+    "DROP": 1,
+    "INSERT": 7,
+    "SELECT": 71,
+    "UPDATE": 21
+  }
+}

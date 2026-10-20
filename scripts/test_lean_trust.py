@@ -97,11 +97,11 @@ class LeanTrustSourceTests(unittest.TestCase):
             self.assertEqual([module_name(path, root) for path in project_sources(root)],
                              ["Future.Feature", "Main", "SQLean.New", "Tests.Hidden"])
 
-    def test_all_three_executable_roots_are_audited_without_name_collisions(self) -> None:
+    def test_all_executable_roots_are_audited_without_name_collisions(self) -> None:
         modules = ["Main", "SQLean.ScopeContract.Spec", "ScopeContractMain",
-                   "TestMain", "Tests.ProjectTrust"]
+                   "TestMain", "PostgresGrammarMain", "Tests.ProjectTrust"]
         groups = audit_import_groups(modules)
-        roots = {"Main", "TestMain", "ScopeContractMain"}
+        roots = {"Main", "TestMain", "ScopeContractMain", "PostgresGrammarMain"}
         self.assertEqual({entrypoint for entrypoint, _ in groups}, roots)
         self.assertEqual(set().union(*(set(imports) for _, imports in groups)), set(modules))
         for entrypoint, imports in groups:
@@ -266,6 +266,29 @@ class LeanTrustSourceTests(unittest.TestCase):
                 "import SQLean.ScopeContract.Spec\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "Admissibility.*ScopeContract.Spec"):
                 check_specification_independence(root)
+
+
+    def test_grammar_spec_accepts_only_immutable_syntax(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "SQLean/PostgresGrammar").mkdir(parents=True)
+            (root / "SQLean/PostgresGrammar/Spec.lean").write_text(
+                "import SQLean.PostgresGrammar.Syntax\n", encoding="utf-8")
+            (root / "SQLean/PostgresGrammar/Syntax.lean").write_text(
+                "import Std\n", encoding="utf-8")
+            check_specification_independence(root)
+
+    def test_grammar_spec_rejects_executable_and_generated_dependencies(self) -> None:
+        for dependency in ("Parser", "Lexer", "Generated"):
+            with self.subTest(dependency=dependency), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                (root / "SQLean/PostgresGrammar").mkdir(parents=True)
+                (root / "SQLean/PostgresGrammar/Spec.lean").write_text(
+                    "import SQLean.PostgresGrammar.Syntax\n", encoding="utf-8")
+                (root / "SQLean/PostgresGrammar/Syntax.lean").write_text(
+                    f"import SQLean.PostgresGrammar.{dependency}\n", encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, f"PostgresGrammar.Spec.*{dependency}"):
+                    check_specification_independence(root)
 
 
 if __name__ == "__main__":

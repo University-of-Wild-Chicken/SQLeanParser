@@ -10,11 +10,20 @@ private def unsupported (feature : String) : Except Failure Unit :=
   .error (.unsupported ⟨"coverage.sqlite." ++ feature,
     "this SQLite rendering profile cannot preserve " ++ feature ++ " without an AST rewrite"⟩)
 
-/-- Compound operands cannot own WITH, ORDER BY, LIMIT or OFFSET in the flat
+/-- Compound operands cannot own WITH, ORDER BY, LIMIT, OFFSET or locking in the flat
 SQLite syntax. Those clauses may still belong to the enclosing compound. -/
 def sqliteBareOperand (query : Advanced.Query) : Bool :=
   query.ctes.isEmpty && !query.recursive && query.orderBy.isEmpty &&
-    query.limit.isNone && query.offset.isNone
+    query.limit.isNone && query.offset.isNone && query.locking.isEmpty && !query.offsetFirst
+
+/-- SQLite assigns native affinity to common numeric/character type spellings.
+PostgreSQL temporal, identifier, JSON and binary types are excluded instead of
+being silently interpreted as SQLite NUMERIC affinity. -/
+def checkSQLiteDataType (type : DataType) : Except Failure Unit :=
+  match type.name with
+  | .date | .time | .timeTZ | .timestamp | .timestampTZ | .interval
+  | .uuid | .json | .jsonb | .bytea => unsupported "PostgreSQL-type"
+  | _ => pure ()
 
 mutual
   def checkSQLiteExpr (expr : Advanced.Expr) : Except Failure Unit := do
@@ -24,8 +33,25 @@ mutual
     | .pattern left right insensitive =>
         if insensitive then unsupported "ILIKE"
         else checkSQLiteExpr left; checkSQLiteExpr right
-    | .unary _ arg | .aggregate _ arg _ | .isNull arg _ | .cast arg _ =>
+    | .unary _ arg | .aggregate _ arg _ | .isNull arg _ =>
         checkSQLiteExpr arg
+    | .cast arg type => checkSQLiteDataType type; checkSQLiteExpr arg
+    | .call .. | .greatest .. | .least .. => unsupported "scalar-function-signatures"
+    | .coalesce args =>
+        if args.length < 2 then unsupported "single-argument-COALESCE"
+        else args.attach.forM fun (arg : {v : Advanced.Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          checkSQLiteExpr arg.val
+    | .nullIf left right => checkSQLiteExpr left; checkSQLiteExpr right
+    | .caseExpr operand branches otherwise =>
+        match _h : operand with | none => pure () | some arg => checkSQLiteExpr arg
+        branches.attach.forM fun (branch : {b : Advanced.Expr × Advanced.Expr // b ∈ branches}) => do
+          have : sizeOf branch.val < sizeOf branches := List.sizeOf_lt_of_mem branch.property
+          have : sizeOf branch.val.1 < sizeOf branch.val := by cases branch.val; simp; omega
+          have : sizeOf branch.val.2 < sizeOf branch.val := by cases branch.val; simp; omega
+          checkSQLiteExpr branch.val.1
+          checkSQLiteExpr branch.val.2
+        match _h : otherwise with | none => pure () | some arg => checkSQLiteExpr arg
     | .inList arg values =>
         checkSQLiteExpr arg
         values.attach.forM fun (value : {v : Advanced.Expr // v ∈ values}) =>
@@ -75,7 +101,9 @@ mutual
   decreasing_by all_goals cases select; simp_all; omega
 
   def checkSQLiteQuery (query : Advanced.Query) : Except Failure Unit := do
-    if query.offset.isSome && query.limit.isNone then unsupported "OFFSET-without-LIMIT"
+    if !query.locking.isEmpty then unsupported "row-locking"
+    else if query.offsetFirst then unsupported "OFFSET-first"
+    else if query.offset.isSome && query.limit.isNone then unsupported "OFFSET-without-LIMIT"
     else
       query.ctes.attach.forM fun (cte : {c : Advanced.CTE // c ∈ query.ctes}) =>
         have : sizeOf cte.val < sizeOf query.ctes := List.sizeOf_lt_of_mem cte.property
@@ -97,6 +125,10 @@ mutual
         have : sizeOf order.val < sizeOf query.orderBy := List.sizeOf_lt_of_mem order.property
         have : sizeOf order.val.expr < sizeOf order.val := by cases order.val; simp; omega
         checkSQLiteExpr order.val.expr
+      match _h : query.limit with
+      | none => pure () | some expr => checkSQLiteExpr expr
+      match _h : query.offset with
+      | none => pure () | some expr => checkSQLiteExpr expr
   termination_by sizeOf query
   decreasing_by all_goals cases query; simp_all; omega
 end

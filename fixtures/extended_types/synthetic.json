@@ -1,0 +1,584 @@
+[
+  {
+    "id": "extended-types-synthetic-01",
+    "source_kind": "synthetic",
+    "sql": "SELECT SMALLINT '7' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "smallint",
+    "postgres_type": "smallint",
+    "expected_value": "7",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-02",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS SMALLINT) AS v;",
+    "parameter_types": "smallint",
+    "parameter_values": [
+      23
+    ],
+    "contract_type": "smallint",
+    "postgres_type": "smallint",
+    "expected_value": "23",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-03",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST('32767' AS INT2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "smallint",
+    "postgres_type": "smallint",
+    "expected_value": "32767",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-04",
+    "source_kind": "synthetic",
+    "sql": "SELECT SMALLINT '2' + SMALLINT '3' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "smallint",
+    "postgres_type": "smallint",
+    "expected_value": "5",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-05",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2147483648 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "bigint",
+    "postgres_type": "bigint",
+    "expected_value": "2147483648",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-06",
+    "source_kind": "synthetic",
+    "sql": "SELECT -9223372036854775808 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "bigint",
+    "postgres_type": "bigint",
+    "expected_value": "-9223372036854775808",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-07",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS BIGINT) + 1 AS v;",
+    "parameter_types": "bigint",
+    "parameter_values": [
+      2147483648
+    ],
+    "contract_type": "bigint",
+    "postgres_type": "bigint",
+    "expected_value": "2147483649",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-08",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST('12.3456' AS NUMERIC(8,3)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "numeric(8,3)",
+    "postgres_type": "numeric",
+    "expected_value": "12.346",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-09",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1.2500 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "numeric",
+    "postgres_type": "numeric",
+    "expected_value": "1.2500",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-10",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS NUMERIC(10,2)) AS v;",
+    "parameter_types": "numeric(10,2)",
+    "parameter_values": [
+      "2.50"
+    ],
+    "contract_type": "numeric(10,2)",
+    "postgres_type": "numeric",
+    "expected_value": "2.50",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-11",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST('1.5' AS REAL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "real",
+    "postgres_type": "real",
+    "expected_value": "1.5",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-12",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST('1.5' AS REAL) + CAST('2.5' AS REAL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "real",
+    "postgres_type": "real",
+    "expected_value": "4",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-13",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST('1.5' AS REAL) + 2 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "double precision",
+    "postgres_type": "double precision",
+    "expected_value": "3.5",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-14",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS FLOAT8) AS v;",
+    "parameter_types": "double precision",
+    "parameter_values": [
+      "2.5"
+    ],
+    "contract_type": "double precision",
+    "postgres_type": "double precision",
+    "expected_value": "2.5",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-15",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST('abcdef' AS VARCHAR(3)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "varchar(3)",
+    "postgres_type": "character varying",
+    "expected_value": "abc",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-16",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS CHARACTER VARYING(5)) AS v;",
+    "parameter_types": "varchar(5)",
+    "parameter_values": [
+      "hello"
+    ],
+    "contract_type": "varchar(5)",
+    "postgres_type": "character varying",
+    "expected_value": "hello",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-17",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST('abcdef' AS CHAR(3)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "char(3)",
+    "postgres_type": "character",
+    "expected_value": "abc",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-18",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST('abc' AS CHARACTER) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "char(1)",
+    "postgres_type": "character",
+    "expected_value": "a",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-19",
+    "source_kind": "synthetic",
+    "sql": "SELECT DATE '2024-02-29' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "date",
+    "postgres_type": "date",
+    "expected_value": "2024-02-29",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-20",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS DATE) AS v;",
+    "parameter_types": "date",
+    "parameter_values": [
+      "2024-02-29"
+    ],
+    "contract_type": "date",
+    "postgres_type": "date",
+    "expected_value": "2024-02-29",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-21",
+    "source_kind": "synthetic",
+    "sql": "SELECT DATE '2024-02-28' + 2 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "date",
+    "postgres_type": "date",
+    "expected_value": "2024-03-01",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-22",
+    "source_kind": "synthetic",
+    "sql": "SELECT DATE '2024-03-01' - DATE '2024-02-28' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "int32",
+    "postgres_type": "integer",
+    "expected_value": "2",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-23",
+    "source_kind": "synthetic",
+    "sql": "SELECT TIME '12:34:56' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "time",
+    "postgres_type": "time without time zone",
+    "expected_value": "12:34:56",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-24",
+    "source_kind": "synthetic",
+    "sql": "SELECT TIME(3) '12:34:56.123456' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "time(3)",
+    "postgres_type": "time without time zone",
+    "expected_value": "12:34:56.123",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-25",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS TIME(6)) AS v;",
+    "parameter_types": "time(6)",
+    "parameter_values": [
+      "01:02:03.456789"
+    ],
+    "contract_type": "time(6)",
+    "postgres_type": "time without time zone",
+    "expected_value": "01:02:03.456789",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-26",
+    "source_kind": "synthetic",
+    "sql": "SELECT TIME WITH TIME ZONE '12:34:56+02' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "time with time zone",
+    "postgres_type": "time with time zone",
+    "expected_value": "12:34:56+02",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-27",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS TIMETZ(3)) AS v;",
+    "parameter_types": "timetz(3)",
+    "parameter_values": [
+      "01:02:03.456+02"
+    ],
+    "contract_type": "time(3) with time zone",
+    "postgres_type": "time with time zone",
+    "expected_value": "01:02:03.456+02",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-28",
+    "source_kind": "synthetic",
+    "sql": "SELECT TIMESTAMP '2024-02-29 12:34:56' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "timestamp",
+    "postgres_type": "timestamp without time zone",
+    "expected_value": "2024-02-29 12:34:56",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-29",
+    "source_kind": "synthetic",
+    "sql": "SELECT TIMESTAMP(2) '2024-02-29 12:34:56.123' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "timestamp(2)",
+    "postgres_type": "timestamp without time zone",
+    "expected_value": "2024-02-29 12:34:56.12",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-30",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS TIMESTAMP(3)) AS v;",
+    "parameter_types": "timestamp(3)",
+    "parameter_values": [
+      "2024-02-29 12:34:56.123"
+    ],
+    "contract_type": "timestamp(3)",
+    "postgres_type": "timestamp without time zone",
+    "expected_value": "2024-02-29 12:34:56.123",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-31",
+    "source_kind": "synthetic",
+    "sql": "SELECT TIMESTAMP WITH TIME ZONE '2024-02-29 12:34:56+02' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "timestamp with time zone",
+    "postgres_type": "timestamp with time zone",
+    "expected_value": "2024-02-29 10:34:56+00",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-32",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS TIMESTAMPTZ(3)) AS v;",
+    "parameter_types": "timestamptz(3)",
+    "parameter_values": [
+      "2024-02-29 12:34:56.123+02"
+    ],
+    "contract_type": "timestamp(3) with time zone",
+    "postgres_type": "timestamp with time zone",
+    "expected_value": "2024-02-29 10:34:56.123+00",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-33",
+    "source_kind": "synthetic",
+    "sql": "SELECT INTERVAL '2 days' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "interval",
+    "postgres_type": "interval",
+    "expected_value": "2 days",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-34",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS INTERVAL(3)) AS v;",
+    "parameter_types": "interval(3)",
+    "parameter_values": [
+      "1 day 02:03:04.123"
+    ],
+    "contract_type": "interval(3)",
+    "postgres_type": "interval",
+    "expected_value": "1 day 02:03:04.123",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-35",
+    "source_kind": "synthetic",
+    "sql": "SELECT DATE '2024-02-29' + INTERVAL '1 day' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "timestamp",
+    "postgres_type": "timestamp without time zone",
+    "expected_value": "2024-03-01 00:00:00",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-36",
+    "source_kind": "synthetic",
+    "sql": "SELECT TIMESTAMP '2024-03-01 12:00:00' - INTERVAL '2 hours' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "timestamp",
+    "postgres_type": "timestamp without time zone",
+    "expected_value": "2024-03-01 10:00:00",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-37",
+    "source_kind": "synthetic",
+    "sql": "SELECT UUID '00000000-0000-0000-0000-000000000001' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "uuid",
+    "postgres_type": "uuid",
+    "expected_value": "00000000-0000-0000-0000-000000000001",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-38",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS UUID) AS v;",
+    "parameter_types": "uuid",
+    "parameter_values": [
+      "A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11"
+    ],
+    "contract_type": "uuid",
+    "postgres_type": "uuid",
+    "expected_value": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-39",
+    "source_kind": "synthetic",
+    "sql": "SELECT JSON '{\"b\":2,\"a\":1}' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "json",
+    "postgres_type": "json",
+    "expected_value": "{\"b\":2,\"a\":1}",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-40",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS JSON) AS v;",
+    "parameter_types": "json",
+    "parameter_values": [
+      "{\"value\":3}"
+    ],
+    "contract_type": "json",
+    "postgres_type": "json",
+    "expected_value": "{\"value\":3}",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-41",
+    "source_kind": "synthetic",
+    "sql": "SELECT JSONB '{\"b\":2,\"a\":1}' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "jsonb",
+    "postgres_type": "jsonb",
+    "expected_value": "{\"a\": 1, \"b\": 2}",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-42",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS JSONB) AS v;",
+    "parameter_types": "jsonb",
+    "parameter_values": [
+      "{\"value\":3}"
+    ],
+    "contract_type": "jsonb",
+    "postgres_type": "jsonb",
+    "expected_value": "{\"value\": 3}",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-43",
+    "source_kind": "synthetic",
+    "sql": "SELECT JSONB '{\"a\":1}' = JSONB '{\"a\":1}' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "bool",
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-44",
+    "source_kind": "synthetic",
+    "sql": "SELECT BYTEA '\\x00ff' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "bytea",
+    "postgres_type": "bytea",
+    "expected_value": "\\x00ff",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-45",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS BYTEA) AS v;",
+    "parameter_types": "bytea",
+    "parameter_values": [
+      "\\xdeadbeef"
+    ],
+    "contract_type": "bytea",
+    "postgres_type": "bytea",
+    "expected_value": "\\xdeadbeef",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-46",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST('abc' AS BYTEA) LIKE CAST('a%' AS BYTEA) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "bool",
+    "postgres_type": "boolean",
+    "expected_value": "true",
+    "nullable": false
+  },
+  {
+    "id": "extended-types-synthetic-47",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST(NULL AS DATE) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "date",
+    "postgres_type": "date",
+    "expected_value": null,
+    "nullable": true
+  },
+  {
+    "id": "extended-types-synthetic-48",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS TIMESTAMP(6)) AS v;",
+    "parameter_types": "timestamp(6)?",
+    "parameter_values": [
+      null
+    ],
+    "contract_type": "timestamp(6)",
+    "postgres_type": "timestamp without time zone",
+    "expected_value": null,
+    "nullable": true
+  },
+  {
+    "id": "extended-types-synthetic-49",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST(NULL AS NUMERIC(12,4)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "numeric(12,4)",
+    "postgres_type": "numeric",
+    "expected_value": null,
+    "nullable": true
+  },
+  {
+    "id": "extended-types-synthetic-50",
+    "source_kind": "synthetic",
+    "sql": "SELECT -2147483648 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "contract_type": "int32",
+    "postgres_type": "integer",
+    "expected_value": "-2147483648",
+    "nullable": false
+  }
+]

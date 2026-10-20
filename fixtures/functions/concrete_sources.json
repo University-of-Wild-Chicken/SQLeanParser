@@ -1,0 +1,997 @@
+{
+  "format_version": 1,
+  "factor": "functions",
+  "expected_count": 50,
+  "expected_sources": {
+    "hatchet": 20,
+    "sqlc": 10,
+    "postgres": 20
+  },
+  "sources": {
+    "hatchet": {
+      "repository": "https://github.com/hatchet-dev/hatchet",
+      "commit": "392e7c472221cdab235cca674640e98f904e1ea0",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/hatchet-LICENSE.txt",
+      "license_sha256": "7388b34bd1ad4b9db3c72dcb73f434ea27c88e5ca8f02a24d4f970c906d79be3",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "pkg/repository/sqlcv1/concurrency.sql.go",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/concurrency.sql.go",
+          "sha256": "d810142f2d50d94b20b2198a6a34184060ebe22927fee0320dc645968cf7d637"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/dispatcher.sql.go",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/dispatcher.sql.go",
+          "sha256": "1d638d0e3141ce6e731d9a87a695dda1dafdd3bd43eec161e995b692bca7e57f"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/lease.sql.go",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/lease.sql.go",
+          "sha256": "0ac0759d31188b600119e59fe310a3b10801cdfeb4d7ebc50dc6336a1a570fcd"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/olap.sql.go",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/olap.sql.go",
+          "sha256": "b6c819d1f09a5c8fbbba708577a8d914c4f7181ecb0bea2b4603cdbca9452233"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/queue.sql.go",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/queue.sql.go",
+          "sha256": "af5416c8ea8ea8ad39857d80ee19b840568e9275f716091ec7158c778c07460f"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/tasks.sql.go",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/tasks.sql.go",
+          "sha256": "b439f6e7e5642fb90e79d61e568ceb849ded87c86d04aa1e093b9d78240979e4"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/tenant_invites.sql.go",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/tenant_invites.sql.go",
+          "sha256": "f59a6675e242b5251339b74d2b98e3470654b2c353076c2b45d578a865c33fcd"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/tenant_limits.sql.go",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/tenant_limits.sql.go",
+          "sha256": "9bdf6cfd98ad5b63451e100775c315f8998fa5beb9ce500fc33c873b3516e116"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/workers.sql.go",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/workers.sql.go",
+          "sha256": "66b3e2518cab2f497148ab2c524167305db1cfbf76eac48e2a946014c3a8b4d5"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/builtins/postgresql/query.sql",
+          "sha256": "053b2e81b8ed10a5c416bb032d702c4c68cbd807fb93e6e8b38b48a724182c72"
+        }
+      ]
+    },
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/bit.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/bit.sql",
+          "sha256": "01618cd355b1e7c130b95f34427119746a933abe478e1aa7e80ee262f2284f46"
+        },
+        {
+          "path": "src/test/regress/sql/create_table.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/create_table.sql",
+          "sha256": "960224adde05a081aa56da0b8d1a2e0d2d113ad4a10b358f66328da7d800a1dc"
+        },
+        {
+          "path": "src/test/regress/sql/date.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/date.sql",
+          "sha256": "616424ff98227d02b301013b618711b85ad1ff9e1619c7ec9f7bc362c265a1b0"
+        },
+        {
+          "path": "src/test/regress/sql/float4.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/float4.sql",
+          "sha256": "6a12f5516303990cf33621d44a516cf7d0771c487f15cf82d824087ed14db63f"
+        },
+        {
+          "path": "src/test/regress/sql/float8.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/float8.sql",
+          "sha256": "561b5d429ec23fccbeb6a393f98280d5afde3c92c6dd16956a5df1211888dcc4"
+        },
+        {
+          "path": "src/test/regress/sql/int2.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/int2.sql",
+          "sha256": "7ad2787de5515b80fae535d4cf38cedbc52065b02f16d0d79a0276d679e440f7"
+        },
+        {
+          "path": "src/test/regress/sql/int4.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/int4.sql",
+          "sha256": "cc3e900e8ef2b1066456188a91bd9c8b7a005d6e1336de89ff828637fd30f7fe"
+        },
+        {
+          "path": "src/test/regress/sql/interval.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/interval.sql",
+          "sha256": "d0250948638904fcb7f039d85ca99337c3041d805ff8475a7258faa576eab6b8"
+        },
+        {
+          "path": "src/test/regress/sql/jsonb.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/jsonb.sql",
+          "sha256": "136298080a23e5046eb99813168180377b5b6fa6bc036f47af8e5d7b08618061"
+        },
+        {
+          "path": "src/test/regress/sql/misc_functions.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/misc_functions.sql",
+          "sha256": "e13ee8571da87a51d629f00372694e9d4272c39e1639f15da56de2f473fb184c"
+        },
+        {
+          "path": "src/test/regress/sql/numeric.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/numeric.sql",
+          "sha256": "8dfb0dd51f3d987938900bd12f193888873c11348c85147a88e250ea23531801"
+        },
+        {
+          "path": "src/test/regress/sql/select_having.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/select_having.sql",
+          "sha256": "bf8adb623f24960d979619f1e697612ba5d25f949af72db66c76666345f9c68f"
+        },
+        {
+          "path": "src/test/regress/sql/select_implicit.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/select_implicit.sql",
+          "sha256": "6799daddc61a5558e2921c2d30f45dfe7e1eca8a0a62776329a86b54ffaa82c5"
+        },
+        {
+          "path": "src/test/regress/sql/strings.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/strings.sql",
+          "sha256": "a7828ef7fed9179d3de172fba7a81b75268606b7d43acda8943bce17c72480db"
+        },
+        {
+          "path": "src/test/regress/sql/time.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/time.sql",
+          "sha256": "89f74ddb5ec458c8f9ff219eab06f48f6ea13767c563782f80569ce364d0960c"
+        },
+        {
+          "path": "src/test/regress/sql/timestamp.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/timestamp.sql",
+          "sha256": "68b4cd1d083eac4379f7603fa5ca8c7580d5f755d0682161753da4b4ef69f99b"
+        },
+        {
+          "path": "src/test/regress/sql/update.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/update.sql",
+          "sha256": "b85044971c67fd88563090ad8b0c9f0abc14cc9ade0d487f28de5406eb9c6a6a"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listActiveSlotsPerTenantAndSlotType"
+      },
+      "sql_sha256": "1318d3c486e20c6eed5e070429bf5d3a9f9c79f2f7470a6a5cc5801e54d73e87",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listActiveWorkersPerTenant"
+      },
+      "sql_sha256": "759477fe77cbe92966b05aee32b6b079484bd2571b48225b62120c79a2150422",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTotalActiveSlotsPerTenant"
+      },
+      "sql_sha256": "47841a58ed8574b50ac1d0e95136c6625aa26ddabde0ade5a6bf54c7333f9689",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tasks.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "createPartitions"
+      },
+      "sql_sha256": "b5a1fee2919ab55a8421f3bb81575fc7a91c85d7ef2cdf3b4e02a64869149b65",
+      "observed_syntax": {
+        "function_names": [
+          "create_v1_monthly_range_partition",
+          "create_v1_range_partition"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/concurrency.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "advisoryLock"
+      },
+      "sql_sha256": "50aec172c59f44ec3b9aa5a97fd09d44fa5a811b0b39895224d89637f4ea713f",
+      "observed_syntax": {
+        "function_names": [
+          "pg_advisory_xact_lock"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/concurrency.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "tryAdvisoryLock"
+      },
+      "sql_sha256": "7c2a43b2bc6839783e05414de5bd5c285ad5e1f44b79711411b8f81816430baf",
+      "observed_syntax": {
+        "function_names": [
+          "pg_try_advisory_xact_lock"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "computeOLAPPayloadBatchSize"
+      },
+      "sql_sha256": "1f420a0ac0b8c3c26e0628fb04ff4fab0ba7b392672563c6fd0ce3ff066e842f",
+      "observed_syntax": {
+        "function_names": [
+          "compute_olap_payload_batch_size"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "createOLAPOptionalTablePartitions"
+      },
+      "sql_sha256": "cea7451dffa3d31e9d3ee982e2bc3ec62015df5c1dcebf3c7c34bfde797b2e8a",
+      "observed_syntax": {
+        "function_names": [
+          "create_v1_monthly_range_partition",
+          "create_v1_range_partition",
+          "create_v1_weekly_range_partition"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "createOLAPOtelPartitions"
+      },
+      "sql_sha256": "1c826158632481b8be7cf6321695aa528c46119290714ce781dbe41fc08bf9b4",
+      "observed_syntax": {
+        "function_names": [
+          "create_v1_range_partition"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "createOLAPPartitions"
+      },
+      "sql_sha256": "8b94b8c11f38442590deb6e5a5e252c52b7b1e8ce089b2c2f35c1be53270cf44",
+      "observed_syntax": {
+        "function_names": [
+          "create_v1_hash_partitions",
+          "create_v1_range_partition"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "createV1PayloadOLAPCutoverTemporaryTable"
+      },
+      "sql_sha256": "56522de0090796b24bfa81c92cc4f5e42e53604f86f5f9bda87e49d796e02e79",
+      "observed_syntax": {
+        "function_names": [
+          "copy_v1_payloads_olap_partition_structure"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listYesterdayRunCountsByStatus"
+      },
+      "sql_sha256": "c6235ca1ed66416c4a556541478470ccb70379a0d4f3b5b74623db4170f57ff3",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "swapV1PayloadOLAPPartitionWithTemp"
+      },
+      "sql_sha256": "d3abc65d8f16c1735a5b0081af79210380ebd40d815d7c043f9051c6069776d5",
+      "observed_syntax": {
+        "function_names": [
+          "swap_v1_payloads_olap_partition_with_temp"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/dispatcher.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listActiveDispatchers"
+      },
+      "sql_sha256": "57e51eeb5674bdc30ddccab1c2e686c0600fa95df26c7d2d4fc20d0d51e02b46",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/dispatcher.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listStaleDispatchers"
+      },
+      "sql_sha256": "92973b98efa7025d5d3f828f5636d655b22bae7cebb972d4ef35789658cb7a50",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listQueues"
+      },
+      "sql_sha256": "f7aa0571beded4de6033853027a2bdec755a5be2405d9b5252676d934d5550e1",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/lease.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listActiveWorkers"
+      },
+      "sql_sha256": "eb178d904789527ebe61bd58b0f2c284d5fd115da839bade9755428073f00c1e",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tenant_limits.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "countTenantWorkers"
+      },
+      "sql_sha256": "63ea8ef0a07cf349e44bda036e6e2ee4b298fa913427817846b89588ae182c1b",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tenant_invites.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "countActiveInvites"
+      },
+      "sql_sha256": "4a97e3e628dab59ed5dee1c5b822177ef815fafed6ed835196969fca5f669815",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tenant_invites.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getExistingInvite"
+      },
+      "sql_sha256": "c4dc79c3774d27d24ac4a972b37b623f63952bb8b120fadb02ae8cd0def2dcda",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18,
+        "end": 36,
+        "statement_index": 0
+      },
+      "sql_sha256": "e5530c9334e74a80f0e1fca35725a7b9b7be40db2481503c8b72563b71fcf2d9",
+      "observed_syntax": {
+        "function_names": [
+          "abs"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 56,
+        "end": 74,
+        "statement_index": 1
+      },
+      "sql_sha256": "f110e5ec7f3f7b022c1e6caa3789e48a057cc576cf07489bcc3389ec10ea1447",
+      "observed_syntax": {
+        "function_names": [
+          "cbrt"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 94,
+        "end": 113,
+        "statement_index": 2
+      },
+      "sql_sha256": "af3697ef4f04696ef2697c12299258855e8b5c97c74294c5724c8fa02ee21a92",
+      "observed_syntax": {
+        "function_names": [
+          "ceil"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 181,
+        "end": 201,
+        "statement_index": 4
+      },
+      "sql_sha256": "e68890629b0e63f27086a92bfb19eb3461397bce314f9db91052930736501d8a",
+      "observed_syntax": {
+        "function_names": [
+          "degrees"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 220,
+        "end": 236,
+        "statement_index": 5
+      },
+      "sql_sha256": "6800df255375c8db5efc54a6519e4e6983f12b6a5f9aefb4f017bda96ccf324f",
+      "observed_syntax": {
+        "function_names": [
+          "div"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 292,
+        "end": 312,
+        "statement_index": 7
+      },
+      "sql_sha256": "bc27ba10a829cf638d996fa27559ef64bb7e9cd025fc6daa72d60a23c1cb75a3",
+      "observed_syntax": {
+        "function_names": [
+          "floor"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 330,
+        "end": 345,
+        "statement_index": 8
+      },
+      "sql_sha256": "6406213df28630e101cfd016b7f3571249a2e04c5306ab0fb4661ca23945f71b",
+      "observed_syntax": {
+        "function_names": [
+          "ln"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 364,
+        "end": 382,
+        "statement_index": 9
+      },
+      "sql_sha256": "4341ad1a92a01a89a1b503b211c5ae2dc2722b86dc427b6c456448d6e238b89a",
+      "observed_syntax": {
+        "function_names": [
+          "log"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 443,
+        "end": 459,
+        "statement_index": 11
+      },
+      "sql_sha256": "7927f240553538fb50779908ba5b8e6cc434fc8ab90113129aea39fc69f691b3",
+      "observed_syntax": {
+        "function_names": [
+          "mod"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 477,
+        "end": 489,
+        "statement_index": 12
+      },
+      "sql_sha256": "843eb27d3677672fe108a39884348ba2385b072c9d38632609a02ba8d57cd8be",
+      "observed_syntax": {
+        "function_names": [
+          "pi"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/float4.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1379,
+        "end": 1422,
+        "statement_index": 26
+      },
+      "sql_sha256": "760223520b67b6e5fa6c096e9db8df0151c240fae57b5407fec8f9ee713e4180",
+      "observed_syntax": {
+        "function_names": [
+          "pg_input_is_valid"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/float4.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3627,
+        "end": 3662,
+        "statement_index": 72
+      },
+      "sql_sha256": "72611576260637b0acccad76708875c894a8f04d853e1300ee86b39ece9cb94e",
+      "observed_syntax": {
+        "function_names": [
+          "float4send"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/int2.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1832,
+        "end": 1904,
+        "statement_index": 33
+      },
+      "sql_sha256": "ef2716da5058a5aae5022e43ccf6de55f227fde67e04190284375bbee2e5ff5e",
+      "observed_syntax": {
+        "function_names": [
+          "abs"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/time.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2752,
+        "end": 2819,
+        "statement_index": 40
+      },
+      "sql_sha256": "63f0229e3c5f00d47a3c132114b8b7b0a48101a095880b71230b696c4f43f8c4",
+      "observed_syntax": {
+        "function_names": [
+          "date_part"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_having.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 834,
+        "end": 954,
+        "statement_index": 13
+      },
+      "sql_sha256": "52de542b078f74ec2bc11bc175964616d2c6b0a1322c2b8b98204a13647d145e",
+      "observed_syntax": {
+        "function_names": [
+          "lower"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/numeric.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 27588,
+        "end": 27786,
+        "statement_index": 493
+      },
+      "sql_sha256": "6adbc18eb6d2c7cddbb313324233bfc88b841993e2f4cec94b0d7e829259ac26",
+      "observed_syntax": {
+        "function_names": [
+          "round"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/bit.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1056,
+        "end": 1104,
+        "statement_index": 19
+      },
+      "sql_sha256": "b8ec2e233aea672520884377ebd1b3b39c01688b9bbbe5843d1f7a3a87fc4250",
+      "observed_syntax": {
+        "function_names": [
+          "length"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/int4.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3302,
+        "end": 3335,
+        "statement_index": 60
+      },
+      "sql_sha256": "3c2d8c0f63bfa9e5fbcb819fc2d8f877ed923da4d93437a3c2e4ac52fef6721b",
+      "observed_syntax": {
+        "function_names": [
+          "to_char"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5362,
+        "end": 5484,
+        "statement_index": 69
+      },
+      "sql_sha256": "d60ecf0b639f0291dbf7310b515eeaea6d77dcc922d3d06659875d8d2dc8c3b5",
+      "observed_syntax": {
+        "function_names": [
+          "justify_hours"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5485,
+        "end": 5606,
+        "statement_index": 70
+      },
+      "sql_sha256": "90e61bdb672c91a070e34f400f7eb23fbf1f0bf06f17381837564c62d3b0c015",
+      "observed_syntax": {
+        "function_names": [
+          "justify_days"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_table.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2594,
+        "end": 2743,
+        "statement_index": 39
+      },
+      "sql_sha256": "82bc78933fe71fded44295033356cc0e79ace797594f06bd9d6b3aaeee1f3c85",
+      "observed_syntax": {
+        "function_names": [
+          "pg_filenode_relation",
+          "pg_relation_filenode"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8390,
+        "end": 8436,
+        "statement_index": 117
+      },
+      "sql_sha256": "9ca713e4038c5195de9be33b99a00faf43d1dad6c8f20da81207ade592b80d4b",
+      "observed_syntax": {
+        "function_names": [
+          "regexp_replace"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9176,
+        "end": 9247,
+        "statement_index": 227
+      },
+      "sql_sha256": "4b0690434d0574697ae7a8dcf8e121dc4ddf8c8ca51dee68bb69fcb512e3d04e",
+      "observed_syntax": {
+        "function_names": [
+          "date_trunc"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3766,
+        "end": 3822,
+        "statement_index": 60
+      },
+      "sql_sha256": "bf707e14f615655e1128c6d07668712a8bab9e2048a9feade017d5e5e50d7060",
+      "observed_syntax": {
+        "function_names": [
+          "to_jsonb"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamp.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9839,
+        "end": 9940,
+        "statement_index": 118
+      },
+      "sql_sha256": "8ddf0c123adc45143a960c70183f6576585c4a54259707f6ef97a3a13f6c54c7",
+      "observed_syntax": {
+        "function_names": [
+          "date_bin"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/misc_functions.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 224,
+        "end": 249,
+        "statement_index": 1
+      },
+      "sql_sha256": "39f80d0bbfe4f5bf7f6bb0ca9dfc51adc79e07a734bd8c3d8a79c9ba4cfd503b",
+      "observed_syntax": {
+        "function_names": [
+          "num_nonnulls"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/misc_functions.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 623,
+        "end": 646,
+        "statement_index": 8
+      },
+      "sql_sha256": "64d2c2bd21294c745d8034d2dc56bf8220483969f066b9b11de8601f396f1a72",
+      "observed_syntax": {
+        "function_names": [
+          "num_nulls"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/update.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2522,
+        "end": 2567,
+        "statement_index": 32
+      },
+      "sql_sha256": "b1343ab8dd059f97900504357acdff2a3c5dbab60d524a1795dca9305d38dccf",
+      "observed_syntax": {
+        "function_names": [
+          "char_length"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/float8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2584,
+        "end": 2642,
+        "statement_index": 50
+      },
+      "sql_sha256": "5d4409e9c219b4efb6fff331c47b9c042bf52903233be4fd7f0fab89455c08f4",
+      "observed_syntax": {
+        "function_names": [
+          "trunc"
+        ],
+        "conditional_forms": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_implicit.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4310,
+        "end": 4362,
+        "statement_index": 34
+      },
+      "sql_sha256": "dac2c26b2d3e8f680a275afe1822dd103ae519c56c51dd8bcc05cd8bcd302118",
+      "observed_syntax": {
+        "function_names": [
+          "upper"
+        ],
+        "conditional_forms": []
+      }
+    }
+  ]
+}

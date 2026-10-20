@@ -10,8 +10,21 @@ namespace SQLean
 
 abbrev Name := String
 
+inductive OpaqueType where
+  | date | time | timeTZ | timestamp | timestampTZ | interval | uuid | json | jsonb | bytea
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+def OpaqueType.name : OpaqueType → String
+  | .date => "date" | .time => "time" | .timeTZ => "timetz"
+  | .timestamp => "timestamp" | .timestampTZ => "timestamptz"
+  | .interval => "interval" | .uuid => "uuid" | .json => "json"
+  | .jsonb => "jsonb" | .bytea => "bytea"
+
 inductive SqlType where
   | int | text | bool | real
+  /-- Concrete nonnumeric built-in identity retained by the expanded checker.
+  The independent contract additionally preserves declaration modifiers. -/
+  | opaque (name : OpaqueType)
   | nullable (base : SqlType)
   deriving Repr, BEq, DecidableEq, Inhabited
 

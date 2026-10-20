@@ -1,0 +1,2194 @@
+[
+  {
+    "id": "join-cross-identity",
+    "source_kind": "synthetic",
+    "join_kind": "cross",
+    "shape": "identity",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u CROSS JOIN orders AS o;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u CROSS JOIN orders AS o;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11
+      ],
+      [
+        1,
+        12
+      ],
+      [
+        1,
+        13
+      ],
+      [
+        2,
+        11
+      ],
+      [
+        2,
+        12
+      ],
+      [
+        2,
+        13
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        12
+      ],
+      [
+        3,
+        13
+      ]
+    ]
+  },
+  {
+    "id": "join-cross-text-and-amount",
+    "source_kind": "synthetic",
+    "join_kind": "cross",
+    "shape": "text-and-amount",
+    "sql": "SELECT u.name AS name, o.amount AS amount FROM users AS u CROSS JOIN orders AS o;",
+    "sqlite_sql": "SELECT u.name AS name, o.amount AS amount FROM users AS u CROSS JOIN orders AS o;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "Ada",
+        5
+      ],
+      [
+        "Ada",
+        7
+      ],
+      [
+        "Ada",
+        9
+      ],
+      [
+        "Bea",
+        5
+      ],
+      [
+        "Bea",
+        7
+      ],
+      [
+        "Bea",
+        9
+      ],
+      [
+        "Cy",
+        5
+      ],
+      [
+        "Cy",
+        7
+      ],
+      [
+        "Cy",
+        9
+      ]
+    ]
+  },
+  {
+    "id": "join-cross-post-join-filter",
+    "source_kind": "synthetic",
+    "join_kind": "cross",
+    "shape": "post-join-filter",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u CROSS JOIN orders AS o WHERE o.amount >= $1;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u CROSS JOIN orders AS o WHERE o.amount >= ?1;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        12
+      ],
+      [
+        1,
+        13
+      ],
+      [
+        2,
+        12
+      ],
+      [
+        2,
+        13
+      ],
+      [
+        3,
+        12
+      ],
+      [
+        3,
+        13
+      ]
+    ]
+  },
+  {
+    "id": "join-cross-coalesced",
+    "source_kind": "synthetic",
+    "join_kind": "cross",
+    "shape": "coalesced",
+    "sql": "SELECT COALESCE(u.id, 0) AS user_id, COALESCE(o.amount, 0) AS amount FROM users AS u CROSS JOIN orders AS o;",
+    "sqlite_sql": "SELECT COALESCE(u.id, 0) AS user_id, COALESCE(o.amount, 0) AS amount FROM users AS u CROSS JOIN orders AS o;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        7
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        3,
+        9
+      ]
+    ]
+  },
+  {
+    "id": "join-cross-anonymous-source-order",
+    "source_kind": "synthetic",
+    "join_kind": "cross",
+    "shape": "anonymous-source-order",
+    "sql": "SELECT ? + COALESCE(u.id, 0) AS shifted, o.id AS order_id FROM users AS u CROSS JOIN orders AS o WHERE o.amount >= ? AND COALESCE(u.age, 0) >= ?;",
+    "sqlite_sql": "SELECT ? + COALESCE(u.id, 0) AS shifted, o.id AS order_id FROM users AS u CROSS JOIN orders AS o WHERE o.amount >= ? AND COALESCE(u.age, 0) >= ?;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      10,
+      7,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "shifted",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        11,
+        12
+      ],
+      [
+        11,
+        13
+      ],
+      [
+        13,
+        12
+      ],
+      [
+        13,
+        13
+      ]
+    ]
+  },
+  {
+    "id": "join-cross-nullable-boolean",
+    "source_kind": "synthetic",
+    "join_kind": "cross",
+    "shape": "nullable-boolean",
+    "sql": "SELECT u.id IS NULL AS missing_user, o.id IS NULL AS missing_order FROM users AS u CROSS JOIN orders AS o;",
+    "sqlite_sql": "SELECT u.id IS NULL AS missing_user, o.id IS NULL AS missing_order FROM users AS u CROSS JOIN orders AS o;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "missing_user",
+        "type": "bool",
+        "nullable": false
+      },
+      {
+        "name": "missing_order",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ]
+    ]
+  },
+  {
+    "id": "join-cross-distinct",
+    "source_kind": "synthetic",
+    "join_kind": "cross",
+    "shape": "distinct",
+    "sql": "SELECT DISTINCT u.id AS user_id FROM users AS u CROSS JOIN orders AS o;",
+    "sqlite_sql": "SELECT DISTINCT u.id AS user_id FROM users AS u CROSS JOIN orders AS o;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ]
+  },
+  {
+    "id": "join-cross-ordered-pagination",
+    "source_kind": "synthetic",
+    "join_kind": "cross",
+    "shape": "ordered-pagination",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u CROSS JOIN orders AS o ORDER BY user_id NULLS LAST, order_id NULLS LAST LIMIT $2 OFFSET $1;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u CROSS JOIN orders AS o ORDER BY user_id NULLS LAST, order_id NULLS LAST LIMIT ?2 OFFSET ?1;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        12
+      ],
+      [
+        1,
+        13
+      ]
+    ]
+  },
+  {
+    "id": "join-cross-qualified-wildcard",
+    "source_kind": "synthetic",
+    "join_kind": "cross",
+    "shape": "qualified-wildcard",
+    "sql": "SELECT u.*, o.amount AS amount FROM users AS u CROSS JOIN orders AS o;",
+    "sqlite_sql": "SELECT u.*, o.amount AS amount FROM users AS u CROSS JOIN orders AS o;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        24,
+        "Ada",
+        5
+      ],
+      [
+        1,
+        24,
+        "Ada",
+        7
+      ],
+      [
+        1,
+        24,
+        "Ada",
+        9
+      ],
+      [
+        2,
+        17,
+        "Bea",
+        5
+      ],
+      [
+        2,
+        17,
+        "Bea",
+        7
+      ],
+      [
+        2,
+        17,
+        "Bea",
+        9
+      ],
+      [
+        3,
+        38,
+        "Cy",
+        5
+      ],
+      [
+        3,
+        38,
+        "Cy",
+        7
+      ],
+      [
+        3,
+        38,
+        "Cy",
+        9
+      ]
+    ]
+  },
+  {
+    "id": "join-cross-nested-outer",
+    "source_kind": "synthetic",
+    "join_kind": "cross",
+    "shape": "nested-outer",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id, r.label AS region, $1 AS marker FROM users AS u CROSS JOIN orders AS o LEFT JOIN regions AS r ON u.id = r.id AND r.id >= $2;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id, r.label AS region, ?1 AS marker FROM users AS u CROSS JOIN orders AS o LEFT JOIN regions AS r ON u.id = r.id AND r.id >= ?2;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      3,
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "region",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11,
+        "North",
+        3
+      ],
+      [
+        1,
+        12,
+        "North",
+        3
+      ],
+      [
+        1,
+        13,
+        "North",
+        3
+      ],
+      [
+        2,
+        11,
+        null,
+        3
+      ],
+      [
+        2,
+        12,
+        null,
+        3
+      ],
+      [
+        2,
+        13,
+        null,
+        3
+      ],
+      [
+        3,
+        11,
+        "West",
+        3
+      ],
+      [
+        3,
+        12,
+        "West",
+        3
+      ],
+      [
+        3,
+        13,
+        "West",
+        3
+      ]
+    ]
+  },
+  {
+    "id": "join-inner-identity",
+    "source_kind": "synthetic",
+    "join_kind": "inner",
+    "shape": "identity",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11
+      ],
+      [
+        1,
+        12
+      ]
+    ]
+  },
+  {
+    "id": "join-inner-text-and-amount",
+    "source_kind": "synthetic",
+    "join_kind": "inner",
+    "shape": "text-and-amount",
+    "sql": "SELECT u.name AS name, o.amount AS amount FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.name AS name, o.amount AS amount FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "Ada",
+        5
+      ],
+      [
+        "Ada",
+        7
+      ]
+    ]
+  },
+  {
+    "id": "join-inner-post-join-filter",
+    "source_kind": "synthetic",
+    "join_kind": "inner",
+    "shape": "post-join-filter",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id WHERE o.amount >= $1;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id WHERE o.amount >= ?1;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        12
+      ]
+    ]
+  },
+  {
+    "id": "join-inner-coalesced",
+    "source_kind": "synthetic",
+    "join_kind": "inner",
+    "shape": "coalesced",
+    "sql": "SELECT COALESCE(u.id, 0) AS user_id, COALESCE(o.amount, 0) AS amount FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT COALESCE(u.id, 0) AS user_id, COALESCE(o.amount, 0) AS amount FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        7
+      ]
+    ]
+  },
+  {
+    "id": "join-inner-anonymous-source-order",
+    "source_kind": "synthetic",
+    "join_kind": "inner",
+    "shape": "anonymous-source-order",
+    "sql": "SELECT ? + COALESCE(u.id, 0) AS shifted, o.id AS order_id FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id AND o.amount >= ? WHERE COALESCE(u.age, 0) >= ?;",
+    "sqlite_sql": "SELECT ? + COALESCE(u.id, 0) AS shifted, o.id AS order_id FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id AND o.amount >= ? WHERE COALESCE(u.age, 0) >= ?;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      10,
+      7,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "shifted",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        11,
+        12
+      ]
+    ]
+  },
+  {
+    "id": "join-inner-nullable-boolean",
+    "source_kind": "synthetic",
+    "join_kind": "inner",
+    "shape": "nullable-boolean",
+    "sql": "SELECT u.id IS NULL AS missing_user, o.id IS NULL AS missing_order FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.id IS NULL AS missing_user, o.id IS NULL AS missing_order FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "missing_user",
+        "type": "bool",
+        "nullable": false
+      },
+      {
+        "name": "missing_order",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ]
+    ]
+  },
+  {
+    "id": "join-inner-distinct",
+    "source_kind": "synthetic",
+    "join_kind": "inner",
+    "shape": "distinct",
+    "sql": "SELECT DISTINCT u.id AS user_id FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT DISTINCT u.id AS user_id FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ]
+  },
+  {
+    "id": "join-inner-ordered-pagination",
+    "source_kind": "synthetic",
+    "join_kind": "inner",
+    "shape": "ordered-pagination",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id ORDER BY user_id NULLS LAST, order_id NULLS LAST LIMIT $2 OFFSET $1;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id ORDER BY user_id NULLS LAST, order_id NULLS LAST LIMIT ?2 OFFSET ?1;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        12
+      ]
+    ]
+  },
+  {
+    "id": "join-inner-qualified-wildcard",
+    "source_kind": "synthetic",
+    "join_kind": "inner",
+    "shape": "qualified-wildcard",
+    "sql": "SELECT u.*, o.amount AS amount FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.*, o.amount AS amount FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        24,
+        "Ada",
+        5
+      ],
+      [
+        1,
+        24,
+        "Ada",
+        7
+      ]
+    ]
+  },
+  {
+    "id": "join-inner-nested-outer",
+    "source_kind": "synthetic",
+    "join_kind": "inner",
+    "shape": "nested-outer",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id, r.label AS region, $1 AS marker FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id LEFT JOIN regions AS r ON u.id = r.id AND r.id >= $2;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id, r.label AS region, ?1 AS marker FROM users AS u INNER JOIN orders AS o ON u.id = o.user_id LEFT JOIN regions AS r ON u.id = r.id AND r.id >= ?2;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      3,
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "region",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11,
+        "North",
+        3
+      ],
+      [
+        1,
+        12,
+        "North",
+        3
+      ]
+    ]
+  },
+  {
+    "id": "join-left-identity",
+    "source_kind": "synthetic",
+    "join_kind": "left",
+    "shape": "identity",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11
+      ],
+      [
+        1,
+        12
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        3,
+        null
+      ]
+    ]
+  },
+  {
+    "id": "join-left-text-and-amount",
+    "source_kind": "synthetic",
+    "join_kind": "left",
+    "shape": "text-and-amount",
+    "sql": "SELECT u.name AS name, o.amount AS amount FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.name AS name, o.amount AS amount FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        "Ada",
+        5
+      ],
+      [
+        "Ada",
+        7
+      ],
+      [
+        "Bea",
+        null
+      ],
+      [
+        "Cy",
+        null
+      ]
+    ]
+  },
+  {
+    "id": "join-left-post-join-filter",
+    "source_kind": "synthetic",
+    "join_kind": "left",
+    "shape": "post-join-filter",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id WHERE o.amount >= $1;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id WHERE o.amount >= ?1;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        12
+      ]
+    ]
+  },
+  {
+    "id": "join-left-coalesced",
+    "source_kind": "synthetic",
+    "join_kind": "left",
+    "shape": "coalesced",
+    "sql": "SELECT COALESCE(u.id, 0) AS user_id, COALESCE(o.amount, 0) AS amount FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT COALESCE(u.id, 0) AS user_id, COALESCE(o.amount, 0) AS amount FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ]
+    ]
+  },
+  {
+    "id": "join-left-anonymous-source-order",
+    "source_kind": "synthetic",
+    "join_kind": "left",
+    "shape": "anonymous-source-order",
+    "sql": "SELECT ? + COALESCE(u.id, 0) AS shifted, o.id AS order_id FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id AND o.amount >= ? WHERE COALESCE(u.age, 0) >= ?;",
+    "sqlite_sql": "SELECT ? + COALESCE(u.id, 0) AS shifted, o.id AS order_id FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id AND o.amount >= ? WHERE COALESCE(u.age, 0) >= ?;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      10,
+      7,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "shifted",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        11,
+        12
+      ],
+      [
+        13,
+        null
+      ]
+    ]
+  },
+  {
+    "id": "join-left-nullable-boolean",
+    "source_kind": "synthetic",
+    "join_kind": "left",
+    "shape": "nullable-boolean",
+    "sql": "SELECT u.id IS NULL AS missing_user, o.id IS NULL AS missing_order FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.id IS NULL AS missing_user, o.id IS NULL AS missing_order FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "missing_user",
+        "type": "bool",
+        "nullable": false
+      },
+      {
+        "name": "missing_order",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        true
+      ],
+      [
+        false,
+        true
+      ]
+    ]
+  },
+  {
+    "id": "join-left-distinct",
+    "source_kind": "synthetic",
+    "join_kind": "left",
+    "shape": "distinct",
+    "sql": "SELECT DISTINCT u.id AS user_id FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT DISTINCT u.id AS user_id FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ]
+  },
+  {
+    "id": "join-left-ordered-pagination",
+    "source_kind": "synthetic",
+    "join_kind": "left",
+    "shape": "ordered-pagination",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id ORDER BY user_id NULLS LAST, order_id NULLS LAST LIMIT $2 OFFSET $1;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id ORDER BY user_id NULLS LAST, order_id NULLS LAST LIMIT ?2 OFFSET ?1;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        12
+      ],
+      [
+        2,
+        null
+      ]
+    ]
+  },
+  {
+    "id": "join-left-qualified-wildcard",
+    "source_kind": "synthetic",
+    "join_kind": "left",
+    "shape": "qualified-wildcard",
+    "sql": "SELECT u.*, o.amount AS amount FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.*, o.amount AS amount FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        24,
+        "Ada",
+        5
+      ],
+      [
+        1,
+        24,
+        "Ada",
+        7
+      ],
+      [
+        2,
+        17,
+        "Bea",
+        null
+      ],
+      [
+        3,
+        38,
+        "Cy",
+        null
+      ]
+    ]
+  },
+  {
+    "id": "join-left-nested-outer",
+    "source_kind": "synthetic",
+    "join_kind": "left",
+    "shape": "nested-outer",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id, r.label AS region, $1 AS marker FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id LEFT JOIN regions AS r ON u.id = r.id AND r.id >= $2;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id, r.label AS region, ?1 AS marker FROM users AS u LEFT JOIN orders AS o ON u.id = o.user_id LEFT JOIN regions AS r ON u.id = r.id AND r.id >= ?2;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      3,
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "region",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11,
+        "North",
+        3
+      ],
+      [
+        1,
+        12,
+        "North",
+        3
+      ],
+      [
+        2,
+        null,
+        null,
+        3
+      ],
+      [
+        3,
+        null,
+        "West",
+        3
+      ]
+    ]
+  },
+  {
+    "id": "join-right-identity",
+    "source_kind": "synthetic",
+    "join_kind": "right",
+    "shape": "identity",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11
+      ],
+      [
+        1,
+        12
+      ],
+      [
+        null,
+        13
+      ]
+    ]
+  },
+  {
+    "id": "join-right-text-and-amount",
+    "source_kind": "synthetic",
+    "join_kind": "right",
+    "shape": "text-and-amount",
+    "sql": "SELECT u.name AS name, o.amount AS amount FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.name AS name, o.amount AS amount FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "Ada",
+        5
+      ],
+      [
+        "Ada",
+        7
+      ],
+      [
+        null,
+        9
+      ]
+    ]
+  },
+  {
+    "id": "join-right-post-join-filter",
+    "source_kind": "synthetic",
+    "join_kind": "right",
+    "shape": "post-join-filter",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id WHERE o.amount >= $1;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id WHERE o.amount >= ?1;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        12
+      ],
+      [
+        null,
+        13
+      ]
+    ]
+  },
+  {
+    "id": "join-right-coalesced",
+    "source_kind": "synthetic",
+    "join_kind": "right",
+    "shape": "coalesced",
+    "sql": "SELECT COALESCE(u.id, 0) AS user_id, COALESCE(o.amount, 0) AS amount FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT COALESCE(u.id, 0) AS user_id, COALESCE(o.amount, 0) AS amount FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        0,
+        9
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        7
+      ]
+    ]
+  },
+  {
+    "id": "join-right-anonymous-source-order",
+    "source_kind": "synthetic",
+    "join_kind": "right",
+    "shape": "anonymous-source-order",
+    "sql": "SELECT ? + COALESCE(u.id, 0) AS shifted, o.id AS order_id FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id AND o.amount >= ? WHERE COALESCE(u.age, 0) >= ?;",
+    "sqlite_sql": "SELECT ? + COALESCE(u.id, 0) AS shifted, o.id AS order_id FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id AND o.amount >= ? WHERE COALESCE(u.age, 0) >= ?;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      10,
+      7,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "shifted",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        11,
+        12
+      ]
+    ]
+  },
+  {
+    "id": "join-right-nullable-boolean",
+    "source_kind": "synthetic",
+    "join_kind": "right",
+    "shape": "nullable-boolean",
+    "sql": "SELECT u.id IS NULL AS missing_user, o.id IS NULL AS missing_order FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.id IS NULL AS missing_user, o.id IS NULL AS missing_order FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "missing_user",
+        "type": "bool",
+        "nullable": false
+      },
+      {
+        "name": "missing_order",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ],
+      [
+        true,
+        false
+      ]
+    ]
+  },
+  {
+    "id": "join-right-distinct",
+    "source_kind": "synthetic",
+    "join_kind": "right",
+    "shape": "distinct",
+    "sql": "SELECT DISTINCT u.id AS user_id FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT DISTINCT u.id AS user_id FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        null
+      ]
+    ]
+  },
+  {
+    "id": "join-right-ordered-pagination",
+    "source_kind": "synthetic",
+    "join_kind": "right",
+    "shape": "ordered-pagination",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id ORDER BY user_id NULLS LAST, order_id NULLS LAST LIMIT $2 OFFSET $1;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id ORDER BY user_id NULLS LAST, order_id NULLS LAST LIMIT ?2 OFFSET ?1;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        12
+      ],
+      [
+        null,
+        13
+      ]
+    ]
+  },
+  {
+    "id": "join-right-qualified-wildcard",
+    "source_kind": "synthetic",
+    "join_kind": "right",
+    "shape": "qualified-wildcard",
+    "sql": "SELECT u.*, o.amount AS amount FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.*, o.amount AS amount FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        24,
+        "Ada",
+        5
+      ],
+      [
+        1,
+        24,
+        "Ada",
+        7
+      ],
+      [
+        null,
+        null,
+        null,
+        9
+      ]
+    ]
+  },
+  {
+    "id": "join-right-nested-outer",
+    "source_kind": "synthetic",
+    "join_kind": "right",
+    "shape": "nested-outer",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id, r.label AS region, $1 AS marker FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id LEFT JOIN regions AS r ON u.id = r.id AND r.id >= $2;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id, r.label AS region, ?1 AS marker FROM users AS u RIGHT JOIN orders AS o ON u.id = o.user_id LEFT JOIN regions AS r ON u.id = r.id AND r.id >= ?2;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      3,
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "region",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11,
+        "North",
+        3
+      ],
+      [
+        1,
+        12,
+        "North",
+        3
+      ],
+      [
+        null,
+        13,
+        null,
+        3
+      ]
+    ]
+  },
+  {
+    "id": "join-full-identity",
+    "source_kind": "synthetic",
+    "join_kind": "full",
+    "shape": "identity",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11
+      ],
+      [
+        1,
+        12
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        3,
+        null
+      ],
+      [
+        null,
+        13
+      ]
+    ]
+  },
+  {
+    "id": "join-full-text-and-amount",
+    "source_kind": "synthetic",
+    "join_kind": "full",
+    "shape": "text-and-amount",
+    "sql": "SELECT u.name AS name, o.amount AS amount FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.name AS name, o.amount AS amount FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        "Ada",
+        5
+      ],
+      [
+        "Ada",
+        7
+      ],
+      [
+        "Bea",
+        null
+      ],
+      [
+        "Cy",
+        null
+      ],
+      [
+        null,
+        9
+      ]
+    ]
+  },
+  {
+    "id": "join-full-post-join-filter",
+    "source_kind": "synthetic",
+    "join_kind": "full",
+    "shape": "post-join-filter",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id WHERE o.amount >= $1;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id WHERE o.amount >= ?1;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        12
+      ],
+      [
+        null,
+        13
+      ]
+    ]
+  },
+  {
+    "id": "join-full-coalesced",
+    "source_kind": "synthetic",
+    "join_kind": "full",
+    "shape": "coalesced",
+    "sql": "SELECT COALESCE(u.id, 0) AS user_id, COALESCE(o.amount, 0) AS amount FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT COALESCE(u.id, 0) AS user_id, COALESCE(o.amount, 0) AS amount FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        0,
+        9
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ]
+    ]
+  },
+  {
+    "id": "join-full-anonymous-source-order",
+    "source_kind": "synthetic",
+    "join_kind": "full",
+    "shape": "anonymous-source-order",
+    "sql": "SELECT ? + COALESCE(u.id, 0) AS shifted, o.id AS order_id FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id AND o.amount >= ? WHERE COALESCE(u.age, 0) >= ?;",
+    "sqlite_sql": "SELECT ? + COALESCE(u.id, 0) AS shifted, o.id AS order_id FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id AND o.amount >= ? WHERE COALESCE(u.age, 0) >= ?;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      10,
+      7,
+      18
+    ],
+    "output_columns": [
+      {
+        "name": "shifted",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        11,
+        12
+      ],
+      [
+        13,
+        null
+      ]
+    ]
+  },
+  {
+    "id": "join-full-nullable-boolean",
+    "source_kind": "synthetic",
+    "join_kind": "full",
+    "shape": "nullable-boolean",
+    "sql": "SELECT u.id IS NULL AS missing_user, o.id IS NULL AS missing_order FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.id IS NULL AS missing_user, o.id IS NULL AS missing_order FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "missing_user",
+        "type": "bool",
+        "nullable": false
+      },
+      {
+        "name": "missing_order",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        false
+      ],
+      [
+        false,
+        true
+      ],
+      [
+        false,
+        true
+      ],
+      [
+        true,
+        false
+      ]
+    ]
+  },
+  {
+    "id": "join-full-distinct",
+    "source_kind": "synthetic",
+    "join_kind": "full",
+    "shape": "distinct",
+    "sql": "SELECT DISTINCT u.id AS user_id FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT DISTINCT u.id AS user_id FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        null
+      ]
+    ]
+  },
+  {
+    "id": "join-full-ordered-pagination",
+    "source_kind": "synthetic",
+    "join_kind": "full",
+    "shape": "ordered-pagination",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id ORDER BY user_id NULLS LAST, order_id NULLS LAST LIMIT $2 OFFSET $1;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id ORDER BY user_id NULLS LAST, order_id NULLS LAST LIMIT ?2 OFFSET ?1;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        12
+      ],
+      [
+        2,
+        null
+      ]
+    ]
+  },
+  {
+    "id": "join-full-qualified-wildcard",
+    "source_kind": "synthetic",
+    "join_kind": "full",
+    "shape": "qualified-wildcard",
+    "sql": "SELECT u.*, o.amount AS amount FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "sqlite_sql": "SELECT u.*, o.amount AS amount FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "age",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        24,
+        "Ada",
+        5
+      ],
+      [
+        1,
+        24,
+        "Ada",
+        7
+      ],
+      [
+        2,
+        17,
+        "Bea",
+        null
+      ],
+      [
+        3,
+        38,
+        "Cy",
+        null
+      ],
+      [
+        null,
+        null,
+        null,
+        9
+      ]
+    ]
+  },
+  {
+    "id": "join-full-nested-outer",
+    "source_kind": "synthetic",
+    "join_kind": "full",
+    "shape": "nested-outer",
+    "sql": "SELECT u.id AS user_id, o.id AS order_id, r.label AS region, $1 AS marker FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id LEFT JOIN regions AS r ON u.id = r.id AND r.id >= $2;",
+    "sqlite_sql": "SELECT u.id AS user_id, o.id AS order_id, r.label AS region, ?1 AS marker FROM users AS u FULL JOIN orders AS o ON u.id = o.user_id LEFT JOIN regions AS r ON u.id = r.id AND r.id >= ?2;",
+    "catalogFile": "fixtures/join_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      3,
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "user_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "order_id",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "region",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        11,
+        "North",
+        3
+      ],
+      [
+        1,
+        12,
+        "North",
+        3
+      ],
+      [
+        2,
+        null,
+        null,
+        3
+      ],
+      [
+        3,
+        null,
+        "West",
+        3
+      ],
+      [
+        null,
+        13,
+        null,
+        3
+      ]
+    ]
+  }
+]

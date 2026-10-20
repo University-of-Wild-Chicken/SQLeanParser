@@ -1,0 +1,562 @@
+[
+  {
+    "inputs": [
+      "smallint"
+    ],
+    "name": "abs",
+    "output": "smallint"
+  },
+  {
+    "inputs": [
+      "integer"
+    ],
+    "name": "abs",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "bigint"
+    ],
+    "name": "abs",
+    "output": "bigint"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "abs",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "real"
+    ],
+    "name": "abs",
+    "output": "real"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "abs",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "sign",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "sign",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "ceil",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "ceil",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "ceiling",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "ceiling",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "floor",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "floor",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "sqrt",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "sqrt",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "exp",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "exp",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "ln",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "ln",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "cbrt",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "degrees",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "radians",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "round",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "round",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric",
+      "integer"
+    ],
+    "name": "round",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "trunc",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "trunc",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric",
+      "integer"
+    ],
+    "name": "trunc",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "numeric"
+    ],
+    "name": "log",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "log",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric",
+      "numeric"
+    ],
+    "name": "log",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "numeric",
+      "numeric"
+    ],
+    "name": "power",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "double precision",
+      "double precision"
+    ],
+    "name": "power",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "numeric",
+      "numeric"
+    ],
+    "name": "div",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "smallint",
+      "smallint"
+    ],
+    "name": "mod",
+    "output": "smallint"
+  },
+  {
+    "inputs": [
+      "integer",
+      "integer"
+    ],
+    "name": "mod",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "bigint",
+      "bigint"
+    ],
+    "name": "mod",
+    "output": "bigint"
+  },
+  {
+    "inputs": [
+      "numeric",
+      "numeric"
+    ],
+    "name": "mod",
+    "output": "numeric"
+  },
+  {
+    "inputs": [
+      "text"
+    ],
+    "name": "lower",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text"
+    ],
+    "name": "upper",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text"
+    ],
+    "name": "length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "char"
+    ],
+    "name": "length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "bytea"
+    ],
+    "name": "length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "text"
+    ],
+    "name": "char_length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "char"
+    ],
+    "name": "char_length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "text"
+    ],
+    "name": "character_length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "char"
+    ],
+    "name": "character_length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "text"
+    ],
+    "name": "octet_length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "char"
+    ],
+    "name": "octet_length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "bytea"
+    ],
+    "name": "octet_length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "text"
+    ],
+    "name": "btrim",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text",
+      "text"
+    ],
+    "name": "btrim",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "bytea",
+      "bytea"
+    ],
+    "name": "btrim",
+    "output": "bytea"
+  },
+  {
+    "inputs": [
+      "text"
+    ],
+    "name": "ltrim",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text",
+      "text"
+    ],
+    "name": "ltrim",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "bytea",
+      "bytea"
+    ],
+    "name": "ltrim",
+    "output": "bytea"
+  },
+  {
+    "inputs": [
+      "text"
+    ],
+    "name": "rtrim",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text",
+      "text"
+    ],
+    "name": "rtrim",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "bytea",
+      "bytea"
+    ],
+    "name": "rtrim",
+    "output": "bytea"
+  },
+  {
+    "inputs": [
+      "text",
+      "text",
+      "text"
+    ],
+    "name": "replace",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text",
+      "integer"
+    ],
+    "name": "substr",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text",
+      "integer",
+      "integer"
+    ],
+    "name": "substr",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "bytea",
+      "integer"
+    ],
+    "name": "substr",
+    "output": "bytea"
+  },
+  {
+    "inputs": [
+      "bytea",
+      "integer",
+      "integer"
+    ],
+    "name": "substr",
+    "output": "bytea"
+  },
+  {
+    "inputs": [
+      "text",
+      "text"
+    ],
+    "name": "to_date",
+    "output": "date"
+  },
+  {
+    "inputs": [
+      "text",
+      "text"
+    ],
+    "name": "to_timestamp",
+    "output": "timestamp with time zone"
+  },
+  {
+    "inputs": [
+      "double precision"
+    ],
+    "name": "to_timestamp",
+    "output": "timestamp with time zone"
+  },
+  {
+    "inputs": [],
+    "name": "now",
+    "output": "timestamp with time zone"
+  },
+  {
+    "inputs": [],
+    "name": "transaction_timestamp",
+    "output": "timestamp with time zone"
+  },
+  {
+    "inputs": [],
+    "name": "statement_timestamp",
+    "output": "timestamp with time zone"
+  },
+  {
+    "inputs": [],
+    "name": "clock_timestamp",
+    "output": "timestamp with time zone"
+  },
+  {
+    "inputs": [],
+    "name": "pi",
+    "output": "double precision"
+  },
+  {
+    "inputs": [],
+    "name": "random",
+    "output": "double precision"
+  },
+  {
+    "inputs": [
+      "json"
+    ],
+    "name": "json_typeof",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "jsonb"
+    ],
+    "name": "jsonb_typeof",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "json"
+    ],
+    "name": "json_array_length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
+      "jsonb"
+    ],
+    "name": "jsonb_array_length",
+    "output": "integer"
+  }
+]

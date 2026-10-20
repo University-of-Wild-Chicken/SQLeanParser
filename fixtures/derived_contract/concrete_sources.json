@@ -1,0 +1,1513 @@
+{
+  "format_version": 1,
+  "factor": "derived_contract",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 47,
+    "sqlc": 3
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+          "sha256": "7fe202a74edec6ed9ab7a225ae3ccf09bd55ce15c0bd69441d9606a70ee5f873",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/postgres_fdw/sql/postgres_fdw.sql"
+        },
+        {
+          "path": "contrib/test_decoding/sql/slot.sql",
+          "sha256": "a7d5af2185afeb5e76d83d38132147303c55391614a52fd98496970d8151a8b5",
+          "local_path": "fixtures/factor_sources/sources/postgres/contrib/test_decoding/sql/slot.sql"
+        },
+        {
+          "path": "src/test/regress/sql/incremental_sort.sql",
+          "sha256": "866b444a2df58b04190b0ddad3e68083d8435dd2d4cd51f9182ab40bc6311b23",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/incremental_sort.sql"
+        },
+        {
+          "path": "src/test/regress/sql/inherit.sql",
+          "sha256": "e1ba3a62ce6f9ae762f624e75a93474102bb1dc458b80c202dbd3e662f22f021",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/inherit.sql"
+        },
+        {
+          "path": "src/test/regress/sql/join.sql",
+          "sha256": "426e69145b95ab27c49ede14006891a5558022023ed55c89b6ff8faa1d443fb3",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/join.sql"
+        },
+        {
+          "path": "src/test/regress/sql/partition_join.sql",
+          "sha256": "a1b80d95d2ce6bad8ab878cd393ce1d2c0931a74008c90acfcfdd8763a320570",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/partition_join.sql"
+        },
+        {
+          "path": "src/test/regress/sql/subselect.sql",
+          "sha256": "233a9f22e38ae691505d7fdfff51e8559e87c96b2b864490ac9e630442c2dc91",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/subselect.sql"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/select_star/postgresql/pgx/v5/query.sql",
+          "sha256": "5df6c1f0261decccd68aa7fc81a292ad2f51d61d7673c9d5b81ca9cdf448ba8b",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/select_star/postgresql/pgx/v5/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/star_expansion_core/postgresql/query.sql",
+          "sha256": "3be5db0ef702063fb2514b70025c41d553843b97469cce008c8cffa038f6db58",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/star_expansion_core/postgresql/query.sql"
+        },
+        {
+          "path": "internal/endtoend/testdata/subquery_calculated_column/postgresql/pgx/v5/query.sql",
+          "sha256": "3ac380a0acb00ed456855981661d0eabc0bb801b44afb36a0affe5793c619d0b",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/subquery_calculated_column/postgresql/pgx/v5/query.sql"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/select_star/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 71,
+        "end": 110,
+        "statement_index": 1
+      },
+      "sql_sha256": "a0e96bc951e4ee8208ffcc3d587e6a10d26f308170653f48542b53fea12f24a0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/star_expansion_core/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 217,
+        "end": 255,
+        "statement_index": 3
+      },
+      "sql_sha256": "a8a37fe607e72bfbc5062afeab20ee7c944834a842a52702c96ff6fc76fdc556",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "sub",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/subquery_calculated_column/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 34,
+        "end": 86,
+        "statement_index": 0
+      },
+      "sql_sha256": "822bf6dfeb5886d31cf0f52aac1ce24275df8bafeec86a8b382ac03ddc293461",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "f",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 21708,
+        "end": 21837,
+        "statement_index": 173
+      },
+      "sql_sha256": "3b644ca92a0034383d8770ed0225a361a0d06de61f2c00f3d8a5ab4ddea1e893",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22172,
+        "end": 22338,
+        "statement_index": 175
+      },
+      "sql_sha256": "98a32799a22712340decf50c9228175fe88942e39aec64f41332ed58ea609c0f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 23528,
+        "end": 23706,
+        "statement_index": 183
+      },
+      "sql_sha256": "ef1de222de67a801271a8088dff2076ff9459a78cd6e1aa66eca2d24ae20e161",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 23892,
+        "end": 24047,
+        "statement_index": 185
+      },
+      "sql_sha256": "09f33c890bace80f4d3516e468d58206d010a25f0edadea9e4e729a1668e68cb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24415,
+        "end": 24662,
+        "statement_index": 187
+      },
+      "sql_sha256": "7baaa45188cc807ffe078c985b2d921230e1e37b2e4452b9fcd411f679f60748",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "ss",
+            "columns": [
+              "a",
+              "b"
+            ],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 25096,
+        "end": 25440,
+        "statement_index": 189
+      },
+      "sql_sha256": "c36240134eeacd2c32f5a54fac1bf08c9b18f1e2f40e68b6dff83043261b3bb9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "ss",
+            "columns": [
+              "a",
+              "b"
+            ],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          },
+          {
+            "alias": "t3",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 35601,
+        "end": 35729,
+        "statement_index": 247
+      },
+      "sql_sha256": "a77bc68be66868176d3edb80b0d39663dd98c2c829f3e7f2b4b8f3b0ab9c61bb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "q",
+            "columns": [
+              "a"
+            ],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 35999,
+        "end": 36188,
+        "statement_index": 249
+      },
+      "sql_sha256": "98941591289b6a38c9ea74af138fd65ebf4231631848aa4c1667a2aea54c34cd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "q",
+            "columns": [
+              "a",
+              "b",
+              "c"
+            ],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 129949,
+        "end": 130097,
+        "statement_index": 1416
+      },
+      "sql_sha256": "c6f6543029952c93653399e5025e4a9dd72c8d40964eed70f430567313b66777",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/test_decoding/sql/slot.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4264,
+        "end": 4621,
+        "statement_index": 48
+      },
+      "sql_sha256": "1ab5ab89d42bed71d3021eae272994a86f26182da5511f106b813648cf3ca77b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "o",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/test_decoding/sql/slot.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7606,
+        "end": 7892,
+        "statement_index": 73
+      },
+      "sql_sha256": "06bfcae7d86e05bd240446d299749bea79638bc12238b0335345dc693399856a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "o",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/incremental_sort.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3898,
+        "end": 3966,
+        "statement_index": 12
+      },
+      "sql_sha256": "14fafddd4ce0140a83052224ca7bb3a95f2a295552db246838cdc1c28878a053",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/incremental_sort.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4846,
+        "end": 4914,
+        "statement_index": 25
+      },
+      "sql_sha256": "92d1fde4229732b1b874e9ca75d781b18c6ddecae8e397998bd873c18e7ccef5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/incremental_sort.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6054,
+        "end": 6121,
+        "statement_index": 35
+      },
+      "sql_sha256": "821f57b734d41516eb09ba5b82d0a13c1d80e66669f9204ca7adae275eda4c7a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/incremental_sort.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6572,
+        "end": 6694,
+        "statement_index": 42
+      },
+      "sql_sha256": "99324744787a2b3a953cb6c3e2c5d699a8421b9113c4905652ed6677ae43b581",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "v",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/inherit.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22208,
+        "end": 22283,
+        "statement_index": 329
+      },
+      "sql_sha256": "01ff0009c4b5f3aae14d96a5a2531bf3e47f0181b1fe0c13beabe278c87930c2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "ss",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5635,
+        "end": 5720,
+        "statement_index": 78
+      },
+      "sql_sha256": "85a06811cae729258eefa3854ce1258f95b354b5b08dbfd3cf1ddcac69ab1dd2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s3",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5722,
+        "end": 5806,
+        "statement_index": 79
+      },
+      "sql_sha256": "ce1b9b5294b337bf80170551ef6c3162a8aaabaa997741d512137cc02af52da8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s3",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5808,
+        "end": 5892,
+        "statement_index": 80
+      },
+      "sql_sha256": "352182a21e5756f105084fea298eb5ed61f297e0f08c155b68b562f70e35a9bb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s3",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5996,
+        "end": 6126,
+        "statement_index": 81
+      },
+      "sql_sha256": "8735e495869b3860095c7b8b91f00073cfd6845a46d6e3c2c7a314a9189f41c9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s3",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6128,
+        "end": 6257,
+        "statement_index": 82
+      },
+      "sql_sha256": "1f61a365d6abfa90d133c38dd5663a9f833e40f8212fc23e3e14548d63684ebe",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s3",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6259,
+        "end": 6388,
+        "statement_index": 83
+      },
+      "sql_sha256": "3995d58f2f7887dda6be268b74a42bee144ae2b1ba5a3aa11af573c0d32b5743",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s3",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6390,
+        "end": 6589,
+        "statement_index": 84
+      },
+      "sql_sha256": "1268653afec790fe838a0645f6b9261f722b23dde38c7dd3cfbbad1beffea182",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s3",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6591,
+        "end": 6788,
+        "statement_index": 85
+      },
+      "sql_sha256": "1341f1131f070fc52401e79e6d05547b4090484038370e413186f50215b5ad46",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s3",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6790,
+        "end": 6994,
+        "statement_index": 86
+      },
+      "sql_sha256": "ed0b12de01ab61d90c2228d5909b5d98148ff0564a4b2d52f926ae22fa6b6952",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "ss2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          },
+          {
+            "alias": "s3",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6996,
+        "end": 7211,
+        "statement_index": 87
+      },
+      "sql_sha256": "949ae2a2fbd0676c6cdffca5dda63585140dbeb44aa73b00cfe45b715ed930e4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "ss2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          },
+          {
+            "alias": "s3",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7263,
+        "end": 7386,
+        "statement_index": 88
+      },
+      "sql_sha256": "53d4d92ae9098d000b435e9a5b393ee37d07bee6bef390617da2d85c344889cf",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "s2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 10104,
+        "end": 10226,
+        "statement_index": 121
+      },
+      "sql_sha256": "a70d73af5dc64ca05ac0f3625e059282d84655cd2df3f579d021c331e7ebf0e3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "ss",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14695,
+        "end": 14846,
+        "statement_index": 142
+      },
+      "sql_sha256": "8c7de82be503b1624abad05cbd9bf50f21f75026fa9760e288a52163d072f9a6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "j2_tbl",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20032,
+        "end": 20238,
+        "statement_index": 222
+      },
+      "sql_sha256": "3c6ff1d44cac98517002e80a38505fecf595fae524f20719ae5050c7e1b77ac9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "derived_sources": [
+          {
+            "alias": "d",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22744,
+        "end": 23055,
+        "statement_index": 252
+      },
+      "sql_sha256": "4a7915af5e6d3d7bff6ae2f2c2c83da2158d3fc0ff575681a3bf8d3dee891456",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "derived_sources": [
+          {
+            "alias": "yya",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 29739,
+        "end": 30176,
+        "statement_index": 313
+      },
+      "sql_sha256": "69b5d655d06f9f80d10405c1f6051a44daa70773af96e177e6d125021872b6a1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "derived_sources": [
+          {
+            "alias": "sub1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "sub2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "sub3",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          },
+          {
+            "alias": "sub4",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          },
+          {
+            "alias": "sub5",
+            "columns": [],
+            "query_depth": 3,
+            "lateral": false
+          },
+          {
+            "alias": "sub6",
+            "columns": [],
+            "query_depth": 3,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 30219,
+        "end": 30646,
+        "statement_index": 314
+      },
+      "sql_sha256": "581c65ec48627b14d941fe0a4b7edf78d99d58c34774e45b1cca1b74d3ff2bb0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "derived_sources": [
+          {
+            "alias": "sub1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "sub2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "sub3",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          },
+          {
+            "alias": "sub4",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          },
+          {
+            "alias": "sub5",
+            "columns": [],
+            "query_depth": 3,
+            "lateral": false
+          },
+          {
+            "alias": "sub6",
+            "columns": [],
+            "query_depth": 3,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 30956,
+        "end": 31167,
+        "statement_index": 316
+      },
+      "sql_sha256": "df181a1e0a1de8165fdcff116a8c4d038210332e73473ad148c764ea626bd712",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "derived_sources": [
+          {
+            "alias": "ss1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "ss2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 32222,
+        "end": 32515,
+        "statement_index": 330
+      },
+      "sql_sha256": "ffe8c798a01238c7ec5ed49baedf3925d0637c0768bc15b5ff8f7d46c3f6311f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "ss2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "ss1",
+            "columns": [],
+            "query_depth": 2,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 46336,
+        "end": 46498,
+        "statement_index": 407
+      },
+      "sql_sha256": "a0a64ebada98ceff3f1fbdf7a6bba181e380e5340816cf54fdd031cec345443c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "derived_sources": [
+          {
+            "alias": "ss",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 58520,
+        "end": 58677,
+        "statement_index": 456
+      },
+      "sql_sha256": "2a09d3a35d577c1dbd5e8f99f46ba6ff65b1648d00d9420d42d7a273c1eb9b4f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "derived_sources": [
+          {
+            "alias": "xx",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "yy",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 72438,
+        "end": 72549,
+        "statement_index": 532
+      },
+      "sql_sha256": "bedf6dc78dbfac9d3d32f3b93064bc0638f42fbfebf143688642a7ba20629a41",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "ss",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 73793,
+        "end": 73951,
+        "statement_index": 549
+      },
+      "sql_sha256": "8681464b2a62e5aff7214293eb75d91b00b44d9d13ae9efaf40fa705d04e82e5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "derived_sources": [
+          {
+            "alias": "ss1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "ss2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 75981,
+        "end": 76112,
+        "statement_index": 564
+      },
+      "sql_sha256": "1c5c1b4d19f62859eb162e656ac6231c4a4b26e277201f78166675a582f01a77",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "s",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 78672,
+        "end": 78790,
+        "statement_index": 586
+      },
+      "sql_sha256": "d6f9d1527d7f4c12827005ff9e307bf7725a5f8dd4ad73766615e6fc7da554f0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "ss",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/partition_join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2577,
+        "end": 2794,
+        "statement_index": 28
+      },
+      "sql_sha256": "cbae1abdb3f0630bb2ec6922304b2da18b987cfd237c28cf8a09e5c8d6373784",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/partition_join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3412,
+        "end": 3583,
+        "statement_index": 32
+      },
+      "sql_sha256": "9d44c4c7354704767804ca1bc49f84ffcfb4f205a09be0a0f809f46daab30cf5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/partition_join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3870,
+        "end": 4053,
+        "statement_index": 34
+      },
+      "sql_sha256": "4a2fe11fed4f3bbdade6b921e344807d4e19df089e809a650a1edaf3179ba5b0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "t1",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          },
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/partition_join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7408,
+        "end": 7577,
+        "statement_index": 59
+      },
+      "sql_sha256": "5b7c5c65f811e9dbf3519b62cf2a1da2f48760126e7c422994a435f9ab8c8d09",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "derived_sources": [
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/partition_join.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8886,
+        "end": 9120,
+        "statement_index": 75
+      },
+      "sql_sha256": "bd1a1956d193268308e75a2f5ec52fc39f7494ca5e2e2193fa8cc52e526d1164",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "derived_sources": [
+          {
+            "alias": "t2",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/subselect.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 212,
+        "end": 245,
+        "statement_index": 3
+      },
+      "sql_sha256": "f45db02e556d0703c299045a1a1e4b722ff52e552c65fe2424cbc10f3a24236a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "derived_sources": [
+          {
+            "alias": "ss",
+            "columns": [],
+            "query_depth": 1,
+            "lateral": false
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -34,7 +34,7 @@ FORBIDDEN = {
 }
 # These executable roots all declare the global `main`. They must be imported
 # in separate environments while still participating in the full source audit.
-ENTRYPOINT_MODULES = ("Main", "TestMain", "ScopeContractMain")
+ENTRYPOINT_MODULES = ("Main", "TestMain", "ScopeContractMain", "PostgresGrammarMain")
 
 
 @dataclass(frozen=True)
@@ -243,6 +243,15 @@ def check_specification_independence(root: Path) -> None:
                              "syntax-only boundary: " + ", ".join(forbidden))
         print(f"PASS: ScopeContract.{domain} import closure is independent of parser, "
               "renderer, and validators", flush=True)
+    initial = "SQLean.PostgresGrammar.Spec"
+    if root.joinpath(*initial.split(".")).with_suffix(".lean").is_file():
+        allowed = {initial, "SQLean.PostgresGrammar.Syntax", "Std"}
+        forbidden = sorted(local_import_closure(root, initial) - allowed)
+        if forbidden:
+            raise ValueError("PostgresGrammar.Spec imports modules outside its reviewed "
+                             "syntax-only boundary: " + ", ".join(forbidden))
+        print("PASS: PostgresGrammar.Spec is independent of lexer, LR tables, and parser",
+              flush=True)
 
 
 def check_sources(root: Path) -> list[str]:

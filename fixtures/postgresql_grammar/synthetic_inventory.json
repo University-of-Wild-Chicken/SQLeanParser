@@ -1,0 +1,1012 @@
+{
+  "upstream_commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+  "postgresql_version": "16.15",
+  "target_per_family": 50,
+  "statement_families": 125,
+  "examples": 6156,
+  "structural_templates": 6107,
+  "families_meeting_target": 123,
+  "boundary": "Grammar-derived syntax examples only. C semantic actions, catalog/type validity, execution, and universal renderer semantics are not established.",
+  "families": [
+    {
+      "grammar_family": "TransactionStmtLegacy",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterEventTrigStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterCollationStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterDatabaseStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterDatabaseSetStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterDefaultPrivilegesStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterDomainStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterEnumStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterExtensionStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterExtensionContentsStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterFdwStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterForeignServerStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterFunctionStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterGroupStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterObjectDependsStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterObjectSchemaStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterOwnerStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterOperatorStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterTypeStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterPolicyStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterSeqStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterSystemStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterTableStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterTblSpcStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterCompositeTypeStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterPublicationStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterRoleSetStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterRoleStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterSubscriptionStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterStatsStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterTSConfigurationStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterTSDictionaryStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterUserMappingStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AnalyzeStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CallStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CheckPointStmt",
+      "target": 50,
+      "examples": 1,
+      "structural_templates": 1,
+      "shortfall": 49,
+      "note": "Finite generator found fewer distinct nontrivia spellings; keyword-case/comment/whitespace padding is excluded."
+    },
+    {
+      "grammar_family": "ClosePortalStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "ClusterStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CommentStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "ConstraintsSetStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CopyStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateAmStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateAsStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateAssertionStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateCastStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateConversionStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateDomainStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateExtensionStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateFdwStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateForeignServerStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateForeignTableStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateFunctionStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateGroupStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateMatViewStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateOpClassStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateOpFamilyStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreatePublicationStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "AlterOpFamilyStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreatePolicyStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreatePLangStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateSchemaStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateSeqStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateSubscriptionStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateStatsStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateTableSpaceStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateTransformStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateTrigStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateEventTrigStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateRoleStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateUserStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreateUserMappingStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "CreatedbStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DeallocateStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DeclareCursorStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DefineStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DeleteStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DiscardStmt",
+      "target": 50,
+      "examples": 5,
+      "structural_templates": 5,
+      "shortfall": 45,
+      "note": "Finite generator found fewer distinct nontrivia spellings; keyword-case/comment/whitespace padding is excluded."
+    },
+    {
+      "grammar_family": "DoStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropCastStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropOpClassStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropOpFamilyStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropOwnedStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropSubscriptionStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropTableSpaceStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropTransformStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropRoleStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropUserMappingStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "DropdbStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "ExecuteStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "ExplainStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "FetchStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "GrantStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "GrantRoleStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "ImportForeignSchemaStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "IndexStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "InsertStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "ListenStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "RefreshMatViewStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "LoadStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 1,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "LockStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "MergeStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "NotifyStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "PrepareStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "ReassignOwnedStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "ReindexStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "RemoveAggrStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "RemoveFuncStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "RemoveOperStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "RenameStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "RevokeStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "RevokeRoleStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "RuleStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "SecLabelStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "SelectStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "TransactionStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "TruncateStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "UnlistenStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "UpdateStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "VacuumStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "VariableResetStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "VariableSetStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "VariableShowStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    },
+    {
+      "grammar_family": "ViewStmt",
+      "target": 50,
+      "examples": 50,
+      "structural_templates": 50,
+      "shortfall": 0,
+      "note": null
+    }
+  ]
+}

@@ -28,6 +28,22 @@ import Tests.ScopeContract
 import Tests.ScopeContractTrust
 import Tests.RenderContract
 import Tests.DialectRendering
+import Tests.PaginationRendering
+import Tests.PaginationCorpus
+import Tests.ExtendedTypeRendering
+import Tests.ExtendedTypeCorpus
+import Tests.PostgresGrammar
+import Tests.PostgresLexer
+import Tests.ScalarFormCorpus
+import Tests.LockingRendering
+import Tests.LockingContract
+import Tests.ParserDispatch
+import Tests.JoinContract
+import Tests.JoinPreservation
+import Tests.MergedJoinPreservation
+import Tests.MergedJoinContract
+import Tests.DerivedContract
+import Tests.DerivedPreservation
 
 namespace SQLean.Tests
 
@@ -84,6 +100,44 @@ def run : IO Unit := do
   IO.println s!"PASS: {render} SELECT rendering, exact round-trip, binding-map, and corpus checks"
   let dialect ← dialectRenderingTests
   IO.println s!"PASS: {dialect} SQLite and PostgreSQL dialect rendering checks"
+  let paginationRender ← paginationRenderingTests
+  IO.println s!"PASS: {paginationRender} pagination rendering and parameter boundary checks"
+  let paginationCorpus ← paginationCorpusTests
+  IO.println s!"PASS: {paginationCorpus} synthetic/full-query and concrete/bounds-only pagination certificates"
+  let extendedTypes ← extendedTypeRenderingTests
+  IO.println s!"PASS: {extendedTypes} extended type syntax and rendering checks"
+  let extendedTypeCorpus ← extendedTypeCorpusTests
+  IO.println s!"PASS: {extendedTypeCorpus} exact-type synthetic SELECT certificates and rendering checks"
+  let scalarForms ← scalarFormCorpusTests
+  IO.println s!"PASS: {scalarForms} function/conditional full SELECT certificates and rendering checks"
+  let scalarBoundaries ← scalarFormBoundaryTests
+  IO.println s!"PASS: {scalarBoundaries} scalar signatures, parameter order, and syntax boundaries"
+  let dispatch ← parserDispatchTests
+  IO.println s!"PASS: {dispatch} default-parser special-form dispatch checks"
+  let lockingRender ← lockingRenderingTests
+  IO.println s!"PASS: {lockingRender} row-locking rendering and parameter-order checks"
+  let lockingContract ← lockingContractTests
+  IO.println s!"PASS: {lockingContract} row-locking validity and scope boundary checks"
+  let lockingCorpus ← lockingCorpusTests
+  IO.println s!"PASS: {lockingCorpus} row-locking full-query and renderer certificates"
+  let joinContract ← joinContractTests
+  IO.println s!"PASS: {joinContract} independent JOIN scope, nullability, and parameter checks"
+  let joinCorpus ← joinCorpusTests
+  IO.println s!"PASS: {joinCorpus} JOIN full-query and renderer certificates"
+  let mergedJoinContract ← mergedJoinContractTests
+  IO.println s!"PASS: {mergedJoinContract} USING/NATURAL namespace, type, and output-order checks"
+  let usingCorpus ← usingCorpusTests
+  IO.println s!"PASS: {usingCorpus} USING full-query and renderer certificates"
+  let naturalCorpus ← naturalCorpusTests
+  IO.println s!"PASS: {naturalCorpus} NATURAL full-query and renderer certificates"
+  let derivedContract ← derivedContractTests
+  IO.println s!"PASS: {derivedContract} nested derived-source scope and parameter checks"
+  let derivedCorpus ← derivedCorpusTests
+  IO.println s!"PASS: {derivedCorpus} derived-source full-query and renderer certificates"
+  let pgLexical ← postgresLexerTests
+  IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
+  let pgGrammar ← postgresGrammarTests
+  IO.println s!"PASS: {pgGrammar} PostgreSQL grammar derivations and parser boundary checks"
   ScopeContract.run
   IO.println "All tests passed. Lean proof examples compiled successfully."
 

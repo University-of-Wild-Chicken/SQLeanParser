@@ -1,0 +1,14 @@
+{
+  "tables": [
+    {
+      "name": "page_rows",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        }
+      ]
+    }
+  ]
+}

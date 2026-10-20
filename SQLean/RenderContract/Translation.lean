@@ -29,6 +29,31 @@ mutual
     | .isNull arg negated => .isNull (translateExpr arg) negated
     | .pattern arg pattern insensitive => .pattern (translateExpr arg) (translateExpr pattern) insensitive
     | .cast arg target => .cast (translateExpr arg) target
+    | .call name args => .call name
+        (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          translateExpr arg.val)
+    | .coalesce args => .coalesce
+        (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          translateExpr arg.val)
+    | .greatest args => .greatest
+        (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          translateExpr arg.val)
+    | .least args => .least
+        (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          translateExpr arg.val)
+    | .nullIf left right => .nullIf (translateExpr left) (translateExpr right)
+    | .caseExpr operand branches otherwise => .caseExpr
+        (match _h : operand with | none => none | some arg => some (translateExpr arg))
+        (branches.attach.map fun (branch : {b : Advanced.Expr × Advanced.Expr // b ∈ branches}) =>
+          have : sizeOf branch.val < sizeOf branches := List.sizeOf_lt_of_mem branch.property
+          have : sizeOf branch.val.1 < sizeOf branch.val := by cases branch.val; simp; omega
+          have : sizeOf branch.val.2 < sizeOf branch.val := by cases branch.val; simp; omega
+          (translateExpr branch.val.1, translateExpr branch.val.2))
+        (match _h : otherwise with | none => none | some arg => some (translateExpr arg))
     | .filteredAggregate aggregate predicate => .filteredAggregate (translateExpr aggregate) (translateExpr predicate)
     | .inList arg values => .inList (translateExpr arg)
         (values.attach.map fun (value : {v : Advanced.Expr // v ∈ values}) =>
@@ -96,7 +121,8 @@ mutual
   decreasing_by all_goals (simp_all <;> omega)
 
   /-- Parameter-only AST translation. CTE order, nested query ownership, aliases,
-  literal contents, modifiers, join conditions and all flags are preserved. -/
+  literal contents, modifiers, join conditions, locking clauses and all flags
+  are preserved. Lock targets contain no parameter occurrences. -/
   def translateParameters (query : Advanced.Query) : Advanced.Query :=
     { query with
       body := translateQueryBody query.body
@@ -105,7 +131,11 @@ mutual
         translateCTE cte.val
       orderBy := query.orderBy.attach.map fun (order : {o : Advanced.OrderBy // o ∈ query.orderBy}) =>
         have : sizeOf order.val < sizeOf query.orderBy := List.sizeOf_lt_of_mem order.property
-        translateOrderBy order.val }
+        translateOrderBy order.val
+      limit := match _h : query.limit with | none => none | some expr => some (translateExpr expr)
+      offset := match _h : query.offset with | none => none | some expr => some (translateExpr expr)
+      locking := query.locking
+      offsetFirst := query.offsetFirst }
   termination_by sizeOf query
   decreasing_by all_goals cases query; simp_all; omega
 
@@ -120,5 +150,15 @@ end
 
 @[simp] theorem translateParameter_anonymous (ordinal : Nat) :
     translateParameter (.anonymous ordinal) = .numbered ordinal := rfl
+
+/-- Lock strengths, target order, duplicate targets, and wait policies are
+retained exactly by parameter translation, independently of admissibility. -/
+@[simp] theorem translateParameters_locking (query : Advanced.Query) :
+    (translateParameters query).locking = query.locking := by
+  rw [translateParameters]
+
+@[simp] theorem translateParameters_offsetFirst (query : Advanced.Query) :
+    (translateParameters query).offsetFirst = query.offsetFirst := by
+  rw [translateParameters]
 
 end SQLean.RenderContract

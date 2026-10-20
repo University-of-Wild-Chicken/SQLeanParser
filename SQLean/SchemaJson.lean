@@ -53,18 +53,16 @@ private def namesJson (json : Lean.Json) : Except String (List Name) := do
 private def catalogColumn (json : Lean.Json) : Except String Column := do
   let name ← (← json.getObjVal? "name").getStr?
   let typeName ← (← json.getObjVal? "type").getStr?
-  let type : DataType ← match typeName with
-    | "int" | "integer" | "int32" => pure ⟨.int, []⟩
-    | "bigint" | "int64" => pure ⟨.bigInt, []⟩
-    | "text" => pure ⟨.text, []⟩
-    | "bool" | "boolean" => pure ⟨.bool, []⟩
-    | "real" => pure ⟨.real, []⟩
-    | "double" | "double precision" => pure ⟨.doublePrecision, []⟩
-    | "numeric" | "decimal" => pure ⟨.numeric, []⟩
-    | "varchar" => pure ⟨.varchar, []⟩
-    | _ => throw s!"unknown SQL type '{typeName}'"
+  let typeName := match typeName with
+    | "int32" => "INTEGER" | "int64" => "BIGINT"
+    | "float32" => "REAL" | "float64" | "double" => "DOUBLE PRECISION"
+    | name => name
+  let type ← (parseDataType typeName).mapError toString
   let modifiers ← match optionalJson json "modifiers" with
-    | none => pure [] | some value => (← value.getArr?).toList.mapM Lean.Json.getNat?
+    | none => pure type.modifiers
+    | some value =>
+      if !type.modifiers.isEmpty then throw "type modifiers must be supplied in the type name or modifiers field, not both"
+      (← value.getArr?).toList.mapM Lean.Json.getNat?
   let type := { type with modifiers }
   let nullable ← match optionalJson json "nullable" with
     | none => pure false | some value => value.getBool?
@@ -104,15 +102,8 @@ def parseCatalogJson (source : String) : Except String Catalog := do
 /-- Comma-separated parameter type families in positional order. A `?` suffix
 permits NULL parameter values, for example `int,text?`. -/
 def parseParameterTypes (source : String) : Except String ParameterEnv := do
-  if source.isEmpty then return []
-  (source.splitOn ",").zipIdx.mapM fun (name, index) => do
-    let name := name.trimAscii.toString
-    let nullable := name.endsWith "?"
-    let name := if nullable then name.dropEnd 1 |>.toString else name
-    let type ← match name with
-      | "int" => pure SqlType.int | "text" => pure SqlType.text
-      | "bool" => pure SqlType.bool | "real" => pure SqlType.real
-      | _ => throw s!"unknown parameter type '{name}'"
-    pure (index + 1, if nullable then type.asNullable else type)
+  let declarations ← (parseParameterDeclarations source).mapError toString
+  pure (declarations.zipIdx.map fun ((type, nullable), index) =>
+    (index + 1, if nullable then type.sqlType.asNullable else type.sqlType))
 
 end SQLean.Advanced

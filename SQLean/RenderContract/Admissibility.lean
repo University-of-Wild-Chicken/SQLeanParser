@@ -53,15 +53,18 @@ def numericLexeme (raw : String) : Bool :=
 def checkDataType (type : DataType) : Except Failure Unit :=
   match type.name, type.modifiers with
   | _, [] => pure ()
-  | .varchar, [n] =>
+  | .varchar, [n] | .char, [n] =>
       if 0 < n && n ≤ 10485760 then pure ()
-      else invalid "representation.type-modifiers" "VARCHAR length must be between 1 and 10485760"
+      else invalid "representation.type-modifiers" "character length must be between 1 and 10485760"
   | .numeric, [p] =>
       if 0 < p && p ≤ 1000 then pure ()
       else invalid "representation.type-modifiers" "NUMERIC precision must be between 1 and 1000"
   | .numeric, [p, s] =>
       if 0 < p && p ≤ 1000 && s ≤ 1000 then pure ()
       else invalid "representation.type-modifiers" "NUMERIC precision/scale exceeds this profile's range"
+  | .time, [p] | .timeTZ, [p] | .timestamp, [p] | .timestampTZ, [p] | .interval, [p] =>
+      if p ≤ 6 then pure ()
+      else invalid "representation.type-modifiers" "fractional-second precision must be between 0 and 6"
   | _, _ => invalid "representation.type-modifiers" "invalid modifiers for this type"
 
 structure Footprint where
@@ -100,6 +103,30 @@ mutual
         combine [inspectExpr left, inspectExpr right]
     | .unary _ arg | .aggregate _ arg _ | .isNull arg _ => combine [inspectExpr arg]
     | .cast arg type => checkDataType type; combine [inspectExpr arg]
+    | .call name args =>
+        if name.isEmpty || name.length > 3 then
+          invalid "representation.function-name" "function names require one to three nonempty components"
+        else
+          checkNames name
+          combine (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
+            have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+            inspectExpr arg.val)
+    | .coalesce args | .greatest args | .least args =>
+        if args.isEmpty then invalid "representation.conditional-args" "conditional expression requires arguments"
+        else combine (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          inspectExpr arg.val)
+    | .nullIf left right => combine [inspectExpr left, inspectExpr right]
+    | .caseExpr operand branches otherwise =>
+        if branches.isEmpty then invalid "representation.case-branches" "CASE requires at least one WHEN branch"
+        else combine (
+          (match _h : operand with | none => [] | some arg => [inspectExpr arg]) ++
+          branches.attach.flatMap (fun (branch : {b : Advanced.Expr × Advanced.Expr // b ∈ branches}) =>
+            have : sizeOf branch.val < sizeOf branches := List.sizeOf_lt_of_mem branch.property
+            have : sizeOf branch.val.1 < sizeOf branch.val := by cases branch.val; simp; omega
+            have : sizeOf branch.val.2 < sizeOf branch.val := by cases branch.val; simp; omega
+            [inspectExpr branch.val.1, inspectExpr branch.val.2]) ++
+          (match _h : otherwise with | none => [] | some arg => [inspectExpr arg]))
     | .filteredAggregate aggregate predicate =>
         match _h : aggregate with
         | .countAll | .aggregate .. => combine [inspectExpr aggregate, inspectExpr predicate]
@@ -174,7 +201,10 @@ mutual
   decreasing_by all_goals cases select; simp_all; omega
 
   def inspectQuery (query : Advanced.Query) : Except Failure Footprint := do
-    if query.recursive && query.ctes.isEmpty then
+    query.locking.forM fun clause => checkNames clause.targets
+    if query.offsetFirst && (query.limit.isNone || query.offset.isNone) then
+      invalid "representation.pagination-order" "OFFSET-first layout requires both OFFSET and LIMIT"
+    else if query.recursive && query.ctes.isEmpty then
       invalid "representation.recursive" "recursive marker requires at least one CTE"
     else
       combine (
@@ -190,7 +220,13 @@ mutual
         (query.orderBy.attach.map fun (order : {o : Advanced.OrderBy // o ∈ query.orderBy}) =>
           have : sizeOf order.val < sizeOf query.orderBy := List.sizeOf_lt_of_mem order.property
           have : sizeOf order.val.expr < sizeOf order.val := by cases order.val; simp; omega
-          inspectExpr order.val.expr))
+          inspectExpr order.val.expr) ++
+        (if query.offsetFirst then
+          [match _h : query.offset with | none => leaf | some expr => inspectExpr expr,
+           match _h : query.limit with | none => leaf | some expr => inspectExpr expr]
+         else
+          [match _h : query.limit with | none => leaf | some expr => inspectExpr expr,
+           match _h : query.offset with | none => leaf | some expr => inspectExpr expr]))
   termination_by sizeOf query
   decreasing_by all_goals cases query; simp_all; omega
 end

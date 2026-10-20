@@ -1,0 +1,426 @@
+{
+  "upstream_commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+  "postgresql_version": "16.15",
+  "bison_version": "3.8.2",
+  "counts": {
+    "production_entries": 3285,
+    "states": 6223,
+    "distinct_shift_rows": 1794,
+    "deduplicated_shift_entries": 76118,
+    "goto_entries": 15470,
+    "generated_modules": 82
+  },
+  "files": [
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions000.lean",
+      "sha256": "c114d9a25af133a53271ccf7620e914ff3d4e7673a47d88ea56410eac4e02d3c",
+      "bytes": 5567
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions001.lean",
+      "sha256": "8889d2c46e110c56338146bb7b1bf92603d32e6c050aa5650325b267ddd49c35",
+      "bytes": 8507
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions002.lean",
+      "sha256": "6f82c1ed5ae9d2c93a4e3e30b3a101e4547af243a8904414d61216a1d9004a2a",
+      "bytes": 13060
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions003.lean",
+      "sha256": "dd9270d5d729f83b2cfb6cdc0fe75afee606e53b509bc75e224842dca2fc1801",
+      "bytes": 10455
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions004.lean",
+      "sha256": "1c3a97fa083ed61d4f222b36944b743146a439354108062c3f8d7dffa8521c5d",
+      "bytes": 10173
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions005.lean",
+      "sha256": "238f3f92c3946cfb84d1146783679c7ff8a873d769f1e2405e950dae68aa0ae3",
+      "bytes": 13193
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions006.lean",
+      "sha256": "74addf214a329532c84f0a15ed32037ec323c74d40184d024b3e2847254681bc",
+      "bytes": 11729
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions007.lean",
+      "sha256": "8329ec0164c5cc131cfd8e6420c9f86b3d92483fe5ef42969babf815f3db1cce",
+      "bytes": 12503
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions008.lean",
+      "sha256": "ed9f69e24012c51f15486ca046862801f1825c617bf108f2599c7ea31bf002f9",
+      "bytes": 10490
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions009.lean",
+      "sha256": "baeb621777eb7ce5044f44518ef56c13e1835b39966d5a03357954e4ad04bc70",
+      "bytes": 14349
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions010.lean",
+      "sha256": "7d8a8a1d086f22e379bfef86def40857ed75594e5045c07d7420140fd9b032b1",
+      "bytes": 19065
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions011.lean",
+      "sha256": "85fc76800a6b3926f38dafc6c1df85c1535a9e807839c7b5fc22f814f2a4c99d",
+      "bytes": 11780
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions012.lean",
+      "sha256": "95b9d1cdf577e076588ff90504cc094b5d99f48a16f8d8fece942374cf8d4c1c",
+      "bytes": 9414
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions013.lean",
+      "sha256": "dfdddcf8be9ff4a5f0b482e4b44d5182a464b8e8ab59ee1197adb74117f78297",
+      "bytes": 9523
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions014.lean",
+      "sha256": "e60f01371056cd83d2e0b2416ee308b51bb5af6c27841289808e62307ffd2036",
+      "bytes": 9163
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions015.lean",
+      "sha256": "2fabde3e0cf6bdce6b5f14abbd607a21d877dd889e4cde709b7587dc0aef1e5e",
+      "bytes": 11486
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions016.lean",
+      "sha256": "5a779c4094d95c4b4de3f32fc87bfefb33ebb14da6a47dfa680fff19cd3f3a9c",
+      "bytes": 11343
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions017.lean",
+      "sha256": "4f7d1c87a1763311352189a85e794aa4f349f89fceabce495a0193dc6b34d353",
+      "bytes": 8146
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions018.lean",
+      "sha256": "fa4a79ac0583211283b1f8e0ace7e3335d1e609f4656ae6043280b4dd08797fd",
+      "bytes": 6634
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions019.lean",
+      "sha256": "5d51b1e293dbf4e38aae7b03c044f85ea9efd4070175246675d3c6e0b77e0260",
+      "bytes": 5134
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions020.lean",
+      "sha256": "2c7313f41c0b6ee72ea46c9906fa65a5d5d12fcb90359b496178489d5aa03191",
+      "bytes": 5135
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions021.lean",
+      "sha256": "f69b77101bfecb10ee97001397422700a04291033e9ca9663cb081b5a78b34c2",
+      "bytes": 5106
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions022.lean",
+      "sha256": "c92686ca89419b0ae8152cb98465934431d87fc18ace23fa84a5da32bfd04d74",
+      "bytes": 5060
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions023.lean",
+      "sha256": "ea873820ffb8a7af228d872238e87bca60c6fce03065e8504272561347cdb3f3",
+      "bytes": 5135
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions024.lean",
+      "sha256": "667a30592391af721e0c44c1bdd83142f42204ef78f2a0d20fff998950404e07",
+      "bytes": 5135
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Productions025.lean",
+      "sha256": "9b1191f5c64de61c5a4cf151bf02a27ecb810e4ae4c89610b5f2938bdaca4ba7",
+      "bytes": 3544
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts000.lean",
+      "sha256": "96fcc369a0fc8cec28a87f4fc86b22e90c15c12909dfe0c15579d733e8f706a3",
+      "bytes": 114024
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts001.lean",
+      "sha256": "f03a881557ae657d28cb494e6d6426737c28fd7767885cade6bdb85b74d09eee",
+      "bytes": 141435
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts002.lean",
+      "sha256": "2d8281ae4eca4a12c0e8de3f714993fe1a57c08ecd7643578a723df960d652cc",
+      "bytes": 38601
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts003.lean",
+      "sha256": "f07fbbda1a7812418c16f2442095d6cebac9b807ede51c0b791d235949296447",
+      "bytes": 36961
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts004.lean",
+      "sha256": "cbf737b7c077350761a9aa0d1f7a541b87aaf04dea480a84b49153aedb807a8c",
+      "bytes": 36794
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts005.lean",
+      "sha256": "0a38b73f636a70df829ccfadd1404e3b13090afb16ac450df309fad2be3affb2",
+      "bytes": 29824
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts006.lean",
+      "sha256": "475982a5c1f62480121d7567c943a40d1176fdb393aa7de9defb9bcd92eb905d",
+      "bytes": 49428
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts007.lean",
+      "sha256": "a8db1ee947ba64c9ab601a1bca3bc18ca40c6686b85008134fc283d1940898e7",
+      "bytes": 37716
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts008.lean",
+      "sha256": "bbd5bf4dd9dab707332f6088bb1cff2eac9481358fbcaacd0d1e20c304ee0af2",
+      "bytes": 20107
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts009.lean",
+      "sha256": "cb8b44c1eeca872d320b938cae2c8e646e3bac84ad1c35286738a8d0a317b7a6",
+      "bytes": 23524
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts010.lean",
+      "sha256": "8d17ae9397eed581b07f3ab87303a5985f26d42c199b15f19940798b922c3cd0",
+      "bytes": 57544
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts011.lean",
+      "sha256": "dc95d3aa3cc0b0606daa89b101ae0dca8210c883d1931a17ee3654f2b6aff424",
+      "bytes": 77431
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts012.lean",
+      "sha256": "b8a1ba74d2a15d08f53eaf46d402173850879b0cc865a7e861366348a8515aa1",
+      "bytes": 31321
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts013.lean",
+      "sha256": "9842010fdd783ff25f7fe0355d9d2a81d40bf7e285d088d8d908eb743559b3ad",
+      "bytes": 24459
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts014.lean",
+      "sha256": "20f30adaa1a0a9a042f67d567a35823f65bba5bd08b4187db4d974a16094297c",
+      "bytes": 15582
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts015.lean",
+      "sha256": "46e65b187ef48d1e25c46d39a5beaefe0248c0f67905da27842a9d8f91b1ec29",
+      "bytes": 34216
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts016.lean",
+      "sha256": "ebeb16e6cf725252b59bfc5bbea0f2b82e9e67bc5e02e418e7c165532a413bba",
+      "bytes": 10494
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts017.lean",
+      "sha256": "90a31ddd48dcf0dff3b5a6d2539a25fb62a044e4fe55f8f16ff09535ebbcc29b",
+      "bytes": 16122
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts018.lean",
+      "sha256": "26b7ed0226de95a73e5526f46aa73fad160a0b6e71c26e994e62b5d5edef9c7a",
+      "bytes": 33083
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts019.lean",
+      "sha256": "dd15ffae336674f20681eab2bf1fbf96534e5ae19a56b9c586bb9a8c8319f559",
+      "bytes": 34885
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts020.lean",
+      "sha256": "4054651f325964495b176298f445c1866fcf30936243981f7d30e3c271f39b0c",
+      "bytes": 24836
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts021.lean",
+      "sha256": "efa773eabe1f29e226dc294e55748c5bb000f2132e05e2b00ceb2df1f9989b8c",
+      "bytes": 24562
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts022.lean",
+      "sha256": "029dd023c2ff4f71a216c28fdf57ef41f70bc1625c8e2b719d08dff37927d5c4",
+      "bytes": 10593
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts023.lean",
+      "sha256": "ec2fc9de19cc9c0c3aea983d2e9607d1173cfd3986a7b5a0d35a7bd6f5637db1",
+      "bytes": 31519
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts024.lean",
+      "sha256": "1447b768b2066da0b645d6c48c326cf2a367236342a6e0bcac2cb8dc5d707070",
+      "bytes": 12950
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts025.lean",
+      "sha256": "47967137d5ea052286c20a6a13b4cb5016bc52d6a2d1de00cb3cc6600d51fe20",
+      "bytes": 24607
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts026.lean",
+      "sha256": "85110762cc92bd77cb6aedbbc18c06e25d74fca5c297384cda5183a6843d380a",
+      "bytes": 26121
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts027.lean",
+      "sha256": "e15a9b0920fe152c31fc32cd2c1ba3cb299a6c34aabd82228c8f1b202408c304",
+      "bytes": 22665
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Shifts028.lean",
+      "sha256": "021feb146bdb772ef8d669257044fc9fa4929e088286cc7f9766aeddfdb892df",
+      "bytes": 577
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States000.lean",
+      "sha256": "5b62a39d1ee2171957d698e5b49bb5001a3c77ec2f80a336fe1f478773f5672e",
+      "bytes": 31122
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States001.lean",
+      "sha256": "8597cf1dbccf657d1d1a6d9a37f4439d9a0fa6ae8aee826eab2e6f0cde6e9356",
+      "bytes": 25477
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States002.lean",
+      "sha256": "acc4e0abcb62ba9b28c4eec91bd3146297c846af9418325872bba19658b53109",
+      "bytes": 29402
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States003.lean",
+      "sha256": "e272d94593a3c2f42028b65f2210ef13ced62e540ef418b26b718856a1224959",
+      "bytes": 33592
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States004.lean",
+      "sha256": "1fb5347c20e25fb14d045bde6f6bcf0155a8fbb04c2e65ac7a0866dfa4a55a6e",
+      "bytes": 31397
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States005.lean",
+      "sha256": "abbb84ca9acb2c470d8749f81cebb8d947be5d6f9a0a2d1280aa84e6121fab4a",
+      "bytes": 33571
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States006.lean",
+      "sha256": "6d7726d04af58d00358299cfb3f7858c2d0eb5a3ee84452135cc45785a82c765",
+      "bytes": 29653
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States007.lean",
+      "sha256": "4337332719cc90c60da5ae30c88ba440e53b7c01fc72cd5f0200678f37a8cb63",
+      "bytes": 41180
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States008.lean",
+      "sha256": "2dcdfe2bb4b7e5ba3a9084fee22f1c24d2c65e5bd8a670dc4bf4a9d55faa7910",
+      "bytes": 32177
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States009.lean",
+      "sha256": "bf80c43322c97fc63d211597e0bf2be5db910c03eac66668cca8d95e430ff5a4",
+      "bytes": 31715
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States010.lean",
+      "sha256": "384401357f7ec95b6ce10e5db95babe147a7ef912a72faa4df80d07e05342898",
+      "bytes": 36204
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States011.lean",
+      "sha256": "e44797abc567109d68da365cd50aceafb749f29ccfd6921d2d24a4b59d015a04",
+      "bytes": 33935
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States012.lean",
+      "sha256": "bfe01b15d92c89ebe961866cf95377509a174bc54e263bd7ee9e6c591126186e",
+      "bytes": 38572
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States013.lean",
+      "sha256": "3393e4f316d7398667fd3e33a4b05f66de09f63c88857ad3ba6e664908475f29",
+      "bytes": 34183
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States014.lean",
+      "sha256": "57e85d849cc28a7583f7c1392ad20b7901d83d6b5f207413192ffa08cc7a30f1",
+      "bytes": 30642
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States015.lean",
+      "sha256": "4678efd748b6f8ad97d58f5920538bec9521bb08ee83f2cd57755e0f5cb6d1bf",
+      "bytes": 43348
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States016.lean",
+      "sha256": "8bb4bf1523fb9f11ed9b09291397700ce4adf943b8711a6217c45c72d9d29113",
+      "bytes": 34766
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States017.lean",
+      "sha256": "60626c77a2f2e2aeef3a78b59e8291b46a69fd7ff5ee0d96ecdeb5c9d1eedff7",
+      "bytes": 33097
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States018.lean",
+      "sha256": "57fe4343e99e43404e18f7db2ca282cd7b2d2e646f51f96dbe3772cb275ab917",
+      "bytes": 38566
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States019.lean",
+      "sha256": "71d72bf22b2469acb0d892b24d2053b135c0d46c35cb362c3a1bbea900e22d64",
+      "bytes": 30266
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States020.lean",
+      "sha256": "ccbc85e19cbdebaa2f6a8afdce529c57ea1d393eeae74e402044e8744d58829b",
+      "bytes": 35565
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States021.lean",
+      "sha256": "07df4205df524bd44cbfaecad0ad527cf6d9dda8c23408227d0f2645c76bbfa2",
+      "bytes": 36715
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States022.lean",
+      "sha256": "884264168067b8cdb6115f7678704e656d542fb254702cb48c9ee0d7ac1b58b9",
+      "bytes": 34505
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States023.lean",
+      "sha256": "c1fcdfeef0fd22b6c5dd8feb3d2678cc59f7f31516613b4288d82fe930c7d388",
+      "bytes": 32337
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/States024.lean",
+      "sha256": "e0f80a86f2fd136759b7064c25edd3e7d567d8479c00ddab100ef9d1bbe9a596",
+      "bytes": 10377
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated/Symbols.lean",
+      "sha256": "00c28dce32e748ade27999a446a854e535b35a65bba39d1ccf468a6f19984afa",
+      "bytes": 59944
+    },
+    {
+      "path": "SQLean/PostgresGrammar/Generated.lean",
+      "sha256": "a0bc7e6af8c3a9c65457fdc376f83dc00b2158d60a3c6672d003bbdd842f152d",
+      "bytes": 5870
+    }
+  ],
+  "evidence": "generated grammar and LR data; PostgreSQL actions and source lexing are not certified"
+}

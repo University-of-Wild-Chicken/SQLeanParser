@@ -1,0 +1,94 @@
+{
+  "tables": [
+    {
+      "name": "left_rows",
+      "columns": [
+        {
+          "name": "left_value",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "tag",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "name": "right_rows",
+      "columns": [
+        {
+          "name": "id",
+          "type": "bigint",
+          "nullable": true
+        },
+        {
+          "name": "right_value",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "tag",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "name": "reordered_rows",
+      "columns": [
+        {
+          "name": "tag",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "left_value",
+          "type": "int",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "name": "extras",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "extra",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "name": "other_rows",
+      "columns": [
+        {
+          "name": "n",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "note",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    }
+  ]
+}

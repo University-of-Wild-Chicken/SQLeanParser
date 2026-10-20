@@ -56,6 +56,9 @@ private def accepted : List String := [
 ]
 
 private def extendedAccepted : List String := [
+  "SELECT unknown(id) FROM users",
+  "SELECT \"COUNT\"(id) FROM users",
+  "SELECT u.count(id) FROM users u",
   "SELECT id FROM users NATURAL JOIN orders",
   "SELECT id FROM users JOIN orders USING (id)",
   "SELECT id FROM users, orders",
@@ -63,6 +66,7 @@ private def extendedAccepted : List String := [
   "SELECT id = NOT TRUE FROM users",
   "SELECT NULL FROM users",
   "SELECT u.id FROM users u OFFSET 1",
+  "SELECT u.id FROM users u LIMIT 1.5",
   "SELECT q.id FROM ((SELECT id FROM users)) q"
 ]
 
@@ -86,14 +90,12 @@ private def rejected : List String := [
   "SELECT COUNT() FROM users", "SELECT COUNT(id, age) FROM users",
   "SELECT COUNT(DISTINCT *) FROM users", "SELECT SUM(*) FROM users",
   "SELECT AVG(*) FROM users", "SELECT COUNT(ALL id) FROM users",
-  "SELECT COUNT(DISTINCT) FROM users", "SELECT unknown(id) FROM users",
-  "SELECT \"COUNT\"(id) FROM users", "SELECT u.count(id) FROM users u",
+  "SELECT COUNT(DISTINCT) FROM users",
   "SELECT id IS TRUE FROM users", "SELECT id IS NOT FALSE FROM users",
   "SELECT id IS FROM users", "SELECT id IS NULL IS NULL FROM users",
   "SELECT id = 1 IS NULL FROM users", "SELECT id IS NULL = TRUE FROM users",
   "SELECT id < age < 100 FROM users",
   "SELECT * FROM users;;", "SELECT * FROM users; SELECT * FROM orders",
-  "SELECT u.id FROM users u LIMIT 1.5",
   "SELECT id FROM (SELECT id FROM users)",
   "SELECT id FROM (SELECT id FROM users) AS",
   "SELECT q.id FROM (SELECT id FROM users;) q",
@@ -127,6 +129,13 @@ def relationalParsingTests : IO Nat := do
   for source in rejected do
     expectError source (parseRelQuery source)
     expectError source (parseStatement source)
+
+  match ← expectOk "decimal pagination uses extended AST"
+      (parseStatement "SELECT u.id FROM users u LIMIT 1.5") with
+  | .extended (.query query) =>
+      SQLean.Tests.assert (query.limit == some (.decimal "1.5") && query.offset.isNone)
+        "decimal pagination expression was truncated or lost"
+  | _ => throw (IO.userError "decimal pagination must retain the Advanced AST")
 
   let joined ← expectOk "JOIN AST" (parseRelQuery
     "SELECT u.*, o.id AS order_id FROM users u LEFT OUTER JOIN orders o ON u.id = o.user_id CROSS JOIN flags f")
@@ -210,6 +219,6 @@ def relationalParsingTests : IO Nat := do
   let cteDefs := String.intercalate ", " ((List.range 100).map fun n => s!"t{n} AS (SELECT id FROM t)")
   let manyCtes ← expectOk "100 CTE definitions" (parseRelQuery s!"WITH {cteDefs} SELECT id FROM t99")
   SQLean.Tests.assert (manyCtes.ctes.length == 100) "lost CTE definitions"
-  pure (3 * accepted.length + 2 * (rejected.length + extendedAccepted.length) + 16)
+  pure (3 * accepted.length + 2 * (rejected.length + extendedAccepted.length) + 17)
 
 end SQLean.Tests

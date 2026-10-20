@@ -48,6 +48,19 @@ private def extendedAccepted : List String := [
   "DROP TABLE users"
 ]
 
+/-- The compatibility API retains expression pagination through its Advanced
+extension instead of discarding expressions into the legacy natural fields. -/
+private def paginationAccepted :
+    List (String × Option Advanced.Expr × Option Advanced.Expr) := [
+  ("SELECT id FROM users LIMIT -1", some (.unary .neg 1), none),
+  ("SELECT id FROM users LIMIT +1", some (.unary .pos 1), none),
+  ("SELECT id FROM users LIMIT 1 + 2", some (.binary .add 1 2), none),
+  ("SELECT id FROM users LIMIT '1'", some (.literal (.text "1")), none),
+  ("SELECT id FROM users LIMIT 1.5", some (.decimal "1.5"), none),
+  ("SELECT id FROM users LIMIT 1 OFFSET -1", some 1, some (.unary .neg 1)),
+  ("SELECT id FROM users LIMIT 1 OFFSET +1", some 1, some (.unary .pos 1))
+]
+
 private def rejected : List String := [
   "", ";", "-- only comment", "SELECT", "INSERT", "UPDATE", "DELETE",
   "SELECT FROM users", "SELECT DISTINCT FROM users", "SELECT DISTINCT DISTINCT id FROM users",
@@ -55,11 +68,8 @@ private def rejected : List String := [
   "SELECT id FROM users ORDER id", "SELECT id FROM users ORDER BY",
   "SELECT id FROM users ORDER BY id,", "SELECT id FROM users ORDER BY id ASC DESC",
   "SELECT id FROM users ORDER BY id WHERE active",
-  "SELECT id FROM users LIMIT", "SELECT id FROM users LIMIT -1",
-  "SELECT id FROM users LIMIT +1", "SELECT id FROM users LIMIT 1 + 2",
-  "SELECT id FROM users LIMIT '1'", "SELECT id FROM users LIMIT 1.5",
+  "SELECT id FROM users LIMIT",
   "SELECT id FROM users LIMIT 1 OFFSET",
-  "SELECT id FROM users LIMIT 1 OFFSET -1", "SELECT id FROM users LIMIT 1 OFFSET +1",
   "SELECT id FROM users LIMIT 1 LIMIT 2", "SELECT id FROM users LIMIT 1 ORDER BY id",
   "SELECT id FROM users LIMIT 1 OFFSET 2 OFFSET 3",
   "SELECT id FROM users WHERE id = 1 = 2", "SELECT id FROM users WHERE NOT id < 1 < 2",
@@ -97,6 +107,12 @@ def crudParsingTests : IO Nat := do
     let _ ← expectOk source (parseStatement source)
   for source in extendedAccepted do
     let _ ← expectOk "extended statement syntax" (parseStatement source)
+  for (source, limit, offset) in paginationAccepted do
+    match ← expectOk "extended pagination syntax" (parseStatement source) with
+    | .extended (.query query) =>
+        SQLean.Tests.assert (query.limit == limit && query.offset == offset)
+          s!"compatibility parser changed pagination expressions: {source}"
+    | _ => throw (IO.userError s!"expression pagination lost its Advanced AST: {source}")
   for source in rejected do
     expectError source (parseStatement source)
 
@@ -199,6 +215,6 @@ def crudParsingTests : IO Nat := do
 
   let nested := (List.range 40).foldl (fun text _ => s!"NOT ({text})") "TRUE"
   let _ ← expectOk "nested NOT expression" (parseStatement s!"DELETE FROM t WHERE {nested}")
-  pure (accepted.length + extendedAccepted.length + rejected.length + 21)
+  pure (accepted.length + extendedAccepted.length + paginationAccepted.length + rejected.length + 21)
 
 end SQLean.Tests

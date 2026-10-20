@@ -679,11 +679,28 @@ def parseQuery (input : String) : Except ParseError Query := do
 /-- Alias for `parseQuery`. -/
 def parse := parseQuery
 
+/-- These PostgreSQL forms must not fall through to the compatibility grammar:
+it can reinterpret a special expression as a column or a postfix predicate as
+an alias. Quoted identifiers and strings are deliberately excluded. -/
+private def requiresAdvancedStatement (tokens : List Token) : Bool :=
+  tokens.any fun token => match token.kind with
+    | .word name =>
+      ["current_date", "current_time", "current_timestamp", "localtime", "localtimestamp",
+       "current_user", "session_user", "system_user", "current_role", "current_catalog",
+       "current_schema", "user", "isnull", "notnull", "only"].contains name
+    | _ => false
+
 /-- Parse exactly one SELECT (including WITH), INSERT, UPDATE, or DELETE
 statement, with one optional trailing semicolon. `parseQuery` preserves the
-original MVP grammar, and legacy SELECT inputs retain their original AST. -/
+original MVP grammar. Legacy statements retain their AST except where legacy
+identifier rules would misinterpret a PostgreSQL special form. -/
 def parseStatement (input : String) : Except ParseError Statement :=
-  match lex input >>= Parser.parseStatementTokens with
+  let legacy := do
+    let tokens ← lex input
+    if requiresAdvancedStatement tokens then
+      return Statement.extended (← Advanced.parse input)
+    Parser.parseStatementTokens tokens
+  match legacy with
   | .ok statement => .ok statement
   | .error legacyError =>
     match Advanced.parse input with

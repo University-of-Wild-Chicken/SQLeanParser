@@ -166,6 +166,10 @@ private def reserved : List String :=
    "nulls", "distinct", "on", "as", "join", "inner", "left", "right", "full", "outer", "cross", "natural",
    "using", "lateral", "union", "intersect", "except", "with", "recursive", "all", "and", "or", "not",
    "is", "null", "true", "false", "in", "exists", "between", "like", "ilike", "filter", "cast",
+   "case", "when", "then", "else", "end", "coalesce", "nullif", "greatest", "least",
+   "current_date", "current_time", "current_timestamp", "localtime", "localtimestamp",
+   "current_user", "session_user", "system_user", "current_role", "current_catalog", "current_schema", "user",
+   "isnull", "notnull", "only", "for",
    "insert", "into", "values", "default", "update", "set", "delete", "returning", "conflict", "do",
    "nothing", "constraint", "create", "alter", "drop", "table", "if", "primary", "key", "unique",
    "column", "add", "rename", "to", "type", "references", "check", "foreign", "cascade", "restrict"]
@@ -200,27 +204,54 @@ private def optionalNames (fuel : Nat) : Parser (List Name) := do
 private def dataType (fuel : Nat) : Parser DataType := do
   let token ← pop
   let name ← match token.kind.keyword with
+    | .word "smallint" | .word "int2" => pure TypeName.smallInt
     | .word "int" | .word "integer" | .word "int4" => pure TypeName.int
     | .word "bigint" | .word "int8" => pure .bigInt
     | .word "text" => pure .text
     | .word "varchar" => pure .varchar
-    | .word "character" => do expect "varying"; pure .varchar
+    | .word "character" | .word "char" =>
+        do if ← eat "varying" then pure .varchar else pure .char
     | .word "bool" | .word "boolean" => pure .bool
     | .word "real" | .word "float4" => pure .real
     | .word "double" => do expect "precision"; pure .doublePrecision
     | .word "float8" => pure .doublePrecision
     | .word "numeric" | .word "decimal" => pure .numeric
+    | .word "date" => pure .date
+    | .word "time" => pure .time
+    | .word "timetz" => pure .timeTZ
+    | .word "timestamp" => pure .timestamp
+    | .word "timestamptz" => pure .timestampTZ
+    | .word "interval" => pure .interval
+    | .word "uuid" => pure .uuid
+    | .word "json" => pure .json
+    | .word "jsonb" => pure .jsonb
+    | .word "bytea" => pure .bytea
     | _ => fail "unsupported SQL type"
   let modifiers ← if ← eat "(" then do
     let values ← separated natural fuel
     expect ")"
     pure values
     else pure []
+  let name ← if name == .time || name == .timestamp then do
+    if ← eat "with" then
+      expect "time"
+      expect "zone"
+      pure (if name == .time then .timeTZ else .timestampTZ)
+    else if ← eat "without" then
+      expect "time"
+      expect "zone"
+      pure name
+    else pure name
+    else pure name
   match name, modifiers with
   | _, [] => pure ()
   | .varchar, [n] => if n == 0 then fail "VARCHAR length must be positive"
+  | .char, [n] =>
+      if n == 0 || n > 10485760 then fail "character length must be between 1 and 10485760"
   | .numeric, [p] => if p == 0 || p > 1000 then fail "NUMERIC precision must be between 1 and 1000"
   | .numeric, [p,s] => if p == 0 || p > 1000 || s > 1000 then fail "unsupported NUMERIC precision/scale"
+  | .time, [p] | .timeTZ, [p] | .timestamp, [p] | .timestampTZ, [p] | .interval, [p] =>
+      if p > 6 then fail "fractional-second precision must be between 0 and 6"
   | _, _ => fail "invalid type modifiers"
   pure {name, modifiers}
 
@@ -246,6 +277,29 @@ private def alternative (first second : Parser α) : Parser α := fun sqlite tok
     | .ok result => .ok result
     | .error secondError =>
       .error (if firstError.position.offset ≥ secondError.position.offset then firstError else secondError)
+
+private def typeWord (word : String) : Bool :=
+  ["smallint", "int2", "int", "integer", "int4", "bigint", "int8", "text", "varchar",
+   "character", "char", "bool", "boolean", "real", "float4", "double", "float8",
+   "numeric", "decimal", "date", "time", "timetz", "timestamp", "timestamptz",
+   "interval", "uuid", "json", "jsonb", "bytea"].contains word
+
+/-- PostgreSQL typed string constants are represented by the same cast tree as
+CAST(string AS type). Bare CHARACTER constants are excluded: unlike a bare
+CHAR cast they do not supply an implicit length of one. -/
+private def typedString (fuel : Nat) : Parser Expr := do
+  let type ← dataType fuel
+  let value ← match (← pop).kind with
+    | .text value => pure value
+    | _ => fail "expected string after SQL type"
+  if type.name == .char && type.modifiers.isEmpty then
+    fail "bare CHAR typed strings require an unbounded-character type; use an explicit length"
+  if type.name == .interval then
+    match (← peek).kind.keyword with
+    | .word "year" | .word "month" | .word "day" | .word "hour" | .word "minute" | .word "second" =>
+        fail "INTERVAL field qualifiers are not represented in this type profile"
+    | _ => pure ()
+  pure (.cast (.literal (.text value)) type)
 
 /-- This is a lookahead hint, not proof that the entire group is a query. -/
 private def queryStart : Parser Bool := do
@@ -293,6 +347,34 @@ mutual
       if ← eat "null" then return .null
       if ← eat "true" then return .literal (.bool true)
       if ← eat "false" then return .literal (.bool false)
+      if ← eat "case" then
+        let operand ← if ← isAt "when" then pure none else do pure (some (← expression fuel 0))
+        let branches ← caseBranches fuel
+        let otherwise ← if ← eat "else" then do pure (some (← expression fuel 0)) else pure none
+        expect "end"
+        return .caseExpr operand branches otherwise
+      if ← eat "coalesce" then
+        expect "("
+        let args ← separated (expression fuel 0) fuel
+        expect ")"
+        return .coalesce args
+      if ← eat "greatest" then
+        expect "("
+        let args ← separated (expression fuel 0) fuel
+        expect ")"
+        return .greatest args
+      if ← eat "least" then
+        expect "("
+        let args ← separated (expression fuel 0) fuel
+        expect ")"
+        return .least args
+      if ← eat "nullif" then
+        expect "("
+        let left ← expression fuel 0
+        expect ","
+        let right ← expression fuel 0
+        expect ")"
+        return .nullIf left right
       if ← eat "exists" then
         expect "("
         let q ← query fuel
@@ -325,6 +407,8 @@ mutual
       | .text value => let _ ← pop; return .literal (.text value)
       | .parameter value => let _ ← pop; return .parameter value
       | .word word =>
+        if typeWord word.toLower then
+          return ← alternative (typedString fuel) (namedAtom fuel)
         match aggregateFn word.toLower with
         | some fn =>
           let _ ← pop
@@ -345,14 +429,42 @@ mutual
           if ← eat "." then return .column (some word) (← identifier)
           return .column none word
         | none =>
-          let name ← identifier
-          if ← eat "." then return .column (some name) (← identifier)
-          return .column none name
+          namedAtom fuel
       | .quoted _ =>
-        let name ← identifier
-        if ← eat "." then return .column (some name) (← identifier)
-        return .column none name
+        namedAtom fuel
       | _ => fail "expected expression"
+
+  private def namedAtom : Nat → Parser Expr
+    | 0 => fail "qualified expression input bound exceeded"
+    | fuel + 1 => do
+      let names ← qualifiedName fuel
+      if ← eat "(" then
+        let args ← if ← eat ")" then pure [] else do
+          let args ← separated (expression fuel 0) fuel
+          expect ")"
+          pure args
+        return .call names args
+      match names with
+      | [name] => pure (.column none name)
+      | [qualifier, name] => pure (.column (some qualifier) name)
+      | _ => fail "column references support at most one qualifier"
+
+  private def qualifiedName : Nat → Parser (List Name)
+    | 0 => fail "qualified name input bound exceeded"
+    | fuel + 1 => do
+      let name ← identifier
+      if ← eat "." then return name :: (← qualifiedName fuel)
+      pure [name]
+
+  private def caseBranches : Nat → Parser (List (Expr × Expr))
+    | 0 => fail "CASE input bound exceeded"
+    | fuel + 1 => do
+      expect "when"
+      let condition ← expression fuel 0
+      expect "then"
+      let value ← expression fuel 0
+      if ← isAt "when" then return (condition, value) :: (← caseBranches fuel)
+      pure [(condition, value)]
 
   private def tailExpr : Nat → Nat → Expr → Bool → Parser Expr
     | 0, _, _, _ => fail "expression input bound exceeded"
@@ -602,6 +714,46 @@ mutual
       expect ")"
       pure {name, columns, query := q}
 
+  private def lockingClauses : Nat → Parser (List LockingClause)
+    | 0 => fail "locking clause bound exceeded"
+    | fuel + 1 => do
+      if !(← eat "for") then return []
+      if ← read then fail "SQLite does not support row-locking clauses"
+      let strength ←
+        if ← eat "update" then pure LockStrength.update
+        else if ← eat "no" then do expect "key"; expect "update"; pure .noKeyUpdate
+        else if ← eat "share" then pure .share
+        else do expect "key"; expect "share"; pure .keyShare
+      let targets ← if ← eat "of" then separated identifier fuel else pure []
+      let waitPolicy ←
+        if ← eat "nowait" then pure LockWaitPolicy.nowait
+        else if ← eat "skip" then do expect "locked"; pure .skipLocked
+        else pure .block
+      let rest ← lockingClauses fuel
+      pure (⟨strength, targets, waitPolicy⟩ :: rest)
+
+  private def pagination (fuel : Nat) : Parser (Option Expr × Option Expr × Bool) := do
+    let sqlite ← read
+    if ← eat "limit" then
+      let first ← expression fuel 0
+      let (limit, commaOffset) ← if sqlite && (← eat ",") then
+        -- Comma LIMIT remains literal-only so rendering never reorders bindings.
+        match first with
+        | .literal (.int _) => pure (some (.literal (.int (← natural))), some first)
+        | _ => fail "SQLite comma LIMIT requires natural-number literals; use LIMIT expression OFFSET expression"
+        else pure (some first, none)
+      let offset ← if ← eat "offset" then do
+        if commaOffset.isSome then fail "OFFSET cannot follow comma LIMIT"
+        pure (some (← expression fuel 0))
+        else pure commaOffset
+      return (limit, offset, false)
+    else if ← eat "offset" then
+      if sqlite then fail "SQLite OFFSET requires LIMIT first"
+      let offset ← expression fuel 0
+      let limit ← if ← eat "limit" then pure (some (← expression fuel 0)) else pure none
+      return (limit, some offset, limit.isSome)
+    else return (none, none, false)
+
   private def query : Nat → Parser Query
     | 0 => fail "query nesting bound exceeded"
     | fuel + 1 => do
@@ -614,25 +766,20 @@ mutual
         let q ← intersectTail fuel q
         unionTail fuel q
       let orderBy ← if ← eat "order" then do expect "by"; separated (orderItem fuel) fuel else pure []
-      let (limit, commaOffset) ← if ← eat "limit" then do
-        let first ← natural
-        if sqlite && (← eat ",") then
-          pure (some (← natural), some first)
-        else pure (some first, none)
-        else pure (none, none)
-      let offset ← if ← eat "offset" then do
-        if sqlite && (limit.isNone || commaOffset.isSome) then
-          fail "SQLite OFFSET requires LIMIT and cannot follow comma LIMIT"
-        pure (some (← natural))
-        else pure commaOffset
-      let outerModifiers := !orderBy.isEmpty || limit.isSome || offset.isSome
-      let innerModifiers := !q.orderBy.isEmpty || q.limit.isSome || q.offset.isSome
+      let leadingLocks ← lockingClauses fuel
+      let (limit, offset, offsetFirst) ← pagination fuel
+      let trailingLocks ← if leadingLocks.isEmpty then lockingClauses fuel else pure []
+      let locking := leadingLocks ++ trailingLocks
+      let outerModifiers := !orderBy.isEmpty || limit.isSome || offset.isSome || !locking.isEmpty
+      let innerModifiers := !q.orderBy.isEmpty || q.limit.isSome || q.offset.isSome || !q.locking.isEmpty
       if (outerModifiers && innerModifiers) || (!ctes.isEmpty && !q.ctes.isEmpty) then
         fail "nested query modifiers require a derived table"
       pure {q with
         ctes := (ctes ++ q.ctes), recursive := (recursive || q.recursive),
         orderBy := (if orderBy.isEmpty then q.orderBy else orderBy),
-        limit := limit.or q.limit, offset := offset.or q.offset}
+        limit := limit.or q.limit, offset := offset.or q.offset,
+        locking := locking ++ q.locking,
+        offsetFirst := if limit.isSome then offsetFirst else q.offsetFirst}
 end
 
 private def assignment (fuel : Nat) : Parser Assignment := do
@@ -803,6 +950,29 @@ def parse (source : String) : Except ParseError Statement := runComplete source 
 /-- Parse a scalar expression, including explicit casts and nested queries. -/
 def parseExpression (source : String) : Except ParseError Expr :=
   runComplete source (fun fuel => expression fuel 0)
+/-- Parse one supported concrete type, preserving its type modifiers. -/
+def parseDataType (source : String) : Except ParseError DataType :=
+  runComplete source dataType
+
+/-- Parse comma-separated concrete parameter declarations. A trailing `?`
+marks a nullable declaration; commas inside type modifiers stay inside the
+type. This is metadata syntax, not SQL parameter-value interpolation. -/
+def parseParameterDeclarations (source : String) : Except ParseError (List (DataType × Bool)) :=
+  runComplete source fun fuel => do
+    if (← peek).kind == .eof then return []
+    separated (do
+      let type ← alternative (dataType fuel) (do
+        let name ← match (← pop).kind.keyword with
+          | .word "int32" => pure TypeName.int
+          | .word "int64" => pure .bigInt
+          | .word "float32" => pure .real
+          | .word "float64" | .word "double" => pure .doublePrecision
+          | _ => fail "unsupported parameter type"
+        pure {name})
+      let nullable ← match (← peek).kind with
+        | .parameter (.anonymous _) => do let _ ← pop; pure true
+        | _ => pure false
+      pure (type, nullable)) fuel
 /-- Uniform query entry point, independent of legacy SELECT AST dispatch. -/
 def parseQuery (source : String) : Except ParseError Query := runComplete source query
 

@@ -136,7 +136,7 @@ def main() -> None:
         "SELECT missing",
         "SELECT users.id",
         "SELECT 1 WHERE 3",
-        "SELECT 1 OFFSET -2",
+        "SELECT 1 OFFSET TRUE",
         "WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM x WHERE n < 3) SELECT missing FROM x",
         "WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT 'text' FROM x) SELECT n FROM x",
         "WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n, n + 1 FROM x) SELECT n FROM x",
@@ -156,6 +156,10 @@ def main() -> None:
     for source in negative:
         run(source, code=1)
 
+    # Preserve the formerly rejected syntax and its exact expression spelling.
+    # A static certificate does not establish runtime nonnegativity.
+    assert run("SELECT 1 OFFSET -2").splitlines()[-1] == "SELECT 1 OFFSET (-2);"
+
     # Verify the execution guard itself interrupts an unbounded, otherwise
     # syntactically valid recursive statement, then leaves the connection usable.
     try:
@@ -169,7 +173,8 @@ def main() -> None:
         db.close()
     print(f"PASS: {total} industrial examples certified and SQLite-compiled (source + canonical)")
     print(f"PASS: {total * 2} execution comparisons on empty and populated databases")
-    print(f"PASS: {len(oracles)} independent result oracles, {len(negative)} rejection cases, and recursion-budget guard")
+    print(f"PASS: {len(oracles)} independent result oracles, {len(negative)} rejection cases, "
+          "expression-pagination acceptance, and recursion-budget guard")
 
 
 if __name__ == "__main__":

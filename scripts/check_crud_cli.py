@@ -73,12 +73,17 @@ def main() -> None:
         ("SELECT id FROM users ORDER BY 0", "validation error"),
         ("SELECT id FROM users ORDER BY 2", "validation error"),
         ("SELECT DISTINCT id FROM users ORDER BY name", "validation error"),
-        ("SELECT id FROM users OFFSET -2", "parse error"),
+        ("SELECT id FROM users OFFSET TRUE", "validation error"),
         ("UPDATE users SET age = 1; DELETE FROM users", "parse error"),
         ("DELETE FROM users RETURNING", "parse error"),
     ]
     for source, message in negative:
         run(["--schema", str(SCHEMA), source], 1, message)
+    # Static pagination typing preserves negative expressions; runtime sign
+    # checks belong to the database and are exercised by the pagination suite.
+    pagination = run(["--schema", str(SCHEMA), "SELECT id FROM users OFFSET -2"],
+                     contains="Valid query.")
+    assert pagination.splitlines()[-1] == 'SELECT "id" FROM "users" OFFSET (-2);'
     run(["--ast", "UPDATE users SET age = age + 1"], contains="SQLean.Statement.update")
     run(["--help"], contains="SELECT, INSERT, UPDATE, or DELETE")
     run(["--unknown"], 2, "unknown option")
@@ -88,7 +93,7 @@ def main() -> None:
         query_path.write_text("INSERT INTO flags VALUES (1, TRUE, 'example');\n")
         run(["--file", str(query_path), "--schema", str(SCHEMA)], contains="Valid INSERT statement.")
     print(f"PASS: {total} CRUD examples certified by the CLI and compiled by SQLite (source + canonical)")
-    print(f"PASS: {len(negative) + 5} CLI rejection, AST, help, stdin, and file cases")
+    print(f"PASS: {len(negative) + 6} CLI rejection, pagination, AST, help, stdin, and file cases")
 
 
 if __name__ == "__main__":

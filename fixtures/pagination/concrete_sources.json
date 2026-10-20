@@ -1,0 +1,636 @@
+{
+  "format_version": 1,
+  "factor": "expression-limit-offset",
+  "expected_count": 50,
+  "expected_sources": {
+    "temporal": 20,
+    "river": 1,
+    "cadence": 21,
+    "sqlc": 8
+  },
+  "sources": {
+    "temporal": {
+      "repository": "https://github.com/temporalio/temporal",
+      "commit": "b7bc978d1040afe2dcbc68ecfe8b228ae198e0b6",
+      "license": "MIT",
+      "license_file": "fixtures/external_postgresql/licenses/temporal-LICENSE.txt",
+      "license_sha256": "6aab9afd99ceb1dcaf6a0d91386b46baef9bce17ae4006044e0f231e31430b69",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/cluster_metadata.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/cluster_metadata.go",
+          "sha256": "3bcc973420183525db8816bad242a7afcf81a1c02d2036e4a55848cf5a19a5c7"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/events.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/events.go",
+          "sha256": "fa3f93254a11a0e63945c983fe7975397e2891b6b127c2571a42ad4d7bebdea0"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/execution.go",
+          "sha256": "7e50fffdfb1cbb8a91d57b3a560870ee68ed3a4ed7097296b81829a2cc71a902"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/namespace.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/namespace.go",
+          "sha256": "14442c4fb47b6e074baedc913fa59cbbdbba910fc960b0ddaf979bdfac7ffad6"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/nexus_endpoints.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/nexus_endpoints.go",
+          "sha256": "770b4519643def19baae8f39ea28bb3df03c23336ab41eaaedbde4007edffca0"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/queue.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/queue.go",
+          "sha256": "752692dc64895b36e1d62e8ddee141b59740cdd1b43f7f6c1571bc899001b5c8"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/queue_v2.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/queue_v2.go",
+          "sha256": "f9ca71235e4afe9789bcd4487fa0c38879bc87ff32b10dc11a5e26ac99f2b3a3"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/task_queues.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/task_queues.go",
+          "sha256": "51c7bf59e7a1c2bc87e855d2180dbc5b8b61ca7ecf1696b7eeb8b910b5d470ec"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/task_user_data.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/task_user_data.go",
+          "sha256": "715a717f5196cd77f84f6ea0ab09b3d1cb96b6f3e56767e25ec89cbfc02a5851"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/task_v1.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/task_v1.go",
+          "sha256": "c5b332b04481bc6b3b5f5bf29c345f1f6b96a2b93d869b814fc89420b397c7c3"
+        }
+      ]
+    },
+    "river": {
+      "repository": "https://github.com/riverqueue/river",
+      "commit": "1354a059d7cbe5790acc7a755a2ab7ac6d2f1ed8",
+      "license": "MPL-2.0",
+      "license_file": "fixtures/external_postgresql/licenses/river-LICENSE.txt",
+      "license_sha256": "393eaf2b92b3d49bea139e39b6fd205b6e99c499999986aec5554586a830dfdd",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+          "local_path": "fixtures/external_postgresql/sources/river/riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+          "sha256": "b86e3fa0032236c912832b5222a070f82efa8519fb92027e4ebca2fdb17f5306"
+        }
+      ]
+    },
+    "cadence": {
+      "repository": "https://github.com/cadence-workflow/cadence",
+      "commit": "b89482543407a82529d022ef81c2280794ab0c74",
+      "license": "Apache-2.0",
+      "license_file": "fixtures/pagination/licenses/cadence-LICENSE.txt",
+      "license_sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "common/persistence/sql/sqlplugin/postgres/domain.go",
+          "local_path": "fixtures/pagination/sources/cadence/common/persistence/sql/sqlplugin/postgres/domain.go",
+          "sha256": "f0be65e7238d2f7042cf62c0f45538de91a2b0b7296f2dfb67766795b52229b5"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgres/domain_audit_log.go",
+          "local_path": "fixtures/pagination/sources/cadence/common/persistence/sql/sqlplugin/postgres/domain_audit_log.go",
+          "sha256": "2247c80fd5af43a7916e93f1ebd9538210733b557fad57400d082b304a005360"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgres/events.go",
+          "local_path": "fixtures/pagination/sources/cadence/common/persistence/sql/sqlplugin/postgres/events.go",
+          "sha256": "47c718f266aa43d30adefd43ab2bcbe9e0799e4fa9a10a30466072e8d05ea692"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgres/execution.go",
+          "local_path": "fixtures/pagination/sources/cadence/common/persistence/sql/sqlplugin/postgres/execution.go",
+          "sha256": "3cd5cf4a4b4793aa69ef8f343624717a8069fca0bbefc65cc3b75213850f32bc"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgres/queue.go",
+          "local_path": "fixtures/pagination/sources/cadence/common/persistence/sql/sqlplugin/postgres/queue.go",
+          "sha256": "35f7f1ae4c63a003d4f85adb2ff5a59d61fec7ba2f293123bc64a95d2b13ee20"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgres/task.go",
+          "local_path": "fixtures/pagination/sources/cadence/common/persistence/sql/sqlplugin/postgres/task.go",
+          "sha256": "d78ec060763663a9455277684e536586b331963bb26872e0b90ae3209789e45e"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgres/visibility.go",
+          "local_path": "fixtures/pagination/sources/cadence/common/persistence/sql/sqlplugin/postgres/visibility.go",
+          "sha256": "dbf1b11a7763fd7f5286d68004f52aa07816ba81a521d49e7ae248434ef71f2d"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "license": "MIT",
+      "license_file": "fixtures/pagination/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/fmt/postgresql/query.sql",
+          "local_path": "fixtures/pagination/sources/sqlc/internal/endtoend/testdata/fmt/postgresql/query.sql",
+          "sha256": "388522dea70d39ae507d6a2dc57a9dd7e2a769f45ddd255e45cdd551ceac74bc"
+        },
+        {
+          "path": "internal/endtoend/testdata/limit/pgx/v5/query.sql",
+          "local_path": "fixtures/pagination/sources/sqlc/internal/endtoend/testdata/limit/pgx/v5/query.sql",
+          "sha256": "a43da012723fbe3ad58b33f104d669922caf1c6f1e18760b9b226ea7ee6daded"
+        },
+        {
+          "path": "internal/endtoend/testdata/params_location/postgresql/pgx/v5/query.sql",
+          "local_path": "fixtures/pagination/sources/sqlc/internal/endtoend/testdata/params_location/postgresql/pgx/v5/query.sql",
+          "sha256": "6676916e66662f895ffc33638a2a65bc9986a4d8be4bfc2a65f0e3dbfd75cc77"
+        },
+        {
+          "path": "internal/endtoend/testdata/select_limit/postgresql/pgx/v5/query.sql",
+          "local_path": "fixtures/pagination/sources/sqlc/internal/endtoend/testdata/select_limit/postgresql/pgx/v5/query.sql",
+          "sha256": "ae5cc475d71ad9de7e0603109b3db9cc250e5a92d79cb02b46de1d3ac1b7f7ba"
+        },
+        {
+          "path": "internal/endtoend/testdata/select_union/postgres/pgx/v5/query.sql",
+          "local_path": "fixtures/pagination/sources/sqlc/internal/endtoend/testdata/select_union/postgres/pgx/v5/query.sql",
+          "sha256": "c00e1253b23494acdb3476fb73ffd91e84c36820f70636ae90d60f3843eab964"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/cluster_metadata.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listClusterMetadataQry"
+      },
+      "sql_sha256": "fac687ddd9a9908485d11bce64e0e45189c3f8c0612f3d279b52e5ba635e5a36"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/cluster_metadata.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listClusterMetadataRangeQry"
+      },
+      "sql_sha256": "b5adaf49348b0f487e0969aba7f0808e2815c96d126dbc51ae7606500b813928"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/events.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getHistoryNodesReverseQuery"
+      },
+      "sql_sha256": "f9d7dfb674f3d67dead2fa585929526577204cfa41d0ef3b3dae15d7bd3f18a6"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getHistoryImmediateTasksQuery"
+      },
+      "sql_sha256": "b609f02d18983000ae229aca2fb1c23862c31d5fb9142fd40eb6a53a01b4fc5d"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getHistoryScheduledTasksQuery"
+      },
+      "sql_sha256": "e50ceff524128a26e8158e7e957a9e4707f2d16862a732fec9671ce689f6a93c"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTransferTasksQuery"
+      },
+      "sql_sha256": "ea333f1893ff08e155d09a5401bcf7ba30d539fd579b26edffde606470263018"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getReplicationTasksQuery"
+      },
+      "sql_sha256": "9aeef8fee1578481b1720f1b830fc7d879da4c50e2f0833365073d80f05f9714"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getReplicationTasksDLQQuery"
+      },
+      "sql_sha256": "a549dd49153109b3fc90ff78c2fa44d08e13c1ba99f772edaa590bc004096e8a"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getVisibilityTasksQuery"
+      },
+      "sql_sha256": "1e5b080f6c2f436ed0ae7c641327a889ce61738177375295b9bcf82ab16d997f"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/namespace.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listNamespacesQuery"
+      },
+      "sql_sha256": "3df9ec64584d8a9bea36b53c61153de2b72cb4c4c6961165417805525c8f2e1e"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/namespace.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listNamespacesRangeQuery"
+      },
+      "sql_sha256": "7d1d4f2e5961f23abf5adc2d6d967ffec45fcd3627c28168f67d304be44adec9"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/nexus_endpoints.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getEndpointsQry"
+      },
+      "sql_sha256": "8cdaa558e6beb4f77669ea36bd55405c59ca55af18e1046f552ce3d09b3bebf8"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/queue.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetMessagesQuery"
+      },
+      "sql_sha256": "253895590b88a1984815d675a245918d970979b747d3d67905f9830796b6bd5e"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/queue_v2.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetMessagesQueryV2"
+      },
+      "sql_sha256": "b048f59b62cca5d23d988069f86c86d9de1177321b05adf5b4b8e0ad1f058551"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/queue_v2.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetNameFromQueueMetadataV2"
+      },
+      "sql_sha256": "66c3506f463583108f878fe0e514ebc387aae572a9f2f49043099d7af729c723"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/task_queues.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTaskQueueWithHashRangeQry"
+      },
+      "sql_sha256": "3c8c83b06dcef33fd42165ad9ba233367a46e51645c8a23fc555af7e2492089c"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/task_queues.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTaskQueueQry"
+      },
+      "sql_sha256": "afc674dc7a2dacdf5290abbf71be5f3093563441432859c1aaa1a6026e11ecc7"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/task_user_data.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTaskQueueUserDataQry"
+      },
+      "sql_sha256": "113f7a085d22475190108188c1d1bd41f80c22f70bc9558041ddb1bc4f66ab96"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/task_v1.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTaskMinMaxQry"
+      },
+      "sql_sha256": "2d9b57c3dbff8b0f60c9e32b2b85403fa6743db2392d92cca39a4fbe27c28eb9"
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/task_v1.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTaskMinQry"
+      },
+      "sql_sha256": "acb2af997b6d471e3842ab73fefe0ec540d82c194315c0fc6b51159c53fe7a44"
+    },
+    {
+      "source": "river",
+      "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "queueList"
+      },
+      "sql_sha256": "d2116b561a689b5140d3012821e4d172a56a7e609aa0dcf53d54af25746ce441"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/task.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTaskListQry"
+      },
+      "sql_sha256": "143d59ee7ec1942cdc321ef387f728fd2d68e6c72c4d127ee20a6e74ea59394f"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/task.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTaskMinMaxQry"
+      },
+      "sql_sha256": "51c13b0f2c45722f5a3e98471e5d079658528052bc3b8e6db6954de347e162b0"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/task.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTaskMinQry"
+      },
+      "sql_sha256": "f827be057678f773d16126400d6b252aee4bb735cf63463829fdd3037d36e4ee"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/task.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getOrphanTaskQry"
+      },
+      "sql_sha256": "f3dda03525ca97fed832a08fd53005298db0782ac0ca8bd74e153f6f4b8c93c7"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/domain_audit_log.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "_selectDomainAuditLogsQuery"
+      },
+      "sql_sha256": "4e48eae7781b90eba318dfa6d5402b68a0c3c80b117dabd06abbda188dc79936"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/domain.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listDomainsQuery"
+      },
+      "sql_sha256": "be2f7ee75dccd3ea13b71c6c3a74acb365b3a8f6780340eb96baf1b3c9960d19"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/domain.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listDomainsRangeQuery"
+      },
+      "sql_sha256": "ce37561e83c27a8a070060715823e8985541aa11e5c4854edb987844f3f08617"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listExecutionQuery"
+      },
+      "sql_sha256": "e9d4e4ee46a8ecbf77add7b5d5148f22c4d5d38587a32558f080ef5b99acfe65"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTransferTasksQuery"
+      },
+      "sql_sha256": "dcbb30c2e65936e91156213b1ed43ccb6172838a2be428d8fba244e376beb9be"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getCrossClusterTasksQuery"
+      },
+      "sql_sha256": "7cbafc8247a001cfccfb29a6491fb47c82899d33b13b7df9bff1f39fc82d0817"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/visibility.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetOpenWorkflowExecutions"
+      },
+      "sql_sha256": "b9fd08b6af4e9f3cd624c636bf7957ef11ce36e9b010f2c2b6804fb0cd7ca9be"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/visibility.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetClosedWorkflowExecutions"
+      },
+      "sql_sha256": "021cef202904f6813506d95d3c48d863c3d100eb7e10eb22c6b7430dca38cf52"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/visibility.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetOpenWorkflowExecutionsByType"
+      },
+      "sql_sha256": "356f0a599ee9640ea4ada09e0cd5152c5ae2dd64cd55d68f99b636133cf35bb0"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/visibility.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetClosedWorkflowExecutionsByType"
+      },
+      "sql_sha256": "a2877391bcc4a2a96462145ae7e3f3c54c7a0f98c2cd2ba9980d1990ddffdfd0"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/visibility.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetOpenWorkflowExecutionsByID"
+      },
+      "sql_sha256": "6970917f5f49dee40d468f25b2726a039aff2a6a85cf8b8e9965ef1de6ff4943"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/visibility.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetClosedWorkflowExecutionsByID"
+      },
+      "sql_sha256": "ffa933708e3c4cbef76f411d59639b54bc6960b747f07eca600e7de4f4f585e5"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/visibility.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetClosedWorkflowExecutionsByStatus"
+      },
+      "sql_sha256": "3473872b914cd5810e748765fed0b41b7f1a2e47e32cbf3a6b928ea82b3db7c7"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/events.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getHistoryNodesQuery"
+      },
+      "sql_sha256": "7059b06d1a836ac6db5a582a9971230b2f9ba1ff0265215c7e9cdf5e5ff157e3"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/events.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getAllHistoryTreeQuery"
+      },
+      "sql_sha256": "33ea3228b6f51866700b01746dcfaa782ae1b8bba148b4db70443b66c3687b85"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/queue.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetMessagesQuery"
+      },
+      "sql_sha256": "a456215f482419f6913c4cc7bec5d484e3fe92e325da36fea559f3ce9088b544"
+    },
+    {
+      "source": "cadence",
+      "path": "common/persistence/sql/sqlplugin/postgres/queue.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetMessagesBetweenQuery"
+      },
+      "sql_sha256": "0d907bdb3d23ba31f035c41094a647d3679e6dca4c63b55fba0f1b08472a9126"
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/limit/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 23,
+        "end": 52,
+        "statement_index": 0
+      },
+      "sql_sha256": "8d53ff08c5fa6ceaea56da84391b34b4d9d2ab0d260b845d2187fd1b8dbbd53b"
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/select_limit/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24,
+        "end": 51,
+        "statement_index": 0
+      },
+      "sql_sha256": "7a25be1909333354ac06e4e6aac459c42c70d28e33616c6a98d5b3ad9ecfe80b"
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/select_limit/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 83,
+        "end": 120,
+        "statement_index": 1
+      },
+      "sql_sha256": "6d98bfd7836d078a4619900bfd3f181cdda18cfdd98de324aa0d9ea627488e8c"
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/params_location/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 572,
+        "end": 621,
+        "statement_index": 4
+      },
+      "sql_sha256": "b74e082b8ca8ca3a09196e50fc672a36dc7ed6c7ef5812e362837e101fe1d1dc"
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/params_location/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 654,
+        "end": 696,
+        "statement_index": 5
+      },
+      "sql_sha256": "6c396ac9ac8175028e7bbcb01287492453c1e0f3464fa1c8f9b7fbeb7db606be"
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/params_location/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 826,
+        "end": 936,
+        "statement_index": 7
+      },
+      "sql_sha256": "08d2b5d978935d241e75938018613ce7ef5b23a64a176abafd9652a42eb346e4"
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/fmt/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 501,
+        "end": 640,
+        "statement_index": 4
+      },
+      "sql_sha256": "bd92b08055f38fb5c85d7a1a96d769cfb430a6a519879755639ee2f8c6734c3a"
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/select_union/postgres/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 107,
+        "end": 168,
+        "statement_index": 1
+      },
+      "sql_sha256": "c039cc7bcd2aa71b7490238f9bb6ae2090a81b9bbf351576a618eaa42f61256d"
+    }
+  ]
+}

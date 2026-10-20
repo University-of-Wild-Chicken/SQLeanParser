@@ -1,0 +1,3 @@
+# Optional, isolated syntax-oracle dependency. Not used by the Lean build.
+# This wheel bundles PostgreSQL 17.7's raw parser (libpg_query).
+pglast==7.21

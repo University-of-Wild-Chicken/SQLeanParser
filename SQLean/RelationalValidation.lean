@@ -25,6 +25,17 @@ def SqlType.asNullable (type : SqlType) : SqlType := .nullable type.base
 
 def SqlType.numeric (type : SqlType) : Bool := type.base == .int || type.base == .real
 
+/-- PostgreSQL JSON has no ordinary equality/ordering operators; JSONB does.
+The other concrete types introduced here have both operators. -/
+def SqlType.equalityComparable (type : SqlType) : Bool :=
+  type.base != .opaque .json
+
+def SqlType.ordered (type : SqlType) : Bool :=
+  match type.base with
+  | .opaque .json => false
+  | .opaque _ => true
+  | type => type.numeric || type == .text
+
 private def numericResult (left right : SqlType) : Option SqlType :=
   if left.numeric && right.numeric then
     some (if left.base == .real || right.base == .real then .real else .int)
@@ -35,9 +46,10 @@ def relBinaryResult (op : BinOp) (left right : SqlType) : Option SqlType :=
     | .add | .sub | .mul | .div => numericResult left right
     | .and | .or => if left.base == SqlType.bool && right.base == SqlType.bool then some .bool else none
     | .eq | .ne =>
-        if left.base == right.base || (left.numeric && right.numeric) then some .bool else none
+        if (left.base == right.base && left.equalityComparable) || (left.numeric && right.numeric)
+        then some .bool else none
     | .lt | .le | .gt | .ge =>
-        if (left.numeric && right.numeric) || (left.base == SqlType.text && right.base == SqlType.text)
+        if (left.numeric && right.numeric) || (left.base == right.base && left.ordered)
         then some .bool else none
   result.map (fun type => if left.isNullable || right.isNullable then type.asNullable else type)
 
@@ -78,7 +90,8 @@ def RelExpr.isAggregateCall : RelExpr → Bool
 The SQL renderer retains the list so PostgreSQL can apply common-type coercion. -/
 def relInResult (arg : SqlType) (values : List SqlType) : Option SqlType :=
   if values.isEmpty then none
-  else if values.all (fun value => arg.base == value.base || (arg.numeric && value.numeric)) then
+  else if arg.equalityComparable &&
+      values.all (fun value => arg.base == value.base || (arg.numeric && value.numeric)) then
     some (if arg.isNullable || values.any SqlType.isNullable then .nullable .bool else .bool)
   else none
 

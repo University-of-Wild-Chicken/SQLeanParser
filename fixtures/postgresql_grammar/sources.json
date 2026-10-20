@@ -1,0 +1,45 @@
+{
+  "repository": "https://github.com/postgres/postgres",
+  "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+  "branch_at_selection": "REL_16_STABLE",
+  "version": "16.15",
+  "license": "PostgreSQL",
+  "files": [
+    {
+      "path": "COPYRIGHT",
+      "sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "bytes": 1198,
+      "source_url": "https://raw.githubusercontent.com/postgres/postgres/f0595c3d839debdb140903621c1b44a4f4d86256/COPYRIGHT"
+    },
+    {
+      "path": "configure.ac",
+      "sha256": "2872810e4a69e51a89e151079be3cc14c8b31bd215434d5f8720c763483f015f",
+      "bytes": 88126,
+      "source_url": "https://raw.githubusercontent.com/postgres/postgres/f0595c3d839debdb140903621c1b44a4f4d86256/configure.ac"
+    },
+    {
+      "path": "src/backend/parser/gram.y",
+      "sha256": "35d957e230167ecbd19b8c7f08b43ba070a3189c1d9de6c360b7fcebfbfd714f",
+      "bytes": 484337,
+      "source_url": "https://raw.githubusercontent.com/postgres/postgres/f0595c3d839debdb140903621c1b44a4f4d86256/src/backend/parser/gram.y"
+    },
+    {
+      "path": "src/backend/parser/scan.l",
+      "sha256": "ae655405b5b76434b0750f6cd9b99dafe46e395930b57515646c67accf5c2c29",
+      "bytes": 42947,
+      "source_url": "https://raw.githubusercontent.com/postgres/postgres/f0595c3d839debdb140903621c1b44a4f4d86256/src/backend/parser/scan.l"
+    },
+    {
+      "path": "src/backend/parser/parser.c",
+      "sha256": "a8d9fae970048dffb9069ff77d707223fc4c7540c55ddf06207f385fbff16a1f",
+      "bytes": 13855,
+      "source_url": "https://raw.githubusercontent.com/postgres/postgres/f0595c3d839debdb140903621c1b44a4f4d86256/src/backend/parser/parser.c"
+    },
+    {
+      "path": "src/include/parser/kwlist.h",
+      "sha256": "b9db8bdeecc085e015e6e958a53545ebe0d8fbadf1094bc885ae511d32ace819",
+      "bytes": 30143,
+      "source_url": "https://raw.githubusercontent.com/postgres/postgres/f0595c3d839debdb140903621c1b44a4f4d86256/src/include/parser/kwlist.h"
+    }
+  ]
+}

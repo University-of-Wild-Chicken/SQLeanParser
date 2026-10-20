@@ -71,7 +71,6 @@ private def rejected : List String := [
   "SELECT 1 INTERSECT ALL ALL SELECT 2", "SELECT 1 ORDER BY 1 UNION SELECT 2",
   "(SELECT id FROM users LIMIT 1) ORDER BY id DESC",
   "(SELECT id FROM users ORDER BY id) LIMIT 1",
-  "SELECT 1 LIMIT $1", "SELECT 1 LIMIT ?", "SELECT 1 OFFSET 1.5", "SELECT 1 LIMIT -1",
   "SELECT .", "SELECT 1e", "SELECT 1e+", "SELECT 1e-", "SELECT 1.2.3",
   "SELECT 1abc", "SELECT 1e2x", "SELECT .e2", "SELECT 1..2", "SELECT 1e2.0",
   "SELECT $0", "SELECT $", "SELECT $-1", "SELECT $1name", "SELECT ?, $1", "SELECT $1, ?",
@@ -107,6 +106,14 @@ private def exprShape (sql : String) (expected : Advanced.Expr) : IO Unit := do
 private def queryBody (sql : String) : IO Advanced.QueryBody := do
   return (← expectOk sql (Advanced.parseQuery sql)).body
 
+private def paginationAccepted :
+    List (String × Option Advanced.Expr × Option Advanced.Expr) := [
+  ("SELECT 1 LIMIT $1", some (.parameter (.numbered 1)), none),
+  ("SELECT 1 LIMIT ?", some (.parameter (.anonymous 1)), none),
+  ("SELECT 1 OFFSET 1.5", none, some (.decimal "1.5")),
+  ("SELECT 1 LIMIT -1", some (.unary .neg 1), none)
+]
+
 /-- Focused syntax, binding identity, precedence, diagnostic and roundtrip regressions. -/
 def advancedParsingTests : IO Nat := do
   for sql in accepted do
@@ -115,6 +122,12 @@ def advancedParsingTests : IO Nat := do
     SQLean.Tests.assert (ast == again) s!"canonical SQL changed AST: {sql}\n{Advanced.render ast}"
   for sql in rejected do
     expectError sql (Advanced.parse sql)
+  for (sql, limit, offset) in paginationAccepted do
+    let query ← expectOk sql (Advanced.parseQuery sql)
+    SQLean.Tests.assert (query.limit == limit && query.offset == offset)
+      s!"pagination expression or parameter identity changed: {sql}"
+    let again ← expectOk "pagination canonical SQL" (Advanced.parseQuery query.toSql)
+    SQLean.Tests.assert (query == again) s!"pagination canonical SQL changed AST: {sql}"
   let int (n : Nat) : Advanced.Expr := .literal (.int n)
   exprShape "1 + 2 * 3" (.binary .add (int 1) (.binary .mul (int 2) (int 3)))
   exprShape "-1.25::REAL" (.unary .neg (.cast (.decimal "1.25") {name := .real}))
@@ -145,6 +158,6 @@ def advancedParsingTests : IO Nat := do
   match Advanced.parse "SELECT 1;\n  1e+" with
   | .error e => SQLean.Tests.assert (e.position.line == 2 && e.position.column == 3) "numeric diagnostic lost source position"
   | .ok _ => throw (IO.userError "malformed numeric exponent accepted")
-  pure (accepted.length * 2 + rejected.length + 19)
+  pure (accepted.length * 2 + rejected.length + paginationAccepted.length * 2 + 19)
 
 end SQLean.Tests

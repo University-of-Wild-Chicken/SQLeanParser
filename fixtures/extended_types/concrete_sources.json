@@ -1,0 +1,794 @@
+{
+  "format_version": 1,
+  "factor": "extended-types",
+  "expected_count": 50,
+  "expected_sources": {
+    "hatchet": 20,
+    "sqlc": 1,
+    "postgres": 29
+  },
+  "sources": {
+    "hatchet": {
+      "repository": "https://github.com/hatchet-dev/hatchet",
+      "commit": "392e7c472221cdab235cca674640e98f904e1ea0",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/hatchet-LICENSE.txt",
+      "license_sha256": "7388b34bd1ad4b9db3c72dcb73f434ea27c88e5ca8f02a24d4f970c906d79be3",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "pkg/repository/sqlcv1/durable_event_log.sql.go",
+          "local_path": "fixtures/extended_types/sources/hatchet/pkg/repository/sqlcv1/durable_event_log.sql.go",
+          "sha256": "072cf1b3052eabf47dd67d8adb3393efc096ff2bfcba4cdd1a7705145594f1c6"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/streams.sql.go",
+          "local_path": "fixtures/extended_types/sources/hatchet/pkg/repository/sqlcv1/streams.sql.go",
+          "sha256": "2af22a6573406211320114588450e0a9005bc2e4c9aaf7e6a4c3b663f44b5284"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/tenants.sql.go",
+          "local_path": "fixtures/extended_types/sources/hatchet/pkg/repository/sqlcv1/tenants.sql.go",
+          "sha256": "d035e76f3d354c4a956e9d544a60689d7805f88451d7ffaef981259454a615c0"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/ticker.sql.go",
+          "local_path": "fixtures/extended_types/sources/hatchet/pkg/repository/sqlcv1/ticker.sql.go",
+          "sha256": "a7049565a6ee402b69257dfb9a4a521b188f72bb10fa51fb6782bf97a42ad6b0"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/workflows.sql.go",
+          "local_path": "fixtures/extended_types/sources/hatchet/pkg/repository/sqlcv1/workflows.sql.go",
+          "sha256": "0dd7b734ad4688e380ad82330b391c8cb8a7b1fe7e8d0eba9566728b1e561ed0"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/cast_null/pgx/v5/query.sql",
+          "local_path": "fixtures/extended_types/sources/sqlc/internal/endtoend/testdata/cast_null/pgx/v5/query.sql",
+          "sha256": "dd7454b21a29a72cef2c5582400d88e0c01c471345a7a1c717054342c0681778"
+        }
+      ]
+    },
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/date.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/date.sql",
+          "sha256": "616424ff98227d02b301013b618711b85ad1ff9e1619c7ec9f7bc362c265a1b0"
+        },
+        {
+          "path": "src/test/regress/sql/float4.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/float4.sql",
+          "sha256": "6a12f5516303990cf33621d44a516cf7d0771c487f15cf82d824087ed14db63f"
+        },
+        {
+          "path": "src/test/regress/sql/int2.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/int2.sql",
+          "sha256": "7ad2787de5515b80fae535d4cf38cedbc52065b02f16d0d79a0276d679e440f7"
+        },
+        {
+          "path": "src/test/regress/sql/interval.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/interval.sql",
+          "sha256": "d0250948638904fcb7f039d85ca99337c3041d805ff8475a7258faa576eab6b8"
+        },
+        {
+          "path": "src/test/regress/sql/json.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/json.sql",
+          "sha256": "021fa336d00f94afbc026e2d7d6eb6e526cc1af139452e7eb726a638fafe29a3"
+        },
+        {
+          "path": "src/test/regress/sql/jsonb.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/jsonb.sql",
+          "sha256": "136298080a23e5046eb99813168180377b5b6fa6bc036f47af8e5d7b08618061"
+        },
+        {
+          "path": "src/test/regress/sql/strings.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/strings.sql",
+          "sha256": "a7828ef7fed9179d3de172fba7a81b75268606b7d43acda8943bce17c72480db"
+        },
+        {
+          "path": "src/test/regress/sql/time.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/time.sql",
+          "sha256": "89f74ddb5ec458c8f9ff219eab06f48f6ea13767c563782f80569ce364d0960c"
+        },
+        {
+          "path": "src/test/regress/sql/timestamp.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/timestamp.sql",
+          "sha256": "68b4cd1d083eac4379f7603fa5ca8c7580d5f755d0682161753da4b4ef69f99b"
+        },
+        {
+          "path": "src/test/regress/sql/timestamptz.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/timestamptz.sql",
+          "sha256": "343ac9b784dd67c56f1e16c6d1b93a21713cade546609f4c7a08e2de27d9d324"
+        },
+        {
+          "path": "src/test/regress/sql/timetz.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/timetz.sql",
+          "sha256": "ece2756ca374eeb6a319bd733870acfd62eb65120f8642d437f0cda3952b1209"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/streams.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "countStreamTopics"
+      },
+      "sql_sha256": "fe74b15548b6b330e7c2db88e8ad6f1a65f0137b285920245bd138c2ed496546",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/streams.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getStreamPayload"
+      },
+      "sql_sha256": "5d33f1b0312e99fac86203839a714d75eb40f53a98a9914adbd652678609b5e3",
+      "new_type_families": [
+        "timestamptz",
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/streams.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listStreamRetentionDeleteCandidates"
+      },
+      "sql_sha256": "4760093bfc02dc07436784076463de89a12055f043a2a2db04d384cb3d11159e",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getWorkflowById"
+      },
+      "sql_sha256": "3d30ab3cbae8e4bc1972c0d2bcb9551834358323e3307beec124e1dca6c3af9c",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getWorkflowByName"
+      },
+      "sql_sha256": "26c3f14833ab758adb90cefd9b06217ade3572ed29a44faa3fe38b447107ce78",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getWorkflowLatestVersion"
+      },
+      "sql_sha256": "dbf3d8f78299fb8956bb7a2f1862364b66ae22a912fdec0046c3334ba45cdb4d",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getWorkflowVersionById"
+      },
+      "sql_sha256": "f665f8cf71cc0b81b17bbb247a25f200e96031a8cd2cbd8580af1cdf5661df98",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getWorkflowVersionCronTriggerRefs"
+      },
+      "sql_sha256": "1f884055acdddd611b34c55b9e4188b75bb793abe58eadc641c41353ffe3eace",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getWorkflowVersionEventTriggerRefs"
+      },
+      "sql_sha256": "2d4e2b0f188b03f7340c4f3fb91348b7862ee7b66981eb9ac27b17e9ff933fa6",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getWorkflowVersionScheduleTriggerRefs"
+      },
+      "sql_sha256": "11ab4de0bd006ee9fbe5c315de50a3afd0ad4cca816d4a53666ef3d92aae9d90",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listWorkflowConcurrencyByVersionId"
+      },
+      "sql_sha256": "b6a703b50d2845c80c3a8c86e196661d70acf7164f1869d4769351e33154a7c2",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/ticker.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTickers"
+      },
+      "sql_sha256": "5451ef659d314246b4a37afb21a950f049cbe84bf5e4602010786a70f79d6ea3",
+      "new_type_families": [
+        "timestamp"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tenants.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTenantByID"
+      },
+      "sql_sha256": "f54c260184981e4ebb323515263db6f0d0d5d6907308fa62c701b910f48bbde2",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tenants.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTenantMemberByID"
+      },
+      "sql_sha256": "cccdb18d07be04a72c5a8df49056627eb7399bad5dadf7bdb48ee58b786ef8f8",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tenants.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTenantMemberByUserID"
+      },
+      "sql_sha256": "c3d7a8fbe5d28c78235b3cebd2461c8f8b8c6fa4979ceaabeda145a3e88ee56d",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tenants.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getEmailGroups"
+      },
+      "sql_sha256": "81f8abf260cfac447b1cd2fe404d955a654d1d7b17b5cc555485844739f30e21",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tenants.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getMemberEmailGroup"
+      },
+      "sql_sha256": "fce0b07146200b3b9779b717c24737b2bdd0c5703652124f0674377a330fc2c9",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tenants.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTenantAlertingSettings"
+      },
+      "sql_sha256": "655681741bf246d81139a453a3ebf64f4a865c939007b8d7a6c085f426fcc237",
+      "new_type_families": [
+        "uuid"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/durable_event_log.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getDurableEventLogEntry"
+      },
+      "sql_sha256": "2de6eff99870c199b8f072d1bf83d59eec5a4916bdffe2e3a2892455e1bfe838",
+      "new_type_families": [
+        "timestamptz"
+      ]
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/durable_event_log.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listDurableEventLogEntriesBeforeNode"
+      },
+      "sql_sha256": "9c4f1bc9a43ba909b0c38d3cbac7a6b4dc8a7fb218d974d8dbedf7d8b1b44132",
+      "new_type_families": [
+        "timestamptz",
+        "uuid"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/float4.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3026,
+        "end": 3057,
+        "statement_index": 60
+      },
+      "sql_sha256": "724ed169f4e3d959c376d3b18a374f784a222f9b6b94f9ba189dcc54ef48299e",
+      "new_type_families": [
+        "int2"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/int2.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1004,
+        "end": 1054,
+        "statement_index": 18
+      },
+      "sql_sha256": "df9e35437bf924b49e9336217db8a92a92169fe640cec14c9191603af8ad26e0",
+      "new_type_families": [
+        "int2"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2859,
+        "end": 2917,
+        "statement_index": 62
+      },
+      "sql_sha256": "6539f24f9a6a36b8191752d13e11eab22f0cc012a36f1488a22941f126209791",
+      "new_type_families": [
+        "bpchar"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2969,
+        "end": 3027,
+        "statement_index": 63
+      },
+      "sql_sha256": "af16bea435232a166f7b14667a030ec3c915cdca85bc22df9b1901287c0d6a16",
+      "new_type_families": [
+        "bpchar"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3029,
+        "end": 3093,
+        "statement_index": 64
+      },
+      "sql_sha256": "f1d67a37f8fa3f63ff82f7c09f18a2080e6dc9418801fd7b99a306a472261390",
+      "new_type_families": [
+        "bpchar"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17786,
+        "end": 17834,
+        "statement_index": 246
+      },
+      "sql_sha256": "e6a865ad64619dbfe7f3d4d3397e8e6d151ac3a2296c1cc16d0ae33942b29a25",
+      "new_type_families": [
+        "bytea"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17835,
+        "end": 17888,
+        "statement_index": 247
+      },
+      "sql_sha256": "d592501908bb55b5d61515e16fbfbe2ca0834fbde6cc83efa065f5ea6f8ddb3c",
+      "new_type_families": [
+        "bytea"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1104,
+        "end": 1129,
+        "statement_index": 24
+      },
+      "sql_sha256": "a16a364cc66ae9b5552f66c7e0dbe14796628f11515cb3bc3876097f0acba7f6",
+      "new_type_families": [
+        "date"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1130,
+        "end": 1155,
+        "statement_index": 25
+      },
+      "sql_sha256": "e85a5631bb647c433cf477a8124f7ec7b14ba9716b8a18b9bcae889bd4890e92",
+      "new_type_families": [
+        "date"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1254,
+        "end": 1277,
+        "statement_index": 30
+      },
+      "sql_sha256": "bfe898642c532dc40bf33cc1187f33584a306d9f0e204b17e4629f6e865205e1",
+      "new_type_families": [
+        "date"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/time.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 982,
+        "end": 1013,
+        "statement_index": 17
+      },
+      "sql_sha256": "2fa7a3ff09186542fda297b4a8fa4e980c619bd48a0f9914cbe187f9328eb155",
+      "new_type_families": [
+        "time"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/time.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1100,
+        "end": 1124,
+        "statement_index": 20
+      },
+      "sql_sha256": "e0c9cddd31ef3b1fbe76fc71fbdb49638df1db4dc2550464789a475556be37f8",
+      "new_type_families": [
+        "time"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1327,
+        "end": 1364,
+        "statement_index": 21
+      },
+      "sql_sha256": "95f0427473f3d285195a46a36dd91408617a8d0411adc5addd10414cab3376f7",
+      "new_type_families": [
+        "timetz"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1463,
+        "end": 1493,
+        "statement_index": 24
+      },
+      "sql_sha256": "762d542ce1e47e561f927a2395b1e727afb7e138147e2d0b45ddd45fec309093",
+      "new_type_families": [
+        "timetz"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamp.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1358,
+        "end": 1448,
+        "statement_index": 19
+      },
+      "sql_sha256": "4ffdbe6a552f0b8e2aab8da3e368020aaa354d9568fe31ef1b7012ea2b91b017",
+      "new_type_families": [
+        "timestamp"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamp.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6694,
+        "end": 6737,
+        "statement_index": 101
+      },
+      "sql_sha256": "754f0e239197d540ee3a6bcc02c60e6db6e866f270d3cfaa7cb6a82574c761f6",
+      "new_type_families": [
+        "timestamp"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamp.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6942,
+        "end": 7026,
+        "statement_index": 105
+      },
+      "sql_sha256": "6c895e5208a3423b4979d22d2c5959e5fc04e79b1f45da83b257ce450d370c20",
+      "new_type_families": [
+        "timestamp"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamptz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4679,
+        "end": 4733,
+        "statement_index": 67
+      },
+      "sql_sha256": "ecca514224027ae599fbfea4d74581c78a427115c717f07ed4c306c48c748ec6",
+      "new_type_families": [
+        "timestamptz"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamptz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4741,
+        "end": 4795,
+        "statement_index": 68
+      },
+      "sql_sha256": "5234d60b6ff9587fa33c04524e4bc725eb3b089f093c81de6d6af80bd02b3bf4",
+      "new_type_families": [
+        "timestamptz"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamptz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8462,
+        "end": 8545,
+        "statement_index": 124
+      },
+      "sql_sha256": "6a296a2b3df94ab583130218cc96135264318b2838527418ed5b0f7799488d39",
+      "new_type_families": [
+        "timestamptz"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 115,
+        "end": 153,
+        "statement_index": 2
+      },
+      "sql_sha256": "b483cd5b5c36afddac1e569123daeeb49a0091f78f5c488e5d558c34b266ea21",
+      "new_type_families": [
+        "interval"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 154,
+        "end": 194,
+        "statement_index": 3
+      },
+      "sql_sha256": "b0941a5e15b216c3413919818b4e71a8c9d296fb1201703a6b84aa9f8b2373b7",
+      "new_type_families": [
+        "interval"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6490,
+        "end": 6614,
+        "statement_index": 84
+      },
+      "sql_sha256": "d5803e9b65afbd92f729c175037dc72151d2388baa139b9001b31557ccffb31d",
+      "new_type_families": [
+        "interval"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/json.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 620,
+        "end": 637,
+        "statement_index": 9
+      },
+      "sql_sha256": "48ee614b06940ca40c79314be9cb5381b220ff7087a2ca77ffb54e8f73b8abc4",
+      "new_type_families": [
+        "json"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/json.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1272,
+        "end": 1293,
+        "statement_index": 21
+      },
+      "sql_sha256": "c4fae85901308c029cb8227f2767edb1070b7518ed84fc3a17d9537c03df0d13",
+      "new_type_families": [
+        "json"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/json.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1544,
+        "end": 1569,
+        "statement_index": 27
+      },
+      "sql_sha256": "e65c67b72c8c426000092d3ddc710186b8687fbbdfed5ad4d8e964eac1a0f494",
+      "new_type_families": [
+        "json"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 661,
+        "end": 679,
+        "statement_index": 9
+      },
+      "sql_sha256": "e7afb70332db51bcdebaa9069619b7e0ca54eacf4eb1af79f5328be091c3d047",
+      "new_type_families": [
+        "jsonb"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1325,
+        "end": 1347,
+        "statement_index": 21
+      },
+      "sql_sha256": "e429bb593c84b265f1d05dd5f203bd5e6f5b664d44b76306141cef8c2f4b600c",
+      "new_type_families": [
+        "jsonb"
+      ]
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1603,
+        "end": 1629,
+        "statement_index": 27
+      },
+      "sql_sha256": "d7164fa0cc49b684f18d7a128613a208d2077e4dd3715614e8f3c9831c18ced4",
+      "new_type_families": [
+        "jsonb"
+      ]
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/cast_null/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 28,
+        "end": 124,
+        "statement_index": 0
+      },
+      "sql_sha256": "d36aaf61f857d388c8faeab731bd9effd0af72fe30934423e1ce20ed774a171b",
+      "new_type_families": [
+        "time"
+      ]
+    }
+  ]
+}

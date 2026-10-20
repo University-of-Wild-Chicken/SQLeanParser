@@ -31,6 +31,52 @@ mutual
     | isNull arg negated => simp only [translateExpr, translateExpr_idempotent arg]
     | pattern arg pattern insensitive => simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent pattern]
     | cast arg target => simp only [translateExpr, translateExpr_idempotent arg]
+    | call name args =>
+        simp only [translateExpr, List.attach_map_val]
+        congr 1
+        exact map_twice translateExpr args fun arg member =>
+          have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+          translateExpr_idempotent arg
+    | coalesce args =>
+        simp only [translateExpr, List.attach_map_val]
+        congr 1
+        exact map_twice translateExpr args fun arg member =>
+          have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+          translateExpr_idempotent arg
+    | greatest args =>
+        simp only [translateExpr, List.attach_map_val]
+        congr 1
+        exact map_twice translateExpr args fun arg member =>
+          have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+          translateExpr_idempotent arg
+    | least args =>
+        simp only [translateExpr, List.attach_map_val]
+        congr 1
+        exact map_twice translateExpr args fun arg member =>
+          have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+          translateExpr_idempotent arg
+    | nullIf left right =>
+        simp only [translateExpr, translateExpr_idempotent left, translateExpr_idempotent right]
+    | caseExpr operand branches otherwise =>
+        conv => lhs; arg 1; rw [translateExpr.eq_def]
+        conv => lhs; rw [translateExpr.eq_def]
+        conv => rhs; rw [translateExpr.eq_def]
+        simp only [List.attach_map_val (f := fun pair : Advanced.Expr × Advanced.Expr =>
+          (translateExpr pair.1, translateExpr pair.2)), Advanced.Expr.caseExpr.injEq]
+        refine ⟨?_, ?_, ?_⟩
+        · cases operand with
+          | none => rfl
+          | some arg => simp only [translateExpr_idempotent arg]
+        · exact map_twice
+            (fun pair : Advanced.Expr × Advanced.Expr => (translateExpr pair.1, translateExpr pair.2))
+            branches fun pair member => by
+              have : sizeOf pair < sizeOf branches := List.sizeOf_lt_of_mem member
+              have : sizeOf pair.1 < sizeOf pair := by cases pair; simp; omega
+              have : sizeOf pair.2 < sizeOf pair := by cases pair; simp; omega
+              simp only [translateExpr_idempotent pair.1, translateExpr_idempotent pair.2]
+        · cases otherwise with
+          | none => rfl
+          | some arg => simp only [translateExpr_idempotent arg]
     | filteredAggregate aggregate predicate => simp only [translateExpr, translateExpr_idempotent aggregate, translateExpr_idempotent predicate]
     | inList arg values =>
         simp only [translateExpr, List.attach_map_val, translateExpr_idempotent arg]
@@ -122,15 +168,21 @@ mutual
   theorem translateParameters_idempotent (query : Advanced.Query) :
       translateParameters (translateParameters query) = translateParameters query := by
     cases query with
-    | mk body ctes recursive orderBy limit offset =>
+    | mk body ctes recursive orderBy limit offset locking offsetFirst =>
       simp only [translateParameters, List.attach_map_val, Advanced.Query.mk.injEq, translateQueryBody_idempotent body]
-      refine ⟨True.intro, ?_, True.intro, ?_, True.intro, True.intro⟩
+      refine ⟨True.intro, ?_, True.intro, ?_, ?_, ?_, True.intro, True.intro⟩
       · exact map_twice translateCTE ctes fun cte member =>
           have : sizeOf cte < sizeOf ctes := List.sizeOf_lt_of_mem member
           translateCTE_idempotent cte
       · exact map_twice translateOrderBy orderBy fun order member =>
           have : sizeOf order < sizeOf orderBy := List.sizeOf_lt_of_mem member
           translateOrderBy_idempotent order
+      · cases limit with
+        | none => rfl
+        | some expr => simp only [translateExpr_idempotent expr]
+      · cases offset with
+        | none => rfl
+        | some expr => simp only [translateExpr_idempotent expr]
   termination_by sizeOf query
   decreasing_by all_goals (simp_all <;> omega)
 

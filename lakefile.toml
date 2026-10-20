@@ -1,6 +1,6 @@
 name = "sqlean"
 version = "0.1.0"
-defaultTargets = ["SQLean", "sqlean", "sqlean_tests"]
+defaultTargets = ["SQLean", "sqlean", "sqlean_tests", "sqlean_pg_grammar"]
 
 [[lean_lib]]
 name = "SQLean"
@@ -19,3 +19,7 @@ name = "Tests"
 [[lean_exe]]
 name = "sqlean_scope_tests"
 root = "ScopeContractMain"
+
+[[lean_exe]]
+name = "sqlean_pg_grammar"
+root = "PostgresGrammarMain"

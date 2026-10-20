@@ -86,24 +86,11 @@ def checkExpanded (catalog : Advanced.Catalog) (params : Advanced.ParameterEnv)
         .inconclusive ⟨"resource.depth", error.message⟩
       else .rejected ⟨"expanded.rejected", error.message⟩
 
-/-- Exact parameter declarations for the contract API. Wider concrete types are
-retained and reported Unsupported by basicV01, rather than collapsed to families. -/
+/-- Exact parameter declarations for the contract API, including precision,
+scale, lengths, and nullable suffixes. No numeric-family conversion occurs. -/
 def parseContractParameterTypes (source : String) : Except String SelectContract.ParameterEnv := do
-  if source.isEmpty then return []
-  (source.splitOn ",").zipIdx.mapM fun (token, index) => do
-    let token := token.trimAscii.toString
-    let nullable := token.endsWith "?"
-    let name := if nullable then token.dropEnd 1 |>.toString else token
-    let typeName ← match name with
-      | "int" | "int32" => pure Advanced.TypeName.int
-      | "bigint" | "int64" => pure .bigInt
-      | "text" => pure .text
-      | "bool" => pure .bool
-      | "real" | "float32" => pure .real
-      | "double" | "float64" => pure .doublePrecision
-      | "numeric" => pure .numeric
-      | "varchar" => pure .varchar
-      | _ => throw s!"unknown contract parameter type '{name}'"
-    pure { index := index + 1, type := ⟨typeName, []⟩, nullable }
+  let declarations ← (Advanced.parseParameterDeclarations source).mapError toString
+  pure (declarations.zipIdx.map fun ((type, nullable), index) =>
+    { index := index + 1, type, nullable })
 
 end SQLean.Assurance

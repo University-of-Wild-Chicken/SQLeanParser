@@ -8,9 +8,14 @@ private def invalid (message : String) : Except ValidationError α := .error ⟨
 private def defaultExpression : Nat → Expr → Bool
   | 0, _ => false
   | _ + 1, .literal _ | _ + 1, .null | _ + 1, .decimal _ => true
-  | n + 1, .binary _ left right | n + 1, .pattern left right _ =>
+  | n + 1, .binary _ left right | n + 1, .pattern left right _ | n + 1, .nullIf left right =>
       defaultExpression n left && defaultExpression n right
   | n + 1, .unary _ arg | n + 1, .cast arg _ | n + 1, .isNull arg _ => defaultExpression n arg
+  | n + 1, .call _ args | n + 1, .coalesce args | n + 1, .greatest args | n + 1, .least args =>
+      args.all (defaultExpression n)
+  | n + 1, .caseExpr operand branches otherwise => operand.all (defaultExpression n) &&
+      branches.all (fun branch => defaultExpression n branch.1 && defaultExpression n branch.2) &&
+      otherwise.all (defaultExpression n)
   | n + 1, .inList arg values => defaultExpression n arg && values.all (defaultExpression n)
   | n + 1, .between arg lower upper _ =>
       defaultExpression n arg && defaultExpression n lower && defaultExpression n upper
@@ -20,7 +25,7 @@ def checkColumnDefault (schema : Schema) (column : Column) : Except ValidationEr
   requireCheck (validDataType column.type) s!"invalid type for column '{column.name}'"
   if let some value := column.defaultValue then
     requireCheck (defaultExpression 1024 value)
-      "defaults must be constant scalar expressions without subqueries or parameters"
+      "defaults must be scalar expressions without columns, subqueries or parameters"
     let type ← inferExpr 1024 schema [] [] false value
     requireCheck (assignmentCompatible type column.sqlType)
       s!"default does not match column '{column.name}'"

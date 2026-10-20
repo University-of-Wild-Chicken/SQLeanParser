@@ -11,10 +11,41 @@ execution or a claim that every advanced construct has basic-tier validity.
 -/
 namespace SQLean.RenderContract
 open Advanced SelectContract
+set_option maxHeartbeats 1000000
+
+@[simp] theorem translateExpr_case (operand : Option Advanced.Expr)
+    (branches : List (Advanced.Expr × Advanced.Expr)) (otherwise : Option Advanced.Expr) :
+    translateExpr (.caseExpr operand branches otherwise) =
+      .caseExpr (operand.map translateExpr)
+        (branches.map fun pair => (translateExpr pair.1, translateExpr pair.2))
+        (otherwise.map translateExpr) := by
+  rw [translateExpr.eq_def]
+  simp only [List.attach_map_val (f := fun pair : Advanced.Expr × Advanced.Expr =>
+    (translateExpr pair.1, translateExpr pair.2))]
+  cases operand <;> cases otherwise <;> rfl
 
 @[simp] theorem translateParameter_index (parameter : Parameter) :
     parameterIndex (translateParameter parameter) = parameterIndex parameter := by
   cases parameter <;> rfl
+
+@[simp] theorem ordinary_unary_translated (op : UnOp) (expr : Advanced.Expr) :
+    OrdinaryUnary op (translateExpr expr) ↔ OrdinaryUnary op expr := by
+  cases op <;> cases expr <;> simp [OrdinaryUnary, translateExpr]
+
+@[simp] theorem scalar_input_translated (expr : Advanced.Expr) (type : ExprType) :
+    scalarInput (translateExpr expr) type = scalarInput expr type := by
+  cases expr <;> simp [translateExpr, scalarInput]
+
+@[simp] theorem scalar_inputs_translated (exprs : List Advanced.Expr) (types : List ExprType) :
+    scalarInputs (exprs.map translateExpr) types = scalarInputs exprs types := by
+  induction exprs generalizing types with
+  | nil => cases types <;> rfl
+  | cons expr exprs ih =>
+    cases types with
+    | nil => rfl
+    | cons type types =>
+      simpa only [scalarInputs, List.zip_cons_cons, List.map_cons, scalar_input_translated] using
+        congrArg (scalarInput expr type :: ·) (ih types)
 
 mutual
   /-- Each scalar typing derivation survives the explicit parameter translation,
@@ -24,6 +55,11 @@ mutual
       ExprValid params scope (translateExpr expr) type (uses.map translateParameter) := by
     cases valid with
     | int range => simpa only [translateExpr, List.map_nil] using ExprValid.int range
+    | bigInt large range => simpa only [translateExpr, List.map_nil] using ExprValid.bigInt large range
+    | numericInt large => simpa only [translateExpr, List.map_nil] using ExprValid.numericInt large
+    | decimal lexical => simpa only [translateExpr, List.map_nil] using ExprValid.decimal lexical
+    | minInt32 => simpa only [translateExpr, List.map_nil] using ExprValid.minInt32
+    | minInt64 => simpa only [translateExpr, List.map_nil] using ExprValid.minInt64
     | text => simpa only [translateExpr, List.map_nil] using ExprValid.text
     | bool => simpa only [translateExpr, List.map_nil] using ExprValid.bool
     | null => simpa only [translateExpr, List.map_nil] using ExprValid.null
@@ -36,15 +72,52 @@ mutual
     | binary left right signature =>
         simpa only [translateExpr, List.map_append] using
           ExprValid.binary (expr_valid_translated left) (expr_valid_translated right) signature
-    | unary arg signature =>
+    | unary arg signature ordinary =>
         simpa only [translateExpr] using ExprValid.unary (expr_valid_translated arg) signature
+          ((ordinary_unary_translated _ _).mpr ordinary)
     | isNull arg =>
         simpa only [translateExpr] using ExprValid.isNull (expr_valid_translated arg)
     | pattern arg pattern signature =>
         simpa only [translateExpr, List.map_append] using
           ExprValid.pattern (expr_valid_translated arg) (expr_valid_translated pattern) signature
-    | cast arg supported =>
-        simpa only [translateExpr] using ExprValid.cast (expr_valid_translated arg) supported
+    | cast arg supported declaration allowed =>
+        simpa only [translateExpr] using ExprValid.cast (expr_valid_translated arg) supported declaration allowed
+    | call args signature =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.call (expr_list_valid_translated args) (by simpa using signature)
+    | coalesce args signature =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.coalesce (expr_list_valid_translated args) (by simpa using signature)
+    | greatest args signature =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.greatest (expr_list_valid_translated args) (by simpa using signature)
+    | least args signature =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.least (expr_list_valid_translated args) (by simpa using signature)
+    | nullIf left right signature =>
+        simpa only [translateExpr, List.map_append] using
+          ExprValid.nullIf (expr_valid_translated left) (expr_valid_translated right)
+            (by simpa using signature)
+    | @caseExpr operand ta ua branches conditions results ub otherwise te ue result
+        operandValid branchesValid otherwiseValid signature =>
+        have transformedSignature :
+            caseSignature ((operand.map translateExpr).map fun expr => scalarInput expr ta)
+              (scalarInputs ((branches.map fun pair => (translateExpr pair.1, translateExpr pair.2)).map Prod.fst) conditions)
+              (scalarInputs ((branches.map fun pair => (translateExpr pair.1, translateExpr pair.2)).map Prod.snd) results)
+              (((otherwise.map translateExpr).map fun expr => scalarInput expr te).getD (.unknown true)) =
+              some result := by
+          have fstMap :
+              (branches.map (fun pair => (translateExpr pair.1, translateExpr pair.2))).map Prod.fst =
+                (branches.map Prod.fst).map translateExpr := by simp only [List.map_map, Function.comp_def]
+          have sndMap :
+              (branches.map (fun pair => (translateExpr pair.1, translateExpr pair.2))).map Prod.snd =
+                (branches.map Prod.snd).map translateExpr := by simp only [List.map_map, Function.comp_def]
+          simpa only [fstMap, sndMap, scalar_inputs_translated, Option.map_map, Function.comp_def,
+            scalar_input_translated] using signature
+        have resultValid := ExprValid.caseExpr
+          (optional_expr_valid_translated operandValid) (branches_valid_translated branchesValid)
+          (optional_expr_valid_translated otherwiseValid) transformedSignature
+        simpa only [translateExpr_case, List.map_append] using resultValid
     | inList arg values nonempty signature =>
         simpa only [translateExpr, List.attach_map_val, List.map_append] using
           ExprValid.inList (expr_valid_translated arg) (expr_list_valid_translated values)
@@ -67,19 +140,34 @@ mutual
           ExprListValid.cons (expr_valid_translated head) (expr_list_valid_translated tail)
   termination_by sizeOf exprs
   decreasing_by all_goals (simp_all <;> omega)
+
+  theorem optional_expr_valid_translated
+      (valid : OptionalExprValid params scope expr type uses) :
+      OptionalExprValid params scope (expr.map translateExpr) type (uses.map translateParameter) := by
+    cases valid with
+    | absent => exact OptionalExprValid.absent
+    | present typed => exact OptionalExprValid.present (expr_valid_translated typed)
+  termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  theorem branches_valid_translated
+      (valid : BranchesValid params scope branches conditions results uses) :
+      BranchesValid params scope
+        (branches.map fun branch => (translateExpr branch.1, translateExpr branch.2))
+        conditions results (uses.map translateParameter) := by
+    cases valid with
+    | nil => exact BranchesValid.nil
+    | cons conditionTyped resultTyped tail =>
+      simpa only [List.map_cons, List.map_append] using
+        BranchesValid.cons (expr_valid_translated conditionTyped) (expr_valid_translated resultTyped)
+          (branches_valid_translated tail)
+  termination_by sizeOf branches
+  decreasing_by all_goals (simp_all <;> omega)
 end
 
 @[simp] theorem translated_output_name (expr : Advanced.Expr) (alias : Option Name) :
     outputName (translateExpr expr) alias = outputName expr alias := by
-  cases expr <;> simp only [translateExpr, outputName]
-
-theorem source_valid_translated (valid : SourceValid catalog source scope) :
-    SourceValid catalog (source.map translateSource) scope := by
-  cases valid with
-  | empty => exact SourceValid.empty
-  | table present sameName aliasValid columns =>
-      simpa only [Option.map_some, translateSource] using
-        SourceValid.table present sameName aliasValid columns
+  cases expr <;> simp only [translateExpr, translateExpr_case, outputName]
 
 theorem items_valid_translated (valid : ItemsValid params scope items output uses) :
     ItemsValid params scope (items.map translateSelectItem) output
@@ -100,25 +188,62 @@ theorem predicate_valid_translated (valid : PredicateValid params scope predicat
   | present typed boolean =>
       exact PredicateValid.present (expr_valid_translated typed) boolean
 
+/-- Relation identity and NULL-extension ancestry do not depend on parameter
+notation, including for sources outside the independent validity fragment. -/
+@[simp] theorem from_relations_translated (source : Advanced.From) :
+    fromRelations (translateSource source) = fromRelations source := by
+  cases source with
+  | table name alias columns => simp only [translateSource, fromRelations]
+  | derived query alias columns lateral => simp only [translateSource, fromRelations]
+  | join kind left right condition =>
+      simp only [translateSource, fromRelations,
+        from_relations_translated left, from_relations_translated right]
+termination_by sizeOf source
+decreasing_by all_goals (simp_all <;> omega)
+
+@[simp] theorem source_relations_translated (source : Option Advanced.From) :
+    sourceRelations (source.map translateSource) = sourceRelations source := by
+  cases source <;> simp [sourceRelations]
+
+@[simp] theorem from_derived_names_translated (source : Advanced.From) :
+    fromDerivedNames (translateSource source) = fromDerivedNames source := by
+  cases source with
+  | table name alias columns => simp only [translateSource, fromDerivedNames]
+  | derived query alias columns lateral => simp only [translateSource, fromDerivedNames]
+  | join kind left right condition =>
+      simp only [translateSource, fromDerivedNames,
+        from_derived_names_translated left, from_derived_names_translated right]
+termination_by sizeOf source
+decreasing_by all_goals (simp_all <;> omega)
+
+@[simp] theorem source_derived_names_translated (source : Option Advanced.From) :
+    sourceDerivedNames (source.map translateSource) = sourceDerivedNames source := by
+  cases source <;> simp [sourceDerivedNames]
+
+@[simp] theorem join_aliases_distinct_translated (left right : Advanced.From) :
+    JoinAliasesDistinct (translateSource left) (translateSource right) ↔
+      JoinAliasesDistinct left right := by
+  simp only [JoinAliasesDistinct, from_relations_translated]
+
 @[simp] theorem translated_sort_expression (expr : Advanced.Expr) :
     SortExpression (translateExpr expr) ↔ SortExpression expr := by
-  cases expr <;> simp only [translateExpr, SortExpression]
+  cases expr <;> simp only [translateExpr, translateExpr_case, SortExpression]
 
 theorem sort_valid_translated (valid : SortValid params scope output distinct expr uses) :
     SortValid params scope output distinct (translateExpr expr)
       (uses.map translateParameter) := by
   cases valid with
-  | ordinal positive inRange =>
-      simpa only [translateExpr, List.map_nil] using SortValid.ordinal positive inRange
-  | outputName resolved =>
-      simpa only [translateExpr, List.map_nil] using SortValid.outputName resolved
-  | inputName noOutput ordinary typed =>
+  | ordinal positive inRange orderable =>
+      simpa only [translateExpr, List.map_nil] using SortValid.ordinal positive inRange orderable
+  | outputName resolved orderable =>
+      simpa only [translateExpr, List.map_nil] using SortValid.outputName resolved orderable
+  | inputName noOutput ordinary typed orderable =>
       simpa only [translateExpr] using
         SortValid.inputName noOutput ordinary
-          (by simpa only [translateExpr] using expr_valid_translated typed)
-  | expression ordinary typed category =>
+          (by simpa only [translateExpr] using expr_valid_translated typed) orderable
+  | expression ordinary typed category orderable =>
       exact SortValid.expression ordinary (expr_valid_translated typed)
-        ((translated_sort_expression _).mpr category)
+        ((translated_sort_expression _).mpr category) orderable
 
 theorem orders_valid_translated (valid : OrdersValid params scope output distinct orders uses) :
     OrdersValid params scope output distinct (orders.map translateOrderBy)
@@ -144,31 +269,133 @@ theorem parameter_order_translated (ordered : ParameterOrder uses) :
     simp only [translateParameter, NumberedPositive]
     omega
 
+/-- Translation preserves closed pagination typing and its contextual widening. -/
+theorem pagination_valid_translated (valid : PaginationValid params bound uses) :
+    PaginationValid params (bound.map translateExpr) (uses.map translateParameter) := by
+  cases valid with
+  | absent => exact .absent
+  | present typed coercion =>
+      exact .present (expr_valid_translated typed) coercion
+
+/-- The local pagination certificate remains useful independently of coverage
+for the query body, while parameter identities and occurrence order survive. -/
+theorem pagination_bounds_valid_translated
+    (valid : PaginationBoundsValid profile params query limitUses offsetUses) :
+    PaginationBoundsValid profile params (translateParameters query)
+      (limitUses.map translateParameter) (offsetUses.map translateParameter) := by
+  cases valid with
+  | bounds environment limitValid offsetValid =>
+      apply PaginationBoundsValid.bounds environment
+      · have translated := pagination_valid_translated limitValid
+        simp only [translateParameters]
+        split <;> simp_all
+      · have translated := pagination_valid_translated offsetValid
+        simp only [translateParameters]
+        split <;> simp_all
+
+@[simp] theorem lock_target_translated (source : Option Advanced.From) (target : Name) :
+    LockTarget (source.map translateSource) target ↔ LockTarget source target := by
+  simp only [LockTarget, source_relations_translated, source_derived_names_translated]
+
+@[simp] theorem lock_targets_translated (source : Option Advanced.From) (targets : List Name) :
+    LockTargets (source.map translateSource) targets ↔ LockTargets source targets := by
+  simp only [LockTargets, source_relations_translated, source_derived_names_translated, lock_target_translated]
+
+theorem locking_valid_translated (valid : LockingValid source distinct clauses) :
+    LockingValid (source.map translateSource) distinct clauses := by
+  induction valid with
+  | nil => exact .nil
+  | cons ordinary targets tail ih =>
+    exact .cons ordinary ((lock_targets_translated _ _).mpr targets) ih
+
+mutual
+  /-- The complete source derivation survives translation: ON predicates retain
+  their child scope, outer joins retain exact output nullability, USING/NATURAL
+  retain both qualified order and merged row order, and occurrences remain in
+  left-source, right-source, ON order. Implicit key comparisons add no parameters. -/
+  theorem source_valid_translated (valid : SourceValid profile catalog params source scope uses) :
+      SourceValid profile catalog params (source.map translateSource) scope
+        (uses.map translateParameter) := by
+    cases valid with
+    | empty => exact SourceValid.empty
+    | table present sameName aliasValid columns =>
+        simpa only [Option.map_some, translateSource, List.map_nil] using
+          SourceValid.table present sameName aliasValid columns
+    | cross leftValid rightValid aliases =>
+        simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
+          SourceValid.cross (source_valid_translated leftValid) (source_valid_translated rightValid)
+            ((join_aliases_distinct_translated _ _).mpr aliases)
+    | on leftValid rightValid aliases kindValid condition =>
+        simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
+          SourceValid.on (source_valid_translated leftValid) (source_valid_translated rightValid)
+            ((join_aliases_distinct_translated _ _).mpr aliases)
+            kindValid (predicate_valid_translated condition)
+    | «using» leftValid rightValid aliases kindValid nonempty unique keysValid =>
+        simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
+          SourceValid.using (source_valid_translated leftValid) (source_valid_translated rightValid)
+            ((join_aliases_distinct_translated _ _).mpr aliases)
+            kindValid nonempty unique keysValid
+    | natural leftValid rightValid aliases kindValid unique keysValid =>
+        simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
+          SourceValid.natural (source_valid_translated leftValid) (source_valid_translated rightValid)
+            ((join_aliases_distinct_translated _ _).mpr aliases)
+            kindValid unique keysValid
+    | derived queryValid aliasValid columnsValid nonLateral =>
+        simpa only [Option.map_some, translateSource] using
+          SourceValid.derived (query_valid_translated queryValid) aliasValid columnsValid nonLateral
+  termination_by sizeOf source
+  decreasing_by all_goals (simp_all <;> omega)
+
+  /-- Every internal query derivation retains its complete occurrence list,
+  including recursively nested derived sources. No child restarts numbering. -/
+  theorem query_valid_translated
+      (valid : QueryValid profile catalog params query output uses) :
+      QueryValid profile catalog params (translateParameters query) output
+        (uses.map translateParameter) := by
+    cases valid with
+    | @basic scope sourceUses output selectUses whereUses orderBy orderUses limit limitUses
+        offset offsetUses locking offsetFirst select source items nonempty distinctComparable
+        predicate orders limitValid offsetValid lockingValid noGrouping noHaving noDistinctOn =>
+      cases offsetFirst <;>
+        simp only [translateParameters, translateQueryBody, List.attach_map_val,
+          List.map_nil, Bool.false_eq_true, ↓reduceIte, List.map_append]
+      all_goals
+        apply QueryValid.basic
+        · have translated := source_valid_translated source
+          simp only [translateSelect]
+          cases relation : select.source <;> simpa [relation] using translated
+        · simpa only [translateSelect, List.attach_map_val] using items_valid_translated items
+        · exact nonempty
+        · simpa only [translateSelect] using distinctComparable
+        · have translated := predicate_valid_translated predicate
+          simp only [translateSelect]
+          cases condition : select.whereClause <;> simpa [condition] using translated
+        · simpa only [translateSelect] using orders_valid_translated orders
+        · have translated := pagination_valid_translated limitValid
+          split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
+        · have translated := pagination_valid_translated offsetValid
+          split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
+        · have translated := locking_valid_translated lockingValid
+          simp only [translateSelect]
+          cases relation : select.source <;> simpa [relation] using translated
+        · simp only [translateSelect, List.attach_map_val, noGrouping, List.map_nil]
+        · simp only [translateSelect]
+          split <;> simp_all
+        · simp only [translateSelect, List.attach_map_val, noDistinctOn, List.map_nil]
+  termination_by sizeOf query
+  decreasing_by all_goals (cases select; simp_all; omega)
+end
+
 /-- Translating anonymous occurrences to numbered parameters preserves every
 independent basic SELECT validity derivation, with exactly the same environment
-and ordered output schema. No parser/renderer success is a hypothesis. -/
+and ordered output schema. No parser/renderer success is a hypothesis. The
+notation condition is applied once, over all nested query occurrences. -/
 theorem translateParameters_valid
     (valid : SelectValid profile catalog params query output) :
     SelectValid profile catalog params (translateParameters query) output := by
   cases valid with
-  | basic environment supported source items nonempty predicate orders parameterOrder noGrouping noHaving noDistinctOn =>
-      rename_i select
-      simp only [translateParameters, translateQueryBody, List.attach_map_val,
-        List.map_nil]
-      apply SelectValid.basic environment supported
-      · have translated := source_valid_translated source
-        simp only [translateSelect]
-        cases relation : select.source <;> simpa [relation] using translated
-      · simpa only [translateSelect, List.attach_map_val] using items_valid_translated items
-      · exact nonempty
-      · have translated := predicate_valid_translated predicate
-        simp only [translateSelect]
-        cases condition : select.whereClause <;> simpa [condition] using translated
-      · simpa only [translateSelect] using orders_valid_translated orders
-      · simpa only [List.map_append] using parameter_order_translated parameterOrder
-      · simp only [translateSelect, List.attach_map_val, noGrouping, List.map_nil]
-      · simp only [translateSelect]
-        split <;> simp_all
-      · simp only [translateSelect, List.attach_map_val, noDistinctOn, List.map_nil]
+  | certified environment supported queryValid parameterOrder =>
+      exact .certified environment supported (query_valid_translated queryValid)
+        (parameter_order_translated parameterOrder)
 
 end SQLean.RenderContract

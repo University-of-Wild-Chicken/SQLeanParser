@@ -17,6 +17,11 @@ def Catalog.toSchema (catalog : Catalog) : Schema := catalog.map CatalogTable.to
 
 def DataType.ofSqlType (type : SqlType) : DataType :=
   ⟨match type.base with
+   | .opaque name => match name with
+     | .date => .date | .time => .time | .timeTZ => .timeTZ
+     | .timestamp => .timestamp | .timestampTZ => .timestampTZ
+     | .interval => .interval | .uuid => .uuid | .json => .json
+     | .jsonb => .jsonb | .bytea => .bytea
    | .int => .int | .text => .text | .bool => .bool | _ => .real, []⟩
 
 def Catalog.ofSchema (schema : Schema) : Catalog :=
@@ -39,11 +44,13 @@ def CatalogTable.keys (table : CatalogTable) : List (List Name) :=
 
 def validDataType (type : DataType) : Bool :=
   match type.name, type.modifiers with
-  | .varchar, [] | .numeric, [] => true
-  | .varchar, [length] => length > 0 && length ≤ 10485760
+  | .varchar, [] | .char, [] | .numeric, [] => true
+  | .varchar, [length] | .char, [length] => length > 0 && length ≤ 10485760
   | .numeric, [precision] => precision > 0 && precision ≤ 1000
   | .numeric, [precision, scale] => precision > 0 && precision ≤ 1000 && scale ≤ 1000
-  | .varchar, _ | .numeric, _ => false
+  | .varchar, _ | .char, _ | .numeric, _ => false
+  | .time, [precision] | .timeTZ, [precision] | .timestamp, [precision]
+  | .timestampTZ, [precision] | .interval, [precision] => precision ≤ 6
   | _, modifiers => modifiers.isEmpty
 
 def requireCheck (condition : Bool) (message : String) : Except ValidationError Unit :=

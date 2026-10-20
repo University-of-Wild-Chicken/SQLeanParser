@@ -1,0 +1,229 @@
+{
+  "river": {
+    "repository": "https://github.com/riverqueue/river",
+    "commit": "1354a059d7cbe5790acc7a755a2ab7ac6d2f1ed8",
+    "license": "MPL-2.0",
+    "license_file": "licenses/river-LICENSE.txt",
+    "license_sha256": "393eaf2b92b3d49bea139e39b6fd205b6e99c499999986aec5554586a830dfdd",
+    "files": [
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql",
+        "sha256": "47fbeea93e496e54c27ce72304ea7bba094f8b3b27d2dce52a21f458d8d78b35",
+        "extract": false
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql.go",
+        "sha256": "383ef1be23a36e047022494128b8fb01b83541f56ab5442fc6ab661f8079e650",
+        "extract": true
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql",
+        "sha256": "ca8e6c560fde1057c6fad456ca3f2bcff0a9b35cea8f1eaa3d3a38446d5f83ee",
+        "extract": false
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+        "sha256": "b99dbdd330354a11c984acbeb4de8234343d387d17f2aff2b49ef3ae3ca05650",
+        "extract": true
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_job_copyfrom.sql",
+        "sha256": "0aa8d5ef873dac55e8832cc00a43f18f32f74e4ec22590f7f0e6548fd32e049c",
+        "extract": false
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_job_copyfrom.sql.go",
+        "sha256": "601bf3e3a9e4d4a06960ee17e371783a2e0558c1e49c0d94db3223e5898556b9",
+        "extract": true
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql",
+        "sha256": "d29fdf8c7b6e406ba17319fa9bb1f3ac76147cc9fedf3e9921e891c94d3624bc",
+        "extract": false
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go",
+        "sha256": "a602fe8b4d5ba48d16a31d1f604155ece8ec50c96041dceeb6fddb708d55d8e7",
+        "extract": true
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql",
+        "sha256": "721534ce9a80607663b273dec6d6990632264ebf7c7d8c922c9198a9e2698293",
+        "extract": false
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go",
+        "sha256": "1093fb7407af9106c3a8af9f865167ae93468b672f0e54c6f4696da29659027b",
+        "extract": true
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_notification.sql",
+        "sha256": "c7aea8820fb73e6b307395028478ad4793558f66b51d940093e31ab9b59f3f7d",
+        "extract": false
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_notification.sql.go",
+        "sha256": "886419fbb2b16e4116a7f9bdc1d29d0c9b8b92c77aacba0123fcd44b93449704",
+        "extract": true
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql",
+        "sha256": "a7eb400352ce4522328dbca74ca68a0ba1595e73fdcd61a76a0df682d5e3116a",
+        "extract": false
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+        "sha256": "b86e3fa0032236c912832b5222a070f82efa8519fb92027e4ebca2fdb17f5306",
+        "extract": true
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql",
+        "sha256": "7317d17f54c69e4bfa6ac2780aecf06787d434cc74d7d728d99226fc64b81eaa",
+        "extract": false
+      },
+      {
+        "path": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+        "sha256": "9060b668edeea083bead3865bf090925c629ecd3d01a8b856a307aca4e3aa80f",
+        "extract": true
+      },
+      {
+        "path": "riverdriver/riverpgxv5/river_pgx_v5_driver.go",
+        "sha256": "b5f34db3ef7a6cc2cd3df88e2823f6cc4b1c9ec02c4b4226df8fe06ec051c613",
+        "extract": false
+      },
+      {
+        "path": "rivershared/sqlctemplate/sqlc_template.go",
+        "sha256": "32ccb88586f0deb00b3c220b5279e41d15e85b87a97db1f6cd9b5453766fe850",
+        "extract": false
+      }
+    ],
+    "expected_included": 56,
+    "expected_candidates": 57
+  },
+  "temporal": {
+    "repository": "https://github.com/temporalio/temporal",
+    "commit": "b7bc978d1040afe2dcbc68ecfe8b228ae198e0b6",
+    "license": "MIT",
+    "license_file": "licenses/temporal-LICENSE.txt",
+    "license_sha256": "6aab9afd99ceb1dcaf6a0d91386b46baef9bce17ae4006044e0f231e31430b69",
+    "files": [
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/admin.go",
+        "sha256": "b2912cef6bd0635e2e78f7e3834dac7de72743cb99ec6ebe7f73ccd3f567d6e3",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/cluster_metadata.go",
+        "sha256": "3bcc973420183525db8816bad242a7afcf81a1c02d2036e4a55848cf5a19a5c7",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/db.go",
+        "sha256": "3897736458252cea1384d2874802e971c4a33f180b174e5321e3a5d313e9c7e7",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/driver/interface.go",
+        "sha256": "f0c52386cb750eecaf3fefef7cbe565bc0d590f8c2e04efff0c191ad38744341",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/driver/pgx.go",
+        "sha256": "3c84c01d61bb4ed1e2de4b6f27af9ae7c895d584270ea17df1e2a56d094b52f2",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/driver/pq.go",
+        "sha256": "d355d719b3205bc09598e8372d328d990bf2e7513a732c0d2aa69dfc69d17305",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/events.go",
+        "sha256": "fa3f93254a11a0e63945c983fe7975397e2891b6b127c2571a42ad4d7bebdea0",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+        "sha256": "7e50fffdfb1cbb8a91d57b3a560870ee68ed3a4ed7097296b81829a2cc71a902",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/execution_maps.go",
+        "sha256": "5e2e75ff6a063545ea3aa3f8ef040c9e4dbf267c2625b7555c5fc2beccf6d9ef",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/namespace.go",
+        "sha256": "14442c4fb47b6e074baedc913fa59cbbdbba910fc960b0ddaf979bdfac7ffad6",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/nexus_endpoints.go",
+        "sha256": "770b4519643def19baae8f39ea28bb3df03c23336ab41eaaedbde4007edffca0",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/plugin.go",
+        "sha256": "bffc9597f47d06621379131f946e2517ac0d4219592e234e1c437e092cfe2cbc",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/query_converter.go",
+        "sha256": "74629ad63e82b7d192533a9f508ac5e65086f749dd3cef1b023a6c2ff7dd1897",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/queue.go",
+        "sha256": "752692dc64895b36e1d62e8ddee141b59740cdd1b43f7f6c1571bc899001b5c8",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/queue_v2.go",
+        "sha256": "f9ca71235e4afe9789bcd4487fa0c38879bc87ff32b10dc11a5e26ac99f2b3a3",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/session/session.go",
+        "sha256": "7b62d83e03c70d7a72314b5f203474c9de87c4bbb02c9154b00a266ad055621e",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/shard.go",
+        "sha256": "441b95c47b844a6b0703116d06347ad8bfaddfb1f7291678231140e98b60e10e",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/task_queues.go",
+        "sha256": "51c7bf59e7a1c2bc87e855d2180dbc5b8b61ca7ecf1696b7eeb8b910b5d470ec",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/task_user_data.go",
+        "sha256": "715a717f5196cd77f84f6ea0ab09b3d1cb96b6f3e56767e25ec89cbfc02a5851",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/task_v1.go",
+        "sha256": "c5b332b04481bc6b3b5f5bf29c345f1f6b96a2b93d869b814fc89420b397c7c3",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/task_v2.go",
+        "sha256": "42082f91adb15adfb7d1d1a32ab126c42a90874b91a782bd3a59dc6b81f5732e",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/typeconv.go",
+        "sha256": "8e7d3ecb7e375e75c61ad57d0fac9a4f37fde34bc2072a5ab76e258157cabcfa",
+        "extract": true
+      },
+      {
+        "path": "common/persistence/sql/sqlplugin/postgresql/visibility.go",
+        "sha256": "28e4efa2058365243971b4b0c2ae723065d6cece24326f93d63b48494548f95b",
+        "extract": true
+      }
+    ],
+    "expected_included": 116,
+    "expected_candidates": 196
+  }
+}

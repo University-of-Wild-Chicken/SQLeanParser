@@ -1,0 +1,411 @@
+{
+  "commit": "1354a059d7cbe5790acc7a755a2ab7ac6d2f1ed8",
+  "candidate_count": 57,
+  "included": 56,
+  "excluded": 1,
+  "oracle": "pglast 7.21 / PostgreSQL 17 grammar",
+  "scope": "syntax only; no execution or application-schema validity claim",
+  "dispositions": [
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql.go:pGAdvisoryXactLock",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql.go",
+      "line": 14,
+      "disposition": "included",
+      "sql_sha256": "8ba4ec985a0b1c897adc60dbf3880b5d14d0b42d14dc6110f3d319bb95e501b8"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql.go:pGGetProductAndVersion",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql.go",
+      "line": 23,
+      "disposition": "included",
+      "sql_sha256": "aeabd9fd9002c30f657bc5ccd99b60566fbabb3c09a01c28de2167999ee9a852"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql.go:pGNotifyMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql.go",
+      "line": 43,
+      "disposition": "included",
+      "sql_sha256": "8ac5adbc8dee5a8ec0368edaa579956f4cc64ab125324a6d0a6d9b35eeb6e047"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobCancel",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 16,
+      "disposition": "included",
+      "sql_sha256": "034c11150a647c3b48ba89e44a18814ef5d3799dc8d97c2bfc1378c32170f111"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobCountByAllStates",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 105,
+      "disposition": "included",
+      "sql_sha256": "a5206785f93868e3e3c9d36681b7fd5656c031e9f470918da810e4d3d6cf013a"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobCountByQueueAndState",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 136,
+      "disposition": "included",
+      "sql_sha256": "53e1d0d9a263afbc86480b4f74afb4eee920e06e7e4d100dbd876436a7048e74"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobCountByState",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 201,
+      "disposition": "included",
+      "sql_sha256": "0e08d1032bbdd6d4078b1ad1d915251b24410c4881deb1b28c6d76d22d896a09"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobDelete",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 214,
+      "disposition": "included",
+      "sql_sha256": "f650742f21973f477799b84ffff0eb2199b27f1f93d12ccbfa37d5eb7ab6f5f9"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobDeleteBefore",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 265,
+      "disposition": "included",
+      "sql_sha256": "7e2bb863197b223c28074f6627b0add2864b8d46fb7e88cd2250185aae43ccaf"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobDeleteMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 314,
+      "disposition": "included",
+      "sql_sha256": "99614ca94a87def0ab133cac7103681f82e3972ae9f08cdb6914240dd8b532a5"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobGetAvailable",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 377,
+      "disposition": "included",
+      "sql_sha256": "f6481c05563db53408b965d288a32d22bbe0819efb99bdfe62a7c3f56ffe5961"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobGetByID",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 473,
+      "disposition": "included",
+      "sql_sha256": "bccca68c48ac6f6d4683e32da50537f02ceb687486ddd86d0126af58c4968096"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobGetByIDMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 506,
+      "disposition": "included",
+      "sql_sha256": "d26eb9eb884f8ba56e4d530311fe13bf4dabe5c95bb087044b0e1b01c8c697c8"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobGetByKindMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 552,
+      "disposition": "included",
+      "sql_sha256": "bfa5eb6611f798585f255b9e14987ea3fb4eaf5ca3d639f176fe2eb2c751ce6c"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobGetCancelRequested",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 598,
+      "disposition": "included",
+      "sql_sha256": "7c65d9d151aec919851e0ec9907fdb3a47eb02f3a0f82bd7a06f5f2afafb01b6"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobGetStuck",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 627,
+      "disposition": "included",
+      "sql_sha256": "1d0f5286d3ebd1de4847a8bc69ca843141dfcd2f3fc1c9d08ee8e69c94acfb79"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobInsertFastMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 682,
+      "disposition": "included",
+      "sql_sha256": "b98dfbbc679649262cf83e614028079e6294fada4ce697074d929595216af081"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobInsertFastManyNoReturning",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 818,
+      "disposition": "included",
+      "sql_sha256": "7d54f1fa37865166b51dc5628b04f440d6f4796697c1ec282e7a6cf4be14301e"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobInsertFull",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 894,
+      "disposition": "included",
+      "sql_sha256": "3f89315c61e8d9d3379da107e44b3bbc626e40caf30c6b9e0301e14ee9755e56"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobInsertFullMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 1001,
+      "disposition": "included",
+      "sql_sha256": "cf6232e7a253de28989df4764e7c0581ac38a20e2e6ba74071e4c9036d381a28"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobKindList",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 1133,
+      "disposition": "included",
+      "sql_sha256": "9957fe12533c3e4a791e03b42647781ccf52bda9c773b56797f8bc293cdabfda"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobList",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 1175,
+      "disposition": "included",
+      "sql_sha256": "cd5e4b3906960fa6351ce8581c83026385b4a8f783e86701e7d56eab50e327ea"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobRescueMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 1222,
+      "disposition": "included",
+      "sql_sha256": "9c466dddc8c38ac5121dcdd03b6379e8ed3466c6c121284295d735742137179c"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobRetry",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 1274,
+      "disposition": "included",
+      "sql_sha256": "a3ca6790dee470863377358a20bd3537e7d60713e773dcdc0930f6d129ae6ef2"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobSchedule",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 1342,
+      "disposition": "included",
+      "sql_sha256": "7b898c243b27be806d6bcd17d53b8c2611ef973cbbbabe18fc8804bf94781643"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobSetStateIfRunningMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 1474,
+      "disposition": "included",
+      "sql_sha256": "4c501085ba095e4c522a0b8ceabaa751df97cd74e45110b14ab801d0029ce1e8"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobUpdate",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 1625,
+      "disposition": "included",
+      "sql_sha256": "5c6e447fef187402da82f28f8996d101f448df4b6cf56236d015dba54ea49dac"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go:jobUpdateFull",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "line": 1673,
+      "disposition": "included",
+      "sql_sha256": "d0dd5c01fc1280beb4ccd125a178a2a2be69f04995a46e43f9ed2762d87389f3"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go:leaderAttemptElect",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go",
+      "line": 15,
+      "disposition": "included",
+      "sql_sha256": "23eb2691b563c63d6e4b204c100c52ee5807d7e7d734864d38c5ed83a09eef2b"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go:leaderAttemptReelect",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go",
+      "line": 49,
+      "disposition": "included",
+      "sql_sha256": "42db768f6bbb531a1436c967cb5e1016cff171a0cc97b8a66a7bf5bc1a0140ec"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go:leaderDeleteExpired",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go",
+      "line": 83,
+      "disposition": "included",
+      "sql_sha256": "970f4ae924af52ded83432e71dff0988dbacb4fc8f7d59279a971cdd381799df"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go:leaderGetElectedLeader",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go",
+      "line": 96,
+      "disposition": "included",
+      "sql_sha256": "e5f2a506c96b73819d9e56214b82f7ecaa3577c590374ccce478a01e1a442108"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go:leaderInsert",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go",
+      "line": 113,
+      "disposition": "included",
+      "sql_sha256": "21e4a462f89d44bc8d02ae6f4c632e2c0bf438f18d6524a30d02046772c5075f"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go:leaderResign",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_leader.sql.go",
+      "line": 151,
+      "disposition": "included",
+      "sql_sha256": "9d4f5117826cc66ed4d32cb48d2f91aa1fc487ca8073ba469585e88c6f829cd4"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go:riverMigrationDeleteAssumingMainMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go",
+      "line": 13,
+      "disposition": "included",
+      "sql_sha256": "fa69b796c21df8a9835abc6fe86f267b728db772ec6a449874320cf0ddec98cf"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go:riverMigrationDeleteByLineAndVersionMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go",
+      "line": 46,
+      "disposition": "included",
+      "sql_sha256": "712febaf03a2ffd2280cf008fa18c21033d165738f40a2ccd5a951c4d34801fc"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go:riverMigrationGetAllAssumingMain",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go",
+      "line": 78,
+      "disposition": "included",
+      "sql_sha256": "4c742d81bd381755c6517a30e17da2e347957dc43a98e737ed30702b0a82a5cb"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go:riverMigrationGetByLine",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go",
+      "line": 116,
+      "disposition": "included",
+      "sql_sha256": "76523917bef7454c27dfcf91be6c3719be5c8cf57bc90bfbb8f0fb997bceae40"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go:riverMigrationInsert",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go",
+      "line": 143,
+      "disposition": "included",
+      "sql_sha256": "a351792126e2635b3fa9f07eed9a34a2d01465a6d28dc0fa0627146e8a28258f"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go:riverMigrationInsertMany",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go",
+      "line": 165,
+      "disposition": "included",
+      "sql_sha256": "8435a0ab828dfbeb62c613f4babe3bf20f62b37721e03699c338155d70a61c8d"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go:riverMigrationInsertManyAssumingMain",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_migration.sql.go",
+      "line": 201,
+      "disposition": "included",
+      "sql_sha256": "a019cc0bd76118f2ba6be97d149752ac1cb05df4f91cebaeb660454b41d96bb6"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_notification.sql.go:notificationDeleteBefore",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_notification.sql.go",
+      "line": 13,
+      "disposition": "included",
+      "sql_sha256": "8efde8ee074699e1501a43afb0eb1f7ac3186766c6195bed426e69eb3fda051e"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go:queueCreateOrSetUpdatedAt",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+      "line": 13,
+      "disposition": "included",
+      "sql_sha256": "9a6bef019a95c527bebdadaab75b13449c8c9cc5e2128f2e951b1df70a43b42b"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go:queueDeleteExpired",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+      "line": 59,
+      "disposition": "included",
+      "sql_sha256": "8aa8280ed61e772903d327b437f22cf4083be16d7aa344d3a3d40bcc4e246b1f"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go:queueGet",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+      "line": 102,
+      "disposition": "included",
+      "sql_sha256": "92653ef20184206f116a6e709d9d9482a8e0fde4be861acbffa65f21f0faad2d"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go:queueList",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+      "line": 121,
+      "disposition": "included",
+      "sql_sha256": "d2116b561a689b5140d3012821e4d172a56a7e609aa0dcf53d54af25746ce441"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go:queueNameList",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+      "line": 154,
+      "disposition": "included",
+      "sql_sha256": "7ae03dffa1ade72b535fcf4f67d96832e91fc275ce8e2eaa3f1a82c59c5017c5"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go:queuePause",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+      "line": 196,
+      "disposition": "included",
+      "sql_sha256": "eaa964965a620aa13ef899cac45c825f933682dff1ce5021d94868329a93fd46"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go:queueResume",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+      "line": 217,
+      "disposition": "included",
+      "sql_sha256": "74943ebbb1d1f9643de70aec5e62790ec7fbf8163f9fc29c3f0f3ce46c77117d"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go:queueUpdate",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+      "line": 238,
+      "disposition": "included",
+      "sql_sha256": "0d7e7121fced17c8536377203fe2637a533151b9730dd7c8a3c69e0262409261"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go:columnExists",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+      "line": 14,
+      "disposition": "included",
+      "sql_sha256": "ddee811041e82f1d4f393ceeaa345779962987a6a3c0996f9188e099c94859aa"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go:indexExists",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+      "line": 36,
+      "disposition": "included",
+      "sql_sha256": "d923768e93659b22c4a101300ca698059a6f5d13d778a5e8fd809d0a1b717ca6"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go:indexReindexArtifacts",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+      "line": 59,
+      "disposition": "included",
+      "sql_sha256": "13d221fdefece897e2a9cf6a7c5c6e4e0927eba87e0054912eea2b5bad21956b"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go:indexesExist",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+      "line": 101,
+      "disposition": "included",
+      "sql_sha256": "15af35b05812a3bab44bf1f5bf26efde8e9159243b22e463d83d96795f234e17"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go:schemaGetExpired",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+      "line": 147,
+      "disposition": "included",
+      "sql_sha256": "c46a700a7510b1e41357b8f1cb5bea5517aa5411bb2093eab640b36a389e358d"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go:tableExists",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+      "line": 180,
+      "disposition": "included",
+      "sql_sha256": "26a83f8362c20170e794b2cc6dbf4f8077a6f272f0a3cbffb9777405ce62b9dd"
+    },
+    {
+      "id": "river:riverdriver/riverpgxv5/internal/dbsqlc/river_job_copyfrom.sql:JobInsertFastManyCopyFrom",
+      "source_file": "riverdriver/riverpgxv5/internal/dbsqlc/river_job_copyfrom.sql",
+      "line": 1,
+      "source_url": "https://github.com/riverqueue/river/blob/1354a059d7cbe5790acc7a755a2ab7ac6d2f1ed8/riverdriver/riverpgxv5/internal/dbsqlc/river_job_copyfrom.sql#L1",
+      "raw_sql": "-- name: JobInsertFastManyCopyFrom :copyfrom\nINSERT INTO river_job(\n    args,\n    created_at,\n    kind,\n    max_attempts,\n    metadata,\n    priority,\n    queue,\n    scheduled_at,\n    state,\n    tags,\n    unique_key,\n    unique_states\n) VALUES (\n    @args,\n    @created_at,\n    @kind,\n    @max_attempts,\n    @metadata,\n    @priority,\n    @queue,\n    @scheduled_at,\n    @state,\n    @tags,\n    @unique_key,\n    @unique_states\n);\n",
+      "disposition": "excluded",
+      "reason": "SQLC :copyfrom command uses the binary-copy API, not a submitted SQL constant"
+    }
+  ]
+}

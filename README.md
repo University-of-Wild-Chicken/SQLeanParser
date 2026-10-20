@@ -1,13 +1,78 @@
 # SQLean
 
+The planned **0.0.1-alpha** release is held until full PostgreSQL contract
+coverage is complete. APIs and proof profiles remain experimental; the
+[coverage and release checklist](docs/releases/0.0.1-alpha.md) records the
+current assurance levels and outstanding obligations.
+
 A Lean 4 SQL parser with public AST interfaces, canonical SQL rendering, and proof-carrying static validation. It supports SELECT with joins, grouping, aggregates, derived tables, ordinary and recursive CTEs, UNION/UNION ALL, and queries without FROM, plus single-table INSERT, UPDATE, and DELETE. PostgreSQL extensions include DISTINCT ON, aggregate FILTER, casts, LIKE/ILIKE, IN/BETWEEN, NULLS ordering, and mutation RETURNING. The advanced statement interface also supports correlated IN/EXISTS and scalar subqueries, LATERAL, USING/NATURAL joins, INTERSECT/EXCEPT, ON CONFLICT, INSERT SELECT, NULL, exact decimal/exponent literals, typed parameters, and table DDL. The project uses Lean **4.34.0**, with no external Lean package dependencies.
 
 The [SELECT validity contract draft](docs/SELECT_validity_contract.md) now has a
 first implementation with explicit assurance tiers. The independent proof tier
-currently covers basic source-free and single-table SELECTs. The broader SELECT
+currently covers source-free SELECTs, base tables and nested non-LATERAL
+derived tables joined with CROSS or INNER/LEFT/RIGHT/FULL JOIN using ON,
+USING or NATURAL matching. The broader SELECT
 family and mutation/DDL syntax remain available through the existing APIs and
 the expanded executable-check tier. This is an initial contract milestone,
 not a claim that the complete draft has been implemented.
+
+The full PostgreSQL target is pinned to **16.15**, commit
+`f0595c3d839debdb140903621c1b44a4f4d86256`. A separate
+[grammar API](fixtures/postgresql_grammar/README.md) imports every upstream
+context-free production and returns a concrete syntax tree with an independent
+Lean derivation. Its UTF-8 lexer retains exact source spelling and byte offsets,
+and its source renderer carries an exact reconstruction proof. This API is
+available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
+`sqlean_pg_grammar` (including JSONL batch input). The report explicitly keeps
+PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
+data does not expand the typed AST or certify every PostgreSQL statement.
+
+The [v0.8 derived-source increment](docs/derived-contract-v0.8.md)
+adds recursively nested non-LATERAL SELECT sources and positional column
+renaming. Independent derivations retain exact output types, modifiers,
+nullability and duplicate labels, and check parameter notation once over the
+complete query. It includes 50 synthetic full-query certificates and 50
+unchanged source rendering examples. Correlation, expression subqueries and
+outer locking of derived sources remain separate obligations.
+
+The [v0.7 merged-join increment](docs/merged-joins-contract-v0.7.md) adds
+USING and NATURAL joins with independent rules for merged columns, qualified
+original columns, common types and modifiers, output order and nullability.
+Each factor has 50 synthetic complete-query certificates and 50 unchanged
+source rendering examples. SQLite has separate native expectations because
+its wildcard order and RIGHT/FULL merged-key values can differ from PostgreSQL.
+
+The [v0.6 join increment](docs/joins-contract-v0.6.md) promotes base-table
+CROSS and INNER/LEFT/RIGHT/FULL JOIN ON queries to independent static validity.
+Its rules derive exact scopes, unique relation aliases, Boolean ON predicates,
+outer-join nullability, lock eligibility and parameter order. It includes 50
+synthetic full-query certificates and 50 unchanged source rendering examples.
+
+The [v0.5 locking increment](docs/locking-contract-v0.5.md) adds PostgreSQL row
+locking, target aliases, wait policies and both LIMIT/OFFSET orders. Basic
+SELECT certificates include lock-target validity; identity/PostgreSQL renderer
+certificates retain the exact locking AST and parameter order. Joins and nested
+queries retain their existing, separate assurance levels.
+
+The [v0.4 scalar forms increment](docs/scalar-forms-contract-v0.4.md) adds
+ordinary function calls, CASE, COALESCE, NULLIF, GREATEST and LEAST. Independent
+static validity uses a closed inventory of 44 built-in names with explicit
+overload rules. Each of the function and conditional factors has 50 synthetic
+full-query certificates and 50 unchanged source rendering examples.
+
+The [v0.3 scalar increment](docs/extended-types-contract-v0.3.md) adds concrete
+numeric, temporal, UUID, JSON/JSONB, BYTEA and character types, preserving their
+supported modifiers. It includes 50 synthetic full SELECT certificates, 50
+unchanged source statements with rendering checks, and 100 separately bound
+PostgreSQL source/rendered value-and-type observations.
+
+The [v0.2 pagination contract](docs/pagination-contract-v0.2.md) adds expression-valued
+LIMIT/OFFSET, including parameters, to this basic proof profile and the checked
+renderers. It separates full-query validity from bounds-only evidence for
+broader application queries, and leaves value-dependent execution obligations
+explicit. Its 50 synthetic and 50 concrete source statements have separate
+assurance scopes. The pagination suite passed 204 SQLite executions and 212
+PostgreSQL PREPARE/EXECUTE cases, including expected runtime errors.
 
 The [SELECT renderer contract](docs/SELECT_render_contract.md) also has an
 initial implementation. It adds a separate checked serialization boundary for
@@ -48,11 +113,23 @@ python3 scripts/test_postgresql_results.py
 python3 scripts/generate_advanced_examples.py --check
 python3 scripts/generate_dialect_examples.py --check
 python3 scripts/check_dialect_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/generate_pagination_examples.py --check
+python3 scripts/extract_pagination_corpus.py --check
+python3 scripts/check_pagination_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_scalar_forms_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_locking_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_join_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_merged_join_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_derived_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/inventory_postgresql_grammar.py --check
+python3 scripts/generate_postgresql_grammar.py --check
+python3 scripts/check_postgresql_grammar_cli.py
 ```
 
 [GitHub Actions CI](.github/workflows/ci.yml) runs on pushes, pull requests, and
 manual dispatch. A Python job runs all offline regression tests and checks all
-six generated corpora. A second job builds the library, CLI, and test executable
+the generated corpora. A second job builds the library, CLI, and test executable
 from scratch using `lean-toolchain`, runs the Lean and SQLite suites, then runs
 both PostgreSQL corpora and the actual parameter-execution check against
 PostgreSQL 16, including the rendering and dialect checks. Both jobs use Ubuntu
@@ -81,6 +158,14 @@ USING/NATURAL joins, set multiplicities, nested CTE scope, and correlated
 subqueries. SQLite and PostgreSQL use their own expected results. These are
 finite observations alongside Lean reconstruction proofs, not a universal
 database-semantic equivalence claim.
+
+An [external PostgreSQL corpus audit](docs/corpus/postgresql-2026-10-20/README.md)
+covers 276 statements from River, Temporal, and six BenchBase workload
+families. At the recorded baseline, 161 parsed and 115 were rejected. The report preserves every failure,
+pinned upstream sources, extraction rules, and a prioritized syntax backlog.
+Separate probes document accepted PostgreSQL special forms that SQLean
+currently interprets incorrectly. These syntax observations do not extend
+the validity or rendering assurance tiers.
 
 The project-wide trust audit rejects proof placeholders, project-defined axioms,
 native proof shortcuts, user-authored unsafe/partial declarations, and kernel-check bypasses.
@@ -166,7 +251,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.1` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.8` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.
@@ -205,25 +290,41 @@ SELECT checking budget (default 1,024); zero is inconclusive, not invalid SQL.
 It cannot be used with syntax mode, and custom budgets for mutations/DDL are
 unsupported. Assurance mode cannot be combined with `--ast` or `--postgres`.
 
-The first independent profile has the following explicit boundary:
+The current independent profile has the following explicit boundary:
 
-- Source-free or single-table SELECT, optional table aliases, nonempty projection,
+- Source-free SELECT, base tables or nested non-LATERAL derived sources
+  with CROSS/INNER/LEFT/RIGHT/FULL JOIN,
+  using ON, USING or NATURAL matching,
+  optional table aliases, nonempty projection,
   expression aliases, `*` and qualified wildcards, WHERE, ordinary DISTINCT,
-  ORDER BY, and nonnegative literal LIMIT/OFFSET. Top-level duplicate labels
+  ORDER BY, and expression-valued LIMIT/OFFSET. Top-level duplicate labels
   retain their positions; sorting by an ambiguous label is invalid. Table
   aliases hide the original name. Projection aliases are unavailable to WHERE
   and sibling projection expressions.
-- Concrete INT32, TEXT, and BOOLEAN, with a separate nullable bit. Integer AST
-  literals from 0 through 2,147,483,647 have INT32 type; unary signs retain it.
-  Larger integer literals, decimal/exponent literals, BIGINT, VARCHAR, NUMERIC,
-  REAL, DOUBLE PRECISION, and type modifiers need future exact-type rules.
-  All supplied catalog and parameter types must be supported, including unused
-  declarations. Unsupported types are never silently collapsed into INT32 or TEXT.
-- Arithmetic requires INT32; Boolean operators require BOOLEAN. Comparisons
-  require the same concrete base type, including nullable operands. LIKE
-  requires TEXT. Casts among the three supported base types are permitted;
-  successful conversion of actual values is not proved. IN requires a nonempty
-  list with one common concrete type; BETWEEN uses the same common-type rule.
+- Each JOIN ON sees its two child scopes before that join's NULL extension.
+  Outer joins make the appropriate result columns conservatively nullable.
+  Relation aliases must be unique. USING keys appear first in their listed
+  order, followed by left and right nonkeys; NATURAL keys follow left-output
+  order. Qualified wildcards retain each relation's original columns and types.
+  Missing or ambiguous keys are invalid, and merged keys use explicit
+  equality/common-type rules with conservative nullability.
+  SELECT parameter occurrences precede FROM/ON, WHERE, ORDER BY and pagination.
+- Derived sources expose only their certified output under the declared alias.
+  Column-alias lists rename a positional prefix; remaining labels are retained.
+  Duplicate labels remain legal but ambiguous when referenced by name.
+  A derived child cannot see a parent or sibling source. Parameter identities
+  continue across query boundaries. Explicit outer row locks targeting derived
+  sources remain unsupported; locking a nonnullable base sibling is covered.
+- Concrete SMALLINT, INTEGER, BIGINT, NUMERIC, REAL, DOUBLE PRECISION, TEXT,
+  VARCHAR, CHAR, BOOLEAN, temporal types, UUID, JSON/JSONB and BYTEA, including
+  supported modifiers. Integer magnitudes choose INTEGER, BIGINT or NUMERIC;
+  decimal/exponent literals have exact NUMERIC type. All supplied metadata
+  must be supported, including unused declarations.
+- Explicit PostgreSQL scalar tables govern arithmetic, casts, comparisons,
+  LIKE, IN and BETWEEN. JSON lacks comparison operators while JSONB admits
+  them. Successful conversion and evaluation of actual values remain runtime
+  obligations. The closed function inventory and CASE/COALESCE/NULLIF/
+  GREATEST/LEAST rules are documented in the v0.4 increment.
 - A bare NULL has unknown type until context supplies one. A matching concrete
   operand can supply that context; NULL cannot reconcile two incompatible types.
   All-NULL comparisons use TEXT, and a projected unconstrained NULL becomes
@@ -240,9 +341,17 @@ The first independent profile has the following explicit boundary:
   aliases are not substituted inside larger expressions. DISTINCT sorting is
   currently certified only by output names or positions. Other DISTINCT sort
   expressions return Unsupported pending a projected-expression identity rule.
+- Pagination expressions are typed in an empty local scope: input columns and
+  output aliases are unavailable. Supported numeric types use explicit
+  assignment conversion to PostgreSQL's `int8` row-count target; an untyped NULL
+  acquires that context. Negative results, overflow, division by zero and failed
+  casts remain execution obligations. Both LIMIT/OFFSET orders retain parameter
+  occurrence order.
+  The separate `checkPaginationBounds` API certifies only the outer bounds of
+  a query and cannot establish full-query validity or parameter notation.
 
-Independent rules for joins, derived sources, grouping/aggregates, correlation,
-LATERAL, CTEs/recursion, set operations, and source column-renaming remain future
+Independent rules for USING/NATURAL joins, derived sources, grouping/aggregates,
+correlation, LATERAL, CTEs/recursion, set operations, and source column-renaming remain future
 milestones. DISTINCT ON and ILIKE require separate dialect rules. These forms
 remain supported by the expanded parser/checker. The contract draft remains the
 target for the general SELECT family; the first implementation does not claim
@@ -263,7 +372,7 @@ open SQLean
 def contractQuery : Advanced.Query := {
   body := .select { items := [.expression (.literal (.int 1)) (some "one")] } }
 
-#eval (SelectContract.checkQuery .basicV01 [] [] contractQuery).map
+#eval (SelectContract.checkQuery .basicV02 [] [] contractQuery).map
   (fun certificate => certificate.output)
 
 example (certificate : SelectContract.Certificate profile catalog params query) :
@@ -335,7 +444,7 @@ obligations. `semanticPreservation` is explicitly false: full SQL semantics have
 not been established. Each map entry identifies the original parameter style
 and index and its target slot. Repeated numbered references share one entry;
 anonymous references must occur exactly as 1..N across CTEs, DISTINCT ON,
-projection, sources/joins, predicates, grouping, and ordering. Mixed styles
+projection, sources/joins, predicates, grouping, ordering, LIMIT, and OFFSET. Mixed styles
 return `unsupported`. PostgreSQL mode limits slots to 1..65535, matching the
 [PostgreSQL 16 parameter limit](https://www.postgresql.org/docs/16/limits.html);
 SQLite mode limits them to 1..32766. Supply parameter
@@ -606,13 +715,13 @@ castType  = INT | INTEGER | TEXT | BOOL | BOOLEAN | REAL | DOUBLE PRECISION ;
 
 In this compatibility grammar, qualification, PostgreSQL scalar expressions, IS NULL, and aggregates extend SELECT; RETURNING supports the scalar subset. Legacy INSERT values and UPDATE/DELETE clauses retain their original unqualified expression grammar. Advanced mutations use `Advanced.Expr`, including NULL, decimals, parameters, and subqueries. Aggregates take one expression, except COUNT(*). COUNT(DISTINCT *) is rejected. Ordinary columns named `count`, `sum`, `avg`, `min`, or `max` remain usable without parentheses. Nested SELECTs cannot contain semicolons.
 
-Postfix casts bind before unary signs, followed by multiplication/division, addition/subtraction, the predicate/comparison tier, NOT, AND, and OR. Binary chains associate left. This subset uses a single nonchainable tier for comparison operators, LIKE/ILIKE, IN, BETWEEN, and IS NULL; use parentheses for mixed forms such as `(name LIKE 'a%') = TRUE`. It does not implement PostgreSQL's complete operator precedence table. Comparison chains such as `a < b < c` are rejected. Integers are arbitrary-precision decimal numerals; a leading sign is a separate unary AST node. `LIMIT` and `OFFSET` take unsigned integer literals. The original grammar requires LIMIT before OFFSET; the advanced grammar also permits OFFSET alone.
+Postfix casts bind before unary signs, followed by multiplication/division, addition/subtraction, the predicate/comparison tier, NOT, AND, and OR. Binary chains associate left. This subset uses a single nonchainable tier for comparison operators, LIKE/ILIKE, IN, BETWEEN, and IS NULL; use parentheses for mixed forms such as `(name LIKE 'a%') = TRUE`. It does not implement PostgreSQL's complete operator precedence table. Comparison chains such as `a < b < c` are rejected. Integers are arbitrary-precision decimal numerals; a leading sign is a separate unary AST node. The original compatibility grammar takes unsigned integer LIMIT/OFFSET literals. The advanced grammar accepts expression bounds, including parameters and casts, with either LIMIT/OFFSET order or OFFSET alone. SQLite comma-style LIMIT remains literal-only and requires LIMIT before OFFSET; LIMIT ALL remains deferred in the typed AST. See the [pagination contract](docs/pagination-contract-v0.2.md) for static and runtime obligations.
 
 GROUP BY and ORDER BY accept expressions, whole-key result aliases, or one-based selected-column positions. Zero, negative, and out-of-range positions are rejected by validation. GROUP BY prefers an input column when its name conflicts with a result alias; ORDER BY prefers the output name. Output-name lookup includes natural bare-column names and explicit aliases; repeated names must denote identical expressions after column resolution. Aliases inside larger expressions and aliases in HAVING are not substituted. With DISTINCT, sort expressions must occur in the selected projection after alias/ordinal expansion. Wildcards expand in FROM/JOIN column order.
 
 An aggregate query's SELECT, HAVING, and ORDER BY expressions must use grouping keys, constants, aggregates, or expressions built from them. GROUP BY expressions are compared structurally after resolving column names, so an unqualified column and its uniquely resolved qualified form agree. Functional dependencies, such as assuming another column is determined by a grouped primary key, are not inferred. Aggregates are forbidden in WHERE, ON, GROUP BY, and arguments to other aggregates. HAVING also creates an aggregate query when GROUP BY is absent.
 
-This is a documented SQL subset, not complete compatibility with PostgreSQL. Remaining unsupported forms include recursive SEARCH/CYCLE, window functions, general function calls, JSON/array operators, schema-qualified relation names, DML CTEs, UPDATE FROM, DELETE USING, row-valued IN, per-value DEFAULT, and transaction commands. DDL is limited to the table forms described below; foreign keys, CHECK constraints, views, indexes, sequences, permissions, and schema DDL are not modeled. Exactly one statement and at most one trailing semicolon are accepted.
+The typed AST remains a SQL subset, separate from the complete grammar interface. Remaining unsupported typed forms include recursive SEARCH/CYCLE, window functions, named/variadic call notation, JSON/array operators, schema-qualified relation names, DML CTEs, UPDATE FROM, DELETE USING, row-valued IN, per-value DEFAULT, and transaction commands. DDL is limited to the table forms described below; foreign keys, CHECK constraints, views, indexes, sequences, permissions, and schema DDL are not modeled. Exactly one statement and at most one trailing semicolon are accepted.
 
 Keywords are case-insensitive. Unquoted identifiers begin with ASCII letters or `_`, followed by ASCII letters, digits, or `_`; the advanced lexer also permits `$` after the first character. Double-quoted identifiers preserve spelling and allow reserved words. The original reserved-word policies are in `Parser.crudReservedWords` and `Parser.relationalReservedWords`; advanced syntax has its own reserved-word set. Escape quotes by doubling them: `'O''Brien'` and `"a""b"`. Empty quoted identifiers are rejected. Strings and quoted identifiers support Unicode. Both lexers accept `--` line comments and `/* ... */` comments; the advanced lexer additionally supports nested block comments. Parse errors carry a zero-based character offset and one-based line/column positions.
 

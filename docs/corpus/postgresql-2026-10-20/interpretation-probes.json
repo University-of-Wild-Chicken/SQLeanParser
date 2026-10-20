@@ -1,0 +1,854 @@
+{
+  "format_version": 1,
+  "corpus_kind": "supplementary-synthetic-probes",
+  "included_in_industrial_denominator": false,
+  "sql_executed": false,
+  "scope": "Raw PostgreSQL parse-tree and SQLean CLI-output observations only",
+  "interpretation_note": "AST shape equality or difference alone is not a SQL semantics theorem; the comma-FROM control intentionally permits explicit CROSS JOIN shape.",
+  "observed_utc": "2026-10-20T07:34:29.228114+00:00",
+  "python": "3.10.11",
+  "pglast": "v7.21",
+  "postgres_parser_version": [
+    17,
+    7
+  ],
+  "binary_sha256": "0fe56df70ec73f5d1ed64560390f2a6d018b90ada7139e0a787b5902a2d4972e",
+  "runner_sha256": "2f63fd115057c83f33ee1488a8842178dfd941995ea3bda4968d3c60f53ad085",
+  "syntax_runner_sha256": "6ac40b445f8c95492cda67468ee5cd108d5d6094020393c09a9150d7790d4466",
+  "timeout_seconds": 5,
+  "infrastructure_or_input_failure": false,
+  "summary": {
+    "probes": 8,
+    "sqlean_syntax": {
+      "accepted": 8
+    },
+    "focused_structural_changes": 7
+  },
+  "results": [
+    {
+      "id": "current_date",
+      "sql": "SELECT CURRENT_DATE;",
+      "expected_feature": "SQL current-date value function",
+      "postgres_input": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "ResTarget": 1,
+          "SQLValueFunction": 1,
+          "SelectStmt": 1
+        },
+        "sql_value_functions": [
+          "SVFOP_CURRENT_DATE"
+        ],
+        "null_tests": [],
+        "relations": [],
+        "explicit_target_aliases": [],
+        "column_references": []
+      },
+      "sqlean_syntax": {
+        "status": "accepted"
+      },
+      "sqlean_render": {
+        "interface": [
+          "--render-assurance",
+          "postgres"
+        ],
+        "returncode": 0,
+        "stdout": "{\"assumptions\":[\"server_encoding=UTF8\",\"client_encoding=UTF8\",\"standard_conforming_strings=on\",\"max_identifier_length=63\",\"same catalog, search_path, and namespace interpretation\"],\"assurance\":\"checked-roundtrip\",\"evidence\":\"checked-instance\",\"mode\":\"postgres\",\"parameterMap\":[],\"profile\":\"postgresql-16-select-render-v0.1\",\"rendererVersion\":\"0.2\",\"scope\":\"SELECT AST serialization; independent target semantics not established\",\"semanticPreservation\":false,\"sql\":\"SELECT \\\"current_date\\\";\",\"status\":\"rendered\",\"theorems\":[\"SQLean.RenderContract.check_roundTrip\",\"SQLean.RenderContract.check_admissible\",\"SQLean.RenderContract.check_canonical\",\"SQLean.RenderContract.render_expected_stable\",\"SQLean.RenderContract.Certificate.parameter_slots_injective\",\"SQLean.RenderContract.Certificate.parameter_map_complete\",\"SQLean.RenderContract.Certificate.transport_preserves\"],\"trustedFoundations\":[\"Lean kernel\",\"propext\",\"Classical.choice\",\"Quot.sound\",\"Lean compiler/runtime for executable reports\"]}\n",
+        "stderr": "",
+        "report": {
+          "assumptions": [
+            "server_encoding=UTF8",
+            "client_encoding=UTF8",
+            "standard_conforming_strings=on",
+            "max_identifier_length=63",
+            "same catalog, search_path, and namespace interpretation"
+          ],
+          "assurance": "checked-roundtrip",
+          "evidence": "checked-instance",
+          "mode": "postgres",
+          "parameterMap": [],
+          "profile": "postgresql-16-select-render-v0.1",
+          "rendererVersion": "0.2",
+          "scope": "SELECT AST serialization; independent target semantics not established",
+          "semanticPreservation": false,
+          "sql": "SELECT \"current_date\";",
+          "status": "rendered",
+          "theorems": [
+            "SQLean.RenderContract.check_roundTrip",
+            "SQLean.RenderContract.check_admissible",
+            "SQLean.RenderContract.check_canonical",
+            "SQLean.RenderContract.render_expected_stable",
+            "SQLean.RenderContract.Certificate.parameter_slots_injective",
+            "SQLean.RenderContract.Certificate.parameter_map_complete",
+            "SQLean.RenderContract.Certificate.transport_preserves"
+          ],
+          "trustedFoundations": [
+            "Lean kernel",
+            "propext",
+            "Classical.choice",
+            "Quot.sound",
+            "Lean compiler/runtime for executable reports"
+          ]
+        },
+        "status": "rendered",
+        "evidence": "checked-instance",
+        "sql": "SELECT \"current_date\";"
+      },
+      "postgres_rendered": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "ColumnRef": 1,
+          "ResTarget": 1,
+          "SelectStmt": 1,
+          "String": 1
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [],
+        "explicit_target_aliases": [],
+        "column_references": [
+          [
+            "current_date"
+          ]
+        ]
+      },
+      "structural_observations": [
+        "sql-value-function-structure-changed"
+      ]
+    },
+    {
+      "id": "session_value_keywords",
+      "sql": "SELECT CURRENT_TIMESTAMP, CURRENT_USER, SESSION_USER, CURRENT_CATALOG, CURRENT_SCHEMA;",
+      "expected_feature": "Special SQL value functions",
+      "postgres_input": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "ResTarget": 5,
+          "SQLValueFunction": 5,
+          "SelectStmt": 1
+        },
+        "sql_value_functions": [
+          "SVFOP_CURRENT_TIMESTAMP",
+          "SVFOP_CURRENT_USER",
+          "SVFOP_SESSION_USER",
+          "SVFOP_CURRENT_CATALOG",
+          "SVFOP_CURRENT_SCHEMA"
+        ],
+        "null_tests": [],
+        "relations": [],
+        "explicit_target_aliases": [],
+        "column_references": []
+      },
+      "sqlean_syntax": {
+        "status": "accepted"
+      },
+      "sqlean_render": {
+        "interface": [
+          "--render-assurance",
+          "postgres"
+        ],
+        "returncode": 0,
+        "stdout": "{\"assumptions\":[\"server_encoding=UTF8\",\"client_encoding=UTF8\",\"standard_conforming_strings=on\",\"max_identifier_length=63\",\"same catalog, search_path, and namespace interpretation\"],\"assurance\":\"checked-roundtrip\",\"evidence\":\"checked-instance\",\"mode\":\"postgres\",\"parameterMap\":[],\"profile\":\"postgresql-16-select-render-v0.1\",\"rendererVersion\":\"0.2\",\"scope\":\"SELECT AST serialization; independent target semantics not established\",\"semanticPreservation\":false,\"sql\":\"SELECT \\\"current_timestamp\\\", \\\"current_user\\\", \\\"session_user\\\", \\\"current_catalog\\\", \\\"current_schema\\\";\",\"status\":\"rendered\",\"theorems\":[\"SQLean.RenderContract.check_roundTrip\",\"SQLean.RenderContract.check_admissible\",\"SQLean.RenderContract.check_canonical\",\"SQLean.RenderContract.render_expected_stable\",\"SQLean.RenderContract.Certificate.parameter_slots_injective\",\"SQLean.RenderContract.Certificate.parameter_map_complete\",\"SQLean.RenderContract.Certificate.transport_preserves\"],\"trustedFoundations\":[\"Lean kernel\",\"propext\",\"Classical.choice\",\"Quot.sound\",\"Lean compiler/runtime for executable reports\"]}\n",
+        "stderr": "",
+        "report": {
+          "assumptions": [
+            "server_encoding=UTF8",
+            "client_encoding=UTF8",
+            "standard_conforming_strings=on",
+            "max_identifier_length=63",
+            "same catalog, search_path, and namespace interpretation"
+          ],
+          "assurance": "checked-roundtrip",
+          "evidence": "checked-instance",
+          "mode": "postgres",
+          "parameterMap": [],
+          "profile": "postgresql-16-select-render-v0.1",
+          "rendererVersion": "0.2",
+          "scope": "SELECT AST serialization; independent target semantics not established",
+          "semanticPreservation": false,
+          "sql": "SELECT \"current_timestamp\", \"current_user\", \"session_user\", \"current_catalog\", \"current_schema\";",
+          "status": "rendered",
+          "theorems": [
+            "SQLean.RenderContract.check_roundTrip",
+            "SQLean.RenderContract.check_admissible",
+            "SQLean.RenderContract.check_canonical",
+            "SQLean.RenderContract.render_expected_stable",
+            "SQLean.RenderContract.Certificate.parameter_slots_injective",
+            "SQLean.RenderContract.Certificate.parameter_map_complete",
+            "SQLean.RenderContract.Certificate.transport_preserves"
+          ],
+          "trustedFoundations": [
+            "Lean kernel",
+            "propext",
+            "Classical.choice",
+            "Quot.sound",
+            "Lean compiler/runtime for executable reports"
+          ]
+        },
+        "status": "rendered",
+        "evidence": "checked-instance",
+        "sql": "SELECT \"current_timestamp\", \"current_user\", \"session_user\", \"current_catalog\", \"current_schema\";"
+      },
+      "postgres_rendered": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "ColumnRef": 5,
+          "ResTarget": 5,
+          "SelectStmt": 1,
+          "String": 5
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [],
+        "explicit_target_aliases": [],
+        "column_references": [
+          [
+            "current_timestamp"
+          ],
+          [
+            "current_user"
+          ],
+          [
+            "session_user"
+          ],
+          [
+            "current_catalog"
+          ],
+          [
+            "current_schema"
+          ]
+        ]
+      },
+      "structural_observations": [
+        "sql-value-function-structure-changed"
+      ]
+    },
+    {
+      "id": "postfix_isnull",
+      "sql": "SELECT 1 ISNULL;",
+      "expected_feature": "Postfix IS NULL test",
+      "postgres_input": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "A_Const": 1,
+          "NullTest": 1,
+          "ResTarget": 1,
+          "SelectStmt": 1
+        },
+        "sql_value_functions": [],
+        "null_tests": [
+          "IS_NULL"
+        ],
+        "relations": [],
+        "explicit_target_aliases": [],
+        "column_references": []
+      },
+      "sqlean_syntax": {
+        "status": "accepted"
+      },
+      "sqlean_render": {
+        "interface": [
+          "--render-assurance",
+          "postgres"
+        ],
+        "returncode": 0,
+        "stdout": "{\"assumptions\":[\"server_encoding=UTF8\",\"client_encoding=UTF8\",\"standard_conforming_strings=on\",\"max_identifier_length=63\",\"same catalog, search_path, and namespace interpretation\"],\"assurance\":\"checked-roundtrip\",\"evidence\":\"checked-instance\",\"mode\":\"postgres\",\"parameterMap\":[],\"profile\":\"postgresql-16-select-render-v0.1\",\"rendererVersion\":\"0.2\",\"scope\":\"SELECT AST serialization; independent target semantics not established\",\"semanticPreservation\":false,\"sql\":\"SELECT 1 AS \\\"isnull\\\";\",\"status\":\"rendered\",\"theorems\":[\"SQLean.RenderContract.check_roundTrip\",\"SQLean.RenderContract.check_admissible\",\"SQLean.RenderContract.check_canonical\",\"SQLean.RenderContract.render_expected_stable\",\"SQLean.RenderContract.Certificate.parameter_slots_injective\",\"SQLean.RenderContract.Certificate.parameter_map_complete\",\"SQLean.RenderContract.Certificate.transport_preserves\"],\"trustedFoundations\":[\"Lean kernel\",\"propext\",\"Classical.choice\",\"Quot.sound\",\"Lean compiler/runtime for executable reports\"]}\n",
+        "stderr": "",
+        "report": {
+          "assumptions": [
+            "server_encoding=UTF8",
+            "client_encoding=UTF8",
+            "standard_conforming_strings=on",
+            "max_identifier_length=63",
+            "same catalog, search_path, and namespace interpretation"
+          ],
+          "assurance": "checked-roundtrip",
+          "evidence": "checked-instance",
+          "mode": "postgres",
+          "parameterMap": [],
+          "profile": "postgresql-16-select-render-v0.1",
+          "rendererVersion": "0.2",
+          "scope": "SELECT AST serialization; independent target semantics not established",
+          "semanticPreservation": false,
+          "sql": "SELECT 1 AS \"isnull\";",
+          "status": "rendered",
+          "theorems": [
+            "SQLean.RenderContract.check_roundTrip",
+            "SQLean.RenderContract.check_admissible",
+            "SQLean.RenderContract.check_canonical",
+            "SQLean.RenderContract.render_expected_stable",
+            "SQLean.RenderContract.Certificate.parameter_slots_injective",
+            "SQLean.RenderContract.Certificate.parameter_map_complete",
+            "SQLean.RenderContract.Certificate.transport_preserves"
+          ],
+          "trustedFoundations": [
+            "Lean kernel",
+            "propext",
+            "Classical.choice",
+            "Quot.sound",
+            "Lean compiler/runtime for executable reports"
+          ]
+        },
+        "status": "rendered",
+        "evidence": "checked-instance",
+        "sql": "SELECT 1 AS \"isnull\";"
+      },
+      "postgres_rendered": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "A_Const": 1,
+          "ResTarget": 1,
+          "SelectStmt": 1
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [],
+        "explicit_target_aliases": [
+          "isnull"
+        ],
+        "column_references": []
+      },
+      "structural_observations": [
+        "null-test-structure-changed"
+      ]
+    },
+    {
+      "id": "postfix_notnull",
+      "sql": "SELECT NULL NOTNULL;",
+      "expected_feature": "Postfix IS NOT NULL test",
+      "postgres_input": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "A_Const": 1,
+          "NullTest": 1,
+          "ResTarget": 1,
+          "SelectStmt": 1
+        },
+        "sql_value_functions": [],
+        "null_tests": [
+          "IS_NOT_NULL"
+        ],
+        "relations": [],
+        "explicit_target_aliases": [],
+        "column_references": []
+      },
+      "sqlean_syntax": {
+        "status": "accepted"
+      },
+      "sqlean_render": {
+        "interface": [
+          "--render-assurance",
+          "postgres"
+        ],
+        "returncode": 0,
+        "stdout": "{\"assumptions\":[\"server_encoding=UTF8\",\"client_encoding=UTF8\",\"standard_conforming_strings=on\",\"max_identifier_length=63\",\"same catalog, search_path, and namespace interpretation\"],\"assurance\":\"checked-roundtrip\",\"evidence\":\"checked-instance\",\"mode\":\"postgres\",\"parameterMap\":[],\"profile\":\"postgresql-16-select-render-v0.1\",\"rendererVersion\":\"0.2\",\"scope\":\"SELECT AST serialization; independent target semantics not established\",\"semanticPreservation\":false,\"sql\":\"SELECT NULL AS \\\"notnull\\\";\",\"status\":\"rendered\",\"theorems\":[\"SQLean.RenderContract.check_roundTrip\",\"SQLean.RenderContract.check_admissible\",\"SQLean.RenderContract.check_canonical\",\"SQLean.RenderContract.render_expected_stable\",\"SQLean.RenderContract.Certificate.parameter_slots_injective\",\"SQLean.RenderContract.Certificate.parameter_map_complete\",\"SQLean.RenderContract.Certificate.transport_preserves\"],\"trustedFoundations\":[\"Lean kernel\",\"propext\",\"Classical.choice\",\"Quot.sound\",\"Lean compiler/runtime for executable reports\"]}\n",
+        "stderr": "",
+        "report": {
+          "assumptions": [
+            "server_encoding=UTF8",
+            "client_encoding=UTF8",
+            "standard_conforming_strings=on",
+            "max_identifier_length=63",
+            "same catalog, search_path, and namespace interpretation"
+          ],
+          "assurance": "checked-roundtrip",
+          "evidence": "checked-instance",
+          "mode": "postgres",
+          "parameterMap": [],
+          "profile": "postgresql-16-select-render-v0.1",
+          "rendererVersion": "0.2",
+          "scope": "SELECT AST serialization; independent target semantics not established",
+          "semanticPreservation": false,
+          "sql": "SELECT NULL AS \"notnull\";",
+          "status": "rendered",
+          "theorems": [
+            "SQLean.RenderContract.check_roundTrip",
+            "SQLean.RenderContract.check_admissible",
+            "SQLean.RenderContract.check_canonical",
+            "SQLean.RenderContract.render_expected_stable",
+            "SQLean.RenderContract.Certificate.parameter_slots_injective",
+            "SQLean.RenderContract.Certificate.parameter_map_complete",
+            "SQLean.RenderContract.Certificate.transport_preserves"
+          ],
+          "trustedFoundations": [
+            "Lean kernel",
+            "propext",
+            "Classical.choice",
+            "Quot.sound",
+            "Lean compiler/runtime for executable reports"
+          ]
+        },
+        "status": "rendered",
+        "evidence": "checked-instance",
+        "sql": "SELECT NULL AS \"notnull\";"
+      },
+      "postgres_rendered": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "A_Const": 1,
+          "ResTarget": 1,
+          "SelectStmt": 1
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [],
+        "explicit_target_aliases": [
+          "notnull"
+        ],
+        "column_references": []
+      },
+      "structural_observations": [
+        "null-test-structure-changed"
+      ]
+    },
+    {
+      "id": "from_only",
+      "sql": "SELECT * FROM ONLY users;",
+      "expected_feature": "ONLY relation reference",
+      "postgres_input": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "A_Star": 1,
+          "ColumnRef": 1,
+          "RangeVar": 1,
+          "ResTarget": 1,
+          "SelectStmt": 1
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [
+          {
+            "schema": null,
+            "name": "users",
+            "inherits": false,
+            "alias": null
+          }
+        ],
+        "explicit_target_aliases": [],
+        "column_references": [
+          [
+            "*"
+          ]
+        ]
+      },
+      "sqlean_syntax": {
+        "status": "accepted"
+      },
+      "sqlean_render": {
+        "interface": [
+          "--render-assurance",
+          "postgres"
+        ],
+        "returncode": 0,
+        "stdout": "{\"assumptions\":[\"server_encoding=UTF8\",\"client_encoding=UTF8\",\"standard_conforming_strings=on\",\"max_identifier_length=63\",\"same catalog, search_path, and namespace interpretation\"],\"assurance\":\"checked-roundtrip\",\"evidence\":\"checked-instance\",\"mode\":\"postgres\",\"parameterMap\":[],\"profile\":\"postgresql-16-select-render-v0.1\",\"rendererVersion\":\"0.2\",\"scope\":\"SELECT AST serialization; independent target semantics not established\",\"semanticPreservation\":false,\"sql\":\"SELECT * FROM \\\"only\\\" AS \\\"users\\\";\",\"status\":\"rendered\",\"theorems\":[\"SQLean.RenderContract.check_roundTrip\",\"SQLean.RenderContract.check_admissible\",\"SQLean.RenderContract.check_canonical\",\"SQLean.RenderContract.render_expected_stable\",\"SQLean.RenderContract.Certificate.parameter_slots_injective\",\"SQLean.RenderContract.Certificate.parameter_map_complete\",\"SQLean.RenderContract.Certificate.transport_preserves\"],\"trustedFoundations\":[\"Lean kernel\",\"propext\",\"Classical.choice\",\"Quot.sound\",\"Lean compiler/runtime for executable reports\"]}\n",
+        "stderr": "",
+        "report": {
+          "assumptions": [
+            "server_encoding=UTF8",
+            "client_encoding=UTF8",
+            "standard_conforming_strings=on",
+            "max_identifier_length=63",
+            "same catalog, search_path, and namespace interpretation"
+          ],
+          "assurance": "checked-roundtrip",
+          "evidence": "checked-instance",
+          "mode": "postgres",
+          "parameterMap": [],
+          "profile": "postgresql-16-select-render-v0.1",
+          "rendererVersion": "0.2",
+          "scope": "SELECT AST serialization; independent target semantics not established",
+          "semanticPreservation": false,
+          "sql": "SELECT * FROM \"only\" AS \"users\";",
+          "status": "rendered",
+          "theorems": [
+            "SQLean.RenderContract.check_roundTrip",
+            "SQLean.RenderContract.check_admissible",
+            "SQLean.RenderContract.check_canonical",
+            "SQLean.RenderContract.render_expected_stable",
+            "SQLean.RenderContract.Certificate.parameter_slots_injective",
+            "SQLean.RenderContract.Certificate.parameter_map_complete",
+            "SQLean.RenderContract.Certificate.transport_preserves"
+          ],
+          "trustedFoundations": [
+            "Lean kernel",
+            "propext",
+            "Classical.choice",
+            "Quot.sound",
+            "Lean compiler/runtime for executable reports"
+          ]
+        },
+        "status": "rendered",
+        "evidence": "checked-instance",
+        "sql": "SELECT * FROM \"only\" AS \"users\";"
+      },
+      "postgres_rendered": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "A_Star": 1,
+          "ColumnRef": 1,
+          "RangeVar": 1,
+          "ResTarget": 1,
+          "SelectStmt": 1
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [
+          {
+            "schema": null,
+            "name": "only",
+            "inherits": true,
+            "alias": "users"
+          }
+        ],
+        "explicit_target_aliases": [],
+        "column_references": [
+          [
+            "*"
+          ]
+        ]
+      },
+      "structural_observations": [
+        "relation-reference-structure-changed"
+      ]
+    },
+    {
+      "id": "update_only",
+      "sql": "UPDATE ONLY users SET age = 1 WHERE id = 2;",
+      "expected_feature": "ONLY update target",
+      "postgres_input": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "UpdateStmt",
+        "node_kinds": {
+          "A_Const": 2,
+          "A_Expr": 1,
+          "ColumnRef": 1,
+          "RangeVar": 1,
+          "ResTarget": 1,
+          "String": 2,
+          "UpdateStmt": 1
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [
+          {
+            "schema": null,
+            "name": "users",
+            "inherits": false,
+            "alias": null
+          }
+        ],
+        "explicit_target_aliases": [
+          "age"
+        ],
+        "column_references": [
+          [
+            "id"
+          ]
+        ]
+      },
+      "sqlean_syntax": {
+        "status": "accepted"
+      },
+      "sqlean_render": {
+        "interface": [
+          "--postgres"
+        ],
+        "returncode": 0,
+        "stdout": "UPDATE \"only\" AS \"users\" SET \"age\" = 1 WHERE (\"id\" = 2);\n",
+        "stderr": "",
+        "status": "rendered",
+        "evidence": "unchecked-render",
+        "sql": "UPDATE \"only\" AS \"users\" SET \"age\" = 1 WHERE (\"id\" = 2);"
+      },
+      "postgres_rendered": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "UpdateStmt",
+        "node_kinds": {
+          "A_Const": 2,
+          "A_Expr": 1,
+          "ColumnRef": 1,
+          "RangeVar": 1,
+          "ResTarget": 1,
+          "String": 2,
+          "UpdateStmt": 1
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [
+          {
+            "schema": null,
+            "name": "only",
+            "inherits": true,
+            "alias": "users"
+          }
+        ],
+        "explicit_target_aliases": [
+          "age"
+        ],
+        "column_references": [
+          [
+            "id"
+          ]
+        ]
+      },
+      "structural_observations": [
+        "relation-reference-structure-changed"
+      ]
+    },
+    {
+      "id": "delete_only",
+      "sql": "DELETE FROM ONLY users WHERE id = 2;",
+      "expected_feature": "ONLY delete target",
+      "postgres_input": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "DeleteStmt",
+        "node_kinds": {
+          "A_Const": 1,
+          "A_Expr": 1,
+          "ColumnRef": 1,
+          "DeleteStmt": 1,
+          "RangeVar": 1,
+          "String": 2
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [
+          {
+            "schema": null,
+            "name": "users",
+            "inherits": false,
+            "alias": null
+          }
+        ],
+        "explicit_target_aliases": [],
+        "column_references": [
+          [
+            "id"
+          ]
+        ]
+      },
+      "sqlean_syntax": {
+        "status": "accepted"
+      },
+      "sqlean_render": {
+        "interface": [
+          "--postgres"
+        ],
+        "returncode": 0,
+        "stdout": "DELETE FROM \"only\" AS \"users\" WHERE (\"id\" = 2);\n",
+        "stderr": "",
+        "status": "rendered",
+        "evidence": "unchecked-render",
+        "sql": "DELETE FROM \"only\" AS \"users\" WHERE (\"id\" = 2);"
+      },
+      "postgres_rendered": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "DeleteStmt",
+        "node_kinds": {
+          "A_Const": 1,
+          "A_Expr": 1,
+          "ColumnRef": 1,
+          "DeleteStmt": 1,
+          "RangeVar": 1,
+          "String": 2
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [
+          {
+            "schema": null,
+            "name": "only",
+            "inherits": true,
+            "alias": "users"
+          }
+        ],
+        "explicit_target_aliases": [],
+        "column_references": [
+          [
+            "id"
+          ]
+        ]
+      },
+      "structural_observations": [
+        "relation-reference-structure-changed"
+      ]
+    },
+    {
+      "id": "comma_from_control",
+      "sql": "SELECT u.id, o.id FROM users u, orders o WHERE u.id = o.user_id;",
+      "expected_feature": "Existing comma-FROM coverage control; explicit CROSS JOIN may change raw AST shape",
+      "postgres_input": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "A_Expr": 1,
+          "ColumnRef": 4,
+          "RangeVar": 2,
+          "ResTarget": 2,
+          "SelectStmt": 1,
+          "String": 9
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [
+          {
+            "schema": null,
+            "name": "users",
+            "inherits": true,
+            "alias": "u"
+          },
+          {
+            "schema": null,
+            "name": "orders",
+            "inherits": true,
+            "alias": "o"
+          }
+        ],
+        "explicit_target_aliases": [],
+        "column_references": [
+          [
+            "u",
+            "id"
+          ],
+          [
+            "o",
+            "id"
+          ],
+          [
+            "u",
+            "id"
+          ],
+          [
+            "o",
+            "user_id"
+          ]
+        ]
+      },
+      "sqlean_syntax": {
+        "status": "accepted"
+      },
+      "sqlean_render": {
+        "interface": [
+          "--render-assurance",
+          "postgres"
+        ],
+        "returncode": 0,
+        "stdout": "{\"assumptions\":[\"server_encoding=UTF8\",\"client_encoding=UTF8\",\"standard_conforming_strings=on\",\"max_identifier_length=63\",\"same catalog, search_path, and namespace interpretation\"],\"assurance\":\"checked-roundtrip\",\"evidence\":\"checked-instance\",\"mode\":\"postgres\",\"parameterMap\":[],\"profile\":\"postgresql-16-select-render-v0.1\",\"rendererVersion\":\"0.2\",\"scope\":\"SELECT AST serialization; independent target semantics not established\",\"semanticPreservation\":false,\"sql\":\"SELECT \\\"u\\\".\\\"id\\\", \\\"o\\\".\\\"id\\\" FROM (\\\"users\\\" AS \\\"u\\\" CROSS JOIN \\\"orders\\\" AS \\\"o\\\") WHERE (\\\"u\\\".\\\"id\\\" = \\\"o\\\".\\\"user_id\\\");\",\"status\":\"rendered\",\"theorems\":[\"SQLean.RenderContract.check_roundTrip\",\"SQLean.RenderContract.check_admissible\",\"SQLean.RenderContract.check_canonical\",\"SQLean.RenderContract.render_expected_stable\",\"SQLean.RenderContract.Certificate.parameter_slots_injective\",\"SQLean.RenderContract.Certificate.parameter_map_complete\",\"SQLean.RenderContract.Certificate.transport_preserves\"],\"trustedFoundations\":[\"Lean kernel\",\"propext\",\"Classical.choice\",\"Quot.sound\",\"Lean compiler/runtime for executable reports\"]}\n",
+        "stderr": "",
+        "report": {
+          "assumptions": [
+            "server_encoding=UTF8",
+            "client_encoding=UTF8",
+            "standard_conforming_strings=on",
+            "max_identifier_length=63",
+            "same catalog, search_path, and namespace interpretation"
+          ],
+          "assurance": "checked-roundtrip",
+          "evidence": "checked-instance",
+          "mode": "postgres",
+          "parameterMap": [],
+          "profile": "postgresql-16-select-render-v0.1",
+          "rendererVersion": "0.2",
+          "scope": "SELECT AST serialization; independent target semantics not established",
+          "semanticPreservation": false,
+          "sql": "SELECT \"u\".\"id\", \"o\".\"id\" FROM (\"users\" AS \"u\" CROSS JOIN \"orders\" AS \"o\") WHERE (\"u\".\"id\" = \"o\".\"user_id\");",
+          "status": "rendered",
+          "theorems": [
+            "SQLean.RenderContract.check_roundTrip",
+            "SQLean.RenderContract.check_admissible",
+            "SQLean.RenderContract.check_canonical",
+            "SQLean.RenderContract.render_expected_stable",
+            "SQLean.RenderContract.Certificate.parameter_slots_injective",
+            "SQLean.RenderContract.Certificate.parameter_map_complete",
+            "SQLean.RenderContract.Certificate.transport_preserves"
+          ],
+          "trustedFoundations": [
+            "Lean kernel",
+            "propext",
+            "Classical.choice",
+            "Quot.sound",
+            "Lean compiler/runtime for executable reports"
+          ]
+        },
+        "status": "rendered",
+        "evidence": "checked-instance",
+        "sql": "SELECT \"u\".\"id\", \"o\".\"id\" FROM (\"users\" AS \"u\" CROSS JOIN \"orders\" AS \"o\") WHERE (\"u\".\"id\" = \"o\".\"user_id\");"
+      },
+      "postgres_rendered": {
+        "status": "accepted",
+        "statement_count": 1,
+        "statement": "SelectStmt",
+        "node_kinds": {
+          "A_Expr": 1,
+          "ColumnRef": 4,
+          "JoinExpr": 1,
+          "RangeVar": 2,
+          "ResTarget": 2,
+          "SelectStmt": 1,
+          "String": 9
+        },
+        "sql_value_functions": [],
+        "null_tests": [],
+        "relations": [
+          {
+            "schema": null,
+            "name": "users",
+            "inherits": true,
+            "alias": "u"
+          },
+          {
+            "schema": null,
+            "name": "orders",
+            "inherits": true,
+            "alias": "o"
+          }
+        ],
+        "explicit_target_aliases": [],
+        "column_references": [
+          [
+            "u",
+            "id"
+          ],
+          [
+            "o",
+            "id"
+          ],
+          [
+            "u",
+            "id"
+          ],
+          [
+            "o",
+            "user_id"
+          ]
+        ]
+      },
+      "structural_observations": []
+    }
+  ]
+}

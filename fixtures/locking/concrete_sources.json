@@ -1,0 +1,1248 @@
+{
+  "format_version": 1,
+  "factor": "locking",
+  "expected_count": 50,
+  "expected_sources": {
+    "temporal": 15,
+    "hatchet": 8,
+    "sqlc": 2,
+    "postgres": 25
+  },
+  "sources": {
+    "temporal": {
+      "repository": "https://github.com/temporalio/temporal",
+      "commit": "b7bc978d1040afe2dcbc68ecfe8b228ae198e0b6",
+      "license": "MIT",
+      "license_file": "fixtures/external_postgresql/licenses/temporal-LICENSE.txt",
+      "license_sha256": "6aab9afd99ceb1dcaf6a0d91386b46baef9bce17ae4006044e0f231e31430b69",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/cluster_metadata.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/cluster_metadata.go",
+          "sha256": "3bcc973420183525db8816bad242a7afcf81a1c02d2036e4a55848cf5a19a5c7"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/execution.go",
+          "sha256": "7e50fffdfb1cbb8a91d57b3a560870ee68ed3a4ed7097296b81829a2cc71a902"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/namespace.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/namespace.go",
+          "sha256": "14442c4fb47b6e074baedc913fa59cbbdbba910fc960b0ddaf979bdfac7ffad6"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/queue.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/queue.go",
+          "sha256": "752692dc64895b36e1d62e8ddee141b59740cdd1b43f7f6c1571bc899001b5c8"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/queue_v2.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/queue_v2.go",
+          "sha256": "f9ca71235e4afe9789bcd4487fa0c38879bc87ff32b10dc11a5e26ac99f2b3a3"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/shard.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/shard.go",
+          "sha256": "441b95c47b844a6b0703116d06347ad8bfaddfb1f7291678231140e98b60e10e"
+        },
+        {
+          "path": "common/persistence/sql/sqlplugin/postgresql/task_queues.go",
+          "local_path": "fixtures/external_postgresql/sources/temporal/common/persistence/sql/sqlplugin/postgresql/task_queues.go",
+          "sha256": "51c7bf59e7a1c2bc87e855d2180dbc5b8b61ca7ecf1696b7eeb8b910b5d470ec"
+        }
+      ]
+    },
+    "hatchet": {
+      "repository": "https://github.com/hatchet-dev/hatchet",
+      "commit": "392e7c472221cdab235cca674640e98f904e1ea0",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/hatchet-LICENSE.txt",
+      "license_sha256": "7388b34bd1ad4b9db3c72dcb73f434ea27c88e5ca8f02a24d4f970c906d79be3",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "pkg/repository/sqlcv1/operator.sql.go",
+          "sha256": "0c48fb79c7e9d2af07455e153aa3b7c0c0656c329305c11417653a6447b4b66a",
+          "local_path": "fixtures/locking/sources/hatchet/pkg/repository/sqlcv1/operator.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/queue.sql.go",
+          "sha256": "af5416c8ea8ea8ad39857d80ee19b840568e9275f716091ec7158c778c07460f",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/queue.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/tasks.sql.go",
+          "sha256": "b439f6e7e5642fb90e79d61e568ceb849ded87c86d04aa1e093b9d78240979e4",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/tasks.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/users.sql.go",
+          "sha256": "56920bfe9fdc403709026f16274b91dede91454272a8ec6d881fb3e7a59778d6",
+          "local_path": "fixtures/statement_families/sources/hatchet/pkg/repository/sqlcv1/users.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/workers.sql.go",
+          "sha256": "66b3e2518cab2f497148ab2c524167305db1cfbf76eac48e2a946014c3a8b4d5",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/workers.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/workflows.sql.go",
+          "sha256": "0dd7b734ad4688e380ad82330b391c8cb8a7b1fe7e8d0eba9566728b1e561ed0",
+          "local_path": "fixtures/extended_types/sources/hatchet/pkg/repository/sqlcv1/workflows.sql.go"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/join_inner/postgresql/query.sql",
+          "sha256": "244e1befce8b2945df2122be6728a08b372decf5e2bd4fb61400731dea7807b3",
+          "local_path": "fixtures/locking/sources/sqlc/internal/endtoend/testdata/join_inner/postgresql/query.sql"
+        }
+      ]
+    },
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "contrib/file_fdw/sql/file_fdw.sql",
+          "sha256": "173039aaa8c4956f3c0a2182737106e04e72c0b2a6baa678d1a6b000d7f0578e",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/file_fdw/sql/file_fdw.sql"
+        },
+        {
+          "path": "contrib/pg_stat_statements/sql/select.sql",
+          "sha256": "bdb5f4eb1315fca6609df3eaa883f68db20287b644c7eca91bb3649ca7cbfe1e",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/pg_stat_statements/sql/select.sql"
+        },
+        {
+          "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+          "sha256": "7fe202a74edec6ed9ab7a225ae3ccf09bd55ce15c0bd69441d9606a70ee5f873",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/postgres_fdw/sql/postgres_fdw.sql"
+        },
+        {
+          "path": "contrib/test_decoding/sql/twophase.sql",
+          "sha256": "9e30b271d8bbd10f6765f3a7b7f91ac73380f0acdecd5b408d231a202267a7db",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/test_decoding/sql/twophase.sql"
+        },
+        {
+          "path": "contrib/test_decoding/sql/xact.sql",
+          "sha256": "5b2a594e4eda38a46531a21513eb0434439ae5c0a8b61ba54148f7c1e39c0cd6",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/test_decoding/sql/xact.sql"
+        },
+        {
+          "path": "src/test/regress/sql/combocid.sql",
+          "sha256": "9868c945e344c5e38cd1b8422e6acaff7572485ae6dfe7542d3b7ff514652f8b",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/combocid.sql"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/operator.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "claimOperators"
+      },
+      "sql_sha256": "1cd4d437aab22de80b6cc795a0daa773db3cf31864c7fb5c5a2896ae16fcccca",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "skip-locked",
+            "targets": [
+              "v1_operator"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/operator.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lockOperator"
+      },
+      "sql_sha256": "59ae7f1380414fa7de493babcb54c7fb470e09023856a34ca664cab9794c587e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listExpiredPausedWorkflowQueueItems"
+      },
+      "sql_sha256": "e8f8d085e174ab4b5205b3c721c1a31d9e7d0d77163e90afa880921d3195dacf",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "skip-locked",
+            "targets": [
+              "qi"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tasks.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTasksToReassign"
+      },
+      "sql_sha256": "38fd383e1c28edbe5d8a584c5299d4660a2bef1e641575d1a3ff12b3e790d062",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "skip-locked",
+            "targets": [
+              "runtime"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tasks.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTasksToTimeout"
+      },
+      "sql_sha256": "6ffd07fa5e98b8e1ca6a4c038c29c8bde801caf218fdd6fceed64615f515d469",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "skip-locked",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/users.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getUserEmailVerifiedForUpdate"
+      },
+      "sql_sha256": "420d631f2febc45e67b04fdd2113dfba8f96810044c06296fea6770a772d259d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lockWorkerActionHash"
+      },
+      "sql_sha256": "f5b55bf16a6be643fb26fb222f39850fa31cb360722588010e150d94e04ddb67",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lockWorkflowVersion"
+      },
+      "sql_sha256": "eea285c67b516cb92357bf7ce64c6d8f8234e4ce32325fe8080d8bedb69085c3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_inner/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 36,
+        "end": 185,
+        "statement_index": 0
+      },
+      "sql_sha256": "6ed4ae7174d649fa66b2287d4cd7b3f84528b7b6f2090a9cddda37008f73b3e4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "skip-locked",
+            "targets": [
+              "he"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/join_inner/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 218,
+        "end": 408,
+        "statement_index": 1
+      },
+      "sql_sha256": "4eb4011b3b357554fffa6208cd9751bb045877084bc8f165ae6a9d6dacaadd79",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "skip-locked",
+            "targets": [
+              "handled_events"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/file_fdw/sql/file_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7633,
+        "end": 7666,
+        "statement_index": 82
+      },
+      "sql_sha256": "e26399c8d7c8bb1a2fc6d403e0a13b1ceb362549df53a87c47f96aa622b198cb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1855,
+        "end": 1926,
+        "statement_index": 41
+      },
+      "sql_sha256": "748d7f64d1f9222a45b1618a7efb5edc227b07077b69fdf16afff9d05348b9cc",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1927,
+        "end": 2008,
+        "statement_index": 42
+      },
+      "sql_sha256": "cd247b11bc29e70325335be280902396fd722d028826f82203e3a25667591f4e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": [
+              "pgss_a"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2009,
+        "end": 2090,
+        "statement_index": 43
+      },
+      "sql_sha256": "75b34de7829723bb68bddc5dba1a73fe7200ae7580858cdc21f509f9219de5f9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": [
+              "pgss_b"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2091,
+        "end": 2180,
+        "statement_index": 44
+      },
+      "sql_sha256": "5e90307508563af4cab34332b57bf3a65633c7027f2d1858b3ac8317b4093459",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": [
+              "pgss_a",
+              "pgss_b"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2211,
+        "end": 2300,
+        "statement_index": 45
+      },
+      "sql_sha256": "804a993dee8b2a34d239ca4188772cae405a6efc5ecf7de9aa43bc7a96175a74",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": [
+              "pgss_b",
+              "pgss_a"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2320,
+        "end": 2398,
+        "statement_index": 46
+      },
+      "sql_sha256": "d90f1f6a983f643d5611e8c545c743030f189897172fc54f038d109d94ffaab8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "no-key-update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2399,
+        "end": 2469,
+        "statement_index": 47
+      },
+      "sql_sha256": "c0ece75abee1add812272d94433673b9e8410ab626300aab97a280c04dc865b7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "share",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2470,
+        "end": 2544,
+        "statement_index": 48
+      },
+      "sql_sha256": "8de9cf0fc353b8b0d991b63aa048302407f7ab9bb1b4aa695dad82f8180b1265",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "key-share",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2568,
+        "end": 2646,
+        "statement_index": 49
+      },
+      "sql_sha256": "130c79af6feb31ea9f0b66a4e57417b37178b9b8cb51db009d72a644df890711",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "nowait",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2647,
+        "end": 2730,
+        "statement_index": 50
+      },
+      "sql_sha256": "c98784a2fe04a355681492ce59609a6cd213ad0a77b935d0ab18799506f670fc",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "skip-locked",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8978,
+        "end": 9025,
+        "statement_index": 69
+      },
+      "sql_sha256": "52ea0cf06b0230692d4061e1f0431767b7bbe1103b385e862eb80d1dca518f5c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9102,
+        "end": 9148,
+        "statement_index": 71
+      },
+      "sql_sha256": "9b437c08014a3338194bdaaf0872da1319478aa90ff8f1480ed3b2ebad80802a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "share",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 30181,
+        "end": 30303,
+        "statement_index": 217
+      },
+      "sql_sha256": "54d95d86e603d2123af5dd1e54cc15be686566620d9a940fb3ecd75ed0330a08",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": [
+              "t1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 30450,
+        "end": 30566,
+        "statement_index": 219
+      },
+      "sql_sha256": "4b19625fee2b7ca67a716683e7a998ad009ad1acb3274b6c6033ea5b5e947a2a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 30759,
+        "end": 30880,
+        "statement_index": 221
+      },
+      "sql_sha256": "64628bd92b4756a42143b1aa8b77dca96b93c9f1256770b18f8e6b07b194079b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "share",
+            "wait_policy": "default",
+            "targets": [
+              "t1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 31026,
+        "end": 31141,
+        "statement_index": 223
+      },
+      "sql_sha256": "b2da795e3f496194215ac8614da6dc961f94559bc1805794c8562aeaa34a5a4b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "share",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 37230,
+        "end": 37411,
+        "statement_index": 259
+      },
+      "sql_sha256": "87e7bc33b2e10c96ac4f84f51f18f6650a05fe2ff8ca18584ebd33b8e9c65338",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 101309,
+        "end": 101371,
+        "statement_index": 994
+      },
+      "sql_sha256": "685893de1d87e85b448f9366e1181ce58573ff1c57cbd490bec6cfff36f1d49c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 101464,
+        "end": 101525,
+        "statement_index": 996
+      },
+      "sql_sha256": "207850dcbeeb68e9e87bbf4a53b06a8ea18e350f5d0093d1cec984dbd9039405",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "share",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 101884,
+        "end": 101946,
+        "statement_index": 1000
+      },
+      "sql_sha256": "40e264b0c7a1083ec5dfa210827fc6e4f8bcb77930909b4f14ada2b244972109",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "share",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/test_decoding/sql/twophase.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6246,
+        "end": 6298,
+        "statement_index": 65
+      },
+      "sql_sha256": "9da04c0fd3e81fe3502906776465dc7edfc96ccf16f291ce6b7c047873ba637c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "share",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/test_decoding/sql/xact.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 367,
+        "end": 402,
+        "statement_index": 5
+      },
+      "sql_sha256": "39504f317ebbc1caf2d0f97794074796a48a0eba57c75155e5a9aa20f08f5c66",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/test_decoding/sql/xact.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 926,
+        "end": 969,
+        "statement_index": 13
+      },
+      "sql_sha256": "ed29ae3883876138fe61bf980a250a477fd60fc447114e412190f6b30e877eb6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/combocid.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1991,
+        "end": 2039,
+        "statement_index": 43
+      },
+      "sql_sha256": "c51b403bb8127054b7c4b3aef48b81e7fa15c94a7a825a12803c24caa9221378",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/cluster_metadata.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "writeLockGetClusterMetadataQry"
+      },
+      "sql_sha256": "3162f78db18d869a18cf24b0deee16ab82e3d644d1522e1b0d35a34c259c7f01",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "writeLockExecutionQuery"
+      },
+      "sql_sha256": "fb1a8340ff1d1029796112fc44c0c7162cd0b855842f11e42c79acda6b8a0975",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "readLockExecutionQuery"
+      },
+      "sql_sha256": "80ba613e7ab186c471b86ceb6076cfaa7ef2c633a1883498b726e64f47b58a55",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "share",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lockCurrentExecutionJoinExecutionsQuery"
+      },
+      "sql_sha256": "3a23daad0ed21d60c03c05c77e35d3b43f6e10b7d31efa74afcc32ff38192ae4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lockCurrentChasmExecutionJoinExecutionsQuery"
+      },
+      "sql_sha256": "ef3b73e63cd9a7ac7525ca1cfc76522130c7540e2b3135836fcf03ff48d4298f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lockCurrentExecutionQuery"
+      },
+      "sql_sha256": "df1bbcfa207f47e6a9000c776adc7d7e23248568162d42fcdf6df8c22d528669",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/execution.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lockCurrentChasmExecutionQuery"
+      },
+      "sql_sha256": "75989401d5450aad98db335f3247c16711b5528ce0c655c41e32e6be29ffd600",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/namespace.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lockNamespaceMetadataQuery"
+      },
+      "sql_sha256": "2b3b83014dc41366eb1e46db6b4539f51d6acecc4d677a0b99f97fdef76bd108",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/queue.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetLastMessageIDQuery"
+      },
+      "sql_sha256": "1ef5bd8223e980c5420c52a43832afe102f9af3a7fbd3fb0708b87cf3b2f674f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/queue.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateLockQueueMetadataQuery"
+      },
+      "sql_sha256": "547ba8042f44820de36e5815c9d11c4661f09f7d3189f13adb3411ef8c2f1684",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/queue_v2.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetLastMessageIDQueryV2"
+      },
+      "sql_sha256": "47d8a77d08261fbc9f52f1551510dfd8086a708efbf08982227c36fd15ace5d0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/queue_v2.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "templateGetQueueMetadataQueryV2ForUpdate"
+      },
+      "sql_sha256": "de28729aeb43c3750c26dd3557849ad0f224796f6ef572b99f3aa513ad358f52",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/shard.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lockShardQry"
+      },
+      "sql_sha256": "428d8fd202d0b82654342ce173abc6a7692733abc58ec260d84461daaebf24fb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/shard.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "readLockShardQry"
+      },
+      "sql_sha256": "d1df33a9bc08781c399edc83ec828d21a58253c4f831d1b89a05037212bda915",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "share",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    },
+    {
+      "source": "temporal",
+      "path": "common/persistence/sql/sqlplugin/postgresql/task_queues.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lockTaskQueueQry"
+      },
+      "sql_sha256": "531b4ced4d83390d5c113be59f47589a5a11cb4cb080f2f249c804e9b2433c0c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "locking_clauses": [
+          {
+            "strength": "update",
+            "wait_policy": "default",
+            "targets": []
+          }
+        ]
+      }
+    }
+  ]
+}

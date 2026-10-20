@@ -6,6 +6,8 @@ namespace SQLean.Advanced
 
 inductive TypeName where
   | int | bigInt | text | varchar | bool | real | doublePrecision | numeric
+  | smallInt | char | date | time | timeTZ | timestamp | timestampTZ
+  | interval | uuid | json | jsonb | bytea
   deriving Repr, BEq, DecidableEq, Inhabited
 
 structure DataType where
@@ -15,10 +17,20 @@ structure DataType where
 
 def DataType.sqlType (type : DataType) : SqlType :=
   match type.name with
-  | .int | .bigInt => .int
-  | .text | .varchar => .text
+  | .smallInt | .int | .bigInt => .int
+  | .text | .varchar | .char => .text
   | .bool => .bool
   | .real | .doublePrecision | .numeric => .real
+  | .date => .opaque .date
+  | .time => .opaque .time
+  | .timeTZ => .opaque .timeTZ
+  | .timestamp => .opaque .timestamp
+  | .timestampTZ => .opaque .timestampTZ
+  | .interval => .opaque .interval
+  | .uuid => .opaque .uuid
+  | .json => .opaque .json
+  | .jsonb => .opaque .jsonb
+  | .bytea => .opaque .bytea
 
 /-- Anonymous ordinals count question marks in source order, beginning at one. -/
 inductive Parameter where
@@ -28,6 +40,22 @@ inductive Parameter where
 
 inductive SetOp where
   | union | intersect | except
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+inductive LockStrength where
+  | update | noKeyUpdate | share | keyShare
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+inductive LockWaitPolicy where
+  | block | nowait | skipLocked
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+/-- Ordered PostgreSQL row-lock clauses. Names identify visible FROM aliases;
+they are not expressions and do not consume parameter positions. -/
+structure LockingClause where
+  strength : LockStrength
+  targets : List Name := []
+  waitPolicy : LockWaitPolicy := .block
   deriving Repr, BEq, DecidableEq, Inhabited
 
 mutual
@@ -44,6 +72,14 @@ mutual
     | isNull (arg : Expr) (negated : Bool := false)
     | pattern (arg pattern : Expr) (insensitive : Bool := false)
     | cast (arg : Expr) (target : DataType)
+    /-- Ordinary positional function call; name components retain quoting/case
+    through the parser's ordinary identifier rules. -/
+    | call (name : List Name) (args : List Expr)
+    | caseExpr (operand : Option Expr) (branches : List (Expr × Expr)) (otherwise : Option Expr)
+    | coalesce (args : List Expr)
+    | nullIf (left right : Expr)
+    | greatest (args : List Expr)
+    | least (args : List Expr)
     | filteredAggregate (aggregate predicate : Expr)
     | inList (arg : Expr) (values : List Expr)
     | between (arg lower upper : Expr) (negated : Bool := false)
@@ -96,8 +132,13 @@ mutual
     ctes : List CTE := []
     recursive : Bool := false
     orderBy : List OrderBy := []
-    limit : Option Nat := none
-    offset : Option Nat := none
+    /-- PostgreSQL evaluates pagination expressions once, outside local row scope.
+    Static typing does not establish nonnegative runtime values. -/
+    limit : Option Expr := none
+    offset : Option Expr := none
+    locking : List LockingClause := []
+    /-- Retain pagination spelling order, including anonymous parameter order. -/
+    offsetFirst : Bool := false
     deriving Repr, BEq, Inhabited
 
   structure CTE where
@@ -106,6 +147,10 @@ mutual
     columns : List Name := []
     deriving Repr, BEq, Inhabited
 end
+
+/-- Preserve numeric-literal construction of pagination fields in client code. -/
+instance (n : Nat) : OfNat Expr n := ⟨.literal (.int n)⟩
+instance : Coe Nat Expr := ⟨fun n => .literal (.int n)⟩
 
 structure Assignment where
   column : Name

@@ -46,6 +46,27 @@ mutual
     case cast.cast a0 a1 b0 b1 =>
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.cast.injEq])
+    case call.call a0 a1 b0 b1 =>
+      letI : Decidable (a1 = b1) := exactListExprDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.call.injEq])
+    case caseExpr.caseExpr a0 a1 a2 b0 b1 b2 =>
+      letI : Decidable (a0 = b0) := exactOptionExprDecEq a0 b0
+      letI : Decidable (a1 = b1) := exactBranchesDecEq a1 b1
+      letI : Decidable (a2 = b2) := exactOptionExprDecEq a2 b2
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2) (by simp only [Expr.caseExpr.injEq])
+    case nullIf.nullIf a0 a1 b0 b1 =>
+      letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
+      letI : Decidable (a1 = b1) := exactExprDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.nullIf.injEq])
+    case coalesce.coalesce a0 b0 =>
+      letI : Decidable (a0 = b0) := exactListExprDecEq a0 b0
+      exact decidable_of_iff (a0 = b0) (by simp only [Expr.coalesce.injEq])
+    case greatest.greatest a0 b0 =>
+      letI : Decidable (a0 = b0) := exactListExprDecEq a0 b0
+      exact decidable_of_iff (a0 = b0) (by simp only [Expr.greatest.injEq])
+    case least.least a0 b0 =>
+      letI : Decidable (a0 = b0) := exactListExprDecEq a0 b0
+      exact decidable_of_iff (a0 = b0) (by simp only [Expr.least.injEq])
     case filteredAggregate.filteredAggregate a0 a1 b0 b1 =>
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       letI : Decidable (a1 = b1) := exactExprDecEq a1 b1
@@ -160,11 +181,15 @@ mutual
     cases a <;> cases b
     all_goals first | solve | apply isFalse; intro h; cases h
                     | skip
-    case mk.mk a0 a1 a2 a3 a4 a5 b0 b1 b2 b3 b4 b5 =>
+    case mk.mk a0 a1 a2 a3 a4 a5 a6 a7 b0 b1 b2 b3 b4 b5 b6 b7 =>
       letI : Decidable (a0 = b0) := exactQueryBodyDecEq a0 b0
       letI : Decidable (a1 = b1) := exactListCTEDecEq a1 b1
       letI : Decidable (a3 = b3) := exactListOrderByDecEq a3 b3
-      exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2 ∧ a3 = b3 ∧ a4 = b4 ∧ a5 = b5) (by simp only [Query.mk.injEq])
+      letI : Decidable (a4 = b4) := exactOptionExprDecEq a4 b4
+      letI : Decidable (a5 = b5) := exactOptionExprDecEq a5 b5
+      exact decidable_of_iff
+        (a0 = b0 ∧ a1 = b1 ∧ a2 = b2 ∧ a3 = b3 ∧ a4 = b4 ∧ a5 = b5 ∧ a6 = b6 ∧ a7 = b7)
+        (by simp only [Query.mk.injEq])
   termination_by sizeOf a
   decreasing_by all_goals (simp_all <;> omega)
 
@@ -187,6 +212,23 @@ mutual
     case cons.cons a0 a1 b0 b1 =>
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       letI : Decidable (a1 = b1) := exactListExprDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [List.cons.injEq])
+  termination_by sizeOf a
+  decreasing_by all_goals (simp_all <;> omega)
+
+  private def exactBranchesDecEq (a b : List (Expr × Expr)) : Decidable (a = b) := by
+    cases a <;> cases b
+    all_goals first | solve | apply isFalse; intro h; cases h
+                    | skip
+    case nil.nil => exact isTrue rfl
+    case cons.cons a0 a1 b0 b1 =>
+      have : sizeOf a0.1 < sizeOf a0 := by cases a0; simp; omega
+      have : sizeOf a0.2 < sizeOf a0 := by cases a0; simp; omega
+      letI : Decidable (a0.1 = b0.1) := exactExprDecEq a0.1 b0.1
+      letI : Decidable (a0.2 = b0.2) := exactExprDecEq a0.2 b0.2
+      letI : Decidable (a0 = b0) := decidable_of_iff (a0.1 = b0.1 ∧ a0.2 = b0.2)
+        (by exact Prod.ext_iff.symm)
+      letI : Decidable (a1 = b1) := exactBranchesDecEq a1 b1
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [List.cons.injEq])
   termination_by sizeOf a
   decreasing_by all_goals (simp_all <;> omega)
