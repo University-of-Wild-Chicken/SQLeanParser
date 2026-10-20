@@ -27,6 +27,14 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.30 set-operation increment](docs/set-operations-contract-v0.30.md) adds
+independent `UNION`, `INTERSECT` and `EXCEPT` validity, including `ALL`, contextual
+NULL/string types, exact modifiers, nested operands and compound sorting.
+Each factor has fifty authored and fifty unchanged source examples. A fixed
+source subset has 62 complete certificates; all 150 sources receive checked
+rendering. Static coercion evidence remains separate from successful literal
+conversion, native analysis and query execution.
+
 The [v0.29 ordinary CTE increment](docs/cte-contract-v0.29.md) adds independent
 nonrecursive SELECT CTE validity: sequential lexical visibility, nested
 shadowing, positional output aliases and exact column types. CTE definitions
@@ -483,7 +491,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.29` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.30` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.
@@ -585,7 +593,10 @@ The current independent profile has the following explicit boundary:
   retain concrete `Advanced.DataType` values, rather than `SqlType` families.
 - Ordinary sorting permits input expressions, unique bare output names, and
   one-based output positions. Output names take precedence over input names;
-  aliases are not substituted inside larger expressions. DISTINCT sorting is
+  repeated labels are also admitted when their projection expressions are
+  syntactically identical, selecting the first target. Other possible
+  transformed-expression equivalences remain Unsupported.
+  Aliases are not substituted inside larger expressions. DISTINCT sorting is
   currently certified only by output names or positions. Other DISTINCT sort
   expressions return Unsupported pending a projected-expression identity rule.
   PostgreSQL's raw integer constants, including folded unary-minus chains,
@@ -601,8 +612,14 @@ The current independent profile has the following explicit boundary:
   The separate `checkPaginationBounds` API certifies only the outer bounds of
   a query and cannot establish full-query validity or parameter notation.
 
+Set operations merge corresponding output positions with independent common-type
+and coercion rules. Only UNION ALL bypasses grouping equality. Unknown literal
+outputs remain contextual until a branch-local sort/DISTINCT or a complete
+CTE/derived/set-query boundary resolves them. Compound ORDER BY permits only
+unambiguous result labels and ordinals; direct set/operand locks are invalid.
+
 Independent rules for grouping/aggregates, correlation, LATERAL, recursive
-CTEs, set operations and expression subqueries remain future milestones.
+CTEs and expression subqueries remain future milestones.
 DISTINCT ON also requires a separate rule. These forms
 remain supported by the expanded parser/checker. The contract draft remains the
 target for the general SELECT family; the first implementation does not claim
@@ -972,7 +989,7 @@ GROUP BY and ORDER BY accept expressions, whole-key result aliases, or one-based
 
 An aggregate query's SELECT, HAVING, and ORDER BY expressions must use grouping keys, constants, aggregates, or expressions built from them. GROUP BY expressions are compared structurally after resolving column names, so an unqualified column and its uniquely resolved qualified form agree. Functional dependencies, such as assuming another column is determined by a grouped primary key, are not inferred. Aggregates are forbidden in WHERE, ON, GROUP BY, and arguments to other aggregates. HAVING also creates an aggregate query when GROUP BY is absent.
 
-The typed AST remains a SQL subset, separate from the complete grammar interface. Remaining unsupported typed forms include recursive SEARCH/CYCLE, window functions, named/variadic call notation, additional JSON/array operators, database-qualified relation names, DML CTEs, UPDATE FROM, DELETE USING, row-valued IN, per-value DEFAULT, and transaction commands. DDL is limited to the table forms described below; foreign keys, CHECK constraints, views, indexes, sequences, permissions, and schema DDL are not modeled. Exactly one statement and at most one trailing semicolon are accepted.
+The typed AST remains a SQL subset, separate from the complete grammar interface. Remaining unsupported typed forms include recursive SEARCH/CYCLE, window functions, variadic call notation, additional JSON/array operators, database-qualified relation names, DML CTEs, UPDATE FROM, DELETE USING, row-valued IN, per-value DEFAULT, and transaction commands. DDL is limited to the table forms described below; foreign keys, CHECK constraints, views, indexes, sequences, permissions, and schema DDL are not modeled. Exactly one statement and at most one trailing semicolon are accepted.
 
 Keywords are case-insensitive. Unquoted identifiers begin with ASCII letters or `_`, followed by ASCII letters, digits, or `_`; the advanced lexer also permits `$` after the first character. Double-quoted identifiers preserve spelling and allow reserved words. The original reserved-word policies are in `Parser.crudReservedWords` and `Parser.relationalReservedWords`; advanced syntax has its own reserved-word set. Escape quotes by doubling them: `'O''Brien'` and `"a""b"`. Empty quoted identifiers are rejected. Strings and quoted identifiers support Unicode. Both lexers accept `--` line comments and `/* ... */` comments; the advanced lexer additionally supports nested block comments. Parse errors carry a zero-based character offset and one-based line/column positions.
 

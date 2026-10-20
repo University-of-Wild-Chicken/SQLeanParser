@@ -1,0 +1,2242 @@
+[
+  {
+    "id": "set-order-sequence-001",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "x",
+    "set_operand": false,
+    "sql": "SELECT NULL AS x,NULL AS x ORDER BY x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-002",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "x",
+    "set_operand": true,
+    "sql": "(SELECT NULL AS x,NULL AS x ORDER BY x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-003",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "1,x",
+    "set_operand": false,
+    "sql": "SELECT NULL AS x,NULL AS x ORDER BY 1,x",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-004",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "1,x",
+    "set_operand": true,
+    "sql": "(SELECT NULL AS x,NULL AS x ORDER BY 1,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-005",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "2,x",
+    "set_operand": false,
+    "sql": "SELECT NULL AS x,NULL AS x ORDER BY 2,x",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-006",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "2,x",
+    "set_operand": true,
+    "sql": "(SELECT NULL AS x,NULL AS x ORDER BY 2,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-007",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "x,x",
+    "set_operand": false,
+    "sql": "SELECT NULL AS x,NULL AS x ORDER BY x,x",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-008",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "x,x",
+    "set_operand": true,
+    "sql": "(SELECT NULL AS x,NULL AS x ORDER BY x,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-009",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "x,1",
+    "set_operand": false,
+    "sql": "SELECT NULL AS x,NULL AS x ORDER BY x,1",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-010",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "x,1",
+    "set_operand": true,
+    "sql": "(SELECT NULL AS x,NULL AS x ORDER BY x,1) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-011",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "x,2",
+    "set_operand": false,
+    "sql": "SELECT NULL AS x,NULL AS x ORDER BY x,2",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-012",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "x,2",
+    "set_operand": true,
+    "sql": "(SELECT NULL AS x,NULL AS x ORDER BY x,2) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-013",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "1,2,x",
+    "set_operand": false,
+    "sql": "SELECT NULL AS x,NULL AS x ORDER BY 1,2,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-014",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "1,2,x",
+    "set_operand": true,
+    "sql": "(SELECT NULL AS x,NULL AS x ORDER BY 1,2,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-015",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "2,1,x",
+    "set_operand": false,
+    "sql": "SELECT NULL AS x,NULL AS x ORDER BY 2,1,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-016",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "2,1,x",
+    "set_operand": true,
+    "sql": "(SELECT NULL AS x,NULL AS x ORDER BY 2,1,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-017",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "1,x,2",
+    "set_operand": false,
+    "sql": "SELECT NULL AS x,NULL AS x ORDER BY 1,x,2",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-018",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "1,x,2",
+    "set_operand": true,
+    "sql": "(SELECT NULL AS x,NULL AS x ORDER BY 1,x,2) UNION ALL SELECT NULL,NULL",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-019",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "2,x,1",
+    "set_operand": false,
+    "sql": "SELECT NULL AS x,NULL AS x ORDER BY 2,x,1",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-020",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-null",
+    "order_sql": "2,x,1",
+    "set_operand": true,
+    "sql": "(SELECT NULL AS x,NULL AS x ORDER BY 2,x,1) UNION ALL SELECT NULL,NULL",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-021",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "x",
+    "set_operand": false,
+    "sql": "SELECT 'x' AS x,'x' AS x ORDER BY x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-022",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "x",
+    "set_operand": true,
+    "sql": "(SELECT 'x' AS x,'x' AS x ORDER BY x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-023",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "1,x",
+    "set_operand": false,
+    "sql": "SELECT 'x' AS x,'x' AS x ORDER BY 1,x",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-024",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "1,x",
+    "set_operand": true,
+    "sql": "(SELECT 'x' AS x,'x' AS x ORDER BY 1,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-025",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "2,x",
+    "set_operand": false,
+    "sql": "SELECT 'x' AS x,'x' AS x ORDER BY 2,x",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-026",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "2,x",
+    "set_operand": true,
+    "sql": "(SELECT 'x' AS x,'x' AS x ORDER BY 2,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-027",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "x,x",
+    "set_operand": false,
+    "sql": "SELECT 'x' AS x,'x' AS x ORDER BY x,x",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-028",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "x,x",
+    "set_operand": true,
+    "sql": "(SELECT 'x' AS x,'x' AS x ORDER BY x,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-029",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "x,1",
+    "set_operand": false,
+    "sql": "SELECT 'x' AS x,'x' AS x ORDER BY x,1",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-030",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "x,1",
+    "set_operand": true,
+    "sql": "(SELECT 'x' AS x,'x' AS x ORDER BY x,1) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-031",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "x,2",
+    "set_operand": false,
+    "sql": "SELECT 'x' AS x,'x' AS x ORDER BY x,2",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-032",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "x,2",
+    "set_operand": true,
+    "sql": "(SELECT 'x' AS x,'x' AS x ORDER BY x,2) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-033",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "1,2,x",
+    "set_operand": false,
+    "sql": "SELECT 'x' AS x,'x' AS x ORDER BY 1,2,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-034",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "1,2,x",
+    "set_operand": true,
+    "sql": "(SELECT 'x' AS x,'x' AS x ORDER BY 1,2,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-035",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "2,1,x",
+    "set_operand": false,
+    "sql": "SELECT 'x' AS x,'x' AS x ORDER BY 2,1,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-036",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "2,1,x",
+    "set_operand": true,
+    "sql": "(SELECT 'x' AS x,'x' AS x ORDER BY 2,1,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-037",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "1,x,2",
+    "set_operand": false,
+    "sql": "SELECT 'x' AS x,'x' AS x ORDER BY 1,x,2",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-038",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "1,x,2",
+    "set_operand": true,
+    "sql": "(SELECT 'x' AS x,'x' AS x ORDER BY 1,x,2) UNION ALL SELECT NULL,NULL",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-039",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "2,x,1",
+    "set_operand": false,
+    "sql": "SELECT 'x' AS x,'x' AS x ORDER BY 2,x,1",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-040",
+    "source_kind": "synthetic",
+    "expression_kind": "unknown-string",
+    "order_sql": "2,x,1",
+    "set_operand": true,
+    "sql": "(SELECT 'x' AS x,'x' AS x ORDER BY 2,x,1) UNION ALL SELECT NULL,NULL",
+    "expected_status": "invalid",
+    "diagnostic": "ambiguous_output",
+    "postgres_sqlstate": "42702",
+    "output_columns": null,
+    "postgres_columns": null
+  },
+  {
+    "id": "set-order-sequence-041",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "x",
+    "set_operand": false,
+    "sql": "SELECT 1 AS x,1 AS x ORDER BY x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-042",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "x",
+    "set_operand": true,
+    "sql": "(SELECT 1 AS x,1 AS x ORDER BY x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-043",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "1,x",
+    "set_operand": false,
+    "sql": "SELECT 1 AS x,1 AS x ORDER BY 1,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-044",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "1,x",
+    "set_operand": true,
+    "sql": "(SELECT 1 AS x,1 AS x ORDER BY 1,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-045",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "2,x",
+    "set_operand": false,
+    "sql": "SELECT 1 AS x,1 AS x ORDER BY 2,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-046",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "2,x",
+    "set_operand": true,
+    "sql": "(SELECT 1 AS x,1 AS x ORDER BY 2,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-047",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "x,x",
+    "set_operand": false,
+    "sql": "SELECT 1 AS x,1 AS x ORDER BY x,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-048",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "x,x",
+    "set_operand": true,
+    "sql": "(SELECT 1 AS x,1 AS x ORDER BY x,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-049",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "x,1",
+    "set_operand": false,
+    "sql": "SELECT 1 AS x,1 AS x ORDER BY x,1",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-050",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "x,1",
+    "set_operand": true,
+    "sql": "(SELECT 1 AS x,1 AS x ORDER BY x,1) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-051",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "x,2",
+    "set_operand": false,
+    "sql": "SELECT 1 AS x,1 AS x ORDER BY x,2",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-052",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "x,2",
+    "set_operand": true,
+    "sql": "(SELECT 1 AS x,1 AS x ORDER BY x,2) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-053",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "1,2,x",
+    "set_operand": false,
+    "sql": "SELECT 1 AS x,1 AS x ORDER BY 1,2,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-054",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "1,2,x",
+    "set_operand": true,
+    "sql": "(SELECT 1 AS x,1 AS x ORDER BY 1,2,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-055",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "2,1,x",
+    "set_operand": false,
+    "sql": "SELECT 1 AS x,1 AS x ORDER BY 2,1,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-056",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "2,1,x",
+    "set_operand": true,
+    "sql": "(SELECT 1 AS x,1 AS x ORDER BY 2,1,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-057",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "1,x,2",
+    "set_operand": false,
+    "sql": "SELECT 1 AS x,1 AS x ORDER BY 1,x,2",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-058",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "1,x,2",
+    "set_operand": true,
+    "sql": "(SELECT 1 AS x,1 AS x ORDER BY 1,x,2) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-059",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "2,x,1",
+    "set_operand": false,
+    "sql": "SELECT 1 AS x,1 AS x ORDER BY 2,x,1",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-060",
+    "source_kind": "synthetic",
+    "expression_kind": "known-integer",
+    "order_sql": "2,x,1",
+    "set_operand": true,
+    "sql": "(SELECT 1 AS x,1 AS x ORDER BY 2,x,1) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-061",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "x",
+    "set_operand": false,
+    "sql": "SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-062",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "x",
+    "set_operand": true,
+    "sql": "(SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-063",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "1,x",
+    "set_operand": false,
+    "sql": "SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 1,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-064",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "1,x",
+    "set_operand": true,
+    "sql": "(SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 1,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-065",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "2,x",
+    "set_operand": false,
+    "sql": "SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 2,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-066",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "2,x",
+    "set_operand": true,
+    "sql": "(SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 2,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-067",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "x,x",
+    "set_operand": false,
+    "sql": "SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY x,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-068",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "x,x",
+    "set_operand": true,
+    "sql": "(SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY x,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-069",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "x,1",
+    "set_operand": false,
+    "sql": "SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY x,1",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-070",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "x,1",
+    "set_operand": true,
+    "sql": "(SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY x,1) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-071",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "x,2",
+    "set_operand": false,
+    "sql": "SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY x,2",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-072",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "x,2",
+    "set_operand": true,
+    "sql": "(SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY x,2) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-073",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "1,2,x",
+    "set_operand": false,
+    "sql": "SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 1,2,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-074",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "1,2,x",
+    "set_operand": true,
+    "sql": "(SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 1,2,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-075",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "2,1,x",
+    "set_operand": false,
+    "sql": "SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 2,1,x",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-076",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "2,1,x",
+    "set_operand": true,
+    "sql": "(SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 2,1,x) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-077",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "1,x,2",
+    "set_operand": false,
+    "sql": "SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 1,x,2",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-078",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "1,x,2",
+    "set_operand": true,
+    "sql": "(SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 1,x,2) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-079",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "2,x,1",
+    "set_operand": false,
+    "sql": "SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 2,x,1",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  },
+  {
+    "id": "set-order-sequence-080",
+    "source_kind": "synthetic",
+    "expression_kind": "known-text",
+    "order_sql": "2,x,1",
+    "set_operand": true,
+    "sql": "(SELECT NULL::TEXT AS x,NULL::TEXT AS x ORDER BY 2,x,1) UNION ALL SELECT NULL,NULL",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ],
+      [
+        "x",
+        "text"
+      ]
+    ]
+  }
+]

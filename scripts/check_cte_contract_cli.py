@@ -94,7 +94,7 @@ def boundary_cases():
          "unsupported", "00000", "0A000"),
         ("WITH RECURSIVE c AS (SELECT 1 AS x) SELECT x FROM c", "unsupported", "00000", "00000"),
         ("WITH c AS (SELECT COUNT(*) AS n FROM items) SELECT n FROM c", "unsupported", "00000", "00000"),
-        ("WITH c AS (SELECT 1 AS x UNION ALL SELECT 2) SELECT x FROM c", "unsupported", "00000", "00000"),
+        ("WITH c AS (SELECT 1 AS x UNION ALL SELECT 2) SELECT x FROM c", "valid", "00000", "00000"),
         ("WITH c AS (SELECT (SELECT 1) AS x) SELECT x FROM c", "unsupported", "00000", "00000"),
         ("WITH c AS (SELECT 1 AS x) SELECT d.x FROM c CROSS JOIN LATERAL (SELECT c.x) d",
          "unsupported", "00000", "00000"),

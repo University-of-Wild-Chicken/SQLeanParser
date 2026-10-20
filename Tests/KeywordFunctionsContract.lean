@@ -31,7 +31,7 @@ private def keywordField (id : String) (record : Lean.Json) (field : String) : I
 private def keywordCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) : IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "keyword function SELECT"
-    ((SelectContract.checkQuery .basicV29 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV30 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "keyword function identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -96,7 +96,7 @@ def keywordFunctionsContractTests : IO Nat := do
               SQLean.Tests.assert ((← keywordCertificate query params) ==
                 [⟨"v", ⟨.text, leftNullable || rightNullable⟩⟩])
                 s!"{name}: admitted exact inputs {first}, {second}"
-            else match SelectContract.checkQuery .basicV29 [] params query with
+            else match SelectContract.checkQuery .basicV30 [] params query with
               | .error (.invalid diagnostic) =>
                   SQLean.Tests.assert (diagnostic.code == "function_signature")
                     s!"{name}: incompatible declared inputs must fail signature resolution"
@@ -133,7 +133,7 @@ def keywordFunctionsContractTests : IO Nat := do
         "'abc',TRUE", "'abc',2.5", "'abc',CAST('2' AS TEXT)", "CAST('abc' AS BYTEA),1"] do
       let sql := s!"SELECT {name}({arguments})"
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV29 [] [] query with
+      match SelectContract.checkQuery .basicV30 [] [] query with
       | .error (.invalid diagnostic) =>
           SQLean.Tests.assert (diagnostic.code == "function_signature") "known wrong signature is Invalid"
       | _ => throw (IO.userError s!"{sql}: known incompatible signature accepted")
@@ -141,18 +141,18 @@ def keywordFunctionsContractTests : IO Nat := do
     for sql in [s!"SELECT application.{name}('abc',1)", s!"SELECT \"{name.toUpper}\"('abc',1)",
         s!"SELECT {name}(string=>'abc',n=>1)", s!"SELECT {name}((SELECT 'abc'),1)"] do
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV29 [] [] query with
+      match SelectContract.checkQuery .basicV30 [] [] query with
       | .error (.unsupported _) => pure ()
       | _ => throw (IO.userError s!"{sql}: unregistered routine/dependency must remain Unsupported")
       count := count + 1
   let query ← expectOk "keyword resource limit" (Advanced.parseQuery "SELECT left('abc',1)")
-  match SelectContract.checkQuery .basicV29 [] [] query 1 with
+  match SelectContract.checkQuery .basicV30 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "keyword call resource limit must remain Inconclusive")
   let query : Advanced.Query := {body := .select {items := [.expression
     (.call ["right"] [.parameter (.anonymous 2), .parameter (.anonymous 1)])]}}
   let params ← expectOk "keyword lexical declarations" (Assurance.parseContractParameterTypes "INTEGER,TEXT")
-  match SelectContract.checkQuery .basicV29 [] params query with
+  match SelectContract.checkQuery .basicV30 [] params query with
   | .error (.invalid diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "parameter_notation")
         "function argument types must not permit anonymous occurrence reordering"

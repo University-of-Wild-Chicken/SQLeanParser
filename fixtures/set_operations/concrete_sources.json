@@ -1,0 +1,6684 @@
+{
+  "format_version": 1,
+  "population": "set_operations",
+  "expected_count": 150,
+  "expected_factors": {
+    "union": {
+      "postgres": 20,
+      "duckdb": 23,
+      "sqlite": 7
+    },
+    "intersect": {
+      "postgres": 17,
+      "materialize": 11,
+      "duckdb": 7,
+      "sqlite": 14,
+      "sqlc": 1
+    },
+    "except": {
+      "postgres": 30,
+      "materialize": 15,
+      "duckdb": 4,
+      "sqlc": 1
+    }
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/aggregates.sql",
+          "sha256": "f762ebe588a81404b826b45b1db59018ee3fe2d087612b4fc6561b00be6c4d0b",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/aggregates.sql"
+        },
+        {
+          "path": "src/test/regress/sql/collate.icu.utf8.sql",
+          "sha256": "8f673ffd31191f10db96cfc2cc540079c1566c956326813d2de15221de122c9d",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/collate.icu.utf8.sql"
+        },
+        {
+          "path": "src/test/regress/sql/collate.sql",
+          "sha256": "c20c9868d2e539295294150de52f0008b454ac8358924df80f4227e4ab2095d0",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/collate.sql"
+        },
+        {
+          "path": "src/test/regress/sql/copy.sql",
+          "sha256": "d4556c8b53a29c93b25f3fb97f95b584c5b5d3ead2e6e1ba91b97c632586c9d1",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/copy.sql"
+        },
+        {
+          "path": "src/test/regress/sql/groupingsets.sql",
+          "sha256": "f83ef60b59f5feaf95dfa1d72e7034758520b2420d3e3a4cd76a22677a9d1f72",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/groupingsets.sql"
+        },
+        {
+          "path": "src/test/regress/sql/misc.sql",
+          "sha256": "247113748384a6cd4dcdb15cb6a7a8ac2f039c60345a4a396eaac9156ab35e5e",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/misc.sql"
+        },
+        {
+          "path": "src/test/regress/sql/select_distinct.sql",
+          "sha256": "36a1663b5c569b37da3882c29daa6de2d0369f572cd9b44bfdd7da1490bf772d",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/select_distinct.sql"
+        },
+        {
+          "path": "src/test/regress/sql/subselect.sql",
+          "sha256": "233a9f22e38ae691505d7fdfff51e8559e87c96b2b864490ac9e630442c2dc91",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/subselect.sql"
+        },
+        {
+          "path": "src/test/regress/sql/union.sql",
+          "sha256": "f251eff1e17f131c2e6de785fe4f1cfb69084157e544bbcaf1289650d22ba4e3",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/union.sql"
+        },
+        {
+          "path": "src/test/regress/sql/with.sql",
+          "sha256": "e76fa662f0679f7220b78799c948244d62982f7c65ebbfa0c8e40f8aeeceb921",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/with.sql"
+        }
+      ]
+    },
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "source_kind": "engine-regression",
+      "source_dialect": "duckdb",
+      "files": [
+        {
+          "path": "test/sql/setops/setops_pushdown.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/setops/setops_pushdown.test",
+          "sha256": "1f83693206f0aabf3dea3de947e98d3713886fc4ca3535ebc1d7547e02bf3553"
+        },
+        {
+          "path": "test/sql/setops/test_except.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/setops/test_except.test",
+          "sha256": "cae52063360b51530853930f7bb44338790e14211f9d4ed5c4697e629394d04e"
+        },
+        {
+          "path": "test/sql/setops/test_setops.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/setops/test_setops.test",
+          "sha256": "0717bcca68f97b61ffabef258b853641a20c684e5a7f10e3b529c7884a0c2d54"
+        },
+        {
+          "path": "test/sql/setops/test_union_binding.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/setops/test_union_binding.test",
+          "sha256": "dad9a2907b8beaf23fbd74c75063833ca98de7a785f24ea08cb7ffc930c9dc90"
+        },
+        {
+          "path": "test/sql/setops/test_union_by_name.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/setops/test_union_by_name.test",
+          "sha256": "169280aca622158278269b232cfa3942d16924ba19472d53605ce04af23b4ab3"
+        },
+        {
+          "path": "test/sql/setops/test_union_order.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/setops/test_union_order.test",
+          "sha256": "6e50f93ba0c398b3c828bb2abd80b100377b0181ecc79e18d57ebb98ae2e3370"
+        },
+        {
+          "path": "test/sql/setops/test_union_type_cast.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/setops/test_union_type_cast.test",
+          "sha256": "9e0b79d0f22a7bd236564b1bb2fd04505d26b96cd6e5b79c2a2e35729b4e95f5"
+        },
+        {
+          "path": "test/sql/setops/union_aggregate.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/setops/union_aggregate.test",
+          "sha256": "5fa4309578ae2d8425f4bcd873dc457f0efbe516089cfd19f56fdfd1fd064b5b"
+        },
+        {
+          "path": "test/sql/setops/union_all_projection_pushdown.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/setops/union_all_projection_pushdown.test",
+          "sha256": "e1facb74ec0a2c120bbfe7c333423d65e79de145efca174913de03b6ba9519fe"
+        },
+        {
+          "path": "test/sql/setops/value_union.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/setops/value_union.test",
+          "sha256": "649df611a45874f0a075b3cba1da0f88b7a37860baa4c58f90d40f2e1cec0bbe"
+        }
+      ]
+    },
+    "sqlite": {
+      "repository": "https://github.com/sqlite/sqlite",
+      "commit": "5484850c7a2cd90f2a06b8d4f3453b259aefc1e1",
+      "ref": "master",
+      "license": "Public Domain",
+      "license_file": "fixtures/factor_sources/licenses/sqlite-LICENSE.md",
+      "license_sha256": "c9053892d578840a196d588ff68baa9bc0f5240eb215fb9cf91cd6b0b3209305",
+      "source_kind": "engine-regression",
+      "source_dialect": "sqlite",
+      "files": [
+        {
+          "path": "test/collate5.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/collate5.test",
+          "sha256": "91ded0d69d0393b41d14f46f45e298b06bc58dc5765e66047b0b1c0bc619044a"
+        },
+        {
+          "path": "test/hook.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/hook.test",
+          "sha256": "c9ea9456d2c2a82c83400aa633fc19e3191335e7388fe785db11b2679bc63e7e"
+        },
+        {
+          "path": "test/join5.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/join5.test",
+          "sha256": "344b12978144ce83840459f5ebdf0fd1223d7f6c3665173bef07270df85c1ae3"
+        },
+        {
+          "path": "test/limit.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/limit.test",
+          "sha256": "7eea17c5da9de5e0e50e7b1009a38a738016e6096b8c1aacd59b107696e7ce0f"
+        },
+        {
+          "path": "test/select4.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/select4.test",
+          "sha256": "4a025a0af4012669bcf979d3460fb9375cc8bf3f69d513f83fa40c5395b0d065"
+        },
+        {
+          "path": "test/select7.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/select7.test",
+          "sha256": "a79eab463440260425340d1ea1a79d904c6b3abbcfca776ad333aeaa63413cb3"
+        },
+        {
+          "path": "test/selectA.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/selectA.test",
+          "sha256": "a432f2895d5a3cca7344181f7d25d4e1d3a3ab3d2d6665450e4fe63e7f8eb6ad"
+        },
+        {
+          "path": "test/with1.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/with1.test",
+          "sha256": "3486bdf537b0cfdbc5a345afbdcaa53a105302f439a04fc6983945688832b21c"
+        },
+        {
+          "path": "test/with2.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/with2.test",
+          "sha256": "a8ca7313a6a64feaf9400ce9c932314a6739436adf6f9530f87f91558874085c"
+        },
+        {
+          "path": "test/with3.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/with3.test",
+          "sha256": "8d90f47aac05735d05f0f84abb7c34f4f43b8fcfe10af49e8c8f5c86309c087a"
+        }
+      ]
+    },
+    "materialize": {
+      "repository": "https://github.com/MaterializeInc/materialize",
+      "commit": "726570dba1d2e4d839c707a84a986fb3b3acc5c3",
+      "ref": "pinned main snapshot",
+      "license": "BSL-1.1 (change date 2030-10-20; change license Apache-2.0)",
+      "source_kind": "engine-regression",
+      "source_dialect": "materialize",
+      "license_file": "fixtures/factor_sources/licenses/materialize-20261020-LICENSE",
+      "license_sha256": "5d4ca070f541414a03ad8b84021e4ba3deeca4025e4b4274053abaa2e93ec032",
+      "files": [
+        {
+          "path": "test/sqllogictest/cockroach/union.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/cockroach/union.slt",
+          "sha256": "1ae2d9286b6c02383a6c4239ec3f7dd02341b98669ddf7f9e665c80b1e3289fa"
+        },
+        {
+          "path": "test/sqllogictest/transform/union.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/transform/union.slt",
+          "sha256": "570ef0b9c75042ad2b72231b7b7b7f71fa79b9733e60a673080fb24f092cf40f"
+        },
+        {
+          "path": "test/sqllogictest/transform/union_cancel.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/transform/union_cancel.slt",
+          "sha256": "6a2b538803d48f682aecd4490b8575b3f0a2538dae80cf47d042e43d43364213"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/select_union/postgres/pgx/v5/query.sql",
+          "local_path": "fixtures/pagination/sources/sqlc/internal/endtoend/testdata/select_union/postgres/pgx/v5/query.sql",
+          "sha256": "c00e1253b23494acdb3476fb73ffd91e84c36820f70636ae90d60f3843eab964"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/subselect.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 354,
+        "end": 380,
+        "statement_index": 6
+      },
+      "sql_sha256": "42eb7115025dd97b4fcddb589ff5e82b8685bb1af4e8e825e48960f27e036045",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 69,
+        "end": 111,
+        "statement_index": 0
+      },
+      "sql_sha256": "0c3c01cf2487fde7d279854e7de4f9562a1271499207bcbfbc617ef85f00f30f",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 113,
+        "end": 155,
+        "statement_index": 1
+      },
+      "sql_sha256": "39f8353d7df7a66fd51640dd2e715c895c1155638a6313960172e848ae60f212",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 157,
+        "end": 192,
+        "statement_index": 2
+      },
+      "sql_sha256": "4e4a0321ac9fcf8b8564f62f59b50bf2fba001125512a755a38b064670a7270e",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 194,
+        "end": 229,
+        "statement_index": 3
+      },
+      "sql_sha256": "595cd885bc9dcdc71b28f578b081579a10d4e893054d468fa7447b542ecdaff2",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 231,
+        "end": 290,
+        "statement_index": 4
+      },
+      "sql_sha256": "0d966187a47b374f3521af019aea90052e3059152baedcbdc590d8134d7aec4b",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 292,
+        "end": 349,
+        "statement_index": 5
+      },
+      "sql_sha256": "ae7ac72ce61487892b677545dfb26813dbe48b1ca767332d9b82ff4b40275103",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 351,
+        "end": 414,
+        "statement_index": 6
+      },
+      "sql_sha256": "7a67cc34775b6e9ee0316862e738fa9baf239ddecb8195eaf953f139e8728250",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 416,
+        "end": 462,
+        "statement_index": 7
+      },
+      "sql_sha256": "7f1fb3bb9ebb4d76db89b4fd0743af5ea9057591e8ef3d01533178737e67a77f",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 480,
+        "end": 524,
+        "statement_index": 8
+      },
+      "sql_sha256": "7623903343ac32a19eb74225f525f2799b8d8ee9530d851e8e7c716ba9512983",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 526,
+        "end": 570,
+        "statement_index": 9
+      },
+      "sql_sha256": "955b003407e7d0a40799412099b2ff3e23bed7057e0347670eaa431f90a46ff7",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 572,
+        "end": 624,
+        "statement_index": 10
+      },
+      "sql_sha256": "1fad539d5da32af6815915f0d53ff2b8673b78f261985fb90984595c52ba9152",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 626,
+        "end": 674,
+        "statement_index": 11
+      },
+      "sql_sha256": "684fef5056ce531f67db2bd16ee243af961cf415d4fe80ba4cf8a123684828f3",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 676,
+        "end": 732,
+        "statement_index": 12
+      },
+      "sql_sha256": "9c93285682ef399f63d625cff8c1d7a83298f456f8b58babcbf8d862edd96cb4",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 734,
+        "end": 795,
+        "statement_index": 13
+      },
+      "sql_sha256": "8d26c8c60bd2a5ccc318c27c908aa6a8b0e522286d1d3e3fd999369854118c25",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 797,
+        "end": 874,
+        "statement_index": 14
+      },
+      "sql_sha256": "082a240cd64a459cd139cc124c075736e0c8e0897947819e9a467d734ec45d3c",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 876,
+        "end": 941,
+        "statement_index": 15
+      },
+      "sql_sha256": "46f00f181c4fd120c807f8b621df427b2c3ce6b61ebb5827a67bc2c4b37c98ec",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 943,
+        "end": 1008,
+        "statement_index": 16
+      },
+      "sql_sha256": "deb4649bc9eef6cd6932e9c64ea41956f39cf95e8b45a9c08bd3f22b299f14b4",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14801,
+        "end": 14901,
+        "statement_index": 167
+      },
+      "sql_sha256": "136be59ad8303430f3571103e143029c9b2a798f126024bccaca19bd776988bc",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.fromClause[0].RangeSubselect.subquery.query",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 27122,
+        "end": 27289,
+        "statement_index": 155
+      },
+      "sql_sha256": "c7552bfac7e49bcfb1420d4e5283372f5c328f190fd820d64a66c5830449b98f",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.cte[0]",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.cte[0].right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "innermost"
+            ],
+            "byte_location": 95,
+            "cte": true
+          },
+          {
+            "parts": [
+              "outermost"
+            ],
+            "byte_location": 146,
+            "cte": true
+          }
+        ],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 5,
+        "start": 111,
+        "end": 139
+      },
+      "sql_sha256": "1eac4eabb98b773e7987de51a8c71dbbf7ffe7617fc7b06533b64576ee4fbb17",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 11,
+        "start": 158,
+        "end": 196
+      },
+      "sql_sha256": "01c5692766ddc22c1088ce0ea8dbeb5026a8f783926081367859f3440a07a0f9",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 17,
+        "start": 219,
+        "end": 292
+      },
+      "sql_sha256": "5e0914715df74d73e7cafa1e507180c21e3fa5cb8d4132fdb177155a9e7ba02e",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 24,
+        "start": 319,
+        "end": 416
+      },
+      "sql_sha256": "dc84dd941d3364f66debeaf65d224c466dca3a7f966d02ad97ae78adea8ec92c",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 33,
+        "start": 488,
+        "end": 518
+      },
+      "sql_sha256": "6f2db9b8094504fd9c276798a50889ac6f65c1a3317905461d966be341023785",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 77,
+        "start": 1078,
+        "end": 1114
+      },
+      "sql_sha256": "535c5d07c50f50d6c5c068f83f740193438ac86c9f02a8efcf77ab96c6f9bdde",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 84,
+        "start": 1169,
+        "end": 1193
+      },
+      "sql_sha256": "cacd8410a3930744c276b85ab8fdcdcacb21c84a2eb22f456ea687e62c41acd2",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 89,
+        "start": 1210,
+        "end": 1295
+      },
+      "sql_sha256": "bb20620bbd4a04a2e0608da32651fa15f416bbbbdbeef52d4fb8b6514ca826f8",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 103,
+        "start": 1434,
+        "end": 1523
+      },
+      "sql_sha256": "59115f378b501532c78a9b48158e096447da1863c6708a6e7411734154c494ef",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 109,
+        "start": 1546,
+        "end": 1640
+      },
+      "sql_sha256": "8889126f50dbf3f5bd68fa83fad2c6749ef423e0443bd7af8416468f736f1932",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_union_by_name.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 147,
+        "start": 2613,
+        "end": 2654
+      },
+      "sql_sha256": "bb5a48c5ed45c77636b45fe6c38c4f2eeaf7498153a41e5980e1b7678115643d",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/setops_pushdown.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 37,
+        "start": 664,
+        "end": 704
+      },
+      "sql_sha256": "123142f3ca6830c4ff1639133dca3f6a2f3293ef4a83a9239c2cb3bdf5f66bc4",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/setops_pushdown.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 43,
+        "start": 747,
+        "end": 787
+      },
+      "sql_sha256": "4bb5ff28c3d4dffff7188fb39166cf0b491cbcffc6caabc237c294521b01cfd2",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/setops_pushdown.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 48,
+        "start": 804,
+        "end": 854
+      },
+      "sql_sha256": "bfbbf7aed1a97bf372c15718cc0b5a05af941b59a023bffbf67f9b4e86322e33",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_union_type_cast.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 6,
+        "start": 147,
+        "end": 173
+      },
+      "sql_sha256": "d5fc293ed5cf494240c96d3e5f8439fff0dc7849426caadf40ab25f97873e6b9",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_union_type_cast.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 11,
+        "start": 189,
+        "end": 219
+      },
+      "sql_sha256": "4fab43e683cb06ee60d50eddc6183e506d07b89341c740aa26965142399893bb",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_union_type_cast.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 18,
+        "start": 268,
+        "end": 324
+      },
+      "sql_sha256": "435dc4d16694b50573721880f56e3ebfdcc5447f12ada3a634b02155a2071280",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.right.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_union_type_cast.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 23,
+        "start": 340,
+        "end": 418
+      },
+      "sql_sha256": "2a4da211cfa647d37e0967db2b1ae6aa186b3d4ac038382ff1c5b3b49ace499b",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left.right.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_union_type_cast.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 28,
+        "start": 434,
+        "end": 528
+      },
+      "sql_sha256": "cddec60bef92a3e4fb31f0a3791b994ac682bd4fbb7db43029a3f6fc6fc20c9c",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left.right.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_union_order.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 5,
+        "start": 119,
+        "end": 188
+      },
+      "sql_sha256": "0139ef3478c8e566b0ad53ca82bdb740727e5c01d8dcc5b5599c41a8b2c1d69b",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_union_binding.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 281,
+        "start": 4138,
+        "end": 4301
+      },
+      "sql_sha256": "4ede848a7cc0f16711a30d114f10e788f5b2c7ca8671f52ffb4468c75cf3d7c2",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/union_all_projection_pushdown.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 70,
+        "start": 1618,
+        "end": 1689
+      },
+      "sql_sha256": "1e5c8ffac9e346c8e2d723383d1f60a4281a57ff60c6034ad91561971c820e00",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.fromClause[0].RangeSubselect.subquery.query",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "duckdb",
+      "path": "test/sql/setops/union_aggregate.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 62,
+        "start": 870,
+        "end": 984
+      },
+      "sql_sha256": "673e95e68ad1532fbe6a3b82dfc32536c05b961a9b068a63373c1e7fe6ac7e28",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.fromClause[0].RangeSubselect.subquery.query",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.fromClause[0].RangeSubselect.subquery.query.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.fromClause[0].RangeSubselect.subquery.query.left.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.fromClause[0].RangeSubselect.subquery.query.left.left.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "sqlite",
+      "path": "test/with2.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 16531,
+        "block_start": 16553,
+        "block_end": 16710,
+        "start": 16556,
+        "end": 16709,
+        "statement_index": 0
+      },
+      "sql_sha256": "50d3e4fad0e5754f67ce010ca87a1e29e37327bec3451a2c41a3aaef69f96941",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.cte[2]",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 87,
+            "cte": true
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 126,
+            "cte": true
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 146,
+            "cte": true
+          },
+          {
+            "parts": [
+              "t3"
+            ],
+            "byte_location": 150,
+            "cte": true
+          }
+        ],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "sqlite",
+      "path": "test/join5.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 5324,
+        "block_start": 5351,
+        "block_end": 5595,
+        "start": 5354,
+        "end": 5594,
+        "statement_index": 0
+      },
+      "sql_sha256": "0e2cce79165f6dec12e8037fed34f486e09a449982155de70c1b810d9ed87854",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.fromClause[0].JoinExpr.larg.JoinExpr.larg.RangeSubselect.subquery.query",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.fromClause[0].JoinExpr.larg.JoinExpr.rarg.RangeSubselect.subquery.query",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "sqlite",
+      "path": "test/with3.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 1159,
+        "block_start": 1180,
+        "block_end": 1402,
+        "start": 1182,
+        "end": 1400,
+        "statement_index": 0
+      },
+      "sql_sha256": "a227e367292d28747e6c387a205d8c1d0b6b24c5dd8021aa39a18a5255a5588a",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.cte[2]",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "x1"
+            ],
+            "byte_location": 75,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x2"
+            ],
+            "byte_location": 102,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x3"
+            ],
+            "byte_location": 192,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x4"
+            ],
+            "byte_location": 215,
+            "cte": true
+          }
+        ],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "sqlite",
+      "path": "test/select4.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 14031,
+        "block_start": 14042,
+        "block_end": 14132,
+        "start": 14047,
+        "end": 14129,
+        "statement_index": 0
+      },
+      "sql_sha256": "59a94333e9e20c92c8ae9c67745f22f337a1bd8df29a8d980538f5587ada7911",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": true,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "sqlite",
+      "path": "test/with1.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 24290,
+        "block_start": 24312,
+        "block_end": 24479,
+        "start": 24315,
+        "end": 24478,
+        "statement_index": 0
+      },
+      "sql_sha256": "0ba3a2f40f0795a4da80a53c79a753ffd3d8c962ef8117441fa6e1d5c40c8d04",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.cte[2]",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "x1"
+            ],
+            "byte_location": 50,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x2"
+            ],
+            "byte_location": 110,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x2"
+            ],
+            "byte_location": 137,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x3"
+            ],
+            "byte_location": 160,
+            "cte": true
+          }
+        ],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "sqlite",
+      "path": "test/with1.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 24490,
+        "block_start": 24512,
+        "block_end": 24679,
+        "start": 24515,
+        "end": 24678,
+        "statement_index": 0
+      },
+      "sql_sha256": "98c7f0ce06a7e0894e9db959a08ba11dbdb01a549bf70e691cd3af3a07864290",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.cte[2]",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "x1"
+            ],
+            "byte_location": 50,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x2"
+            ],
+            "byte_location": 110,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x1"
+            ],
+            "byte_location": 137,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x3"
+            ],
+            "byte_location": 160,
+            "cte": true
+          }
+        ],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "union",
+      "source": "sqlite",
+      "path": "test/with1.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 24690,
+        "block_start": 24712,
+        "block_end": 24922,
+        "start": 24715,
+        "end": 24921,
+        "statement_index": 0
+      },
+      "sql_sha256": "78fb2a213759607bd51cb4a4cb1b4361dbe3eca9bf41b91b6f5b595ed85ff3a0",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.cte[2]",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "x1"
+            ],
+            "byte_location": 50,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x2"
+            ],
+            "byte_location": 130,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x4"
+            ],
+            "byte_location": 153,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x1"
+            ],
+            "byte_location": 180,
+            "cte": true
+          },
+          {
+            "parts": [
+              "x3"
+            ],
+            "byte_location": 203,
+            "cte": true
+          }
+        ],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/select_union/postgres/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 274,
+        "end": 320,
+        "statement_index": 3
+      },
+      "sql_sha256": "c4e6e727f56b31f5a80803c5a2d725b4df4b688d24ca0f1a1e8a711add11830c",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "foo"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "foo"
+            ],
+            "byte_location": 42,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7543,
+        "end": 7650,
+        "statement_index": 101
+      },
+      "sql_sha256": "538a65b8e072957b558af9105ba6ea2f467d1b1fa2175decba9668353edfffaf",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test3"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "collate_test3"
+            ],
+            "byte_location": 70,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19870,
+        "end": 19924,
+        "statement_index": 268
+      },
+      "sql_sha256": "2dacef04e1cdabe65b9b580251a926373eda340bf49ccfdbbc0c52492a6b3aca",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test1cs"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test2cs"
+            ],
+            "byte_location": 46,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19925,
+        "end": 19979,
+        "statement_index": 269
+      },
+      "sql_sha256": "e7b2924429b9e19c8c7ddd4435feec696d9e3e00bf39964b43a193b63436f7d6",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test2cs"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test1cs"
+            ],
+            "byte_location": 46,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24484,
+        "end": 24549,
+        "statement_index": 314
+      },
+      "sql_sha256": "f9f30ca4a8e7b9c07d89d82b36f8979a14bb95695c60372f922d55b7710f7129",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test1ci"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test2ci"
+            ],
+            "byte_location": 46,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24550,
+        "end": 24615,
+        "statement_index": 315
+      },
+      "sql_sha256": "67a94c9427b794f0788d29f238ba90603c9bbfda9be108eef5780fe9e65c01ba",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test2ci"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test1ci"
+            ],
+            "byte_location": 46,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 26844,
+        "end": 26913,
+        "statement_index": 355
+      },
+      "sql_sha256": "32a81addff09e67d478952cd5a066c621efe61c6bdbcf7c645cb942c1bcb493a",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test1bpci"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test2bpci"
+            ],
+            "byte_location": 48,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 26914,
+        "end": 26983,
+        "statement_index": 356
+      },
+      "sql_sha256": "cbc5c5be08a809096305c664008b806c36b1aafd50c4719dbca64b72e5b0dfad",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test2bpci"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test1bpci"
+            ],
+            "byte_location": 48,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4933,
+        "end": 5040,
+        "statement_index": 62
+      },
+      "sql_sha256": "4f0d947ffe91ec72af47f38dd4da1e04c5c71b06ebd41b79e39bad3900ebcfd6",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test2"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "collate_test2"
+            ],
+            "byte_location": 70,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1908,
+        "end": 1977,
+        "statement_index": 26
+      },
+      "sql_sha256": "8bc89f308e80cbf8c0bbc332c5a4a9bfc88d9388e1c4e137c4fb76c3f1e94fd9",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 49,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1979,
+        "end": 2052,
+        "statement_index": 27
+      },
+      "sql_sha256": "4a77aa4d4334f1951f123660bc449706fc96671153752caa852c8ceb22b49106",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 53,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2591,
+        "end": 2648,
+        "statement_index": 35
+      },
+      "sql_sha256": "db6dc517fdf2d7efbbdfd22d518aabb00bfe09309ede48a4bf818ff98e5e1fe7",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2649,
+        "end": 2719,
+        "statement_index": 36
+      },
+      "sql_sha256": "12c91c4ad2373c3f26a7c3f4847e80444655c71ba6c5d950bdc085744a9a7c1e",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 2,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3267,
+        "end": 3361,
+        "statement_index": 43
+      },
+      "sql_sha256": "d525632838c1f24be0d71a355f7406e8533fbe5bf6e9b0276e76f1b1b8797449",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$.fromClause[0].RangeSubselect.subquery.query",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "tenk1"
+            ],
+            "byte_location": 45,
+            "cte": false
+          },
+          {
+            "parts": [
+              "tenk1"
+            ],
+            "byte_location": 83,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {
+          "aggregate": 1
+        },
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9116,
+        "end": 9187,
+        "statement_index": 97
+      },
+      "sql_sha256": "da5b198134b0d7201717ec073a246c62eb4db5325abad3c46a2c63ac6e735637",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "float8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int4_tbl"
+            ],
+            "byte_location": 51,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9321,
+        "end": 9425,
+        "statement_index": 99
+      },
+      "sql_sha256": "a667e88df5c25b6c657f23c5d714a0440fd289f11f1702943f02e57d37b4164b",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 49,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 83,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9427,
+        "end": 9536,
+        "statement_index": 100
+      },
+      "sql_sha256": "f692fe8fadd0d0fa4fa1a2b8e0db9c39fa64e3f6f20722566ddc9f87b7c2a144",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 52,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 86,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9538,
+        "end": 9647,
+        "statement_index": 101
+      },
+      "sql_sha256": "e9d65c685fcf0a427d6c4bb0c1cd2f28736c071279c5194a09896f53fa320f97",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$.left",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 18,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 52,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 100,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 195,
+        "start": 3648,
+        "end": 3730
+      },
+      "sql_sha256": "2049f275110a6d413918438508dad0e6bc0bd3049d224050a07103dea22f9eb9",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "uniontest"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "uniontest"
+            ],
+            "byte_location": 60,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 200,
+        "start": 3754,
+        "end": 3840
+      },
+      "sql_sha256": "d7b4388abe144a7cd8999256c2c61413a6c87fc0c636c7b00137abb419fbe546",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "uniontest"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "uniontest"
+            ],
+            "byte_location": 64,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 523,
+        "start": 10101,
+        "end": 10175
+      },
+      "sql_sha256": "f0201e681864263ee1067c30bd5024b0d60170a24270092629b3983315c32405",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 2,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 57,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 531,
+        "start": 10248,
+        "end": 10312
+      },
+      "sql_sha256": "deb6eb05c67a305693748fb492191bc5540377b84f09e09a4730bee7ca15c527",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 50,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 580,
+        "start": 10970,
+        "end": 11030
+      },
+      "sql_sha256": "96d0eea5a830ecb99748c2f88c515db4a702b64faffff7c979940d17b2267e16",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 57,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 588,
+        "start": 11111,
+        "end": 11164
+      },
+      "sql_sha256": "38a7117a568d7803de21b5d340330a7b33c5aa9c09cfedb10a926dc80a11f1bf",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 50,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 679,
+        "start": 12423,
+        "end": 12484
+      },
+      "sql_sha256": "37b5db36eb80f8496e307b03edf57a0c4b1cab33e990c16d8b523e33b01a86b0",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 47,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 688,
+        "start": 12563,
+        "end": 12628
+      },
+      "sql_sha256": "002a587b23045364c3d7e9fc4e14f85f8d1362a8c5c560bcea2171d6de5ac7ef",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 51,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 774,
+        "start": 14815,
+        "end": 14900
+      },
+      "sql_sha256": "450e648aca0c11ededec558983f5dbde9216e2f261825f8dc09433af372f6b73",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 2,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "abc"
+            ],
+            "byte_location": 32,
+            "cte": false
+          },
+          {
+            "parts": [
+              "abc"
+            ],
+            "byte_location": 66,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/transform/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 122,
+        "start": 3407,
+        "end": 3485
+      },
+      "sql_sha256": "d7c6c42a55cfa6d3143430001de437b8af3fb464fbe12d08bbb628b3ac27f996",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "intersect",
+            "all": true,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 43,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t3"
+            ],
+            "byte_location": 74,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "materialize",
+      "path": "test/sqllogictest/transform/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 152,
+        "start": 4366,
+        "end": 4457
+      },
+      "sql_sha256": "deef70d04de4893da5f49197ea26ffd4c2591f21f20f2b6643b30ac3a70971a5",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "intersect",
+            "all": true,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 43,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t3"
+            ],
+            "byte_location": 86,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 42,
+        "start": 582,
+        "end": 616
+      },
+      "sql_sha256": "73ef1ad6d4542141b35f30861143a190b590860593d833664f3eb848e3183c31",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_except.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 23,
+        "start": 361,
+        "end": 403
+      },
+      "sql_sha256": "5f1b5ee9b82823e4339ee0ee418a0d304efa20398a73d9a93597dd160c8dac3c",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "a"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "b"
+            ],
+            "byte_location": 40,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_except.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 47,
+        "start": 777,
+        "end": 833
+      },
+      "sql_sha256": "ec3068dac221e41a722cbf0d758e9fa9c6ecacbf9ea7e654ebfc3269991619d0",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 41,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "duckdb",
+      "path": "test/sql/setops/setops_pushdown.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 22,
+        "start": 406,
+        "end": 446
+      },
+      "sql_sha256": "0be7082196da0b3962acb01894dba4d9af09e00c420076c91030258852f9a633",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "duckdb",
+      "path": "test/sql/setops/setops_pushdown.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 27,
+        "start": 490,
+        "end": 530
+      },
+      "sql_sha256": "260ee513d1029eff4526f1e68370cc68244306543f493a17126a97e6041905ab",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "duckdb",
+      "path": "test/sql/setops/setops_pushdown.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 32,
+        "start": 574,
+        "end": 624
+      },
+      "sql_sha256": "d08a9445e8f0695ab9845f87989a72b331f14e3c827114c57768047953b7016c",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "duckdb",
+      "path": "test/sql/setops/value_union.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 55,
+        "start": 740,
+        "end": 824
+      },
+      "sql_sha256": "e36bebd26f54829d625ae15745b368e766064d385c9028fc5edf9ec4fb705abe",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$.fromClause[0].RangeSubselect.subquery.query",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "vunion"
+            ],
+            "byte_location": 29,
+            "cte": false
+          },
+          {
+            "parts": [
+              "vunion"
+            ],
+            "byte_location": 60,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/limit.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 8613,
+        "block_start": 8624,
+        "block_end": 8687,
+        "start": 8629,
+        "end": 8684,
+        "statement_index": 0
+      },
+      "sql_sha256": "5f80d463f533165d48135a47ba5c94bddb68798707f8a71558a425a03a058834",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": true,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t6"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 44,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/limit.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 8717,
+        "block_start": 8728,
+        "block_end": 8791,
+        "start": 8733,
+        "end": 8788,
+        "statement_index": 0
+      },
+      "sql_sha256": "8789c8559fe55a65ff6b8cba5758b543f4e19a2491948e80914c532e38862fb9",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": true,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t6"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 44,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/limit.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 8821,
+        "block_start": 8832,
+        "block_end": 8904,
+        "start": 8837,
+        "end": 8901,
+        "statement_index": 0
+      },
+      "sql_sha256": "4e54be62b7c6b1f147ac1ef1ed3672598c7b0f85375a60b59a52e720a888e2b5",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": true,
+            "offset": true
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t6"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 44,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/limit.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 8934,
+        "block_start": 8945,
+        "block_end": 9041,
+        "start": 8950,
+        "end": 9038,
+        "statement_index": 0
+      },
+      "sql_sha256": "74ce19e32a0ec1a6f8b854d88bff10dae29910989c54aa55698e021c520823ea",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": true,
+            "offset": true
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t6"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 44,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/hook.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 7994,
+        "block_start": 8007,
+        "block_end": 8279,
+        "start": 8112,
+        "end": 8156,
+        "statement_index": 2
+      },
+      "sql_sha256": "154f10442ca92504dd9c9c8af24308db3bc02eee2ae9937c1b27023b900ffa4c",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t3"
+            ],
+            "byte_location": 41,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/select7.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 736,
+        "block_start": 749,
+        "block_end": 1080,
+        "start": 931,
+        "end": 1075,
+        "statement_index": 5
+      },
+      "sql_sha256": "1c7cfe411e127b5987ae3c5417069f15ab39731b12fe7dccc63608f5201296d2",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 68,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 122,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/selectA.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 45827,
+        "block_start": 45848,
+        "block_end": 45896,
+        "start": 45851,
+        "end": 45895,
+        "statement_index": 0
+      },
+      "sql_sha256": "5bb4d3eb0fdef797ef23cb100a54ef1daf28ca32f96539ef800e3d8a4b73b8fb",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 41,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/select4.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 5135,
+        "block_start": 5146,
+        "block_end": 5246,
+        "start": 5151,
+        "end": 5243,
+        "statement_index": 0
+      },
+      "sql_sha256": "7c66fbc00d08918a559637b7290916165a83a7341f9bb6a8d9c2e6899e4859e4",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 25,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 60,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {
+          "distinct": 1
+        },
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/collate5.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 5328,
+        "block_start": 5339,
+        "block_end": 5422,
+        "start": 5344,
+        "end": 5419,
+        "statement_index": 0
+      },
+      "sql_sha256": "cca8bd5e493e9ad6d3953534e46f404081521cf5b3788fd971e32cc297b9acd6",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate5t2"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "collate5t1"
+            ],
+            "byte_location": 49,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/collate5.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 5607,
+        "block_start": 5618,
+        "block_end": 5692,
+        "start": 5623,
+        "end": 5689,
+        "statement_index": 0
+      },
+      "sql_sha256": "2a4c4ac65157d90a9b332939eeff7efee52b6c7c82ce89e2187219010dd8f76b",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate5t2"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "collate5t1"
+            ],
+            "byte_location": 55,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/collate5.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 7727,
+        "block_start": 7738,
+        "block_end": 7821,
+        "start": 7743,
+        "end": 7818,
+        "statement_index": 0
+      },
+      "sql_sha256": "da1b0f4ecc2f51f1804d3d53a5bd199a7b8d35e17b05bdb9eef9b65c58becffc",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate5t_cn"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "collate5t_ct"
+            ],
+            "byte_location": 51,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/collate5.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 7859,
+        "block_start": 7870,
+        "block_end": 7953,
+        "start": 7875,
+        "end": 7950,
+        "statement_index": 0
+      },
+      "sql_sha256": "31c8aa8e655c37c32d88e34497d37c34f6d1035c7a48e29d583bd36f0423659d",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate5t_ct"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "collate5t_cn"
+            ],
+            "byte_location": 51,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/selectA.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 44696,
+        "block_start": 44717,
+        "block_end": 44803,
+        "start": 44720,
+        "end": 44802,
+        "statement_index": 0
+      },
+      "sql_sha256": "49542daf7121fe2d0642465127d294b72d492bd0953e562ae12430fe98820b4a",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$.whereClause.BoolExpr.args[0].A_Expr.rexpr.SubLink.subselect.query",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 18,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t4"
+            ],
+            "byte_location": 67,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {
+          "scalar_subquery": 1
+        },
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "intersect",
+      "source": "sqlite",
+      "path": "test/selectA.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 44815,
+        "block_start": 44836,
+        "block_end": 44922,
+        "start": 44839,
+        "end": 44921,
+        "statement_index": 0
+      },
+      "sql_sha256": "3c8f1f973689773955d8cce14e5a534ff8339faa9b262624730b4b7cac4833e2",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "intersect",
+            "all": false,
+            "path": "$.whereClause.BoolExpr.args[0].A_Expr.rexpr.SubLink.subselect.query",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 18,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t5"
+            ],
+            "byte_location": 67,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {
+          "scalar_subquery": 1
+        },
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2720,
+        "end": 2774,
+        "statement_index": 37
+      },
+      "sql_sha256": "bcf90dfe44a05b6b9442e7ae639835b6a8d65ebcd2cd8d2d12091d307886f890",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2775,
+        "end": 2842,
+        "statement_index": 38
+      },
+      "sql_sha256": "dacfde5025bac71e10f14fb99f2227ab6a91a68119d58e7f781bc09647a05839",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": false,
+            "path": "$.left",
+            "order_items": 2,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "duckdb",
+      "path": "test/sql/setops/test_setops.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 38,
+        "start": 537,
+        "end": 568
+      },
+      "sql_sha256": "256d28401a4f38ffca24107a80d92851a9c6ac0e6bb0f8ec923dfff70f504111",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "duckdb",
+      "path": "test/sql/setops/setops_pushdown.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 6,
+        "start": 156,
+        "end": 193
+      },
+      "sql_sha256": "789513429cdaee85d12126decc724b2f452a4b6c0482b87544d7ce8d877eedba",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "duckdb",
+      "path": "test/sql/setops/setops_pushdown.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 11,
+        "start": 234,
+        "end": 271
+      },
+      "sql_sha256": "804f352c9da1c0a9677f33650bbb136ce7b760efe21baa9a5046775de4d5e74e",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "duckdb",
+      "path": "test/sql/setops/setops_pushdown.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 17,
+        "start": 315,
+        "end": 362
+      },
+      "sql_sha256": "a6953b804011834d7bfd95cb281271c3f4bdf5972e4ba0406faf1a55651e2125",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [],
+        "source_free": true,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/aggregates.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 46641,
+        "end": 46773,
+        "statement_index": 465
+      },
+      "sql_sha256": "3694362f7ef942708941c2455eced8ce91db25696fd774334f6ed7d515b161c0",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "agg_hash_1"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_group_1"
+            ],
+            "byte_location": 47,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_group_1"
+            ],
+            "byte_location": 87,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_hash_1"
+            ],
+            "byte_location": 120,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/aggregates.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 46775,
+        "end": 46907,
+        "statement_index": 466
+      },
+      "sql_sha256": "8372a39129e650db2a3b9b00cb9de403a0dcdc9984fbe4cbc235977b9e542356",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "agg_hash_2"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_group_2"
+            ],
+            "byte_location": 47,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_group_2"
+            ],
+            "byte_location": 87,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_hash_2"
+            ],
+            "byte_location": 120,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/aggregates.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 46909,
+        "end": 47041,
+        "statement_index": 467
+      },
+      "sql_sha256": "69133a1485aa1f35fcfd238dd8cdd6eeb0e69c172c1a8196cd32e7094120ec0d",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "agg_hash_3"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_group_3"
+            ],
+            "byte_location": 47,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_group_3"
+            ],
+            "byte_location": 87,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_hash_3"
+            ],
+            "byte_location": 120,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/aggregates.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 47043,
+        "end": 47175,
+        "statement_index": 468
+      },
+      "sql_sha256": "7998776677c4934dc7ac22b91e865ceddc5b2cd2ba592ec394277ce6c7064111",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "agg_hash_4"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_group_4"
+            ],
+            "byte_location": 47,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_group_4"
+            ],
+            "byte_location": 87,
+            "cte": false
+          },
+          {
+            "parts": [
+              "agg_hash_4"
+            ],
+            "byte_location": 120,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7651,
+        "end": 7743,
+        "statement_index": 102
+      },
+      "sql_sha256": "70fc3afedb2ef00e8f4d2cb0cdbbcc04d7f0f255c37ff334e89d387c17b96efe",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test3"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "collate_test3"
+            ],
+            "byte_location": 55,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19980,
+        "end": 20031,
+        "statement_index": 270
+      },
+      "sql_sha256": "d27a5527880839b930280c099143e69c021ab39e042e34e19505591b96d10320",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test1cs"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test2cs"
+            ],
+            "byte_location": 43,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20032,
+        "end": 20083,
+        "statement_index": 271
+      },
+      "sql_sha256": "e033b396cac00ba1dfe161a3743f26df7f2423debfadc10485ade72ea5757a41",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test2cs"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test1cs"
+            ],
+            "byte_location": 43,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24616,
+        "end": 24667,
+        "statement_index": 316
+      },
+      "sql_sha256": "db1db0802e77eaef135b2434086e48ed70663de5a5663d88db7c9a95d0e1dd6f",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test1ci"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test2ci"
+            ],
+            "byte_location": 43,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24668,
+        "end": 24719,
+        "statement_index": 317
+      },
+      "sql_sha256": "de35ebab3797303e070cff4ef2d7166807f37ace8d0f72c6fd6077a4eada9210",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test2ci"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test1ci"
+            ],
+            "byte_location": 43,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 26984,
+        "end": 27039,
+        "statement_index": 357
+      },
+      "sql_sha256": "6094837baaa112e13819e0a893470e6ca2eaed8d569ab3bec9d29a319ce92ce6",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test1bpci"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test2bpci"
+            ],
+            "byte_location": 45,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 27040,
+        "end": 27095,
+        "statement_index": 358
+      },
+      "sql_sha256": "229661e9850b0837f2868437c6a19ad48b1fd93a8d3402e1aac4e670a3237700",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test2bpci"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "test1bpci"
+            ],
+            "byte_location": 45,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5041,
+        "end": 5133,
+        "statement_index": 63
+      },
+      "sql_sha256": "8f0863ef3a0560dd014371ccbfa938b6b7151b6bc0e8ff34f54b2cf90a1faa0d",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test2"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "collate_test2"
+            ],
+            "byte_location": 55,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/copy.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 695,
+        "end": 749,
+        "statement_index": 8
+      },
+      "sql_sha256": "b02af77c6aab8b1017e4fc6d58705598f1d75e2a4091755d3a121a7b78c0834f",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "copytest"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "copytest2"
+            ],
+            "byte_location": 44,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/groupingsets.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20001,
+        "end": 20129,
+        "statement_index": 161
+      },
+      "sql_sha256": "71409c74712a9c95a493756c4db9c1f19818ece5992daa6d2e75a6952fa7caba",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "gs_hash_1"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "gs_group_1"
+            ],
+            "byte_location": 46,
+            "cte": false
+          },
+          {
+            "parts": [
+              "gs_group_1"
+            ],
+            "byte_location": 85,
+            "cte": false
+          },
+          {
+            "parts": [
+              "gs_hash_1"
+            ],
+            "byte_location": 117,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/misc.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1551,
+        "end": 1605,
+        "statement_index": 11
+      },
+      "sql_sha256": "44a711a4a136098f45cb9817f008500283fe1c8945787c50a3699741d10230d5",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "onek"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "onek_copy"
+            ],
+            "byte_location": 44,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/misc.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1607,
+        "end": 1661,
+        "statement_index": 12
+      },
+      "sql_sha256": "82c39d2fb5c428e622fa75672dac58bf0f45fcb17b479d6a3959f0e355dcedcb",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "onek_copy"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "onek"
+            ],
+            "byte_location": 49,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2245,
+        "end": 2397,
+        "statement_index": 26
+      },
+      "sql_sha256": "628f1589d0b9f94e01d915734f98a128583be89864ee6d0f05c78f90ccb03fa4",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "distinct_hash_1"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "distinct_group_1"
+            ],
+            "byte_location": 52,
+            "cte": false
+          },
+          {
+            "parts": [
+              "distinct_group_1"
+            ],
+            "byte_location": 97,
+            "cte": false
+          },
+          {
+            "parts": [
+              "distinct_hash_1"
+            ],
+            "byte_location": 135,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2054,
+        "end": 2120,
+        "statement_index": 28
+      },
+      "sql_sha256": "be3d631cb656f441688e4a9a25a4bb9b62ca61949b75f5458c9a3a4a7fd27a16",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 46,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2122,
+        "end": 2192,
+        "statement_index": 29
+      },
+      "sql_sha256": "25eec31c3f54a19ebdf9d445c22bcc2cd04026148213454615635a8095c1ee6c",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 50,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2275,
+        "end": 2341,
+        "statement_index": 31
+      },
+      "sql_sha256": "42fa02ce5358c4ec10ac670e90908bf18adb14426674c0c9c0998daac567cb35",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 46,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2343,
+        "end": 2413,
+        "statement_index": 32
+      },
+      "sql_sha256": "f023772a0aeb0c458dd8b475a28a135f0626b5916a4f7d555e0992409466156a",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 50,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3463,
+        "end": 3542,
+        "statement_index": 45
+      },
+      "sql_sha256": "d02d4e4f0b1e95e7a709f027542fa52346b59c5ca9bbc284572c364017140e47",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "tenk1"
+            ],
+            "byte_location": 20,
+            "cte": false
+          },
+          {
+            "parts": [
+              "tenk1"
+            ],
+            "byte_location": 53,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9189,
+        "end": 9257,
+        "statement_index": 98
+      },
+      "sql_sha256": "a0d9cfaf2c3b1ce9b0ded205fab85ab8cd9231956c6ade2bc5661f3164b0aebe",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "float8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int4_tbl"
+            ],
+            "byte_location": 48,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9649,
+        "end": 9749,
+        "statement_index": 102
+      },
+      "sql_sha256": "6229b2727bd9592a856f8c3cd2be595296723cf6ac5411d3efa1c0d1851185a2",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 49,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 80,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9751,
+        "end": 9857,
+        "statement_index": 103
+      },
+      "sql_sha256": "d57b73da49a6578a068860c397ddb4ad4364a5c57c52af78aa7c52b5fcdcb0ec",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$.right",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 52,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 83,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9859,
+        "end": 9965,
+        "statement_index": 104
+      },
+      "sql_sha256": "d40d61a14e5414242bd22f6e9753837f675fc562879382117729f42bf7949378",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 18,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 52,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 86,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 10086,
+        "end": 10162,
+        "statement_index": 105
+      },
+      "sql_sha256": "64b9da2f3495a042f1966f092d714d2d13fc60784e6494a856e684fbbf556cc8",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 2,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 18,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 52,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "postgres",
+      "path": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 10338,
+        "end": 10430,
+        "statement_index": 107
+      },
+      "sql_sha256": "dcb4a71fc2b65c0a7ee2c8e927047667bf80231b1e16e316ed562c2051f08bc6",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "int8_tbl"
+            ],
+            "byte_location": 49,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/select_union/postgres/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 198,
+        "end": 241,
+        "statement_index": 2
+      },
+      "sql_sha256": "edfe9e28e072a1c40c88b2757f6bf7827de05603984393b562ae837b32222b22",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "foo"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "foo"
+            ],
+            "byte_location": 39,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 206,
+        "start": 3866,
+        "end": 3945
+      },
+      "sql_sha256": "5cd6e6f2da19327eee7e67e49e607e6f77ca07108e20e577bbedd655483e68a6",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "uniontest"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "uniontest"
+            ],
+            "byte_location": 57,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 211,
+        "start": 3969,
+        "end": 4052
+      },
+      "sql_sha256": "1452ab519218780671a367dffd263fece6db3fd124b536862cbcfa4987a442d8",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "uniontest"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "uniontest"
+            ],
+            "byte_location": 61,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 541,
+        "start": 10384,
+        "end": 10455
+      },
+      "sql_sha256": "af503894a23f772e742c99801259d2cb4b7908ac3db4925c0ed217e9119ef277",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 2,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 54,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 552,
+        "start": 10543,
+        "end": 10604
+      },
+      "sql_sha256": "91956a4ea2b2f9b47318ae935046b7427a93b285d8562cca476ec70dc9d98cb7",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 47,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 598,
+        "start": 11244,
+        "end": 11301
+      },
+      "sql_sha256": "0a996c71a7f829385e6b33ec119e092497a36c976c8584c9ba7f7ac8416ae325",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 54,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 609,
+        "start": 11397,
+        "end": 11447
+      },
+      "sql_sha256": "696fc20a49d829c745dc5d6d3ba155544c6ff8aa0beb82d7df59019669b87a36",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 47,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 697,
+        "start": 12707,
+        "end": 12765
+      },
+      "sql_sha256": "6f19d6a2b94612c1ecc937906d7d3f5cfd689989299c6274f594795455e16012",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 44,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 705,
+        "start": 12839,
+        "end": 12901
+      },
+      "sql_sha256": "76a11c3213e8c5ce8f23929fff98d54a44cc93ddb79e067617f931c9f63e2e86",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 1,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "ab"
+            ],
+            "byte_location": 17,
+            "cte": false
+          },
+          {
+            "parts": [
+              "xy"
+            ],
+            "byte_location": 48,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 739,
+        "start": 13764,
+        "end": 13833
+      },
+      "sql_sha256": "8c7836d3d33b9a722a07f57416737eaacb60d88df4be38fa7e6c81a5295af00f",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 2,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "def"
+            ],
+            "byte_location": 20,
+            "cte": false
+          },
+          {
+            "parts": [
+              "abc"
+            ],
+            "byte_location": 51,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 757,
+        "start": 14386,
+        "end": 14463
+      },
+      "sql_sha256": "274d8cf6231b1dae536f2f0d29c91ed4d7e5adda1ee6c52a8c6d4a5fd152e3e8",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 2,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "efgh"
+            ],
+            "byte_location": 23,
+            "cte": false
+          },
+          {
+            "parts": [
+              "abcd"
+            ],
+            "byte_location": 58,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 768,
+        "start": 14668,
+        "end": 14750
+      },
+      "sql_sha256": "baa30a74cae24aa9a4be36cf520934b56a62d5220f403b1989b24d1423d16e98",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": false,
+            "path": "$",
+            "order_items": 2,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "abc"
+            ],
+            "byte_location": 32,
+            "cte": false
+          },
+          {
+            "parts": [
+              "abc"
+            ],
+            "byte_location": 63,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/transform/union.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 91,
+        "start": 2514,
+        "end": 2618
+      },
+      "sql_sha256": "bbcb2fd65707bfb545152568c101f64ee4af2c5a8c1c3d0c7440c7e456f09f49",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.right",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 15,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 42,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 72,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t2"
+            ],
+            "byte_location": 99,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/transform/union_cancel.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 103,
+        "start": 2459,
+        "end": 2504
+      },
+      "sql_sha256": "a0fed83a2ed396c1d3d31627714a7d1845dd502847d2a92a5fa20c39fb1e2e27",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 42,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/transform/union_cancel.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 120,
+        "start": 2848,
+        "end": 2920
+      },
+      "sql_sha256": "216c4c119da4b9e346a8ddf2bec1e9a0955e90dfa96e0a486a1541504a10cc42",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 41,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 69,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    },
+    {
+      "factor": "except",
+      "source": "materialize",
+      "path": "test/sqllogictest/transform/union_cancel.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 139,
+        "start": 3278,
+        "end": 3350
+      },
+      "sql_sha256": "959c734ac3f69fb33ed80b3948ae931b10520bc29c784d243c14cc561648e052",
+      "observed_syntax": {
+        "set_operations": [
+          {
+            "operator": "union",
+            "all": true,
+            "path": "$",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          },
+          {
+            "operator": "except",
+            "all": true,
+            "path": "$.left",
+            "order_items": 0,
+            "limit": false,
+            "offset": false
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 14,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 42,
+            "cte": false
+          },
+          {
+            "parts": [
+              "t1"
+            ],
+            "byte_location": 69,
+            "cte": false
+          }
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "parameter_slots": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,666 @@
+{
+  "format_version": 1,
+  "scope": "Authored syntax and dialect observations, not universal static validity or semantic equivalence",
+  "postgres_raw_ast": [
+    {
+      "id": "set-structure-001",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION SELECT 2 UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-002",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION SELECT 2) UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-003",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION (SELECT 2 UNION SELECT 3)"
+    },
+    {
+      "id": "set-structure-004",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION SELECT 2 UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-005",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION SELECT 2) UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-006",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION (SELECT 2 UNION ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-007",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION SELECT 2 INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-008",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION SELECT 2) INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-009",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION (SELECT 2 INTERSECT SELECT 3)"
+    },
+    {
+      "id": "set-structure-010",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION SELECT 2 INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-011",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION SELECT 2) INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-012",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION (SELECT 2 INTERSECT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-013",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION SELECT 2 EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-014",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION SELECT 2) EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-015",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION (SELECT 2 EXCEPT SELECT 3)"
+    },
+    {
+      "id": "set-structure-016",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION SELECT 2 EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-017",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION SELECT 2) EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-018",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION (SELECT 2 EXCEPT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-019",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL SELECT 2 UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-020",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION ALL SELECT 2) UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-021",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL (SELECT 2 UNION SELECT 3)"
+    },
+    {
+      "id": "set-structure-022",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-023",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION ALL SELECT 2) UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-024",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL (SELECT 2 UNION ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-025",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL SELECT 2 INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-026",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION ALL SELECT 2) INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-027",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL (SELECT 2 INTERSECT SELECT 3)"
+    },
+    {
+      "id": "set-structure-028",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL SELECT 2 INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-029",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION ALL SELECT 2) INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-030",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL (SELECT 2 INTERSECT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-031",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL SELECT 2 EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-032",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION ALL SELECT 2) EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-033",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL (SELECT 2 EXCEPT SELECT 3)"
+    },
+    {
+      "id": "set-structure-034",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL SELECT 2 EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-035",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 UNION ALL SELECT 2) EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-036",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL (SELECT 2 EXCEPT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-037",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT SELECT 2 UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-038",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT SELECT 2) UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-039",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT (SELECT 2 UNION SELECT 3)"
+    },
+    {
+      "id": "set-structure-040",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT SELECT 2 UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-041",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT SELECT 2) UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-042",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT (SELECT 2 UNION ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-043",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT SELECT 2 INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-044",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT SELECT 2) INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-045",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT (SELECT 2 INTERSECT SELECT 3)"
+    },
+    {
+      "id": "set-structure-046",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT SELECT 2 INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-047",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT SELECT 2) INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-048",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT (SELECT 2 INTERSECT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-049",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT SELECT 2 EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-050",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT SELECT 2) EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-051",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT (SELECT 2 EXCEPT SELECT 3)"
+    },
+    {
+      "id": "set-structure-052",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT SELECT 2 EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-053",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT SELECT 2) EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-054",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT (SELECT 2 EXCEPT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-055",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL SELECT 2 UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-056",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT ALL SELECT 2) UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-057",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL (SELECT 2 UNION SELECT 3)"
+    },
+    {
+      "id": "set-structure-058",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL SELECT 2 UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-059",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT ALL SELECT 2) UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-060",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL (SELECT 2 UNION ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-061",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL SELECT 2 INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-062",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT ALL SELECT 2) INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-063",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL (SELECT 2 INTERSECT SELECT 3)"
+    },
+    {
+      "id": "set-structure-064",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL SELECT 2 INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-065",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT ALL SELECT 2) INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-066",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL (SELECT 2 INTERSECT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-067",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL SELECT 2 EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-068",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT ALL SELECT 2) EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-069",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL (SELECT 2 EXCEPT SELECT 3)"
+    },
+    {
+      "id": "set-structure-070",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL SELECT 2 EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-071",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 INTERSECT ALL SELECT 2) EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-072",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 INTERSECT ALL (SELECT 2 EXCEPT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-073",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT SELECT 2 UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-074",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT SELECT 2) UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-075",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT (SELECT 2 UNION SELECT 3)"
+    },
+    {
+      "id": "set-structure-076",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT SELECT 2 UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-077",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT SELECT 2) UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-078",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT (SELECT 2 UNION ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-079",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT SELECT 2 INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-080",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT SELECT 2) INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-081",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT (SELECT 2 INTERSECT SELECT 3)"
+    },
+    {
+      "id": "set-structure-082",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT SELECT 2 INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-083",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT SELECT 2) INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-084",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT (SELECT 2 INTERSECT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-085",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT SELECT 2 EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-086",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT SELECT 2) EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-087",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT (SELECT 2 EXCEPT SELECT 3)"
+    },
+    {
+      "id": "set-structure-088",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT SELECT 2 EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-089",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT SELECT 2) EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-090",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT (SELECT 2 EXCEPT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-091",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL SELECT 2 UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-092",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT ALL SELECT 2) UNION SELECT 3"
+    },
+    {
+      "id": "set-structure-093",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL (SELECT 2 UNION SELECT 3)"
+    },
+    {
+      "id": "set-structure-094",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL SELECT 2 UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-095",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT ALL SELECT 2) UNION ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-096",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL (SELECT 2 UNION ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-097",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL SELECT 2 INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-098",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT ALL SELECT 2) INTERSECT SELECT 3"
+    },
+    {
+      "id": "set-structure-099",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL (SELECT 2 INTERSECT SELECT 3)"
+    },
+    {
+      "id": "set-structure-100",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL SELECT 2 INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-101",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT ALL SELECT 2) INTERSECT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-102",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL (SELECT 2 INTERSECT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-103",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL SELECT 2 EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-104",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT ALL SELECT 2) EXCEPT SELECT 3"
+    },
+    {
+      "id": "set-structure-105",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL (SELECT 2 EXCEPT SELECT 3)"
+    },
+    {
+      "id": "set-structure-106",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL SELECT 2 EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-107",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 EXCEPT ALL SELECT 2) EXCEPT ALL SELECT 3"
+    },
+    {
+      "id": "set-structure-108",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT ALL (SELECT 2 EXCEPT ALL SELECT 3)"
+    },
+    {
+      "id": "set-structure-109",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 AS x ORDER BY 1 LIMIT 1) UNION ALL (SELECT 2 AS y ORDER BY 1 LIMIT 1) ORDER BY x LIMIT 2 OFFSET 0"
+    },
+    {
+      "id": "set-structure-110",
+      "source_kind": "synthetic",
+      "sql": "(SELECT $1 AS x OFFSET $2 LIMIT $3) EXCEPT ALL (SELECT $4 AS y LIMIT $5 OFFSET $6) ORDER BY x OFFSET $7 LIMIT $8"
+    },
+    {
+      "id": "set-structure-111",
+      "source_kind": "synthetic",
+      "sql": "WITH c AS (SELECT 1 AS v) SELECT v AS x FROM c UNION ALL SELECT v AS y FROM c"
+    },
+    {
+      "id": "set-structure-112",
+      "source_kind": "synthetic",
+      "sql": "(WITH c AS (SELECT 1 AS v) SELECT v FROM c) UNION ALL (WITH c AS (SELECT 2 AS v) SELECT v FROM c)"
+    },
+    {
+      "id": "set-structure-113",
+      "source_kind": "synthetic",
+      "sql": "WITH a AS (SELECT 1 AS v) (WITH b AS (SELECT v FROM a) SELECT v FROM b) UNION ALL SELECT v FROM a"
+    },
+    {
+      "id": "set-structure-114",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 EXCEPT (SELECT 2 UNION ALL (SELECT 3 ORDER BY 1 LIMIT 1))"
+    },
+    {
+      "id": "set-structure-115",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION ALL (WITH c AS (SELECT 2 AS v UNION ALL SELECT 3) SELECT v FROM c ORDER BY v LIMIT 1)"
+    },
+    {
+      "id": "set-structure-116",
+      "source_kind": "synthetic",
+      "sql": "WITH c AS (SELECT 1 AS v UNION ALL SELECT 2 ORDER BY v LIMIT 1) SELECT v FROM c"
+    },
+    {
+      "id": "set-structure-117",
+      "source_kind": "synthetic",
+      "sql": "(SELECT NULL ORDER BY 1) UNION ALL SELECT 1"
+    },
+    {
+      "id": "set-structure-118",
+      "source_kind": "synthetic",
+      "sql": "(SELECT NULL LIMIT 1) UNION ALL SELECT 1"
+    },
+    {
+      "id": "set-structure-119",
+      "source_kind": "synthetic",
+      "sql": "SELECT NULL UNION ALL (SELECT NULL UNION ALL SELECT 1)"
+    },
+    {
+      "id": "set-structure-120",
+      "source_kind": "synthetic",
+      "sql": "(SELECT NULL UNION ALL SELECT NULL) UNION ALL SELECT 1"
+    },
+    {
+      "id": "set-structure-121",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 AS x UNION SELECT 2 AS y ORDER BY x"
+    },
+    {
+      "id": "set-structure-122",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 AS x UNION SELECT 2 AS y ORDER BY y"
+    },
+    {
+      "id": "set-structure-123",
+      "source_kind": "synthetic",
+      "sql": "(SELECT id FROM t FOR UPDATE) UNION SELECT id FROM u"
+    },
+    {
+      "id": "set-structure-124",
+      "source_kind": "synthetic",
+      "sql": "SELECT id FROM t UNION (SELECT id FROM u FOR UPDATE)"
+    },
+    {
+      "id": "set-structure-125",
+      "source_kind": "synthetic",
+      "sql": "SELECT id FROM t UNION SELECT id FROM u FOR UPDATE"
+    },
+    {
+      "id": "set-structure-126",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 UNION (SELECT 2 ORDER BY 1) LIMIT 1"
+    }
+  ],
+  "postgres16_wrapper_gaps": [
+    {
+      "id": "set-wrapper-gap-1",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 ORDER BY 1) LIMIT 1",
+      "postgres16_sqlstate": "00000",
+      "pglast17_accepts": true
+    },
+    {
+      "id": "set-wrapper-gap-2",
+      "source_kind": "synthetic",
+      "sql": "((SELECT 1 UNION SELECT 2) ORDER BY 1) LIMIT 1",
+      "postgres16_sqlstate": "00000",
+      "pglast17_accepts": true
+    },
+    {
+      "id": "set-wrapper-gap-3",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 LIMIT 1) OFFSET 1",
+      "postgres16_sqlstate": "00000",
+      "pglast17_accepts": false
+    },
+    {
+      "id": "set-wrapper-gap-4",
+      "source_kind": "synthetic",
+      "sql": "(SELECT 1 OFFSET 1) LIMIT 1",
+      "postgres16_sqlstate": "00000",
+      "pglast17_accepts": false
+    }
+  ]
+}

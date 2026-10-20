@@ -14,7 +14,7 @@ private def cteBody : Advanced.Query :=
 
 /-- A body derivation, without invoking the executable checker. -/
 private theorem cteBody_valid :
-    QueryValid .basicV29 [] [] [] cteBody cteColumns [] := by
+    QueryValid .basicV30 [] [] [] cteBody cteColumns [] := by
   apply QueryValid.basic (cteUses := []) (visible := []) (by decide) .nil
     (scope := .empty) (sourceUses := []) (selectUses := []) (whereUses := [])
     (orderUses := []) (limitUses := []) (offsetUses := [])
@@ -39,14 +39,14 @@ private def cteQuery : Advanced.Query := {
   body := .select {items := [.all], source := some (.table "c")} }
 
 private theorem cteDefinitions_valid :
-    CTEsValid .basicV29 [] [] [] [cteDefinition] cteEnvironment [] :=
+    CTEsValid .basicV30 [] [] [] [cteDefinition] cteEnvironment [] :=
   .cons (head := cteDefinition) (output := cteColumns) cteBody_valid (by decide) .nil
 
 private theorem cteReference_valid :
-    SourceValid .basicV29 [] [] cteEnvironment (some (.table "c")) cteScope [] :=
+    SourceValid .basicV30 [] [] cteEnvironment (some (.table "c")) cteScope [] :=
   .cte (binding := ⟨"c", cteColumns⟩) (alias := none) rfl (by simp) (by decide) (Or.inl rfl)
 
-private theorem cteQuery_valid : SelectValid .basicV29 [] [] cteQuery cteColumns := by
+private theorem cteQuery_valid : SelectValid .basicV30 [] [] cteQuery cteColumns := by
   apply SelectValid.certified (uses := [])
   · decide
   · decide
@@ -68,7 +68,7 @@ private theorem cteQuery_valid : SelectValid .basicV29 [] [] cteQuery cteColumns
     · rfl
   · decide
 
-example : SelectValid .basicV29 [] [] (RenderContract.translateParameters cteQuery) cteColumns :=
+example : SelectValid .basicV30 [] [] (RenderContract.translateParameters cteQuery) cteColumns :=
   RenderContract.translateParameters_valid cteQuery_valid
 
 example : (Certificate.mk cteColumns cteQuery_valid).outputCatalog = [] := rfl
@@ -100,7 +100,7 @@ private def cteExpected (record : Lean.Json) : IO (List OutputColumn) := do
 private def cteCertificate (query : Advanced.Query) (catalog : Advanced.Catalog := [])
     (params : ParameterEnv := []) : IO (List OutputColumn) := do
   let certificate ← expectOk "CTE complete query"
-    ((SelectContract.checkQuery .basicV29 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV30 catalog params query).mapError reprStr)
   have _catalog : certificate.outputCatalog = catalog := certificate.catalog_unchanged
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "CTE identity" ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -119,6 +119,7 @@ def cteContractTests : IO Nat := do
   let catalog ← expectOk "CTE test catalog"
     (Advanced.decodeCatalogJson (← IO.FS.readFile "fixtures/cte_contract/schema.json"))
   let valid : List (String × List OutputColumn) := [
+    ("WITH c AS (SELECT 1 AS x UNION SELECT 2) SELECT x FROM c", cteColumns),
     ("WITH c AS (SELECT NULL AS x) SELECT x FROM c", [⟨"x", ⟨.text, true⟩⟩]),
     ("WITH c AS (SELECT 1 AS x) SELECT * FROM (WITH c AS (SELECT x+1 AS x FROM c) SELECT x FROM c) d",
       cteColumns),
@@ -150,13 +151,12 @@ def cteContractTests : IO Nat := do
     "WITH unused AS (SELECT id FROM items FOR UPDATE OF absent) SELECT 1"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV29 catalog [] query with
+    match SelectContract.checkQuery .basicV30 catalog [] query with
     | .error (.invalid _) => pure ()
     | result => throw (IO.userError s!"CTE Invalid expected: {sql}: {reprStr (result.map (fun _ => ()))}")
   let unsupported := [
     "WITH RECURSIVE c AS (SELECT 1 AS x) SELECT x FROM c",
     "WITH c AS (SELECT COUNT(*) AS x FROM items) SELECT x FROM c",
-    "WITH c AS (SELECT 1 AS x UNION SELECT 2) SELECT x FROM c",
     "WITH c AS (SELECT 1 AS x) SELECT c FROM c",
     "WITH c AS (SELECT 1 AS x) SELECT d FROM c d",
     "WITH c AS (SELECT 1 AS x) SELECT c.unknown FROM c",
@@ -167,7 +167,7 @@ def cteContractTests : IO Nat := do
     "WITH used AS (SELECT i.id FROM items i LEFT JOIN labels l ON FALSE FOR UPDATE OF l) SELECT * FROM used"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV29 catalog [] query with
+    match SelectContract.checkQuery .basicV30 catalog [] query with
     | .error (.unsupported _) => pure ()
     | result => throw (IO.userError s!"CTE Unsupported expected: {sql}: {reprStr (result.map (fun _ => ()))}")
   let parameterCases := [
@@ -188,7 +188,7 @@ def cteContractTests : IO Nat := do
     lexical.ctes.map (fun definition => {definition with name := "other"})
   let missingFirst := lexical.ctes.map (fun definition => {definition with query := cteBody})
   for changed in [{lexical with ctes := duplicateDefinitions}, {lexical with ctes := missingFirst}] do
-    match SelectContract.checkQuery .basicV29 [] params changed with
+    match SelectContract.checkQuery .basicV30 [] params changed with
     | .error (.invalid diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == "parameter_notation")
           "definition insertion/removal cannot silently restart anonymous numbering"
@@ -196,13 +196,13 @@ def cteContractTests : IO Nat := do
   for changed in [
       {cteQuery with ctes := [{cteDefinition with name := ""}]},
       {cteQuery with ctes := [{cteDefinition with columns := [""]}]}] do
-    match SelectContract.checkQuery .basicV29 [] [] changed with
+    match SelectContract.checkQuery .basicV30 [] [] changed with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "malformed unused definition metadata was certified")
   let incomplete ← expectOk "resource test" (Advanced.parseQuery
     "WITH a AS (SELECT 1 AS x), b AS (SELECT x FROM a) SELECT * FROM b")
   for fuel in [0,1,2] do
-    match SelectContract.checkQuery .basicV29 catalog [] incomplete fuel with
+    match SelectContract.checkQuery .basicV30 catalog [] incomplete fuel with
     | .error (.inconclusive _) => pure ()
     | _ => throw (IO.userError "CTE resource exhaustion must remain Inconclusive")
   pure (valid.length + invalid.length + unsupported.length + parameterCases.length + 7)

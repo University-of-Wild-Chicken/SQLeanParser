@@ -276,11 +276,17 @@ class CteContractCliTests(unittest.TestCase):
                          ("unsupported", "00000", "00000"))
         self.assertEqual((used["status"], used["prepare_state"], used["execute_state"]),
                          ("unsupported", "00000", "0A000"))
+        set_cte = next(r for r in boundaries if "SELECT 1 AS x UNION ALL SELECT 2" in r["sql"])
+        self.assertEqual((set_cte["status"], set_cte["prepare_state"], set_cte["execute_state"]),
+                         ("valid", "00000", "00000"))
         missing = next(r for r in boundaries if "unused AS (SELECT * FROM absent)" in r["sql"])
         self.assertEqual((missing["prepare_state"], missing["execute_state"]), ("42P01", "42P01"))
         with patch.object(checker, "assert_report") as observed:
             self.assertEqual(checker.boundaries(), 30)
         self.assertEqual(observed.call_count, 30)
+        observed.assert_any_call(
+            ["--assurance", "contract", "--schema", str(checker.FIXTURES / "schema.json"), set_cte["sql"]],
+            "valid", "contract")
 
     def test_sqlite_exclusion_pairs_require_exact_exit_status_and_diagnostic(self):
         for shape, code, status, exitcode in (

@@ -400,6 +400,47 @@ theorem items_valid_translated (valid : ItemsValid params scope items output use
   | all bindings nonempty tail ih =>
       simpa only [List.map_cons, translateSelectItem] using ItemsValid.all bindings nonempty ih
 
+theorem items_input_valid_translated (valid : ItemsInputValid params scope items output uses) :
+    ItemsInputValid params scope (items.map translateSelectItem) output
+      (uses.map translateParameter) := by
+  induction valid with
+  | nil => exact .nil
+  | expression typed aliasValid tail ih =>
+      simpa only [List.map_cons, translateSelectItem, List.map_append,
+        translated_output_name, scalar_input_translated] using
+        ItemsInputValid.expression (expr_valid_translated typed) aliasValid ih
+  | all bindings nonempty tail ih =>
+      simpa only [List.map_cons, translateSelectItem] using ItemsInputValid.all bindings nonempty ih
+
+@[simp] theorem projection_expressions_translated (items : List Advanced.SelectItem) (name : Name) :
+    projectionExpressions (items.map translateSelectItem) name =
+      (projectionExpressions items name).map translateExpr := by
+  induction items with
+  | nil => rfl
+  | cons item items ih =>
+    cases item <;> simp [projectionExpressions, translateSelectItem, ih, apply_ite]
+
+@[simp] theorem pure_projection_translated (items : List Advanced.SelectItem) :
+    pureProjection (items.map translateSelectItem) = pureProjection items := by
+  induction items with
+  | nil => rfl
+  | cons item items ih =>
+    cases item <;> simp_all [pureProjection, translateSelectItem]
+
+theorem same_output_expressions_translated (same : SameOutputExpressions items name) :
+    SameOutputExpressions (items.map translateSelectItem) name := by
+  obtain ⟨pure, same⟩ := same
+  refine ⟨by simpa using pure, ?_⟩
+  rw [projection_expressions_translated]
+  cases found : projectionExpressions items name with
+  | nil => simp_all
+  | cons first rest =>
+    simp only [found] at same
+    simp only [List.map_cons]
+    intro expr member
+    obtain ⟨original, present, rfl⟩ := List.mem_map.mp member
+    rw [same original present]
+
 theorem predicate_valid_translated (valid : PredicateValid params scope predicate uses) :
     PredicateValid params scope (predicate.map translateExpr)
       (uses.map translateParameter) := by
@@ -456,8 +497,8 @@ termination_by sizeOf expr
   cases expr <;> simp only [translateExpr, translateExpr_case]
 
 
-theorem sort_valid_translated (valid : SortValid params scope output distinct expr uses) :
-    SortValid params scope output distinct (translateExpr expr)
+theorem sort_valid_translated (valid : SortValid params scope projection output distinct expr uses) :
+    SortValid params scope (projection.map translateSelectItem) output distinct (translateExpr expr)
       (uses.map translateParameter) := by
   cases valid with
   | ordinal constant positive inRange orderable =>
@@ -465,6 +506,9 @@ theorem sort_valid_translated (valid : SortValid params scope output distinct ex
         positive inRange orderable
   | outputName resolved orderable =>
       simpa only [translateExpr, List.map_nil] using SortValid.outputName resolved orderable
+  | repeatedName same resolved orderable =>
+      simpa only [translateExpr, List.map_nil] using
+        SortValid.repeatedName (same_output_expressions_translated same) resolved orderable
   | inputName noOutput ordinary typed orderable =>
       simpa only [translateExpr] using
         SortValid.inputName noOutput ordinary
@@ -473,14 +517,91 @@ theorem sort_valid_translated (valid : SortValid params scope output distinct ex
       exact SortValid.expression ordinary (expr_valid_translated typed)
         ((translated_sort_expression _).mpr category) orderable
 
-theorem orders_valid_translated (valid : OrdersValid params scope output distinct orders uses) :
-    OrdersValid params scope output distinct (orders.map translateOrderBy)
+@[simp] theorem unknown_sort_key_translated (expr : Advanced.Expr) :
+    unknownSortKey (translateExpr expr) = unknownSortKey expr := by
+  cases expr <;> simp only [unknownSortKey, translateExpr, translateExpr_case]
+
+@[simp] theorem projection_sort_keys_translated (items : List Advanced.SelectItem) :
+    projectionSortKeys (items.map translateSelectItem) = projectionSortKeys items := by
+  induction items with
+  | nil => rfl
+  | cons item items ih =>
+    cases item <;> simp only [projectionSortKeys, List.map_cons, translateSelectItem,
+      translated_output_name, unknown_sort_key_translated] at ih ⊢ <;> rw [ih]
+
+@[simp] theorem sort_target_index_translated (keys : List (Name × Option (Option String)))
+    (expr : Advanced.Expr) : sortTargetIndex keys (translateExpr expr) = sortTargetIndex keys expr := by
+  unfold sortTargetIndex
+  rw [sort_syntax_translated]
+  cases sortSyntax expr <;> try rfl
+  all_goals cases expr <;> simp only [translateExpr, translateExpr_case]
+
+@[simp] theorem order_sequence_safe_translated (keys : List (Name × Option (Option String)))
+    (resolved : List Nat) (orders : List Advanced.OrderBy) :
+    orderSequenceSafe keys resolved (orders.map translateOrderBy) = orderSequenceSafe keys resolved orders := by
+  induction orders generalizing resolved with
+  | nil => rfl
+  | cons order orders ih =>
+    simp only [List.map_cons, orderSequenceSafe, translateOrderBy, sort_target_index_translated, ih]
+    cases order.expr <;> simp only [translateExpr, translateExpr_case]
+
+theorem order_sequence_valid_translated (safe : OrderSequenceSafe projection orders) :
+    OrderSequenceSafe (projection.map translateSelectItem) (orders.map translateOrderBy) := by
+  simpa only [OrderSequenceSafe, pure_projection_translated, projection_sort_keys_translated,
+    order_sequence_safe_translated] using safe
+
+theorem sort_list_valid_translated (valid : SortListValid params scope projection output distinct orders uses) :
+    SortListValid params scope (projection.map translateSelectItem) output distinct (orders.map translateOrderBy)
       (uses.map translateParameter) := by
   induction valid with
-  | nil => exact OrdersValid.nil
+  | nil => exact .nil
   | cons head tail ih =>
       simpa only [List.map_cons, List.map_append, translateOrderBy] using
-        OrdersValid.cons (sort_valid_translated head) ih
+        SortListValid.cons (sort_valid_translated head) ih
+
+theorem orders_valid_translated (valid : OrdersValid params scope projection output distinct orders uses) :
+    OrdersValid params scope (projection.map translateSelectItem) output distinct (orders.map translateOrderBy)
+      (uses.map translateParameter) := by
+  cases valid with
+  | nil => exact .nil
+  | checked items sequence =>
+    exact .checked (sort_list_valid_translated items) (order_sequence_valid_translated sequence)
+
+@[simp] theorem order_resolves_input_translated (expr : Advanced.Expr) (index : Nat) (column : PendingColumn) :
+    orderResolvesInput (translateExpr expr) index column = orderResolvesInput expr index column := by
+  unfold orderResolvesInput
+  rw [sort_syntax_translated]
+  cases sortSyntax expr <;> try rfl
+  all_goals cases expr <;> simp only [translateExpr, translateExpr_case]
+
+@[simp] theorem order_resolves_column_translated (expr : Advanced.Expr) (index : Nat)
+    (column : PendingColumn) (columns : List PendingColumn) :
+    orderResolvesColumn (translateExpr expr) index column columns =
+      orderResolvesColumn expr index column columns := by
+  unfold orderResolvesColumn
+  rw [order_resolves_input_translated]
+  cases expr <;> simp only [translateExpr, translateExpr_case]
+
+@[simp] theorem resolve_leaf_inputs_translated (distinct : Bool) (orders : List Advanced.OrderBy)
+    (columns : List PendingColumn) :
+    resolveLeafInputs distinct (orders.map translateOrderBy) columns = resolveLeafInputs distinct orders columns := by
+  simp only [resolveLeafInputs, List.any_map, Function.comp_def, translateOrderBy,
+    order_resolves_column_translated]
+
+theorem set_sort_valid_translated (valid : SetSortValid output expr) :
+    SetSortValid output (translateExpr expr) := by
+  cases valid with
+  | ordinal constant positive inRange orderable =>
+    exact .ordinal (by simpa using constant) positive inRange orderable
+  | outputName resolved orderable =>
+    simpa only [translateExpr] using SetSortValid.outputName resolved orderable
+
+theorem set_orders_valid_translated (valid : SetOrdersValid output orders) :
+    SetOrdersValid output (orders.map translateOrderBy) := by
+  induction valid with
+  | nil => exact .nil
+  | cons head tail ih =>
+    simpa only [List.map_cons, translateOrderBy] using SetOrdersValid.cons (set_sort_valid_translated head) ih
 
 theorem parameter_order_translated (ordered : ParameterOrder uses) :
     ParameterOrder (uses.map translateParameter) := by
@@ -566,7 +687,7 @@ mutual
     | derived queryValid aliasValid columnsValid nonLateral =>
         simpa only [Option.map_some, translateSource] using
           SourceValid.derived (query_valid_translated queryValid) aliasValid columnsValid nonLateral
-  termination_by sizeOf source
+  termination_by 2 * sizeOf source
   decreasing_by all_goals (simp_all <;> omega)
 
   /-- Every internal query derivation retains its complete occurrence list,
@@ -595,7 +716,7 @@ mutual
         · have translated := predicate_valid_translated predicate
           simp only [translateSelect]
           cases condition : select.whereClause <;> simpa [condition] using translated
-        · simpa only [translateSelect] using orders_valid_translated orders
+        · simpa only [translateSelect, List.attach_map_val] using orders_valid_translated orders
         · have translated := pagination_valid_translated limitValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
         · have translated := pagination_valid_translated offsetValid
@@ -605,8 +726,73 @@ mutual
         · simp only [translateSelect]
           split <;> simp_all
         · simp only [translateSelect, List.attach_map_val, noDistinctOn, List.map_nil]
-  termination_by sizeOf query
-  decreasing_by all_goals (cases select; simp_all; omega)
+    | @set ctes env visible cteUses left leftInputs leftUses right rightInputs rightUses op all output
+        orderBy limit limitUses offset offsetUses offsetFirst names definitions leftValid rightValid
+        leftUnlocked rightUnlocked columns nonempty orders limitValid offsetValid =>
+      cases offsetFirst <;>
+        simp only [translateParameters, translateQueryBody, List.attach_map_val,
+          Bool.false_eq_true, ↓reduceIte, List.map_append]
+      all_goals
+        apply QueryValid.set
+        · simpa [CTENamesValid, List.map_map, Function.comp_def, translateCTE] using names
+        · exact ctes_valid_translated definitions
+        · simpa only [translateParameters, List.attach_map_val] using set_operand_valid_translated leftValid
+        · simpa only [translateParameters, List.attach_map_val] using set_operand_valid_translated rightValid
+        · simpa only [translateParameters] using leftUnlocked
+        · simpa only [translateParameters] using rightUnlocked
+        · exact columns
+        · exact nonempty
+        · exact set_orders_valid_translated orders
+        · have translated := pagination_valid_translated limitValid
+          split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
+        · have translated := pagination_valid_translated offsetValid
+          split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
+  termination_by 2 * sizeOf query
+  decreasing_by all_goals (try cases select) <;> simp <;> omega
+
+  theorem set_operand_valid_translated
+      (valid : SetOperandValid profile catalog params env query output uses) :
+      SetOperandValid profile catalog params env (translateParameters query) output
+        (uses.map translateParameter) := by
+    cases valid with
+    | @basic ctes env visible cteUses scope sourceUses output selectUses pending whereUses orderBy orderUses limit limitUses
+        offset offsetUses locking offsetFirst select names definitions source items inputs nonempty distinctComparable
+        predicate orders limitValid offsetValid lockingValid noGrouping noHaving noDistinctOn =>
+      cases offsetFirst <;>
+        simp only [translateParameters, translateQueryBody, List.attach_map_val,
+          Bool.false_eq_true, ↓reduceIte, List.map_append]
+      all_goals
+        rw [← resolve_leaf_inputs_translated select.distinct orderBy pending]
+        simp only [translateSelect]
+        apply SetOperandValid.basic (pending := pending) (output := output)
+        · simpa [CTENamesValid, List.map_map, Function.comp_def, translateCTE] using names
+        · simpa only [List.attach_map_val] using ctes_valid_translated definitions
+        · have translated := source_valid_translated source
+          cases relation : select.source <;> simpa [relation] using translated
+        · simpa only [translateSelect, List.attach_map_val] using items_valid_translated items
+        · simpa only [translateSelect, List.attach_map_val] using items_input_valid_translated inputs
+        · exact nonempty
+        · simpa only [translateSelect] using distinctComparable
+        · have translated := predicate_valid_translated predicate
+          cases condition : select.whereClause <;> simpa [condition] using translated
+        · simpa only [translateSelect, List.attach_map_val] using orders_valid_translated orders
+        · have translated := pagination_valid_translated limitValid
+          split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
+        · have translated := pagination_valid_translated offsetValid
+          split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
+        · simpa only [translateSelect] using lockingValid
+        · simp only [List.attach_map_val, noGrouping, List.map_nil]
+        · cases select
+          simp only at noHaving
+          subst_vars
+          rfl
+        · simp only [List.attach_map_val, noDistinctOn, List.map_nil]
+    | set complete =>
+      have translated := query_valid_translated complete
+      simp only [translateParameters, translateQueryBody, List.attach_map_val] at translated ⊢
+      exact SetOperandValid.set translated
+  termination_by 2 * sizeOf query + 1
+  decreasing_by all_goals (try cases select) <;> simp <;> omega
 
   /-- Definition order and exposed names are unchanged; each body contributes
   its translated occurrences once, independently of references. -/
@@ -620,7 +806,7 @@ mutual
         simpa only [List.map_cons, List.map_append, translateCTE] using
           CTEsValid.cons (head := {head with query := translateParameters head.query}) (query_valid_translated body)
             aliases (ctes_valid_translated tail)
-  termination_by sizeOf ctes
+  termination_by 2 * sizeOf ctes
   decreasing_by all_goals (cases head; simp_all; omega)
 end
 

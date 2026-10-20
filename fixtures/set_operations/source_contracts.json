@@ -1,0 +1,733 @@
+{
+  "union": [
+    {
+      "id": "union:postgres:src/test/regress/sql/subselect.sql:statement-6",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-0",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-1",
+      "output_columns": [
+        {
+          "name": "one",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-2",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-3",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-4",
+      "output_columns": [
+        {
+          "name": "three",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-5",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-6",
+      "output_columns": [
+        {
+          "name": "three",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-7",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-8",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-9",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-10",
+      "output_columns": [
+        {
+          "name": "one",
+          "type": "double precision",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-11",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-12",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "double precision",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-13",
+      "output_columns": [
+        {
+          "name": "three",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-14",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "double precision",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-15",
+      "output_columns": [
+        {
+          "name": "three",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-16",
+      "output_columns": [
+        {
+          "name": "two",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/union.sql:statement-167",
+      "output_columns": [
+        {
+          "name": "t",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:postgres:src/test/regress/sql/with.sql:statement-155",
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-5",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-11",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-17",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-24",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-33",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-77",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-84",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-89",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-103",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-109",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_union_by_name.test:sqllogic-query-147",
+      "output_columns": [
+        {
+          "name": "c",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-37",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-43",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-48",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-6",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-11",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-18",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-23",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-28",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "numeric",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_union_order.test:sqllogic-query-5",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/test_union_binding.test:sqllogic-query-281",
+      "output_columns": [
+        {
+          "name": "a",
+          "type": "timestamp",
+          "nullable": true
+        },
+        {
+          "name": "b",
+          "type": "timestamp",
+          "nullable": true
+        },
+        {
+          "name": "id",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/union_all_projection_pushdown.test:sqllogic-query-70",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:duckdb:test/sql/setops/union_aggregate.test:sqllogic-query-62",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:sqlite:test/with2.test:tcl-16531-statement-0",
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "z",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:sqlite:test/join5.test:tcl-5324-statement-0",
+      "output_columns": [
+        {
+          "name": "fruit",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "fruit",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "isyellow",
+          "type": "int32",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "union:sqlite:test/with3.test:tcl-1159-statement-0",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:sqlite:test/select4.test:tcl-14031-statement-0",
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "y",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:sqlite:test/with1.test:tcl-24290-statement-0",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:sqlite:test/with1.test:tcl-24490-statement-0",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "union:sqlite:test/with1.test:tcl-24690-statement-0",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    }
+  ],
+  "intersect": [
+    {
+      "id": "intersect:postgres:src/test/regress/sql/union.sql:statement-35",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "intersect:postgres:src/test/regress/sql/union.sql:statement-36",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "intersect:duckdb:test/sql/setops/test_setops.test:sqllogic-query-42",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "intersect:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-22",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "intersect:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-27",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "intersect:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-32",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    }
+  ],
+  "except": [
+    {
+      "id": "except:postgres:src/test/regress/sql/union.sql:statement-37",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "except:postgres:src/test/regress/sql/union.sql:statement-38",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "except:duckdb:test/sql/setops/test_setops.test:sqllogic-query-38",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "id": "except:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-6",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "except:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-11",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "except:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-17",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false
+        }
+      ]
+    }
+  ]
+}

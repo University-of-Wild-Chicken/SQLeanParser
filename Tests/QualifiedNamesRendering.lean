@@ -75,10 +75,10 @@ private def baseScope : SelectContract.Scope := .ofTable baseTable.identity none
 private def source : Advanced.From := .table "t" none [] (some "s")
 
 private theorem source_valid :
-    SourceValid .basicV29 [baseTable] [] [] (some source) baseScope [] :=
+    SourceValid .basicV30 [baseTable] [] [] (some source) baseScope [] :=
   .table (table := baseTable) (Or.inr rfl) (by simp) rfl (by simp) (.cons rfl .nil)
 
-example : SourceValid .basicV29 [baseTable] [] [] (some (translateSource source)) baseScope [] :=
+example : SourceValid .basicV30 [baseTable] [] [] (some (translateSource source)) baseScope [] :=
   source_valid_translated source_valid
 
 private theorem column_valid :

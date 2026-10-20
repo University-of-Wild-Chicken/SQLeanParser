@@ -26,7 +26,7 @@ EXIT_CODES = {
 }
 ASSURANCE = {"contract": "declarative", "checked": "executable", "syntax": "syntax"}
 PROFILES = {
-    "contract": "sqlean-basic-select-v0.29",
+    "contract": "sqlean-basic-select-v0.30",
     "checked": "sqlean-expanded-v0",
     "syntax": "sqlean-syntax-v0",
 }
@@ -98,7 +98,8 @@ CASES = [
     Case("DISTINCT unresolved projected sort is a coverage gap",
          "SELECT DISTINCT id FROM users ORDER BY age", "unsupported"),
     Case("sort ordinal starts at one", "SELECT id FROM users ORDER BY 0", "invalid"),
-    Case("ambiguous output sort alias", "SELECT id AS x, age AS x FROM users ORDER BY x", "invalid"),
+    Case("repeated sort label requires transformed-expression identity",
+         "SELECT id AS x, age AS x FROM users ORDER BY x", "unsupported"),
     Case("base-table ON join has independent validity",
          "SELECT u.id FROM users AS u JOIN flags AS f ON u.id = f.id",
          columns=(("id", "int32", False),)),
@@ -109,8 +110,8 @@ CASES = [
     Case("CTE preserves certified output",
          "WITH x AS (SELECT id FROM users) SELECT id FROM x",
          columns=(("id", "int32", False),)),
-    Case("set operation is an acknowledged contract gap",
-         "SELECT id FROM users UNION SELECT id FROM flags", "unsupported"),
+    Case("set operation has independent positional validity",
+         "SELECT id FROM users UNION SELECT id FROM flags", columns=(("id", "int32", False),)),
     Case("DISTINCT ON is a dialect extension",
          "SELECT DISTINCT ON (city) id FROM users ORDER BY city, id", "unsupported"),
     Case("ILIKE has independent scalar validity",

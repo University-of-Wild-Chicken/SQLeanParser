@@ -1,4 +1,5 @@
 import SQLean.SelectContract.Spec
+import SQLean.AdvancedEquality
 
 /-! Proof-producing bounded implementation of the independent SELECT rules.
 Every successful branch constructs a Spec derivation. Exhausted operational
@@ -10,6 +11,11 @@ open Advanced
 private def invalid (code message : String) : Failure := .invalid ⟨code, message⟩
 private def unsupported (code message : String) : Failure := .unsupported ⟨code, message⟩
 private def exhausted : Failure := .inconclusive ⟨"resource_limit", "SELECT contract checking exhausted its recursion budget"⟩
+
+private instance (items : List Advanced.SelectItem) (name : Name) :
+    Decidable (SameOutputExpressions items name) := by
+  unfold SameOutputExpressions
+  split <;> infer_instance
 
 /-- PostgreSQL warns and clamps excess SECOND precision. This profile keeps
 only canonical 0..6 declarations, so that boundary is missing coverage. -/
@@ -745,25 +751,33 @@ structure ItemsCertificate (params : ParameterEnv) (scope : Scope) (items : List
   uses : List Parameter
   valid : ItemsValid params scope items output uses
 
+private structure ItemsAnalysis (params : ParameterEnv) (scope : Scope) (items : List Advanced.SelectItem)
+    extends ItemsCertificate params scope items where
+  inputs : List PendingColumn
+  inputValid : ItemsInputValid params scope items inputs uses
+
 private def checkItems (fuel : Nat) (params : ParameterEnv) (scope : Scope) (items : List Advanced.SelectItem) :
-    Except Failure (ItemsCertificate params scope items) :=
+    Except Failure (ItemsAnalysis params scope items) :=
   match fuel with
   | 0 => .error exhausted
   | fuel + 1 => match items with
-    | [] => .ok ⟨[], [], .nil⟩
+    | [] => .ok ⟨⟨[], [], .nil⟩, [], .nil⟩
     | .expression expr alias :: items => do
         if goodAlias : ∀ name ∈ alias, name ≠ "" then
           let item ← checkExpr fuel params scope expr
           let tail ← checkItems fuel params scope items
-          .ok ⟨⟨outputName expr alias, projectedType item.type⟩ :: tail.output, item.uses ++ tail.uses,
-            .expression item.valid goodAlias tail.valid⟩
+          .ok ⟨⟨⟨outputName expr alias, projectedType item.type⟩ :: tail.output, item.uses ++ tail.uses,
+            .expression item.valid goodAlias tail.valid⟩,
+            ⟨outputName expr alias, scalarInput expr item.type⟩ :: tail.inputs,
+            .expression item.valid goodAlias tail.inputValid⟩
         else .error (invalid "empty_alias" "A projection alias must be nonempty")
     | .all qualifier schema :: items => do
         checkNamespace scope qualifier schema
         let selected := scope.columns qualifier schema
         if nonempty : selected ≠ [] then
           let tail ← checkItems fuel params scope items
-          .ok ⟨selected ++ tail.output, tail.uses, .all rfl nonempty tail.valid⟩
+          .ok ⟨⟨selected ++ tail.output, tail.uses, .all rfl nonempty tail.valid⟩,
+            knownColumns selected ++ tail.inputs, .all rfl nonempty tail.inputValid⟩
         else .error (invalid "wildcard_binding" "Wildcard must identify a nonempty visible input scope")
 
 private def checkPredicate (fuel : Nat) (params : ParameterEnv) (scope : Scope) (expr : Option Advanced.Expr) :
@@ -781,9 +795,9 @@ private def checkPredicate (fuel : Nat) (params : ParameterEnv) (scope : Scope) 
         .ok ⟨arg.uses, .present arg.valid boolean⟩
       else .error (invalid "predicate_type" "WHERE requires a Boolean expression")
 
-private def checkSort (fuel : Nat) (params : ParameterEnv) (scope : Scope) (output : List OutputColumn)
+private def checkSort (fuel : Nat) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn)
     (distinct : Bool) (expr : Advanced.Expr) :
-    Except Failure {uses : List Parameter // SortValid params scope output distinct expr uses} :=
+    Except Failure {uses : List Parameter // SortValid params scope projection output distinct expr uses} :=
   match category : sortSyntax expr with
   | .integer position =>
       if positive : 0 < position then
@@ -811,7 +825,14 @@ private def checkSort (fuel : Nat) (params : ParameterEnv) (scope : Scope) (outp
               else .error (operatorFailure [typed.type] false
                   "order_type" "ORDER BY input type has no PostgreSQL ordering operator")
             else .error (unsupported "distinct_order_expression" "DISTINCT ordering by an input name requires projected-expression identity rules; use an output label or position")
-        | _ => .error (invalid "ambiguous_output" s!"ORDER BY label '{name}' is ambiguous")
+        | column :: _remaining =>
+            if same : SameOutputExpressions projection name then
+              if orderable : column.type.base.orderable = true then
+                .ok ⟨[], .repeatedName same found orderable⟩
+              else .error (operatorFailure [some column.type] false
+                "order_type" "ORDER BY output type has no PostgreSQL ordering operator")
+            else .error (unsupported "output_expression_identity"
+              s!"Repeated ORDER BY label '{name}' requires transformed projection-expression identity")
     | expr => do
         if ordinary : distinct = false then
           if category : SortExpression expr then
@@ -822,17 +843,84 @@ private def checkSort (fuel : Nat) (params : ParameterEnv) (scope : Scope) (outp
                 "order_type" "ORDER BY expression type has no PostgreSQL ordering operator")
           else .error (invalid "order_category" "Unclassified ORDER BY syntax")
         else .error (unsupported "distinct_order_expression" "This milestone supports DISTINCT ordering by output name or position")
-private def checkOrders (fuel : Nat) (params : ParameterEnv) (scope : Scope) (output : List OutputColumn)
+private def checkSortList (fuel : Nat) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn)
     (distinct : Bool) (items : List Advanced.OrderBy) :
-    Except Failure {uses : List Parameter // OrdersValid params scope output distinct items uses} :=
+    Except Failure {uses : List Parameter // SortListValid params scope projection output distinct items uses} :=
   match fuel with
   | 0 => .error exhausted
   | fuel + 1 => match items with
     | [] => .ok ⟨[], .nil⟩
     | item :: items => do
-        let head ← checkSort fuel params scope output distinct item.expr
-        let tail ← checkOrders fuel params scope output distinct items
+        let head ← checkSort fuel params scope projection output distinct item.expr
+        let tail ← checkSortList fuel params scope projection output distinct items
         .ok ⟨head.val ++ tail.val, .cons head.property tail.property⟩
+
+private def checkOrders (fuel : Nat) (params : ParameterEnv) (scope : Scope)
+    (projection : List Advanced.SelectItem) (output : List OutputColumn) (distinct : Bool)
+    (items : List Advanced.OrderBy) :
+    Except Failure {uses : List Parameter // OrdersValid params scope projection output distinct items uses} := do
+  if sequence : OrderSequenceSafe projection items then
+    let checked ← checkSortList fuel params scope projection output distinct items
+    .ok ⟨checked.val, .checked checked.property sequence⟩
+  else .error (invalid "ambiguous_output"
+    "Earlier ORDER BY entries resolved only some identical unknown targets; the repeated name is ambiguous")
+
+private def checkSetColumns (fuel : Nat) (op : SetOp) (all : Bool)
+    (left right : List PendingColumn) :
+    Except Failure {output : List OutputColumn // SetColumnsValid op all left right output} :=
+  match fuel with
+  | 0 => .error exhausted
+  | fuel + 1 => match left, right with
+    | [], [] => .ok ⟨[], .nil⟩
+    | l :: ls, r :: rs => do
+        match common : conditionalBase [l.input, r.input] with
+        | none => .error (invalid "set_common_type" "Corresponding set columns have no common PostgreSQL type")
+        | some base =>
+            if leftCoercion : acceptsInput l.input base = true then
+              if rightCoercion : acceptsInput r.input base = true then
+                if grouping : SetGroupingAllowed op all base then
+                  let tail ← checkSetColumns fuel op all ls rs
+                  .ok ⟨⟨l.name, ⟨base, l.input.nullable || r.input.nullable⟩⟩ :: tail.val,
+                    .cons common leftCoercion rightCoercion grouping tail.property⟩
+                else .error (invalid "set_equality"
+                  "Set duplicate/group matching requires equality, including array element equality")
+              else .error (invalid "set_right_coercion" "The right set column cannot acquire the selected common type")
+            else .error (invalid "set_left_coercion" "The left set column cannot acquire the selected common type")
+    | _, _ => .error (invalid "set_width" "Set operands must have the same number of output columns")
+
+private def checkSetSort (output : List OutputColumn) (expr : Advanced.Expr) :
+    Except Failure {_u : Unit // SetSortValid output expr} :=
+  match category : sortSyntax expr with
+  | .integer position =>
+      if positive : 0 < position then
+        if inRange : position.toNat ≤ output.length then
+          if orderable : OrdinalOrderable output position.toNat then
+            .ok ⟨(), .ordinal category positive inRange orderable⟩
+          else .error (invalid "order_type" "The set output has no ordering operator")
+        else .error (invalid "order_position" "ORDER BY position exceeds set output width")
+      else .error (invalid "order_position" "ORDER BY positions are one-based")
+  | .numericConstant | .otherConstant =>
+      .error (invalid "order_constant" "A bare ORDER BY constant must be an INT4 integer ordinal")
+  | .expression => match expr with
+    | .column none name none =>
+      match found : output.filter (·.name == name) with
+      | [column] =>
+        if orderable : column.type.base.orderable = true then .ok ⟨(), .outputName found orderable⟩
+        else .error (invalid "order_type" "The set output has no ordering operator")
+      | [] => .error (invalid "set_order_name" "Set ORDER BY must name a left-result output column")
+      | _ => .error (invalid "ambiguous_output" "Set ORDER BY output label is ambiguous")
+    | _ => .error (invalid "set_order_expression" "Set ORDER BY admits only output names or ordinals")
+
+private def checkSetOrders (fuel : Nat) (output : List OutputColumn) (items : List Advanced.OrderBy) :
+    Except Failure {_u : Unit // SetOrdersValid output items} :=
+  match fuel with
+  | 0 => .error exhausted
+  | fuel + 1 => match items with
+    | [] => .ok ⟨(), .nil⟩
+    | item :: items => do
+      let head ← checkSetSort output item.expr
+      let tail ← checkSetOrders fuel output items
+      .ok ⟨(), .cons head.property tail.property⟩
 
 /-- Check one pagination expression in an empty local scope. This proves a
 static coercion to a row count, not nonnegativity of its eventual runtime value. -/
@@ -967,6 +1055,11 @@ structure QueryCertificate (profile : Profile) (catalog : Catalog) (params : Par
   uses : List Parameter
   valid : QueryValid profile catalog params env query output uses
 
+private structure QueryAnalysis (profile : Profile) (catalog : Catalog) (params : ParameterEnv)
+    (env : CTEEnv) (query : Advanced.Query) extends QueryCertificate profile catalog params env query where
+  inputs : List PendingColumn
+  operandValid : SetOperandValid profile catalog params env query inputs uses
+
 structure CTEsCertificate (profile : Profile) (catalog : Catalog) (params : ParameterEnv)
     (env : CTEEnv) (ctes : List Advanced.CTE) where
   visible : CTEEnv
@@ -1099,7 +1192,7 @@ mutual
 
   private def checkQueryCore (fuel : Nat) (profile : Profile) (catalog : Catalog)
       (params : ParameterEnv) (env : CTEEnv) (query : Advanced.Query) :
-      Except Failure (QueryCertificate profile catalog params env query) :=
+      Except Failure (QueryAnalysis profile catalog params env query) :=
     match fuel with
     | 0 => .error exhausted
     | fuel + 1 => do
@@ -1110,7 +1203,32 @@ mutual
           if namesValid : CTENamesValid ctes then
             let definitions ← checkCTEs fuel profile catalog params env ctes
             match bodyEq : body with
-            | .set .. => .error (unsupported "set_operation" "Independent set-operation rules are not implemented yet")
+            | .set op all left right =>
+              if unlocked : locking = [] then
+                if leftUnlocked : left.locking = [] then
+                  if rightUnlocked : right.locking = [] then
+                    let l ← checkQueryCore fuel profile catalog params definitions.visible left
+                    let r ← checkQueryCore fuel profile catalog params definitions.visible right
+                    let columns ← checkSetColumns fuel op all l.inputs r.inputs
+                    if nonempty : columns.val ≠ [] then
+                      let orders ← checkSetOrders fuel columns.val orderBy
+                      let checkedLimit ← checkPagination fuel params limit
+                      let checkedOffset ← checkPagination fuel params offset
+                      let uses := definitions.uses ++ l.uses ++ r.uses ++
+                        if offsetFirst then checkedOffset.val ++ checkedLimit.val else checkedLimit.val ++ checkedOffset.val
+                      have complete : QueryValid profile catalog params env query columns.val uses := by
+                        rw [queryEq, bodyEq, noRecursive, unlocked]
+                        exact .set namesValid definitions.valid l.operandValid r.operandValid
+                          leftUnlocked rightUnlocked columns.property nonempty orders.property
+                          checkedLimit.property checkedOffset.property
+                      .ok ⟨⟨columns.val, uses, complete⟩, knownColumns columns.val, by
+                        dsimp only
+                        rw [queryEq, bodyEq]
+                        exact .set (by simpa only [queryEq, bodyEq] using complete)⟩
+                    else .error (invalid "empty_projection" "Set operands must produce output columns")
+                  else .error (invalid "locking_set_operand" "A direct set operand cannot have row-locking clauses")
+                else .error (invalid "locking_set_operand" "A direct set operand cannot have row-locking clauses")
+              else .error (invalid "locking_set_operation" "Row locking cannot apply to a set-operation result")
             | .select select =>
               if noGrouping : select.groupBy = [] then
                 if noHaving : select.having = none then
@@ -1120,17 +1238,23 @@ mutual
                     if nonempty : items.output ≠ [] then
                       if distinctComparable : DistinctAllowed select.distinct items.output then
                         let predicate ← checkPredicate fuel params source.scope select.whereClause
-                        let orders ← checkOrders fuel params source.scope items.output select.distinct orderBy
+                        let orders ← checkOrders fuel params source.scope select.items items.output select.distinct orderBy
                         let checkedLimit ← checkPagination fuel params limit
                         let checkedOffset ← checkPagination fuel params offset
                         let checkedLocking ← checkLocking source.scope select.distinct locking
-                        .ok ⟨items.output,
+                        .ok ⟨⟨items.output,
                           (definitions.uses ++ if offsetFirst then items.uses ++ source.uses ++ predicate.val ++ orders.val ++ checkedOffset.val ++ checkedLimit.val
                            else items.uses ++ source.uses ++ predicate.val ++ orders.val ++ checkedLimit.val ++ checkedOffset.val), by
                           rw [queryEq, bodyEq, noRecursive]
                           exact .basic namesValid definitions.valid source.valid items.valid nonempty distinctComparable predicate.property
                             orders.property checkedLimit.property checkedOffset.property checkedLocking.valid
-                            noGrouping noHaving noDistinctOn⟩
+                            noGrouping noHaving noDistinctOn⟩,
+                          resolveLeafInputs select.distinct orderBy items.inputs, by
+                            dsimp only
+                            rw [queryEq, bodyEq, noRecursive]
+                            exact .basic namesValid definitions.valid source.valid items.valid items.inputValid
+                              nonempty distinctComparable predicate.property orders.property checkedLimit.property
+                              checkedOffset.property checkedLocking.valid noGrouping noHaving noDistinctOn⟩
                       else .error (operatorFailure (items.output.map (fun column => some column.type)) false
                         "distinct_type" "DISTINCT output type has no PostgreSQL equality operator")
                     else .error (invalid "empty_projection" "SELECT must produce at least one output column")

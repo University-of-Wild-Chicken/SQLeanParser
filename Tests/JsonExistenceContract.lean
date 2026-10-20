@@ -34,7 +34,7 @@ private def existenceField (id : String) (record : Lean.Json) (name : String) : 
 private def existenceCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) : IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "JSONB existence SELECT"
-    ((SelectContract.checkQuery .basicV29 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV30 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "JSONB existence identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -121,7 +121,7 @@ def jsonExistenceContractTests : IO Nat := do
           SQLean.Tests.assert ((← existenceCertificate query) == [⟨"v", ⟨.bool, true⟩⟩])
             s!"existence matrix exact output: {reprStr op}/{left}/{right}"
         else
-          match SelectContract.checkQuery .basicV29 [] [] query with
+          match SelectContract.checkQuery .basicV30 [] [] query with
           | .error (.invalid diagnostic) =>
               SQLean.Tests.assert (diagnostic.code == "json_existence_signature") "closed unsupported overload must be Invalid"
           | _ => throw (IO.userError s!"existence matrix expected Invalid: {reprStr op}/{left}/{right}")
@@ -177,7 +177,7 @@ def jsonExistenceContractTests : IO Nat := do
       "SELECT '{}'::JSONB ?| 'a'::TEXT", "SELECT '{}'::JSONB ? 1",
       "SELECT '{}'::JSONB ?& ARRAY[1]", "SELECT '{}'::JSONB ? ARRAY['a']"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV29 [] [] query with
+    match SelectContract.checkQuery .basicV30 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected invalid existence signature: {sql}")
     count := count + 1
@@ -185,7 +185,7 @@ def jsonExistenceContractTests : IO Nat := do
       "SELECT (SELECT '{}'::JSONB) ? 'a'", "SELECT '{}'::JSONB ? (SELECT 'a')",
       "SELECT unknown_function() ?& ARRAY['a']", "SELECT ROW(1,2) ? 'a'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV29 [] [] query with
+    match SelectContract.checkQuery .basicV30 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"unsupported existence child must remain unsupported: {sql}")
     count := count + 1
@@ -205,7 +205,7 @@ def jsonExistenceContractTests : IO Nat := do
       (.jsonExistence .key (.parameter (.anonymous 2)) (.parameter (.anonymous 1)), "TEXT,JSONB")] do
     let parameters ← expectOk "existence bindings" (Assurance.parseContractParameterTypes parameterTypes)
     let query : Advanced.Query := {body := .select {items := [.expression expr]}}
-    match SelectContract.checkQuery .basicV29 [] parameters query with
+    match SelectContract.checkQuery .basicV30 [] parameters query with
     | .error (.invalid diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == "parameter_notation")
           "well-typed existence operands must fail specifically on parameter notation"
@@ -213,7 +213,7 @@ def jsonExistenceContractTests : IO Nat := do
     count := count + 1
   let query : Advanced.Query := {body := .select {items := [
     .expression (.jsonExistence .key (.cast .null ⟨.jsonb, []⟩) (.literal (.text "a")))]}}
-  match SelectContract.checkQuery .basicV29 [] [] query 1 with
+  match SelectContract.checkQuery .basicV30 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "existence resource exhaustion must be Inconclusive")
   pure (count + 1)

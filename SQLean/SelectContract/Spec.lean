@@ -501,6 +501,30 @@ inductive ItemsValid (params : ParameterEnv) (scope : Scope) :
       (tail : ItemsValid params scope items output uses) :
       ItemsValid params scope (.all qualifier schema :: items) (selected ++ output) uses
 
+/-- A set operand retains raw unknown literal inputs until its containing
+binary set operation selects a type. Complete derived/CTE outputs are known. -/
+structure PendingColumn where
+  name : Name
+  input : ScalarInput
+  deriving Repr, BEq, DecidableEq
+
+def knownColumns (output : List OutputColumn) : List PendingColumn :=
+  output.map fun column => ⟨column.name, .known column.type⟩
+
+inductive ItemsInputValid (params : ParameterEnv) (scope : Scope) :
+    List Advanced.SelectItem → List PendingColumn → List Parameter → Prop where
+  | nil : ItemsInputValid params scope [] [] []
+  | expression (typed : ExprValid params scope expr type uses)
+      (aliasValid : ∀ name ∈ alias, name ≠ "")
+      (tail : ItemsInputValid params scope items output remaining) :
+      ItemsInputValid params scope (.expression expr alias :: items)
+        (⟨outputName expr alias, scalarInput expr type⟩ :: output) (uses ++ remaining)
+  | all (bindings : scope.columns qualifier schema = selected)
+      (nonempty : selected ≠ [])
+      (tail : ItemsInputValid params scope items output uses) :
+      ItemsInputValid params scope (.all qualifier schema :: items)
+        (knownColumns selected ++ output) uses
+
 inductive PredicateValid (params : ParameterEnv) (scope : Scope) : Option Advanced.Expr → List Parameter → Prop where
   | absent : PredicateValid params scope none []
   | present (typed : ExprValid params scope expr type uses) (boolean : acceptsBase .bool type = true) :
@@ -652,31 +676,178 @@ def DistinctAllowed (distinct : Bool) (output : List OutputColumn) : Prop :=
 instance (distinct : Bool) (output : List OutputColumn) : Decidable (DistinctAllowed distinct output) :=
   inferInstanceAs (Decidable (_ ∨ _))
 
-/-- Output-name lookup takes precedence only for a bare name. Duplicate output
-names are an error. Compound expressions see input bindings, not aliases. -/
-inductive SortValid (params : ParameterEnv) (scope : Scope) (output : List OutputColumn) (distinct : Bool) :
+def projectionExpressions (items : List Advanced.SelectItem) (name : Name) : List Advanced.Expr :=
+  match items with
+  | [] => []
+  | .expression expr alias :: rest =>
+      if outputName expr alias == name then expr :: projectionExpressions rest name
+      else projectionExpressions rest name
+  | .all .. :: rest => projectionExpressions rest name
+
+def pureProjection (items : List Advanced.SelectItem) : Bool :=
+  items.all fun item => match item with | .expression .. => true | .all .. => false
+
+/-- Syntactic identity is sufficient for PostgreSQL's repeated-target-name
+exception. Other transformed-expression equivalences remain outside coverage. -/
+def SameOutputExpressions (items : List Advanced.SelectItem) (name : Name) : Prop :=
+  pureProjection items = true ∧
+    match projectionExpressions items name with
+    | [] => False
+    | first :: rest => ∀ expr ∈ rest, expr = first
+
+/-- Output-name lookup takes precedence only for a bare name. Repeated names
+need projection identity; compound expressions see input bindings, not aliases. -/
+inductive SortValid (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn) (distinct : Bool) :
     Advanced.Expr → List Parameter → Prop where
   | ordinal (constant : sortSyntax expr = .integer position)
       (positive : 0 < position) (inRange : position.toNat ≤ output.length)
       (orderable : OrdinalOrderable output position.toNat) :
-      SortValid params scope output distinct expr []
+      SortValid params scope projection output distinct expr []
   | outputName (resolved : output.filter (·.name == name) = [column])
       (orderable : column.type.base.orderable = true) :
-      SortValid params scope output distinct (.column none name) []
+      SortValid params scope projection output distinct (.column none name) []
+  | repeatedName (same : SameOutputExpressions projection name)
+      (resolved : output.filter (·.name == name) = column :: remaining)
+      (orderable : column.type.base.orderable = true) :
+      SortValid params scope projection output distinct (.column none name) []
   | inputName (noOutput : output.filter (·.name == name) = []) (ordinary : distinct = false)
       (typed : ExprValid params scope (.column none name) type uses)
       (orderable : type.orderable = true) :
-      SortValid params scope output distinct (.column none name) uses
+      SortValid params scope projection output distinct (.column none name) uses
   | expression (ordinary : distinct = false) (typed : ExprValid params scope expr type uses)
       (category : SortExpression expr) (orderable : type.orderable = true) :
-      SortValid params scope output distinct expr uses
+      SortValid params scope projection output distinct expr uses
 
-inductive OrdersValid (params : ParameterEnv) (scope : Scope) (output : List OutputColumn) (distinct : Bool) :
+/-- Raw unknown identity survives until its particular target entry is sorted.
+The outer option distinguishes known expressions; the inner distinguishes NULL
+from an unknown string payload. -/
+def unknownSortKey : Advanced.Expr → Option (Option String)
+  | .null => some none
+  | .literal (.text value) => some (some value)
+  | _ => none
+
+def projectionSortKeys (items : List Advanced.SelectItem) : List (Name × Option (Option String)) :=
+  items.map fun item => match item with
+    | .expression expr alias => (outputName expr alias, unknownSortKey expr)
+    | .all .. => ("", none)
+
+def firstSortIndex (keys : List (Name × Option (Option String))) (name : Name) : Option Nat :=
+  match keys with
+  | [] => none
+  | key :: rest => if key.1 == name then some 0 else (firstSortIndex rest name).map Nat.succ
+
+def sortTargetIndex (keys : List (Name × Option (Option String))) (expr : Advanced.Expr) : Option Nat :=
+  match sortSyntax expr with
+  | .integer position => if 0 < position then some (position.toNat - 1) else none
+  | _ => match expr with
+    | .column none name none => firstSortIndex keys name
+    | _ => none
+
+def unknownSortGroup (keys : List (Name × Option (Option String))) (name : Name) : List Nat :=
+  let matching := keys.zipIdx.filter (fun row => row.1.1 == name)
+  match matching with
+  | [] => []
+  | first :: _ =>
+    match first.1.2 with
+    | none => []
+    | some key =>
+      if matching.all (fun row => row.1.2 == some key) then matching.map Prod.snd else []
+
+/-- PostgreSQL processes ORDER BY entries sequentially. Resolving just one of
+several identical unknown projections can make a later name ambiguous. -/
+def orderSequenceSafe (keys : List (Name × Option (Option String))) (resolved : List Nat) :
+    List Advanced.OrderBy → Bool
+  | [] => true
+  | order :: rest =>
+    let safe := match order.expr with
+      | .column none name none =>
+        let group := unknownSortGroup keys name
+        group.all resolved.contains || group.all (fun index => !resolved.contains index)
+      | _ => true
+    safe && orderSequenceSafe keys
+      (match sortTargetIndex keys order.expr with | none => resolved | some index => index :: resolved) rest
+
+def OrderSequenceSafe (projection : List Advanced.SelectItem) (orders : List Advanced.OrderBy) : Prop :=
+  pureProjection projection = false ∨ orderSequenceSafe (projectionSortKeys projection) [] orders = true
+
+instance (projection : List Advanced.SelectItem) (orders : List Advanced.OrderBy) :
+    Decidable (OrderSequenceSafe projection orders) :=
+  inferInstanceAs (Decidable (_ ∨ _))
+
+inductive SortListValid (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn) (distinct : Bool) :
     List Advanced.OrderBy → List Parameter → Prop where
-  | nil : OrdersValid params scope output distinct [] []
-  | cons (head : SortValid params scope output distinct item.expr uses)
-      (tail : OrdersValid params scope output distinct items remaining) :
-      OrdersValid params scope output distinct (item :: items) (uses ++ remaining)
+  | nil : SortListValid params scope projection output distinct [] []
+  | cons (head : SortValid params scope projection output distinct item.expr uses)
+      (tail : SortListValid params scope projection output distinct items remaining) :
+      SortListValid params scope projection output distinct (item :: items) (uses ++ remaining)
+
+inductive OrdersValid (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem)
+    (output : List OutputColumn) (distinct : Bool) : List Advanced.OrderBy → List Parameter → Prop where
+  | nil : OrdersValid params scope projection output distinct [] []
+  | checked (items : SortListValid params scope projection output distinct orders uses)
+      (sequence : OrderSequenceSafe projection orders) :
+      OrdersValid params scope projection output distinct orders uses
+
+/-- SQL92 sorting resolves only a referenced unknown target entry. DISTINCT
+resolves every target. Parentheses and pagination alone do not resolve it. -/
+def orderResolvesInput (expr : Advanced.Expr) (index : Nat) (column : PendingColumn) : Bool :=
+  match sortSyntax expr with
+  | .integer position => position == Int.ofNat (index + 1)
+  | _ => match expr with
+    | .column none name none => column.name == name
+    | _ => false
+
+def orderResolvesColumn (expr : Advanced.Expr) (index : Nat) (column : PendingColumn)
+    (columns : List PendingColumn) : Bool :=
+  orderResolvesInput expr index column &&
+    (match expr with
+     | .column none name none => !(columns.take index).any (fun earlier => earlier.name == name)
+     | _ => true)
+
+def resolveLeafInputs (distinct : Bool) (orders : List Advanced.OrderBy)
+    (columns : List PendingColumn) : List PendingColumn :=
+  columns.zipIdx.map fun (column, index) =>
+    if distinct || orders.any (fun order =>
+      orderResolvesColumn order.expr index column columns) then
+      match column.input with
+      | .unknown nullable => ⟨column.name, .known ⟨.text, nullable⟩⟩
+      | .known _ => column
+    else column
+
+/-- Within the admitted built-in inventory, grouping requires scalar equality,
+including element equality for arrays. JSON and JSON[] fail this requirement
+at set analysis, unlike the deferred JSON[] comparison execution boundary. -/
+def SetGroupingAllowed (op : Advanced.SetOp) (all : Bool) (type : ScalarType) : Prop :=
+  (op = .union ∧ all = true) ∨ type.orderable = true
+
+instance (op : Advanced.SetOp) (all : Bool) (type : ScalarType) :
+    Decidable (SetGroupingAllowed op all type) :=
+  inferInstanceAs (Decidable (_ ∨ _))
+
+inductive SetColumnsValid (op : Advanced.SetOp) (all : Bool) :
+    List PendingColumn → List PendingColumn → List OutputColumn → Prop where
+  | nil : SetColumnsValid op all [] [] []
+  | cons (common : conditionalBase [left.input, right.input] = some base)
+      (leftCoercion : acceptsInput left.input base = true)
+      (rightCoercion : acceptsInput right.input base = true)
+      (grouping : SetGroupingAllowed op all base)
+      (tail : SetColumnsValid op all lefts rights output) :
+      SetColumnsValid op all (left :: lefts) (right :: rights)
+        (⟨left.name, ⟨base, left.input.nullable || right.input.nullable⟩⟩ :: output)
+
+/-- A compound result has no input-relation namespace for ORDER BY. -/
+inductive SetSortValid (output : List OutputColumn) : Advanced.Expr → Prop where
+  | ordinal (constant : sortSyntax expr = .integer position)
+      (positive : 0 < position) (inRange : position.toNat ≤ output.length)
+      (orderable : OrdinalOrderable output position.toNat) : SetSortValid output expr
+  | outputName (resolved : output.filter (·.name == name) = [column])
+      (orderable : column.type.base.orderable = true) :
+      SetSortValid output (.column none name)
+
+inductive SetOrdersValid (output : List OutputColumn) : List Advanced.OrderBy → Prop where
+  | nil : SetOrdersValid output []
+  | cons (head : SetSortValid output item.expr) (tail : SetOrdersValid output items) :
+      SetOrdersValid output (item :: items)
 
 /-- The pagination context supplies PostgreSQL's INT8 row-count target.
 Integer widening is lossless; NUMERIC/REAL/DOUBLE use catalog assignment casts
@@ -851,7 +1022,7 @@ mutual
         (nonempty : output ≠ [])
         (distinctComparable : DistinctAllowed select.distinct output)
         (predicate : PredicateValid params scope select.whereClause whereUses)
-        (orders : OrdersValid params scope output select.distinct orderBy orderUses)
+        (orders : OrdersValid params scope select.items output select.distinct orderBy orderUses)
         (limitValid : PaginationValid params limit limitUses)
         (offsetValid : PaginationValid params offset offsetUses)
         (lockingValid : LockingValid scope select.distinct locking)
@@ -861,6 +1032,51 @@ mutual
           ⟨.select select, ctes, false, orderBy, limit, offset, locking, offsetFirst⟩ output
           (cteUses ++ if offsetFirst then selectUses ++ sourceUses ++ whereUses ++ orderUses ++ offsetUses ++ limitUses
            else selectUses ++ sourceUses ++ whereUses ++ orderUses ++ limitUses ++ offsetUses)
+    | set (names : CTENamesValid ctes)
+        (definitions : CTEsValid profile catalog params env ctes visible cteUses)
+        (leftValid : SetOperandValid profile catalog params visible left leftInputs leftUses)
+        (rightValid : SetOperandValid profile catalog params visible right rightInputs rightUses)
+        (leftUnlocked : left.locking = []) (rightUnlocked : right.locking = [])
+        (columns : SetColumnsValid op all leftInputs rightInputs output)
+        (nonempty : output ≠ [])
+        (orders : SetOrdersValid output orderBy)
+        (limitValid : PaginationValid params limit limitUses)
+        (offsetValid : PaginationValid params offset offsetUses) :
+        QueryValid profile catalog params env
+          ⟨.set op all left right, ctes, false, orderBy, limit, offset, [], offsetFirst⟩ output
+          (cteUses ++ leftUses ++ rightUses ++
+            if offsetFirst then offsetUses ++ limitUses else limitUses ++ offsetUses)
+
+  /-- Contextual set operands have their own projection judgment. The ordinary
+  SELECT premises remain independent of checker success; only their pending
+  output treatment differs. A nested set has already selected concrete types. -/
+  inductive SetOperandValid (profile : Profile) (catalog : Catalog) (params : ParameterEnv) :
+      CTEEnv → Advanced.Query → List PendingColumn → List Parameter → Prop where
+    | basic {select : Advanced.Select}
+        (names : CTENamesValid ctes)
+        (definitions : CTEsValid profile catalog params env ctes visible cteUses)
+        (source : SourceValid profile catalog params visible select.source scope sourceUses)
+        (items : ItemsValid params scope select.items output selectUses)
+        (inputs : ItemsInputValid params scope select.items pending selectUses)
+        (nonempty : output ≠ [])
+        (distinctComparable : DistinctAllowed select.distinct output)
+        (predicate : PredicateValid params scope select.whereClause whereUses)
+        (orders : OrdersValid params scope select.items output select.distinct orderBy orderUses)
+        (limitValid : PaginationValid params limit limitUses)
+        (offsetValid : PaginationValid params offset offsetUses)
+        (lockingValid : LockingValid scope select.distinct locking)
+        (noGrouping : select.groupBy = []) (noHaving : select.having = none)
+        (noDistinctOn : select.distinctOn = []) :
+        SetOperandValid profile catalog params env
+          ⟨.select select, ctes, false, orderBy, limit, offset, locking, offsetFirst⟩
+          (resolveLeafInputs select.distinct orderBy pending)
+          (cteUses ++ if offsetFirst then selectUses ++ sourceUses ++ whereUses ++ orderUses ++ offsetUses ++ limitUses
+           else selectUses ++ sourceUses ++ whereUses ++ orderUses ++ limitUses ++ offsetUses)
+    | set (complete : QueryValid profile catalog params env
+        ⟨.set op all left right, ctes, recursive, orderBy, limit, offset, locking, offsetFirst⟩ output uses) :
+        SetOperandValid profile catalog params env
+          ⟨.set op all left right, ctes, recursive, orderBy, limit, offset, locking, offsetFirst⟩
+          (knownColumns output) uses
   /-- Definitions are analyzed in order. A name becomes visible only after its
   own query is certified, allowing inherited/base lookup in its defining body.
   References reuse output metadata and never duplicate definition occurrences. -/
