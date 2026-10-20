@@ -94,6 +94,8 @@ mutual
     | .regex arg pattern insensitive negated =>
         paren (exprSql pg arg ++ " " ++ regexOperatorSql insensitive negated ++ " " ++ exprSql pg pattern)
     | .jsonAccess op arg key => paren (exprSql pg arg ++ " " ++ op.toSql ++ " " ++ exprSql pg key)
+    | .containment left right containedBy =>
+        paren (exprSql pg left ++ (if containedBy then " <@ " else " @> ") ++ exprSql pg right)
     | .cast arg type => "CAST(" ++ exprSql pg arg ++ " AS " ++ type.toSql ++ ")"
     | .subscript base subscripts => paren (exprSql pg base) ++ String.join
         (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>

@@ -34,7 +34,7 @@ private def quantifiedCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "quantified-array SELECT"
-    ((SelectContract.checkQuery .basicV16 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV17 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "quantified-array identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -157,7 +157,7 @@ def arrayQuantifiedContractTests : IO Nat := do
     "SELECT 1 = ANY(ARRAY[])"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV16 [] [] query with
+    match SelectContract.checkQuery .basicV17 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid quantified-array query: {sql}")
     count := count + 1
@@ -166,7 +166,7 @@ def arrayQuantifiedContractTests : IO Nat := do
       "SELECT 1 = ANY(unknown_array_function())",
       "SELECT 1 = ANY(ARRAY[COUNT(*)])"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV16 [] [] query with
+    match SelectContract.checkQuery .basicV17 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported quantified-array boundary: {sql}")
     count := count + 1
@@ -190,11 +190,11 @@ def arrayQuantifiedContractTests : IO Nat := do
   let bad : Advanced.Query := { body := .select { items := [
     .expression (.quantifiedComparison .eq .any
       (.parameter (.anonymous 2)) (.array [.parameter (.anonymous 1)]))] } }
-  match SelectContract.checkQuery .basicV16 [] params bad with
+  match SelectContract.checkQuery .basicV17 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "manual reordered quantified placeholders must be Invalid")
   count := count + 1
-  match SelectContract.checkQuery .basicV16 [] params query 1 with
+  match SelectContract.checkQuery .basicV17 [] params query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "quantified array exhaustion must be Inconclusive")
   count := count + 1

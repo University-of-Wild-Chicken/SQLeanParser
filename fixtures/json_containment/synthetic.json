@@ -1,0 +1,1022 @@
+[
+  {
+    "id": "json-containment-01-contains-empty-objects",
+    "source_kind": "synthetic",
+    "shape": "empty-objects",
+    "sql": "SELECT ('{}'::JSONB) @> ('{}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{}'::JSONB) @> ('{}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-02-contains-object-subset",
+    "source_kind": "synthetic",
+    "shape": "object-subset",
+    "sql": "SELECT ('{\"a\":1,\"b\":2}'::JSONB) @> ('{\"a\":1}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{\"a\":1,\"b\":2}'::JSONB) @> ('{\"a\":1}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-03-contains-missing-key",
+    "source_kind": "synthetic",
+    "shape": "missing-key",
+    "sql": "SELECT ('{\"a\":1}'::JSONB) @> ('{\"b\":1}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('{\"a\":1}'::JSONB) @> ('{\"b\":1}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-04-contains-wrong-value",
+    "source_kind": "synthetic",
+    "shape": "wrong-value",
+    "sql": "SELECT ('{\"a\":1}'::JSONB) @> ('{\"a\":2}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('{\"a\":1}'::JSONB) @> ('{\"a\":2}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-05-contains-nested-object",
+    "source_kind": "synthetic",
+    "shape": "nested-object",
+    "sql": "SELECT ('{\"a\":{\"b\":1,\"c\":2}}'::JSONB) @> ('{\"a\":{\"b\":1}}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{\"a\":{\"b\":1,\"c\":2}}'::JSONB) @> ('{\"a\":{\"b\":1}}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-06-contains-array-order",
+    "source_kind": "synthetic",
+    "shape": "array-order",
+    "sql": "SELECT ('[1,2,3]'::JSONB) @> ('[3,1]') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('[1,2,3]'::JSONB) @> ('[3,1]') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-07-contains-array-duplicates",
+    "source_kind": "synthetic",
+    "shape": "array-duplicates",
+    "sql": "SELECT ('[1]'::JSONB) @> ('[1,1]') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('[1]'::JSONB) @> ('[1,1]') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-08-contains-array-missing",
+    "source_kind": "synthetic",
+    "shape": "array-missing",
+    "sql": "SELECT ('[1,2]'::JSONB) @> ('[3]') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('[1,2]'::JSONB) @> ('[3]') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-09-contains-array-primitive",
+    "source_kind": "synthetic",
+    "shape": "array-primitive",
+    "sql": "SELECT ('[1,2]'::JSONB) @> ('1') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('[1,2]'::JSONB) @> ('1') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-10-contains-primitive-array",
+    "source_kind": "synthetic",
+    "shape": "primitive-array",
+    "sql": "SELECT ('1'::JSONB) @> ('[1]') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('1'::JSONB) @> ('[1]') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-11-contains-object-array",
+    "source_kind": "synthetic",
+    "shape": "object-array",
+    "sql": "SELECT ('{\"a\":[1,2]}'::JSONB) @> ('{\"a\":[2]}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{\"a\":[1,2]}'::JSONB) @> ('{\"a\":[2]}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-12-contains-scalar-string",
+    "source_kind": "synthetic",
+    "shape": "scalar-string",
+    "sql": "SELECT ('\"x\"'::JSONB) @> ('\"x\"') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('\"x\"'::JSONB) @> ('\"x\"') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-13-contains-scalar-different",
+    "source_kind": "synthetic",
+    "shape": "scalar-different",
+    "sql": "SELECT ('\"x\"'::JSONB) @> ('\"y\"') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('\"x\"'::JSONB) @> ('\"y\"') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-14-contains-boolean",
+    "source_kind": "synthetic",
+    "shape": "boolean",
+    "sql": "SELECT ('true'::JSONB) @> ('false') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('true'::JSONB) @> ('false') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-15-contains-json-null",
+    "source_kind": "synthetic",
+    "shape": "json-null",
+    "sql": "SELECT ('null'::JSONB) @> ('null') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('null'::JSONB) @> ('null') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-16-contains-json-null-not-false",
+    "source_kind": "synthetic",
+    "shape": "json-null-not-false",
+    "sql": "SELECT ('null'::JSONB) @> ('false') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('null'::JSONB) @> ('false') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-17-contains-sql-null",
+    "source_kind": "synthetic",
+    "shape": "sql-null",
+    "sql": "SELECT (NULL::JSONB) @> ('{}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (NULL::JSONB) @> ('{}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-18-contains-unknown-subject",
+    "source_kind": "synthetic",
+    "shape": "unknown-subject",
+    "sql": "SELECT ('{\"a\":1}') @> ('{}'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{\"a\":1}') @> ('{}'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-19-contains-explicit-json-cast",
+    "source_kind": "synthetic",
+    "shape": "explicit-json-cast",
+    "sql": "SELECT (CAST('{\"a\":1}'::JSON AS JSONB)) @> ('{\"a\":1}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (CAST('{\"a\":1}'::JSON AS JSONB)) @> ('{\"a\":1}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-20-contains-anonymous",
+    "source_kind": "synthetic",
+    "shape": "anonymous",
+    "sql": "SELECT (CAST(? AS JSONB)) @> (CAST(? AS JSONB)) AS v;",
+    "parameter_types": "jsonb,jsonb",
+    "parameter_values": [
+      "{\"a\":1,\"b\":2}",
+      "{\"a\":1}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (CAST(? AS JSONB)) @> (CAST(? AS JSONB)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-21-contains-repeated",
+    "source_kind": "synthetic",
+    "shape": "repeated",
+    "sql": "SELECT (CAST($1 AS JSONB)) @> ($1) AS v;",
+    "parameter_types": "jsonb",
+    "parameter_values": [
+      "{\"a\":1}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (CAST(?1 AS JSONB)) @> (?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-22-contains-reordered",
+    "source_kind": "synthetic",
+    "shape": "reordered",
+    "sql": "SELECT ($2) @> ($1) AS v;",
+    "parameter_types": "jsonb,jsonb",
+    "parameter_values": [
+      "{\"a\":1}",
+      "{\"a\":1,\"b\":2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (?2) @> (?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-23-contains-nullable-binding",
+    "source_kind": "synthetic",
+    "shape": "nullable-binding",
+    "sql": "SELECT ($1) @> ('{}'::JSONB) AS v;",
+    "parameter_types": "jsonb?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (?1) @> ('{}'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-24-contains-nested-extraction",
+    "source_kind": "synthetic",
+    "shape": "nested-extraction",
+    "sql": "SELECT ('{\"a\":{\"b\":1}}'::JSONB -> 'a') @> ('{\"b\":1}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{\"a\":{\"b\":1}}'::JSONB -> 'a') @> ('{\"b\":1}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-25-contains-coalesce",
+    "source_kind": "synthetic",
+    "shape": "coalesce",
+    "sql": "SELECT (COALESCE(NULL::JSONB,'{}'::JSONB)) @> ('{}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (COALESCE(NULL::JSONB,'{}'::JSONB)) @> ('{}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-26-contained-empty-objects",
+    "source_kind": "synthetic",
+    "shape": "empty-objects",
+    "sql": "SELECT ('{}') <@ ('{}'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{}') <@ ('{}'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-27-contained-object-subset",
+    "source_kind": "synthetic",
+    "shape": "object-subset",
+    "sql": "SELECT ('{\"a\":1}') <@ ('{\"a\":1,\"b\":2}'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{\"a\":1}') <@ ('{\"a\":1,\"b\":2}'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-28-contained-missing-key",
+    "source_kind": "synthetic",
+    "shape": "missing-key",
+    "sql": "SELECT ('{\"b\":1}') <@ ('{\"a\":1}'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('{\"b\":1}') <@ ('{\"a\":1}'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-29-contained-wrong-value",
+    "source_kind": "synthetic",
+    "shape": "wrong-value",
+    "sql": "SELECT ('{\"a\":2}') <@ ('{\"a\":1}'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('{\"a\":2}') <@ ('{\"a\":1}'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-30-contained-nested-object",
+    "source_kind": "synthetic",
+    "shape": "nested-object",
+    "sql": "SELECT ('{\"a\":{\"b\":1}}') <@ ('{\"a\":{\"b\":1,\"c\":2}}'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{\"a\":{\"b\":1}}') <@ ('{\"a\":{\"b\":1,\"c\":2}}'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-31-contained-array-order",
+    "source_kind": "synthetic",
+    "shape": "array-order",
+    "sql": "SELECT ('[3,1]') <@ ('[1,2,3]'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('[3,1]') <@ ('[1,2,3]'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-32-contained-array-duplicates",
+    "source_kind": "synthetic",
+    "shape": "array-duplicates",
+    "sql": "SELECT ('[1,1]') <@ ('[1]'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('[1,1]') <@ ('[1]'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-33-contained-array-missing",
+    "source_kind": "synthetic",
+    "shape": "array-missing",
+    "sql": "SELECT ('[3]') <@ ('[1,2]'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('[3]') <@ ('[1,2]'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-34-contained-array-primitive",
+    "source_kind": "synthetic",
+    "shape": "array-primitive",
+    "sql": "SELECT ('1') <@ ('[1,2]'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('1') <@ ('[1,2]'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-35-contained-primitive-array",
+    "source_kind": "synthetic",
+    "shape": "primitive-array",
+    "sql": "SELECT ('[1]') <@ ('1'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('[1]') <@ ('1'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-36-contained-object-array",
+    "source_kind": "synthetic",
+    "shape": "object-array",
+    "sql": "SELECT ('{\"a\":[2]}') <@ ('{\"a\":[1,2]}'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{\"a\":[2]}') <@ ('{\"a\":[1,2]}'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-37-contained-scalar-string",
+    "source_kind": "synthetic",
+    "shape": "scalar-string",
+    "sql": "SELECT ('\"x\"') <@ ('\"x\"'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('\"x\"') <@ ('\"x\"'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-38-contained-scalar-different",
+    "source_kind": "synthetic",
+    "shape": "scalar-different",
+    "sql": "SELECT ('\"y\"') <@ ('\"x\"'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('\"y\"') <@ ('\"x\"'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-39-contained-boolean",
+    "source_kind": "synthetic",
+    "shape": "boolean",
+    "sql": "SELECT ('false') <@ ('true'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('false') <@ ('true'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-40-contained-json-null",
+    "source_kind": "synthetic",
+    "shape": "json-null",
+    "sql": "SELECT ('null') <@ ('null'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('null') <@ ('null'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-41-contained-json-null-not-false",
+    "source_kind": "synthetic",
+    "shape": "json-null-not-false",
+    "sql": "SELECT ('false') <@ ('null'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT ('false') <@ ('null'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-42-contained-sql-null",
+    "source_kind": "synthetic",
+    "shape": "sql-null",
+    "sql": "SELECT ('{}') <@ (NULL::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT ('{}') <@ (NULL::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-43-contained-unknown-subject",
+    "source_kind": "synthetic",
+    "shape": "unknown-subject",
+    "sql": "SELECT ('{}'::JSONB) <@ ('{\"a\":1}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{}'::JSONB) <@ ('{\"a\":1}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-44-contained-explicit-json-cast",
+    "source_kind": "synthetic",
+    "shape": "explicit-json-cast",
+    "sql": "SELECT ('{\"a\":1}') <@ (CAST('{\"a\":1}'::JSON AS JSONB)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{\"a\":1}') <@ (CAST('{\"a\":1}'::JSON AS JSONB)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-45-contained-anonymous",
+    "source_kind": "synthetic",
+    "shape": "anonymous",
+    "sql": "SELECT (CAST(? AS JSONB)) <@ (CAST(? AS JSONB)) AS v;",
+    "parameter_types": "jsonb,jsonb",
+    "parameter_values": [
+      "{\"a\":1}",
+      "{\"a\":1,\"b\":2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (CAST(? AS JSONB)) <@ (CAST(? AS JSONB)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-46-contained-repeated",
+    "source_kind": "synthetic",
+    "shape": "repeated",
+    "sql": "SELECT ($1) <@ (CAST($1 AS JSONB)) AS v;",
+    "parameter_types": "jsonb",
+    "parameter_values": [
+      "{\"a\":1}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (?1) <@ (CAST(?1 AS JSONB)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-47-contained-reordered",
+    "source_kind": "synthetic",
+    "shape": "reordered",
+    "sql": "SELECT ($1) <@ ($2) AS v;",
+    "parameter_types": "jsonb,jsonb",
+    "parameter_values": [
+      "{\"a\":1}",
+      "{\"a\":1,\"b\":2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (?1) <@ (?2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-48-contained-nullable-binding",
+    "source_kind": "synthetic",
+    "shape": "nullable-binding",
+    "sql": "SELECT ('{}'::JSONB) <@ ($1) AS v;",
+    "parameter_types": "jsonb?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT ('{}'::JSONB) <@ (?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-49-contained-nested-extraction",
+    "source_kind": "synthetic",
+    "shape": "nested-extraction",
+    "sql": "SELECT ('{\"b\":1}') <@ ('{\"a\":{\"b\":1}}'::JSONB -> 'a') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{\"b\":1}') <@ ('{\"a\":{\"b\":1}}'::JSONB -> 'a') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-containment-50-contained-coalesce",
+    "source_kind": "synthetic",
+    "shape": "coalesce",
+    "sql": "SELECT ('{}') <@ (COALESCE(NULL::JSONB,'{}'::JSONB)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{}') <@ (COALESCE(NULL::JSONB,'{}'::JSONB)) AS v;",
+    "sqlite_supported": false
+  }
+]

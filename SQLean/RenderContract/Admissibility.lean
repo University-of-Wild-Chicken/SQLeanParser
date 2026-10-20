@@ -117,7 +117,7 @@ mutual
     | .parameter parameter => pure { parameters := [parameter] }
     | .column qualifier name => checkOptionalName qualifier; checkName name; leaf
     | .binary _ left right | .concat left right | .pattern left right _ | .regex left right _ _
-    | .jsonAccess _ left right =>
+    | .jsonAccess _ left right | .containment left right _ =>
         combine [inspectExpr left, inspectExpr right]
     | .quantifiedComparison _ _ left right =>
         if ambiguousQuantifiedRight right then

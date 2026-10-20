@@ -60,6 +60,8 @@ import Tests.PatternMatchingContract
 import Tests.PatternMatchingRendering
 import Tests.JsonExtractionContract
 import Tests.JsonExtractionRendering
+import Tests.JsonContainmentContract
+import Tests.JsonContainmentRendering
 
 namespace SQLean.Tests
 
@@ -200,6 +202,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {jsonExtractionConcrete} unchanged JSON extraction source certificates"
   let jsonExtractionRendering ← jsonExtractionRenderingTests
   IO.println s!"PASS: {jsonExtractionRendering} JSON extraction parsing and rendering checks"
+  let jsonContainmentContract ← jsonContainmentContractTests
+  IO.println s!"PASS: {jsonContainmentContract} JSONB containment validity and operator checks"
+  let jsonContainmentCorpus ← jsonContainmentCorpusTests
+  IO.println s!"PASS: {jsonContainmentCorpus} JSONB containment full-query certificates"
+  let jsonContainmentConcrete ← jsonContainmentConcreteContractTests
+  IO.println s!"PASS: {jsonContainmentConcrete} unchanged JSONB containment source certificates"
+  let jsonContainmentRendering ← jsonContainmentRenderingTests
+  IO.println s!"PASS: {jsonContainmentRendering} JSONB containment parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

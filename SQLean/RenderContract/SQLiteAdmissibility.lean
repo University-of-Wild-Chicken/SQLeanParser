@@ -32,6 +32,7 @@ mutual
     | .quantifiedComparison .. => unsupported "array-quantified-comparison"
     | .regex .. => unsupported "regex"
     | .jsonAccess .. => unsupported "json-extraction"
+    | .containment .. => unsupported "containment"
     | .binary _ left right | .concat left right | .filteredAggregate left right =>
         checkSQLiteExpr left; checkSQLiteExpr right
     | .pattern left right insensitive =>

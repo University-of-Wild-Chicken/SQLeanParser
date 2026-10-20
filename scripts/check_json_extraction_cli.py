@@ -169,7 +169,7 @@ def boundaries():
     syntax = [
         "SELECT '{}'::JSON ->", "SELECT '{}'::JSON #>", "SELECT -> 'a'",
         "SELECT '{}'::JSON ->>> 'a'", "SELECT '{}'::JSON #>-1",
-        "SELECT '{}'::JSONB @> '{}'", "SELECT '{}'::JSONB ? 'a'",
+        "SELECT '{}'::JSONB @@ '$.a'", "SELECT '{}'::JSONB ? 'a'",
     ]
     for status, queries in (("invalid", invalid), ("unsupported", unsupported)):
         for sql in queries:

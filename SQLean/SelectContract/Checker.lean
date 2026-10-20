@@ -192,6 +192,20 @@ mutual
               "JSON extraction requires an unambiguous JSON/JSONB input and a compatible INTEGER/TEXT key or TEXT[] path")
           | some selected => .ok ⟨some ⟨selected.output, true⟩, arg.uses ++ key.uses,
               .jsonAccess arg.valid key.valid signature⟩
+      | .containment a b containedBy => do
+          let left ← checkExpr fuel params scope a
+          let right ← checkExpr fuel params scope b
+          match signature : jsonContainmentSignature (scalarInput a left.type) (scalarInput b right.type) with
+          | some _selected => .ok ⟨some ⟨.bool,
+                (scalarInput a left.type).nullable || (scalarInput b right.type).nullable⟩,
+              left.uses ++ right.uses,
+              .containment (containedBy := containedBy) left.valid right.valid signature⟩
+          | none => .error (if (left.type.any fun type => type.base.isArray) ||
+                (right.type.any fun type => type.base.isArray) then
+              unsupported "array_containment"
+                "Array containment requires separate polymorphic and element-comparison rules"
+            else invalid "json_containment_signature"
+              "JSONB containment requires at least one known JSONB operand and a JSONB or contextually typed unknown counterpart")
       | .cast a target => do
           if declaration : DataTypeWellFormed target then
             match supported : concreteType target with
@@ -643,7 +657,8 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
     | _ =>
       let children : List Advanced.Expr := match expr with
         | .binary _ a b | .pattern a b _ | .nullIf a b
-        | .quantifiedComparison _ _ a b | .concat a b | .regex a b .. | .jsonAccess _ a b => [a, b]
+        | .quantifiedComparison _ _ a b | .concat a b | .regex a b .. | .jsonAccess _ a b
+        | .containment a b _ => [a, b]
         | .unary _ a | .cast a _ | .isNull a _ | .inQuery a _ => [a]
         | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
         | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args

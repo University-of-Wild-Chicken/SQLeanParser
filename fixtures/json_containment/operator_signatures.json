@@ -1,0 +1,16 @@
+[
+  {
+    "operator": "@>",
+    "left": "jsonb",
+    "right": "jsonb",
+    "output": "boolean",
+    "function": "jsonb_contains"
+  },
+  {
+    "operator": "<@",
+    "left": "jsonb",
+    "right": "jsonb",
+    "output": "boolean",
+    "function": "jsonb_contained"
+  }
+]

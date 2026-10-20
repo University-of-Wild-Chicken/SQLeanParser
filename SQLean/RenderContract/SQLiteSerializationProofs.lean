@@ -35,6 +35,8 @@ mutual
         simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, exprSql_translated pattern]
     | jsonAccess op arg key =>
         simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, exprSql_translated key]
+    | containment left right containedBy =>
+        simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated left, exprSql_translated right]
     | cast arg target => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
     | subscript base subscripts =>
         have mapped : subscripts.map (fun subscript => Advanced.SQLite.subscriptSql (translateSubscript subscript)) =

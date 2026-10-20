@@ -37,6 +37,8 @@ mutual
         simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent pattern]
     | jsonAccess op arg key =>
         simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent key]
+    | containment left right containedBy =>
+        simp only [translateExpr, translateExpr_idempotent left, translateExpr_idempotent right]
     | cast arg target => simp only [translateExpr, translateExpr_idempotent arg]
     | subscript base subscripts =>
         simp only [translateExpr, List.attach_map_val, translateExpr_idempotent base]

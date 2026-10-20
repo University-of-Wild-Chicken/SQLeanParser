@@ -293,6 +293,30 @@ def jsonAccessSignature (op : Advanced.JsonAccessOp) (arg key : ScalarInput) :
     Option FunctionOverload :=
   resolveOverload (jsonAccessCatalog op) [arg, key]
 
+/-- The two directions share an exact JSONB/JSONB declaration; the AST retains
+their spelling instead of swapping operands. -/
+def jsonContainmentDirections : List Bool := [false, true]
+
+def jsonContainmentSpelling (containedBy : Bool) : String :=
+  if containedBy then "<@" else "@>"
+
+def jsonContainmentFunctionName (containedBy : Bool) : String :=
+  if containedBy then "jsonb_contained" else "jsonb_contains"
+
+/-- JSONB containment is strict in both arguments. An unknown constant can
+receive JSONB context from the other operand; two unknowns are ambiguous in
+PostgreSQL's full built-in operator environment, which also contains array,
+range, geometric and text-search families. A JSONB-only candidate list must
+therefore not resolve that pair by pretending those other families are absent.
+Known TEXT and JSON do not implicitly become JSONB. Array containment requires
+its own polymorphic and element-comparison rules and is outside this rule. -/
+def jsonContainmentSignature (left right : ScalarInput) : Option FunctionOverload :=
+  match left.base, right.base with
+  | some .jsonb, some .jsonb
+  | some .jsonb, none
+  | none, some .jsonb => some ⟨[.jsonb, .jsonb], .bool⟩
+  | _, _ => none
+
 private def unaryOverloads (inputs : List ScalarType) (output : Option ScalarType := none) :
     List FunctionOverload :=
   inputs.map fun input => ⟨[input], output.getD input⟩

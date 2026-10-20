@@ -27,6 +27,14 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.17 JSONB containment increment](docs/json-containment-contract-v0.17.md)
+adds `@>` and `<@` with exact JSONB signatures, unknown-input disambiguation
+and strict NULL propagation. Fifty synthetic queries and 42 of the 50
+unchanged source queries receive full static certificates; all 50 sources
+receive rendering certificates. Native checks cover 100 value/type observations,
+112 result descriptors, two operator declarations and eight expected errors.
+Array, range and geometric containment remain separate typed-contract work.
+
 The [v0.16 JSON extraction increment](docs/json-extraction-contract-v0.16.md)
 adds `->`, `->>`, `#>` and `#>>` with all twelve JSON/JSONB signatures.
 Both the 50 synthetic queries and 50 unchanged source queries receive full
@@ -202,6 +210,7 @@ python3 scripts/check_row_comparisons_cli.py --local-bin /usr/lib/postgresql/16/
 python3 scripts/check_concatenation_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_pattern_matching_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_json_extraction_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_json_containment_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -331,7 +340,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.16` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.17` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

@@ -15,7 +15,7 @@ private def arrayCertificate (query : Advanced.Query)
     (catalog : Advanced.Catalog := []) (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "array SELECT certificate"
-    ((SelectContract.checkQuery .basicV16 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV17 catalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "array identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -122,7 +122,7 @@ def arrayTypeContractTests : IO Nat := do
     "SELECT * FROM (SELECT '{1}'::INTEGER[] AS id) l JOIN (SELECT '{1}'::BIGINT[] AS id) r USING (id)"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV16 [] [] query with
+    match SelectContract.checkQuery .basicV17 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid array type use: {sql}")
     count := count + 1
@@ -143,7 +143,7 @@ def arrayTypeContractTests : IO Nat := do
     "SELECT array_length('{1}'::INTEGER[], 1)"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV16 [] [] query with
+    match SelectContract.checkQuery .basicV17 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported array boundary: {sql}")
     count := count + 1
@@ -152,7 +152,7 @@ def arrayTypeContractTests : IO Nat := do
       ⟨.array .timestamp, [7]⟩, ⟨.array .jsonb, [1]⟩]
   for malformed in malformedTypes do
     let query := arrayProjection (.cast .null malformed)
-    match SelectContract.checkQuery .basicV16 [] [] query with
+    match SelectContract.checkQuery .basicV17 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"array element modifiers must be checked: {reprStr malformed}")
     count := count + 1

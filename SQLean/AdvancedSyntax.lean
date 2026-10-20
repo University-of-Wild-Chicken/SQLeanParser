@@ -113,6 +113,9 @@ mutual
     part of the selected operator rather than being rewritten into NOT. -/
     | regex (arg pattern : Expr) (insensitive negated : Bool := false)
     | jsonAccess (op : JsonAccessOp) (arg key : Expr)
+    /-- `@>` or `<@`. The independent contract selects the operand-specific
+    native family; broader array/range/geometric families may remain uncovered. -/
+    | containment (left right : Expr) (containedBy : Bool := false)
     | cast (arg : Expr) (target : DataType)
     /-- PostgreSQL ARRAY[...] constructor. Nested bracket shorthand normalizes
     to nested constructors; declared dimensions remain runtime properties. -/

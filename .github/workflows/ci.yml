@@ -77,6 +77,7 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor ilike --check
           python3 scripts/extract_factor_corpus.py --factor regex --check
           python3 scripts/extract_factor_corpus.py --factor json_extraction --check
+          python3 scripts/extract_factor_corpus.py --factor json_containment --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -187,6 +188,9 @@ jobs:
 
       - name: Check JSON extraction contracts and native result descriptors
         run: python3 scripts/check_json_extraction_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check JSONB containment contracts and native operator signatures
+        run: python3 scripts/check_json_containment_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin
