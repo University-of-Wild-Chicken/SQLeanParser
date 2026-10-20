@@ -71,6 +71,12 @@ inductive ArrayQuantifier where
   | any | some | all
   deriving Repr, BEq, DecidableEq, Inhabited
 
+/-- PostgreSQL field/element and path extraction retain JSON versus TEXT
+result syntax; overload selection is an independent contract obligation. -/
+inductive JsonAccessOp where
+  | field | fieldText | path | pathText
+  deriving Repr, BEq, DecidableEq, Inhabited
+
 inductive LockStrength where
   | update | noKeyUpdate | share | keyShare
   deriving Repr, BEq, DecidableEq, Inhabited
@@ -106,6 +112,7 @@ mutual
     /-- PostgreSQL's four regular-expression match operators. Negation remains
     part of the selected operator rather than being rewritten into NOT. -/
     | regex (arg pattern : Expr) (insensitive negated : Bool := false)
+    | jsonAccess (op : JsonAccessOp) (arg key : Expr)
     | cast (arg : Expr) (target : DataType)
     /-- PostgreSQL ARRAY[...] constructor. Nested bracket shorthand normalizes
     to nested constructors; declared dimensions remain runtime properties. -/

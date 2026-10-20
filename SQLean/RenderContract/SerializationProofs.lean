@@ -34,6 +34,8 @@ mutual
     | pattern arg pattern insensitive => simp only [translateExpr, exprSql, exprSql_translated pg arg, exprSql_translated pg pattern]
     | regex arg pattern insensitive negated =>
         simp only [translateExpr, exprSql, exprSql_translated pg arg, exprSql_translated pg pattern]
+    | jsonAccess op arg key =>
+        simp only [translateExpr, exprSql, exprSql_translated pg arg, exprSql_translated pg key]
     | cast arg target => simp only [translateExpr, exprSql, exprSql_translated pg arg]
     | subscript base subscripts =>
         have mapped : subscripts.map (fun subscript => subscriptSql pg (translateSubscript subscript)) =

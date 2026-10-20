@@ -184,6 +184,9 @@ mutual
         (signature : stringMatchSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
         ExprValid params scope (.regex a b insensitive negated)
           (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
+    | jsonAccess (arg : ExprValid params scope a ta ua) (key : ExprValid params scope b tb ub)
+        (signature : jsonAccessSignature op (scalarInput a ta) (scalarInput b tb) = some selected) :
+        ExprValid params scope (.jsonAccess op a b) (some ⟨selected.output, true⟩) (ua ++ ub)
     | cast (arg : ExprValid params scope a ta uses) (supported : concreteType target = some base)
         (declaration : DataTypeWellFormed target) (allowed : castAllowed ta base = true)
         (ordinary : OrdinaryCast a target) :

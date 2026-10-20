@@ -54,6 +54,9 @@ mutual
     -- excludes PostgreSQL regex operators before exposing this spelling.
     | .regex arg pattern insensitive negated =>
         paren (exprSql arg ++ " " ++ regexOperatorSql insensitive negated ++ " " ++ exprSql pattern)
+    -- The PostgreSQL extraction operators require a separate SQLite contract,
+    -- even where SQLite recognizes the same arrow spelling.
+    | .jsonAccess op arg key => paren (exprSql arg ++ " " ++ op.toSql ++ " " ++ exprSql key)
     | .cast arg type => "CAST(" ++ exprSql arg ++ " AS " ++ type.toSql ++ ")"
     -- Excluded by SQLite admissibility; this total structural spelling is only
     -- used by serialization laws over arbitrary finite ASTs.

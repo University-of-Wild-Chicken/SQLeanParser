@@ -184,6 +184,14 @@ mutual
                 (scalarInput a arg.type).nullable || (scalarInput b pattern.type).nullable⟩,
               arg.uses ++ pattern.uses,
               .regex (insensitive := insensitive) (negated := negated) arg.valid pattern.valid signature⟩
+      | .jsonAccess op a b => do
+          let arg ← checkExpr fuel params scope a
+          let key ← checkExpr fuel params scope b
+          match signature : jsonAccessSignature op (scalarInput a arg.type) (scalarInput b key.type) with
+          | none => .error (invalid "json_extraction_signature"
+              "JSON extraction requires an unambiguous JSON/JSONB input and a compatible INTEGER/TEXT key or TEXT[] path")
+          | some selected => .ok ⟨some ⟨selected.output, true⟩, arg.uses ++ key.uses,
+              .jsonAccess arg.valid key.valid signature⟩
       | .cast a target => do
           if declaration : DataTypeWellFormed target then
             match supported : concreteType target with
@@ -635,7 +643,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
     | _ =>
       let children : List Advanced.Expr := match expr with
         | .binary _ a b | .pattern a b _ | .nullIf a b
-        | .quantifiedComparison _ _ a b | .concat a b | .regex a b .. => [a, b]
+        | .quantifiedComparison _ _ a b | .concat a b | .regex a b .. | .jsonAccess _ a b => [a, b]
         | .unary _ a | .cast a _ | .isNull a _ | .inQuery a _ => [a]
         | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
         | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args

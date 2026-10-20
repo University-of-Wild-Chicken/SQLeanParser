@@ -33,6 +33,7 @@ mutual
     | .pattern arg pattern insensitive => .pattern (translateExpr arg) (translateExpr pattern) insensitive
     | .regex arg pattern insensitive negated =>
         .regex (translateExpr arg) (translateExpr pattern) insensitive negated
+    | .jsonAccess op arg key => .jsonAccess op (translateExpr arg) (translateExpr key)
     | .cast arg target => .cast (translateExpr arg) target
     | .subscript base subscripts => .subscript (translateExpr base)
         (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>

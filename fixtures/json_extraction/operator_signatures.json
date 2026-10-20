@@ -1,0 +1,86 @@
+[
+  {
+    "operator": "->",
+    "left": "json",
+    "right": "text",
+    "output": "json",
+    "function": "json_object_field"
+  },
+  {
+    "operator": "->",
+    "left": "json",
+    "right": "integer",
+    "output": "json",
+    "function": "json_array_element"
+  },
+  {
+    "operator": "->",
+    "left": "jsonb",
+    "right": "text",
+    "output": "jsonb",
+    "function": "jsonb_object_field"
+  },
+  {
+    "operator": "->",
+    "left": "jsonb",
+    "right": "integer",
+    "output": "jsonb",
+    "function": "jsonb_array_element"
+  },
+  {
+    "operator": "->>",
+    "left": "json",
+    "right": "text",
+    "output": "text",
+    "function": "json_object_field_text"
+  },
+  {
+    "operator": "->>",
+    "left": "json",
+    "right": "integer",
+    "output": "text",
+    "function": "json_array_element_text"
+  },
+  {
+    "operator": "->>",
+    "left": "jsonb",
+    "right": "text",
+    "output": "text",
+    "function": "jsonb_object_field_text"
+  },
+  {
+    "operator": "->>",
+    "left": "jsonb",
+    "right": "integer",
+    "output": "text",
+    "function": "jsonb_array_element_text"
+  },
+  {
+    "operator": "#>",
+    "left": "json",
+    "right": "text[]",
+    "output": "json",
+    "function": "json_extract_path"
+  },
+  {
+    "operator": "#>",
+    "left": "jsonb",
+    "right": "text[]",
+    "output": "jsonb",
+    "function": "jsonb_extract_path"
+  },
+  {
+    "operator": "#>>",
+    "left": "json",
+    "right": "text[]",
+    "output": "text",
+    "function": "json_extract_path_text"
+  },
+  {
+    "operator": "#>>",
+    "left": "jsonb",
+    "right": "text[]",
+    "output": "text",
+    "function": "jsonb_extract_path_text"
+  }
+]

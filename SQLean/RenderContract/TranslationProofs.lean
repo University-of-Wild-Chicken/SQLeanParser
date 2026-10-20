@@ -35,6 +35,8 @@ mutual
     | pattern arg pattern insensitive => simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent pattern]
     | regex arg pattern insensitive negated =>
         simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent pattern]
+    | jsonAccess op arg key =>
+        simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent key]
     | cast arg target => simp only [translateExpr, translateExpr_idempotent arg]
     | subscript base subscripts =>
         simp only [translateExpr, List.attach_map_val, translateExpr_idempotent base]

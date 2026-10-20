@@ -244,6 +244,55 @@ def resolveOverload (catalog : List FunctionOverload) (args : List ScalarInput) 
       | [candidate] => some candidate
       | _ => none
 
+def jsonAccessOperators : List Advanced.JsonAccessOp :=
+  [.field, .fieldText, .path, .pathText]
+
+def jsonAccessSpelling : Advanced.JsonAccessOp → String
+  | .field => "->"
+  | .fieldText => "->>"
+  | .path => "#>"
+  | .pathText => "#>>"
+
+/-- The complete twelve PostgreSQL JSON/JSONB extraction declarations.
+An arrow takes either an INTEGER index or TEXT object key; a path takes
+TEXT[]. Neither scalar JSON family is silently converted to the other. -/
+def jsonAccessCatalog (op : Advanced.JsonAccessOp) : List FunctionOverload :=
+  [.json, .jsonb].flatMap fun base =>
+    let output := match op with
+      | .field | .path => base
+      | .fieldText | .pathText => ScalarType.text
+    let keys := match op with
+      | .field | .fieldText => [ScalarType.text, .int32]
+      | .path | .pathText => [ScalarType.array .text]
+    keys.map fun key => ⟨[base, key], output⟩
+
+/-- Native function identity for each admitted extraction declaration.
+Path functions have a variadic catalog parameter, but the operator passes
+one TEXT[] argument; their fixed declared argument count remains two. -/
+def jsonAccessFunctionName (op : Advanced.JsonAccessOp)
+    (base key : ScalarType) : Option String := do
+  let functionStem ← match base with
+    | .json => some "json"
+    | .jsonb => some "jsonb"
+    | _ => none
+  let suffix ← match op, key with
+    | .field, .text => some "_object_field"
+    | .fieldText, .text => some "_object_field_text"
+    | .field, .int32 => some "_array_element"
+    | .fieldText, .int32 => some "_array_element_text"
+    | .path, .array .text => some "_extract_path"
+    | .pathText, .array .text => some "_extract_path_text"
+    | _, _ => none
+  pure (functionStem ++ suffix)
+
+/-- Finite operator selection retains the exact input/result types. SMALLINT
+indices widen to INTEGER, string keys coerce to TEXT, and string-array paths
+coerce elementwise to TEXT[]. Unknown RHS arrows prefer TEXT; unknown LHS
+remains ambiguous between JSON and JSONB. Input-content errors are separate. -/
+def jsonAccessSignature (op : Advanced.JsonAccessOp) (arg key : ScalarInput) :
+    Option FunctionOverload :=
+  resolveOverload (jsonAccessCatalog op) [arg, key]
+
 private def unaryOverloads (inputs : List ScalarType) (output : Option ScalarType := none) :
     List FunctionOverload :=
   inputs.map fun input => ⟨[input], output.getD input⟩

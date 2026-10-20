@@ -134,6 +134,10 @@ mutual
         simpa only [translateExpr, List.map_append, scalar_input_translated] using
           ExprValid.regex (expr_valid_translated arg) (expr_valid_translated pattern)
             (by simpa only [scalar_input_translated] using signature)
+    | jsonAccess arg key signature =>
+        simpa only [translateExpr, List.map_append] using
+          ExprValid.jsonAccess (expr_valid_translated arg) (expr_valid_translated key)
+            (by simpa only [scalar_input_translated] using signature)
     | cast arg supported declaration allowed ordinary =>
         simpa only [translateExpr] using ExprValid.cast (expr_valid_translated arg)
           supported declaration allowed ((ordinary_cast_translated _ _).mpr ordinary)

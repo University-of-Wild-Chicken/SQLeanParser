@@ -106,7 +106,7 @@ private def readPgOperator (input : List Char) (p : SourcePos) :
   let chars := if stripped.isEmpty then raw.take 1 else stripped
   let operator := String.ofList chars
   if !(["+", "-", "*", "/", "=", "<", ">", "<=", ">=", "<>", "!=",
-      "||", "~", "~*", "!~", "!~*"] : List String).contains operator then
+      "||", "~", "~*", "!~", "!~*", "->", "->>", "#>", "#>>"] : List String).contains operator then
     throw {position := p, message := s!"unsupported PostgreSQL operator '{operator}'"}
   pure (operator, input.drop chars.length, chars.foldl advance p)
 
@@ -621,6 +621,18 @@ mutual
             pure (if negated then .unary .not result else result)
         tailExpr fuel minPrec result true
       else
+        let jsonOperator := match (← peek).kind with
+          | .symbol "->" => some JsonAccessOp.field
+          | .symbol "->>" => some JsonAccessOp.fieldText
+          | .symbol "#>" => some JsonAccessOp.path
+          | .symbol "#>>" => some JsonAccessOp.pathText
+          | _ => none
+        if let some op := jsonOperator then
+          if minPrec > 5 then return left
+          if ← read then fail "PostgreSQL JSON extraction is not supported by the SQLite profile"
+          let _ ← pop
+          let right ← expression fuel 6
+          return ← tailExpr fuel minPrec (.jsonAccess op left right) false
         let regexFlags := match (← peek).kind with
           | .symbol "~" => some (false, false)
           | .symbol "~*" => some (true, false)

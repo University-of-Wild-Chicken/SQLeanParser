@@ -71,6 +71,11 @@ mutual
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       letI : Decidable (a1 = b1) := exactExprDecEq a1 b1
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.concat.injEq])
+    case jsonAccess.jsonAccess a0 a1 a2 b0 b1 b2 =>
+      letI : Decidable (a1 = b1) := exactExprDecEq a1 b1
+      letI : Decidable (a2 = b2) := exactExprDecEq a2 b2
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2)
+        (by simp only [Expr.jsonAccess.injEq])
     case regex.regex a0 a1 a2 a3 b0 b1 b2 b3 =>
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       letI : Decidable (a1 = b1) := exactExprDecEq a1 b1

@@ -39,6 +39,7 @@ POPULATIONS = {
     "concatenation": {"hatchet": 1, "postgres": 49},
     "ilike": {"hatchet": 1, "river": 2, "postgres": 7, "duckdb": 40},
     "regex": {"postgres": 50},
+    "json_extraction": {"postgres": 50},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -661,6 +662,95 @@ def observe_pattern_matches(parsed: dict, factor: str) -> list[dict]:
     return result
 
 
+JSON_EXTRACTION_OPERATORS = {"->", "->>", "#>", "#>>"}
+
+
+def validate_json_extractions(entries: list[dict]) -> None:
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("JSON extraction factor is absent")
+    keys = {"operator", "left_form", "left_cast", "right_form", "right_cast"}
+    for entry in entries:
+        if (not isinstance(entry, dict) or set(entry) != keys
+                or not isinstance(entry["operator"], str)
+                or entry["operator"] not in JSON_EXTRACTION_OPERATORS
+                or entry["left_form"] not in ("TypeCast", "A_Expr")
+                or entry["right_form"] not in ("A_Const", "A_ArrayExpr", "TypeCast")):
+            raise ValueError("invalid JSON extraction observation")
+        for side, declared in (("left", ("pg_catalog.json", "jsonb")),
+                               ("right", ("text", "pg_catalog.int4"))):
+            if entry[side + "_form"] == "TypeCast":
+                if entry[side + "_cast"] not in declared:
+                    raise ValueError("unexpected explicit JSON extraction cast")
+            elif entry[side + "_cast"] is not None:
+                raise ValueError("JSON extraction observation cannot invent an operand type")
+
+
+def observe_json_extractions(parsed: dict) -> list[dict]:
+    """Observe the finite source-free JSON/JSONB extraction population.
+
+    Explicit type names are source declarations. No output type, operator
+    signature, path interpretation, or result value is inferred here.
+    """
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("JSON extraction source must be a SELECT")
+    result = []
+
+    def operand(value):
+        if not isinstance(value, dict) or len(value) != 1:
+            raise ValueError("JSON extraction requires two expression operands")
+        form = next(iter(value))
+        declared = None
+        if form == "TypeCast":
+            name = value[form].get("typeName", {})
+            if name.get("arrayBounds"):
+                raise ValueError("explicit array cast is outside this JSON source population")
+            declared = ".".join(part.get("String", {}).get("sval", "") for part in name.get("names", []))
+        return form, declared
+
+    def invalid_constant(value):
+        raise ValueError(f"non-JSON numeric constant {value}")
+
+    def walk(value):
+        if isinstance(value, list):
+            for child in value:
+                walk(child)
+        elif isinstance(value, dict):
+            for kind, node in value.items():
+                if not isinstance(node, dict):
+                    walk(node)
+                    continue
+                if kind in {"ColumnRef", "ParamRef", "FuncCall", "SubLink", "RowExpr",
+                            "A_Indirection", "A_Indices"}:
+                    raise ValueError("catalog/call/subquery/row/access dependency is outside this JSON population")
+                if kind == "SelectStmt" and any(node.get(key) for key in (
+                        "fromClause", "withClause", "larg", "rarg", "valuesLists")):
+                    raise ValueError("JSON extraction population requires source-free SELECTs")
+                if kind == "TypeCast":
+                    name = ".".join(part.get("String", {}).get("sval", "")
+                                    for part in node.get("typeName", {}).get("names", []))
+                    if name in {"pg_catalog.json", "jsonb"}:
+                        literal = node.get("arg", {}).get("A_Const", {}).get("sval", {}).get("sval")
+                        if not isinstance(literal, str):
+                            raise ValueError("JSON source declaration requires a literal document")
+                        # A finite malformed-literal screen, not PostgreSQL's
+                        # runtime conversion or Unicode/numeric semantics.
+                        json.loads(literal, parse_constant=invalid_constant)
+                if kind == "A_Expr":
+                    names = [part.get("String", {}).get("sval") for part in node.get("name", [])]
+                    if (node.get("kind") != "AEXPR_OP" or len(names) != 1
+                            or names[0] not in JSON_EXTRACTION_OPERATORS):
+                        raise ValueError("another operator is outside this JSON extraction population")
+                    left_form, left_cast = operand(node.get("lexpr"))
+                    right_form, right_cast = operand(node.get("rexpr"))
+                    result.append({"operator": names[0], "left_form": left_form, "left_cast": left_cast,
+                                   "right_form": right_form, "right_cast": right_cast})
+                walk(node)
+
+    walk(parsed)
+    validate_json_extractions(result)
+    return result
+
+
 def observe_oracle(sql: str, factor: str) -> dict:
     import pglast
     from pglast import ast, enums, parse_sql, parser, visitors
@@ -726,13 +816,13 @@ def observe_oracle(sql: str, factor: str) -> dict:
         allowed.add("conditional-expression")
     if factor in {"locking", "array_types", "row_comparisons"}:
         allowed.add("row-locking")
-    if factor in ARRAY_FACTORS | {"row_comparisons", "ilike"}:
+    if factor in ARRAY_FACTORS | {"row_comparisons", "ilike", "json_extraction"}:
         allowed.add("array-or-subscripting")
     if factor in {"array_quantified", "row_comparisons", "ilike"}:
         allowed.add("quantified-comparison")
     if factor == "row_comparisons":
         allowed.add("row-constructor")
-    if factor in {"concatenation", "ilike", "regex"}:
+    if factor in {"concatenation", "ilike", "regex", "json_extraction"}:
         allowed.add("extended-operator")
     unexpected = set(features(json.loads(parser.parse_sql_json(sql)))) - allowed
     if unexpected:
@@ -810,6 +900,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor in PATTERN_OPERATORS:
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["pattern_matches"] = observe_pattern_matches(parsed, factor)
+    if factor == "json_extraction":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation["json_extractions"] = observe_json_extractions(parsed)
     return observation
 
 
@@ -831,6 +924,8 @@ def validate_population(records: list[dict], factor: str) -> None:
     row_operators, row_arities, row_forms = Counter(), Counter(), Counter()
     concat_left, concat_right, concat_casts = Counter(), Counter(), Counter()
     pattern_operators, pattern_left, pattern_right = Counter(), Counter(), Counter()
+    json_operators, json_left, json_right, json_left_casts, json_right_casts = (
+        Counter(), Counter(), Counter(), Counter(), Counter())
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -862,6 +957,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("concatenations")
         if factor in PATTERN_OPERATORS:
             expected_keys.add("pattern_matches")
+        if factor == "json_extraction":
+            expected_keys.add("json_extractions")
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -943,6 +1040,14 @@ def validate_population(records: list[dict], factor: str) -> None:
             pattern_operators.update(entry["operator"] for entry in entries)
             pattern_left.update(entry["left_form"] for entry in entries)
             pattern_right.update(entry["right_form"] for entry in entries)
+        if factor == "json_extraction":
+            entries = observation["json_extractions"]
+            validate_json_extractions(entries)
+            json_operators.update(entry["operator"] for entry in entries)
+            json_left.update(entry["left_form"] for entry in entries)
+            json_right.update(entry["right_form"] for entry in entries)
+            json_left_casts.update(entry["left_cast"] for entry in entries)
+            json_right_casts.update(entry["right_cast"] for entry in entries)
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -994,6 +1099,13 @@ def validate_population(records: list[dict], factor: str) -> None:
             or pattern_left != {"A_Const": 27, "ColumnRef": 22, "TypeCast": 1}
             or pattern_right != {"A_Const": 49, "ColumnRef": 1}):
         raise ValueError("regex population must retain its 50 nodes and operand forms")
+    if factor == "json_extraction" and (
+            json_operators != {"->": 15, "->>": 11, "#>": 12, "#>>": 14}
+            or json_left != {"TypeCast": 50, "A_Expr": 2}
+            or json_right != {"A_Const": 27, "A_ArrayExpr": 17, "TypeCast": 8}
+            or json_left_casts != {"pg_catalog.json": 25, "jsonb": 25, None: 2}
+            or json_right_casts != {None: 44, "text": 4, "pg_catalog.int4": 4}):
+        raise ValueError("JSON extraction population must retain its 52 nodes and declared casts")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -1012,7 +1124,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -1029,7 +1141,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if factor not in {"array_subscripts", "ilike"} or name != "duckdb":
                 raise ValueError("SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_sqllogic_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])

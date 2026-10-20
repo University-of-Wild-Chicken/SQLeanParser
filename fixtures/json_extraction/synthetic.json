@@ -1,0 +1,1070 @@
+[
+  {
+    "id": "json-extraction-01-json-object-number",
+    "source_kind": "synthetic",
+    "shape": "object-number",
+    "sql": "SELECT '{\"a\":1}'::json -> 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": "1",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::json -> 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-02-json-object-string",
+    "source_kind": "synthetic",
+    "shape": "object-string",
+    "sql": "SELECT '{\"a\":\"x\"}'::json -> 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": "\"x\"",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":\"x\"}'::json -> 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-03-json-object-string-text",
+    "source_kind": "synthetic",
+    "shape": "object-string-text",
+    "sql": "SELECT '{\"a\":\"x\"}'::json ->> 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":\"x\"}'::json ->> 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-04-json-array-index",
+    "source_kind": "synthetic",
+    "shape": "array-index",
+    "sql": "SELECT '[10,20]'::json -> 0 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": "10",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '[10,20]'::json -> 0 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-05-json-negative-index",
+    "source_kind": "synthetic",
+    "shape": "negative-index",
+    "sql": "SELECT '[10,20]'::json->>-1 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "20",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '[10,20]'::json->>-1 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-06-json-smallint-index",
+    "source_kind": "synthetic",
+    "shape": "smallint-index",
+    "sql": "SELECT '[10,20]'::json -> 1::SMALLINT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": "20",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '[10,20]'::json -> 1::SMALLINT AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-07-json-unknown-numeric-key",
+    "source_kind": "synthetic",
+    "shape": "unknown-numeric-key",
+    "sql": "SELECT '[10,20]'::json -> '1' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '[10,20]'::json -> '1' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-08-json-missing-key",
+    "source_kind": "synthetic",
+    "shape": "missing-key",
+    "sql": "SELECT '{\"a\":1}'::json ->> 'missing' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '{\"a\":1}'::json ->> 'missing' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-09-json-wrong-structure",
+    "source_kind": "synthetic",
+    "shape": "wrong-structure",
+    "sql": "SELECT '7'::json -> 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '7'::json -> 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-10-json-json-null",
+    "source_kind": "synthetic",
+    "shape": "json-null",
+    "sql": "SELECT '[null]'::json -> 0 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": "null",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '[null]'::json -> 0 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-11-json-json-null-as-text",
+    "source_kind": "synthetic",
+    "shape": "json-null-as-text",
+    "sql": "SELECT '[null]'::json ->> 0 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '[null]'::json ->> 0 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-12-json-sql-null-subject",
+    "source_kind": "synthetic",
+    "shape": "sql-null-subject",
+    "sql": "SELECT NULL::json -> 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT NULL::json -> 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-13-json-sql-null-key",
+    "source_kind": "synthetic",
+    "shape": "sql-null-key",
+    "sql": "SELECT '{\"a\":1}'::json ->> NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '{\"a\":1}'::json ->> NULL AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-14-json-char-key-trims",
+    "source_kind": "synthetic",
+    "shape": "char-key-trims",
+    "sql": "SELECT '{\"a\":\"x\",\"a  \":\"wrong\"}'::json ->> 'a'::CHAR(3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":\"x\",\"a  \":\"wrong\"}'::json ->> 'a'::CHAR(3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-15-json-path-literal",
+    "source_kind": "synthetic",
+    "shape": "path-literal",
+    "sql": "SELECT '{\"a\":[\"x\",\"y\"]}'::json #> '{a,0}' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": "\"x\"",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":[\"x\",\"y\"]}'::json #> '{a,0}' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-16-json-path-array",
+    "source_kind": "synthetic",
+    "shape": "path-array",
+    "sql": "SELECT '{\"a\":[\"x\",\"y\"]}'::json #>> ARRAY['a','1'] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "y",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":[\"x\",\"y\"]}'::json #>> ARRAY['a','1'] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-17-json-empty-path",
+    "source_kind": "synthetic",
+    "shape": "empty-path",
+    "sql": "SELECT '{\"a\":1}'::json #> '{}' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": "{\"a\":1}",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::json #> '{}' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-18-json-null-path-member",
+    "source_kind": "synthetic",
+    "shape": "null-path-member",
+    "sql": "SELECT '{\"a\":1}'::json #> ARRAY[NULL::TEXT] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '{\"a\":1}'::json #> ARRAY[NULL::TEXT] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-19-json-multidimensional-path",
+    "source_kind": "synthetic",
+    "shape": "multidimensional-path",
+    "sql": "SELECT '{\"a\":{\"b\":{\"c\":{\"d\":1}}}}'::json #>> ARRAY[['a','b'],['c','d']] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "1",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":{\"b\":{\"c\":{\"d\":1}}}}'::json #>> ARRAY[['a','b'],['c','d']] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-20-json-char-path-trims",
+    "source_kind": "synthetic",
+    "shape": "char-path-trims",
+    "sql": "SELECT '{\"a\":\"x\",\"a  \":\"wrong\"}'::json #>> ARRAY['a'::CHAR(3)] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":\"x\",\"a  \":\"wrong\"}'::json #>> ARRAY['a'::CHAR(3)] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-21-json-varchar-path",
+    "source_kind": "synthetic",
+    "shape": "varchar-path",
+    "sql": "SELECT '{\"a\":1}'::json #> ARRAY['a'::VARCHAR(3)] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": "1",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::json #> ARRAY['a'::VARCHAR(3)] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-22-json-anonymous",
+    "source_kind": "synthetic",
+    "shape": "anonymous",
+    "sql": "SELECT CAST(? AS json) -> ? AS v;",
+    "parameter_types": "json,int",
+    "parameter_values": [
+      "[10,20]",
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "json",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "json",
+    "postgres_display_type": "json",
+    "expected_value": "20",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT CAST(? AS json) -> ? AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-23-json-reordered-repeat",
+    "source_kind": "synthetic",
+    "shape": "reordered-repeat",
+    "sql": "SELECT (CAST($2 AS json) -> $1) ->> $1 AS v;",
+    "parameter_types": "text,json",
+    "parameter_values": [
+      "a",
+      "{\"a\":{\"a\":\"x\"}}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT (CAST(?2 AS json) -> ?1) ->> ?1 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-24-json-nullable-bound-path",
+    "source_kind": "synthetic",
+    "shape": "nullable-bound-path",
+    "sql": "SELECT CAST($1 AS json) #>> $2 AS v;",
+    "parameter_types": "json?,text[]",
+    "parameter_values": [
+      null,
+      "{a}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT CAST(?1 AS json) #>> ?2 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-25-json-generic-precedence",
+    "source_kind": "synthetic",
+    "shape": "generic-precedence",
+    "sql": "SELECT '{\"a\":\"x\"}'::json ->> 'a' || 'y' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "xy",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":\"x\"}'::json ->> 'a' || 'y' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-26-jsonb-object-number",
+    "source_kind": "synthetic",
+    "shape": "object-number",
+    "sql": "SELECT '{\"a\":1}'::jsonb -> 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "1",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::jsonb -> 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-27-jsonb-object-string",
+    "source_kind": "synthetic",
+    "shape": "object-string",
+    "sql": "SELECT '{\"a\":\"x\"}'::jsonb -> 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "\"x\"",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":\"x\"}'::jsonb -> 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-28-jsonb-object-string-text",
+    "source_kind": "synthetic",
+    "shape": "object-string-text",
+    "sql": "SELECT '{\"a\":\"x\"}'::jsonb ->> 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":\"x\"}'::jsonb ->> 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-29-jsonb-array-index",
+    "source_kind": "synthetic",
+    "shape": "array-index",
+    "sql": "SELECT '[10,20]'::jsonb -> 0 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "10",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '[10,20]'::jsonb -> 0 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-30-jsonb-negative-index",
+    "source_kind": "synthetic",
+    "shape": "negative-index",
+    "sql": "SELECT '[10,20]'::jsonb->>-1 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "20",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '[10,20]'::jsonb->>-1 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-31-jsonb-smallint-index",
+    "source_kind": "synthetic",
+    "shape": "smallint-index",
+    "sql": "SELECT '[10,20]'::jsonb -> 1::SMALLINT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "20",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '[10,20]'::jsonb -> 1::SMALLINT AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-32-jsonb-unknown-numeric-key",
+    "source_kind": "synthetic",
+    "shape": "unknown-numeric-key",
+    "sql": "SELECT '[10,20]'::jsonb -> '1' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '[10,20]'::jsonb -> '1' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-33-jsonb-missing-key",
+    "source_kind": "synthetic",
+    "shape": "missing-key",
+    "sql": "SELECT '{\"a\":1}'::jsonb ->> 'missing' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '{\"a\":1}'::jsonb ->> 'missing' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-34-jsonb-wrong-structure",
+    "source_kind": "synthetic",
+    "shape": "wrong-structure",
+    "sql": "SELECT '7'::jsonb -> 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '7'::jsonb -> 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-35-jsonb-json-null",
+    "source_kind": "synthetic",
+    "shape": "json-null",
+    "sql": "SELECT '[null]'::jsonb -> 0 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "null",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '[null]'::jsonb -> 0 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-36-jsonb-json-null-as-text",
+    "source_kind": "synthetic",
+    "shape": "json-null-as-text",
+    "sql": "SELECT '[null]'::jsonb ->> 0 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '[null]'::jsonb ->> 0 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-37-jsonb-sql-null-subject",
+    "source_kind": "synthetic",
+    "shape": "sql-null-subject",
+    "sql": "SELECT NULL::jsonb -> 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT NULL::jsonb -> 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-38-jsonb-sql-null-key",
+    "source_kind": "synthetic",
+    "shape": "sql-null-key",
+    "sql": "SELECT '{\"a\":1}'::jsonb ->> NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '{\"a\":1}'::jsonb ->> NULL AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-39-jsonb-char-key-trims",
+    "source_kind": "synthetic",
+    "shape": "char-key-trims",
+    "sql": "SELECT '{\"a\":\"x\",\"a  \":\"wrong\"}'::jsonb ->> 'a'::CHAR(3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":\"x\",\"a  \":\"wrong\"}'::jsonb ->> 'a'::CHAR(3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-40-jsonb-path-literal",
+    "source_kind": "synthetic",
+    "shape": "path-literal",
+    "sql": "SELECT '{\"a\":[\"x\",\"y\"]}'::jsonb #> '{a,0}' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "\"x\"",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":[\"x\",\"y\"]}'::jsonb #> '{a,0}' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-41-jsonb-path-array",
+    "source_kind": "synthetic",
+    "shape": "path-array",
+    "sql": "SELECT '{\"a\":[\"x\",\"y\"]}'::jsonb #>> ARRAY['a','1'] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "y",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":[\"x\",\"y\"]}'::jsonb #>> ARRAY['a','1'] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-42-jsonb-empty-path",
+    "source_kind": "synthetic",
+    "shape": "empty-path",
+    "sql": "SELECT '{\"a\":1}'::jsonb #> '{}' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "{\"a\": 1}",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::jsonb #> '{}' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-43-jsonb-null-path-member",
+    "source_kind": "synthetic",
+    "shape": "null-path-member",
+    "sql": "SELECT '{\"a\":1}'::jsonb #> ARRAY[NULL::TEXT] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT '{\"a\":1}'::jsonb #> ARRAY[NULL::TEXT] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-44-jsonb-multidimensional-path",
+    "source_kind": "synthetic",
+    "shape": "multidimensional-path",
+    "sql": "SELECT '{\"a\":{\"b\":{\"c\":{\"d\":1}}}}'::jsonb #>> ARRAY[['a','b'],['c','d']] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "1",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":{\"b\":{\"c\":{\"d\":1}}}}'::jsonb #>> ARRAY[['a','b'],['c','d']] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-45-jsonb-char-path-trims",
+    "source_kind": "synthetic",
+    "shape": "char-path-trims",
+    "sql": "SELECT '{\"a\":\"x\",\"a  \":\"wrong\"}'::jsonb #>> ARRAY['a'::CHAR(3)] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":\"x\",\"a  \":\"wrong\"}'::jsonb #>> ARRAY['a'::CHAR(3)] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-46-jsonb-varchar-path",
+    "source_kind": "synthetic",
+    "shape": "varchar-path",
+    "sql": "SELECT '{\"a\":1}'::jsonb #> ARRAY['a'::VARCHAR(3)] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "1",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::jsonb #> ARRAY['a'::VARCHAR(3)] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-47-jsonb-anonymous",
+    "source_kind": "synthetic",
+    "shape": "anonymous",
+    "sql": "SELECT CAST(? AS jsonb) -> ? AS v;",
+    "parameter_types": "jsonb,int",
+    "parameter_values": [
+      "[10,20]",
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "20",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT CAST(? AS jsonb) -> ? AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-48-jsonb-reordered-repeat",
+    "source_kind": "synthetic",
+    "shape": "reordered-repeat",
+    "sql": "SELECT (CAST($2 AS jsonb) -> $1) ->> $1 AS v;",
+    "parameter_types": "text,jsonb",
+    "parameter_values": [
+      "a",
+      "{\"a\":{\"a\":\"x\"}}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT (CAST(?2 AS jsonb) -> ?1) ->> ?1 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-49-jsonb-nullable-bound-path",
+    "source_kind": "synthetic",
+    "shape": "nullable-bound-path",
+    "sql": "SELECT CAST($1 AS jsonb) #>> $2 AS v;",
+    "parameter_types": "jsonb?,text[]",
+    "parameter_values": [
+      null,
+      "{a}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_input": "SELECT CAST(?1 AS jsonb) #>> ?2 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "json-extraction-50-jsonb-generic-precedence",
+    "source_kind": "synthetic",
+    "shape": "generic-precedence",
+    "sql": "SELECT '{\"a\":\"x\"}'::jsonb ->> 'a' || 'y' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "xy",
+    "expected_sql_null": false,
+    "sqlite_input": "SELECT '{\"a\":\"x\"}'::jsonb ->> 'a' || 'y' AS v;",
+    "sqlite_supported": false
+  }
+]
