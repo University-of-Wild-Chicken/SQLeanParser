@@ -31,6 +31,14 @@ mutual
     | isNull arg negated => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
     | pattern arg pattern insensitive => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, exprSql_translated pattern]
     | cast arg target => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
+    | subscript base subscripts =>
+        have mapped : subscripts.map (fun subscript => Advanced.SQLite.subscriptSql (translateSubscript subscript)) =
+            subscripts.map Advanced.SQLite.subscriptSql :=
+          List.map_congr_left fun subscript member =>
+            have : sizeOf subscript < sizeOf subscripts := List.sizeOf_lt_of_mem member
+            subscriptSql_translated subscript
+        simp only [translateExpr, Advanced.SQLite.exprSql, List.attach_map_val, List.map_map,
+          Function.comp_def, exprSql_translated base, mapped]
     | array elements =>
         have mapped : elements.map (fun element => Advanced.SQLite.exprSql (translateExpr element)) =
             elements.map Advanced.SQLite.exprSql :=
@@ -112,6 +120,26 @@ mutual
     | «exists» query => simp only [translateExpr, Advanced.SQLite.exprSql, querySql_translated query]
     | scalarQuery query => simp only [translateExpr, Advanced.SQLite.exprSql, querySql_translated query]
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  theorem subscriptSql_translated (subscript : Advanced.Subscript) :
+      Advanced.SQLite.subscriptSql (translateSubscript subscript) =
+        Advanced.SQLite.subscriptSql subscript := by
+    cases subscript with
+    | index expr => simp only [translateSubscript, Advanced.SQLite.subscriptSql, exprSql_translated expr]
+    | slice lower upper =>
+        cases lower with
+        | none =>
+            cases upper with
+            | none => simp only [translateSubscript, Advanced.SQLite.subscriptSql]
+            | some expr => simp only [translateSubscript, Advanced.SQLite.subscriptSql, exprSql_translated expr]
+        | some expr =>
+            cases upper with
+            | none => simp only [translateSubscript, Advanced.SQLite.subscriptSql, exprSql_translated expr]
+            | some other =>
+                simp only [translateSubscript, Advanced.SQLite.subscriptSql,
+                  exprSql_translated expr, exprSql_translated other]
+  termination_by sizeOf subscript
   decreasing_by all_goals (simp_all <;> omega)
 
   theorem itemSql_translated (item : Advanced.SelectItem) :

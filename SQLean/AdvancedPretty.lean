@@ -83,6 +83,10 @@ mutual
     | .isNull arg negated => paren (exprSql pg arg ++ if negated then " IS NOT NULL" else " IS NULL")
     | .pattern arg pattern insensitive => paren (exprSql pg arg ++ (if insensitive then " ILIKE " else " LIKE ") ++ exprSql pg pattern)
     | .cast arg type => "CAST(" ++ exprSql pg arg ++ " AS " ++ type.toSql ++ ")"
+    | .subscript base subscripts => paren (exprSql pg base) ++ String.join
+        (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>
+          have : sizeOf subscript.val < sizeOf subscripts := List.sizeOf_lt_of_mem subscript.property
+          subscriptSql pg subscript.val)
     | .array elements => "ARRAY[" ++ comma
         (elements.attach.map fun (element : {v : Expr // v ∈ elements}) =>
           have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
@@ -123,6 +127,17 @@ mutual
     | .exists query => "EXISTS " ++ paren (querySql pg query)
     | .scalarQuery query => paren (querySql pg query)
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  /-- One contiguous bracket group belongs to one expression node. Parentheses
+  around the base keep nested nodes distinct from adjacent dimensions. -/
+  def subscriptSql (pg : Bool) (subscript : Subscript) : String :=
+    match subscript with
+    | .index expr => "[" ++ exprSql pg expr ++ "]"
+    | .slice lower upper => "[" ++
+        (match _h : lower with | none => "" | some expr => exprSql pg expr) ++ ":" ++
+        (match _h : upper with | none => "" | some expr => exprSql pg expr) ++ "]"
+  termination_by sizeOf subscript
   decreasing_by all_goals (simp_all <;> omega)
 
   def itemSql (pg : Bool) (item : SelectItem) : String :=

@@ -32,6 +32,14 @@ mutual
     | isNull arg negated => simp only [translateExpr, exprSql, exprSql_translated pg arg]
     | pattern arg pattern insensitive => simp only [translateExpr, exprSql, exprSql_translated pg arg, exprSql_translated pg pattern]
     | cast arg target => simp only [translateExpr, exprSql, exprSql_translated pg arg]
+    | subscript base subscripts =>
+        have mapped : subscripts.map (fun subscript => subscriptSql pg (translateSubscript subscript)) =
+            subscripts.map (subscriptSql true) :=
+          List.map_congr_left fun subscript member =>
+            have : sizeOf subscript < sizeOf subscripts := List.sizeOf_lt_of_mem member
+            subscriptSql_translated pg subscript
+        simp only [translateExpr, exprSql, List.attach_map_val, List.map_map, Function.comp_def,
+          exprSql_translated pg base, mapped]
     | array elements =>
         have mapped : elements.map (fun element => exprSql pg (translateExpr element)) =
             elements.map (exprSql true) :=
@@ -115,6 +123,25 @@ mutual
     | «exists» query => simp only [translateExpr, exprSql, querySql_translated pg query]
     | scalarQuery query => simp only [translateExpr, exprSql, querySql_translated pg query]
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  theorem subscriptSql_translated (pg : Bool) (subscript : Advanced.Subscript) :
+      subscriptSql pg (translateSubscript subscript) = subscriptSql true subscript := by
+    cases subscript with
+    | index expr => simp only [translateSubscript, subscriptSql, exprSql_translated pg expr]
+    | slice lower upper =>
+        cases lower with
+        | none =>
+            cases upper with
+            | none => simp only [translateSubscript, subscriptSql]
+            | some expr => simp only [translateSubscript, subscriptSql, exprSql_translated pg expr]
+        | some expr =>
+            cases upper with
+            | none => simp only [translateSubscript, subscriptSql, exprSql_translated pg expr]
+            | some other =>
+                simp only [translateSubscript, subscriptSql, exprSql_translated pg expr,
+                  exprSql_translated pg other]
+  termination_by sizeOf subscript
   decreasing_by all_goals (simp_all <;> omega)
 
   theorem itemSql_translated (pg : Bool) (item : Advanced.SelectItem) :

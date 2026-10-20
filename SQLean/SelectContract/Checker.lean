@@ -79,6 +79,11 @@ structure ArrayElementsCertificate (params : ParameterEnv) (scope : Scope)
   uses : List Parameter
   valid : ArrayElementsValid params scope target exprs types uses
 
+structure SubscriptsCertificate (params : ParameterEnv) (scope : Scope)
+    (indices : List Advanced.Subscript) where
+  uses : List Parameter
+  valid : SubscriptsValid params scope indices uses
+
 mutual
   def checkExpr (fuel : Nat) (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) :
       Except Failure (ExprCertificate params scope expr) :=
@@ -222,6 +227,23 @@ mutual
               "ANY/SOME/ALL requires a scalar Boolean comparison operator and an array or contextually typed unknown RHS")
           | some _selected => .ok ⟨some ⟨.bool, true⟩, leftTyped.uses ++ rightTyped.uses,
               .quantifiedComparison (quantifier := quantifier) leftTyped.valid rightTyped.valid signature⟩
+      | .subscript base indices => do
+          if nonempty : indices ≠ [] then
+            if dimensions : indices.length ≤ 6 then
+              let baseTyped ← checkExpr fuel params scope base
+              match shape : baseTyped.type with
+              | some ⟨.array element, nullable⟩ =>
+                  let bounds ← checkSubscripts fuel params scope indices
+                  .ok ⟨some ⟨if indices.any Advanced.Subscript.isSlice then .array element else element, true⟩,
+                    baseTyped.uses ++ bounds.uses,
+                    .subscript (shape ▸ baseTyped.valid) bounds.valid nonempty dimensions⟩
+              | some ⟨.jsonb, _⟩ => .error (unsupported "jsonb_subscript"
+                  "JSONB subscripting requires its own container and bound rules")
+              | _ => .error (invalid "subscript_container"
+                  "Array subscripting requires a concrete array expression")
+            else .error (unsupported "subscript_dimensions"
+              "PostgreSQL 16 array subscripting supports at most six adjacent dimensions")
+          else .error (invalid "empty_subscripts" "A subscript group requires at least one dimension")
       | .inList a values => do
           if nonempty : values ≠ [] then
             let arg ← checkExpr fuel params scope a
@@ -300,6 +322,31 @@ mutual
       | some expr => do
           let typed ← checkExpr fuel params scope expr
           .ok ⟨typed.type, typed.uses, .present typed.valid⟩
+
+  def checkSubscripts (fuel : Nat) (params : ParameterEnv) (scope : Scope)
+      (indices : List Advanced.Subscript) :
+      Except Failure (SubscriptsCertificate params scope indices) :=
+    match fuel with
+    | 0 => .error exhausted
+    | fuel + 1 => match indices with
+      | [] => .ok ⟨[], .nil⟩
+      | .index expr :: rest => do
+          let bound ← checkExpr fuel params scope expr
+          if signature : subscriptBoundSignature (scalarInput expr bound.type) = true then
+            let tail ← checkSubscripts fuel params scope rest
+            .ok ⟨bound.uses ++ tail.uses, .index bound.valid signature tail.valid⟩
+          else .error (invalid "subscript_bound"
+            "Array bounds require assignment coercion to INTEGER; concrete numeric types or unknown inputs are admitted")
+      | .slice lo hi :: rest => do
+          let lower ← checkOptionalExpr fuel params scope lo
+          let upper ← checkOptionalExpr fuel params scope hi
+          if lowerSignature : optionalSubscriptBoundSignature lo lower.type = true then
+            if upperSignature : optionalSubscriptBoundSignature hi upper.type = true then
+              let tail ← checkSubscripts fuel params scope rest
+              .ok ⟨lower.uses ++ upper.uses ++ tail.uses,
+                .slice lower.valid upper.valid lowerSignature upperSignature tail.valid⟩
+            else .error (invalid "subscript_bound" "Array upper bound has no assignment coercion to INTEGER")
+          else .error (invalid "subscript_bound" "Array lower bound has no assignment coercion to INTEGER")
 
   def checkBranches (fuel : Nat) (params : ParameterEnv) (scope : Scope)
       (branches : List (Advanced.Expr × Advanced.Expr)) :
@@ -532,6 +579,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
         | .binary _ a b | .pattern a b _ | .nullIf a b
         | .quantifiedComparison _ _ a b => [a, b]
         | .unary _ a | .cast a _ | .isNull a _ | .inQuery a _ => [a]
+        | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
         | .array args | .call _ args | .coalesce args | .greatest args | .least args => args
         | .caseExpr operand branches otherwise =>
           operand.toList ++ branches.flatMap (fun (branch : Advanced.Expr × Advanced.Expr) =>

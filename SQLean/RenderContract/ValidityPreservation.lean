@@ -55,6 +55,27 @@ set_option maxHeartbeats 1000000
       simpa only [scalarInputs, List.zip_cons_cons, List.map_cons, scalar_input_translated] using
         congrArg (scalarInput expr type :: ·) (ih types)
 
+@[simp] theorem translateSubscript_slice (lower upper : Option Advanced.Expr) :
+    translateSubscript (.slice lower upper) =
+      .slice (lower.map translateExpr) (upper.map translateExpr) := by
+  rw [translateSubscript.eq_def]
+  cases lower <;> cases upper <;> rfl
+
+@[simp] theorem subscript_isSlice_translated (subscript : Advanced.Subscript) :
+    (translateSubscript subscript).isSlice = subscript.isSlice := by
+  cases subscript <;> simp only [translateSubscript_slice, translateSubscript,
+    Advanced.Subscript.isSlice]
+
+@[simp] theorem subscripts_any_slice_translated (subscripts : List Advanced.Subscript) :
+    (subscripts.map translateSubscript).any Advanced.Subscript.isSlice =
+      subscripts.any Advanced.Subscript.isSlice := by
+  simp only [List.any_map, Function.comp_def, subscript_isSlice_translated]
+
+@[simp] theorem optional_subscript_bound_translated (expr : Option Advanced.Expr) (type : ExprType) :
+    optionalSubscriptBoundSignature (expr.map translateExpr) type =
+      optionalSubscriptBoundSignature expr type := by
+  cases expr <;> simp only [Option.map, optionalSubscriptBoundSignature, scalar_input_translated]
+
 mutual
   /-- Each scalar typing derivation survives the explicit parameter translation,
   with parameter occurrences translated in their original order. -/
@@ -84,6 +105,11 @@ mutual
         simpa only [translateExpr, List.map_append] using
           ExprValid.quantifiedComparison (expr_valid_translated left) (expr_valid_translated right)
             (by simpa only [scalar_input_translated] using signature)
+    | subscript base bounds nonempty dimensions =>
+        simpa only [translateExpr, List.attach_map_val, List.map_append,
+          subscripts_any_slice_translated] using
+          ExprValid.subscript (expr_valid_translated base) (subscripts_valid_translated bounds)
+            (by simpa using nonempty) (by simpa using dimensions)
     | unary arg signature ordinary =>
         simpa only [translateExpr] using ExprValid.unary (expr_valid_translated arg) signature
           ((ordinary_unary_translated _ _).mpr ordinary)
@@ -199,6 +225,29 @@ mutual
   termination_by sizeOf expr
   decreasing_by all_goals (simp <;> omega)
 
+  /-- Group boundaries, omitted endpoints and lower-before-upper occurrence
+  order survive the parameter-only transformation. -/
+  theorem subscripts_valid_translated
+      (valid : SubscriptsValid params scope subscripts uses) :
+      SubscriptsValid params scope (subscripts.map translateSubscript)
+        (uses.map translateParameter) := by
+    cases valid with
+    | nil => exact SubscriptsValid.nil
+    | index bound signature tail =>
+        simpa only [List.map_cons, translateSubscript, List.map_append] using
+          SubscriptsValid.index (expr_valid_translated bound)
+            (by simpa only [scalar_input_translated] using signature)
+            (subscripts_valid_translated tail)
+    | slice lower upper lowerSignature upperSignature tail =>
+        simpa only [List.map_cons, translateSubscript_slice, List.map_append] using
+          SubscriptsValid.slice (optional_expr_valid_translated lower)
+            (optional_expr_valid_translated upper)
+            (by simpa only [optional_subscript_bound_translated] using lowerSignature)
+            (by simpa only [optional_subscript_bound_translated] using upperSignature)
+            (subscripts_valid_translated tail)
+  termination_by sizeOf subscripts
+  decreasing_by all_goals (simp <;> omega)
+
   theorem branches_valid_translated
       (valid : BranchesValid params scope branches conditions results uses) :
       BranchesValid params scope
@@ -223,10 +272,27 @@ end
 termination_by sizeOf expr
 decreasing_by all_goals (simp_all <;> omega)
 
+@[simp] theorem output_label_translated (expr : Advanced.Expr) :
+    outputLabel (translateExpr expr) = outputLabel expr := by
+  cases expr with
+  | cast arg target =>
+      simp only [translateExpr, outputLabel, output_label_translated arg]
+  | subscript arg indices =>
+      simp only [translateExpr, outputLabel, output_label_translated arg]
+  | caseExpr operand branches otherwise =>
+      cases otherwise with
+      | none =>
+          simp only [translateExpr_case, outputLabel, Option.map_none]
+      | some arg =>
+          simp only [translateExpr_case, outputLabel, Option.map_some,
+            output_label_translated arg]
+  | _ => simp only [translateExpr, outputLabel]
+termination_by sizeOf expr
+decreasing_by all_goals (simp_all <;> omega)
+
 @[simp] theorem translated_output_name (expr : Advanced.Expr) (alias : Option Name) :
     outputName (translateExpr expr) alias = outputName expr alias := by
-  simp only [outputName, array_origin_translated]
-  cases expr <;> simp only [translateExpr, translateExpr_case]
+  simp only [outputName, output_label_translated]
 
 theorem items_valid_translated (valid : ItemsValid params scope items output uses) :
     ItemsValid params scope (items.map translateSelectItem) output

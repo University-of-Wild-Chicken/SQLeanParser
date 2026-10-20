@@ -69,6 +69,10 @@ mutual
       letI : Decidable (a3 = b3) := exactExprDecEq a3 b3
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2 ∧ a3 = b3)
         (by simp only [Expr.quantifiedComparison.injEq])
+    case subscript.subscript a0 a1 b0 b1 =>
+      letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
+      letI : Decidable (a1 = b1) := exactListSubscriptDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.subscript.injEq])
     case greatest.greatest a0 b0 =>
       letI : Decidable (a0 = b0) := exactListExprDecEq a0 b0
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.greatest.injEq])
@@ -98,6 +102,32 @@ mutual
     case scalarQuery.scalarQuery a0 b0 =>
       letI : Decidable (a0 = b0) := exactQueryDecEq a0 b0
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.scalarQuery.injEq])
+  termination_by sizeOf a
+  decreasing_by all_goals (simp_all <;> omega)
+
+  private def exactSubscriptDecEq (a b : Subscript) : Decidable (a = b) := by
+    cases a <;> cases b
+    all_goals first | solve | apply isFalse; intro h; cases h
+                    | skip
+    case index.index a0 b0 =>
+      letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
+      exact decidable_of_iff (a0 = b0) (by simp only [Subscript.index.injEq])
+    case slice.slice a0 a1 b0 b1 =>
+      letI : Decidable (a0 = b0) := exactOptionExprDecEq a0 b0
+      letI : Decidable (a1 = b1) := exactOptionExprDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Subscript.slice.injEq])
+  termination_by sizeOf a
+  decreasing_by all_goals (simp_all <;> omega)
+
+  private def exactListSubscriptDecEq (a b : List Subscript) : Decidable (a = b) := by
+    cases a <;> cases b
+    all_goals first | solve | apply isFalse; intro h; cases h
+                    | skip
+    case nil.nil => exact isTrue rfl
+    case cons.cons a0 a1 b0 b1 =>
+      letI : Decidable (a0 = b0) := exactSubscriptDecEq a0 b0
+      letI : Decidable (a1 = b1) := exactListSubscriptDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [List.cons.injEq])
   termination_by sizeOf a
   decreasing_by all_goals (simp_all <;> omega)
 
@@ -307,6 +337,7 @@ mutual
 end
 
 instance : DecidableEq Expr := exactExprDecEq
+instance : DecidableEq Subscript := exactSubscriptDecEq
 instance : DecidableEq SelectItem := exactSelectItemDecEq
 instance : DecidableEq OrderBy := exactOrderByDecEq
 instance : DecidableEq JoinCondition := exactJoinConditionDecEq

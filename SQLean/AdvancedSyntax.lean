@@ -107,6 +107,9 @@ mutual
     /-- Comparison against elements of an array expression. Quantified
     subqueries are a separate SQL form and are not represented here. -/
     | quantifiedComparison (op : ComparisonOp) (quantifier : ArrayQuantifier) (left right : Expr)
+    /-- One contiguous bracket group. Nested parenthesized extraction is a
+    separate node, since `(a[1])[2]` differs from `a[1][2]`. -/
+    | subscript (base : Expr) (indices : List Subscript)
     /-- Ordinary positional function call; name components retain quoting/case
     through the parser's ordinary identifier rules. -/
     | call (name : List Name) (args : List Expr)
@@ -121,6 +124,11 @@ mutual
     | inQuery (arg : Expr) (query : Query)
     | exists (query : Query)
     | scalarQuery (query : Query)
+    deriving Repr, BEq, Inhabited
+
+  inductive Subscript where
+    | index (expr : Expr)
+    | slice (lower upper : Option Expr)
     deriving Repr, BEq, Inhabited
 
   inductive SelectItem where
@@ -182,6 +190,15 @@ mutual
     columns : List Name := []
     deriving Repr, BEq, Inhabited
 end
+
+def Subscript.isSlice : Subscript → Bool
+  | .index _ => false
+  | .slice _ _ => true
+
+/-- Present bound expressions in source order. -/
+def Subscript.expressions : Subscript → List Expr
+  | .index expr => [expr]
+  | .slice lower upper => lower.toList ++ upper.toList
 
 /-- Preserve numeric-literal construction of pagination fields in client code. -/
 instance (n : Nat) : OfNat Expr n := ⟨.literal (.int n)⟩

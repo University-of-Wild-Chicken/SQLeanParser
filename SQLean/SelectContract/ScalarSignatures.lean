@@ -303,6 +303,20 @@ def quantifiedComparisonSignature (op : Advanced.ComparisonOp)
       if coerces then some selected else none
   | _ => none
 
+/-- PostgreSQL array bounds use assignment coercion to INT32, not ordinary
+implicit operator coercion. Numeric narrowing is admitted; range and input
+conversion success remain value obligations. Concrete strings are excluded. -/
+def subscriptBoundSignature : ScalarInput → Bool
+  | .unknown _ => true
+  | .known type => type.base.numericRank.isSome
+
+/-- Missing slice endpoints denote the array's existing bounds and introduce
+neither an expression nor a conversion obligation. -/
+def optionalSubscriptBoundSignature (expr : Option Advanced.Expr) (type : ExprType) : Bool :=
+  match expr with
+  | none => true
+  | some expr => subscriptBoundSignature (scalarInput expr type)
+
 def nullIfSignature (left right : ScalarInput) : Option ExactType := do
   let signature ← equalityOverload left right
   let first ← signature.inputs.head?

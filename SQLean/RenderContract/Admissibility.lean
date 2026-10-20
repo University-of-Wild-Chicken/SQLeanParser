@@ -127,6 +127,13 @@ mutual
     | .cast arg type =>
         checkDataType type
         combine [inspectExpr arg, .ok {depth := arrayTypeDepth type.name}]
+    | .subscript base subscripts =>
+        if subscripts.isEmpty then
+          invalid "representation.empty-subscripts" "subscripting requires a nonempty bracket group"
+        else combine (inspectExpr base :: subscripts.attach.map
+          fun (subscript : {s : Subscript // s ∈ subscripts}) =>
+            have : sizeOf subscript.val < sizeOf subscripts := List.sizeOf_lt_of_mem subscript.property
+            inspectSubscript subscript.val)
     | .array elements =>
         combine (elements.attach.map fun (element : {v : Advanced.Expr // v ∈ elements}) =>
           have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
@@ -172,6 +179,15 @@ mutual
     | .inQuery arg query => combine [inspectExpr arg, inspectQuery query]
     | .exists query | .scalarQuery query => combine [inspectQuery query]
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def inspectSubscript (subscript : Advanced.Subscript) : Except Failure Footprint :=
+    match subscript with
+    | .index expr => combine [inspectExpr expr]
+    | .slice lower upper => combine (
+        (match _h : lower with | none => [] | some expr => [inspectExpr expr]) ++
+        (match _h : upper with | none => [] | some expr => [inspectExpr expr]))
+  termination_by sizeOf subscript
   decreasing_by all_goals (simp_all <;> omega)
 
   def inspectItem (item : Advanced.SelectItem) : Except Failure Footprint := do

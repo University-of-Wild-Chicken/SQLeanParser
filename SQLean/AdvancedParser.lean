@@ -139,11 +139,11 @@ private def lexLoop (sqlite : Bool) : Nat → List Char → SourcePos → Nat �
               (c == '!' && d == '=') || (c == ':' && d == ':') then
             lexLoop sqlite fuel ds (advance (advance p c) d) anonymous numbered
               ({kind := .symbol (String.ofList [c,d]), position := p} :: acc)
-          else if "(),;*./+-=<>[]".contains c then
+          else if "(),;*./+-=<>[]:".contains c then
             lexLoop sqlite fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
           else throw {position := p, message := s!"unsupported character '{c}'"}
         | [] =>
-          if "(),;*./+-=<>[]".contains c then
+          if "(),;*./+-=<>[]:".contains c then
             lexLoop sqlite fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
           else throw {position := p, message := s!"unsupported character '{c}'"}
 
@@ -408,11 +408,12 @@ mutual
           expect ")"
           pure value
         if ← queryStart then
-          return ← alternative (do
+          let value ← alternative (do
             let q ← query fuel
             expect ")"
             pure (.scalarQuery q)) grouped
-        return ← grouped
+          return ← subscriptTail fuel value
+        return ← subscriptTail fuel (← grouped)
       match (← peek).kind with
       | .number raw =>
         let _ ← pop
@@ -420,7 +421,7 @@ mutual
         | some n => return .literal (.int n)
         | none => return .decimal raw
       | .text value => let _ ← pop; return .literal (.text value)
-      | .parameter value => let _ ← pop; return .parameter value
+      | .parameter value => let _ ← pop; return ← subscriptTail fuel (.parameter value)
       | .word word =>
         if typeWord word.toLower then
           return ← alternative (typedString fuel) (namedAtom fuel)
@@ -441,8 +442,8 @@ mutual
               pure (.filteredAggregate value predicate)
               else pure value
             return value
-          if ← eat "." then return .column (some word) (← identifier)
-          return .column none word
+          if ← eat "." then return ← subscriptTail fuel (.column (some word) (← identifier))
+          return ← subscriptTail fuel (.column none word)
         | none =>
           namedAtom fuel
       | .quoted _ =>
@@ -461,6 +462,32 @@ mutual
       expect "]"
       pure (.array elements)
 
+  /-- Only columns, parameters and parenthesized expressions call this parser.
+  It consumes exactly one contiguous bracket run; parentheses keep runs apart. -/
+  private def subscriptTail : Nat → Expr → Parser Expr
+    | 0, _ => fail "array subscript nesting bound exceeded"
+    | fuel + 1, base => do
+      unless ← isAt "[" do return base
+      if ← read then fail "array subscripts are not supported by the SQLite profile"
+      pure (.subscript base (← subscriptGroups fuel))
+
+  private def subscriptGroups : Nat → Parser (List Subscript)
+    | 0 => fail "array subscript input bound exceeded"
+    | fuel + 1 => do
+      expect "["
+      let bound ← if ← eat ":" then do
+        let upper ← if ← isAt "]" then pure none else do pure (some (← expression fuel 0))
+        pure (Subscript.slice none upper)
+        else do
+          let lower ← expression fuel 0
+          if ← eat ":" then
+            let upper ← if ← isAt "]" then pure none else do pure (some (← expression fuel 0))
+            pure (.slice (some lower) upper)
+          else pure (.index lower)
+      expect "]"
+      let rest ← if ← isAt "[" then subscriptGroups fuel else pure []
+      pure (bound :: rest)
+
   private def namedAtom : Nat → Parser Expr
     | 0 => fail "qualified expression input bound exceeded"
     | fuel + 1 => do
@@ -472,8 +499,8 @@ mutual
           pure args
         return .call names args
       match names with
-      | [name] => pure (.column none name)
-      | [qualifier, name] => pure (.column (some qualifier) name)
+      | [name] => subscriptTail fuel (.column none name)
+      | [qualifier, name] => subscriptTail fuel (.column (some qualifier) name)
       | _ => fail "column references support at most one qualifier"
 
   private def qualifiedName : Nat → Parser (List Name)

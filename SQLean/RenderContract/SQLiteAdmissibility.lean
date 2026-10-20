@@ -39,6 +39,7 @@ mutual
         checkSQLiteExpr arg
     | .cast arg type => checkSQLiteDataType type; checkSQLiteExpr arg
     | .array _ => unsupported "array-constructor"
+    | .subscript .. => unsupported "array-subscripting"
     | .call .. | .greatest .. | .least .. => unsupported "scalar-function-signatures"
     | .coalesce args =>
         if args.length < 2 then unsupported "single-argument-COALESCE"

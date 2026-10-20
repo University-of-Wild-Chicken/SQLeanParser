@@ -31,6 +31,10 @@ mutual
     | .isNull arg negated => .isNull (translateExpr arg) negated
     | .pattern arg pattern insensitive => .pattern (translateExpr arg) (translateExpr pattern) insensitive
     | .cast arg target => .cast (translateExpr arg) target
+    | .subscript base subscripts => .subscript (translateExpr base)
+        (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>
+          have : sizeOf subscript.val < sizeOf subscripts := List.sizeOf_lt_of_mem subscript.property
+          translateSubscript subscript.val)
     | .array elements => .array
         (elements.attach.map fun (element : {v : Advanced.Expr // v ∈ elements}) =>
           have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
@@ -70,6 +74,15 @@ mutual
     | .exists query => .exists (translateParameters query)
     | .scalarQuery query => .scalarQuery (translateParameters query)
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def translateSubscript (subscript : Advanced.Subscript) : Advanced.Subscript :=
+    match subscript with
+    | .index expr => .index (translateExpr expr)
+    | .slice lower upper => .slice
+        (match _h : lower with | none => none | some expr => some (translateExpr expr))
+        (match _h : upper with | none => none | some expr => some (translateExpr expr))
+  termination_by sizeOf subscript
   decreasing_by all_goals (simp_all <;> omega)
 
   def translateSelectItem (item : Advanced.SelectItem) : Advanced.SelectItem :=

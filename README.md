@@ -27,6 +27,15 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.12 subscript increment](docs/array-subscripts-contract-v0.12.md)
+adds array element extraction, slices with omitted bounds, and mixed
+multidimensional groups. Independent derivations retain element modifiers and
+check assignment conversions for each bound. Fifty synthetic certificates and
+50 unchanged source examples accompany 100 native value/type observations,
+270 exact descriptors and 10 expected execution errors. It also corrects
+inferred cast, CASE and subscript labels, checked against 85 native examples.
+SQLite explicitly rejects PostgreSQL array subscripts.
+
 The [v0.11 quantified-comparison increment](docs/array-quantified-contract-v0.11.md)
 adds the six scalar comparison operators with `ANY`, `SOME` and `ALL` arrays.
 Independent derivations retain the selected scalar operator and conservatively
@@ -42,8 +51,8 @@ contextual direct casts, including typed empty arrays. Independent judgments
 and parameter-translation proofs cover the new syntax. Fifty synthetic
 certificates and 50 unchanged source examples accompany 112 native value/type
 observations, 120 exact result descriptors and 14 expected runtime errors.
-SQLite explicitly rejects these constructors. Array subqueries and indexing
-remain separate increments.
+SQLite explicitly rejects these constructors. Array subqueries remain a
+separate increment; indexing and slicing are covered by v0.12.
 
 The [v0.9 array-type increment](docs/array-types-contract-v0.9.md)
 adds built-in array types, repeated unsized suffixes, casts, catalog columns and
@@ -152,6 +161,7 @@ python3 scripts/check_derived_contract_cli.py --local-bin /usr/lib/postgresql/16
 python3 scripts/check_array_types_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_array_constructors_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_array_quantified_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_array_subscripts_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -281,7 +291,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.11` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.12` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

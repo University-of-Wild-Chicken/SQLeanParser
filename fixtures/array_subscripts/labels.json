@@ -1,0 +1,437 @@
+[
+  {
+    "sql": "SELECT NULL::SMALLINT",
+    "name": "int2",
+    "type": "smallint"
+  },
+  {
+    "sql": "SELECT (NULL::SMALLINT[])[1]",
+    "name": "int2",
+    "type": "smallint"
+  },
+  {
+    "sql": "SELECT NULL::INT2",
+    "name": "int2",
+    "type": "smallint"
+  },
+  {
+    "sql": "SELECT (NULL::INT2[])[1]",
+    "name": "int2",
+    "type": "smallint"
+  },
+  {
+    "sql": "SELECT NULL::INT",
+    "name": "int4",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT (NULL::INT[])[1]",
+    "name": "int4",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT NULL::INTEGER",
+    "name": "int4",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT (NULL::INTEGER[])[1]",
+    "name": "int4",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT NULL::INT4",
+    "name": "int4",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT (NULL::INT4[])[1]",
+    "name": "int4",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT NULL::BIGINT",
+    "name": "int8",
+    "type": "bigint"
+  },
+  {
+    "sql": "SELECT (NULL::BIGINT[])[1]",
+    "name": "int8",
+    "type": "bigint"
+  },
+  {
+    "sql": "SELECT NULL::INT8",
+    "name": "int8",
+    "type": "bigint"
+  },
+  {
+    "sql": "SELECT (NULL::INT8[])[1]",
+    "name": "int8",
+    "type": "bigint"
+  },
+  {
+    "sql": "SELECT NULL::TEXT",
+    "name": "text",
+    "type": "text"
+  },
+  {
+    "sql": "SELECT (NULL::TEXT[])[1]",
+    "name": "text",
+    "type": "text"
+  },
+  {
+    "sql": "SELECT NULL::VARCHAR(5)",
+    "name": "varchar",
+    "type": "character varying(5)"
+  },
+  {
+    "sql": "SELECT (NULL::VARCHAR(5)[])[1]",
+    "name": "varchar",
+    "type": "character varying(5)"
+  },
+  {
+    "sql": "SELECT NULL::CHARACTER VARYING(5)",
+    "name": "varchar",
+    "type": "character varying(5)"
+  },
+  {
+    "sql": "SELECT (NULL::CHARACTER VARYING(5)[])[1]",
+    "name": "varchar",
+    "type": "character varying(5)"
+  },
+  {
+    "sql": "SELECT NULL::CHAR(5)",
+    "name": "bpchar",
+    "type": "character(5)"
+  },
+  {
+    "sql": "SELECT (NULL::CHAR(5)[])[1]",
+    "name": "bpchar",
+    "type": "character(5)"
+  },
+  {
+    "sql": "SELECT NULL::CHARACTER(5)",
+    "name": "bpchar",
+    "type": "character(5)"
+  },
+  {
+    "sql": "SELECT (NULL::CHARACTER(5)[])[1]",
+    "name": "bpchar",
+    "type": "character(5)"
+  },
+  {
+    "sql": "SELECT NULL::BOOL",
+    "name": "bool",
+    "type": "boolean"
+  },
+  {
+    "sql": "SELECT (NULL::BOOL[])[1]",
+    "name": "bool",
+    "type": "boolean"
+  },
+  {
+    "sql": "SELECT NULL::BOOLEAN",
+    "name": "bool",
+    "type": "boolean"
+  },
+  {
+    "sql": "SELECT (NULL::BOOLEAN[])[1]",
+    "name": "bool",
+    "type": "boolean"
+  },
+  {
+    "sql": "SELECT NULL::REAL",
+    "name": "float4",
+    "type": "real"
+  },
+  {
+    "sql": "SELECT (NULL::REAL[])[1]",
+    "name": "float4",
+    "type": "real"
+  },
+  {
+    "sql": "SELECT NULL::FLOAT4",
+    "name": "float4",
+    "type": "real"
+  },
+  {
+    "sql": "SELECT (NULL::FLOAT4[])[1]",
+    "name": "float4",
+    "type": "real"
+  },
+  {
+    "sql": "SELECT NULL::DOUBLE PRECISION",
+    "name": "float8",
+    "type": "double precision"
+  },
+  {
+    "sql": "SELECT (NULL::DOUBLE PRECISION[])[1]",
+    "name": "float8",
+    "type": "double precision"
+  },
+  {
+    "sql": "SELECT NULL::FLOAT8",
+    "name": "float8",
+    "type": "double precision"
+  },
+  {
+    "sql": "SELECT (NULL::FLOAT8[])[1]",
+    "name": "float8",
+    "type": "double precision"
+  },
+  {
+    "sql": "SELECT NULL::FLOAT",
+    "name": "float8",
+    "type": "double precision"
+  },
+  {
+    "sql": "SELECT (NULL::FLOAT[])[1]",
+    "name": "float8",
+    "type": "double precision"
+  },
+  {
+    "sql": "SELECT NULL::NUMERIC(6,2)",
+    "name": "numeric",
+    "type": "numeric(6,2)"
+  },
+  {
+    "sql": "SELECT (NULL::NUMERIC(6,2)[])[1]",
+    "name": "numeric",
+    "type": "numeric(6,2)"
+  },
+  {
+    "sql": "SELECT NULL::DECIMAL(6,2)",
+    "name": "numeric",
+    "type": "numeric(6,2)"
+  },
+  {
+    "sql": "SELECT (NULL::DECIMAL(6,2)[])[1]",
+    "name": "numeric",
+    "type": "numeric(6,2)"
+  },
+  {
+    "sql": "SELECT NULL::DATE",
+    "name": "date",
+    "type": "date"
+  },
+  {
+    "sql": "SELECT (NULL::DATE[])[1]",
+    "name": "date",
+    "type": "date"
+  },
+  {
+    "sql": "SELECT NULL::TIME(2)",
+    "name": "time",
+    "type": "time(2) without time zone"
+  },
+  {
+    "sql": "SELECT (NULL::TIME(2)[])[1]",
+    "name": "time",
+    "type": "time(2) without time zone"
+  },
+  {
+    "sql": "SELECT NULL::TIME(2) WITHOUT TIME ZONE",
+    "name": "time",
+    "type": "time(2) without time zone"
+  },
+  {
+    "sql": "SELECT (NULL::TIME(2) WITHOUT TIME ZONE[])[1]",
+    "name": "time",
+    "type": "time(2) without time zone"
+  },
+  {
+    "sql": "SELECT NULL::TIME(2) WITH TIME ZONE",
+    "name": "timetz",
+    "type": "time(2) with time zone"
+  },
+  {
+    "sql": "SELECT (NULL::TIME(2) WITH TIME ZONE[])[1]",
+    "name": "timetz",
+    "type": "time(2) with time zone"
+  },
+  {
+    "sql": "SELECT NULL::TIMETZ(2)",
+    "name": "timetz",
+    "type": "time(2) with time zone"
+  },
+  {
+    "sql": "SELECT (NULL::TIMETZ(2)[])[1]",
+    "name": "timetz",
+    "type": "time(2) with time zone"
+  },
+  {
+    "sql": "SELECT NULL::TIMESTAMP(3)",
+    "name": "timestamp",
+    "type": "timestamp(3) without time zone"
+  },
+  {
+    "sql": "SELECT (NULL::TIMESTAMP(3)[])[1]",
+    "name": "timestamp",
+    "type": "timestamp(3) without time zone"
+  },
+  {
+    "sql": "SELECT NULL::TIMESTAMP(3) WITHOUT TIME ZONE",
+    "name": "timestamp",
+    "type": "timestamp(3) without time zone"
+  },
+  {
+    "sql": "SELECT (NULL::TIMESTAMP(3) WITHOUT TIME ZONE[])[1]",
+    "name": "timestamp",
+    "type": "timestamp(3) without time zone"
+  },
+  {
+    "sql": "SELECT NULL::TIMESTAMP(3) WITH TIME ZONE",
+    "name": "timestamptz",
+    "type": "timestamp(3) with time zone"
+  },
+  {
+    "sql": "SELECT (NULL::TIMESTAMP(3) WITH TIME ZONE[])[1]",
+    "name": "timestamptz",
+    "type": "timestamp(3) with time zone"
+  },
+  {
+    "sql": "SELECT NULL::TIMESTAMPTZ(3)",
+    "name": "timestamptz",
+    "type": "timestamp(3) with time zone"
+  },
+  {
+    "sql": "SELECT (NULL::TIMESTAMPTZ(3)[])[1]",
+    "name": "timestamptz",
+    "type": "timestamp(3) with time zone"
+  },
+  {
+    "sql": "SELECT NULL::INTERVAL(2)",
+    "name": "interval",
+    "type": "interval(2)"
+  },
+  {
+    "sql": "SELECT (NULL::INTERVAL(2)[])[1]",
+    "name": "interval",
+    "type": "interval(2)"
+  },
+  {
+    "sql": "SELECT NULL::UUID",
+    "name": "uuid",
+    "type": "uuid"
+  },
+  {
+    "sql": "SELECT (NULL::UUID[])[1]",
+    "name": "uuid",
+    "type": "uuid"
+  },
+  {
+    "sql": "SELECT NULL::JSON",
+    "name": "json",
+    "type": "json"
+  },
+  {
+    "sql": "SELECT (NULL::JSON[])[1]",
+    "name": "json",
+    "type": "json"
+  },
+  {
+    "sql": "SELECT NULL::JSONB",
+    "name": "jsonb",
+    "type": "jsonb"
+  },
+  {
+    "sql": "SELECT (NULL::JSONB[])[1]",
+    "name": "jsonb",
+    "type": "jsonb"
+  },
+  {
+    "sql": "SELECT NULL::BYTEA",
+    "name": "bytea",
+    "type": "bytea"
+  },
+  {
+    "sql": "SELECT (NULL::BYTEA[])[1]",
+    "name": "bytea",
+    "type": "bytea"
+  },
+  {
+    "sql": "SELECT (CAST(NULL::INTEGER AS NUMERIC))",
+    "name": "numeric",
+    "type": "numeric"
+  },
+  {
+    "sql": "SELECT (CAST(ARRAY[1,2] AS BIGINT[]))[1]",
+    "name": "array",
+    "type": "bigint"
+  },
+  {
+    "sql": "SELECT (CAST(ARRAY[1,2] AS BIGINT[]))[1:2]",
+    "name": "array",
+    "type": "bigint[]"
+  },
+  {
+    "sql": "SELECT (COALESCE(ARRAY[1],ARRAY[2]))[1]",
+    "name": "coalesce",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT a::BIGINT FROM (SELECT 1 AS a) d",
+    "name": "a",
+    "type": "bigint"
+  },
+  {
+    "sql": "SELECT (a::BIGINT[])[1] FROM (SELECT ARRAY[1] AS a) d",
+    "name": "a",
+    "type": "bigint"
+  },
+  {
+    "sql": "SELECT CASE WHEN TRUE THEN 1 ELSE 2 END",
+    "name": "case",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT CASE WHEN TRUE THEN 1 ELSE a END FROM (SELECT 2 AS a) d",
+    "name": "a",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT (CASE WHEN TRUE THEN ARRAY[1] ELSE a END)[1] FROM (SELECT ARRAY[2] AS a) d",
+    "name": "a",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT CASE WHEN TRUE THEN 1 ELSE 2::BIGINT END",
+    "name": "case",
+    "type": "bigint"
+  },
+  {
+    "sql": "SELECT (CASE WHEN TRUE THEN 1 ELSE 2 END)::BIGINT",
+    "name": "int8",
+    "type": "bigint"
+  },
+  {
+    "sql": "SELECT (CASE WHEN TRUE THEN 1 ELSE a END)::BIGINT FROM (SELECT 2 AS a) d",
+    "name": "a",
+    "type": "bigint"
+  },
+  {
+    "sql": "SELECT CASE WHEN TRUE THEN ARRAY[1] ELSE ARRAY[2] END",
+    "name": "array",
+    "type": "integer[]"
+  },
+  {
+    "sql": "SELECT (CASE WHEN TRUE THEN ARRAY[1] ELSE ARRAY[2] END)[1]",
+    "name": "array",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT CASE WHEN TRUE THEN 1 ELSE COALESCE(2,3) END",
+    "name": "coalesce",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT CASE WHEN TRUE THEN 1 ELSE CASE WHEN TRUE THEN 2 ELSE a END END FROM (SELECT 3 AS a) d",
+    "name": "a",
+    "type": "integer"
+  },
+  {
+    "sql": "SELECT ((ARRAY[[1,2],[3,4]])[1:1])[1][2]",
+    "name": "array",
+    "type": "integer"
+  }
+]

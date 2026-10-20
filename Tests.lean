@@ -50,6 +50,8 @@ import Tests.ArrayConstructorContract
 import Tests.ArrayConstructorRendering
 import Tests.ArrayQuantifiedContract
 import Tests.ArrayQuantifiedRendering
+import Tests.ArraySubscriptContract
+import Tests.ArraySubscriptRendering
 
 namespace SQLean.Tests
 
@@ -158,6 +160,12 @@ def run : IO Unit := do
   IO.println s!"PASS: {arrayQuantifiedCorpus} quantified array full-query certificates"
   let arrayQuantifiedRendering ← arrayQuantifiedRenderingTests
   IO.println s!"PASS: {arrayQuantifiedRendering} quantified array parsing and rendering checks"
+  let arraySubscriptContract ← arraySubscriptContractTests
+  IO.println s!"PASS: {arraySubscriptContract} array subscript/slice validity and label checks"
+  let arraySubscriptCorpus ← arraySubscriptCorpusTests
+  IO.println s!"PASS: {arraySubscriptCorpus} array subscript/slice full-query certificates"
+  let arraySubscriptRendering ← arraySubscriptRenderingTests
+  IO.println s!"PASS: {arraySubscriptRendering} array subscript/slice parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

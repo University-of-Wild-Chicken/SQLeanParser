@@ -11,6 +11,8 @@ private def defaultExpression : Nat → Expr → Bool
   | n + 1, .quantifiedComparison _ _ left right | n + 1, .binary _ left right | n + 1, .pattern left right _ | n + 1, .nullIf left right =>
       defaultExpression n left && defaultExpression n right
   | n + 1, .unary _ arg | n + 1, .cast arg _ | n + 1, .isNull arg _ => defaultExpression n arg
+  | n + 1, .subscript base indices =>
+      defaultExpression n base && (indices.flatMap Subscript.expressions).all (defaultExpression n)
   | n + 1, .array args | n + 1, .call _ args | n + 1, .coalesce args | n + 1, .greatest args | n + 1, .least args =>
       args.all (defaultExpression n)
   | n + 1, .caseExpr operand branches otherwise => operand.all (defaultExpression n) &&

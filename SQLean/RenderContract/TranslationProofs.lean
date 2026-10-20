@@ -33,6 +33,12 @@ mutual
     | isNull arg negated => simp only [translateExpr, translateExpr_idempotent arg]
     | pattern arg pattern insensitive => simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent pattern]
     | cast arg target => simp only [translateExpr, translateExpr_idempotent arg]
+    | subscript base subscripts =>
+        simp only [translateExpr, List.attach_map_val, translateExpr_idempotent base]
+        congr 1
+        exact map_twice translateSubscript subscripts fun subscript member =>
+          have : sizeOf subscript < sizeOf subscripts := List.sizeOf_lt_of_mem member
+          translateSubscript_idempotent subscript
     | array elements =>
         simp only [translateExpr, List.attach_map_val]
         congr 1
@@ -98,6 +104,24 @@ mutual
     | «exists» query => simp only [translateExpr, translateParameters_idempotent query]
     | scalarQuery query => simp only [translateExpr, translateParameters_idempotent query]
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  theorem translateSubscript_idempotent (subscript : Advanced.Subscript) :
+      translateSubscript (translateSubscript subscript) = translateSubscript subscript := by
+    cases subscript with
+    | index expr => simp only [translateSubscript, translateExpr_idempotent expr]
+    | slice lower upper =>
+        cases lower with
+        | none =>
+            cases upper with
+            | none => simp only [translateSubscript]
+            | some expr => simp only [translateSubscript, translateExpr_idempotent expr]
+        | some expr =>
+            cases upper with
+            | none => simp only [translateSubscript, translateExpr_idempotent expr]
+            | some other =>
+                simp only [translateSubscript, translateExpr_idempotent expr, translateExpr_idempotent other]
+  termination_by sizeOf subscript
   decreasing_by all_goals (simp_all <;> omega)
 
   theorem translateSelectItem_idempotent (item : Advanced.SelectItem) :

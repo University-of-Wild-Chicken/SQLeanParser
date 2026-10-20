@@ -20,6 +20,7 @@ from extract_extended_type_corpus import (
 from extract_pagination_corpus import checked_file, comparison_key, sha256
 from extract_statement_corpus import selected_sql, statement_spans
 from extract_tcl_sql import selected_tcl_sql
+from extract_sqllogic_sql import selected_sqllogic_sql
 
 ROOT = Path(__file__).resolve().parents[1]
 POPULATIONS = {
@@ -33,6 +34,7 @@ POPULATIONS = {
     "array_types": {"postgres": 42, "hatchet": 7, "sqlc": 1},
     "array_constructors": {"postgres": 49, "sqlc": 1},
     "array_quantified": {"hatchet": 29, "postgres": 18, "sqlc": 3},
+    "array_subscripts": {"postgres": 24, "duckdb": 26},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -42,7 +44,7 @@ JOIN_KINDS = {"cross", "inner", "left", "right", "full"}
 MERGED_FACTORS = {"using_contract": "using", "natural_contract": "natural"}
 JOIN_FACTORS = {"join_contract", *MERGED_FACTORS}
 ARRAY_ELEMENT_FAMILIES = {"int4", "int8", "text", "float8", "interval", "timestamptz", "uuid"}
-ARRAY_FACTORS = {"array_types", "array_constructors", "array_quantified"}
+ARRAY_FACTORS = {"array_types", "array_constructors", "array_quantified", "array_subscripts"}
 COMPARISON_OPERATORS = {"=", "<>", "<", "<=", ">", ">="}
 
 
@@ -369,6 +371,74 @@ def observe_array_quantified(parsed: dict, sql: str) -> list[dict]:
     return result
 
 
+def validate_array_subscripts(groups: list[dict]) -> None:
+    if not isinstance(groups, list) or not groups:
+        raise ValueError("array subscript factor is absent")
+    for group in groups:
+        if (not isinstance(group, dict) or set(group) != {"depth", "dimensions"}
+                or type(group["depth"]) is not int or group["depth"] < 1
+                or not isinstance(group["dimensions"], list)
+                or not 1 <= len(group["dimensions"]) <= 6):
+            raise ValueError("invalid array subscript group")
+        for dimension in group["dimensions"]:
+            if (not isinstance(dimension, dict)
+                    or set(dimension) != {"slice", "lower", "upper"}
+                    or not all(type(value) is bool for value in dimension.values())
+                    or (not dimension["slice"] and (dimension["lower"] or not dimension["upper"]))):
+                raise ValueError("invalid array subscript bound observation")
+
+
+def observe_array_subscripts(parsed: dict) -> list[dict]:
+    """Retain index groups and optional slice bounds, without catalog inference.
+
+    A chained group a[1][2] differs from the nested grouping (a[1])[2].
+    Domain-backed source columns may contain nested arrays; this syntax screen
+    neither assigns their types nor proves that an access succeeds.
+    """
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("array subscript source must be a SELECT")
+    result = []
+
+    def walk(value, depth=0):
+        if isinstance(value, list):
+            for child in value:
+                walk(child, depth)
+        elif isinstance(value, dict):
+            for kind, node in value.items():
+                if not isinstance(node, dict):
+                    walk(node, depth)
+                    continue
+                if kind == "RowExpr" or (kind == "SubLink"
+                        and node.get("subLinkType") != "EXPR_SUBLINK"):
+                    raise ValueError("row/quantified/array subquery is outside this subscript population")
+                if kind == "A_Indirection":
+                    indices = node.get("indirection", [])
+                    if not isinstance(indices, list) or not indices:
+                        raise ValueError("empty array subscript group")
+                    dimensions = []
+                    for index in indices:
+                        if not isinstance(index, dict) or set(index) != {"A_Indices"}:
+                            raise ValueError("record-field indirection is outside this subscript population")
+                        item = index["A_Indices"]
+                        if not isinstance(item, dict):
+                            raise ValueError("invalid array subscript bounds")
+                        dimensions.append({"slice": item.get("is_slice", False),
+                                           "lower": bool(item.get("lidx")),
+                                           "upper": bool(item.get("uidx"))})
+                    base = node.get("arg", {})
+                    if ("FuncCall" in base
+                            or ("TypeCast" in base and not base["TypeCast"].get("typeName", {}).get("arrayBounds"))):
+                        raise ValueError("function/scalar-cast base is outside this subscript population")
+                    result.append({"depth": depth + 1, "dimensions": dimensions})
+                    walk(node, depth + 1)
+                else:
+                    walk(node, depth)
+
+    walk(parsed)
+    validate_array_subscripts(result)
+    return result
+
+
 def observe_oracle(sql: str, factor: str) -> dict:
     import pglast
     from pglast import ast, enums, parse_sql, parser, visitors
@@ -502,6 +572,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "array_quantified":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["array_quantified"] = observe_array_quantified(parsed, sql)
+    if factor == "array_subscripts":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation["array_subscripts"] = observe_array_subscripts(parsed)
     return observation
 
 
@@ -518,6 +591,8 @@ def validate_population(records: list[dict], factor: str) -> None:
     array_elements = set()
     constructor_count, constructor_empty, constructor_nested, constructor_depth = 0, 0, 0, 0
     quantified_ops, quantifiers, quantified_right = Counter(), Counter(), Counter()
+    subscript_dimensions, subscript_groups = Counter(), Counter()
+    subscript_nested = 0
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -541,6 +616,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("array_constructors")
         if factor == "array_quantified":
             expected_keys.add("array_quantified")
+        if factor == "array_subscripts":
+            expected_keys.add("array_subscripts")
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -595,6 +672,14 @@ def validate_population(records: list[dict], factor: str) -> None:
             quantified_ops.update(entry["source_operator"] for entry in comparisons)
             quantifiers.update(entry["quantifier"] for entry in comparisons)
             quantified_right.update(entry["right_form"] for entry in comparisons)
+        if factor == "array_subscripts":
+            groups = observation["array_subscripts"]
+            validate_array_subscripts(groups)
+            subscript_groups.update(len(group["dimensions"]) for group in groups)
+            subscript_nested += any(group["depth"] > 1 for group in groups)
+            subscript_dimensions.update(
+                "slice" if dimension["slice"] else "element"
+                for group in groups for dimension in group["dimensions"])
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -620,6 +705,11 @@ def validate_population(records: list[dict], factor: str) -> None:
             or quantifiers != {"any": 41, "all": 10}
             or quantified_right != {"TypeCast": 34, "A_Const": 13, "ParamRef": 2, "A_ArrayExpr": 2}):
         raise ValueError("quantified population must retain its 51 nodes and source spellings")
+    if factor == "array_subscripts" and (
+            subscript_dimensions != {"element": 71, "slice": 46}
+            or subscript_groups != {1: 47, 2: 17, 3: 12}
+            or subscript_nested != 3):
+        raise ValueError("subscript population must retain its 117 dimensions and nested groups")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -651,6 +741,10 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if factor not in MERGED_FACTORS or name != "sqlite":
                 raise ValueError("Tcl SQL selection is outside its explicit source factors")
             sql, line, detail = selected_tcl_sql(files[key], selection["selector"])
+        elif selection["selector"]["kind"] == "sqllogic_query":
+            if factor != "array_subscripts" or name != "duckdb":
+                raise ValueError("SQLLogicTest selection is outside its explicit source factor")
+            sql, line, detail = selected_sqllogic_sql(files[key], selection["selector"])
         elif factor in {"locking", "derived_contract"} | ARRAY_FACTORS | JOIN_FACTORS:
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
@@ -660,6 +754,8 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
         metadata = manifest["sources"][name]
         suffix = (f"tcl-{detail['command_start']}-statement-{detail['statement_index']}"
                   if detail.get("extraction") == "tcl_sql_statement"
+                  else f"sqllogic-query-{detail['header_line']}"
+                  if detail.get("extraction") == "sqllogic_query"
                   else detail.get("symbol", f"statement-{detail.get('statement_index')}"))
         records.append({
             "id": f"{factor}:{name}:{path}:{suffix}", "factor": factor,

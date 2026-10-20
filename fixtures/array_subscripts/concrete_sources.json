@@ -1,0 +1,1882 @@
+{
+  "format_version": 1,
+  "factor": "array_subscripts",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 24,
+    "duckdb": 26
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/arrays.sql",
+          "sha256": "9d4ce22f3dfe91ccc0426d2599149d66f8e1d09f5b2d42034d19136971cd9279",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/arrays.sql"
+        },
+        {
+          "path": "src/test/regress/sql/domain.sql",
+          "sha256": "b836f10d12ef9addb43ab5e86b5ebed14c2614137fefd112efd34631f6e4bf9c",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/domain.sql"
+        },
+        {
+          "path": "src/test/regress/sql/subselect.sql",
+          "sha256": "233a9f22e38ae691505d7fdfff51e8559e87c96b2b864490ac9e630442c2dc91",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/subselect.sql"
+        }
+      ]
+    },
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "source_kind": "engine-regression",
+      "source_dialect": "duckdb",
+      "files": [
+        {
+          "path": "test/sql/types/list/nested_list_extract.test",
+          "sha256": "374d55e056c675471382f62ca64f73dd4d0cb89f086250460442af821e5643b7",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/types/list/nested_list_extract.test"
+        },
+        {
+          "path": "test/sql/types/nested/list/test_list_slice.test",
+          "sha256": "2d2f0e278ccc7f7c56a9196edbae5933ad7ec5a5b13bb1aa5d7af7abbd9eff0b",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/types/nested/list/test_list_slice.test"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1213,
+        "end": 1354,
+        "statement_index": 13
+      },
+      "sql_sha256": "1211704dfcd28b192927f07cfd4435c5a8429f39660ea8d0c4ca15d1cc0147a7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1356,
+        "end": 1417,
+        "statement_index": 14
+      },
+      "sql_sha256": "ad11eb39d8ef97749a4d6b935cb338f9b0efef170f69a34adf4314249eb89fbd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1419,
+        "end": 1518,
+        "statement_index": 15
+      },
+      "sql_sha256": "59e1150e9879b31870316e16aac067ae9863b0f0a3e3021a5a73b2ad298b9228",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2103,
+        "end": 2202,
+        "statement_index": 23
+      },
+      "sql_sha256": "56992834322551baba9b912db4a8a5dfbd9dced82afaf8f894a6005289b1a819",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2204,
+        "end": 2258,
+        "statement_index": 24
+      },
+      "sql_sha256": "04854cac71f70fb887cee3d3b22584110ab4d57d0f4695d3f9db74efd3ab0a0d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2379,
+        "end": 2420,
+        "statement_index": 28
+      },
+      "sql_sha256": "c9a6c69f62ca30d979bb97d9e22669e9267bc3a2a1dd2da8816ebd49567e95a3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2824,
+        "end": 2876,
+        "statement_index": 36
+      },
+      "sql_sha256": "20a958f522a70ec81840b870647451bd1a1c49fe40eba1979e3f47092041ad2a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2931,
+        "end": 2994,
+        "statement_index": 38
+      },
+      "sql_sha256": "ffa59cef52b98184255aa9591cf551d2fcfc291bc177fabdc6be1829e90b5b77",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3156,
+        "end": 3216,
+        "statement_index": 40
+      },
+      "sql_sha256": "18fbc7b2ca41846b3f20777a1f6d219d77d0e023e8e09ad1f41585a51eeb355c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3217,
+        "end": 3279,
+        "statement_index": 41
+      },
+      "sql_sha256": "223ea5554f1f40929665cb70df276830afbaf72a1f8e532f4d226f8f5bfab00d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3280,
+        "end": 3342,
+        "statement_index": 42
+      },
+      "sql_sha256": "72db50a84551ccbf479eb18385679d355be5f3edd7e66a00728ea90a18142f72",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4008,
+        "end": 4047,
+        "statement_index": 51
+      },
+      "sql_sha256": "9b15746d741b69abe3257e594aa6e807b92848fe064893c9b5ca4071995cbbd4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": true,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4048,
+        "end": 4087,
+        "statement_index": 52
+      },
+      "sql_sha256": "f1fa1df376d69b5c4ce22d34d338160dd5d193fe201c8bd64165ab715ebf965b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": false
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": false
+              },
+              {
+                "slice": true,
+                "lower": true,
+                "upper": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4088,
+        "end": 4121,
+        "statement_index": 53
+      },
+      "sql_sha256": "4f8dc434d9ed20104c50c29d34a4db6ec2832c9701a577983d79780129adb349",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": false,
+                "upper": false
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": false,
+                "upper": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8477,
+        "end": 8628,
+        "statement_index": 128
+      },
+      "sql_sha256": "ce2ef43f6e7b6fb104f750324b90d164255fa3834a9eacaecdb353cc39103ecb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/domain.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3349,
+        "end": 3406,
+        "statement_index": 50
+      },
+      "sql_sha256": "b3f8382ebc5f8f75bb0ac711b4ce2a12b6e21a4262906042bd76ed6133082fb7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/domain.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9410,
+        "end": 9458,
+        "statement_index": 160
+      },
+      "sql_sha256": "d6027097d00e6307a712592954bd16545c88903057562aa2f205aa59ba7d550c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 2,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/domain.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9500,
+        "end": 9543,
+        "statement_index": 162
+      },
+      "sql_sha256": "88d88a70879bb7fae95bc342d62f933897e224d2bf169634a31192a2e6c88755",
+      "observed_syntax": {
+        "function_names": [
+          "pg_typeof"
+        ],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/domain.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9544,
+        "end": 9590,
+        "statement_index": 163
+      },
+      "sql_sha256": "9e380320023edeea2eb250995c107edb198f8e3e4be3bf1772a1d87cbe1b25c4",
+      "observed_syntax": {
+        "function_names": [
+          "pg_typeof"
+        ],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/domain.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9591,
+        "end": 9639,
+        "statement_index": 164
+      },
+      "sql_sha256": "544857bf90b38de6855f165c64aa9f6cc5281db289a7d8d2d22979117a3bdc7e",
+      "observed_syntax": {
+        "function_names": [
+          "pg_typeof"
+        ],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 2,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/domain.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9684,
+        "end": 9732,
+        "statement_index": 166
+      },
+      "sql_sha256": "9a5a4cbcd1a9356106ba3978ac150eae9f1909c0292c9424c5725fa010b997ca",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 2,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/subselect.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 486,
+        "end": 518,
+        "statement_index": 10
+      },
+      "sql_sha256": "5164c5420c488b7178fde67fdd04f724f7d3823f67a14d957d73d6b18c534890",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/subselect.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 519,
+        "end": 553,
+        "statement_index": 11
+      },
+      "sql_sha256": "091990f294525149b7e7d6ee762b69b5c8bef96ef911de025b280ad2e4d317ac",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/subselect.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 554,
+        "end": 590,
+        "statement_index": 12
+      },
+      "sql_sha256": "6b584158a63ee62308db64742b538a32a65d6b98856159ad9ee6273615aac133",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1332,
+        "end": 1357,
+        "header_line": 63
+      },
+      "sql_sha256": "2b8cf15d0ad4d0ff450046da431ca37c3f9839d08ce3db6fc184aef815658d1f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1417,
+        "end": 1442,
+        "header_line": 71
+      },
+      "sql_sha256": "f39f6c9cc9870f75be6ad40b663c70a47c7b8550d345b22fc59e055a8386b507",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1600,
+        "end": 1636,
+        "header_line": 89
+      },
+      "sql_sha256": "cde02c3d3c90966e3d14360545357a55ae7df8c049916e7d52ad3165d33a3f57",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1682,
+        "end": 1713,
+        "header_line": 97
+      },
+      "sql_sha256": "ce195960c3c35d8b634c0747ade007bf87cbb9f0c6079ef3bf96c3053b629e4a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1756,
+        "end": 1786,
+        "header_line": 105
+      },
+      "sql_sha256": "080d6286be1f41fff2bf7959f23751393e28618c03101608e5335d359531c4ab",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1826,
+        "end": 1873,
+        "header_line": 113
+      },
+      "sql_sha256": "323e7a53902f5639a2ee171e2406dda3d0cba7764f7fe65cbb06ef0f3257b35c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1921,
+        "end": 1968,
+        "header_line": 121
+      },
+      "sql_sha256": "887059ab44c0b8d230c2fdd1a062f940b7940033f559939f9d80089e8f672e3b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2002,
+        "end": 2051,
+        "header_line": 129
+      },
+      "sql_sha256": "3449bb50cf158fcf93cfca1ac2e7e96a2fd4fcea81e83509f2ee4ffcddfed3ed",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2085,
+        "end": 2125,
+        "header_line": 137
+      },
+      "sql_sha256": "93181d93567461c84c753e2cf3bbd4ecca392111791b5d392be99fcab5a7031c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2167,
+        "end": 2212,
+        "header_line": 145
+      },
+      "sql_sha256": "efe2bac05b9c05ef7410e5f995622a575263bee835370eeb0ec3135aa7d2caaa",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2329,
+        "end": 2376,
+        "header_line": 161
+      },
+      "sql_sha256": "b358aaedd82777a10d422a80866a94624e4cc3dd03c78cdb4fc3370040f09012",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2570,
+        "end": 2604,
+        "header_line": 185
+      },
+      "sql_sha256": "2fc48000a827cad8c980056557e6fc6449abd909b7267d91e2a41afc4494be0f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": false,
+                "upper": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2652,
+        "end": 2677,
+        "header_line": 194
+      },
+      "sql_sha256": "41b21009fb3af160f2f770a68b859f75e5f236a69cf84d060e625376eb3d2dcd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": false
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2819,
+        "end": 2846,
+        "header_line": 212
+      },
+      "sql_sha256": "cec53fabdcf3f42eb43351609be622b7c26875ee3d86fd1e0da65a87790a58a6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 3146,
+        "end": 3184,
+        "header_line": 247
+      },
+      "sql_sha256": "7a5e9fdbe8d7e053ebf4cd996a19f4b97bd16dd87a0ae535ad7f032d39de0603",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 3374,
+        "end": 3423,
+        "header_line": 271
+      },
+      "sql_sha256": "28f7a02ec3a403c74a00d5cc732c9cc3dabe2fcfc2d2acf75a5b95247b6ba537",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/list/nested_list_extract.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 430,
+        "end": 465,
+        "header_line": 20
+      },
+      "sql_sha256": "ff0ccb5b621031daf20d7d29f544038491750909d7e8be3888fffc94ce0ee9aa",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/list/nested_list_extract.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 511,
+        "end": 549,
+        "header_line": 27
+      },
+      "sql_sha256": "6a88f203d12123ea00a719d44d54f38e5dd6173a241c85ac62055c92adfe9c32",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/list/nested_list_extract.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 579,
+        "end": 617,
+        "header_line": 34
+      },
+      "sql_sha256": "66bfd3384dfa65c163671b80499d80acf3e3362797d9645b9e32416ec2bd5ebd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/list/nested_list_extract.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 727,
+        "end": 765,
+        "header_line": 48
+      },
+      "sql_sha256": "4b570118fbc8d66d8cdc4f0b2555742a7196b39b15363422925b03c52ae57c87",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/list/nested_list_extract.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 872,
+        "end": 904,
+        "header_line": 62
+      },
+      "sql_sha256": "4c505655d1994742e374c4e95c78deb7d2b9d6aa0ab1e1e8fcd93758ad2f918a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/list/nested_list_extract.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 947,
+        "end": 992,
+        "header_line": 67
+      },
+      "sql_sha256": "ad380275a7deb5de630e01542fa29bc49a999c949bcfb69da10b3a64203be7f8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          },
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/list/nested_list_extract.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1581,
+        "end": 1624,
+        "header_line": 93
+      },
+      "sql_sha256": "ffca83216527ea0826237989200dc031b6556e117242f4f2cc6cb5c0c9c76a62",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/list/nested_list_extract.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1753,
+        "end": 1799,
+        "header_line": 107
+      },
+      "sql_sha256": "3aa241ce4d874778d3f5e9a683d799f84bab434133f7082106e1ff09cc429d6e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/list/nested_list_extract.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1833,
+        "end": 1879,
+        "header_line": 114
+      },
+      "sql_sha256": "724d7125a573b793a4fa7e2ea17f57a1617e0d77eb800d53b4f5192b89da7a90",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              },
+              {
+                "slice": false,
+                "lower": false,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/nested/list/test_list_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1500,
+        "end": 1525,
+        "header_line": 80
+      },
+      "sql_sha256": "7217205043630d1e3563b7a0f066ed10b6f7711da91aad1658ab5afc17cd8a1b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_subscripts": [
+          {
+            "depth": 1,
+            "dimensions": [
+              {
+                "slice": true,
+                "lower": true,
+                "upper": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

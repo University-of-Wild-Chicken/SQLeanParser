@@ -203,6 +203,12 @@ mutual
         (signature : quantifiedComparisonSignature op (scalarInput a ta) (scalarInput b tb) = some selected) :
         ExprValid params scope (.quantifiedComparison op quantifier a b)
           (some ⟨.bool, true⟩) (ua ++ ub)
+    | subscript (base : ExprValid params scope a (some ⟨.array element, nullable⟩) ua)
+        (bounds : SubscriptsValid params scope indices ui)
+        (nonempty : indices ≠ []) (dimensions : indices.length ≤ 6) :
+        ExprValid params scope (.subscript a indices)
+          (some ⟨if indices.any Advanced.Subscript.isSlice then .array element else element, true⟩)
+          (ua ++ ui)
     | inList (arg : ExprValid params scope a ta ua) (values : ExprListValid params scope es ts us)
         (nonempty : es ≠ []) (signature : comparisonListSignature (ta :: ts) = some result) :
         ExprValid params scope (.inList a es) result (ua ++ us)
@@ -242,6 +248,22 @@ mutual
     | present (typed : ExprValid params scope expr type uses) :
         OptionalExprValid params scope (some expr) type uses
 
+  /-- Adjacent dimensions belong to one operation. Bounds retain lexical
+  lower-before-upper order; omitted endpoints consume no parameters. -/
+  inductive SubscriptsValid (params : ParameterEnv) (scope : Scope) :
+      List Advanced.Subscript → List Parameter → Prop where
+    | nil : SubscriptsValid params scope [] []
+    | index (bound : ExprValid params scope expr type uses)
+        (signature : subscriptBoundSignature (scalarInput expr type) = true)
+        (tail : SubscriptsValid params scope rest remaining) :
+        SubscriptsValid params scope (.index expr :: rest) (uses ++ remaining)
+    | slice (lower : OptionalExprValid params scope lo tl ul)
+        (upper : OptionalExprValid params scope hi th uh)
+        (lowerSignature : optionalSubscriptBoundSignature lo tl = true)
+        (upperSignature : optionalSubscriptBoundSignature hi th = true)
+        (tail : SubscriptsValid params scope rest remaining) :
+        SubscriptsValid params scope (.slice lo hi :: rest) (ul ++ uh ++ remaining)
+
   /-- WHEN and THEN occurrences remain interleaved in source order. -/
   inductive BranchesValid (params : ParameterEnv) (scope : Scope) :
       List (Advanced.Expr × Advanced.Expr) → List ExprType → List ExprType → List Parameter → Prop where
@@ -259,18 +281,44 @@ def arrayOrigin : Advanced.Expr → Bool
   | .cast arg _ => arrayOrigin arg
   | _ => false
 
-/-- A label is independent of expression typing. Computed unnamed top-level
-outputs use ?column?; duplicate labels are retained, never deduplicated. -/
+/-- Built-in names used by PostgreSQL's raw TypeName after grammar aliases
+are normalized. Array suffixes and modifiers do not change the label. -/
+def typeNameLabel : Advanced.TypeName → Name
+  | .smallInt => "int2" | .int => "int4" | .bigInt => "int8"
+  | .text => "text" | .varchar => "varchar" | .char => "bpchar"
+  | .bool => "bool" | .real => "float4" | .doublePrecision => "float8"
+  | .numeric => "numeric" | .date => "date" | .time => "time"
+  | .timeTZ => "timetz" | .timestamp => "timestamp" | .timestampTZ => "timestamptz"
+  | .interval => "interval" | .uuid => "uuid" | .json => "json"
+  | .jsonb => "jsonb" | .bytea => "bytea"
+  | .array element => typeNameLabel element
+
+/-- PostgreSQL FigureColnameInternal's strength distinction for the covered
+expression forms: 0 is absent, 1 is a weak cast/CASE name, and 2 is inherited.
+A cast replaces a weak name but retains a column/function/constructor name. -/
+def outputLabel : Advanced.Expr → Nat × Name
+  | .column _ name => (2, name)
+  | .call name _ => (2, name.getLastD "?column?")
+  | .array _ => (2, "array")
+  | .cast arg target =>
+      let inherited := outputLabel arg
+      if inherited.1 ≤ 1 then (1, typeNameLabel target.name) else inherited
+  | .subscript arg _ => outputLabel arg
+  | .caseExpr _ _ otherwise =>
+      let inherited := match otherwise with
+        | none => (0, "?column?")
+        | some expr => outputLabel expr
+      if inherited.1 ≤ 1 then (1, "case") else inherited
+  | .coalesce .. => (2, "coalesce")
+  | .nullIf .. => (2, "nullif")
+  | .greatest .. => (2, "greatest")
+  | .least .. => (2, "least")
+  | _ => (0, "?column?")
+
+/-- Labels are independent of expression typing. Duplicate labels remain
+ordered outputs, and an explicit alias overrides every inferred label. -/
 def outputName (expr : Advanced.Expr) (alias : Option Name) : Name :=
-  alias.getD (if arrayOrigin expr then "array" else match expr with
-    | .column _ name => name
-    | .call name _ => name.getLastD "?column?"
-    | .caseExpr .. => "case"
-    | .coalesce .. => "coalesce"
-    | .nullIf .. => "nullif"
-    | .greatest .. => "greatest"
-    | .least .. => "least"
-    | _ => "?column?")
+  alias.getD (outputLabel expr).2
 
 inductive ItemsValid (params : ParameterEnv) (scope : Scope) :
     List Advanced.SelectItem → List OutputColumn → List Parameter → Prop where

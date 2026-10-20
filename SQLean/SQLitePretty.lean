@@ -50,6 +50,12 @@ mutual
     | .isNull arg negated => paren (exprSql arg ++ if negated then " IS NOT NULL" else " IS NULL")
     | .pattern arg pattern insensitive => paren (exprSql arg ++ (if insensitive then " ILIKE " else " LIKE ") ++ exprSql pattern)
     | .cast arg type => "CAST(" ++ exprSql arg ++ " AS " ++ type.toSql ++ ")"
+    -- Excluded by SQLite admissibility; this total structural spelling is only
+    -- used by serialization laws over arbitrary finite ASTs.
+    | .subscript base subscripts => paren (exprSql base) ++ String.join
+        (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>
+          have : sizeOf subscript.val < sizeOf subscripts := List.sizeOf_lt_of_mem subscript.property
+          subscriptSql subscript.val)
     -- The checked SQLite boundary excludes this constructor. Keeping a total,
     -- structural spelling here does not assert SQLite syntax support.
     | .array elements => "ARRAY[" ++ comma
@@ -92,6 +98,15 @@ mutual
     | .exists query => "EXISTS " ++ paren (querySql query)
     | .scalarQuery query => paren (querySql query)
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def subscriptSql (subscript : Subscript) : String :=
+    match subscript with
+    | .index expr => "[" ++ exprSql expr ++ "]"
+    | .slice lower upper => "[" ++
+        (match _h : lower with | none => "" | some expr => exprSql expr) ++ ":" ++
+        (match _h : upper with | none => "" | some expr => exprSql expr) ++ "]"
+  termination_by sizeOf subscript
   decreasing_by all_goals (simp_all <;> omega)
 
   def itemSql (item : SelectItem) : String :=

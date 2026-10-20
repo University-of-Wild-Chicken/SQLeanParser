@@ -51,12 +51,12 @@ private def checkSyntheticPagination (record : Lean.Json) : IO (String × String
   SQLean.Tests.assert (query.limit.isSome || query.offset.isSome)
     s!"{label}: no outer pagination clause"
   let certificate ← expectOk s!"{label}: complete SELECT validity"
-    ((SelectContract.checkQuery .basicV11 paginationCatalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV12 paginationCatalog params query).mapError reprStr)
   have _completeDerivation :
-      SelectContract.SelectValid .basicV11 paginationCatalog params query certificate.output :=
+      SelectContract.SelectValid .basicV12 paginationCatalog params query certificate.output :=
     certificate.valid
   have _translatedDerivation :
-      SelectContract.SelectValid .basicV11 paginationCatalog params
+      SelectContract.SelectValid .basicV12 paginationCatalog params
         (RenderContract.translateParameters query) certificate.output :=
     RenderContract.translateParameters_valid certificate.valid
   SQLean.Tests.assert (certificate.output == [⟨"id", ⟨.int32, false⟩⟩])
@@ -88,12 +88,12 @@ private def checkConcretePagination (record : Lean.Json) : IO (String × String)
   let assumedParams : SelectContract.ParameterEnv :=
     indices.map (fun index => ⟨index, ⟨.int, []⟩, false⟩)
   let certificate ← expectOk s!"{label}: pagination-only validity under test INT32 assumptions"
-    ((SelectContract.checkPaginationBounds .basicV11 assumedParams query).mapError reprStr)
+    ((SelectContract.checkPaginationBounds .basicV12 assumedParams query).mapError reprStr)
   have _boundsDerivation :
-      SelectContract.PaginationBoundsValid .basicV11 assumedParams query
+      SelectContract.PaginationBoundsValid .basicV12 assumedParams query
         certificate.limitUses certificate.offsetUses := certificate.valid
   have _translatedBounds :
-      SelectContract.PaginationBoundsValid .basicV11 assumedParams
+      SelectContract.PaginationBoundsValid .basicV12 assumedParams
         (RenderContract.translateParameters query)
         (certificate.limitUses.map RenderContract.translateParameter)
         (certificate.offsetUses.map RenderContract.translateParameter) :=
