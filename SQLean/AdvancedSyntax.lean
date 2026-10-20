@@ -104,6 +104,12 @@ inductive JsonAccessOp where
   | field | fieldText | path | pathText
   deriving Repr, BEq, DecidableEq, Inhabited
 
+/-- PostgreSQL JSONB top-level existence operators. The question-mark token
+is an operator only in infix position; anonymous binding identity is separate. -/
+inductive JsonExistenceOp where
+  | key | any | all
+  deriving Repr, BEq, DecidableEq, Inhabited
+
 inductive LockStrength where
   | update | noKeyUpdate | share | keyShare
   deriving Repr, BEq, DecidableEq, Inhabited
@@ -142,6 +148,7 @@ mutual
     part of the selected operator rather than being rewritten into NOT. -/
     | regex (arg pattern : Expr) (insensitive negated : Bool := false)
     | jsonAccess (op : JsonAccessOp) (arg key : Expr)
+    | jsonExistence (op : JsonExistenceOp) (arg keys : Expr)
     /-- `@>` or `<@`. The independent contract selects the operand-specific
     native family; broader array/range/geometric families may remain uncovered. -/
     | containment (left right : Expr) (containedBy : Bool := false)

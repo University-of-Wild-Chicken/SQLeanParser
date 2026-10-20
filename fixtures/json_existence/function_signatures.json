@@ -1,0 +1,23 @@
+[
+  {
+    "operator": "?",
+    "left": "jsonb",
+    "right": "text",
+    "output": "boolean",
+    "function": "jsonb_exists"
+  },
+  {
+    "operator": "?|",
+    "left": "jsonb",
+    "right": "text[]",
+    "output": "boolean",
+    "function": "jsonb_exists_any"
+  },
+  {
+    "operator": "?&",
+    "left": "jsonb",
+    "right": "text[]",
+    "output": "boolean",
+    "function": "jsonb_exists_all"
+  }
+]

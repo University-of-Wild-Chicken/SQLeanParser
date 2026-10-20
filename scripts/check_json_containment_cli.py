@@ -124,6 +124,7 @@ def boundaries():
     valid = [
         "SELECT ARRAY[1] @> ARRAY[1]", "SELECT ARRAY[1] <@ ARRAY[1]",
         "SELECT ARRAY[1] @> '{1}'", "SELECT '{1}' <@ ARRAY[1]",
+        "SELECT '{}'::JSONB ? 'a'",
     ]
     invalid.append("SELECT ARRAY[1] @> ARRAY[1::BIGINT]")
     unsupported = [
@@ -132,7 +133,7 @@ def boundaries():
     syntax = [
         "SELECT '{}'::JSONB @>", "SELECT <@ '{}'::JSONB",
         "SELECT '{}'::JSONB @>> '{}'", "SELECT '{}'::JSONB @>-1",
-        "SELECT '{}'::JSONB ? 'a'", "SELECT '{}'::JSONB @@ '$.a'",
+        "SELECT '{}'::JSONB @@ '$.a'",
     ]
     for status, queries in (("invalid", invalid), ("unsupported", unsupported), ("valid", valid)):
         for sql in queries:

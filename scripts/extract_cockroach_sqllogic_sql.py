@@ -1,9 +1,10 @@
 """Select complete literal queries from a bounded SQLLogicTest prefix.
 
-The two pinned SUBSTRING inputs use Cockroach-style query headers. This reader
-recognizes the prefix through the selected record, never executes directives,
-and leaves result sections opaque. Unknown directives before that record fail.
-The stricter existing reader for other source populations remains unchanged.
+The pinned SUBSTRING and JSONB-existence inputs use Cockroach-style headers.
+This reader recognizes the prefix through the selected record, never executes
+directives, and leaves result sections opaque. Unknown directives before that
+record fail. The default selection remains query T; only the existence factor
+opts into query B/BB. The stricter reader for other populations is unchanged.
 """
 from __future__ import annotations
 
@@ -15,7 +16,8 @@ HEADER = re.compile(r"query [IRTB]+(?: (?:nosort|rowsort|valuesort|colnames|coln
 KEYS = {"kind", "start", "end", "header_line"}
 
 
-def selected_cockroach_sql(source: str, selector: dict) -> tuple[str, int, dict]:
+def selected_cockroach_sql(source: str, selector: dict, *,
+                          boolean_queries: bool = False) -> tuple[str, int, dict]:
     if (set(selector) != KEYS or selector["kind"] != "cockroach_sqllogic_query"
             or any(type(selector[key]) is not int for key in KEYS - {"kind"})
             or selector["header_line"] < 1):
@@ -58,7 +60,8 @@ def selected_cockroach_sql(source: str, selector: dict) -> tuple[str, int, dict]
         if start == end:
             raise ValueError("empty SQLLogicTest query")
         if header_line == selector["header_line"]:
-            if header != "query T" or (start, end) != (selector["start"], selector["end"]):
+            allowed_headers = {"query B", "query BB"} if boolean_queries else {"query T"}
+            if header not in allowed_headers or (start, end) != (selector["start"], selector["end"]):
                 raise ValueError("selection is not the complete pinned literal query")
             sql = source[start:end]
             code = sql_code(sql).strip()

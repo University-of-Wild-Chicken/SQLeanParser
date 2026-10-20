@@ -1,0 +1,1443 @@
+{
+  "format_version": 1,
+  "factor": "json_existence",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 27,
+    "cockroach": 14,
+    "materialize": 8,
+    "river": 1
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "contrib/pg_stat_statements/sql/select.sql",
+          "sha256": "bdb5f4eb1315fca6609df3eaa883f68db20287b644c7eca91bb3649ca7cbfe1e",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/pg_stat_statements/sql/select.sql"
+        },
+        {
+          "path": "src/test/regress/sql/jsonb.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/jsonb.sql",
+          "sha256": "136298080a23e5046eb99813168180377b5b6fa6bc036f47af8e5d7b08618061"
+        }
+      ]
+    },
+    "cockroach": {
+      "repository": "https://github.com/cockroachdb/cockroach",
+      "commit": "5b78463ed2e7106a8477b63fa837564ad02bb510",
+      "ref": "v22.1.0",
+      "license": "Apache-2.0 (BSL-1.1 change date 2025-04-01)",
+      "source_kind": "engine-regression",
+      "source_dialect": "cockroachdb",
+      "license_file": "fixtures/factor_sources/licenses/cockroach-v22.1-BSL.txt",
+      "license_sha256": "b18788e78d6c5a3498b8857abfef58c19ae06b241d38a4023a514e8f8702248d",
+      "additional_notices": [
+        {
+          "path": "LICENSE",
+          "local_path": "fixtures/factor_sources/licenses/cockroach-v22.1-LICENSE",
+          "sha256": "8a2fba9d26592ff3538f44c96d1b894ef44649058b4d04f3fda49518a9c4ae11"
+        },
+        {
+          "path": "licenses/APL.txt",
+          "local_path": "fixtures/factor_sources/licenses/cockroach-v22.1-APACHE.txt",
+          "sha256": "24f9c32c2d3b165c1f9eb4a8aa2c582412a06b3c0c4630f9c77c4f5a6c3937e5"
+        }
+      ],
+      "files": [
+        {
+          "path": "pkg/sql/logictest/testdata/logic_test/json",
+          "local_path": "fixtures/factor_sources/sources/cockroach/pkg/sql/logictest/testdata/logic_test/json",
+          "sha256": "a7eed727f6aaec005757430cb75ad10f5c877f0e470a252696ff48cc42e8eb46"
+        }
+      ]
+    },
+    "materialize": {
+      "repository": "https://github.com/MaterializeInc/materialize",
+      "commit": "726570dba1d2e4d839c707a84a986fb3b3acc5c3",
+      "ref": "pinned main snapshot",
+      "license": "BSL-1.1 (change date 2030-10-20; change license Apache-2.0)",
+      "source_kind": "engine-regression",
+      "source_dialect": "materialize",
+      "license_file": "fixtures/factor_sources/licenses/materialize-20261020-LICENSE",
+      "license_sha256": "5d4ca070f541414a03ad8b84021e4ba3deeca4025e4b4274053abaa2e93ec032",
+      "files": [
+        {
+          "path": "test/sqllogictest/jsonb.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/jsonb.slt",
+          "sha256": "203da405de271852abc2dd21ead6c696d2b1ad9dc78b52059328f3937b788903"
+        }
+      ]
+    },
+    "river": {
+      "repository": "https://github.com/riverqueue/river",
+      "commit": "1354a059d7cbe5790acc7a755a2ab7ac6d2f1ed8",
+      "license": "MPL-2.0",
+      "license_file": "fixtures/external_postgresql/licenses/river-LICENSE.txt",
+      "license_sha256": "393eaf2b92b3d49bea139e39b6fd205b6e99c499999986aec5554586a830dfdd",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+          "sha256": "b99dbdd330354a11c984acbeb4de8234343d387d17f2aff2b49ef3ae3ca05650",
+          "local_path": "fixtures/external_postgresql/sources/river/riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 834,
+        "end": 871,
+        "statement_index": 25
+      },
+      "sql_sha256": "2e96397706c3decd1d6f9f66f44b83659077a8879fa4c89c3b07674680dcd05b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 12278,
+        "end": 12320,
+        "statement_index": 189
+      },
+      "sql_sha256": "ee795b91d51c16e6241a226984baa06c7445b17e8b2bb262c827cb5baae6dd23",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 12321,
+        "end": 12363,
+        "statement_index": 190
+      },
+      "sql_sha256": "516cca606cca75c062d5d148ea26067422138dc0e07f3ae228ba6f66bd912cc8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 12364,
+        "end": 12406,
+        "statement_index": 191
+      },
+      "sql_sha256": "41953abb85fc0ee85b9fae1bd6f772f88a714cd1e485d62d01d1fa03a69fa991",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 12407,
+        "end": 12451,
+        "statement_index": 192
+      },
+      "sql_sha256": "89a081b3df3fe61230704bf63bac27d50df82b1d0b4a76b55a2640c0d082087a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 12507,
+        "end": 12564,
+        "statement_index": 193
+      },
+      "sql_sha256": "56e799e8d5d5e6bcc1e4ebeb86c30c1577d530dc4d11200d8bc21ed6a4459b52",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "A_Expr",
+            "left_cast": null,
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 12707,
+        "end": 12768,
+        "statement_index": 194
+      },
+      "sql_sha256": "4e9d8e105fb5bb555a39d0a85c0c16451e3780e73a3bc2febf555f5ee6ddb8e0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "A_Expr",
+            "left_cast": null,
+            "left_literal_null": false,
+            "right_form": "TypeCast",
+            "right_cast": "text"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13214,
+        "end": 13268,
+        "statement_index": 201
+      },
+      "sql_sha256": "17087d752d0b278e6961d3252841702419e08547f3f1efad29ce3fed1d9cc163",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?|",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13269,
+        "end": 13323,
+        "statement_index": 202
+      },
+      "sql_sha256": "598cca40ac9bee2e33373b5ced70a3e07d82cdddeb76ff1581c000fce5189bf0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?|",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13324,
+        "end": 13378,
+        "statement_index": 203
+      },
+      "sql_sha256": "f502418c4ea32d35901e9ed31e5f6bbc60c157ae145c2c5f42adcc45f94c3430",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?|",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13379,
+        "end": 13433,
+        "statement_index": 204
+      },
+      "sql_sha256": "91c856d1343f9257001187f92585726be6f370e38bfb4239d65054ae1ea1e67f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?|",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13434,
+        "end": 13486,
+        "statement_index": 205
+      },
+      "sql_sha256": "81efcc6b6c084a3dc6a38e23bfc72d49726ed93a71346a25b3ec55d4f643f93c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?|",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "TypeCast",
+            "right_cast": "text[]"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13811,
+        "end": 13865,
+        "statement_index": 211
+      },
+      "sql_sha256": "23406b4ce54d4705e43ceddb44904101bcfd0803d2da4450caf08724cebf4712",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13866,
+        "end": 13920,
+        "statement_index": 212
+      },
+      "sql_sha256": "70b9bea0204da81239923eb365bcdc7bacde7df01780e4a6b4bf27d4707c4f21",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13921,
+        "end": 13975,
+        "statement_index": 213
+      },
+      "sql_sha256": "849ba07eb7984d6e0ba065170c10890ede4659e0a6e4bfb78cce3cfe77327ef6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13976,
+        "end": 14030,
+        "statement_index": 214
+      },
+      "sql_sha256": "b257b2c9ed8f418260208d3ad1f1a7972536c6d3c56d52b59d97a7291ab3def5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14031,
+        "end": 14100,
+        "statement_index": 215
+      },
+      "sql_sha256": "f2c61b07eea50079ff9709d7667452f1d66cf265df7775b582266831abdb240d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14101,
+        "end": 14153,
+        "statement_index": 216
+      },
+      "sql_sha256": "190bf3b9b339696ff3a4f25bd495231c09afbee16b12a9933ce7601b0b5331f3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "TypeCast",
+            "right_cast": "text[]"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 36524,
+        "end": 36574,
+        "statement_index": 504
+      },
+      "sql_sha256": "d2235e93e18746476b7bbaad16245d4e57c2a2ef69d45a03e7a08896ca89a6e7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "ColumnRef",
+            "left_cast": null,
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "river",
+      "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "jobGetCancelRequested"
+      },
+      "sql_sha256": "7c65d9d151aec919851e0ec9907fdb3a47eb02f3a0f82bd7a06f5f2afafb01b6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "ColumnRef",
+            "left_cast": null,
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 36623,
+        "end": 36692,
+        "statement_index": 506
+      },
+      "sql_sha256": "82508d271c44b85cabe98a67221c400c538f30558000be8aa2d4189e181fa2dd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "json_existence": [
+          {
+            "operator": "?|",
+            "left_form": "ColumnRef",
+            "left_cast": null,
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 36693,
+        "end": 36762,
+        "statement_index": 507
+      },
+      "sql_sha256": "0aa5f95588cc668ac079ca1e3f2ced4bfcb13ac12bf78bad8817a59b2468f938",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "ColumnRef",
+            "left_cast": null,
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 49548,
+        "end": 49625,
+        "statement_index": 707
+      },
+      "sql_sha256": "3c59a98a6c22477f3129e42e33413a31b7801428ac408f64137bfb7fee8f3f1c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 49626,
+        "end": 49703,
+        "statement_index": 708
+      },
+      "sql_sha256": "d371ece6ac35023d61ff594580a004acd3f0b6927ca986b12afb5adfd7599dd5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 49704,
+        "end": 49781,
+        "statement_index": 709
+      },
+      "sql_sha256": "ed99ade9d7e52f0981d61936994349085cf578cb1c9f42f7696e64d603e6ca83",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 49782,
+        "end": 49859,
+        "statement_index": 710
+      },
+      "sql_sha256": "2825e8be786f5cd48e4ab0f877c0a028e86427d1a06dcd6d9a28ad025ceca442",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 49860,
+        "end": 49937,
+        "statement_index": 711
+      },
+      "sql_sha256": "0be811de176610e2671cdf061e585287675eebf79b4f49634352a38b5097ace4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 49938,
+        "end": 50015,
+        "statement_index": 712
+      },
+      "sql_sha256": "04ad0538654168f7ae9bf23574375ec356485f20e2bdd7207a768791bb299a18",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 467,
+        "start": 7167,
+        "end": 7223
+      },
+      "sql_sha256": "60fa48c180e215f138133fc02ff2a9908446780229d9b31e2f5cb20c5f72948f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          },
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 472,
+        "start": 7249,
+        "end": 7321
+      },
+      "sql_sha256": "37da91af999597c137cddab323e002657cda44eab2a87f59d4c70b314564708d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          },
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 477,
+        "start": 7346,
+        "end": 7428
+      },
+      "sql_sha256": "585782ce8cf3f7caf85234bdffc9e53f84b46f84c410be470facb123aa2a5579",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?|",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          },
+          {
+            "operator": "?|",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 482,
+        "start": 7452,
+        "end": 7496
+      },
+      "sql_sha256": "bb97190e9cf86efe11e8c75cf210672b6bfaa2878760f5e7ed3c1fd143e22569",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?|",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 487,
+        "start": 7517,
+        "end": 7599
+      },
+      "sql_sha256": "6e6e0c3e6fb2ac4dbc3c22314c3b583eaac8b30219159edf6ddd430c008b30bf",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          },
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 492,
+        "start": 7625,
+        "end": 7685
+      },
+      "sql_sha256": "8868eed23935a6afc7d7701b391e1868b2badb5ece88f982562e05374518fc59",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 498,
+        "start": 7752,
+        "end": 7784
+      },
+      "sql_sha256": "33f5472315576ddbff5eb1916f6dbc228a986fef4074c619c8e5be7ec230972a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 504,
+        "start": 7835,
+        "end": 7881
+      },
+      "sql_sha256": "9077bcd25db963ddc8bbda617b1e1eb3cf6878de3ed15fed06e1f58871d782b0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 509,
+        "start": 7900,
+        "end": 7946
+      },
+      "sql_sha256": "abfa2ffbca1d8962ae4aae7a3fef8fb227a4753d740eed47837325891668e444",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 514,
+        "start": 7965,
+        "end": 8011
+      },
+      "sql_sha256": "aca8918d5d823477dec0c5bb66dc80aeed7f72102a7ecc257dc067f65f1571dd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 519,
+        "start": 8031,
+        "end": 8092
+      },
+      "sql_sha256": "ad4e05b1f99349d4487b9914bf6fa48f6c45bd82bdf80283a2bc4b252eb61585",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?|",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 524,
+        "start": 8111,
+        "end": 8172
+      },
+      "sql_sha256": "4c1d797355b4266c05ec029bf8c53845dd0e74e5fbe8c5cdd2e8acb70ae47808",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?|",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 529,
+        "start": 8192,
+        "end": 8253
+      },
+      "sql_sha256": "064c7ef47fd45b6811f35606c451e9a2eda651999c8c651eed6734ecaa399e89",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/json",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 534,
+        "start": 8272,
+        "end": 8333
+      },
+      "sql_sha256": "8d9db5457dd96dc8b174a37fafe86fbe393e4b47f11d5777a71d430013d9baca",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?&",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_ArrayExpr",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/jsonb.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 657,
+        "start": 11358,
+        "end": 11411
+      },
+      "sql_sha256": "75e14b8c6c9eb7212733112528f365c228e8e59efd82382bd79fd8ee1f938d49",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          },
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/jsonb.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 663,
+        "start": 11492,
+        "end": 11519
+      },
+      "sql_sha256": "2d1e68ea371aac40df2c03846c025a002db527b8698bbcda8337b44306f23dd6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": true,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/jsonb.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 668,
+        "start": 11538,
+        "end": 11572
+      },
+      "sql_sha256": "4f080d884366f4d0f1168fdc4950d85b795c57320f4bec2f2919bc81bffb3ca2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": true,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/jsonb.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 719,
+        "start": 12066,
+        "end": 12131
+      },
+      "sql_sha256": "5540426d4166d363df05fff6e6df4a2ce7b66caaa8139c13060eafb17baf4328",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          },
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/jsonb.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 745,
+        "start": 12576,
+        "end": 12606
+      },
+      "sql_sha256": "f5a3549bb5d98f43ec0e95b2927ed4d409bf45f2747c52367504329f7894ed6d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/jsonb.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 751,
+        "start": 12657,
+        "end": 12701
+      },
+      "sql_sha256": "3031aa05a49940fc57854bf4751921fa0015dfdb9f0f9a4a6a100414be508258",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/jsonb.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 756,
+        "start": 12720,
+        "end": 12764
+      },
+      "sql_sha256": "677e555b13960341bfc294681b5895eff992d5f2423954b7116d9bacfeddc7e8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/jsonb.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 761,
+        "start": 12783,
+        "end": 12827
+      },
+      "sql_sha256": "d380866835c98a7bdc6259f84d12c92355885a7c709d196102348441c0c8911d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "json_existence": [
+          {
+            "operator": "?",
+            "left_form": "TypeCast",
+            "left_cast": "jsonb",
+            "left_literal_null": false,
+            "right_form": "A_Const",
+            "right_cast": null
+          }
+        ]
+      }
+    }
+  ]
+}

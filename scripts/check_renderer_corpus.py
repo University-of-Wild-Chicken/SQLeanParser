@@ -101,77 +101,9 @@ def load_file(root, entry):
 
 
 def sql_tokens(sql, mode):
-    """Small independent lexical observer, not a SQL parser.
-
-    Observe parameters and outer ORDER BY, ignoring strings, quoted names and
-    comments. PostgreSQL block comments nest; SQLite comments do not.
-    """
-    i, depth, ordinal = 0, 0, 0
-    tokens = []
-    while i < len(sql):
-        if sql.startswith("--", i):
-            end = sql.find("\n", i + 2)
-            i = len(sql) if end < 0 else end + 1
-        elif sql.startswith("/*", i):
-            nesting = 1
-            i += 2
-            while i < len(sql) and nesting:
-                if sql.startswith("*/", i):
-                    nesting -= 1
-                    i += 2
-                elif mode != "sqlite" and sql.startswith("/*", i):
-                    nesting += 1
-                    i += 2
-                else:
-                    i += 1
-            assert nesting == 0, "unterminated observed comment"
-        elif sql[i] in "'\"":
-            quote = sql[i]
-            i += 1
-            while i < len(sql):
-                if sql[i] == quote:
-                    i += 1
-                    if i < len(sql) and sql[i] == quote:
-                        i += 1
-                    else:
-                        break
-                else:
-                    i += 1
-            else:
-                raise AssertionError("unterminated observed quoted text")
-        elif sql[i] in "?$":
-            marker = sql[i]
-            i += 1
-            start = i
-            while i < len(sql) and sql[i].isdigit():
-                i += 1
-            digits = sql[start:i]
-            if digits:
-                assert marker == "$" or mode == "sqlite", "unexpected numbered question marker"
-                parameter = ("numbered", int(digits))
-            else:
-                assert marker == "?", "bare dollar marker"
-                ordinal += 1
-                parameter = ("anonymous", ordinal)
-            assert parameter[1] > 0
-            tokens.append(("parameter", parameter, depth))
-        elif sql[i] == "(":
-            depth += 1
-            i += 1
-        elif sql[i] == ")":
-            depth -= 1
-            assert depth >= 0
-            i += 1
-        elif sql[i].isalpha() or sql[i] == "_":
-            start = i
-            i += 1
-            while i < len(sql) and (sql[i].isalnum() or sql[i] in "_$"):
-                i += 1
-            tokens.append(("word", sql[start:i].upper(), depth))
-        else:
-            i += 1
-    assert depth == 0, "unbalanced observed parentheses"
-    return tokens
+    """Independent bounded lexical observer shared with native binding adapters."""
+    from sql_parameter_observer import observe_sql
+    return [(token.kind, token.value, token.depth) for token in observe_sql(sql, mode)]
 
 
 def parameters(sql, mode):

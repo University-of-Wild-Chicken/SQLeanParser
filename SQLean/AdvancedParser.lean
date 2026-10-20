@@ -85,10 +85,10 @@ private def readNumeric (input : List Char) (p : SourcePos) :
   | [] => pure ()
   pure (raw, rest, p')
 
-/-- PostgreSQL scans a maximal operator token before considering the finite
-supported operator vocabulary. `?` remains the explicitly supported anonymous
-placeholder extension, including conventional `column=?` spelling. -/
-private def pgOperatorChar (c : Char) : Bool := "~!@#^&|`+-*/%<>=".contains c
+/-- PostgreSQL scans maximal operator runs, including question marks. Runs
+containing a question mark are resolved by parser role: native infix operators
+versus the separately documented anonymous-template compatibility extension. -/
+private def pgOperatorChar (c : Char) : Bool := "~!@#^&|`?+-*/%<>=".contains c
 
 private def pgOperatorPrefix : List Char → List Char
   | [] => []
@@ -97,104 +97,170 @@ private def pgOperatorPrefix : List Char → List Char
     else if pgOperatorChar c then c :: pgOperatorPrefix cs
     else []
 
+private def supportedPgOperators : List String :=
+  ["->>", "#>>", "!~*", "<=", ">=", "<>", "!=", "||", "&&", "~*", "!~",
+   "->", "#>", "@>", "<@", "?|", "?&", "+", "-", "*", "/", "=", "<", ">", "~", "?"]
+
 private def readPgOperator (input : List Char) (p : SourcePos) :
     Except ParseError (String × List Char × SourcePos) := do
   let raw := pgOperatorPrefix input
   -- scan.l strips trailing +/− only from SQL-style operator runs. The
   -- nonstandard characters in `||-`, `~-`, `!=+`, etc. prevent stripping.
-  let stripped := if raw.any (fun c => "~!@#^&|`%".contains c) then raw
+  let stripped := if raw.any (fun c => "~!@#^&|`?%".contains c) then raw
     else (raw.reverse.dropWhile (fun c => c == '+' || c == '-')).reverse
   let chars := if stripped.isEmpty then raw.take 1 else stripped
   let operator := String.ofList chars
-  if !(["+", "-", "*", "/", "=", "<", ">", "<=", ">=", "<>", "!=",
-      "||", "&&", "~", "~*", "!~", "!~*", "->", "->>", "#>", "#>>", "@>", "<@"] : List String).contains operator then
+  if !supportedPgOperators.contains operator && !operator.contains '?' then
     throw {position := p, message := s!"unsupported PostgreSQL operator '{operator}'"}
   pure (operator, input.drop chars.length, chars.foldl advance p)
 
-private def lexLoop (sqlite : Bool) : Nat → List Char → SourcePos → Nat → Bool → List LexToken → Except ParseError (List LexToken)
-  | 0, _, p, _, _, _ => .error { position := p, message := "lexer input bound exceeded" }
-  | fuel + 1, input, p, anonymous, numbered, acc => do
+private def lexLoop (sqlite : Bool) : Nat → List Char → SourcePos → List LexToken → Except ParseError (List LexToken)
+  | 0, _, p, _ => .error { position := p, message := "lexer input bound exceeded" }
+  | fuel + 1, input, p, acc => do
     match input with
     | [] => pure (({kind := .eof, position := p} :: acc).reverse)
     | c :: cs =>
       if c == ' ' || c == '\t' || c == '\r' || c == '\n' then
-        lexLoop sqlite fuel cs (advance p c) anonymous numbered acc
+        lexLoop sqlite fuel cs (advance p c) acc
       else if wordStart c then
         let (name, rest, next) := readWhile wordChar cs (advance p c) [c]
         let spelling := if sqlite then name else name.toLower
-        lexLoop sqlite fuel rest next anonymous numbered ({kind := .word spelling, position := p} :: acc)
+        lexLoop sqlite fuel rest next ({kind := .word spelling, position := p} :: acc)
       else if digit c || (c == '.' && cs.head?.any digit) then
         let (raw, rest, next) ← readNumeric input p
-        lexLoop sqlite fuel rest next anonymous numbered ({kind := .number raw, position := p} :: acc)
+        lexLoop sqlite fuel rest next ({kind := .number raw, position := p} :: acc)
       else if c == '\'' || c == '"' then
         let (value, rest, next) ← quoted c p cs (advance p c) []
         if c == '"' && value.isEmpty then throw {position := p, message := "empty identifier"}
         let kind := if c == '\'' then Lexeme.text value else .quoted value
-        lexLoop sqlite fuel rest next anonymous numbered ({kind, position := p} :: acc)
+        lexLoop sqlite fuel rest next ({kind, position := p} :: acc)
       else if c == '?' then
-        if cs.head?.any digit then
-          if !sqlite then throw {position := p, message := "?NNN parameters require the SQLite parser interface"}
-          if anonymous > 0 then throw {position := p, message := "cannot mix ? and ?NNN parameter styles"}
+        if !sqlite then
+          let (operator, rest, next) ← readPgOperator input p
+          lexLoop sqlite fuel rest next
+            ({kind := .symbol operator, position := p} :: acc)
+        else if cs.head?.any digit then
           let (raw, rest, next) := readWhile digit cs (advance p c) []
           let some index := raw.toNat? | throw {position := p, message := "expected positive parameter index"}
           if index == 0 then throw {position := p, message := "parameter indexes begin at one"}
           if rest.head?.any wordChar then throw {position := next, message := "invalid parameter suffix"}
-          lexLoop sqlite fuel rest next anonymous true
+          lexLoop sqlite fuel rest next
             ({kind := .parameter (.numbered index), position := p} :: acc)
+        else if cs.head? == some '|' || cs.head? == some '&' then
+          let operator := String.ofList (c :: cs.take 1)
+          lexLoop sqlite fuel (cs.drop 1) ((cs.take 1).foldl advance (advance p c))
+            ({kind := .symbol operator, position := p} :: acc)
         else
-          if numbered then throw {position := p, message := "cannot mix anonymous and numbered parameter styles"}
-          lexLoop sqlite fuel cs (advance p c) (anonymous + 1) numbered
-            ({kind := .parameter (.anonymous (anonymous + 1)), position := p} :: acc)
+          lexLoop sqlite fuel cs (advance p c)
+            ({kind := .symbol "?", position := p} :: acc)
       else if c == '$' then
         if sqlite then throw {position := p, message := "SQLite named $ parameters are outside this profile; use ?NNN"}
-        if anonymous > 0 then throw {position := p, message := "cannot mix ? and $n parameter styles"}
         let (raw, rest, next) := readWhile digit cs (advance p c) []
         let some index := raw.toNat? | throw {position := p, message := "expected positive parameter index"}
         if index == 0 then throw {position := p, message := "parameter indexes begin at one"}
         if rest.head?.any wordChar then throw {position := next, message := "invalid parameter suffix"}
-        lexLoop sqlite fuel rest next anonymous true ({kind := .parameter (.numbered index), position := p} :: acc)
+        lexLoop sqlite fuel rest next ({kind := .parameter (.numbered index), position := p} :: acc)
       else
         match cs with
         | d :: ds =>
           if c == '-' && d == '-' then
             let (rest, next) := skipLine ds (advance (advance p c) d)
-            lexLoop sqlite fuel rest next anonymous numbered acc
+            lexLoop sqlite fuel rest next acc
           else if c == '/' && d == '*' then
             let (rest, next) ← skipBlock (!sqlite) (input.length + 1) 1 ds (advance (advance p c) d)
-            lexLoop sqlite fuel rest next anonymous numbered acc
+            lexLoop sqlite fuel rest next acc
           else if !sqlite && pgOperatorChar c then
             let (operator, rest, next) ← readPgOperator input p
-            lexLoop sqlite fuel rest next anonymous numbered
+            lexLoop sqlite fuel rest next
               ({kind := .symbol operator, position := p} :: acc)
           else if c == '!' && d == '~' then
             match ds with
             | '*' :: rest =>
-              lexLoop sqlite fuel rest (advance (advance (advance p c) d) '*') anonymous numbered
+              lexLoop sqlite fuel rest (advance (advance (advance p c) d) '*')
                 ({kind := .symbol "!~*", position := p} :: acc)
             | _ =>
-              lexLoop sqlite fuel ds (advance (advance p c) d) anonymous numbered
+              lexLoop sqlite fuel ds (advance (advance p c) d)
                 ({kind := .symbol "!~", position := p} :: acc)
           else if (c == '<' && (d == '>' || d == '=')) || (c == '>' && d == '=') ||
               (c == '!' && d == '=') || (c == ':' && d == ':') || (c == '|' && d == '|') ||
               (c == '~' && d == '*') then
-            lexLoop sqlite fuel ds (advance (advance p c) d) anonymous numbered
+            lexLoop sqlite fuel ds (advance (advance p c) d)
               ({kind := .symbol (String.ofList [c,d]), position := p} :: acc)
           else if "(),;*./+-=<>[]:~".contains c then
-            lexLoop sqlite fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
+            lexLoop sqlite fuel cs (advance p c) ({kind := .symbol (String.singleton c), position := p} :: acc)
           else throw {position := p, message := s!"unsupported character '{c}'"}
         | [] =>
           if "(),;*./+-=<>[]:~".contains c then
-            lexLoop sqlite fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
+            lexLoop sqlite fuel cs (advance p c) ({kind := .symbol (String.singleton c), position := p} :: acc)
           else throw {position := p, message := s!"unsupported character '{c}'"}
 
-private abbrev Parser := ReaderT Bool (StateT (List LexToken) (Except ParseError))
-private def peek : Parser LexToken := do pure ((← get).headD {kind := .eof, position := {}})
+/-- The entire state is restored by parser alternatives. Only a consumed
+primary parameter changes the binding counters; infix question operators and
+metadata nullability suffixes never consume a slot. -/
+private structure ParseState where
+  tokens : List LexToken
+  anonymousCount : Nat := 0
+  numberedSeen : Bool := false
+
+private abbrev Parser := ReaderT Bool (StateT ParseState (Except ParseError))
+private def peek : Parser LexToken := do pure ((← get).tokens.headD {kind := .eof, position := {}})
 private def pop : Parser LexToken := do
   let token ← peek
-  modify List.tail
+  modify fun state => {state with tokens := state.tokens.tail}
   pure token
 private def fail {α : Type} (message : String) : Parser α := do
   throw { position := (← peek).position, message }
+/-- Splitting is confined to the explicit anonymous-template extension.
+Native infix runs such as ?-, ?!, ?|| and ||- remain maximal and unsupported.
+In primary position ?+? / ?||? denote bindings; in infix position 1=? and id+?
+keep their established interpretation. Positions advance by the exact prefix. -/
+private def splitSymbol (piece : String) : Parser Unit := do
+  let token ← peek
+  match token.kind with
+  | .symbol raw =>
+      let rest := String.ofList (raw.toList.drop piece.length)
+      unless rest.isEmpty do
+        modify fun state => {state with tokens :=
+          {token with kind := .symbol piece} ::
+          {kind := .symbol rest, position := piece.toList.foldl advance token.position} ::
+          state.tokens.tail}
+  | _ => pure ()
+
+private def preparePrimaryOperator : Parser Unit := do
+  if ← read then return
+  match (← peek).kind with
+  | .symbol raw =>
+      if raw.startsWith "?" &&
+          (!raw.startsWith "?|" || raw.startsWith "?||") &&
+          (!raw.startsWith "?&" || raw.startsWith "?&&") then
+        splitSymbol "?"
+      else if raw.contains '?' && (raw.startsWith "+" || raw.startsWith "-") then
+        splitSymbol (String.ofList (raw.toList.take 1))
+  | _ => pure ()
+
+private def prepareInfixOperator : Parser Unit := do
+  if ← read then return
+  match (← peek).kind with
+  | .symbol raw =>
+      if raw.contains '?' && !supportedPgOperators.contains raw then
+        match supportedPgOperators.find? (fun op => raw.startsWith (op ++ "?")) with
+        | some piece => splitSymbol piece
+        | none => fail s!"unsupported PostgreSQL operator '{raw}'"
+  | _ => pure ()
+
+private def consumeParameter (parameter : Parameter) : Parser Parameter := do
+  let state ← get
+  match parameter with
+  | .anonymous _ =>
+      if state.numberedSeen then fail "cannot mix anonymous and numbered parameter styles"
+      let ordinal := state.anonymousCount + 1
+      modify fun state => {state with anonymousCount := ordinal}
+      pure (.anonymous ordinal)
+  | .numbered _ =>
+      if state.anonymousCount > 0 then fail "cannot mix anonymous and numbered parameter styles"
+      modify fun state => {state with numberedSeen := true}
+      pure parameter
+
 private def isAt (value : String) : Parser Bool := do
   pure (match (← peek).kind.keyword with | .word s | .symbol s => s == value | _ => false)
 private def eat (value : String) : Parser Bool := do
@@ -471,7 +537,7 @@ private def typedString (fuel : Nat) : Parser Expr := do
 
 /-- This is a lookahead hint, not proof that the entire group is a query. -/
 private def queryStart : Parser Bool := do
-  let tokens := (← get).dropWhile (fun t => t.kind == .symbol "(")
+  let tokens := (← get).tokens.dropWhile (fun t => t.kind == .symbol "(")
   pure (match tokens.head? with
     | some token => token.kind.keyword == .word "select" || token.kind.keyword == .word "with"
     | none => false)
@@ -509,6 +575,7 @@ mutual
   private def atom : Nat → Parser Expr
     | 0 => fail "expression nesting bound exceeded"
     | fuel + 1 => do
+      preparePrimaryOperator
       if ← eat "not" then return .unary .not (← expression fuel 4)
       if ← eat "+" then return .unary .pos (← expression fuel 9)
       if ← eat "-" then return .unary .neg (← expression fuel 9)
@@ -518,7 +585,7 @@ mutual
       if ← eat "array" then
         if ← read then fail "array constructors are not supported by the SQLite profile"
         return ← arrayBracket fuel
-      if (← isAt "row") && ((← get).drop 1).head?.any (fun t => t.kind == .symbol "(") then
+      if (← isAt "row") && ((← get).tokens.drop 1).head?.any (fun t => t.kind == .symbol "(") then
         let _ ← pop
         if ← read then fail "ROW constructors require tuple syntax in the SQLite profile"
         expect "("
@@ -527,7 +594,7 @@ mutual
           expect ")"
           pure fields
         return .row fields
-      if (← isAt "extract") && ((← get).drop 1).head?.any (fun t => t.kind == .symbol "(") then
+      if (← isAt "extract") && ((← get).tokens.drop 1).head?.any (fun t => t.kind == .symbol "(") then
         let _ ← pop
         if ← read then fail "EXTRACT is not supported by the SQLite profile"
         expect "("
@@ -536,7 +603,7 @@ mutual
         let arg ← expression fuel 0
         expect ")"
         return .extract field arg
-      if (← isAt "substring") && ((← get).drop 1).head?.any (fun t => t.kind == .symbol "(") then
+      if (← isAt "substring") && ((← get).tokens.drop 1).head?.any (fun t => t.kind == .symbol "(") then
         let _ ← pop
         expect "("
         if ← eat ")" then return .call ["substring"] []
@@ -628,7 +695,17 @@ mutual
         | some n => return .literal (.int n)
         | none => return .decimal raw
       | .text value => let _ ← pop; return .literal (.text value)
-      | .parameter value => let _ ← pop; return ← subscriptTail fuel (.parameter value)
+      | .symbol "?" =>
+          let token ← pop
+          if !(← read) && (← peek).position.offset == token.position.offset + 1 then
+            if let .number _ := (← peek).kind then
+              fail "?NNN parameters require the SQLite parser interface"
+          let value ← consumeParameter (.anonymous 0)
+          return ← subscriptTail fuel (.parameter value)
+      | .parameter value =>
+          let _ ← pop
+          let value ← consumeParameter value
+          return ← subscriptTail fuel (.parameter value)
       | .word word =>
         if typeWord word.toLower then
           return ← alternative (typedString fuel) (namedAtom fuel)
@@ -741,10 +818,11 @@ mutual
   private def tailExpr : Nat → Nat → Expr → Bool → Parser Expr
     | 0, _, _, _ => fail "expression input bound exceeded"
     | fuel + 1, minPrec, left, compared => do
+      prepareInfixOperator
       if minPrec <= 10 && (← eat "::") then
         let type ← dataType fuel
         return ← tailExpr fuel minPrec (.cast left type) compared
-      let notPredicate := match (← get) with
+      let notPredicate := match (← get).tokens with
         | first :: next :: _ =>
           first.kind.keyword == .word "not" &&
             match next.kind.keyword with
@@ -786,6 +864,16 @@ mutual
             pure (if negated then .unary .not result else result)
         tailExpr fuel minPrec result true
       else
+        let existenceOperator := match (← peek).kind with
+          | .symbol "?" => some JsonExistenceOp.key
+          | .symbol "?|" => some JsonExistenceOp.any
+          | .symbol "?&" => some JsonExistenceOp.all
+          | _ => none
+        if let some op := existenceOperator then
+          if minPrec > 5 then return left
+          let _ ← pop
+          let right ← expression fuel 6
+          return ← tailExpr fuel minPrec (.jsonExistence op left right) false
         if ← isAt "&&" then
           if minPrec > 5 then return left
           if ← read then fail "PostgreSQL overlap is not supported by the SQLite profile"
@@ -1277,13 +1365,13 @@ private def statement (fuel : Nat) : Parser Statement := do
 private def runComplete {α : Type} (source : String) (parser : Nat → Parser α)
     (sqlite : Bool := false) : Except ParseError α := do
   let chars := source.toList
-  let tokens ← lexLoop sqlite (chars.length + 1) chars {} 0 false []
+  let tokens ← lexLoop sqlite (chars.length + 1) chars {} []
   let (result, _) ← (do
-    let value ← parser (tokens.length * 12 + 64)
+    let value ← parser (max tokens.length chars.length * 12 + 64)
     let _ ← eat ";"
     match (← peek).kind with
     | .eof => pure value
-    | _ => fail "unexpected trailing SQL input").run sqlite |>.run tokens
+    | _ => fail "unexpected trailing SQL input").run sqlite |>.run {tokens}
   pure result
 
 /-- Parse one statement. Mixing numbered and anonymous parameters is rejected. -/
@@ -1311,7 +1399,7 @@ def parseParameterDeclarations (source : String) : Except ParseError (List (Data
           | _ => fail "unsupported parameter type"
         pure {name})
       let nullable ← match (← peek).kind with
-        | .parameter (.anonymous _) => do let _ ← pop; pure true
+        | .symbol "?" => do let _ ← pop; pure true
         | _ => pure false
       pure (type, nullable)) fuel
 /-- Uniform query entry point, independent of legacy SELECT AST dispatch. -/

@@ -57,6 +57,7 @@ mutual
     -- The PostgreSQL extraction operators require a separate SQLite contract,
     -- even where SQLite recognizes the same arrow spelling.
     | .jsonAccess op arg key => paren (exprSql arg ++ " " ++ op.toSql ++ " " ++ exprSql key)
+    | .jsonExistence op arg key => paren (exprSql arg ++ " " ++ op.toSql ++ " " ++ exprSql key)
     -- This spelling supports structural laws only; the checked SQLite profile
     -- excludes PostgreSQL containment operators.
     | .containment left right containedBy =>

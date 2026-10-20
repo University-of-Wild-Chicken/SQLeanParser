@@ -328,6 +328,30 @@ def jsonAccessSignature (op : Advanced.JsonAccessOp) (arg key : ScalarInput) :
     Option FunctionOverload :=
   resolveOverload (jsonAccessCatalog op) [arg, key]
 
+/-- The three admitted JSONB existence operators retain their exact spellings. -/
+def jsonExistenceOperators : List Advanced.JsonExistenceOp := [.key, .any, .all]
+
+def jsonExistenceSpelling : Advanced.JsonExistenceOp → String
+  | .key => "?" | .any => "?|" | .all => "?&"
+
+def jsonExistenceFunctionName : Advanced.JsonExistenceOp → String
+  | .key => "jsonb_exists" | .any => "jsonb_exists_any" | .all => "jsonb_exists_all"
+
+/-- Strict, immutable, scalar Boolean declarations. NULL array members are
+skipped by the array variants; only the outer argument flags affect nullability. -/
+def jsonExistenceCatalog (op : Advanced.JsonExistenceOp) : List FunctionOverload :=
+  [⟨[.jsonb, match op with | .key => .text | .any | .all => .array .text], .bool⟩]
+
+/-- PostgreSQL also has binary POINT ?| POINT. Two unknown operands therefore
+remain ambiguous for ?|, even though the JSONB-only inventory has one candidate.
+The other two binary spellings have unique built-in declarations, and can give
+both unknown constants their JSONB/TEXT or JSONB/TEXT[] context. Known JSON and
+TEXT subjects do not become JSONB implicitly; string keys/arrays do coerce. -/
+def jsonExistenceSignature (op : Advanced.JsonExistenceOp) (arg keys : ScalarInput) :
+    Option FunctionOverload :=
+  if op == .any && arg.base.isNone && keys.base.isNone then none
+  else resolveOverload (jsonExistenceCatalog op) [arg, keys]
+
 /-- The two directions share an exact JSONB/JSONB declaration; the AST retains
 their spelling instead of swapping operands. -/
 def jsonContainmentDirections : List Bool := [false, true]

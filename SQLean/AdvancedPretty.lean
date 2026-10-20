@@ -77,6 +77,9 @@ def JsonAccessOp.toSql : JsonAccessOp → String
   | .field => "->" | .fieldText => "->>"
   | .path => "#>" | .pathText => "#>>"
 
+def JsonExistenceOp.toSql : JsonExistenceOp → String
+  | .key => "?" | .any => "?|" | .all => "?&"
+
 private def aggregateSql : AggregateFn → String
   | .count => "COUNT" | .sum => "SUM" | .avg => "AVG" | .min => "MIN" | .max => "MAX"
 private def joinSql : JoinKind → String
@@ -114,6 +117,7 @@ mutual
     | .regex arg pattern insensitive negated =>
         paren (exprSql pg arg ++ " " ++ regexOperatorSql insensitive negated ++ " " ++ exprSql pg pattern)
     | .jsonAccess op arg key => paren (exprSql pg arg ++ " " ++ op.toSql ++ " " ++ exprSql pg key)
+    | .jsonExistence op arg key => paren (exprSql pg arg ++ " " ++ op.toSql ++ " " ++ exprSql pg key)
     | .containment left right containedBy =>
         paren (exprSql pg left ++ (if containedBy then " <@ " else " @> ") ++ exprSql pg right)
     | .overlap left right => paren (exprSql pg left ++ " && " ++ exprSql pg right)

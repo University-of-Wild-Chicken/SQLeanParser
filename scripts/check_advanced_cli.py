@@ -37,31 +37,9 @@ def literal(value):
 
 
 def question_parameters(source):
-    """Translate fixture ? parameters without touching quoted strings/names."""
-    output, index, count = [], 0, 0
-    while index < len(source):
-        char = source[index]
-        if char in "'\"":
-            quote = char
-            start = index
-            index += 1
-            while index < len(source):
-                if source[index] == quote:
-                    index += 1
-                    if index < len(source) and source[index] == quote:
-                        index += 1
-                        continue
-                    break
-                index += 1
-            output.append(source[start:index])
-            continue
-        if char == '?':
-            count += 1
-            output.append(f'${count}')
-        else:
-            output.append(char)
-        index += 1
-    return ''.join(output)
+    """Translate true template bindings, retaining PostgreSQL question operators."""
+    from sql_parameter_observer import postgres_parameters
+    return postgres_parameters(source)
 
 
 def bind_parameters(source, case):

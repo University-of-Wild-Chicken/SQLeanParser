@@ -25,6 +25,7 @@ from extract_rust_query_sql import selected_rust_sql
 from extract_cockroach_sqllogic_sql import selected_cockroach_sql
 from observe_substring_source import observe_substrings, validate_substrings
 from observe_qualified_name_source import observe_qualified_names, validate_qualified_names
+from observe_json_existence_source import observe_json_existence, validate_json_existence
 
 ROOT = Path(__file__).resolve().parents[1]
 POPULATIONS = {
@@ -53,6 +54,7 @@ POPULATIONS = {
     "interval_fields": {"postgres": 49, "duckdb": 1},
     "substring": {"postgres": 27, "cockroach": 11, "materialize": 12},
     "qualified_names": {"postgres": 37, "sqlc": 12, "hatchet": 1},
+    "json_existence": {"postgres": 27, "cockroach": 14, "materialize": 8, "river": 1},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -1162,7 +1164,7 @@ def observe_oracle(sql: str, factor: str) -> dict:
             names = [part.sval for part in node.names or ()]
             if (not names or names[-1] not in NEW_FAMILIES | OLD_FAMILIES
                     or len(names) > 2 or (len(names) == 2 and names[0] != "pg_catalog")
-                    or (node.arrayBounds and factor not in ARRAY_FACTORS | {"row_comparisons", "ilike"})):
+                    or (node.arrayBounds and factor not in ARRAY_FACTORS | {"row_comparisons", "ilike", "json_existence"})):
                 raise ValueError("array/user-defined type belongs to a later factor")
 
         def visit_FuncCall(self, ancestors, node):
@@ -1221,13 +1223,13 @@ def observe_oracle(sql: str, factor: str) -> dict:
         allowed.add("conditional-expression")
     if factor in {"locking", "array_types", "row_comparisons"}:
         allowed.add("row-locking")
-    if factor in ARRAY_FACTORS | {"row_comparisons", "ilike", "json_extraction"}:
+    if factor in ARRAY_FACTORS | {"row_comparisons", "ilike", "json_extraction", "json_existence"}:
         allowed.add("array-or-subscripting")
-    if factor in {"array_quantified", "row_comparisons", "ilike"}:
+    if factor in {"array_quantified", "row_comparisons", "ilike", "json_existence"}:
         allowed.add("quantified-comparison")
     if factor == "row_comparisons":
         allowed.add("row-constructor")
-    if factor in {"concatenation", "array_concatenation", "ilike", "regex", "json_extraction", "json_containment"} | ARRAY_PREDICATE_FACTORS:
+    if factor in {"concatenation", "array_concatenation", "ilike", "regex", "json_extraction", "json_containment", "json_existence"} | ARRAY_PREDICATE_FACTORS:
         allowed.add("extended-operator")
     unexpected = set(features(json.loads(parser.parse_sql_json(sql)))) - allowed
     if unexpected:
@@ -1329,6 +1331,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "json_containment":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation.update(observe_json_containments(parsed))
+    if factor == "json_existence":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation.update(observe_json_existence(parsed, sql))
     return observation
 
 
@@ -1358,6 +1363,7 @@ def validate_population(records: list[dict], factor: str) -> None:
     substring_forms, substring_casts, substring_wrappers = Counter(), Counter(), Counter()
     qualified_relation_count, qualified_alias_cases, qualified_quoted_cases = 0, 0, 0
     qualified_column_arities = Counter()
+    existence_null_literals = 0
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -1405,6 +1411,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("json_extractions")
         if factor == "json_containment":
             expected_keys.update(("json_containments", "source_free"))
+        if factor == "json_existence":
+            expected_keys.update(("json_existence", "source_free"))
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -1562,6 +1570,18 @@ def validate_population(records: list[dict], factor: str) -> None:
             json_right.update(entry["right_form"] for entry in entries)
             json_left_casts.update(entry["left_cast"] for entry in entries)
             json_right_casts.update(entry["right_cast"] for entry in entries)
+        if factor == "json_existence":
+            validate_json_existence(observation)
+            if observation["function_names"] or observation["conditional_forms"]:
+                raise ValueError("unexpected general calls/conditionals in existence population")
+            entries = observation["json_existence"]
+            containment_scopes.update([observation["source_free"]])
+            json_operators.update(entry["operator"] for entry in entries)
+            json_left.update(entry["left_form"] for entry in entries)
+            json_right.update(entry["right_form"] for entry in entries)
+            json_left_casts.update(entry["left_cast"] for entry in entries)
+            json_right_casts.update(entry["right_cast"] for entry in entries)
+            existence_null_literals += sum(entry["left_literal_null"] for entry in entries)
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -1638,6 +1658,15 @@ def validate_population(records: list[dict], factor: str) -> None:
             or json_left_casts != {"jsonb": 42, None: 8}
             or json_right_casts != {"jsonb": 9, None: 41}):
         raise ValueError("JSON containment population must retain its 50 nodes and 42 literal sources")
+    if factor == "json_existence" and (
+            containment_scopes != {True: 44, False: 6}
+            or json_operators != {"?": 33, "?|": 11, "?&": 12}
+            or json_left != {"TypeCast": 50, "ColumnRef": 4, "A_Expr": 2}
+            or json_right != {"A_Const": 32, "A_ArrayExpr": 21, "TypeCast": 3}
+            or json_left_casts != {"jsonb": 50, None: 6}
+            or json_right_casts != {None: 53, "text": 1, "text[]": 2}
+            or existence_null_literals != 2):
+        raise ValueError("JSONB existence population must retain its 56 nodes and 44 source-free queries")
     if factor in ARRAY_PREDICATE_FACTORS:
         expected_scopes = {True: 6, False: 44} if factor == "array_containment" else {True: 5, False: 45}
         expected_ops = {"@>": 30, "<@": 20} if factor == "array_containment" else {"&&": 50, "@>": 2}
@@ -1691,7 +1720,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract", "interval_fields", "substring", "qualified_names"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -1717,10 +1746,11 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                 raise ValueError("Rust query selection is outside its explicit source factor")
             sql, line, detail = selected_rust_sql(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "cockroach_sqllogic_query":
-            if factor != "substring" or name not in {"cockroach", "materialize"}:
+            if factor not in {"substring", "json_existence"} or name not in {"cockroach", "materialize"}:
                 raise ValueError("Cockroach SQLLogicTest selection is outside its explicit source factor")
-            sql, line, detail = selected_cockroach_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract", "interval_fields", "substring", "qualified_names"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+            sql, line, detail = selected_cockroach_sql(
+                files[key], selection["selector"], boolean_queries=factor == "json_existence")
+        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])

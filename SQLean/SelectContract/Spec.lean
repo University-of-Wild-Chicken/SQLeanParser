@@ -231,6 +231,10 @@ mutual
     | jsonAccess (arg : ExprValid params scope a ta ua) (key : ExprValid params scope b tb ub)
         (signature : jsonAccessSignature op (scalarInput a ta) (scalarInput b tb) = some selected) :
         ExprValid params scope (.jsonAccess op a b) (some ⟨selected.output, true⟩) (ua ++ ub)
+    | jsonExistence (arg : ExprValid params scope a ta ua) (keys : ExprValid params scope b tb ub)
+        (signature : jsonExistenceSignature op (scalarInput a ta) (scalarInput b tb) = some selected) :
+        ExprValid params scope (.jsonExistence op a b)
+          (some ⟨selected.output, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
     | containment (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
         (signature : jsonContainmentSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
         ExprValid params scope (.containment a b containedBy)

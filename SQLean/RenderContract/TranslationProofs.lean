@@ -37,6 +37,8 @@ mutual
         simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent pattern]
     | jsonAccess op arg key =>
         simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent key]
+    | jsonExistence op arg key =>
+        simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent key]
     | containment left right containedBy =>
         simp only [translateExpr, translateExpr_idempotent left, translateExpr_idempotent right]
     | overlap left right =>

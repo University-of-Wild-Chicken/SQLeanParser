@@ -33,6 +33,7 @@ mutual
         if schema.isSome then unsupported "schema-qualification" else pure ()
     | .quantifiedComparison .. => unsupported "array-quantified-comparison"
     | .regex .. => unsupported "regex"
+    | .jsonExistence .. => unsupported "json-existence"
     | .jsonAccess .. => unsupported "json-extraction"
     | .containment .. => unsupported "containment"
     | .overlap .. => unsupported "overlap"

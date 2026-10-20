@@ -85,6 +85,7 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor interval_fields --check
           python3 scripts/extract_factor_corpus.py --factor substring --check
           python3 scripts/extract_factor_corpus.py --factor qualified_names --check
+          python3 scripts/extract_factor_corpus.py --factor json_existence --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -216,6 +217,8 @@ jobs:
 
       - name: Check qualified names and native namespace resolution
         run: python3 scripts/check_qualified_names_cli.py --local-bin /usr/lib/postgresql/16/bin
+      - name: Verify JSONB existence operators
+        run: python3 scripts/check_json_existence_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

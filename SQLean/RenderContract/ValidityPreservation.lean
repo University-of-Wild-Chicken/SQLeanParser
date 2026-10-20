@@ -142,6 +142,10 @@ mutual
         simpa only [translateExpr, List.map_append] using
           ExprValid.jsonAccess (expr_valid_translated arg) (expr_valid_translated key)
             (by simpa only [scalar_input_translated] using signature)
+    | jsonExistence arg key signature =>
+        simpa only [translateExpr, List.map_append, scalar_input_translated] using
+          ExprValid.jsonExistence (expr_valid_translated arg) (expr_valid_translated key)
+            (by simpa only [scalar_input_translated] using signature)
     | containment left right signature =>
         simpa only [translateExpr, List.map_append, scalar_input_translated] using
           ExprValid.containment (expr_valid_translated left) (expr_valid_translated right)
