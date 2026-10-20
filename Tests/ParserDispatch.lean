@@ -21,6 +21,15 @@ def parserDispatchTests : IO Nat := do
     "SELECT id FROM \"ONLY\"", "SELECT id FROM users /* CURRENT_DATE ISNULL ONLY */"]
   for sql in quoted do
     let _ ← expectOk sql (parseStatement sql)
-  pure (3 * special.length + predicates.length + quoted.length)
+  let rows := ["SELECT ROW(1) = ROW(1)", "SELECT (1,2) < (1,3)",
+    "SELECT ROW() = ROW()"]
+  for sql in rows do
+    match ← expectOk sql (parseStatement sql) with
+    | .extended (.query _) => pure ()
+    | _ => throw (IO.userError "row comparison lost the advanced AST")
+  match ← expectOk "ordinary row column" (parseStatement "SELECT row FROM users") with
+  | .select _ => pure ()
+  | _ => throw (IO.userError "ROW lookahead changed an ordinary compatibility column")
+  pure (3 * special.length + predicates.length + quoted.length + rows.length + 1)
 
 end SQLean.Tests

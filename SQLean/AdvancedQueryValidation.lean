@@ -211,7 +211,7 @@ private def hasAggregate : Nat → Expr → Bool
     | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => hasAggregate fuel left || hasAggregate fuel right
     | .unary _ arg | .isNull arg _ | .cast arg _ => hasAggregate fuel arg
     | .subscript base indices => hasAggregate fuel base || (indices.flatMap Subscript.expressions).any (hasAggregate fuel)
-    | .array args | .call _ args | .coalesce args | .greatest args | .least args => args.any (hasAggregate fuel)
+    | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args.any (hasAggregate fuel)
     | .caseExpr operand branches otherwise => operand.any (hasAggregate fuel) ||
         branches.any (fun branch => hasAggregate fuel branch.1 || hasAggregate fuel branch.2) ||
         otherwise.any (hasAggregate fuel)
@@ -245,6 +245,7 @@ private def canonical : Nat → List Scope → Expr → Expr
       | .index expr => .index (canonical fuel scopes expr)
       | .slice lower upper => .slice (lower.map (canonical fuel scopes)) (upper.map (canonical fuel scopes)))
     | .array args => .array (args.map (canonical fuel scopes))
+    | .row args => .row (args.map (canonical fuel scopes))
     | .call name args => .call name (args.map (canonical fuel scopes))
     | .coalesce args => .coalesce (args.map (canonical fuel scopes))
     | .greatest args => .greatest (args.map (canonical fuel scopes))
@@ -328,7 +329,7 @@ mutual
       | .quantifiedComparison _ _ l r | .binary _ l r | .pattern l r _ | .filteredAggregate l r | .nullIf l r => exprTables fuel l ++ exprTables fuel r
       | .unary _ e | .isNull e _ | .cast e _ | .aggregate _ e _ => exprTables fuel e
       | .subscript base indices => exprTables fuel base ++ (indices.flatMap Subscript.expressions).flatMap (exprTables fuel)
-      | .array args | .call _ args | .coalesce args | .greatest args | .least args => args.flatMap (exprTables fuel)
+      | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args.flatMap (exprTables fuel)
       | .caseExpr operand branches otherwise => operand.toList.flatMap (exprTables fuel) ++
           branches.flatMap (fun branch => exprTables fuel branch.1 ++ exprTables fuel branch.2) ++
           otherwise.toList.flatMap (exprTables fuel)
@@ -361,7 +362,7 @@ private def simpleRecursiveExpr : Nat → Expr → Bool
     | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => simpleRecursiveExpr fuel left && simpleRecursiveExpr fuel right
     | .unary _ e | .cast e _ | .isNull e _ => simpleRecursiveExpr fuel e
     | .subscript base indices => simpleRecursiveExpr fuel base && (indices.flatMap Subscript.expressions).all (simpleRecursiveExpr fuel)
-    | .array args | .call _ args | .coalesce args | .greatest args | .least args => args.all (simpleRecursiveExpr fuel)
+    | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args.all (simpleRecursiveExpr fuel)
     | .caseExpr operand branches otherwise => operand.all (simpleRecursiveExpr fuel) &&
         branches.all (fun branch => simpleRecursiveExpr fuel branch.1 && simpleRecursiveExpr fuel branch.2) &&
         otherwise.all (simpleRecursiveExpr fuel)
@@ -430,7 +431,7 @@ mutual
           | .quantifiedComparison _ _ a b | .binary _ a b | .pattern a b _ | .nullIf a b | .filteredAggregate a b => [a, b]
           | .unary _ a | .cast a _ | .isNull a _ | .aggregate _ a _ => [a]
           | .subscript base indices => base :: indices.flatMap Subscript.expressions
-          | .array args | .call _ args | .coalesce args | .greatest args | .least args => args
+          | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args
           | .caseExpr operand branches otherwise =>
             operand.toList ++ branches.flatMap (fun (branch : Expr × Expr) => [branch.1, branch.2]) ++ otherwise.toList
           | .inList arg values => arg :: values
@@ -553,6 +554,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         invalid "array subscripts require exact element types and bound coercions; use the independent contract tier"
       | .quantifiedComparison .. =>
         invalid "quantified array comparisons require exact scalar operator signatures; use the independent contract tier"
+      | .row _ =>
+        invalid "row constructors and comparisons require independent exact field typing; use the contract tier"
       | .array _ =>
         invalid "array constructors require exact contextual element typing; use the independent contract tier"
       | .call name args =>
@@ -714,7 +717,7 @@ an explicit validation error. Parameter declarations are supplied by the caller.
       | .subscript base indices =>
         checkGrouped fuel schema params scopes groups base
         (indices.flatMap Subscript.expressions).forM (checkGrouped fuel schema params scopes groups)
-      | .array args | .call _ args | .coalesce args | .greatest args | .least args =>
+      | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args =>
         args.forM (checkGrouped fuel schema params scopes groups)
       | .caseExpr operand branches otherwise =>
         operand.toList.forM (checkGrouped fuel schema params scopes groups)
@@ -878,7 +881,7 @@ mutual
         expressionParameters fuel left ++ expressionParameters fuel right
       | .unary _ arg | .cast arg _ | .isNull arg _ | .aggregate _ arg _ => expressionParameters fuel arg
       | .subscript base indices => expressionParameters fuel base ++ (indices.flatMap Subscript.expressions).flatMap (expressionParameters fuel)
-      | .array args | .call _ args | .coalesce args | .greatest args | .least args => args.flatMap (expressionParameters fuel)
+      | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args.flatMap (expressionParameters fuel)
       | .caseExpr operand branches otherwise => operand.toList.flatMap (expressionParameters fuel) ++
           branches.flatMap (fun branch => expressionParameters fuel branch.1 ++ expressionParameters fuel branch.2) ++
           otherwise.toList.flatMap (expressionParameters fuel)

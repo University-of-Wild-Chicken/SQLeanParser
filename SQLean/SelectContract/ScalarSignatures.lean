@@ -317,6 +317,29 @@ def optionalSubscriptBoundSignature (expr : Option Advanced.Expr) (type : ExprTy
   | none => true
   | some expr => subscriptBoundSignature (scalarInput expr type)
 
+/-- Closed PostgreSQL B-tree comparison inventory. Every scalar pair has all
+five strategies; its <> operator negates strategy-3 equality. Same-element
+arrays use the polymorphic array family when their element operators exist.
+This is normative catalog data, not a claim about arbitrary SQL operators. -/
+def rowBtreeCompatible (selected : FunctionOverload) : Bool :=
+  equalityCatalog.contains selected ||
+    (selected.output == .bool && match selected.inputs with
+      | [.array left, .array right] =>
+          left == right && !left.isArray && left.orderable
+      | _ => false)
+
+/-- PostgreSQL resolves each constructor field pair independently. One-field
+rows use that scalar operator directly; longer rows additionally require the
+admitted B-tree strategy family (or equality's negator for <>). Empty rows
+and unequal arities have no comparison derivation. -/
+def rowComparisonSignature (op : Advanced.ComparisonOp)
+    (left right : List ScalarInput) : Option (List FunctionOverload) := do
+  if left.isEmpty || left.length != right.length then none
+  else (left.zip right).mapM fun (a, b) => do
+    let selected ← comparisonOverload op a b
+    if selected.output != .bool then none
+    else if left.length == 1 || rowBtreeCompatible selected then some selected else none
+
 def nullIfSignature (left right : ScalarInput) : Option ExactType := do
   let signature ← equalityOverload left right
   let first ← signature.inputs.head?

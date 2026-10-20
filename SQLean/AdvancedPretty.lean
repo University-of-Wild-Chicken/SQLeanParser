@@ -91,6 +91,10 @@ mutual
         (elements.attach.map fun (element : {v : Expr // v ∈ elements}) =>
           have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
           exprSql pg element.val) ++ "]"
+    | .row elements => "ROW" ++ paren (comma
+        (elements.attach.map fun (element : {v : Expr // v ∈ elements}) =>
+          have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
+          exprSql pg element.val))
     | .call name args => String.intercalate "." (name.map quoteName) ++ paren (comma
         (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property

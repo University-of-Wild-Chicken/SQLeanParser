@@ -27,6 +27,16 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.13 row-comparison increment](docs/row-comparisons-contract-v0.13.md)
+adds all six comparison operators between explicit `ROW(...)` or implicit
+tuple constructors. Independent derivations retain each field's selected
+operator and lexical parameter order. Fifty synthetic certificates and 50
+unchanged sources accompany 100 PostgreSQL value/type observations, 112
+descriptors, 198 B-tree operator checks, 10 expected errors, and 66 separate
+SQLite observations. The [updated industrial audit](docs/corpus/row-comparisons-v0.13/README.md)
+accepts 233 of the original 276 statements; all seven row-comparison failures
+are now parsed. Standalone and nested record typing remain separate obligations.
+
 The [v0.12 subscript increment](docs/array-subscripts-contract-v0.12.md)
 adds array element extraction, slices with omitted bounds, and mixed
 multidimensional groups. Independent derivations retain element modifiers and
@@ -162,6 +172,7 @@ python3 scripts/check_array_types_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_array_constructors_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_array_quantified_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_array_subscripts_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_row_comparisons_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -291,7 +302,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.12` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.13` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

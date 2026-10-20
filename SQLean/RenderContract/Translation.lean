@@ -39,6 +39,10 @@ mutual
         (elements.attach.map fun (element : {v : Advanced.Expr // v ∈ elements}) =>
           have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
           translateExpr element.val)
+    | .row elements => .row
+        (elements.attach.map fun (element : {v : Advanced.Expr // v ∈ elements}) =>
+          have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
+          translateExpr element.val)
     | .call name args => .call name
         (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property

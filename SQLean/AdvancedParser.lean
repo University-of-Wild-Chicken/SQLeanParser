@@ -362,6 +362,15 @@ mutual
       if ← eat "array" then
         if ← read then fail "array constructors are not supported by the SQLite profile"
         return ← arrayBracket fuel
+      if (← isAt "row") && ((← get).drop 1).head?.any (fun t => t.kind == .symbol "(") then
+        let _ ← pop
+        if ← read then fail "ROW constructors require tuple syntax in the SQLite profile"
+        expect "("
+        let fields ← if ← eat ")" then pure [] else do
+          let fields ← separated (expression fuel 0) fuel
+          expect ")"
+          pure fields
+        return .row fields
       if ← eat "case" then
         let operand ← if ← isAt "when" then pure none else do pure (some (← expression fuel 0))
         let branches ← caseBranches fuel
@@ -403,17 +412,22 @@ mutual
         expect ")"
         return .cast value type
       if ← eat "(" then
-        let grouped : Parser Expr := do
+        let grouped : Parser (Expr × Bool) := do
           let value ← expression fuel 0
+          if ← eat "," then
+            let fields ← separated (expression fuel 0) fuel
+            expect ")"
+            return (.row (value :: fields), false)
           expect ")"
-          pure value
+          pure (value, true)
         if ← queryStart then
-          let value ← alternative (do
+          let (value, indirect) ← alternative (do
             let q ← query fuel
             expect ")"
-            pure (.scalarQuery q)) grouped
-          return ← subscriptTail fuel value
-        return ← subscriptTail fuel (← grouped)
+            pure (.scalarQuery q, true)) grouped
+          return ← if indirect then subscriptTail fuel value else pure value
+        let (value, indirect) ← grouped
+        return ← if indirect then subscriptTail fuel value else pure value
       match (← peek).kind with
       | .number raw =>
         let _ ← pop

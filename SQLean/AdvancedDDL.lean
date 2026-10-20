@@ -13,7 +13,7 @@ private def defaultExpression : Nat → Expr → Bool
   | n + 1, .unary _ arg | n + 1, .cast arg _ | n + 1, .isNull arg _ => defaultExpression n arg
   | n + 1, .subscript base indices =>
       defaultExpression n base && (indices.flatMap Subscript.expressions).all (defaultExpression n)
-  | n + 1, .array args | n + 1, .call _ args | n + 1, .coalesce args | n + 1, .greatest args | n + 1, .least args =>
+  | n + 1, .array args | n + 1, .row args | n + 1, .call _ args | n + 1, .coalesce args | n + 1, .greatest args | n + 1, .least args =>
       args.all (defaultExpression n)
   | n + 1, .caseExpr operand branches otherwise => operand.all (defaultExpression n) &&
       branches.all (fun branch => defaultExpression n branch.1 && defaultExpression n branch.2) &&

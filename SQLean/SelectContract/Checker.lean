@@ -118,6 +118,16 @@ mutual
           match found : (scope.columns qualifier).filter (fun (col : OutputColumn) => col.name == name) with
           | [column] => .ok ⟨some column.type, [], .column found⟩
           | _ => .error (invalid "column_binding" s!"Column '{name}' must resolve to exactly one visible binding")
+      | .binary op (.row left) (.row right) =>
+          match op with
+          | .eq => checkRowComparison fuel params scope .eq left right
+          | .ne => checkRowComparison fuel params scope .ne left right
+          | .lt => checkRowComparison fuel params scope .lt left right
+          | .le => checkRowComparison fuel params scope .le left right
+          | .gt => checkRowComparison fuel params scope .gt left right
+          | .ge => checkRowComparison fuel params scope .ge left right
+          | _ => .error (invalid "row_operator"
+              "Constructor-pair rows require one of the six comparison operators")
       | .binary op a b => do
           let left ← checkExpr fuel params scope a
           let right ← checkExpr fuel params scope b
@@ -170,6 +180,8 @@ mutual
           | none => .error (invalid "array_constructor_type"
               "An inferred array requires nonempty elements with a common implicit type; empty arrays require a direct array cast")
           | some result => .ok ⟨some result, args.uses, .array args.valid signature⟩
+      | .row _ => .error (unsupported "record_value"
+          "Standalone and nested record values require a separate composite-type contract")
       | .call name args => do
           let argsTyped ← checkExprList fuel params scope args
           match signature : callSignature name (scalarInputs args argsTyped.types) with
@@ -278,6 +290,24 @@ mutual
           let head ← checkExpr fuel params scope expr
           let tail ← checkExprList fuel params scope exprs
           .ok ⟨head.type :: tail.types, head.uses ++ tail.uses, .cons head.valid tail.valid⟩
+
+  def checkRowComparison (fuel : Nat) (params : ParameterEnv) (scope : Scope)
+      (op : Advanced.ComparisonOp) (left right : List Advanced.Expr) :
+      Except Failure (ExprCertificate params scope (.binary op.toBinOp (.row left) (.row right))) :=
+    match fuel with
+    | 0 => .error exhausted
+    | fuel + 1 => do
+      if left.isEmpty || left.length != right.length then
+        .error (invalid "row_comparison_arity" "Row comparison requires equal positive field counts")
+      else
+        let leftTyped ← checkExprList fuel params scope left
+        let rightTyped ← checkExprList fuel params scope right
+        match signature : rowComparisonSignature op
+            (scalarInputs left leftTyped.types) (scalarInputs right rightTyped.types) with
+        | some _selected => .ok ⟨some ⟨.bool, true⟩, leftTyped.uses ++ rightTyped.uses,
+            .rowComparison leftTyped.valid rightTyped.valid signature⟩
+        | none => .error (operatorFailure (leftTyped.types ++ rightTyped.types) false
+            "row_comparison_signature" "Row fields require compatible scalar comparison operators with admitted B-tree strategies")
 
   /-- Direct target-directed array construction; target context follows only
   nested raw constructors. It never crosses a function/conditional/cast node. -/
@@ -580,7 +610,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
         | .quantifiedComparison _ _ a b => [a, b]
         | .unary _ a | .cast a _ | .isNull a _ | .inQuery a _ => [a]
         | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
-        | .array args | .call _ args | .coalesce args | .greatest args | .least args => args
+        | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args
         | .caseExpr operand branches otherwise =>
           operand.toList ++ branches.flatMap (fun (branch : Advanced.Expr × Advanced.Expr) =>
             [branch.1, branch.2]) ++ otherwise.toList

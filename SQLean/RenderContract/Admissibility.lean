@@ -134,7 +134,7 @@ mutual
           fun (subscript : {s : Subscript // s ∈ subscripts}) =>
             have : sizeOf subscript.val < sizeOf subscripts := List.sizeOf_lt_of_mem subscript.property
             inspectSubscript subscript.val)
-    | .array elements =>
+    | .array elements | .row elements =>
         combine (elements.attach.map fun (element : {v : Advanced.Expr // v ∈ elements}) =>
           have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
           inspectExpr element.val)

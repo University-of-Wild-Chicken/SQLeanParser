@@ -1,0 +1,1120 @@
+[
+  {
+    "id": "row-comparison-01-second-field-eq",
+    "source_kind": "synthetic",
+    "shape": "second-field-eq",
+    "sql": "SELECT (1,2) = (1,3) AS v;",
+    "sqlite_sql": "SELECT (1,2) = (1,3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,2) = (1,3) AS v;"
+  },
+  {
+    "id": "row-comparison-02-second-field-ne",
+    "source_kind": "synthetic",
+    "shape": "second-field-ne",
+    "sql": "SELECT (1,2) <> (1,3) AS v;",
+    "sqlite_sql": "SELECT (1,2) <> (1,3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,2) <> (1,3) AS v;"
+  },
+  {
+    "id": "row-comparison-03-second-field-lt",
+    "source_kind": "synthetic",
+    "shape": "second-field-lt",
+    "sql": "SELECT (1,2) < (1,3) AS v;",
+    "sqlite_sql": "SELECT (1,2) < (1,3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,2) < (1,3) AS v;"
+  },
+  {
+    "id": "row-comparison-04-second-field-le",
+    "source_kind": "synthetic",
+    "shape": "second-field-le",
+    "sql": "SELECT (1,2) <= (1,3) AS v;",
+    "sqlite_sql": "SELECT (1,2) <= (1,3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,2) <= (1,3) AS v;"
+  },
+  {
+    "id": "row-comparison-05-second-field-gt",
+    "source_kind": "synthetic",
+    "shape": "second-field-gt",
+    "sql": "SELECT (1,2) > (1,3) AS v;",
+    "sqlite_sql": "SELECT (1,2) > (1,3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,2) > (1,3) AS v;"
+  },
+  {
+    "id": "row-comparison-06-second-field-ge",
+    "source_kind": "synthetic",
+    "shape": "second-field-ge",
+    "sql": "SELECT (1,2) >= (1,3) AS v;",
+    "sqlite_sql": "SELECT (1,2) >= (1,3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,2) >= (1,3) AS v;"
+  },
+  {
+    "id": "row-comparison-07-first-field-eq",
+    "source_kind": "synthetic",
+    "shape": "first-field-eq",
+    "sql": "SELECT ROW(2,0) = ROW(1,9) AS v;",
+    "sqlite_sql": "SELECT (2,0) = (1,9) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (2,0) = (1,9) AS v;"
+  },
+  {
+    "id": "row-comparison-08-first-field-ne",
+    "source_kind": "synthetic",
+    "shape": "first-field-ne",
+    "sql": "SELECT ROW(2,0) <> ROW(1,9) AS v;",
+    "sqlite_sql": "SELECT (2,0) <> (1,9) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (2,0) <> (1,9) AS v;"
+  },
+  {
+    "id": "row-comparison-09-first-field-lt",
+    "source_kind": "synthetic",
+    "shape": "first-field-lt",
+    "sql": "SELECT ROW(2,0) < ROW(1,9) AS v;",
+    "sqlite_sql": "SELECT (2,0) < (1,9) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (2,0) < (1,9) AS v;"
+  },
+  {
+    "id": "row-comparison-10-first-field-le",
+    "source_kind": "synthetic",
+    "shape": "first-field-le",
+    "sql": "SELECT ROW(2,0) <= ROW(1,9) AS v;",
+    "sqlite_sql": "SELECT (2,0) <= (1,9) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (2,0) <= (1,9) AS v;"
+  },
+  {
+    "id": "row-comparison-11-first-field-gt",
+    "source_kind": "synthetic",
+    "shape": "first-field-gt",
+    "sql": "SELECT ROW(2,0) > ROW(1,9) AS v;",
+    "sqlite_sql": "SELECT (2,0) > (1,9) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (2,0) > (1,9) AS v;"
+  },
+  {
+    "id": "row-comparison-12-first-field-ge",
+    "source_kind": "synthetic",
+    "shape": "first-field-ge",
+    "sql": "SELECT ROW(2,0) >= ROW(1,9) AS v;",
+    "sqlite_sql": "SELECT (2,0) >= (1,9) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (2,0) >= (1,9) AS v;"
+  },
+  {
+    "id": "row-comparison-13-equal-null-fields",
+    "source_kind": "synthetic",
+    "shape": "equal-null-fields",
+    "sql": "SELECT (1,NULL) = (1,NULL) AS v;",
+    "sqlite_sql": "SELECT (1,NULL) = (1,NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_value": null,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,NULL) = (1,NULL) AS v;"
+  },
+  {
+    "id": "row-comparison-14-unequal-null-fields",
+    "source_kind": "synthetic",
+    "shape": "unequal-null-fields",
+    "sql": "SELECT (1,NULL) <> (1,NULL) AS v;",
+    "sqlite_sql": "SELECT (1,NULL) <> (1,NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_value": null,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,NULL) <> (1,NULL) AS v;"
+  },
+  {
+    "id": "row-comparison-15-decisive-equality",
+    "source_kind": "synthetic",
+    "shape": "decisive-equality",
+    "sql": "SELECT (1,NULL) = (2,NULL) AS v;",
+    "sqlite_sql": "SELECT (1,NULL) = (2,NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,NULL) = (2,NULL) AS v;"
+  },
+  {
+    "id": "row-comparison-16-decisive-inequality",
+    "source_kind": "synthetic",
+    "shape": "decisive-inequality",
+    "sql": "SELECT (1,NULL) != (2,NULL) AS v;",
+    "sqlite_sql": "SELECT (1,NULL) != (2,NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,NULL) != (2,NULL) AS v;"
+  },
+  {
+    "id": "row-comparison-17-decisive-less",
+    "source_kind": "synthetic",
+    "shape": "decisive-less",
+    "sql": "SELECT (1,NULL) < (2,NULL) AS v;",
+    "sqlite_sql": "SELECT (1,NULL) < (2,NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,NULL) < (2,NULL) AS v;"
+  },
+  {
+    "id": "row-comparison-18-decisive-greater",
+    "source_kind": "synthetic",
+    "shape": "decisive-greater",
+    "sql": "SELECT (1,NULL) > (2,NULL) AS v;",
+    "sqlite_sql": "SELECT (1,NULL) > (2,NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,NULL) > (2,NULL) AS v;"
+  },
+  {
+    "id": "row-comparison-19-null-first",
+    "source_kind": "synthetic",
+    "shape": "null-first",
+    "sql": "SELECT (NULL,1) < (NULL,2) AS v;",
+    "sqlite_sql": "SELECT (NULL,1) < (NULL,2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_value": null,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (NULL,1) < (NULL,2) AS v;"
+  },
+  {
+    "id": "row-comparison-20-null-second",
+    "source_kind": "synthetic",
+    "shape": "null-second",
+    "sql": "SELECT (1,NULL) <= (1,2) AS v;",
+    "sqlite_sql": "SELECT (1,NULL) <= (1,2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_value": null,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,NULL) <= (1,2) AS v;"
+  },
+  {
+    "id": "row-comparison-21-single-field",
+    "source_kind": "synthetic",
+    "shape": "single-field",
+    "sql": "SELECT ROW(1) = ROW(1) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(1) = ROW(1) AS v;"
+  },
+  {
+    "id": "row-comparison-22-single-null",
+    "source_kind": "synthetic",
+    "shape": "single-null",
+    "sql": "SELECT ROW(NULL) <> ROW(1) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_value": null,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(NULL) <> ROW(1) AS v;"
+  },
+  {
+    "id": "row-comparison-23-unknown-text",
+    "source_kind": "synthetic",
+    "shape": "unknown-text",
+    "sql": "SELECT ('b',2) > ('a',9) AS v;",
+    "sqlite_sql": "SELECT ('b',2) > ('a',9) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ('b',2) > ('a',9) AS v;"
+  },
+  {
+    "id": "row-comparison-24-contextual-unknown",
+    "source_kind": "synthetic",
+    "shape": "contextual-unknown",
+    "sql": "SELECT ('1',NULL) = (1,NULL::INTEGER) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ('1',NULL) = (1,NULL::INTEGER) AS v;"
+  },
+  {
+    "id": "row-comparison-25-cross-int-bigint",
+    "source_kind": "synthetic",
+    "shape": "cross-int-bigint",
+    "sql": "SELECT (1,2::BIGINT) <= (1::BIGINT,3) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,2::BIGINT) <= (1::BIGINT,3) AS v;"
+  },
+  {
+    "id": "row-comparison-26-cross-smallint",
+    "source_kind": "synthetic",
+    "shape": "cross-smallint",
+    "sql": "SELECT (1::SMALLINT,3) > (1::BIGINT,2::SMALLINT) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1::SMALLINT,3) > (1::BIGINT,2::SMALLINT) AS v;"
+  },
+  {
+    "id": "row-comparison-27-numeric-unknown",
+    "source_kind": "synthetic",
+    "shape": "numeric-unknown",
+    "sql": "SELECT (1.25,'2.5') = (1.25::NUMERIC,2.5) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1.25,'2.5') = (1.25::NUMERIC,2.5) AS v;"
+  },
+  {
+    "id": "row-comparison-28-cross-float",
+    "source_kind": "synthetic",
+    "shape": "cross-float",
+    "sql": "SELECT (1::REAL,2::DOUBLE PRECISION) = (1::DOUBLE PRECISION,2::REAL) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1::REAL,2::DOUBLE PRECISION) = (1::DOUBLE PRECISION,2::REAL) AS v;"
+  },
+  {
+    "id": "row-comparison-29-date-timestamp",
+    "source_kind": "synthetic",
+    "shape": "date-timestamp",
+    "sql": "SELECT (DATE '2024-01-01',1) < (TIMESTAMP '2024-01-02',0) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT (DATE '2024-01-01',1) < (TIMESTAMP '2024-01-02',0) AS v;"
+  },
+  {
+    "id": "row-comparison-30-time-zone",
+    "source_kind": "synthetic",
+    "shape": "time-zone",
+    "sql": "SELECT (TIME WITH TIME ZONE '12:00+00',1) = (TIME WITH TIME ZONE '12:00+00',1) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT (TIME WITH TIME ZONE '12:00+00',1) = (TIME WITH TIME ZONE '12:00+00',1) AS v;"
+  },
+  {
+    "id": "row-comparison-31-numeric-modifier",
+    "source_kind": "synthetic",
+    "shape": "numeric-modifier",
+    "sql": "SELECT (1.234::NUMERIC(6,2),2) = (1.23,2) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1.234::NUMERIC(6,2),2) = (1.23,2) AS v;"
+  },
+  {
+    "id": "row-comparison-32-varchar-modifier",
+    "source_kind": "synthetic",
+    "shape": "varchar-modifier",
+    "sql": "SELECT ('abcd'::VARCHAR(2),1) = ('ab'::TEXT,1) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 0,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ('abcd'::VARCHAR(2),1) = ('ab'::TEXT,1) AS v;"
+  },
+  {
+    "id": "row-comparison-33-character-padding",
+    "source_kind": "synthetic",
+    "shape": "character-padding",
+    "sql": "SELECT ('a'::CHAR(3),1) = ('a'::CHAR(1),1) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ('a'::CHAR(3),1) = ('a'::CHAR(1),1) AS v;"
+  },
+  {
+    "id": "row-comparison-34-boolean-order",
+    "source_kind": "synthetic",
+    "shape": "boolean-order",
+    "sql": "SELECT (FALSE,2) < (TRUE,1) AS v;",
+    "sqlite_sql": "SELECT (FALSE,2) < (TRUE,1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (FALSE,2) < (TRUE,1) AS v;"
+  },
+  {
+    "id": "row-comparison-35-uuid-order",
+    "source_kind": "synthetic",
+    "shape": "uuid-order",
+    "sql": "SELECT ('00000000-0000-0000-0000-000000000001'::UUID,1) < ('00000000-0000-0000-0000-000000000002'::UUID,0) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ('00000000-0000-0000-0000-000000000001'::UUID,1) < ('00000000-0000-0000-0000-000000000002'::UUID,0) AS v;"
+  },
+  {
+    "id": "row-comparison-36-jsonb-equality",
+    "source_kind": "synthetic",
+    "shape": "jsonb-equality",
+    "sql": "SELECT ('{\"a\":1,\"b\":2}'::JSONB,1) = ('{\"b\":2,\"a\":1}'::JSONB,1) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ('{\"a\":1,\"b\":2}'::JSONB,1) = ('{\"b\":2,\"a\":1}'::JSONB,1) AS v;"
+  },
+  {
+    "id": "row-comparison-37-bytea-order",
+    "source_kind": "synthetic",
+    "shape": "bytea-order",
+    "sql": "SELECT ('\\x6162'::BYTEA,1) < ('\\x6163'::BYTEA,0) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ('\\x6162'::BYTEA,1) < ('\\x6163'::BYTEA,0) AS v;"
+  },
+  {
+    "id": "row-comparison-38-array-null-members",
+    "source_kind": "synthetic",
+    "shape": "array-null-members",
+    "sql": "SELECT (ARRAY[1,NULL],1) = (ARRAY[1,NULL],1) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT (ARRAY[1,NULL],1) = (ARRAY[1,NULL],1) AS v;"
+  },
+  {
+    "id": "row-comparison-39-array-order",
+    "source_kind": "synthetic",
+    "shape": "array-order",
+    "sql": "SELECT (ARRAY[1,2],9) < (ARRAY[1,3],0) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT (ARRAY[1,2],9) < (ARRAY[1,3],0) AS v;"
+  },
+  {
+    "id": "row-comparison-40-date-array",
+    "source_kind": "synthetic",
+    "shape": "date-array",
+    "sql": "SELECT (ARRAY[DATE '2024-01-01'],2) >= (ARRAY[DATE '2024-01-01'],1) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT (ARRAY[DATE '2024-01-01'],2) >= (ARRAY[DATE '2024-01-01'],1) AS v;"
+  },
+  {
+    "id": "row-comparison-41-anonymous-order",
+    "source_kind": "synthetic",
+    "shape": "anonymous-order",
+    "sql": "SELECT ROW(?,?) < ROW(?,?) AS v;",
+    "sqlite_sql": "SELECT (?,?) < (?,?) AS v;",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      1,
+      2,
+      1,
+      3
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (?,?) < (?,?) AS v;"
+  },
+  {
+    "id": "row-comparison-42-reordered-repeat",
+    "source_kind": "synthetic",
+    "shape": "reordered-repeat",
+    "sql": "SELECT ($2,$1,$2) > ($1,$2,$1) AS v;",
+    "sqlite_sql": "SELECT (?2,?1,?2) > (?1,?2,?1) AS v;",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (?2,?1,?2) > (?1,?2,?1) AS v;"
+  },
+  {
+    "id": "row-comparison-43-nullable-binding",
+    "source_kind": "synthetic",
+    "shape": "nullable-binding",
+    "sql": "SELECT ($1,2) = (1,$2) AS v;",
+    "sqlite_sql": "SELECT (?1,2) = (1,?2) AS v;",
+    "parameter_types": "int?,int",
+    "parameter_values": [
+      null,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_value": null,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (?1,2) = (1,?2) AS v;"
+  },
+  {
+    "id": "row-comparison-44-wide-binding",
+    "source_kind": "synthetic",
+    "shape": "wide-binding",
+    "sql": "SELECT ($1,1) > (2147483647,$2) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "bigint,int",
+    "parameter_values": [
+      2147483648,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (?1,1) > (2147483647,?2) AS v;"
+  },
+  {
+    "id": "row-comparison-45-parameter-modifier-erasure",
+    "source_kind": "synthetic",
+    "shape": "parameter-modifier-erasure",
+    "sql": "SELECT ($1,0) <> (1.23,0) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "numeric(6,2)",
+    "parameter_values": [
+      "1.234"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (?1,0) <> (1.23,0) AS v;"
+  },
+  {
+    "id": "row-comparison-46-conditional-fields",
+    "source_kind": "synthetic",
+    "shape": "conditional-fields",
+    "sql": "SELECT (CASE WHEN TRUE THEN 1 ELSE 2 END,COALESCE(NULL,2)) = (1,2) AS v;",
+    "sqlite_sql": "SELECT (CASE WHEN TRUE THEN 1 ELSE 2 END,COALESCE(NULL,2)) = (1,2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (CASE WHEN TRUE THEN 1 ELSE 2 END,COALESCE(NULL,2)) = (1,2) AS v;"
+  },
+  {
+    "id": "row-comparison-47-function-fields",
+    "source_kind": "synthetic",
+    "shape": "function-fields",
+    "sql": "SELECT (ABS(-2),LENGTH('abc')) = (2,3) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT (ABS(-2),LENGTH('abc')) = (2,3) AS v;"
+  },
+  {
+    "id": "row-comparison-48-subscript-fields",
+    "source_kind": "synthetic",
+    "shape": "subscript-fields",
+    "sql": "SELECT ((ARRAY[1,2])[1],(ARRAY[3,4])[2]) < (2,0) AS v;",
+    "sqlite_sql": null,
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ((ARRAY[1,2])[1],(ARRAY[3,4])[2]) < (2,0) AS v;"
+  },
+  {
+    "id": "row-comparison-49-predicate",
+    "source_kind": "synthetic",
+    "shape": "predicate",
+    "sql": "SELECT ($1,2) <= (1,2) AS v WHERE (1,2) < (2,1);",
+    "sqlite_sql": "SELECT (?1,2) <= (1,2) AS v WHERE (1,2) < (2,1);",
+    "parameter_types": "int",
+    "parameter_values": [
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (?1,2) <= (1,2) AS v WHERE (1,2) < (2,1);"
+  },
+  {
+    "id": "row-comparison-50-four-fields",
+    "source_kind": "synthetic",
+    "shape": "four-fields",
+    "sql": "SELECT (1,'a',TRUE,4) = (1,'a',TRUE,4) AS v;",
+    "sqlite_sql": "SELECT (1,'a',TRUE,4) = (1,'a',TRUE,4) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_value": 1,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1,'a',TRUE,4) = (1,'a',TRUE,4) AS v;"
+  }
+]

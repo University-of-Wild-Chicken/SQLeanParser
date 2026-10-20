@@ -104,6 +104,9 @@ mutual
     /-- PostgreSQL ARRAY[...] constructor. Nested bracket shorthand normalizes
     to nested constructors; declared dimensions remain runtime properties. -/
     | array (elements : List Expr)
+    /-- Explicit ROW(...) and implicit multi-field tuples normalize to the
+    same constructor. A one-field or empty row still requires ROW syntax. -/
+    | row (elements : List Expr)
     /-- Comparison against elements of an array expression. Quantified
     subqueries are a separate SQL form and are not represented here. -/
     | quantifiedComparison (op : ComparisonOp) (quantifier : ArrayQuantifier) (left right : Expr)

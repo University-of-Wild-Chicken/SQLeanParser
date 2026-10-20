@@ -158,6 +158,11 @@ mutual
     | binary (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
         (signature : binarySignature op ta tb = some result) :
         ExprValid params scope (.binary op a b) result (ua ++ ub)
+    | rowComparison (left : ExprListValid params scope a ta ua)
+        (right : ExprListValid params scope b tb ub)
+        (signature : rowComparisonSignature op (scalarInputs a ta) (scalarInputs b tb) = some selected) :
+        ExprValid params scope (.binary op.toBinOp (.row a) (.row b))
+          (some ⟨.bool, true⟩) (ua ++ ub)
     | unary (arg : ExprValid params scope a ta uses) (signature : unarySignature op ta = some result)
         (ordinary : OrdinaryUnary op a) :
         ExprValid params scope (.unary op a) result uses
@@ -300,6 +305,7 @@ def outputLabel : Advanced.Expr → Nat × Name
   | .column _ name => (2, name)
   | .call name _ => (2, name.getLastD "?column?")
   | .array _ => (2, "array")
+  | .row _ => (2, "row")
   | .cast arg target =>
       let inherited := outputLabel arg
       if inherited.1 ≤ 1 then (1, typeNameLabel target.name) else inherited

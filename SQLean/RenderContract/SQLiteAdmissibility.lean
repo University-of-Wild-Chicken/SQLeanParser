@@ -39,6 +39,11 @@ mutual
         checkSQLiteExpr arg
     | .cast arg type => checkSQLiteDataType type; checkSQLiteExpr arg
     | .array _ => unsupported "array-constructor"
+    | .row elements =>
+        if elements.length < 2 then unsupported "row-arity"
+        else elements.attach.forM fun (element : {v : Advanced.Expr // v ∈ elements}) =>
+          have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
+          checkSQLiteExpr element.val
     | .subscript .. => unsupported "array-subscripting"
     | .call .. | .greatest .. | .least .. => unsupported "scalar-function-signatures"
     | .coalesce args =>

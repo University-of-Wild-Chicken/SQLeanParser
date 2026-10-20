@@ -35,6 +35,7 @@ POPULATIONS = {
     "array_constructors": {"postgres": 49, "sqlc": 1},
     "array_quantified": {"hatchet": 29, "postgres": 18, "sqlc": 3},
     "array_subscripts": {"postgres": 24, "duckdb": 26},
+    "row_comparisons": {"hatchet": 16, "postgres": 8, "temporal": 6, "sqlite": 20},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -439,6 +440,71 @@ def observe_array_subscripts(parsed: dict) -> list[dict]:
     return result
 
 
+def validate_row_comparisons(comparisons: list[dict]) -> None:
+    if not isinstance(comparisons, list) or not comparisons:
+        raise ValueError("row comparison factor is absent")
+    for entry in comparisons:
+        if (not isinstance(entry, dict)
+                or set(entry) != {"operator", "arity", "left_form", "right_form"}
+                or not isinstance(entry["operator"], str)
+                or entry["operator"] not in COMPARISON_OPERATORS
+                or type(entry["arity"]) is not int or entry["arity"] < 1
+                or entry["left_form"] not in ("explicit", "implicit")
+                or entry["right_form"] not in ("explicit", "implicit")):
+            raise ValueError("invalid row comparison observation")
+
+
+def observe_row_comparisons(parsed: dict) -> list[dict]:
+    """Observe direct constructor comparisons, excluding other composite forms.
+
+    Equal nonzero arities describe this finite source population. The observer
+    does not infer field types, comparison operators, or runtime NULL behavior.
+    Every row constructor must be a direct operand of an observed comparison.
+    """
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("row comparison source must be a SELECT")
+    result, rows, consumed = [], [], set()
+    forms = {"COERCE_EXPLICIT_CALL": "explicit", "COERCE_IMPLICIT_CAST": "implicit"}
+
+    def walk(value):
+        if isinstance(value, list):
+            for child in value:
+                walk(child)
+        elif isinstance(value, dict):
+            for kind, node in value.items():
+                if not isinstance(node, dict):
+                    walk(node)
+                    continue
+                if kind == "RowExpr":
+                    rows.append(node)
+                if kind == "SubLink" and node.get("subLinkType") in {
+                        "ANY_SUBLINK", "ALL_SUBLINK", "ARRAY_SUBLINK", "ROWCOMPARE_SUBLINK"}:
+                    raise ValueError("row/array/quantified subquery is outside this comparison population")
+                if kind == "A_Expr":
+                    left, right = node.get("lexpr", {}).get("RowExpr"), node.get("rexpr", {}).get("RowExpr")
+                    names = [part.get("String", {}).get("sval") for part in node.get("name", [])]
+                    if (node.get("kind") == "AEXPR_OP" and len(names) == 1
+                            and names[0] in COMPARISON_OPERATORS
+                            and isinstance(left, dict) and isinstance(right, dict)):
+                        args = (left.get("args", []), right.get("args", []))
+                        if (not all(isinstance(items, list) and items for items in args)
+                                or len(args[0]) != len(args[1])):
+                            raise ValueError("source comparison rows must have equal nonzero arities")
+                        if left.get("row_format") not in forms or right.get("row_format") not in forms:
+                            raise ValueError("unknown row constructor spelling observation")
+                        consumed.update((id(left), id(right)))
+                        result.append({"operator": names[0], "arity": len(args[0]),
+                                       "left_form": forms[left["row_format"]],
+                                       "right_form": forms[right["row_format"]]})
+                walk(node)
+
+    walk(parsed)
+    if any(id(row) not in consumed for row in rows):
+        raise ValueError("standalone/nested/IN/custom-operator row form is outside this population")
+    validate_row_comparisons(result)
+    return result
+
+
 def observe_oracle(sql: str, factor: str) -> dict:
     import pglast
     from pglast import ast, enums, parse_sql, parser, visitors
@@ -454,7 +520,7 @@ def observe_oracle(sql: str, factor: str) -> dict:
             names = [part.sval for part in node.names or ()]
             if (not names or names[-1] not in NEW_FAMILIES | OLD_FAMILIES
                     or len(names) > 2 or (len(names) == 2 and names[0] != "pg_catalog")
-                    or (node.arrayBounds and factor not in ARRAY_FACTORS)):
+                    or (node.arrayBounds and factor not in ARRAY_FACTORS | {"row_comparisons"})):
                 raise ValueError("array/user-defined type belongs to a later factor")
 
         def visit_FuncCall(self, ancestors, node):
@@ -500,14 +566,16 @@ def observe_oracle(sql: str, factor: str) -> dict:
     observer.locks = []
     observer(tree)
     allowed = {"general-function-call", "comma-from", "expression-limit-offset", "extended-type"}
-    if factor in {"conditional", "locking", "derived_contract", "array_types", "array_quantified"} | JOIN_FACTORS:
+    if factor in {"conditional", "locking", "derived_contract", "array_types", "array_quantified", "row_comparisons"} | JOIN_FACTORS:
         allowed.add("conditional-expression")
-    if factor in {"locking", "array_types"}:
+    if factor in {"locking", "array_types", "row_comparisons"}:
         allowed.add("row-locking")
-    if factor in ARRAY_FACTORS:
+    if factor in ARRAY_FACTORS | {"row_comparisons"}:
         allowed.add("array-or-subscripting")
-    if factor == "array_quantified":
+    if factor in {"array_quantified", "row_comparisons"}:
         allowed.add("quantified-comparison")
+    if factor == "row_comparisons":
+        allowed.add("row-constructor")
     unexpected = set(features(json.loads(parser.parse_sql_json(sql)))) - allowed
     if unexpected:
         raise ValueError(f"source has later-factor dependencies: {sorted(unexpected)}")
@@ -575,6 +643,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "array_subscripts":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["array_subscripts"] = observe_array_subscripts(parsed)
+    if factor == "row_comparisons":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation["row_comparisons"] = observe_row_comparisons(parsed)
     return observation
 
 
@@ -593,6 +664,7 @@ def validate_population(records: list[dict], factor: str) -> None:
     quantified_ops, quantifiers, quantified_right = Counter(), Counter(), Counter()
     subscript_dimensions, subscript_groups = Counter(), Counter()
     subscript_nested = 0
+    row_operators, row_arities, row_forms = Counter(), Counter(), Counter()
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -618,6 +690,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("array_quantified")
         if factor == "array_subscripts":
             expected_keys.add("array_subscripts")
+        if factor == "row_comparisons":
+            expected_keys.add("row_comparisons")
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -680,6 +754,12 @@ def validate_population(records: list[dict], factor: str) -> None:
             subscript_dimensions.update(
                 "slice" if dimension["slice"] else "element"
                 for group in groups for dimension in group["dimensions"])
+        if factor == "row_comparisons":
+            comparisons = observation["row_comparisons"]
+            validate_row_comparisons(comparisons)
+            row_operators.update(entry["operator"] for entry in comparisons)
+            row_arities.update(entry["arity"] for entry in comparisons)
+            row_forms.update((entry["left_form"], entry["right_form"]) for entry in comparisons)
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -710,6 +790,11 @@ def validate_population(records: list[dict], factor: str) -> None:
             or subscript_groups != {1: 47, 2: 17, 3: 12}
             or subscript_nested != 3):
         raise ValueError("subscript population must retain its 117 dimensions and nested groups")
+    if factor == "row_comparisons" and (
+            row_operators != {"=": 40, ">": 10, ">=": 9, "<=": 7, "<": 6}
+            or row_arities != {2: 56, 3: 12, 4: 3, 5: 1}
+            or row_forms != {("implicit", "implicit"): 71, ("explicit", "explicit"): 1}):
+        raise ValueError("row comparison population must retain its 72 pairs and source forms")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -728,7 +813,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract"} | ARRAY_FACTORS | JOIN_FACTORS:
+            if factor in {"locking", "derived_contract", "row_comparisons"} | ARRAY_FACTORS | JOIN_FACTORS:
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -738,14 +823,14 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             raise ValueError("selection has no pinned source input")
         used.add(key)
         if selection["selector"]["kind"] == "tcl_sql_statement":
-            if factor not in MERGED_FACTORS or name != "sqlite":
+            if factor not in {*MERGED_FACTORS, "row_comparisons"} or name != "sqlite":
                 raise ValueError("Tcl SQL selection is outside its explicit source factors")
             sql, line, detail = selected_tcl_sql(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "sqllogic_query":
             if factor != "array_subscripts" or name != "duckdb":
                 raise ValueError("SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_sqllogic_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract"} | ARRAY_FACTORS | JOIN_FACTORS:
+        elif factor in {"locking", "derived_contract", "row_comparisons"} | ARRAY_FACTORS | JOIN_FACTORS:
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])
