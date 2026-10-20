@@ -219,6 +219,38 @@ private def identifier : Parser Name := do
   | .word s => if reserved.contains s.toLower then fail s!"reserved identifier {s}" else pure s
   | _ => fail "expected identifier"
 
+/-- PostgreSQL's `attr_name = ColLabel` permits keywords after a dot.
+Each decoded component remains separate from its punctuation. -/
+private def attributeName : Parser Name := do
+  match (← pop).kind with
+  | .quoted name | .word name => pure name
+  | _ => fail "expected name component after dot"
+
+private def invalidQualifiedHead (token : LexToken) : Bool :=
+  match token.kind with
+  | .word name => (SQLean.PostgresGrammar.Generated.keyword name.toLower).any fun keyword =>
+      keyword.category == "RESERVED_KEYWORD" || keyword.category == "TYPE_FUNC_NAME_KEYWORD"
+  | _ => false
+
+/-- Column-alias lists use ColId rather than the clause-boundary keyword
+heuristic. For example KEY is an ordinary unreserved PostgreSQL identifier. -/
+private def columnIdentifier : Parser Name := do
+  if ← read then return ← identifier
+  let token ← pop
+  match token.kind with
+  | .quoted name => pure name
+  | .word name =>
+      if invalidQualifiedHead token then fail s!"reserved column identifier {name}"
+      else pure name
+  | _ => fail "expected column identifier"
+
+private def nameTail : Nat → Parser (List Name)
+  | 0 => fail "qualified name input bound exceeded"
+  | fuel + 1 => do
+      if !(← eat ".") then return []
+      let name ← attributeName
+      pure (name :: (← nameTail fuel))
+
 /-- `extract_arg` is IDENT, Sconst, or six specifically listed keywords.
 Other PostgreSQL keywords cannot be treated as identifiers in this position.
 Decoded fields always serialize as strings; identifier truncation is excluded. -/
@@ -258,7 +290,7 @@ private def separated {α : Type} (item : Parser α) : Nat → Parser (List α)
     if ← eat "," then return first :: (← separated item fuel) else pure [first]
 private def names (fuel : Nat) : Parser (List Name) := do
   expect "("
-  let values ← separated identifier fuel
+  let values ← separated columnIdentifier fuel
   expect ")"
   pure values
 private def optionalNames (fuel : Nat) : Parser (List Name) := do
@@ -602,6 +634,7 @@ mutual
           return ← alternative (typedString fuel) (namedAtom fuel)
         match aggregateFn word.toLower with
         | some fn =>
+          let original ← get
           let _ ← pop
           if ← eat "(" then
             let distinct ← eat "distinct"
@@ -617,8 +650,8 @@ mutual
               pure (.filteredAggregate value predicate)
               else pure value
             return value
-          if ← eat "." then return ← subscriptTail fuel (.column (some word) (← identifier))
-          return ← subscriptTail fuel (.column none word)
+          set original
+          return ← namedAtom fuel
         | none =>
           namedAtom fuel
       | .quoted _ =>
@@ -673,17 +706,27 @@ mutual
           expect ")"
           pure args
         return .call names args
+      namedColumn fuel names
+
+  private def namedColumn : Nat → List Name → Parser Expr
+    | 0, _ => fail "column reference input bound exceeded"
+    | fuel + 1, names => do
       match names with
       | [name] => subscriptTail fuel (.column none name)
       | [qualifier, name] => subscriptTail fuel (.column (some qualifier) name)
-      | _ => fail "column references support at most one qualifier"
+      | [schema, qualifier, name] =>
+          subscriptTail fuel (.column (some qualifier) name (some schema))
+      | _ => fail "column references support at most schema, relation and column components"
 
   private def qualifiedName : Nat → Parser (List Name)
     | 0 => fail "qualified name input bound exceeded"
     | fuel + 1 => do
+      let first ← peek
       let name ← identifier
-      if ← eat "." then return name :: (← qualifiedName fuel)
-      pure [name]
+      let tail ← nameTail fuel
+      if !(← read) && !tail.isEmpty && invalidQualifiedHead first then
+        fail "the first qualified-name component must be a column identifier"
+      pure (name :: tail)
 
   private def caseBranches : Nat → Parser (List (Expr × Expr))
     | 0 => fail "CASE input bound exceeded"
@@ -819,18 +862,20 @@ mutual
     | 0 => fail "projection nesting bound exceeded"
     | fuel + 1 => do
       if ← eat "*" then return .all none
-      let tokens ← get
-      match tokens with
-      | a :: {kind := .symbol ".", ..} :: {kind := .symbol "*", ..} :: rest =>
-        match a.kind with
-        | .word name | .quoted name =>
-          set rest
-          return .all (some name)
-        | _ => pure ()
-      | _ => pure ()
-      let value ← expression fuel 0
-      let alias ← alias? true
-      return .expression value alias
+      alternative (do
+        let head ← peek
+        let first ← identifier
+        expect "."
+        if !(← read) && invalidQualifiedHead head then
+          fail "the first qualified-name component must be a column identifier"
+        if ← eat "*" then return .all (some first)
+        let second ← attributeName
+        expect "."
+        expect "*"
+        pure (.all (some second) (some first))) (do
+        let value ← expression fuel 0
+        let alias ← alias? true
+        return .expression value alias)
 
   private def fromAtom : Nat → Parser From
     | 0 => fail "FROM nesting bound exceeded"
@@ -851,10 +896,14 @@ mutual
             pure (.derived q alias columns lateral)) grouped
         return ← grouped
       if lateral then fail "LATERAL requires a derived table"
-      let name ← identifier
+      let parts ← qualifiedName fuel
+      let (name, schema) ← match parts with
+        | [name] => pure (name, none)
+        | [schema, name] => pure (name, some schema)
+        | _ => fail "relations support at most schema and relation components"
       let alias ← alias?
       let columns ← if alias.isSome then optionalNames fuel else pure []
-      pure (.table name alias columns)
+      pure (.table name alias columns schema)
 
   private def fromExpr : Nat → Parser From
     | 0 => fail "FROM nesting bound exceeded"

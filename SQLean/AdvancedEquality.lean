@@ -22,8 +22,8 @@ mutual
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.decimal.injEq])
     case parameter.parameter a0 b0 =>
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.parameter.injEq])
-    case column.column a0 a1 b0 b1 =>
-      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.column.injEq])
+    case column.column a0 a1 a2 b0 b1 b2 =>
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2) (by simp only [Expr.column.injEq])
     case binary.binary a0 a1 a2 b0 b1 b2 =>
       letI : Decidable (a1 = b1) := exactExprDecEq a1 b1
       letI : Decidable (a2 = b2) := exactExprDecEq a2 b2
@@ -167,8 +167,8 @@ mutual
     cases a <;> cases b
     all_goals first | solve | apply isFalse; intro h; cases h
                     | skip
-    case all.all a0 b0 =>
-      exact decidable_of_iff (a0 = b0) (by simp only [SelectItem.all.injEq])
+    case all.all a0 a1 b0 b1 =>
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [SelectItem.all.injEq])
     case expression.expression a0 a1 b0 b1 =>
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [SelectItem.expression.injEq])
@@ -205,8 +205,8 @@ mutual
     cases a <;> cases b
     all_goals first | solve | apply isFalse; intro h; cases h
                     | skip
-    case table.table a0 a1 a2 b0 b1 b2 =>
-      exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2) (by simp only [From.table.injEq])
+    case table.table a0 a1 a2 a3 b0 b1 b2 b3 =>
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2 ∧ a3 = b3) (by simp only [From.table.injEq])
     case derived.derived a0 a1 a2 a3 b0 b1 b2 b3 =>
       letI : Decidable (a0 = b0) := exactQueryDecEq a0 b0
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2 ∧ a3 = b3) (by simp only [From.derived.injEq])

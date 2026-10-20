@@ -108,6 +108,26 @@ structure SubscriptsCertificate (params : ParameterEnv) (scope : Scope)
   uses : List Parameter
   valid : SubscriptsValid params scope indices uses
 
+/-- Namespace errors precede column lookup. Missing legacy schema provenance
+and PostgreSQL's whole-row function notation remain explicit coverage gaps. -/
+private def checkNamespace (scope : Scope) (qualifier : Option Name)
+    (schema : Option Name) : Except Failure Unit :=
+  if schema == some "pg_temp" then
+    .error (unsupported "namespace_alias" "The pg_temp schema alias requires explicit schema-alias resolution")
+  else
+  match qualifier, schema with
+  | none, none => .ok ()
+  | none, some _ => .error (invalid "qualified_reference_shape" "A schema-qualified column or star requires a relation name")
+  | some qualifier, schema =>
+    match scope.matchingRelations qualifier schema with
+    | [_] => .ok ()
+    | [] =>
+      if schema.isSome && scope.relations.any (fun relation => !relation.aliased &&
+          relation.origin.any (fun origin => origin.schema.isNone && origin.name == qualifier)) then
+        .error (unsupported "relation_schema_metadata" "The legacy relation binding has no schema provenance")
+      else .error (invalid "relation_reference" "No visible relation has this qualified name")
+    | _ => .error (invalid "ambiguous_relation_reference" "The relation qualifier identifies multiple visible namespaces")
+
 private def checkSubstringArguments (form : Advanced.SubstringForm) (args : List ScalarInput) :
     Except Failure {callInputs // SubstringArguments form args callInputs} :=
   match form, args with
@@ -156,9 +176,25 @@ mutual
               | some base => .ok ⟨some ⟨base.unmodified, binding.nullable⟩, [parameter],
                   .parameter facts.1 (by simpa using facts.2) supported⟩
           | _ => .error (invalid "parameter_binding" "Parameter must resolve to exactly one declared binding")
-      | .column qualifier name =>
-          match found : (scope.columns qualifier).filter (fun (col : OutputColumn) => col.name == name) with
+      | .column qualifier name schema => do
+          checkNamespace scope qualifier schema
+          if qualifier.isNone &&
+              ["ctid", "tableoid", "xmin", "xmax", "cmin", "cmax"].contains name &&
+              scope.relations.any (fun relation => relation.origin.isSome &&
+                !relation.columns.any (fun column => column.name == name)) then
+            throw (unsupported "system_column"
+              "Implicit PostgreSQL system columns may participate in unqualified name resolution")
+          match found : (scope.columns qualifier schema).filter (fun (col : OutputColumn) => col.name == name) with
           | [column] => .ok ⟨some column.type, [], .column found⟩
+          | [] =>
+              if qualifier.isSome then .error (unsupported "whole_row_function"
+                "A missing qualified scalar column may denote PostgreSQL function-on-row notation")
+              else match scope.matchingRelations name with
+                | [_] => .error (unsupported "whole_row_reference"
+                    "A bare relation name denotes a composite whole-row value outside the scalar profile")
+                | [] => .error (invalid "column_binding" s!"Column '{name}' has no visible binding")
+                | _ => .error (invalid "ambiguous_relation_reference"
+                    "A whole-row reference identifies multiple visible relation namespaces")
           | _ => .error (invalid "column_binding" s!"Column '{name}' must resolve to exactly one visible binding")
       | .binary op (.row left) (.row right) =>
           match op with
@@ -532,16 +568,16 @@ structure SourceCertificate (profile : Profile) (catalog : Catalog) (params : Pa
   uses : List Parameter
   valid : SourceValid profile catalog params source scope uses
 
-private def tableColumns (table : CatalogTable) (qualifier : Name) (columns : List Advanced.Column) :
-    Except Failure {bindings : List Binding // TableColumns table qualifier columns bindings} :=
+private def tableColumns (table : CatalogTable) (columns : List Advanced.Column) :
+    Except Failure {bindings : List OutputColumn // TableColumns table columns bindings} :=
   match columns with
   | [] => .ok ⟨[], .nil⟩
   | col :: cols => do
       match supported : concreteType col.type with
       | none => .error (unsupported "column_type" "Column type is outside the concrete PostgreSQL scalar profile")
       | some base =>
-          let rest ← tableColumns table qualifier cols
-          .ok ⟨⟨qualifier, ⟨col.name, ⟨base, columnNullable table col⟩⟩⟩ :: rest.val,
+          let rest ← tableColumns table cols
+          .ok ⟨⟨col.name, ⟨base, columnNullable table col⟩⟩ :: rest.val,
             .cons supported rest.property⟩
 
 private def checkJoinKeys (kind : JoinKind) (left right : List OutputColumn)
@@ -584,8 +620,9 @@ private def checkItems (fuel : Nat) (params : ParameterEnv) (scope : Scope) (ite
           .ok ⟨⟨outputName expr alias, projectedType item.type⟩ :: tail.output, item.uses ++ tail.uses,
             .expression item.valid goodAlias tail.valid⟩
         else .error (invalid "empty_alias" "A projection alias must be nonempty")
-    | .all qualifier :: items => do
-        let selected := scope.columns qualifier
+    | .all qualifier schema :: items => do
+        checkNamespace scope qualifier schema
+        let selected := scope.columns qualifier schema
         if nonempty : selected ≠ [] then
           let tail ← checkItems fuel params scope items
           .ok ⟨selected ++ tail.output, tail.uses, .all rfl nonempty tail.valid⟩
@@ -618,7 +655,7 @@ private def checkSort (fuel : Nat) (params : ParameterEnv) (scope : Scope) (outp
               "order_type" "ORDER BY output type has no PostgreSQL ordering operator")
         else .error (invalid "order_position" "ORDER BY position exceeds expanded output width")
       else .error (invalid "order_position" "ORDER BY positions are one-based")
-  | .column none name =>
+  | .column none name none =>
       match found : output.filter (·.name == name) with
       | [column] =>
           if orderable : column.type.base.orderable = true then .ok ⟨[], .outputName found orderable⟩
@@ -708,27 +745,27 @@ theorem checkPaginationBounds_sound
     PaginationBoundsValid profile params query certificate.limitUses certificate.offsetUses :=
   certificate.valid
 
-structure LockingCertificate (source : Option Advanced.From) (distinct : Bool)
+structure LockingCertificate (scope : Scope) (distinct : Bool)
     (clauses : List Advanced.LockingClause) : Type where
-  valid : LockingValid source distinct clauses
+  valid : LockingValid scope distinct clauses
 
-/-- Targets are checked against the exact source alias, without constructing
-or mutating a catalog and without simulating runtime locks. -/
-def checkLocking (source : Option Advanced.From) (distinct : Bool)
+/-- OF selects the first matching relation, independently of column ambiguity. -/
+def checkLocking (scope : Scope) (distinct : Bool)
     (clauses : List Advanced.LockingClause) :
-    Except Failure (LockingCertificate source distinct clauses) :=
+    Except Failure (LockingCertificate scope distinct clauses) :=
   match clauses with
   | [] => .ok ⟨.nil⟩
   | clause :: clauses => do
     if ordinary : distinct = false then
-      let derived := sourceDerivedNames source
-      if (clause.targets.isEmpty && !derived.isEmpty) || clause.targets.any derived.contains then
+      let selected := if clause.targets.isEmpty then scope.relations else
+        clause.targets.filterMap (fun target => scope.relations.find? (fun relation => relation.name == target))
+      if selected.any (fun relation => relation.origin.isNone) then
         throw (unsupported "derived_locking"
           "Row-lock propagation through a selected derived source is not independently modeled")
-      if targets : LockTargets source clause.targets then
-        let tail ← checkLocking source distinct clauses
+      if targets : LockTargets scope clause.targets then
+        let tail ← checkLocking scope distinct clauses
         .ok ⟨.cons ordinary targets tail.valid⟩
-      else .error (invalid "locking_target" "FOR locking targets must resolve uniquely to nonnullable base relations")
+      else .error (invalid "locking_target" "FOR locking targets must select nonnullable base relations")
     else .error (invalid "locking_distinct" "Row locking cannot be combined with DISTINCT")
 
 /-- Diagnostic traversal only. Nested query aggregates belong to their own
@@ -769,7 +806,7 @@ private def checkLockingShape (fuel : Nat) (query : Advanced.Query) : Except Fai
       .error (invalid "locking_grouping" "Row locking cannot be combined with GROUP BY or HAVING")
     else
       let exprs := select.items.filterMap (fun item => match item with
-          | .all _ => none | .expression expr _ => some expr) ++
+          | .all .. => none | .expression expr _ => some expr) ++
         select.whereClause.toList ++ query.orderBy.map Advanced.OrderBy.expr ++
         query.limit.toList ++ query.offset.toList
       let aggregate ← exprs.foldlM (fun found expr => do
@@ -792,19 +829,33 @@ mutual
     | 0 => .error exhausted
     | fuel + 1 => match source with
     | none => .ok ⟨.empty, [], .empty⟩
-    | some (.table name alias columns) => do
-        if noRenaming : columns = [] then
-          if goodAlias : ∀ name ∈ alias, name ≠ "" then
-            match found : catalog.filter (fun table => table.name == name) with
-            | [table] =>
-                have member : table ∈ catalog.filter (fun t => t.name == name) := by rw [found]; simp
-                have facts := List.mem_filter.mp member
-                let bindings ← tableColumns table (alias.getD name) table.columns
-                .ok ⟨Scope.ofBindings bindings.val, [],
+    | some (.table name alias columns schema) => do
+        if schema == some "pg_temp" then
+          throw (unsupported "namespace_alias" "The pg_temp schema alias requires explicit schema-alias resolution")
+        if goodAlias : ∀ name ∈ alias, name ≠ "" then
+          match found : catalog.filter (fun table => table.matchesReference name schema) with
+          | [table] =>
+              have member : table ∈ catalog.filter (fun t => t.matchesReference name schema) := by rw [found]; simp
+              have facts := List.mem_filter.mp member
+              let bindings ← tableColumns table table.columns
+              if noRenaming : columns = [] then
+                .ok ⟨Scope.ofTable table.identity alias bindings.val, [],
                   noRenaming ▸ .table facts.1 (by simpa using facts.2) goodAlias bindings.property⟩
-            | _ => .error (invalid "relation_binding" s!"Relation '{name}' must resolve to exactly one catalog entry")
-          else .error (invalid "empty_alias" "A relation alias must be nonempty")
-        else .error (unsupported "source_column_renaming" "Independent source column-renaming rules are not implemented yet")
+              else match aliasEq : alias with
+                | none => .error (invalid "table_column_aliases" "A table column alias list requires a relation alias")
+                | some aliasName =>
+                    if aliasesValid : ColumnAliasesValid columns bindings.val then
+                      .ok ⟨Scope.ofTable table.identity (some aliasName) (renameOutput columns bindings.val), [], by
+                        rw [aliasEq]
+                        exact .tableRenamed facts.1 (by simpa using facts.2)
+                          (goodAlias aliasName (by simp [aliasEq])) bindings.property aliasesValid⟩
+                    else .error (invalid "table_column_aliases"
+                      "Table column aliases must be nonempty and cannot exceed the column count")
+          | _ =>
+              if schema.isSome && catalog.any (fun table => table.schema.isNone && table.name == name) then
+                .error (unsupported "relation_schema_metadata" "Legacy catalog metadata does not identify this schema-qualified relation")
+              else .error (invalid "relation_binding" s!"Relation '{name}' must resolve to exactly one catalog entry")
+        else .error (invalid "empty_alias" "A relation alias must be nonempty")
     | some (.derived query alias columns lateral) => do
         if nonLateral : lateral = false then
           if aliasValid : alias ≠ "" then
@@ -823,7 +874,7 @@ mutual
               if unique : keys.Nodup then
                 let leftValid ← checkSource fuel profile catalog params (some left)
                 let rightValid ← checkSource fuel profile catalog params (some right)
-                if aliases : JoinAliasesDistinct left right then
+                if aliases : JoinAliasesDistinct leftValid.scope rightValid.scope then
                   let merged ← checkJoinKeys kind leftValid.scope.output rightValid.scope.output keys
                   .ok ⟨mergedJoinScope kind leftValid.scope rightValid.scope keys merged.val,
                     leftValid.uses ++ rightValid.uses, by
@@ -837,7 +888,7 @@ mutual
           if kindValid : kind ≠ .cross then
             let leftValid ← checkSource fuel profile catalog params (some left)
             let rightValid ← checkSource fuel profile catalog params (some right)
-            if aliases : JoinAliasesDistinct left right then
+            if aliases : JoinAliasesDistinct leftValid.scope rightValid.scope then
               let keys := naturalJoinKeys leftValid.scope.output rightValid.scope.output
               if unique : keys.Nodup then
                 let merged ← checkJoinKeys kind leftValid.scope.output rightValid.scope.output keys
@@ -852,7 +903,7 @@ mutual
           if cross : kind = .cross then
             let leftValid ← checkSource fuel profile catalog params (some left)
             let rightValid ← checkSource fuel profile catalog params (some right)
-            if aliases : JoinAliasesDistinct left right then
+            if aliases : JoinAliasesDistinct leftValid.scope rightValid.scope then
               .ok ⟨leftValid.scope ++ rightValid.scope, leftValid.uses ++ rightValid.uses,
                 by rw [conditionEq, cross]; exact .cross leftValid.valid rightValid.valid aliases⟩
             else .error (invalid "duplicate_relation_alias" "Visible relation aliases must be distinct")
@@ -866,7 +917,7 @@ mutual
             | _ => pure ()
             let leftValid ← checkSource fuel profile catalog params (some left)
             let rightValid ← checkSource fuel profile catalog params (some right)
-            if aliases : JoinAliasesDistinct left right then
+            if aliases : JoinAliasesDistinct leftValid.scope rightValid.scope then
               let predicate ← checkExpr fuel params (leftValid.scope ++ rightValid.scope) expr
               if boolean : acceptsBase .bool predicate.type = true then
                 .ok ⟨joinScope kind leftValid.scope rightValid.scope,
@@ -905,7 +956,7 @@ mutual
                         let orders ← checkOrders fuel params source.scope items.output select.distinct orderBy
                         let checkedLimit ← checkPagination fuel params limit
                         let checkedOffset ← checkPagination fuel params offset
-                        let checkedLocking ← checkLocking select.source select.distinct locking
+                        let checkedLocking ← checkLocking source.scope select.distinct locking
                         .ok ⟨items.output,
                           (if offsetFirst then items.uses ++ source.uses ++ predicate.val ++ orders.val ++ checkedOffset.val ++ checkedLimit.val
                            else items.uses ++ source.uses ++ predicate.val ++ orders.val ++ checkedLimit.val ++ checkedOffset.val), by
@@ -929,6 +980,8 @@ def checkQuery (profile : Profile) (catalog : Catalog) (params : ParameterEnv) (
     (fuel : Nat := 1024) : Except Failure (Certificate profile catalog params query) := do
   if fuel = 0 then throw exhausted
   if environment : WellFormedEnvironment catalog params then
+    if catalog.any (fun table => table.schema == some "pg_temp") then
+      throw (unsupported "namespace_alias" "Catalog metadata cannot treat pg_temp as a distinct physical schema")
     if supported : SupportedEnvironment catalog params then
       let checked ← checkQueryCore fuel profile catalog params query
       if parameterOrder : ParameterOrder checked.uses then

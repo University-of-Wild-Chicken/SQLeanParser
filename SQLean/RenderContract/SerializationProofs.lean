@@ -22,7 +22,7 @@ mutual
     | null => simp only [translateExpr, exprSql]
     | decimal raw => simp only [translateExpr, exprSql]
     | parameter parameter => cases parameter <;> simp only [translateExpr, translateParameter, exprSql, ite_true]
-    | column qualifier name => simp only [translateExpr, exprSql]
+    | column qualifier name schema => simp only [translateExpr, exprSql]
     | binary op left right => simp only [translateExpr, exprSql, exprSql_translated pg left, exprSql_translated pg right]
     | concat left right => simp only [translateExpr, exprSql, exprSql_translated pg left, exprSql_translated pg right]
     | quantifiedComparison op quantifier left right =>
@@ -170,7 +170,7 @@ mutual
   theorem itemSql_translated (pg : Bool) (item : Advanced.SelectItem) :
       itemSql pg (translateSelectItem item) = itemSql true item := by
     cases item with
-    | all qualifier => simp only [translateSelectItem, itemSql]
+    | all qualifier schema => simp only [translateSelectItem, itemSql]
     | expression expr alias => simp only [translateSelectItem, itemSql, exprSql_translated pg expr]
   termination_by sizeOf item
   decreasing_by all_goals (simp_all <;> omega)
@@ -178,7 +178,7 @@ mutual
   theorem sourceSql_translated (pg : Bool) (source : Advanced.From) :
       sourceSql pg (translateSource source) = sourceSql true source := by
     cases source with
-    | table name alias columns => simp only [translateSource, sourceSql.eq_def]
+    | table name alias columns schema => simp only [translateSource, sourceSql.eq_def]
     | derived query alias columns lateral =>
       rw [translateSource, sourceSql.eq_def]
       conv => rhs; rw [sourceSql.eq_def]

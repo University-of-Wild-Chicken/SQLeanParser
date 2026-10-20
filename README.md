@@ -27,6 +27,18 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.23 schema-qualified name increment](docs/qualified-names-contract-v0.23.md)
+adds separate schema, table and column components, exact relation identities,
+and explicit unqualified visibility metadata. Relation lookup precedes column
+lookup, aliases hide original paths, and row-lock targets retain PostgreSQL's
+ordered selection rule. Fifty authored queries receive full static and
+rendering certificates. Fifty unchanged PostgreSQL, sqlc and Hatchet queries
+receive rendering certificates; their application catalogs are not invented.
+Database-qualified paths, dynamic search-path resolution, `pg_temp` alias
+resolution and composite whole-row typing remain explicit coverage gaps.
+The [industrial replay](docs/corpus/qualified-names-v0.23/README.md) accepts
+248 of 276 statements and records the remaining 28 syntax rejections.
+
 The [v0.22 SUBSTRING increment](docs/substring-contract-v0.22.md)
 adds all five SQL-standard keyword forms and six concrete TEXT/BYTEA
 declarations, including regex extraction. The contract distinguishes
@@ -35,8 +47,8 @@ preserves lexical parameter order in reversed FOR/FROM forms, and marks
 regex results nullable even for non-NULL inputs. BIT/VARBIT declarations
 remain separate type coverage work.
 Fifty synthetic queries and 50 unchanged source queries receive full
-certificates. The [industrial replay](docs/corpus/substring-v0.22/README.md)
-now accepts 246 of 276 statements, including TPC-H Q22.
+certificates. Its [industrial replay](docs/corpus/substring-v0.22/README.md)
+accepted 246 of 276 statements, including TPC-H Q22.
 
 The [v0.21 interval qualifier increment](docs/interval-fields-contract-v0.21.md)
 adds all 13 field/range forms, including `YEAR TO MONTH` and
@@ -269,6 +281,7 @@ python3 scripts/check_json_extraction_cli.py --local-bin /usr/lib/postgresql/16/
 python3 scripts/check_json_containment_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_interval_fields_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_substring_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_qualified_names_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -398,7 +411,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.22` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.23` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.
@@ -883,7 +896,7 @@ GROUP BY and ORDER BY accept expressions, whole-key result aliases, or one-based
 
 An aggregate query's SELECT, HAVING, and ORDER BY expressions must use grouping keys, constants, aggregates, or expressions built from them. GROUP BY expressions are compared structurally after resolving column names, so an unqualified column and its uniquely resolved qualified form agree. Functional dependencies, such as assuming another column is determined by a grouped primary key, are not inferred. Aggregates are forbidden in WHERE, ON, GROUP BY, and arguments to other aggregates. HAVING also creates an aggregate query when GROUP BY is absent.
 
-The typed AST remains a SQL subset, separate from the complete grammar interface. Remaining unsupported typed forms include recursive SEARCH/CYCLE, window functions, named/variadic call notation, JSON/array operators, schema-qualified relation names, DML CTEs, UPDATE FROM, DELETE USING, row-valued IN, per-value DEFAULT, and transaction commands. DDL is limited to the table forms described below; foreign keys, CHECK constraints, views, indexes, sequences, permissions, and schema DDL are not modeled. Exactly one statement and at most one trailing semicolon are accepted.
+The typed AST remains a SQL subset, separate from the complete grammar interface. Remaining unsupported typed forms include recursive SEARCH/CYCLE, window functions, named/variadic call notation, additional JSON/array operators, database-qualified relation names, DML CTEs, UPDATE FROM, DELETE USING, row-valued IN, per-value DEFAULT, and transaction commands. DDL is limited to the table forms described below; foreign keys, CHECK constraints, views, indexes, sequences, permissions, and schema DDL are not modeled. Exactly one statement and at most one trailing semicolon are accepted.
 
 Keywords are case-insensitive. Unquoted identifiers begin with ASCII letters or `_`, followed by ASCII letters, digits, or `_`; the advanced lexer also permits `$` after the first character. Double-quoted identifiers preserve spelling and allow reserved words. The original reserved-word policies are in `Parser.crudReservedWords` and `Parser.relationalReservedWords`; advanced syntax has its own reserved-word set. Escape quotes by doubling them: `'O''Brien'` and `"a""b"`. Empty quoted identifiers are rejected. Strings and quoted identifiers support Unicode. Both lexers accept `--` line comments and `/* ... */` comments; the advanced lexer additionally supports nested block comments. Parse errors carry a zero-based character offset and one-based line/column positions.
 
@@ -1044,7 +1057,16 @@ In the relational AST, `recursive` records the WITH RECURSIVE modifier, and `uni
 
 `RelQuery.distinctOn` holds DISTINCT ON keys and is mutually exclusive with `distinct = true`. `RelOrderBy.nullsFirst` distinguishes the default (`none`), FIRST (`some true`), and LAST (`some false`). `RelExpr.cast`, `pattern`, `filteredAggregate`, and `inList` preserve the corresponding PostgreSQL syntax. `RelExpr.between` supplies the normalized comparison AST; `RelExpr.inValues` builds an IN node whose list must be nonempty for certification.
 
-Static validity requires a well-formed schema, existing relations, and uniquely resolved, correctly typed expressions. A table alias hides that table's original qualifier. Unqualified column names must identify exactly one visible column; duplicate relation aliases are rejected. ON cannot reference a later JOIN. In the original relational API, ON sees preceding relations and the current JOIN source; CROSS JOIN forbids ON and the other join kinds require it. `Advanced.From` preserves join trees and separately represents ON, USING, and NATURAL joins.
+Contract catalog JSON additionally accepts a table `schema` component and
+`exposeUnqualified` Boolean. Schema-bearing entries default to hidden from
+unqualified lookup; legacy entries default to exposed. An explicitly exposed
+entry represents the caller's resolved connection visibility, not a search-path
+algorithm. Full `(schema, name)` identities and exposed basenames must each be
+unique. Qualified names preserve component boundaries, including quoted dots.
+The older expanded checker rejects schema-aware catalogs rather than erasing
+their identity. See the [v0.23 contract](docs/qualified-names-contract-v0.23.md).
+
+Static validity requires a well-formed schema, existing relations, and uniquely resolved, correctly typed expressions. A table alias hides that table's original qualifier and schema path. Unqualified column names must identify exactly one visible column; duplicate relation aliases are rejected. Distinct unaliased tables with the same basename can coexist across schemas, but a reference by that basename is ambiguous even when only one table has the requested column. ON cannot reference a later JOIN. In the original relational API, ON sees preceding relations and the current JOIN source; CROSS JOIN forbids ON and the other join kinds require it. `Advanced.From` preserves join trees and separately represents ON, USING, and NATURAL joins.
 
 Relational arithmetic accepts integer/real operands; ordered comparisons accept numeric pairs or two text operands. Equality accepts matching base types or a numeric pair. Logical operators and predicates require boolean base types. The original CRUD expression checker retains its integer arithmetic/comparison rules. The original INSERT checker requires complete target coverage and checks every row's arity/types in an empty column environment. Advanced INSERT additionally uses catalog defaults/nullability and validates SELECT sources and conflict actions. UPDATE checks unique assignment targets and matching value types against the original table environment, so swaps such as `SET id = age, age = id` typecheck. UPDATE and DELETE without WHERE are valid.
 

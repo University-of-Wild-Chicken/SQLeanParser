@@ -24,6 +24,12 @@ private def checkNames (names : List Name) : Except Failure Unit :=
 private def checkOptionalName (name : Option Name) : Except Failure Unit :=
   match name with | none => pure () | some name => checkName name
 
+private def checkQualifier (qualifier schema : Option Name) : Except Failure Unit := do
+  checkOptionalName qualifier
+  checkOptionalName schema
+  if schema.isSome && qualifier.isNone then
+    invalid "representation.schema-qualifier" "schema-qualified references require a relation qualifier"
+
 private def digit (c : Char) : Bool := '0' ≤ c && c ≤ '9'
 
 private def exponent (chars : List Char) : Bool :=
@@ -121,7 +127,7 @@ mutual
         if numericLexeme raw then leaf
         else invalid "representation.numeric-token" "decimal field is not a decimal/exponent token"
     | .parameter parameter => pure { parameters := [parameter] }
-    | .column qualifier name => checkOptionalName qualifier; checkName name; leaf
+    | .column qualifier name schema => checkQualifier qualifier schema; checkName name; leaf
     | .binary _ left right | .concat left right | .pattern left right _ | .regex left right _ _
     | .jsonAccess _ left right | .containment left right _ | .overlap left right =>
         combine [inspectExpr left, inspectExpr right]
@@ -208,15 +214,16 @@ mutual
 
   def inspectItem (item : Advanced.SelectItem) : Except Failure Footprint := do
     match item with
-    | .all qualifier => checkOptionalName qualifier; leaf
+    | .all qualifier schema => checkQualifier qualifier schema; leaf
     | .expression expr alias => checkOptionalName alias; combine [inspectExpr expr]
   termination_by sizeOf item
   decreasing_by all_goals (simp_all <;> omega)
 
   def inspectSource (source : From) : Except Failure Footprint := do
     match source with
-    | .table name alias columns =>
+    | .table name alias columns schema =>
         checkName name
+        checkOptionalName schema
         checkOptionalName alias
         checkNames columns
         if alias.isNone && !columns.isEmpty then

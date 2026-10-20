@@ -29,6 +29,8 @@ def checkSQLiteDataType (type : DataType) : Except Failure Unit :=
 mutual
   def checkSQLiteExpr (expr : Advanced.Expr) : Except Failure Unit := do
     match expr with
+    | .column _ _ schema =>
+        if schema.isSome then unsupported "schema-qualification" else pure ()
     | .quantifiedComparison .. => unsupported "array-quantified-comparison"
     | .regex .. => unsupported "regex"
     | .jsonAccess .. => unsupported "json-extraction"
@@ -82,8 +84,9 @@ mutual
 
   def checkSQLiteSource (source : From) : Except Failure Unit := do
     match source with
-    | .table _ _ columns =>
-        if columns.isEmpty then pure () else unsupported "relation-column-aliases"
+    | .table _ _ columns schema =>
+        if schema.isSome then unsupported "schema-qualification"
+        else if columns.isEmpty then pure () else unsupported "relation-column-aliases"
     | .derived query _ columns lateral =>
         if lateral then unsupported "LATERAL"
         else if !columns.isEmpty then unsupported "relation-column-aliases"
@@ -101,7 +104,8 @@ mutual
       select.items.attach.forM fun (item : {i : Advanced.SelectItem // i ∈ select.items}) =>
         have : sizeOf item.val < sizeOf select.items := List.sizeOf_lt_of_mem item.property
         match _h : item.val with
-        | .all _ => pure ()
+        | .all _ schema =>
+            if schema.isSome then unsupported "schema-qualification" else pure ()
         | .expression expr _ => checkSQLiteExpr expr
       match _h : select.source with
       | none => pure () | some source => checkSQLiteSource source

@@ -38,7 +38,7 @@ instance (names key : List Name) : Decidable (KeyWellFormed names key) :=
   inferInstanceAs (Decidable (_ ∧ _ ∧ _))
 
 def TableWellFormed (table : CatalogTable) : Prop :=
-  table.name ≠ "" ∧ table.columns ≠ [] ∧
+  table.name ≠ "" ∧ (∀ schema ∈ table.schema, schema ≠ "") ∧ table.columns ≠ [] ∧
   (table.columns.map Advanced.Column.name).Nodup ∧
   (∀ column ∈ table.columns, column.name ≠ "" ∧ DataTypeWellFormed column.type) ∧
   (∀ key ∈ table.uniqueKeys, KeyWellFormed (table.columns.map Advanced.Column.name) key) ∧
@@ -50,13 +50,20 @@ def TableWellFormed (table : CatalogTable) : Prop :=
     (table.columns.filter (·.primaryKey)).map Advanced.Column.name = table.primaryKey)
 
 instance (table : CatalogTable) : Decidable (TableWellFormed table) :=
-  inferInstanceAs (Decidable (_ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _ ∧ _))
+  by unfold TableWellFormed; infer_instance
 
+/-- Catalog keys and exposed unqualified names are independently unique.
+A legacy unknown-schema entry cannot double-register a qualified object. -/
 def CatalogWellFormed (catalog : Catalog) : Prop :=
-  (catalog.map CatalogTable.name).Nodup ∧ ∀ table ∈ catalog, TableWellFormed table
+  (catalog.map CatalogTable.identity).Nodup ∧
+  ((catalog.filter (·.exposeUnqualified)).map CatalogTable.name).Nodup ∧
+  (∀ table ∈ catalog, ∀ other ∈ catalog,
+    table.name = other.name → table.schema.isSome = other.schema.isSome) ∧
+  ∀ table ∈ catalog, TableWellFormed table
 
-instance (catalog : Catalog) : Decidable (CatalogWellFormed catalog) :=
-  inferInstanceAs (Decidable (_ ∧ _))
+instance (catalog : Catalog) : Decidable (CatalogWellFormed catalog) := by
+  unfold CatalogWellFormed
+  infer_instance
 
 def ParametersWellFormed (params : ParameterEnv) : Prop :=
   (params.map ParameterBinding.index).Nodup ∧
@@ -74,11 +81,12 @@ instance (catalog : Catalog) (params : ParameterEnv) : Decidable (WellFormedEnvi
 /-- ALL supplied concrete types must belong to the fixed profile. Unsupported
 metadata is not silently coerced through Advanced.DataType.sqlType. -/
 def SupportedEnvironment (catalog : Catalog) (params : ParameterEnv) : Prop :=
+  (∀ table ∈ catalog, table.schema ≠ some "pg_temp") ∧
   (∀ table ∈ catalog, ∀ col ∈ table.columns, concreteType col.type ≠ none) ∧
   (∀ param ∈ params, concreteType param.type ≠ none)
 
 instance (catalog : Catalog) (params : ParameterEnv) : Decidable (SupportedEnvironment catalog params) :=
-  inferInstanceAs (Decidable (_ ∧ _))
+  inferInstanceAs (Decidable (_ ∧ _ ∧ _))
 
 /-- Parameter notation is a query-wide property. Numbered references can repeat;
 anonymous references must be exactly 1,2,... in AST source order. -/
@@ -104,19 +112,21 @@ metadata. Predicate-based refinements are absent. -/
 def columnNullable (table : CatalogTable) (col : Advanced.Column) : Bool :=
   !(col.primaryKey || table.primaryKey.contains col.name || col.nullable == some false)
 
-inductive TableColumns (table : CatalogTable) (qualifier : Name) : List Advanced.Column → List Binding → Prop where
-  | nil : TableColumns table qualifier [] []
+inductive TableColumns (table : CatalogTable) : List Advanced.Column → List OutputColumn → Prop where
+  | nil : TableColumns table [] []
   | cons (supported : concreteType col.type = some base)
-      (tail : TableColumns table qualifier cols bindings) :
-      TableColumns table qualifier (col :: cols)
-        (⟨qualifier, ⟨col.name, ⟨base, columnNullable table col⟩⟩⟩ :: bindings)
+      (tail : TableColumns table cols bindings) :
+      TableColumns table (col :: cols)
+        (⟨col.name, ⟨base, columnNullable table col⟩⟩ :: bindings)
 
-/-- Unique lookup in either the exposed row or the qualified namespace. -/
-def Resolves (scope : Scope) (qualifier : Option Name) (name : Name) (column : OutputColumn) : Prop :=
-  (scope.columns qualifier).filter (fun col => col.name == name) = [column]
+/-- A unique relation namespace is selected before looking up its column. -/
+def Resolves (scope : Scope) (qualifier : Option Name) (name : Name) (column : OutputColumn)
+    (schema : Option Name := none) : Prop :=
+  (scope.columns qualifier schema).filter (fun col => col.name == name) = [column]
 
-instance (scope : Scope) (qualifier : Option Name) (name : Name) (column : OutputColumn) :
-    Decidable (Resolves scope qualifier name column) := inferInstanceAs (Decidable (_ = _))
+instance (scope : Scope) (qualifier : Option Name) (name : Name) (column : OutputColumn)
+    (schema : Option Name) : Decidable (Resolves scope qualifier name column schema) :=
+  inferInstanceAs (Decidable (_ = _))
 
 /-- Direct array-to-array casts must use target-directed element coercion.
 Allowing the ordinary inferred-array route would invent transitive casts. -/
@@ -177,8 +187,8 @@ mutual
     | parameter (present : binding ∈ params) (identity : binding.index = parameterIndex parameter)
         (supported : concreteType binding.type = some base) :
         ExprValid params scope (.parameter parameter) (some ⟨base.unmodified, binding.nullable⟩) [parameter]
-    | column (resolved : Resolves scope qualifier name column) :
-        ExprValid params scope (.column qualifier name) (some column.type) []
+    | column (resolved : Resolves scope qualifier name column schema) :
+        ExprValid params scope (.column qualifier name schema) (some column.type) []
     | binary (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
         (signature : binarySignature op ta tb = some result) :
         ExprValid params scope (.binary op a b) result (ua ++ ub)
@@ -369,7 +379,7 @@ def typeNameLabel : Advanced.TypeName → Name
 expression forms: 0 is absent, 1 is a weak cast/CASE name, and 2 is inherited.
 A cast replaces a weak name but retains a column/function/constructor name. -/
 def outputLabel : Advanced.Expr → Nat × Name
-  | .column _ name => (2, name)
+  | .column _ name _ => (2, name)
   | .call name _ => (2, name.getLastD "?column?")
   | .array _ => (2, "array")
   | .row _ => (2, "row")
@@ -403,10 +413,10 @@ inductive ItemsValid (params : ParameterEnv) (scope : Scope) :
       (tail : ItemsValid params scope items output remaining) :
       ItemsValid params scope (.expression expr alias :: items)
         (⟨outputName expr alias, projectedType type⟩ :: output) (uses ++ remaining)
-  | all (bindings : scope.columns qualifier = selected)
+  | all (bindings : scope.columns qualifier schema = selected)
       (nonempty : selected ≠ [])
       (tail : ItemsValid params scope items output uses) :
-      ItemsValid params scope (.all qualifier :: items) (selected ++ output) uses
+      ItemsValid params scope (.all qualifier schema :: items) (selected ++ output) uses
 
 inductive PredicateValid (params : ParameterEnv) (scope : Scope) : Option Advanced.Expr → List Parameter → Prop where
   | absent : PredicateValid params scope none []
@@ -419,7 +429,8 @@ def nullableColumn (column : OutputColumn) : OutputColumn :=
   { column with type := { column.type with nullable := true } }
 
 def nullableScope (scope : Scope) : Scope :=
-  ⟨scope.qualified.map (fun binding => { binding with column := nullableColumn binding.column }),
+  ⟨scope.relations.map (fun relation =>
+      {relation with columns := relation.columns.map nullableColumn, nullable := true}),
     scope.output.map nullableColumn⟩
 
 def joinScope (kind : JoinKind) (left right : Scope) : Scope :=
@@ -429,7 +440,7 @@ def joinScope (kind : JoinKind) (left right : Scope) : Scope :=
 /-- Visible leaf relation names with the possibility of a NULL-extended row.
 This is structural metadata, independent of column resolution or a checker. -/
 def fromRelations : Advanced.From → List (Name × Bool)
-  | .table name alias _ => [(alias.getD name, false)]
+  | .table name alias _ _ => [(alias.getD name, false)]
   | .derived _ alias _ _ => [(alias, false)]
   | .join kind left right _ =>
       (fromRelations left).map (fun relation =>
@@ -448,11 +459,23 @@ def fromDerivedNames : Advanced.From → List Name
 def sourceDerivedNames (source : Option Advanced.From) : List Name :=
   source.toList.flatMap fromDerivedNames
 
-def JoinAliasesDistinct (left right : Advanced.From) : Prop :=
-  ((fromRelations left ++ fromRelations right).map Prod.fst).Nodup
+/-- Equal visible names are legal only for distinct unaliased base relations.
+Column lookup can still be ambiguous; the namespace itself remains well formed. -/
+def NamespaceCompatible (left right : RelationNamespace) : Prop :=
+  left.name ≠ right.name ∨
+    (left.aliased = false ∧ right.aliased = false ∧
+      left.origin.isSome = true ∧ right.origin.isSome = true ∧ left.origin ≠ right.origin)
 
-instance (left right : Advanced.From) : Decidable (JoinAliasesDistinct left right) :=
-  inferInstanceAs (Decidable (List.Nodup _))
+instance (left right : RelationNamespace) : Decidable (NamespaceCompatible left right) := by
+  unfold NamespaceCompatible
+  infer_instance
+
+def JoinAliasesDistinct (left right : Scope) : Prop :=
+  ∀ l ∈ left.relations, ∀ r ∈ right.relations, NamespaceCompatible l r
+
+instance (left right : Scope) : Decidable (JoinAliasesDistinct left right) := by
+  unfold JoinAliasesDistinct
+  infer_instance
 
 /-- NATURAL discovers common names in the left exposed row's order. It does
 not deduplicate names: ambiguous exposed keys must be rejected. -/
@@ -486,7 +509,7 @@ Only the exposed row is merged: keys first, then left and right nonkeys. -/
 def mergedJoinScope (kind : JoinKind) (left right : Scope)
     (keys : List Name) (merged : List OutputColumn) : Scope :=
   let joined := joinScope kind left right
-  ⟨joined.qualified, merged ++ joined.output.filter (fun col => !keys.contains col.name)⟩
+  ⟨joined.relations, merged ++ joined.output.filter (fun col => !keys.contains col.name)⟩
 
 /-- An alias list renames a positional prefix; unnamed remaining columns keep
 their certified labels. Repeated labels are legal and remain ambiguous when
@@ -505,7 +528,7 @@ instance (names : List Name) (output : List OutputColumn) : Decidable (ColumnAli
 /-- Sort syntax categories are part of the name-resolution rule, not an
 executable typing predicate. -/
 def SortExpression : Advanced.Expr → Prop
-  | .literal (.int _) | .column none _ => False
+  | .literal (.int _) | .column none _ none => False
   | _ => True
 
 instance (expr : Advanced.Expr) : Decidable (SortExpression expr) := by
@@ -612,37 +635,34 @@ def PaginationBoundsCertificate.runtimeObligation
     (limitValue offsetValue : Option Int) : Prop :=
   PaginationValueAllowed limitValue ∧ PaginationValueAllowed offsetValue
 
-/-- Row-lock targets refer to visible relation names, never output aliases.
-An explicit alias replaces the underlying table name. -/
-def LockTarget (source : Option Advanced.From) (target : Name) : Prop :=
-  target ≠ "" ∧ (sourceRelations source).filter (fun relation => relation.1 == target) = [(target, false)] ∧
-    target ∉ sourceDerivedNames source
+/-- PostgreSQL OF resolves the first matching visible relation in range-table
+order. This deliberately differs from unique namespace resolution for columns. -/
+def LockTarget (scope : Scope) (target : Name) : Prop :=
+  target ≠ "" ∧ ∃ relation ∈ scope.relations.find? (fun relation => relation.name == target),
+    relation.origin.isSome = true ∧ relation.nullable = false
 
-instance (source : Option Advanced.From) (target : Name) : Decidable (LockTarget source target) :=
-  inferInstanceAs (Decidable (_ ∧ _ ∧ _))
+instance (scope : Scope) (target : Name) : Decidable (LockTarget scope target) := by
+  unfold LockTarget
+  infer_instance
 
-/-- An omitted OF list selects every visible leaf. All selected leaves must be
-nonnullable; source-free selection is empty and therefore legal. -/
-def LockTargets (source : Option Advanced.From) (targets : List Name) : Prop :=
-  if targets = [] then sourceDerivedNames source = [] ∧
-    ∀ relation ∈ sourceRelations source, relation.2 = false
-  else ∀ target ∈ targets, LockTarget source target
+def LockTargets (scope : Scope) (targets : List Name) : Prop :=
+  if targets = [] then ∀ relation ∈ scope.relations,
+    relation.origin.isSome = true ∧ relation.nullable = false
+  else ∀ target ∈ targets, LockTarget scope target
 
-instance (source : Option Advanced.From) (targets : List Name) : Decidable (LockTargets source targets) := by
+instance (scope : Scope) (targets : List Name) : Decidable (LockTargets scope targets) := by
   unfold LockTargets
   infer_instance
 
-/-- Clause strengths and wait policies are preserved exactly. Repeating an OF
-target or having multiple clauses is legal PostgreSQL syntax. With no targets,
-a source-free SELECT has no rows to lock and remains statically valid.
-This judgment does not claim privileges, lock acquisition or absence of waits. -/
-inductive LockingValid (source : Option Advanced.From) (distinct : Bool) :
+/-- This judgment checks target identity and null extension, not privileges,
+lock acquisition, waits, or propagation into a selected derived relation. -/
+inductive LockingValid (scope : Scope) (distinct : Bool) :
     List Advanced.LockingClause → Prop where
-  | nil : LockingValid source distinct []
+  | nil : LockingValid scope distinct []
   | cons (ordinary : distinct = false)
-      (targets : LockTargets source clause.targets)
-      (tail : LockingValid source distinct clauses) :
-      LockingValid source distinct (clause :: clauses)
+      (targets : LockTargets scope clause.targets)
+      (tail : LockingValid scope distinct clauses) :
+      LockingValid scope distinct (clause :: clauses)
 
 mutual
   /-- Every ON predicate sees exactly its two child scopes, before this join's
@@ -652,32 +672,38 @@ mutual
   inductive SourceValid (profile : Profile) (catalog : Catalog) (params : ParameterEnv) :
       Option Advanced.From → Scope → List Parameter → Prop where
     | empty : SourceValid profile catalog params none .empty []
-    | table (present : table ∈ catalog) (sameName : table.name = name)
+    | table (present : table ∈ catalog) (resolved : table.matchesReference name schema = true)
         (aliasValid : ∀ aliasName ∈ alias, aliasName ≠ "")
-        (columns : TableColumns table (alias.getD name) table.columns bindings) :
-        SourceValid profile catalog params (some (.table name alias [])) (Scope.ofBindings bindings) []
+        (columns : TableColumns table table.columns bindings) :
+        SourceValid profile catalog params (some (.table name alias [] schema)) (Scope.ofTable table.identity alias bindings) []
+    | tableRenamed (present : table ∈ catalog) (resolved : table.matchesReference name schema = true)
+        (aliasValid : alias ≠ "")
+        (columns : TableColumns table table.columns bindings)
+        (aliasesValid : ColumnAliasesValid aliases bindings) :
+        SourceValid profile catalog params (some (.table name (some alias) aliases schema))
+          (Scope.ofTable table.identity (some alias) (renameOutput aliases bindings)) []
     | cross (leftValid : SourceValid profile catalog params (some left) leftScope leftUses)
         (rightValid : SourceValid profile catalog params (some right) rightScope rightUses)
-        (aliases : JoinAliasesDistinct left right) :
+        (aliases : JoinAliasesDistinct leftScope rightScope) :
         SourceValid profile catalog params (some (.join .cross left right .none))
           (leftScope ++ rightScope) (leftUses ++ rightUses)
     | on (leftValid : SourceValid profile catalog params (some left) leftScope leftUses)
         (rightValid : SourceValid profile catalog params (some right) rightScope rightUses)
-        (aliases : JoinAliasesDistinct left right)
+        (aliases : JoinAliasesDistinct leftScope rightScope)
         (kindValid : kind ≠ .cross)
         (condition : PredicateValid params (leftScope ++ rightScope) (some expr) onUses) :
         SourceValid profile catalog params (some (.join kind left right (.on expr)))
           (joinScope kind leftScope rightScope) (leftUses ++ rightUses ++ onUses)
     | using (leftValid : SourceValid profile catalog params (some left) leftScope leftUses)
         (rightValid : SourceValid profile catalog params (some right) rightScope rightUses)
-        (aliases : JoinAliasesDistinct left right)
+        (aliases : JoinAliasesDistinct leftScope rightScope)
         (kindValid : kind ≠ .cross) (nonempty : keys ≠ []) (unique : keys.Nodup)
         (keysValid : JoinKeysValid kind leftScope.output rightScope.output keys merged) :
         SourceValid profile catalog params (some (.join kind left right (.using keys)))
           (mergedJoinScope kind leftScope rightScope keys merged) (leftUses ++ rightUses)
     | natural (leftValid : SourceValid profile catalog params (some left) leftScope leftUses)
         (rightValid : SourceValid profile catalog params (some right) rightScope rightUses)
-        (aliases : JoinAliasesDistinct left right)
+        (aliases : JoinAliasesDistinct leftScope rightScope)
         (kindValid : kind ≠ .cross)
         (unique : (naturalJoinKeys leftScope.output rightScope.output).Nodup)
         (keysValid : JoinKeysValid kind leftScope.output rightScope.output
@@ -704,7 +730,7 @@ mutual
         (orders : OrdersValid params scope output select.distinct orderBy orderUses)
         (limitValid : PaginationValid params limit limitUses)
         (offsetValid : PaginationValid params offset offsetUses)
-        (lockingValid : LockingValid select.source select.distinct locking)
+        (lockingValid : LockingValid scope select.distinct locking)
         (noGrouping : select.groupBy = []) (noHaving : select.having = none)
         (noDistinctOn : select.distinctOn = []) :
         QueryValid profile catalog params

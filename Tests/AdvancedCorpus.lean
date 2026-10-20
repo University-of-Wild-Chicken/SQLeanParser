@@ -47,7 +47,7 @@ mutual
           advancedQueryFeature category fuel left || advancedQueryFeature category fuel right
       | .select select =>
           select.items.any (fun
-            | .all _ => false
+            | .all .. => false
             | .expression expr _ => advancedExprFeature category fuel expr) ||
           select.source.any (advancedFromFeature category fuel) ||
           select.whereClause.any (advancedExprFeature category fuel) ||

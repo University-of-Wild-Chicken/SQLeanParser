@@ -23,7 +23,7 @@ mutual
     | null => simp only [translateExpr]
     | decimal raw => simp only [translateExpr]
     | parameter parameter => simp only [translateExpr, translateParameter_idempotent]
-    | column qualifier name => simp only [translateExpr]
+    | column qualifier name schema => simp only [translateExpr]
     | binary op left right => simp only [translateExpr, translateExpr_idempotent left, translateExpr_idempotent right]
     | concat left right => simp only [translateExpr, translateExpr_idempotent left, translateExpr_idempotent right]
     | quantifiedComparison op quantifier left right =>
@@ -149,7 +149,7 @@ mutual
   theorem translateSelectItem_idempotent (item : Advanced.SelectItem) :
       translateSelectItem (translateSelectItem item) = translateSelectItem item := by
     cases item with
-    | all qualifier => simp only [translateSelectItem]
+    | all qualifier schema => simp only [translateSelectItem]
     | expression expr alias => simp only [translateSelectItem, translateExpr_idempotent expr]
   termination_by sizeOf item
   decreasing_by all_goals (simp_all <;> omega)
@@ -174,7 +174,7 @@ mutual
   theorem translateSource_idempotent (source : Advanced.From) :
       translateSource (translateSource source) = translateSource source := by
     cases source with
-    | table name alias columns => simp only [translateSource]
+    | table name alias columns schema => simp only [translateSource]
     | derived query alias columns lateral => simp only [translateSource, translateParameters_idempotent query]
     | join kind left right condition =>
         simp only [translateSource, translateSource_idempotent left, translateSource_idempotent right,

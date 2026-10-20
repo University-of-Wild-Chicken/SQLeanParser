@@ -56,6 +56,7 @@ private def accepted : List String := [
 ]
 
 private def extendedAccepted : List String := [
+  "SELECT a.b.c FROM users",
   "SELECT unknown(id) FROM users",
   "SELECT \"COUNT\"(id) FROM users",
   "SELECT u.count(id) FROM users u",
@@ -73,7 +74,7 @@ private def extendedAccepted : List String := [
 private def rejected : List String := [
   "SELECT * AS all_users FROM users", "SELECT u.* alias FROM users u",
   "SELECT u.* + 1 FROM users u", "SELECT u. FROM users u",
-  "SELECT u..id FROM users u", "SELECT a.b.c FROM users",
+  "SELECT u..id FROM users u", "SELECT db.a.b.c FROM users",
   "SELECT .id FROM users", "SELECT id AS FROM users", "SELECT id AS where FROM users",
   "SELECT id FROM users AS", "SELECT id FROM users AS where",
   "SELECT id FROM users JOIN orders", "SELECT id FROM users JOIN orders ON",
@@ -129,6 +130,14 @@ def relationalParsingTests : IO Nat := do
   for source in rejected do
     expectError source (parseRelQuery source)
     expectError source (parseStatement source)
+
+  match ← expectOk "schema-qualified column uses extended AST"
+      (parseStatement "SELECT a.b.c FROM users") with
+  | .extended (.query {body := .select select, ..}) =>
+      SQLean.Tests.assert
+        (select.items == [.expression (.column (some "b") "c" (some "a"))])
+        "schema, relation and column components must stay separate"
+  | _ => throw (IO.userError "schema-qualified columns must retain the Advanced AST")
 
   match ← expectOk "decimal pagination uses extended AST"
       (parseStatement "SELECT u.id FROM users u LIMIT 1.5") with
@@ -219,6 +228,6 @@ def relationalParsingTests : IO Nat := do
   let cteDefs := String.intercalate ", " ((List.range 100).map fun n => s!"t{n} AS (SELECT id FROM t)")
   let manyCtes ← expectOk "100 CTE definitions" (parseRelQuery s!"WITH {cteDefs} SELECT id FROM t99")
   SQLean.Tests.assert (manyCtes.ctes.length == 100) "lost CTE definitions"
-  pure (3 * accepted.length + 2 * (rejected.length + extendedAccepted.length) + 17)
+  pure (3 * accepted.length + 2 * (rejected.length + extendedAccepted.length) + 18)
 
 end SQLean.Tests

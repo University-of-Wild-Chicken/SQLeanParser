@@ -1,0 +1,2346 @@
+{
+  "format_version": 1,
+  "factor": "qualified_names",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 37,
+    "sqlc": 12,
+    "hatchet": 1
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "contrib/hstore_plperl/sql/hstore_plperl.sql",
+          "sha256": "4c07b13a8f92f27038f0b3a85af70dac7d980054bf41cad620da22e78521af31",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/hstore_plperl/sql/hstore_plperl.sql"
+        },
+        {
+          "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+          "sha256": "7fe202a74edec6ed9ab7a225ae3ccf09bd55ce15c0bd69441d9606a70ee5f873",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/postgres_fdw/sql/postgres_fdw.sql"
+        },
+        {
+          "path": "src/test/modules/worker_spi/sql/worker_spi.sql",
+          "sha256": "6062e496cdf2a68fe16a055ad1e56b958a3c3e98d6e2247679370f9c9c11f458",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/modules/worker_spi/sql/worker_spi.sql"
+        },
+        {
+          "path": "src/test/regress/sql/alter_table.sql",
+          "sha256": "533636646b7c25c191355309187da5edc8f9e7c17101ea70ba96317ffaa24774",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/alter_table.sql"
+        },
+        {
+          "path": "src/test/regress/sql/collate.sql",
+          "sha256": "c20c9868d2e539295294150de52f0008b454ac8358924df80f4227e4ab2095d0",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/collate.sql"
+        },
+        {
+          "path": "src/test/regress/sql/create_function_sql.sql",
+          "sha256": "f4208caa58b82a29768fa759f8959eb2bca000810e18a4886eabb80c79813683",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/create_function_sql.sql"
+        },
+        {
+          "path": "src/test/regress/sql/foreign_data.sql",
+          "sha256": "89f0835d9e079c94c2d5e1edf5f7e4bcf58088d52fddbe46bfa2a91ee95d481f",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/foreign_data.sql"
+        },
+        {
+          "path": "src/test/regress/sql/foreign_key.sql",
+          "sha256": "53e6eb5fa26f43e7b78a88de30f1cae13757a14fd5dd7b501dbaf3212e89e898",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/foreign_key.sql"
+        },
+        {
+          "path": "src/test/regress/sql/generated.sql",
+          "sha256": "f704b63cad068fb44a9d466f7e738bfd7208c3870eab3639b477aa81c612e19b",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/generated.sql"
+        },
+        {
+          "path": "src/test/regress/sql/identity.sql",
+          "sha256": "999f9cccc40ffcf09022d96e701daac9bffe672dba47093aa70fbb94e80738be",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/identity.sql"
+        },
+        {
+          "path": "src/test/regress/sql/namespace.sql",
+          "sha256": "383cb756845dbab359156482d44c190d7eaca0dab6535ed462806df8ca387fa5",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/namespace.sql"
+        },
+        {
+          "path": "src/test/regress/sql/select_parallel.sql",
+          "sha256": "c9ea32b7d352ef0e154076419e64ab73a0360f08908a01218c7d03dd068d8511",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/select_parallel.sql"
+        },
+        {
+          "path": "src/test/regress/sql/sequence.sql",
+          "sha256": "0a0acc85ddcde98cd886de42a6b39b5f29938e50e560d52b324e464c63f24a02",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/sequence.sql"
+        },
+        {
+          "path": "src/test/regress/sql/stats_ext.sql",
+          "sha256": "3687ebb8d0251be5954c3c7b7b516ff2bb93f1524e49977efb830047b3bb2f94",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/stats_ext.sql"
+        },
+        {
+          "path": "src/test/regress/sql/tablespace.sql",
+          "sha256": "6936926d7b6fb34c90bad133d68a8ef5c4c4ba52fc42813effa4603c4e4c2832",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/tablespace.sql"
+        },
+        {
+          "path": "src/test/regress/sql/updatable_views.sql",
+          "sha256": "e88d712d76f92e0d1e09a3eb6b9f1165fad59aeabf1aed86f71995e47a744015",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/updatable_views.sql"
+        },
+        {
+          "path": "src/test/regress/sql/xml.sql",
+          "sha256": "7fae76b29f7e3b296885a4e9b713e1d0172ab620c4a65b2726c17feec74848f1",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/xml.sql"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/analyze_system_catalog/postgresql/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/analyze_system_catalog/postgresql/query.sql",
+          "sha256": "17c1153ae8be26ac9a732770c724bbc45025711fabee241b1e09970c5b7e5beb"
+        },
+        {
+          "path": "internal/endtoend/testdata/batch/postgresql/pgx/v5/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/batch/postgresql/pgx/v5/query.sql",
+          "sha256": "88a87a404d424725fa9a85323b2835d71969eb2bf16708709bb53a1eaf1eb46c"
+        },
+        {
+          "path": "internal/endtoend/testdata/comment_on/postgresql/pgx/v5/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/comment_on/postgresql/pgx/v5/query.sql",
+          "sha256": "69dc00c22e237697e059fb00891fd29b1b818cedd547fb89c4fea5c6470f11b5"
+        },
+        {
+          "path": "internal/endtoend/testdata/composite_type/pgx/v5/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/composite_type/pgx/v5/query.sql",
+          "sha256": "7f113774c9c3881a0ce5bf841561ab2e0d0bb7a609703dcbb2787efcbea2c6ac"
+        },
+        {
+          "path": "internal/endtoend/testdata/ddl_alter_materialized_views_set_schema/postgresql/pgx/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/ddl_alter_materialized_views_set_schema/postgresql/pgx/query.sql",
+          "sha256": "c9b02b93095e59b8271d5f19a4d44c50ea05b4a437e6f0b5a0dbd0532a90002d"
+        },
+        {
+          "path": "internal/endtoend/testdata/schema_scoped_filter/postgresql/pgx/v5/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/schema_scoped_filter/postgresql/pgx/v5/query.sql",
+          "sha256": "b987078d3f2afc09a752dd9afbfd855248ac858a3fada1ad246fa73acc110604"
+        },
+        {
+          "path": "internal/endtoend/testdata/schema_scoped_list/postgresql/pgx/v5/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/schema_scoped_list/postgresql/pgx/v5/query.sql",
+          "sha256": "c4c9b48887d3fc1f00dccb3dbd240a9dbb89c8a4b241d623c1174d2017641fd8"
+        },
+        {
+          "path": "internal/endtoend/testdata/schema_table_column_ref/postgresql/pgx/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/schema_table_column_ref/postgresql/pgx/query.sql",
+          "sha256": "0eb39d4fcf411234ba140e770b9ccb437e57b06be73b0827753d25e3c5f9d4ea"
+        }
+      ]
+    },
+    "hatchet": {
+      "repository": "https://github.com/hatchet-dev/hatchet",
+      "commit": "392e7c472221cdab235cca674640e98f904e1ea0",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/hatchet-LICENSE.txt",
+      "license_sha256": "7388b34bd1ad4b9db3c72dcb73f434ea27c88e5ca8f02a24d4f970c906d79be3",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "pkg/repository/sqlcv1/tasks.sql.go",
+          "sha256": "b439f6e7e5642fb90e79d61e568ceb849ded87c86d04aa1e093b9d78240979e4",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/tasks.sql.go"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/batch/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 1,
+        "start": 124,
+        "end": 164
+      },
+      "sql_sha256": "98b07937043357fbd35e64b56400ee9bfb1b3ffcdb76392e77fb1c118d06ba11",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "myschema",
+              "foo"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "myschema.foo",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/comment_on/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 0,
+        "start": 23,
+        "end": 45
+      },
+      "sql_sha256": "c081f9ebd184f8396d1f3cfe2956d139cc47e5a18df5d4af131d3e1e51e1aa1c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "foo",
+              "bar"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "foo.bar",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/comment_on/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 1,
+        "start": 70,
+        "end": 92
+      },
+      "sql_sha256": "ab48f6fca0dea92c92991794c5e4b90f3e85259c7e6c6504f1556338171505ec",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "foo",
+              "bat"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "foo.bat",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/composite_type/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 0,
+        "start": 25,
+        "end": 49
+      },
+      "sql_sha256": "7695747f7085e88855510bbd9e3da927934b0d5928847490f8d73e1f60517b1d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "foo",
+              "paths"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "foo.paths",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/schema_scoped_filter/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 0,
+        "start": 34,
+        "end": 70
+      },
+      "sql_sha256": "f4af8b0dbcf6358a2fc735c07ca9e2d1874a8ea8d9ba463ad14bb605efacb6b1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "foo",
+              "bar"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "foo.bar",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/schema_scoped_list/postgresql/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 1,
+        "start": 91,
+        "end": 122
+      },
+      "sql_sha256": "c40f159d2b0459af06545ab8ea751234815726a35752da37e1c412a38df8f0e2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "foo",
+              "bar"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "foo.bar",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "foo",
+              "bar",
+              "id"
+            ],
+            "quoted": [
+              false,
+              false,
+              false
+            ],
+            "spelling": "foo.bar.id"
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/schema_table_column_ref/postgresql/pgx/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 0,
+        "start": 35,
+        "end": 184
+      },
+      "sql_sha256": "7e8cd3620d5814a637754aaf7ae11fbfffd989f8e5983a4284abadb80cd180b0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "astoria",
+              "slack_feedback"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "astoria.slack_feedback",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "astoria",
+              "slack_feedback",
+              "workspace_id"
+            ],
+            "quoted": [
+              false,
+              false,
+              false
+            ],
+            "spelling": "astoria.slack_feedback.workspace_id"
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/schema_table_column_ref/postgresql/pgx/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 1,
+        "start": 229,
+        "end": 433
+      },
+      "sql_sha256": "c7008d24720fa112ad97ae9884f28d56d91e981b955d33f24bb003fede5f5458",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "astoria",
+              "slack_feedback"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "astoria.slack_feedback",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "astoria",
+              "slack_feedback",
+              "workspace_id"
+            ],
+            "quoted": [
+              false,
+              false,
+              false
+            ],
+            "spelling": "astoria.slack_feedback.workspace_id"
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/schema_table_column_ref/postgresql/pgx/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 2,
+        "start": 485,
+        "end": 655
+      },
+      "sql_sha256": "6e85ad75523b1734f1bb25c6d44452d2d46d16995f0473efe8ee44fe3a916726",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "astoria",
+              "tickets"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "astoria.tickets",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "astoria",
+              "tickets",
+              "workspace_id"
+            ],
+            "quoted": [
+              false,
+              false,
+              false
+            ],
+            "spelling": "astoria.tickets.workspace_id"
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/analyze_system_catalog/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 0,
+        "start": 27,
+        "end": 125
+      },
+      "sql_sha256": "cf8ffbd8983ad8931c92cf70c27c2d06d3ea54459c3af25c78bd59b1771f5d36",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "columns"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.columns",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/analyze_system_catalog/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 1,
+        "start": 156,
+        "end": 225
+      },
+      "sql_sha256": "d8732254f10069229a61dbc32c5d07059848b7d1f78c7edce2587ba363a7a556",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "pg_catalog",
+              "pg_class"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pg_catalog.pg_class",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/ddl_alter_materialized_views_set_schema/postgresql/pgx/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 0,
+        "start": 25,
+        "end": 70
+      },
+      "sql_sha256": "31168ffd67babca0b39b1741b95d1892c0eae8e425715c058584413c3c151f67",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "computed_tables",
+              "something"
+            ],
+            "quoted": [
+              true,
+              true
+            ],
+            "spelling": "\"computed_tables\".\"something\"",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tasks.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "ensureTablePartitionsExist"
+      },
+      "sql_sha256": "cc5cf7fd41c4c37af4876ad4b17d10e2fdc4d9e0285e3733c8df5b0d41c5b3e6",
+      "observed_syntax": {
+        "function_names": [
+          "now",
+          "to_char"
+        ],
+        "conditional_forms": [
+          "searched-case"
+        ],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "pg_catalog",
+              "pg_tables"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pg_catalog.pg_tables",
+            "alias": "pt",
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "pt",
+              "tablename"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pt.tablename"
+          },
+          {
+            "parts": [
+              "pt",
+              "tablename"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pt.tablename"
+          },
+          {
+            "parts": [
+              "ep",
+              "expected_partition_name"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "ep.expected_partition_name"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/hstore_plperl/sql/hstore_plperl.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 1,
+        "start": 41,
+        "end": 313
+      },
+      "sql_sha256": "07a384d0e5353d957621df43655a0a72a61d8a336007098400e599884986c26c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "transforms"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.transforms",
+            "alias": null,
+            "column_aliases": []
+          },
+          {
+            "parts": [
+              "information_schema",
+              "routines"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.routines",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "transforms",
+              "udt_schema"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "transforms.udt_schema"
+          },
+          {
+            "parts": [
+              "transforms",
+              "udt_name"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "transforms.udt_name"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 80,
+        "start": 9936,
+        "end": 10033
+      },
+      "sql_sha256": "e7b04235f4a2cf166c321743f74bbaf53b8108d10f138c993612d2981af4772e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "S 1",
+              "T 1"
+            ],
+            "quoted": [
+              true,
+              true
+            ],
+            "spelling": "\"S 1\".\"T 1\"",
+            "alias": "t2",
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "t1",
+              "c1"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "t1.c1"
+          },
+          {
+            "parts": [
+              "t2",
+              "C 1"
+            ],
+            "quoted": [
+              false,
+              true
+            ],
+            "spelling": "t2.\"C 1\""
+          },
+          {
+            "parts": [
+              "t1",
+              "c1"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "t1.c1"
+          },
+          {
+            "parts": [
+              "t2",
+              "C 1"
+            ],
+            "quoted": [
+              false,
+              true
+            ],
+            "spelling": "t2.\"C 1\""
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/sequence.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 252,
+        "start": 11785,
+        "end": 12014
+      },
+      "sql_sha256": "623ff4fc94b331926df32f5408d14092377187bf560656912af318cd7893b610",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "sequences"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.sequences",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_parallel.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 188,
+        "start": 13881,
+        "end": 13960
+      },
+      "sql_sha256": "8c99fed5b996b447176fac5f88ad3588c617d2be2c4cdcd545e467b5f0a24083",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "foreign_data_wrapper_options"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.foreign_data_wrapper_options",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/identity.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 5,
+        "start": 456,
+        "end": 715
+      },
+      "sql_sha256": "0acaa9f697a0a269dfa2047cc743cc0495a541a095070c4cfc019c99be621fe2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "columns"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.columns",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/foreign_data.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 322,
+        "start": 19937,
+        "end": 20006
+      },
+      "sql_sha256": "8eb89308278846ab8f1c7ce539693273aaee201d563415dd6c14c8a15009e9f6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "foreign_data_wrappers"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.foreign_data_wrappers",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 35,
+        "start": 2968,
+        "end": 3080
+      },
+      "sql_sha256": "d2a7005ac03dc4684d8cbd8135cbafd441387f901710f5e50fa487129d774da9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "views"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.views",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/foreign_key.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 1035,
+        "start": 72769,
+        "end": 72794
+      },
+      "sql_sha256": "f98b1e02e2391f3a6d27b8a6b1d0edaa3fc8fbd352db8e0e34d343eebdd2a65e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "fkpart9",
+              "pk"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "fkpart9.pk",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/namespace.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 19,
+        "start": 1335,
+        "end": 1370
+      },
+      "sql_sha256": "7545e7fc6906a5a99b2125830ca093bf281cc591b0c285229314c7e65afb1ae9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "test_ns_schema_1",
+              "abc"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "test_ns_schema_1.abc",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/updatable_views.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7493,
+        "end": 7595,
+        "statement_index": 107
+      },
+      "sql_sha256": "13bc1979d8cd855efc6cb6f1ad2dc812066e8407864741e1eaf96d949ee7e14e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "tables"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.tables",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/tablespace.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 65,
+        "start": 7870,
+        "end": 8005
+      },
+      "sql_sha256": "367a455e6c3d2880f3de43db1ce681202ff87defd86e1d5d7b715c40d2cc4d6a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "pg_catalog",
+              "pg_tablespace"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pg_catalog.pg_tablespace",
+            "alias": "t",
+            "column_aliases": []
+          },
+          {
+            "parts": [
+              "pg_catalog",
+              "pg_class"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pg_catalog.pg_class",
+            "alias": "c",
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "c",
+              "reltablespace"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "c.reltablespace"
+          },
+          {
+            "parts": [
+              "t",
+              "oid"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "t.oid"
+          },
+          {
+            "parts": [
+              "c",
+              "relname"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "c.relname"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/generated.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 3,
+        "start": 294,
+        "end": 468
+      },
+      "sql_sha256": "f79aa47c90ca2e0b2c3bf49e93da851967429158819761c2fc505430e3af0de9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "columns"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.columns",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_function_sql.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 91,
+        "start": 8519,
+        "end": 8800
+      },
+      "sql_sha256": "142ede495b154dca6138172b55463ab8e03d45e8465496f0ed69439b44d7414e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "parameters"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.parameters",
+            "alias": null,
+            "column_aliases": []
+          },
+          {
+            "parts": [
+              "information_schema",
+              "routines"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.routines",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/xml.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 144,
+        "start": 9551,
+        "end": 9662
+      },
+      "sql_sha256": "9561f0aa6c0f24056d0070cb8530b7e43e16094b364b8a151cd8eca1f22f0a84",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "views"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.views",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/alter_table.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 1074,
+        "start": 69407,
+        "end": 69431
+      },
+      "sql_sha256": "99b608dae0f04ba76b1e454e360a8ca90cc9d2c7d4f742d44f14734af9fc72e7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "alter2",
+              "t1"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "alter2.t1",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/stats_ext.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 726,
+        "start": 73666,
+        "end": 73703
+      },
+      "sql_sha256": "b095d84ecf09c95a670d95f21ee11c3c2292e0882ada5223b9c5c2d06225e98a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "tststats",
+              "priv_test_tbl"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "tststats.priv_test_tbl",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/updatable_views.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 86,
+        "start": 5973,
+        "end": 6075
+      },
+      "sql_sha256": "11be0cd1ab625b0df6e6b01a64eb5e8e54215ec9c375ef5c7b6a534400fc7186",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "tables"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.tables",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/modules/worker_spi/sql/worker_spi.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 6,
+        "start": 824,
+        "end": 854
+      },
+      "sql_sha256": "a0473400b9ec7a21f1f65163eda5cac9f1a7bb2e0d2379294e30adc7f65a03b7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "schema4",
+              "counted"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "schema4.counted",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 82,
+        "start": 10307,
+        "end": 10409
+      },
+      "sql_sha256": "6ba3e4275a4fbee18fa8224abb8a4088301f7112920b794b38d0f3f50f06ccad",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "S 1",
+              "T 1"
+            ],
+            "quoted": [
+              true,
+              true
+            ],
+            "spelling": "\"S 1\".\"T 1\"",
+            "alias": "t2",
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "t1",
+              "c1"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "t1.c1"
+          },
+          {
+            "parts": [
+              "t2",
+              "C 1"
+            ],
+            "quoted": [
+              false,
+              true
+            ],
+            "spelling": "t2.\"C 1\""
+          },
+          {
+            "parts": [
+              "t1",
+              "c1"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "t1.c1"
+          },
+          {
+            "parts": [
+              "t2",
+              "C 1"
+            ],
+            "quoted": [
+              false,
+              true
+            ],
+            "spelling": "t2.\"C 1\""
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/identity.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 6,
+        "start": 764,
+        "end": 853
+      },
+      "sql_sha256": "545cd1aa3a87a868b6b3338edc910ff998c0dfc00447a17b231fcee42347bcd4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "sequences"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.sequences",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/foreign_data.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 324,
+        "start": 20087,
+        "end": 20150
+      },
+      "sql_sha256": "bc23525435da86feeb36c797ccbbf3d594f85f1c3dc3a71d1e7987e39d844640",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "foreign_servers"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.foreign_servers",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/foreign_key.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 1036,
+        "start": 72795,
+        "end": 72820
+      },
+      "sql_sha256": "9d86930ada89e4af22c9ff6282b62e073666c1e4a5d16249b4827608056221a4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "fkpart9",
+              "fk"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "fkpart9.fk",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/namespace.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 20,
+        "start": 1371,
+        "end": 1411
+      },
+      "sql_sha256": "ed01f6367a85f0a38fea1ea2a4450da3c12e2cd94fe20667b2a6389166cd47a3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "test_ns_schema_1",
+              "abc_view"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "test_ns_schema_1.abc_view",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/tablespace.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 69,
+        "start": 8189,
+        "end": 8329
+      },
+      "sql_sha256": "6fa9509caac45c0d0df8c5152b97893f7c9219c869bdd529672d650907f7680d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "pg_catalog",
+              "pg_tablespace"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pg_catalog.pg_tablespace",
+            "alias": "t",
+            "column_aliases": []
+          },
+          {
+            "parts": [
+              "pg_catalog",
+              "pg_class"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pg_catalog.pg_class",
+            "alias": "c",
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "c",
+              "reltablespace"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "c.reltablespace"
+          },
+          {
+            "parts": [
+              "t",
+              "oid"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "t.oid"
+          },
+          {
+            "parts": [
+              "c",
+              "relname"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "c.relname"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/generated.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 4,
+        "start": 470,
+        "end": 580
+      },
+      "sql_sha256": "0e7ad42633630d384a93c81f6695c00a981cf3c3bb29e96bbae18034324ebd72",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "column_column_usage"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.column_column_usage",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_function_sql.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 100,
+        "start": 9485,
+        "end": 9852
+      },
+      "sql_sha256": "910d1265a61d0c318fbbbc1b9b43f3df7505dc8653838e6d308ebb81d6ad5ca2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "routine_routine_usage"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.routine_routine_usage",
+            "alias": "rru",
+            "column_aliases": []
+          },
+          {
+            "parts": [
+              "information_schema",
+              "routines"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.routines",
+            "alias": "r0",
+            "column_aliases": []
+          },
+          {
+            "parts": [
+              "information_schema",
+              "routines"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.routines",
+            "alias": "r1",
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "r0",
+              "routine_name"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "r0.routine_name"
+          },
+          {
+            "parts": [
+              "r1",
+              "routine_name"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "r1.routine_name"
+          },
+          {
+            "parts": [
+              "r0",
+              "specific_name"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "r0.specific_name"
+          },
+          {
+            "parts": [
+              "rru",
+              "specific_name"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "rru.specific_name"
+          },
+          {
+            "parts": [
+              "r1",
+              "specific_name"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "r1.specific_name"
+          },
+          {
+            "parts": [
+              "rru",
+              "routine_name"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "rru.routine_name"
+          },
+          {
+            "parts": [
+              "r0",
+              "routine_schema"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "r0.routine_schema"
+          },
+          {
+            "parts": [
+              "r1",
+              "routine_schema"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "r1.routine_schema"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/alter_table.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 1075,
+        "start": 69433,
+        "end": 69457
+      },
+      "sql_sha256": "1126a1f84b5e7cbf22d4ef72aa3d9bf77dde0c34fc943d03a03b00b64abbc483",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "alter2",
+              "v1"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "alter2.v1",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/updatable_views.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 87,
+        "start": 6077,
+        "end": 6192
+      },
+      "sql_sha256": "f9d705aa524efe007ca34d2dc0cedf8ed7bb30719f546c1279372f5121f3a715",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "views"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.views",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 115,
+        "start": 14072,
+        "end": 14142
+      },
+      "sql_sha256": "377776682b9b1c6473c5c1998260f418047476d2d5ed59f5550b776c3cf3d6f7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "S 1",
+              "T 1"
+            ],
+            "quoted": [
+              true,
+              true
+            ],
+            "spelling": "\"S 1\".\"T 1\"",
+            "alias": "a",
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "a",
+              "C 1"
+            ],
+            "quoted": [
+              false,
+              true
+            ],
+            "spelling": "a.\"C 1\""
+          },
+          {
+            "parts": [
+              "b",
+              "c1"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "b.c1"
+          },
+          {
+            "parts": [
+              "a",
+              "c2"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "a.c2"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/identity.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 122,
+        "start": 8169,
+        "end": 8308
+      },
+      "sql_sha256": "d4512d8055f59c8e8a3d164fd086244afd8b8f767e141201cfa928f4f5029237",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "columns"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.columns",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/foreign_data.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 325,
+        "start": 20151,
+        "end": 20224
+      },
+      "sql_sha256": "695e56486a2eb13eaf491d74ecc668a9cfc5f7ece94a9ad3ed533af038e93265",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "foreign_server_options"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.foreign_server_options",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/tablespace.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 72,
+        "start": 8465,
+        "end": 8606
+      },
+      "sql_sha256": "7eef608856c50cac469c586ebc0e114b8493f194aca8ad8b54a1d915d04f479d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "pg_catalog",
+              "pg_tablespace"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pg_catalog.pg_tablespace",
+            "alias": "t",
+            "column_aliases": []
+          },
+          {
+            "parts": [
+              "pg_catalog",
+              "pg_class"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pg_catalog.pg_class",
+            "alias": "c",
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "c",
+              "reltablespace"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "c.reltablespace"
+          },
+          {
+            "parts": [
+              "t",
+              "oid"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "t.oid"
+          },
+          {
+            "parts": [
+              "c",
+              "relname"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "c.relname"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_function_sql.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 101,
+        "start": 9853,
+        "end": 9993
+      },
+      "sql_sha256": "7e919e98a1ca63ddd5a8556f372df205e5466a129d0f63c18a6da17b353f9386",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "routine_sequence_usage"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.routine_sequence_usage",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/updatable_views.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 88,
+        "start": 6194,
+        "end": 6331
+      },
+      "sql_sha256": "80ddff3bfd1633a121b387a84ea0c5dfee072af82120b79b43930d0d57c573cb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "columns"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.columns",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/identity.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 137,
+        "start": 9138,
+        "end": 9294
+      },
+      "sql_sha256": "f912f1e85fb93517ceafb82ea093359cbe75d58fed13d8fb87c586382a689a8a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "columns"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.columns",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/foreign_data.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 328,
+        "start": 20425,
+        "end": 20565
+      },
+      "sql_sha256": "b4200f3876106fd45672407a4887ed18968f92900ca4dd28a6c9a7878333482b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "information_schema",
+              "usage_privileges"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "information_schema.usage_privileges",
+            "alias": null,
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": []
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/tablespace.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 74,
+        "start": 8688,
+        "end": 8827
+      },
+      "sql_sha256": "2c5286c623cead185226826f4a9fcefc14b090a4dd738b2c59d8d789521d4e90",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "qualified_relations": [
+          {
+            "parts": [
+              "pg_catalog",
+              "pg_tablespace"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pg_catalog.pg_tablespace",
+            "alias": "t",
+            "column_aliases": []
+          },
+          {
+            "parts": [
+              "pg_catalog",
+              "pg_class"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "pg_catalog.pg_class",
+            "alias": "c",
+            "column_aliases": []
+          }
+        ],
+        "qualified_columns": [
+          {
+            "parts": [
+              "c",
+              "reltablespace"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "c.reltablespace"
+          },
+          {
+            "parts": [
+              "t",
+              "oid"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "t.oid"
+          },
+          {
+            "parts": [
+              "c",
+              "relname"
+            ],
+            "quoted": [
+              false,
+              false
+            ],
+            "spelling": "c.relname"
+          }
+        ]
+      }
+    }
+  ]
+}

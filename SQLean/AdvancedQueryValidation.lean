@@ -177,7 +177,7 @@ private def mergeJoin (kind : JoinKind) (left right : Scope) (names : List Name)
   pure { both with output := keys ++ both.output.filter (fun c => !names.contains c.name) }
 
 private def expressionName : Expr → Name
-  | .column _ name => name
+  | .column _ name _ => name
   | .countAll | .aggregate .count _ _ => "count"
   | .aggregate .sum _ _ => "sum"
   | .aggregate .avg _ _ => "avg"
@@ -230,7 +230,7 @@ private def aggregateScopes : List Scope → List Scope
 private def canonical : Nat → List Scope → Expr → Expr
   | 0, _, expr => expr
   | fuel + 1, scopes, expr => match expr with
-    | .column qualifier name => match resolveColumn scopes qualifier name with
+    | .column qualifier name none => match resolveColumn scopes qualifier name with
       | .ok (column, _) => .column column.qualifier column.name
       | .error _ => expr
     | .binary op left right => .binary op (canonical fuel scopes left) (canonical fuel scopes right)
@@ -277,7 +277,7 @@ private def groupedScopes (fuel : Nat) (scopes : List Scope) (groups : List Expr
   | [] => []
   | scope :: outer =>
     let keys := groups.filterMap fun expr => match canonical fuel scopes expr with
-      | .column qualifier name => some (qualifier, name)
+      | .column qualifier name none => some (qualifier, name)
       | _ => none
     { scope with allowed := some keys } :: outer
 
@@ -302,7 +302,7 @@ private def selectExpression (items : List TypedOutput) (scopes : List Scope) (e
     ensure (!fractionalConstant expr) "non-integer constant in ordering/grouping"
     match expr with
     | .literal (.text _) | .literal (.bool _) | .null => invalid "non-integer constant in ordering/grouping"
-    | .column none name =>
+    | .column none name none =>
       if preferInput && scopes.any (fun scope => scope.output.any (·.name == name)) then pure expr
       else
         let candidates := items.filter (·.name == name)
@@ -332,7 +332,7 @@ mutual
       | .set _ _ left right => queryTables fuel left ++ queryTables fuel right
       | .select select =>
         (select.source.toList.flatMap (fromTables fuel)) ++
-        (select.items.flatMap fun item => match item with | .all _ => [] | .expression e _ => exprTables fuel e) ++
+        (select.items.flatMap fun item => match item with | .all .. => [] | .expression e _ => exprTables fuel e) ++
         select.whereClause.toList.flatMap (exprTables fuel) ++
         select.having.toList.flatMap (exprTables fuel) ++ select.groupBy.flatMap (exprTables fuel)
   private def exprTables : Nat → Expr → List Name
@@ -353,7 +353,7 @@ mutual
   private def fromTables : Nat → From → List Name
     | 0, _ => []
     | fuel + 1, source => match source with
-      | .table name _ _ => [name]
+      | .table name _ _ schema => if schema.isNone then [name] else []
       | .derived query _ _ _ => queryTables fuel query
       | .join _ left right condition => fromTables fuel left ++ fromTables fuel right ++
         match condition with | .on expr => exprTables fuel expr | _ => []
@@ -389,13 +389,13 @@ private def recursiveStepShape (fuel : Nat) (query : Query) : Bool :=
   | .set .. => false
   | .select select => select.groupBy.isEmpty && select.having.isNone && !select.distinct &&
     select.distinctOn.isEmpty && select.source.all (simpleRecursiveSource fuel) &&
-    select.items.all (fun i => match i with | .all _ => true | .expression e _ => simpleRecursiveExpr fuel e) &&
+    select.items.all (fun i => match i with | .all .. => true | .expression e _ => simpleRecursiveExpr fuel e) &&
     select.whereClause.all (simpleRecursiveExpr fuel)
 
 /-- Visible source name, nullable outer-join side, and derived-source flag. -/
 private def lockingRelations : Nat → Bool → From → Except ValidationError (List (Name × Bool × Bool))
   | 0, _, _ => invalid "advanced validation depth exhausted"
-  | _ + 1, nullable, .table name alias _ => pure [(alias.getD name, nullable, false)]
+  | _ + 1, nullable, .table name alias _ _ => pure [(alias.getD name, nullable, false)]
   | _ + 1, nullable, .derived _ alias _ _ => pure [(alias, nullable, true)]
   | fuel + 1, nullable, .join kind left right _ => do
     let left ← lockingRelations fuel (nullable || kind == .right || kind == .full) left
@@ -426,8 +426,8 @@ Targetless locks do not propagate into a CTE's defining query. -/
 mutual
   private def cteSourceNames : Nat → List Name → From → Except ValidationError (List Name)
     | 0, _, _ => invalid "advanced validation depth exhausted"
-    | _ + 1, names, .table name alias _ =>
-      pure (if names.contains name then [alias.getD name] else [])
+    | _ + 1, names, .table name alias _ schema =>
+      pure (if schema.isNone && names.contains name then [alias.getD name] else [])
     | _ + 1, _, .derived .. => pure []
     | fuel + 1, names, .join _ left right _ => do
       pure ((← cteSourceNames fuel names left) ++ (← cteSourceNames fuel names right))
@@ -481,7 +481,7 @@ mutual
             "row locking OF cannot target a WITH query"
         select.source.toList.forM (checkCTELockSource fuel names)
         let expressions := select.items.filterMap (fun item => match item with
-            | .all _ => none | .expression expr _ => some expr) ++
+            | .all .. => none | .expression expr _ => some expr) ++
           select.whereClause.toList ++ select.groupBy ++ select.having.toList ++ select.distinctOn
         expressions.forM (checkCTELockExpr fuel names)
       (query.orderBy.map OrderBy.expr ++ query.limit.toList ++ query.offset.toList).forM
@@ -506,7 +506,9 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         match params.find? (·.1 == index) with
         | some (_, type) => pure (some type)
         | none => invalid s!"missing type declaration for parameter {index}"
-      | .column qualifier name => pure (some (← resolveColumn scopes qualifier name).1.type)
+      | .column qualifier name sourceSchema =>
+        ensure sourceSchema.isNone "schema-qualified columns require the independent SELECT contract"
+        pure (some (← resolveColumn scopes qualifier name).1.type)
       | .binary op left right =>
         let left ← inferExpr fuel schema params scopes aggregates left
         let right ← inferExpr fuel schema params scopes aggregates right
@@ -695,7 +697,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
     | 0, _, _, _, _, _ => invalid "advanced validation depth exhausted"
     | fuel + 1, schema, params, outer, lateralScope, source => do
       match source with
-      | .table name alias aliases =>
+      | .table name alias aliases sourceSchema =>
+        ensure sourceSchema.isNone "schema-qualified sources require the independent SELECT contract"
         match schema.find? (·.name == name) with
         | none => invalid s!"unknown table '{name}'"
         | some table => namedRelation (alias.getD name) table.columns aliases
@@ -733,7 +736,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
       if groups.any (fun key => canonical fuel scopes key == canonical fuel scopes expr) then pure ()
       else match expr with
       | .literal _ | .null | .decimal _ | .parameter _ | .countAll | .aggregate .. | .filteredAggregate .. => pure ()
-      | .column qualifier name =>
+      | .column qualifier name sourceSchema =>
+        ensure sourceSchema.isNone "schema-qualified columns require the independent SELECT contract"
         let (_, depth) ← resolveColumn scopes qualifier name
         ensure (depth > 0) s!"ungrouped column '{name}'"
       | .overlap left right | .containment left right _ | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right =>
@@ -784,7 +788,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
           ensure (alias.all (· != "")) "empty output alias"
           let type ← inferExpr fuel schema params scopes true expr
           pure [{ name := alias.getD (expressionName expr), type, expr }]
-        | .all qualifier =>
+        | .all qualifier sourceSchema =>
+          ensure sourceSchema.isNone "schema-qualified wildcards require the independent SELECT contract"
           let columns : List Binding := match qualifier with
             | none => scope.output
             | some q => (scope.qualified.filter (·.qualifier == q)).map fun c =>
@@ -889,7 +894,7 @@ an explicit validation error. Parameter declarations are supplied by the caller.
               "set-operation ORDER BY requires an orderable type"
             pure ()
           else match item.expr with
-          | .column none name =>
+          | .column none name none =>
             ensure ((columns.filter (·.name == name)).length == 1) "unknown or ambiguous set-operation output name"
             ensure ((columns.filter (·.name == name)).all
               (fun column => (finishType column.type).equalityComparable))
@@ -926,7 +931,7 @@ mutual
       | .select select =>
         select.distinctOn.flatMap (expressionParameters fuel) ++
         select.items.flatMap (fun item => match item with
-          | .all _ => [] | .expression expr _ => expressionParameters fuel expr) ++
+          | .all .. => [] | .expression expr _ => expressionParameters fuel expr) ++
         select.source.toList.flatMap (sourceParameters fuel) ++
         select.whereClause.toList.flatMap (expressionParameters fuel) ++
         select.groupBy.flatMap (expressionParameters fuel) ++

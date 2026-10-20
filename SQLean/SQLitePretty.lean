@@ -38,7 +38,7 @@ mutual
     | .decimal raw => raw
     | .parameter (.numbered index) => "?" ++ toString index
     | .parameter (.anonymous index) => "?" ++ toString index
-    | .column qualifier name => (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ quoteName name
+    | .column qualifier name schema => (schema.map (fun s => quoteName s ++ ".")).getD "" ++ (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ quoteName name
     | .binary op l r => paren (exprSql l ++ " " ++ binSql op ++ " " ++ exprSql r)
     | .concat left right => paren (exprSql left ++ " || " ++ exprSql right)
     -- Excluded by the checked SQLite profile; the total spelling is retained
@@ -133,14 +133,14 @@ mutual
 
   def itemSql (item : SelectItem) : String :=
     match item with
-    | .all qualifier => (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ "*"
+    | .all qualifier schema => (schema.map (fun s => quoteName s ++ ".")).getD "" ++ (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ "*"
     | .expression expr alias => exprSql expr ++ (alias.map (fun a => " AS " ++ quoteName a)).getD ""
   termination_by sizeOf item
   decreasing_by all_goals (simp_all <;> omega)
 
   def sourceSql (source : From) : String :=
     match source with
-    | .table name alias columns => quoteName name ++
+    | .table name alias columns schema => (schema.map (fun s => quoteName s ++ ".")).getD "" ++ quoteName name ++
       (alias.map (fun a => " AS " ++ quoteName a)).getD "" ++ (if columns.isEmpty then "" else nameList columns)
     | .derived query alias columns lateral => (if lateral then "LATERAL " else "") ++
       paren (querySql query) ++ " AS " ++ quoteName alias ++ (if columns.isEmpty then "" else nameList columns)

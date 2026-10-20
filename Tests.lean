@@ -72,6 +72,8 @@ import Tests.IntervalFieldsContract
 import Tests.IntervalFieldsRendering
 import Tests.SubstringContract
 import Tests.SubstringRendering
+import Tests.QualifiedNamesContract
+import Tests.QualifiedNamesRendering
 
 namespace SQLean.Tests
 
@@ -260,6 +262,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {substringConcrete} unchanged SUBSTRING source certificates"
   let substringRendering ← substringRenderingTests
   IO.println s!"PASS: {substringRendering} SUBSTRING parsing and rendering checks"
+  let qualifiedNamesContract ← qualifiedNamesContractTests
+  IO.println s!"PASS: {qualifiedNamesContract} qualified relation namespace checks"
+  let qualifiedNamesCorpus ← qualifiedNamesCorpusTests
+  IO.println s!"PASS: {qualifiedNamesCorpus} qualified relation full-query certificates"
+  let qualifiedNamesConcrete ← qualifiedNamesConcreteRenderingTests
+  IO.println s!"PASS: {qualifiedNamesConcrete} unchanged qualified source rendering certificates"
+  let qualifiedNamesRendering ← qualifiedNamesRenderingTests
+  IO.println s!"PASS: {qualifiedNamesRendering} qualified relation parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

@@ -75,6 +75,12 @@ private def catalogColumn (json : Lean.Json) : Except String Column := do
 
 private def catalogTable (json : Lean.Json) : Except String CatalogTable := do
   let name ← (← json.getObjVal? "name").getStr?
+  let schema ← match optionalJson json "schema" with
+    | none | some .null => pure none
+    | some value => pure (some (← value.getStr?))
+  let exposeUnqualified ← match optionalJson json "exposeUnqualified" with
+    | none => pure schema.isNone
+    | some value => value.getBool?
   let columns ← (← (← json.getObjVal? "columns").getArr?).toList.mapM catalogColumn
   let uniqueKeys ← match optionalJson json "uniqueKeys" with
     | none => pure [] | some value => (← value.getArr?).toList.mapM namesJson
@@ -84,7 +90,7 @@ private def catalogTable (json : Lean.Json) : Except String CatalogTable := do
     | none => pure []
     | some value => (← value.getObj?).toList.mapM fun (key, names) => do
         pure (key, ← namesJson names)
-  pure { name, columns, uniqueKeys, primaryKey, namedKeys }
+  pure { name, columns, uniqueKeys, primaryKey, namedKeys, schema, exposeUnqualified }
 
 /-- Decode catalog structure without running a validity checker. This lets an
 independent contract validator classify invalid environments itself. -/

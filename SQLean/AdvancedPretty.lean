@@ -100,7 +100,7 @@ mutual
     | .decimal raw => raw
     | .parameter (.numbered index) => "$" ++ toString index
     | .parameter (.anonymous index) => if pg then "$" ++ toString index else "?"
-    | .column qualifier name => (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ quoteName name
+    | .column qualifier name schema => (schema.map (fun s => quoteName s ++ ".")).getD "" ++ (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ quoteName name
     | .binary op l r => paren (exprSql pg l ++ " " ++ binSql op ++ " " ++ exprSql pg r)
     | .concat left right => paren (exprSql pg left ++ " || " ++ exprSql pg right)
     | .quantifiedComparison op quantifier left right =>
@@ -186,14 +186,14 @@ mutual
 
   def itemSql (pg : Bool) (item : SelectItem) : String :=
     match item with
-    | .all qualifier => (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ "*"
+    | .all qualifier schema => (schema.map (fun s => quoteName s ++ ".")).getD "" ++ (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ "*"
     | .expression expr alias => exprSql pg expr ++ (alias.map (fun a => " AS " ++ quoteName a)).getD ""
   termination_by sizeOf item
   decreasing_by all_goals (simp_all <;> omega)
 
   def sourceSql (pg : Bool) (source : From) : String :=
     match source with
-    | .table name alias columns => quoteName name ++
+    | .table name alias columns schema => (schema.map (fun s => quoteName s ++ ".")).getD "" ++ quoteName name ++
       (alias.map (fun a => " AS " ++ quoteName a)).getD "" ++ (if columns.isEmpty then "" else nameList columns)
     | .derived query alias columns lateral => (if lateral then "LATERAL " else "") ++
       paren (querySql pg query) ++ " AS " ++ quoteName alias ++ (if columns.isEmpty then "" else nameList columns)

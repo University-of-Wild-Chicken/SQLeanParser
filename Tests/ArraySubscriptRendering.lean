@@ -44,7 +44,7 @@ open SelectContract RenderContract
 
 private def params : SelectContract.ParameterEnv :=
   [⟨1, ⟨.numeric, [6, 2]⟩, false⟩, ⟨2, ⟨.int, []⟩, false⟩]
-private def scope : Scope := .ofBindings [⟨"q", ⟨"a", ⟨.array (.varchar [5]), false⟩⟩⟩]
+private def scope : Scope := .ofOutput "q" [⟨"a", ⟨.array (.varchar [5]), false⟩⟩]
 private def base : Advanced.Expr := .column (some "q") "a"
 private def bounds : List Subscript := [.slice none (some (anon 1)), .index (anon 2)]
 

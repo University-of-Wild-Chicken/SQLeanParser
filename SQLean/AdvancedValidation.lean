@@ -44,7 +44,8 @@ private def returningTypes (schema : Schema) (params : ParameterEnv) (table : Ta
   let mut types := []
   for item in items do
     match item with
-    | .all qualifier =>
+    | .all qualifier schema =>
+        requireCheck schema.isNone "schema-qualified RETURNING requires an exact namespace model"
         requireCheck (qualifier.isNone || qualifier == some (alias.getD table.name))
           "unknown RETURNING qualifier"
         types := types ++ table.columns.map ColumnDef.type
@@ -115,7 +116,7 @@ private def checkInsert (catalog : Catalog) (params : ParameterEnv) (query : Ins
 
 private def itemParameters (items : List SelectItem) : List Parameter :=
   items.flatMap fun item => match item with
-    | .all _ => [] | .expression expr _ => expressionParameters 1024 expr
+    | .all .. => [] | .expression expr _ => expressionParameters 1024 expr
 
 private def assignmentsParameters (items : List Assignment) : List Parameter :=
   items.flatMap fun item => expressionParameters 1024 item.value
@@ -140,6 +141,7 @@ private def statementParameters : Statement → List Parameter
 def checkStatementDetailed (catalog : Catalog) (params : ParameterEnv) (statement : Statement) :
     Except ValidationError StatementResult := do
   checkCatalogDefaults catalog
+  requireCheck (!catalog.schemaAware) "schema-aware catalogs require the independent SELECT contract"
   checkParameterEnv params
   checkParameterUses (statementParameters statement)
   match statement with

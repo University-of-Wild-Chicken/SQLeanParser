@@ -11,11 +11,11 @@ formalization of PostgreSQL's general overload-resolution algorithm. -/
 namespace SQLean.SelectContract
 
 inductive Profile where
-  | basicV22
+  | basicV23
   deriving Repr, BEq, DecidableEq, Inhabited
 
 def Profile.name : Profile → String
-  | .basicV22 => "sqlean-basic-select-v0.22"
+  | .basicV23 => "sqlean-basic-select-v0.23"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes
@@ -122,36 +122,57 @@ structure OutputColumn where
   type : ExactType
   deriving Repr, BEq, DecidableEq, Inhabited
 
-structure Binding where
-  qualifier : Name
-  column : OutputColumn
+/-- One namespace entry per visible relation, before column lookup.
+`origin = none` denotes a derived source. An explicit alias hides the origin
+from qualified-name resolution, even when it repeats the base name. -/
+structure RelationNamespace where
+  name : Name
+  origin : Option Advanced.RelationIdentity
+  aliased : Bool
+  columns : List OutputColumn
+  nullable : Bool := false
   deriving Repr, BEq, DecidableEq, Inhabited
 
-/-- Qualified relation columns retain their original order and types separately
-from the exposed row. USING/NATURAL may merge the latter without hiding the
-former from qualified references or qualified wildcards. -/
 structure Scope where
-  qualified : List Binding := []
+  relations : List RelationNamespace := []
   output : List OutputColumn := []
   deriving Repr, BEq, DecidableEq, Inhabited
 
 def Scope.empty : Scope := ⟨[], []⟩
 
-def Scope.ofBindings (bindings : List Binding) : Scope :=
-  ⟨bindings, bindings.map Binding.column⟩
+def Scope.ofTable (identity : Advanced.RelationIdentity) (alias : Option Name)
+    (output : List OutputColumn) : Scope :=
+  ⟨[⟨alias.getD identity.name, some identity, alias.isSome, output, false⟩], output⟩
 
 def Scope.ofOutput (qualifier : Name) (output : List OutputColumn) : Scope :=
-  ⟨output.map (fun column => ⟨qualifier, column⟩), output⟩
+  ⟨[⟨qualifier, none, true, output, false⟩], output⟩
 
 def Scope.append (left right : Scope) : Scope :=
-  ⟨left.qualified ++ right.qualified, left.output ++ right.output⟩
+  ⟨left.relations ++ right.relations, left.output ++ right.output⟩
 
 instance : Append Scope := ⟨Scope.append⟩
 
-def Scope.columns (scope : Scope) : Option Name → List OutputColumn
-  | none => scope.output
-  | some qualifier =>
-      (scope.qualified.filter (fun binding => binding.qualifier == qualifier)).map Binding.column
+def RelationNamespace.matches (relation : RelationNamespace) (name : Name)
+    (schema : Option Name := none) : Bool :=
+  match schema with
+  | none => relation.name == name
+  | some schema => !relation.aliased && relation.origin.any (fun identity =>
+      identity.schema == some schema && identity.name == name)
+
+def Scope.matchingRelations (scope : Scope) (name : Name) (schema : Option Name := none) :
+    List RelationNamespace :=
+  scope.relations.filter (fun relation => relation.matches name schema)
+
+/-- Select the relation before its column. Two same-basename namespaces are
+ambiguous even if only one contains the requested column. -/
+def Scope.columns (scope : Scope) (qualifier : Option Name) (schema : Option Name := none) :
+    List OutputColumn :=
+  match qualifier, schema with
+  | none, none => scope.output
+  | some qualifier, schema => match scope.matchingRelations qualifier schema with
+    | [relation] => relation.columns
+    | _ => []
+  | none, some _ => []
 
 /-- Concrete conversion preserves declaration modifiers. Well-formedness is a
 separate prerequisite, not a family-level erasure through DataType.sqlType. -/

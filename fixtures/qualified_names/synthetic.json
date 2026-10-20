@@ -1,0 +1,1457 @@
+[
+  {
+    "id": "qualified-names-from",
+    "source_kind": "synthetic",
+    "shape": "from",
+    "sql": "SELECT id FROM qa.users;",
+    "sqlite_sql": "SELECT id FROM qa.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-column",
+    "source_kind": "synthetic",
+    "shape": "column",
+    "sql": "SELECT qa.users.id FROM qa.users;",
+    "sqlite_sql": "SELECT qa.users.id FROM qa.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-basename",
+    "source_kind": "synthetic",
+    "shape": "basename",
+    "sql": "SELECT users.id FROM qa.users;",
+    "sqlite_sql": "SELECT users.id FROM qa.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-alias",
+    "source_kind": "synthetic",
+    "shape": "alias",
+    "sql": "SELECT u.id FROM qa.users AS u;",
+    "sqlite_sql": "SELECT u.id FROM qa.users AS u;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-dotted-alias",
+    "source_kind": "synthetic",
+    "shape": "dotted-alias",
+    "sql": "SELECT \"u.dot\".id FROM qa.users AS \"u.dot\";",
+    "sqlite_sql": "SELECT \"u.dot\".id FROM qa.users AS \"u.dot\";",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-quoted-parts",
+    "source_kind": "synthetic",
+    "shape": "quoted-parts",
+    "sql": "SELECT \"qa\".\"users\".\"name\" FROM \"qa\".\"users\";",
+    "sqlite_sql": "SELECT \"qa\".\"users\".\"name\" FROM \"qa\".\"users\";",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "Ada"
+      ],
+      [
+        "Bea"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-schema-star",
+    "source_kind": "synthetic",
+    "shape": "schema-star",
+    "sql": "SELECT qa.users.* FROM qa.users;",
+    "sqlite_sql": "SELECT qa.users.* FROM qa.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "active",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada",
+        true
+      ],
+      [
+        2,
+        "Bea",
+        false
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-basename-star",
+    "source_kind": "synthetic",
+    "shape": "basename-star",
+    "sql": "SELECT users.* FROM qa.users;",
+    "sqlite_sql": "SELECT users.* FROM qa.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "active",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada",
+        true
+      ],
+      [
+        2,
+        "Bea",
+        false
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-unqualified-star",
+    "source_kind": "synthetic",
+    "shape": "unqualified-star",
+    "sql": "SELECT * FROM qa.users;",
+    "sqlite_sql": "SELECT * FROM qa.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "active",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada",
+        true
+      ],
+      [
+        2,
+        "Bea",
+        false
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-column-aliases",
+    "source_kind": "synthetic",
+    "shape": "column-aliases",
+    "sql": "SELECT u.key, u.label, u.enabled FROM qa.users AS u(key, label, enabled);",
+    "sqlite_sql": "SELECT u.key, u.label, u.enabled FROM qa.users AS u(key, label, enabled);",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "label",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "enabled",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada",
+        true
+      ],
+      [
+        2,
+        "Bea",
+        false
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-partial-aliases",
+    "source_kind": "synthetic",
+    "shape": "partial-aliases",
+    "sql": "SELECT u.key, u.name FROM qa.users AS u(key);",
+    "sqlite_sql": "SELECT u.key, u.name FROM qa.users AS u(key);",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "key",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada"
+      ],
+      [
+        2,
+        "Bea"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-resolved-unqualified-origin",
+    "source_kind": "synthetic",
+    "shape": "resolved-unqualified-origin",
+    "sql": "SELECT qa.users.id FROM users;",
+    "sqlite_sql": "SELECT qa.users.id FROM users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-dotted-table",
+    "source_kind": "synthetic",
+    "shape": "dotted-table",
+    "sql": "SELECT qa.\"users.dot\".label FROM qa.\"users.dot\";",
+    "sqlite_sql": "SELECT qa.\"users.dot\".label FROM qa.\"users.dot\";",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "label",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "dot"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-literal-dots",
+    "source_kind": "synthetic",
+    "shape": "literal-dots",
+    "sql": "SELECT \"schema.dot\".\"table.dot\".\"column.dot\" FROM \"schema.dot\".\"table.dot\";",
+    "sqlite_sql": "SELECT \"schema.dot\".\"table.dot\".\"column.dot\" FROM \"schema.dot\".\"table.dot\";",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column.dot",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "literal.dot"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-case-and-spaces",
+    "source_kind": "synthetic",
+    "shape": "case-and-spaces",
+    "sql": "SELECT \"Case Schema\".\"Case Table\".\"Case ID\" FROM \"Case Schema\".\"Case Table\";",
+    "sqlite_sql": "SELECT \"Case Schema\".\"Case Table\".\"Case ID\" FROM \"Case Schema\".\"Case Table\";",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "Case ID",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        12
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-reserved-components",
+    "source_kind": "synthetic",
+    "shape": "reserved-components",
+    "sql": "SELECT qa.select.from FROM qa.select;",
+    "sqlite_sql": "SELECT qa.select.from FROM qa.select;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "from",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "keyword"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-duplicate-labels",
+    "source_kind": "synthetic",
+    "shape": "duplicate-labels",
+    "sql": "SELECT qa.users.id AS x, qa.users.name AS x FROM qa.users;",
+    "sqlite_sql": "SELECT qa.users.id AS x, qa.users.name AS x FROM qa.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada"
+      ],
+      [
+        2,
+        "Bea"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-star-plus-expression",
+    "source_kind": "synthetic",
+    "shape": "star-plus-expression",
+    "sql": "SELECT qa.users.*, qa.users.id + 1 AS next FROM qa.users;",
+    "sqlite_sql": "SELECT qa.users.*, qa.users.id + 1 AS next FROM qa.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "active",
+        "type": "bool",
+        "nullable": false
+      },
+      {
+        "name": "next",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada",
+        true,
+        2
+      ],
+      [
+        2,
+        "Bea",
+        false,
+        3
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-numbered-parameter",
+    "source_kind": "synthetic",
+    "shape": "numbered-parameter",
+    "sql": "SELECT qa.users.id FROM qa.users WHERE qa.users.id >= $1;",
+    "sqlite_sql": "SELECT qa.users.id FROM qa.users WHERE qa.users.id >= ?1;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-nullable-parameter",
+    "source_kind": "synthetic",
+    "shape": "nullable-parameter",
+    "sql": "SELECT COALESCE(qb.users.title, $1) AS label FROM qb.users;",
+    "sqlite_sql": "SELECT COALESCE(qb.users.title, ?1) AS label FROM qb.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "text?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "label",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        "Bee"
+      ],
+      [
+        null
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-inner-same-basename",
+    "source_kind": "synthetic",
+    "shape": "inner-same-basename",
+    "sql": "SELECT qa.users.id AS a, qb.users.id AS b FROM qa.users INNER JOIN qb.users ON qa.users.id = qb.users.id;",
+    "sqlite_sql": "SELECT qa.users.id AS a, qb.users.id AS b FROM qa.users INNER JOIN qb.users ON qa.users.id = qb.users.id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "b",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-left-same-basename",
+    "source_kind": "synthetic",
+    "shape": "left-same-basename",
+    "sql": "SELECT qa.users.id AS a, qb.users.id AS b FROM qa.users LEFT JOIN qb.users ON qa.users.id = qb.users.id;",
+    "sqlite_sql": "SELECT qa.users.id AS a, qb.users.id AS b FROM qa.users LEFT JOIN qb.users ON qa.users.id = qb.users.id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "b",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        null
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-right-same-basename",
+    "source_kind": "synthetic",
+    "shape": "right-same-basename",
+    "sql": "SELECT qa.users.id AS a, qb.users.id AS b FROM qa.users RIGHT JOIN qb.users ON qa.users.id = qb.users.id;",
+    "sqlite_sql": "SELECT qa.users.id AS a, qb.users.id AS b FROM qa.users RIGHT JOIN qb.users ON qa.users.id = qb.users.id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "b",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1
+      ],
+      [
+        null,
+        3
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-full-same-basename",
+    "source_kind": "synthetic",
+    "shape": "full-same-basename",
+    "sql": "SELECT qa.users.id AS a, qb.users.id AS b FROM qa.users FULL JOIN qb.users ON qa.users.id = qb.users.id;",
+    "sqlite_sql": "SELECT qa.users.id AS a, qb.users.id AS b FROM qa.users FULL JOIN qb.users ON qa.users.id = qb.users.id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "b",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        null,
+        3
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-cross-same-basename",
+    "source_kind": "synthetic",
+    "shape": "cross-same-basename",
+    "sql": "SELECT qa.users.id AS a, qb.users.id AS b FROM qa.users CROSS JOIN qb.users;",
+    "sqlite_sql": "SELECT qa.users.id AS a, qb.users.id AS b FROM qa.users CROSS JOIN qb.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "b",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        3
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-using-same-basename",
+    "source_kind": "synthetic",
+    "shape": "using-same-basename",
+    "sql": "SELECT id, qa.users.name, qb.users.title FROM qa.users FULL JOIN qb.users USING (id);",
+    "sqlite_sql": "SELECT id, qa.users.name, qb.users.title FROM qa.users FULL JOIN qb.users USING (id);",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": true
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada",
+        "Bee"
+      ],
+      [
+        2,
+        "Bea",
+        null
+      ],
+      [
+        3,
+        null,
+        null
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-natural-same-basename",
+    "source_kind": "synthetic",
+    "shape": "natural-same-basename",
+    "sql": "SELECT * FROM qa.users NATURAL JOIN qb.users;",
+    "sqlite_sql": "SELECT * FROM qa.users NATURAL JOIN qb.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "active",
+        "type": "bool",
+        "nullable": false
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada",
+        true,
+        "Bee"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-aliased-schemas",
+    "source_kind": "synthetic",
+    "shape": "aliased-schemas",
+    "sql": "SELECT a.id, b.title FROM qa.users a JOIN qb.users b ON a.id = b.id;",
+    "sqlite_sql": "SELECT a.id, b.title FROM qa.users a JOIN qb.users b ON a.id = b.id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Bee"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-self-join",
+    "source_kind": "synthetic",
+    "shape": "self-join",
+    "sql": "SELECT a.id, b.name FROM qa.users a JOIN qa.users b ON a.id = b.id;",
+    "sqlite_sql": "SELECT a.id, b.name FROM qa.users a JOIN qa.users b ON a.id = b.id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada"
+      ],
+      [
+        2,
+        "Bea"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-mixed-visibility",
+    "source_kind": "synthetic",
+    "shape": "mixed-visibility",
+    "sql": "SELECT qa.users.id, qb.users.title FROM users JOIN qb.users ON qa.users.id = qb.users.id;",
+    "sqlite_sql": "SELECT qa.users.id, qb.users.title FROM users JOIN qb.users ON qa.users.id = qb.users.id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Bee"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-alias-and-base",
+    "source_kind": "synthetic",
+    "shape": "alias-and-base",
+    "sql": "SELECT qa.users.id, u.name FROM qa.users JOIN qa.users u ON qa.users.id = u.id;",
+    "sqlite_sql": "SELECT qa.users.id, u.name FROM qa.users JOIN qa.users u ON qa.users.id = u.id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Ada"
+      ],
+      [
+        2,
+        "Bea"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-derived",
+    "source_kind": "synthetic",
+    "shape": "derived",
+    "sql": "SELECT d.id FROM (SELECT qa.users.id FROM qa.users) d;",
+    "sqlite_sql": "SELECT d.id FROM (SELECT qa.users.id FROM qa.users) d;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-nested-derived",
+    "source_kind": "synthetic",
+    "shape": "nested-derived",
+    "sql": "SELECT d.id, qb.users.title FROM (SELECT x.id FROM (SELECT qa.users.id FROM qa.users) x) d JOIN qb.users ON d.id = qb.users.id;",
+    "sqlite_sql": "SELECT d.id, qb.users.title FROM (SELECT x.id FROM (SELECT qa.users.id FROM qa.users) x) d JOIN qb.users ON d.id = qb.users.id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Bee"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-derived-basename-alias",
+    "source_kind": "synthetic",
+    "shape": "derived-basename-alias",
+    "sql": "SELECT users.id FROM (SELECT qa.users.id FROM qa.users) users;",
+    "sqlite_sql": "SELECT users.id FROM (SELECT qa.users.id FROM qa.users) users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-reserved-star",
+    "source_kind": "synthetic",
+    "shape": "reserved-star",
+    "sql": "SELECT qa.select.* FROM qa.select;",
+    "sqlite_sql": "SELECT qa.select.* FROM qa.select;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "from",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        10,
+        "keyword"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-on-parameter",
+    "source_kind": "synthetic",
+    "shape": "on-parameter",
+    "sql": "SELECT qa.users.id, qa.orders.amount FROM qa.users JOIN qa.orders ON qa.users.id = qa.orders.user_id AND qa.orders.amount >= $1;",
+    "sqlite_sql": "SELECT qa.users.id, qa.orders.amount FROM qa.users JOIN qa.orders ON qa.users.id = qa.orders.user_id AND qa.orders.amount >= ?1;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        7
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-anonymous-order",
+    "source_kind": "synthetic",
+    "shape": "anonymous-order",
+    "sql": "SELECT ? + qa.users.id AS shifted, qa.orders.amount FROM qa.users JOIN qa.orders ON qa.users.id = qa.orders.user_id AND qa.orders.amount >= ? WHERE qa.users.id >= ?;",
+    "sqlite_sql": "SELECT ? + qa.users.id AS shifted, qa.orders.amount FROM qa.users JOIN qa.orders ON qa.users.id = qa.orders.user_id AND qa.orders.amount >= ? WHERE qa.users.id >= ?;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      10,
+      7,
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "shifted",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "amount",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        11,
+        7
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-repeated-parameter",
+    "source_kind": "synthetic",
+    "shape": "repeated-parameter",
+    "sql": "SELECT qa.users.id + $1 AS n FROM qa.users WHERE qa.users.id >= $1;",
+    "sqlite_sql": "SELECT qa.users.id + ?1 AS n FROM qa.users WHERE qa.users.id >= ?1;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-reordered-parameter",
+    "source_kind": "synthetic",
+    "shape": "reordered-parameter",
+    "sql": "SELECT qa.users.id + $2 AS n FROM qa.users WHERE qa.users.id >= $1;",
+    "sqlite_sql": "SELECT qa.users.id + ?2 AS n FROM qa.users WHERE qa.users.id >= ?1;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      2,
+      10
+    ],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        12
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-distinct",
+    "source_kind": "synthetic",
+    "shape": "distinct",
+    "sql": "SELECT DISTINCT qa.users.id FROM qa.users JOIN qa.orders ON qa.users.id = qa.orders.user_id;",
+    "sqlite_sql": "SELECT DISTINCT qa.users.id FROM qa.users JOIN qa.orders ON qa.users.id = qa.orders.user_id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-ordering",
+    "source_kind": "synthetic",
+    "shape": "ordering",
+    "sql": "SELECT qa.users.name FROM qa.users ORDER BY qa.users.id DESC;",
+    "sqlite_sql": "SELECT qa.users.name FROM qa.users ORDER BY qa.users.id DESC;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "Bea"
+      ],
+      [
+        "Ada"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-pagination",
+    "source_kind": "synthetic",
+    "shape": "pagination",
+    "sql": "SELECT qa.users.id FROM qa.users ORDER BY qa.users.id LIMIT $2 OFFSET $1;",
+    "sqlite_sql": "SELECT qa.users.id FROM qa.users ORDER BY qa.users.id LIMIT ?2 OFFSET ?1;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      1,
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-is-null",
+    "source_kind": "synthetic",
+    "shape": "is-null",
+    "sql": "SELECT qb.users.id, qb.users.title IS NULL AS missing FROM qb.users;",
+    "sqlite_sql": "SELECT qb.users.id, qb.users.title IS NULL AS missing FROM qb.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "missing",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        false
+      ],
+      [
+        3,
+        true
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-substring",
+    "source_kind": "synthetic",
+    "shape": "substring",
+    "sql": "SELECT SUBSTRING(qa.users.name FROM 2 FOR 2) AS part FROM qa.users;",
+    "sqlite_sql": "SELECT SUBSTRING(qa.users.name FROM 2 FOR 2) AS part FROM qa.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "part",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "da"
+      ],
+      [
+        "ea"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-case",
+    "source_kind": "synthetic",
+    "shape": "case",
+    "sql": "SELECT CASE WHEN qa.users.active THEN qa.users.name ELSE 'inactive' END AS label FROM qa.users;",
+    "sqlite_sql": "SELECT CASE WHEN qa.users.active THEN qa.users.name ELSE 'inactive' END AS label FROM qa.users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "label",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        "Ada"
+      ],
+      [
+        "inactive"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-coalesce-outer",
+    "source_kind": "synthetic",
+    "shape": "coalesce-outer",
+    "sql": "SELECT qa.users.id, COALESCE(qb.users.title, 'none') AS label FROM qa.users LEFT JOIN qb.users ON qa.users.id = qb.users.id;",
+    "sqlite_sql": "SELECT qa.users.id, COALESCE(qb.users.title, 'none') AS label FROM qa.users LEFT JOIN qb.users ON qa.users.id = qb.users.id;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "label",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "Bee"
+      ],
+      [
+        2,
+        "none"
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-locking",
+    "source_kind": "synthetic",
+    "shape": "locking",
+    "sql": "SELECT qa.users.id FROM qa.users FOR UPDATE;",
+    "sqlite_sql": "SELECT qa.users.id FROM qa.users FOR UPDATE;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-locking-first-inner",
+    "source_kind": "synthetic",
+    "shape": "locking-first-inner",
+    "sql": "SELECT qa.users.id FROM qa.users JOIN qb.users ON qa.users.id = qb.users.id FOR UPDATE OF users;",
+    "sqlite_sql": "SELECT qa.users.id FROM qa.users JOIN qb.users ON qa.users.id = qb.users.id FOR UPDATE OF users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-locking-first-left",
+    "source_kind": "synthetic",
+    "shape": "locking-first-left",
+    "sql": "SELECT qa.users.id FROM qa.users LEFT JOIN qb.users ON qa.users.id = qb.users.id FOR UPDATE OF users;",
+    "sqlite_sql": "SELECT qa.users.id FROM qa.users LEFT JOIN qb.users ON qa.users.id = qb.users.id FOR UPDATE OF users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ]
+  },
+  {
+    "id": "qualified-names-locking-first-reversed",
+    "source_kind": "synthetic",
+    "shape": "locking-first-reversed",
+    "sql": "SELECT qb.users.id FROM qb.users LEFT JOIN qa.users ON qa.users.id = qb.users.id FOR UPDATE OF users;",
+    "sqlite_sql": "SELECT qb.users.id FROM qb.users LEFT JOIN qa.users ON qa.users.id = qb.users.id FOR UPDATE OF users;",
+    "catalogFile": "fixtures/qualified_names/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ]
+    ]
+  }
+]

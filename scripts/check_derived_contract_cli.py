@@ -50,7 +50,6 @@ def validity(case):
 def boundaries():
     invalid = [
         "SELECT items.id FROM (SELECT id FROM items) d",
-        "SELECT d.absent FROM (SELECT id FROM items) d",
         "SELECT d.id FROM (SELECT id, id FROM items) d",
         "SELECT * FROM (SELECT id FROM items) d(a, b)",
         "SELECT * FROM items i CROSS JOIN (SELECT i.id) d",
@@ -60,6 +59,9 @@ def boundaries():
         "SELECT * FROM (SELECT id FROM items) d ORDER BY items.id",
     ]
     unsupported = [
+        # A missing qualified scalar field can denote function-on-whole-row
+        # notation; its function environment is outside this contract.
+        "SELECT d.absent FROM (SELECT id FROM items) d",
         "SELECT * FROM items i CROSS JOIN LATERAL (SELECT i.id) d",
         "SELECT * FROM (SELECT COUNT(*) AS n FROM items) d",
         "SELECT * FROM (SELECT id FROM items) d FOR UPDATE",

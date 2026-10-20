@@ -362,7 +362,7 @@ notation, including for sources outside the independent validity fragment. -/
 @[simp] theorem from_relations_translated (source : Advanced.From) :
     fromRelations (translateSource source) = fromRelations source := by
   cases source with
-  | table name alias columns => simp only [translateSource, fromRelations]
+  | table name alias columns schema => simp only [translateSource, fromRelations]
   | derived query alias columns lateral => simp only [translateSource, fromRelations]
   | join kind left right condition =>
       simp only [translateSource, fromRelations,
@@ -377,7 +377,7 @@ decreasing_by all_goals (simp_all <;> omega)
 @[simp] theorem from_derived_names_translated (source : Advanced.From) :
     fromDerivedNames (translateSource source) = fromDerivedNames source := by
   cases source with
-  | table name alias columns => simp only [translateSource, fromDerivedNames]
+  | table name alias columns schema => simp only [translateSource, fromDerivedNames]
   | derived query alias columns lateral => simp only [translateSource, fromDerivedNames]
   | join kind left right condition =>
       simp only [translateSource, fromDerivedNames,
@@ -388,11 +388,6 @@ decreasing_by all_goals (simp_all <;> omega)
 @[simp] theorem source_derived_names_translated (source : Option Advanced.From) :
     sourceDerivedNames (source.map translateSource) = sourceDerivedNames source := by
   cases source <;> simp [sourceDerivedNames]
-
-@[simp] theorem join_aliases_distinct_translated (left right : Advanced.From) :
-    JoinAliasesDistinct (translateSource left) (translateSource right) ↔
-      JoinAliasesDistinct left right := by
-  simp only [JoinAliasesDistinct, from_relations_translated]
 
 @[simp] theorem translated_sort_expression (expr : Advanced.Expr) :
     SortExpression (translateExpr expr) ↔ SortExpression expr := by
@@ -462,20 +457,9 @@ theorem pagination_bounds_valid_translated
         simp only [translateParameters]
         split <;> simp_all
 
-@[simp] theorem lock_target_translated (source : Option Advanced.From) (target : Name) :
-    LockTarget (source.map translateSource) target ↔ LockTarget source target := by
-  simp only [LockTarget, source_relations_translated, source_derived_names_translated]
-
-@[simp] theorem lock_targets_translated (source : Option Advanced.From) (targets : List Name) :
-    LockTargets (source.map translateSource) targets ↔ LockTargets source targets := by
-  simp only [LockTargets, source_relations_translated, source_derived_names_translated, lock_target_translated]
-
-theorem locking_valid_translated (valid : LockingValid source distinct clauses) :
-    LockingValid (source.map translateSource) distinct clauses := by
-  induction valid with
-  | nil => exact .nil
-  | cons ordinary targets tail ih =>
-    exact .cons ordinary ((lock_targets_translated _ _).mpr targets) ih
+/- Source transport below preserves the exact scope, including namespace
+identity, aliases, order and NULL-extension flags. Locking premises therefore
+remain the same propositions; no name is re-resolved after translation. -/
 
 mutual
   /-- The complete source derivation survives translation: ON predicates retain
@@ -490,24 +474,27 @@ mutual
     | table present sameName aliasValid columns =>
         simpa only [Option.map_some, translateSource, List.map_nil] using
           SourceValid.table present sameName aliasValid columns
+    | tableRenamed present resolved aliasValid columns aliasesValid =>
+        simpa only [Option.map_some, translateSource, List.map_nil] using
+          SourceValid.tableRenamed present resolved aliasValid columns aliasesValid
     | cross leftValid rightValid aliases =>
         simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
           SourceValid.cross (source_valid_translated leftValid) (source_valid_translated rightValid)
-            ((join_aliases_distinct_translated _ _).mpr aliases)
+            aliases
     | on leftValid rightValid aliases kindValid condition =>
         simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
           SourceValid.on (source_valid_translated leftValid) (source_valid_translated rightValid)
-            ((join_aliases_distinct_translated _ _).mpr aliases)
+            aliases
             kindValid (predicate_valid_translated condition)
     | «using» leftValid rightValid aliases kindValid nonempty unique keysValid =>
         simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
           SourceValid.using (source_valid_translated leftValid) (source_valid_translated rightValid)
-            ((join_aliases_distinct_translated _ _).mpr aliases)
+            aliases
             kindValid nonempty unique keysValid
     | natural leftValid rightValid aliases kindValid unique keysValid =>
         simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
           SourceValid.natural (source_valid_translated leftValid) (source_valid_translated rightValid)
-            ((join_aliases_distinct_translated _ _).mpr aliases)
+            aliases
             kindValid unique keysValid
     | derived queryValid aliasValid columnsValid nonLateral =>
         simpa only [Option.map_some, translateSource] using
@@ -544,9 +531,7 @@ mutual
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
         · have translated := pagination_valid_translated offsetValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
-        · have translated := locking_valid_translated lockingValid
-          simp only [translateSelect]
-          cases relation : select.source <;> simpa [relation] using translated
+        · simpa only [translateSelect] using lockingValid
         · simp only [translateSelect, List.attach_map_val, noGrouping, List.map_nil]
         · simp only [translateSelect]
           split <;> simp_all

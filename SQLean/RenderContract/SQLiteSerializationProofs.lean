@@ -21,7 +21,7 @@ mutual
     | null => simp only [translateExpr, Advanced.SQLite.exprSql]
     | decimal raw => simp only [translateExpr, Advanced.SQLite.exprSql]
     | parameter parameter => cases parameter <;> simp only [translateExpr, translateParameter, Advanced.SQLite.exprSql]
-    | column qualifier name => simp only [translateExpr, Advanced.SQLite.exprSql]
+    | column qualifier name schema => simp only [translateExpr, Advanced.SQLite.exprSql]
     | binary op left right => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated left, exprSql_translated right]
     | concat left right => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated left, exprSql_translated right]
     | quantifiedComparison op quantifier left right =>
@@ -168,7 +168,7 @@ mutual
   theorem itemSql_translated (item : Advanced.SelectItem) :
       Advanced.SQLite.itemSql (translateSelectItem item) = Advanced.SQLite.itemSql item := by
     cases item with
-    | all qualifier => simp only [translateSelectItem, Advanced.SQLite.itemSql]
+    | all qualifier schema => simp only [translateSelectItem, Advanced.SQLite.itemSql]
     | expression expr alias => simp only [translateSelectItem, Advanced.SQLite.itemSql, exprSql_translated expr]
   termination_by sizeOf item
   decreasing_by all_goals (simp_all <;> omega)
@@ -176,7 +176,7 @@ mutual
   theorem sourceSql_translated (source : Advanced.From) :
       Advanced.SQLite.sourceSql (translateSource source) = Advanced.SQLite.sourceSql source := by
     cases source with
-    | table name alias columns => simp only [translateSource, Advanced.SQLite.sourceSql.eq_def]
+    | table name alias columns schema => simp only [translateSource, Advanced.SQLite.sourceSql.eq_def]
     | derived query alias columns lateral =>
       rw [translateSource, Advanced.SQLite.sourceSql.eq_def]
       conv => rhs; rw [Advanced.SQLite.sourceSql.eq_def]

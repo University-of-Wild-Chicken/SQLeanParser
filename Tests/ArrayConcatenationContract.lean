@@ -31,7 +31,7 @@ private def arrayConcatCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "array concatenation SELECT"
-    ((SelectContract.checkQuery .basicV22 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV23 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "array concatenation identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -130,7 +130,7 @@ def arrayConcatenationContractTests : IO Nat := do
               [⟨"v", ⟨element.asArray, operator == .cat⟩⟩])
               s!"array concatenation matrix output: {sql}"
         | none =>
-            match SelectContract.checkQuery .basicV22 [] [] query with
+            match SelectContract.checkQuery .basicV23 [] [] query with
             | .error (.invalid diagnostic) =>
                 SQLean.Tests.assert (diagnostic.code == "concatenation_signature")
                   s!"incompatible array element signature: {sql}"
@@ -199,7 +199,7 @@ def arrayConcatenationContractTests : IO Nat := do
   count := count + 1
   for sql in ["SELECT ARRAY[] || ARRAY[1]", "SELECT ARRAY[1] || ARRAY[]"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV22 [] [] query with
+    match SelectContract.checkQuery .basicV23 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"untyped empty constructors must remain Invalid: {sql}")
     count := count + 1
@@ -207,7 +207,7 @@ def arrayConcatenationContractTests : IO Nat := do
       "SELECT (SELECT 1) || ARRAY[2]", "SELECT ARRAY[1] || unknown_function()",
       "SELECT ROW(1,2) || ARRAY[1]"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV22 [] [] query with
+    match SelectContract.checkQuery .basicV23 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"array child coverage must remain Unsupported: {sql}")
     count := count + 1
@@ -224,12 +224,12 @@ def arrayConcatenationContractTests : IO Nat := do
       Advanced.Expr.concat (.parameter (.numbered 1)) (.parameter (.anonymous 2)),
       .concat (.parameter (.anonymous 2)) (.parameter (.anonymous 1))] do
     let query : Advanced.Query := { body := .select { items := [.expression expr] } }
-    match SelectContract.checkQuery .basicV22 [] params query with
+    match SelectContract.checkQuery .basicV23 [] params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "mixed/reordered array parameters must be Invalid")
     count := count + 1
   let query ← expectOk "array exhaustion" (Advanced.parseQuery "SELECT ARRAY[1] || ARRAY[2]")
-  match SelectContract.checkQuery .basicV22 [] [] query 1 with
+  match SelectContract.checkQuery .basicV23 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "array concatenation exhaustion must be Inconclusive")
   pure (count + 1)

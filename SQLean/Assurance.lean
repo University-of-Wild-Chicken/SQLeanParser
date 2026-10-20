@@ -55,6 +55,8 @@ ordered output names. Its result types are the older coarse SqlType families. -/
 def expandedCheck (catalog : Advanced.Catalog) (params : Advanced.ParameterEnv)
     (query : Advanced.Query) (fuel : Nat) : Except ValidationError (List ColumnDef) := do
   Advanced.checkCatalogDefaults catalog
+  Advanced.requireCheck (!catalog.schemaAware)
+    "schema-aware catalogs require the independent SELECT contract"
   Advanced.checkParameterEnv params
   -- Type traversal must finish before consulting the fuel-bounded collector:
   -- a truncated list of anonymous parameters is not a notation violation.

@@ -33,12 +33,14 @@ def Catalog.ofSchema (schema : Schema) : Catalog :=
     { name := column.name, type := DataType.ofSqlType column.type,
       nullable := some column.type.isNullable } }
 
-def Catalog.findTable (catalog : Catalog) (name : Name) : Option CatalogTable :=
-  catalog.find? (·.name == name)
+def Catalog.findTable (catalog : Catalog) (name : Name) (schema : Option Name := none) : Option CatalogTable :=
+  match catalog.filter (fun table => table.matchesReference name schema) with
+  | [table] => some table
+  | _ => none
 
 def Catalog.putTable (catalog : Catalog) (table : CatalogTable) : Catalog :=
-  if catalog.any (·.name == table.name) then
-    catalog.map (fun old => if old.name == table.name then table else old)
+  if catalog.any (·.identity == table.identity) then
+    catalog.map (fun old => if old.identity == table.identity then table else old)
   else catalog ++ [table]
 
 def CatalogTable.keys (table : CatalogTable) : List (List Name) :=
@@ -62,8 +64,16 @@ def requireCheck (condition : Bool) (message : String) : Except ValidationError 
   if condition then pure () else .error ⟨message⟩
 
 def checkCatalog (catalog : Catalog) : Except ValidationError Unit := do
-  let _ ← checkSchema catalog.toSchema
+  let identities := catalog.map CatalogTable.identity
+  requireCheck (identities.eraseDups.length == identities.length) "duplicate relation identity"
+  let visible := (catalog.filter (·.exposeUnqualified)).map CatalogTable.name
+  requireCheck (visible.eraseDups.length == visible.length) "ambiguous unqualified catalog exposure"
   for table in catalog do
+    let _ ← checkSchema [table.toTableDef]
+    requireCheck (table.schema.all (!·.isEmpty)) "empty schema identifier"
+    requireCheck (catalog.all fun other =>
+      table.name != other.name || table.schema.isSome == other.schema.isSome)
+      "legacy relation metadata cannot coexist with a qualified identity of the same basename"
     for column in table.columns do
       requireCheck (validDataType column.type) s!"invalid type declaration for '{column.name}'"
     let names := table.columns.map Column.name

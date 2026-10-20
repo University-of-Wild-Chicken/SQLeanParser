@@ -126,7 +126,9 @@ mutual
     | null
     | decimal (lexeme : String)
     | parameter (parameter : Parameter)
-    | column (qualifier : Option Name) (name : Name)
+    /-- Schema qualification retains decoded identifier components. A schema
+    requires a relation qualifier; aliases always remain one plain Name. -/
+    | column (qualifier : Option Name) (name : Name) (schema : Option Name := none)
     | binary (op : BinOp) (left right : Expr)
     /-- PostgreSQL's overloaded concatenation operator; its concrete operator
     family is resolved by the independent scalar contract. -/
@@ -185,7 +187,7 @@ mutual
     deriving Repr, BEq, Inhabited
 
   inductive SelectItem where
-    | all (qualifier : Option Name := none)
+    | all (qualifier : Option Name := none) (schema : Option Name := none)
     | expression (expr : Expr) (alias : Option Name := none)
     deriving Repr, BEq, Inhabited
 
@@ -204,6 +206,7 @@ mutual
 
   inductive From where
     | table (name : Name) (alias : Option Name := none) (columns : List Name := [])
+        (schema : Option Name := none)
     | derived (query : Query) (alias : Name) (columns : List Name := []) (lateral : Bool := false)
     | join (kind : JoinKind) (left right : From) (condition : JoinCondition)
     deriving Repr, BEq, Inhabited

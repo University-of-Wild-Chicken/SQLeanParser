@@ -1,0 +1,133 @@
+{
+  "tables": [
+    {
+      "schema": "qa",
+      "name": "users",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "schema": "qb",
+      "name": "users",
+      "exposeUnqualified": false,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "schema": "qa",
+      "name": "orders",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "user_id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "amount",
+          "type": "int",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "schema": "qa",
+      "name": "users.dot",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "label",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "schema": "schema.dot",
+      "name": "table.dot",
+      "exposeUnqualified": false,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "column.dot",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "schema": "qa",
+      "name": "select",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "from",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "schema": "Case Schema",
+      "name": "Case Table",
+      "exposeUnqualified": false,
+      "columns": [
+        {
+          "name": "Case ID",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "Case Name",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    }
+  ]
+}

@@ -21,7 +21,7 @@ mutual
     | .null => .null
     | .decimal raw => .decimal raw
     | .parameter parameter => .parameter (translateParameter parameter)
-    | .column qualifier name => .column qualifier name
+    | .column qualifier name schema => .column qualifier name schema
     | .binary op left right => .binary op (translateExpr left) (translateExpr right)
     | .concat left right => .concat (translateExpr left) (translateExpr right)
     | .quantifiedComparison op quantifier left right =>
@@ -103,7 +103,7 @@ mutual
 
   def translateSelectItem (item : Advanced.SelectItem) : Advanced.SelectItem :=
     match item with
-    | .all qualifier => .all qualifier
+    | .all qualifier schema => .all qualifier schema
     | .expression expr alias => .expression (translateExpr expr) alias
   termination_by sizeOf item
   decreasing_by all_goals (simp_all <;> omega)
@@ -124,7 +124,7 @@ mutual
 
   def translateSource (source : Advanced.From) : Advanced.From :=
     match source with
-    | .table name alias columns => .table name alias columns
+    | .table name alias columns schema => .table name alias columns schema
     | .derived query alias columns lateral => .derived (translateParameters query) alias columns lateral
     | .join kind left right condition =>
         .join kind (translateSource left) (translateSource right) (translateJoinCondition condition)
