@@ -1,0 +1,1840 @@
+{
+  "format_version": 1,
+  "factor": "concatenation",
+  "expected_count": 50,
+  "expected_sources": {
+    "hatchet": 1,
+    "postgres": 49
+  },
+  "sources": {
+    "hatchet": {
+      "repository": "https://github.com/hatchet-dev/hatchet",
+      "commit": "392e7c472221cdab235cca674640e98f904e1ea0",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/hatchet-LICENSE.txt",
+      "license_sha256": "7388b34bd1ad4b9db3c72dcb73f434ea27c88e5ca8f02a24d4f970c906d79be3",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "pkg/repository/sqlcv1/pg_health.sql.go",
+          "sha256": "f8944df0d4b2ba7129aca99c3aa751b1e601169523e98b2f6402213af379b146",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/pg_health.sql.go"
+        }
+      ]
+    },
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "contrib/pgcrypto/sql/rijndael.sql",
+          "sha256": "3dba83f5a45a7502e4b1d4d1b55d904e7ac81b58c77d0af5c6bea0d41e635dbd",
+          "local_path": "fixtures/factor_sources/sources/postgres/contrib/pgcrypto/sql/rijndael.sql"
+        },
+        {
+          "path": "src/test/regress/sql/json.sql",
+          "sha256": "021fa336d00f94afbc026e2d7d6eb6e526cc1af139452e7eb726a638fafe29a3",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/json.sql"
+        },
+        {
+          "path": "src/test/regress/sql/jsonb.sql",
+          "sha256": "136298080a23e5046eb99813168180377b5b6fa6bc036f47af8e5d7b08618061",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/jsonb.sql"
+        },
+        {
+          "path": "src/test/regress/sql/polymorphism.sql",
+          "sha256": "e98fabd96f51dbabb30e9f6f5772da977433a074ae1aaa57c2c54b1d44ab3b9c",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/polymorphism.sql"
+        },
+        {
+          "path": "src/test/regress/sql/strings.sql",
+          "sha256": "a7828ef7fed9179d3de172fba7a81b75268606b7d43acda8943bce17c72480db",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/strings.sql"
+        },
+        {
+          "path": "src/test/regress/sql/text.sql",
+          "sha256": "da10a5e9762b359b32362d77c984d72d583beaea0d9da56590ec72d7b72aa2ba",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/text.sql"
+        },
+        {
+          "path": "src/test/regress/sql/with.sql",
+          "sha256": "e76fa662f0679f7220b78799c948244d62982f7c65ebbfa0c8e40f8aeeceb921",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/with.sql"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/pg_health.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "checkBloat"
+      },
+      "sql_sha256": "841dfd8c3d6bfd21877dedee11a324ba0418d595cede543d43b9e5277ee70026",
+      "observed_syntax": {
+        "function_names": [
+          "pg_relation_size",
+          "pg_size_pretty",
+          "pg_total_relation_size",
+          "quote_ident",
+          "round"
+        ],
+        "conditional_forms": [
+          "nullif"
+        ],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "FuncCall",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "FuncCall",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 50835,
+        "end": 50913,
+        "statement_index": 725
+      },
+      "sql_sha256": "43201d541c1ad80c453c056a55b9ae02aac53f01dc29cdada3a6e6654a6e8756",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 50914,
+        "end": 50971,
+        "statement_index": 726
+      },
+      "sql_sha256": "e1c56911b051f384b58a7bba27e5acf57d0d20881bb80c0c741800affec5ab96",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 50972,
+        "end": 51029,
+        "statement_index": 727
+      },
+      "sql_sha256": "63a8524c685bc7362fd4128ede7dc04ad207249068f8ccaf47a161493ba3c551",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51030,
+        "end": 51079,
+        "statement_index": 728
+      },
+      "sql_sha256": "0b53c6eac1a7e86f04227cdef074d228b9a8e20bc4dacaff080f058703a0f977",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51081,
+        "end": 51119,
+        "statement_index": 729
+      },
+      "sql_sha256": "d4861aa25f2d398a4fb8b2472a72bfb884cb4c4703dbfb1c2df50f1f65fc96d7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51120,
+        "end": 51163,
+        "statement_index": 730
+      },
+      "sql_sha256": "5e5cfa6d32e9c358272eba284628689847134f363724f71d3ed2c242d1c17110",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51164,
+        "end": 51202,
+        "statement_index": 731
+      },
+      "sql_sha256": "85d212b13d63627c9c74d9aec96faffa8a4fdcaf7fd19f3fc324bc1f2b209b98",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51204,
+        "end": 51240,
+        "statement_index": 732
+      },
+      "sql_sha256": "3588d112ba4ce1bfd2f145f80c7939904bcf056c84b04d52a1cf1ffb1ea5939a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51241,
+        "end": 51277,
+        "statement_index": 733
+      },
+      "sql_sha256": "721da6a0caad9258d59cba41b491601d8e8ade842a6ee93ccc6b3c23625f062d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51279,
+        "end": 51316,
+        "statement_index": 734
+      },
+      "sql_sha256": "09d2574c804ba22fbf4f4dc1e35363fbf6b90a08969338f56ddbdb269ff6a4a8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51317,
+        "end": 51352,
+        "statement_index": 735
+      },
+      "sql_sha256": "aa6f1974fec697dc16054e784cbb8d7b06c10a678c2e13ed98274e27f6df63f8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51353,
+        "end": 51389,
+        "statement_index": 736
+      },
+      "sql_sha256": "a0137ddad05993c44c2c4a34267a998e806d7c1dd7baaf113568695ca4b7f490",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51390,
+        "end": 51431,
+        "statement_index": 737
+      },
+      "sql_sha256": "da05568660c5344ebb2654732dedbbd29cb707839fd7e2213c61cdb2757172e6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51432,
+        "end": 51473,
+        "statement_index": 738
+      },
+      "sql_sha256": "f09990242603e13d8054d34bc68e9ca334ce978d70cf6567bbc9afcab72b6e26",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51474,
+        "end": 51515,
+        "statement_index": 739
+      },
+      "sql_sha256": "38bd2a48d140741a55055570812f3f3bb7c674041df6a00c9f417440a6125934",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51517,
+        "end": 51550,
+        "statement_index": 740
+      },
+      "sql_sha256": "d35898ac5bf8b8add5d3606987fe9a979d65818f7d402b4b1fd07b4de3a47462",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51551,
+        "end": 51584,
+        "statement_index": 741
+      },
+      "sql_sha256": "e95e9596ea1bc3e7fb0cd8a0573750ce03e887b58be0cbbfe6d833c404459d01",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51586,
+        "end": 51621,
+        "statement_index": 742
+      },
+      "sql_sha256": "92dded459e6ad872a9147138d62d9805b271f6cc5b8fdfa47fc67560794771bc",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51622,
+        "end": 51655,
+        "statement_index": 743
+      },
+      "sql_sha256": "777cab974e0bf87d0076aaf617bb29cc388d0e9fb961d82d7a4070de6197649a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51656,
+        "end": 51688,
+        "statement_index": 744
+      },
+      "sql_sha256": "437618c73a92ea3ec2e72c798b44277df9c4e33652cd31b504e7522cb176c7c4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51689,
+        "end": 51722,
+        "statement_index": 745
+      },
+      "sql_sha256": "f1094c067512a66ed45ba55971c1670caae01a75e38e0c43aae396fb36334e0e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51724,
+        "end": 51764,
+        "statement_index": 746
+      },
+      "sql_sha256": "1f3b95fda8b119ab6e27fa7396b8f2c087595f9c61b7bf93949fffcc468d64db",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51765,
+        "end": 51806,
+        "statement_index": 747
+      },
+      "sql_sha256": "42293399642fc2d4893252b56c142bf5179d2ea89d624d42a5a582422fc4b9b4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51808,
+        "end": 51864,
+        "statement_index": 748
+      },
+      "sql_sha256": "30b7eb8d48273099647575ff9834a7d476cc14a60011abdf17ff7e864c36ffda",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51866,
+        "end": 51946,
+        "statement_index": 749
+      },
+      "sql_sha256": "1e9dae6d05b12784e7d7c24dd8a66bd1d4fb9a3d18f740f2a0efff07957b7461",
+      "observed_syntax": {
+        "function_names": [
+          "pg_column_size"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 51947,
+        "end": 52051,
+        "statement_index": 750
+      },
+      "sql_sha256": "d9d2add3868508cf1ea7de6008183ac35ff814a4333c29c9727f4d4c6f80c75a",
+      "observed_syntax": {
+        "function_names": [
+          "pg_column_size"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 52052,
+        "end": 52158,
+        "statement_index": 751
+      },
+      "sql_sha256": "10a65e5e5d194ad9001bffb992b22ab20acd3b3a074fa104b227a541b6198863",
+      "observed_syntax": {
+        "function_names": [
+          "pg_column_size"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/jsonb.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 52159,
+        "end": 52265,
+        "statement_index": 752
+      },
+      "sql_sha256": "c693340b8cc675a8b71cdcb46463581f940d30c19381802fc093415d654d3270",
+      "observed_syntax": {
+        "function_names": [
+          "pg_column_size"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "jsonb"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/json.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 430,
+        "end": 474,
+        "statement_index": 7
+      },
+      "sql_sha256": "0a9c17d3513c978623b9c466f5d07af8974457a152bc36eb5bc4542a90beb2b9",
+      "observed_syntax": {
+        "function_names": [
+          "repeat"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/json.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 481,
+        "end": 527,
+        "statement_index": 8
+      },
+      "sql_sha256": "5c965155d8f6761c0edb0c1a9fb47604dac7d4e908dad8f56e454240b92de2c0",
+      "observed_syntax": {
+        "function_names": [
+          "repeat"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/polymorphism.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 24428,
+        "end": 24455,
+        "statement_index": 222
+      },
+      "sql_sha256": "497e2009159f5beae4a33c513f157168930bf6ee6061dc08416ee4e1de4610bb",
+      "observed_syntax": {
+        "function_names": [
+          "pg_typeof"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 10101,
+        "end": 10151,
+        "statement_index": 141
+      },
+      "sql_sha256": "b99c631dc1f02a1751bb4b1aff31ea0c30ee8c7ad629b4ff72c1b73fa70ea87a",
+      "observed_syntax": {
+        "function_names": [
+          "chr",
+          "regexp_like"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 10152,
+        "end": 10202,
+        "statement_index": 142
+      },
+      "sql_sha256": "f9f23735ad7f9d5303a4e73ae5e7b4b8886c935e29d19e8cd24cc3dc404d8bbf",
+      "observed_syntax": {
+        "function_names": [
+          "chr",
+          "regexp_like"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13922,
+        "end": 14024,
+        "statement_index": 196
+      },
+      "sql_sha256": "4b9814ad2bc7d90334ccba5eb9777d527a96bb7f201be967a9ea8ab742cefd34",
+      "observed_syntax": {
+        "function_names": [
+          "chr",
+          "regexp_matches"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14025,
+        "end": 14127,
+        "statement_index": 197
+      },
+      "sql_sha256": "cf30ddef2d885144d26e488061855a9edc8b41f5d3537cf69c237ed27886b0db",
+      "observed_syntax": {
+        "function_names": [
+          "chr",
+          "regexp_matches"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14128,
+        "end": 14233,
+        "statement_index": 198
+      },
+      "sql_sha256": "8067056d49898adea1da3cc3d998fc067473db7cd8f7ee6a01c06b22b5c7fa7d",
+      "observed_syntax": {
+        "function_names": [
+          "chr",
+          "regexp_matches"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14234,
+        "end": 14350,
+        "statement_index": 199
+      },
+      "sql_sha256": "74d08ffb2c8d81ae31106eda1fd0eacc4a62710a502db5072155a532e93507b6",
+      "observed_syntax": {
+        "function_names": [
+          "chr",
+          "regexp_matches"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "FuncCall",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14351,
+        "end": 14456,
+        "statement_index": 200
+      },
+      "sql_sha256": "186c4426d7d99477d664fbb99c1626d3e8fa4debeb6b2a8392a9dc3d354e0793",
+      "observed_syntax": {
+        "function_names": [
+          "chr",
+          "regexp_matches"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "A_Expr",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          },
+          {
+            "left": {
+              "form": "FuncCall",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 21041,
+        "end": 21102,
+        "statement_index": 300
+      },
+      "sql_sha256": "0827830d26dd7b272818384544f118256a7eba7a64cbe0b4ae6790e898f8e051",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 21104,
+        "end": 21174,
+        "statement_index": 301
+      },
+      "sql_sha256": "c6dde0676f9721ad9efae6ae06cbb16c4d9f5ae2517dc10fdda065409e65b078",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "text"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 21176,
+        "end": 21253,
+        "statement_index": 302
+      },
+      "sql_sha256": "2287fc3f29343ee89615426417bd6eea67457bff13af798c012ddc73d6b48a73",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "pg_catalog.bpchar"
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 21255,
+        "end": 21329,
+        "statement_index": 303
+      },
+      "sql_sha256": "0b8e1838b72020f515ff84ba4712d4c6f0c16cff1e1eddbb3da6d91b1bd1888f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "text"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "pg_catalog.bpchar"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 21331,
+        "end": 21404,
+        "statement_index": 304
+      },
+      "sql_sha256": "3ebe9910a44096e4d5659cc608c0542e61ae98613616ed4196e36165d4d6891d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "text"
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "pg_catalog.varchar"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 27128,
+        "end": 27204,
+        "statement_index": 384
+      },
+      "sql_sha256": "8cb2967ac4bdc231207af4f555c85a273cf6792869cf586c9d823cbc8f533aeb",
+      "observed_syntax": {
+        "function_names": [
+          "encode",
+          "repeat"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 27205,
+        "end": 27320,
+        "statement_index": 385
+      },
+      "sql_sha256": "eb8d7c68ec9d17df94a45b93b49f822786ae05803bf953be5155d50bb0569854",
+      "observed_syntax": {
+        "function_names": [
+          "decode",
+          "encode",
+          "repeat"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "FuncCall",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/text.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 572,
+        "end": 601,
+        "statement_index": 4
+      },
+      "sql_sha256": "f3591480b485c304db56d8682b23b855f04e77cdb50233bf4b0e6f541a63bd2b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "TypeCast",
+              "declared_type": "text"
+            },
+            "right": {
+              "form": "A_Expr",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/text.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 602,
+        "end": 625,
+        "statement_index": 5
+      },
+      "sql_sha256": "c24f3a6e95a70fd3b0a786acc538954204cc48bdd6bb0c30d15fcceac6afa2b7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "A_Const",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Expr",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1604,
+        "end": 1739,
+        "statement_index": 13
+      },
+      "sql_sha256": "a04097e1662970006b19f6ace5b8313dbe9c58da1ac33ad3f7cdaa81b215213c",
+      "observed_syntax": {
+        "function_names": [
+          "length",
+          "pg_typeof"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "ColumnRef",
+              "declared_type": null
+            },
+            "right": {
+              "form": "A_Const",
+              "declared_type": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pgcrypto/sql/rijndael.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1426,
+        "end": 1528,
+        "statement_index": 12
+      },
+      "sql_sha256": "a6a637cce5054a33762174f199c5e2f24bf920c72ea198e9bc91f7395240c2e2",
+      "observed_syntax": {
+        "function_names": [
+          "decrypt",
+          "encode",
+          "encrypt"
+        ],
+        "conditional_forms": [],
+        "concatenations": [
+          {
+            "left": {
+              "form": "FuncCall",
+              "declared_type": null
+            },
+            "right": {
+              "form": "TypeCast",
+              "declared_type": "bytea"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

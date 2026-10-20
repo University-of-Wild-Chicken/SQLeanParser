@@ -73,6 +73,7 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor array_quantified --check
           python3 scripts/extract_factor_corpus.py --factor array_subscripts --check
           python3 scripts/extract_factor_corpus.py --factor row_comparisons --check
+          python3 scripts/extract_factor_corpus.py --factor concatenation --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -174,6 +175,9 @@ jobs:
 
       - name: Check row-constructor comparison contracts and native observations
         run: python3 scripts/check_row_comparisons_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check concatenation contracts and native overload observations
+        run: python3 scripts/check_concatenation_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

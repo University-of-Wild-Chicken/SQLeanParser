@@ -95,6 +95,9 @@ mutual
     | parameter (parameter : Parameter)
     | column (qualifier : Option Name) (name : Name)
     | binary (op : BinOp) (left right : Expr)
+    /-- PostgreSQL's overloaded concatenation operator; its concrete operator
+    family is resolved by the independent scalar contract. -/
+    | concat (left right : Expr)
     | unary (op : UnOp) (arg : Expr)
     | countAll
     | aggregate (fn : AggregateFn) (arg : Expr) (distinct : Bool := false)

@@ -74,6 +74,75 @@ structure FunctionOverload where
   output : ScalarType
   deriving Repr, BEq, DecidableEq
 
+/-- The five admitted PostgreSQL scalar `||` catalog declarations.
+Polymorphic text conversion is distinct from an implicit cast to TEXT.
+Array concatenation/append/prepend have separate, non-strict semantics. -/
+inductive ConcatOperator where
+  | textText | textOther | otherText | jsonb | bytea
+  deriving Repr, BEq, DecidableEq
+
+def concatOperators : List ConcatOperator :=
+  [.textText, .textOther, .otherText, .jsonb, .bytea]
+
+def ConcatOperator.catalogInputs : ConcatOperator → List String
+  | .textText => ["text", "text"]
+  | .textOther => ["text", "anynonarray"]
+  | .otherText => ["anynonarray", "text"]
+  | .jsonb => ["jsonb", "jsonb"]
+  | .bytea => ["bytea", "bytea"]
+
+def ConcatOperator.output : ConcatOperator → ScalarType
+  | .textText | .textOther | .otherText => .text
+  | .jsonb => .jsonb
+  | .bytea => .bytea
+
+def ConcatOperator.functionName : ConcatOperator → String
+  | .textText => "textcat"
+  | .textOther => "textanycat"
+  | .otherText => "anytextcat"
+  | .jsonb => "jsonb_concat"
+  | .bytea => "byteacat"
+
+/-- Selected catalog family and concrete argument instantiation. A polymorphic
+argument retains its scalar identity; modifiers do not select an overload. -/
+structure ConcatSignature where
+  operator : ConcatOperator
+  inputs : List ScalarType
+  output : ScalarType
+  deriving Repr, BEq, DecidableEq
+
+/-- Closed scalar resolution for `||`, including PostgreSQL's exact-type
+assumption for a single unknown operand. An unknown next to JSONB or BYTEA
+receives that type; explicit TEXT selects a text conversion overload instead.
+All admitted families propagate SQL NULL and return a non-NULL result on
+successful non-NULL inputs. Literal parsing and value conversion can fail. -/
+def concatSignature (left right : ScalarInput) : Option ConcatSignature :=
+  let textText := some ⟨.textText, [.text, .text], .text⟩
+  let jsonb := some ⟨.jsonb, [.jsonb, .jsonb], .jsonb⟩
+  let bytea := some ⟨.bytea, [.bytea, .bytea], .bytea⟩
+  match left.base.map ScalarType.unmodified, right.base.map ScalarType.unmodified with
+  | none, none => textText
+  | none, some b =>
+      if b.isArray then none
+      else if b == .jsonb then jsonb
+      else if b == .bytea then bytea
+      else if b.isString then textText
+      else some ⟨.textOther, [.text, b], .text⟩
+  | some a, none =>
+      if a.isArray then none
+      else if a == .jsonb then jsonb
+      else if a == .bytea then bytea
+      else if a.isString then textText
+      else some ⟨.otherText, [a, .text], .text⟩
+  | some a, some b =>
+      if a.isArray || b.isArray then none
+      else if a.isString && b.isString then textText
+      else if a.isString then some ⟨.textOther, [.text, b], .text⟩
+      else if b.isString then some ⟨.otherText, [a, .text], .text⟩
+      else if a == .jsonb && b == .jsonb then jsonb
+      else if a == .bytea && b == .bytea then bytea
+      else none
+
 private def keepBest (score : FunctionOverload → Nat) (candidates : List FunctionOverload) :
     List FunctionOverload :=
   let best := (candidates.map score).foldl max 0

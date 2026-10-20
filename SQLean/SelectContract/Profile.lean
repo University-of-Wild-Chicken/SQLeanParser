@@ -11,11 +11,11 @@ formalization of PostgreSQL's general overload-resolution algorithm. -/
 namespace SQLean.SelectContract
 
 inductive Profile where
-  | basicV13
+  | basicV14
   deriving Repr, BEq, DecidableEq, Inhabited
 
 def Profile.name : Profile → String
-  | .basicV13 => "sqlean-basic-select-v0.13"
+  | .basicV14 => "sqlean-basic-select-v0.14"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes

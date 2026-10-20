@@ -1,0 +1,7 @@
+[
+  {"operator":"||","left":"text","right":"text","output":"text","function":"textcat"},
+  {"operator":"||","left":"text","right":"anynonarray","output":"text","function":"textanycat"},
+  {"operator":"||","left":"anynonarray","right":"text","output":"text","function":"anytextcat"},
+  {"operator":"||","left":"jsonb","right":"jsonb","output":"jsonb","function":"jsonb_concat"},
+  {"operator":"||","left":"bytea","right":"bytea","output":"bytea","function":"byteacat"}
+]

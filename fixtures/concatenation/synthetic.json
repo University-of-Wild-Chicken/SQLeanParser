@@ -1,0 +1,1118 @@
+[
+  {
+    "id": "concatenation-01-two-strings",
+    "source_kind": "synthetic",
+    "shape": "two-strings",
+    "sql": "SELECT 'a' || 'b' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'a' || 'b' AS v;",
+    "sqlite_sql": "SELECT 'a' || 'b' AS v;",
+    "sqlite_value": "ab"
+  },
+  {
+    "id": "concatenation-02-empty-string",
+    "source_kind": "synthetic",
+    "shape": "empty-string",
+    "sql": "SELECT '' || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT '' || 'x' AS v;",
+    "sqlite_sql": "SELECT '' || 'x' AS v;",
+    "sqlite_value": "x"
+  },
+  {
+    "id": "concatenation-03-quoted-text",
+    "source_kind": "synthetic",
+    "shape": "quoted-text",
+    "sql": "SELECT 'it''s ' || 'SQL' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "it's SQL",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'it''s ' || 'SQL' AS v;",
+    "sqlite_sql": "SELECT 'it''s ' || 'SQL' AS v;",
+    "sqlite_value": "it's SQL"
+  },
+  {
+    "id": "concatenation-04-two-null",
+    "source_kind": "synthetic",
+    "shape": "two-null",
+    "sql": "SELECT NULL || NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT NULL || NULL AS v;",
+    "sqlite_sql": "SELECT NULL || NULL AS v;",
+    "sqlite_value": null
+  },
+  {
+    "id": "concatenation-05-unknown-null",
+    "source_kind": "synthetic",
+    "shape": "unknown-null",
+    "sql": "SELECT NULL || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT NULL || 'x' AS v;",
+    "sqlite_sql": "SELECT NULL || 'x' AS v;",
+    "sqlite_value": null
+  },
+  {
+    "id": "concatenation-06-typed-null",
+    "source_kind": "synthetic",
+    "shape": "typed-null",
+    "sql": "SELECT CAST(NULL AS TEXT) || 'x'::TEXT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT CAST(NULL AS TEXT) || 'x'::TEXT AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": null
+  },
+  {
+    "id": "concatenation-07-text-integer",
+    "source_kind": "synthetic",
+    "shape": "text-integer",
+    "sql": "SELECT 'x'::TEXT || 7 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x7",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'x'::TEXT || 7 AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "x7"
+  },
+  {
+    "id": "concatenation-08-integer-text",
+    "source_kind": "synthetic",
+    "shape": "integer-text",
+    "sql": "SELECT 7 || 'x'::TEXT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "7x",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 7 || 'x'::TEXT AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "7x"
+  },
+  {
+    "id": "concatenation-09-varchar-length",
+    "source_kind": "synthetic",
+    "shape": "varchar-length",
+    "sql": "SELECT 'abcd'::VARCHAR(2) || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abx",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'abcd'::VARCHAR(2) || 'x' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "abcdx"
+  },
+  {
+    "id": "concatenation-10-character-padding",
+    "source_kind": "synthetic",
+    "shape": "character-padding",
+    "sql": "SELECT 'a'::CHAR(3) || 'b' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'a'::CHAR(3) || 'b' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "ab"
+  },
+  {
+    "id": "concatenation-11-unknown-integer",
+    "source_kind": "synthetic",
+    "shape": "unknown-integer",
+    "sql": "SELECT 'x' || 1 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x1",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'x' || 1 AS v;",
+    "sqlite_sql": "SELECT 'x' || 1 AS v;",
+    "sqlite_value": "x1"
+  },
+  {
+    "id": "concatenation-12-integer-unknown",
+    "source_kind": "synthetic",
+    "shape": "integer-unknown",
+    "sql": "SELECT 1 || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "1x",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 || 'x' AS v;",
+    "sqlite_sql": "SELECT 1 || 'x' AS v;",
+    "sqlite_value": "1x"
+  },
+  {
+    "id": "concatenation-13-boolean-text",
+    "source_kind": "synthetic",
+    "shape": "boolean-text",
+    "sql": "SELECT TRUE || 'x'::TEXT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "truex",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT TRUE || 'x'::TEXT AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "1x"
+  },
+  {
+    "id": "concatenation-14-text-boolean",
+    "source_kind": "synthetic",
+    "shape": "text-boolean",
+    "sql": "SELECT 'x'::TEXT || FALSE AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "xfalse",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'x'::TEXT || FALSE AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "x0"
+  },
+  {
+    "id": "concatenation-15-numeric-modifier",
+    "source_kind": "synthetic",
+    "shape": "numeric-modifier",
+    "sql": "SELECT 1.234::NUMERIC(6,2) || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "1.23x",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1.234::NUMERIC(6,2) || 'x' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "1.234x"
+  },
+  {
+    "id": "concatenation-16-real",
+    "source_kind": "synthetic",
+    "shape": "real",
+    "sql": "SELECT 1.5::REAL || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "1.5x",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1.5::REAL || 'x' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "1.5x"
+  },
+  {
+    "id": "concatenation-17-double",
+    "source_kind": "synthetic",
+    "shape": "double",
+    "sql": "SELECT 1.25::DOUBLE PRECISION || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "1.25x",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1.25::DOUBLE PRECISION || 'x' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "1.25x"
+  },
+  {
+    "id": "concatenation-18-date",
+    "source_kind": "synthetic",
+    "shape": "date",
+    "sql": "SELECT DATE '2024-01-01' || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "2024-01-01x",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT DATE '2024-01-01' || 'x' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "2024-01-01x"
+  },
+  {
+    "id": "concatenation-19-timestamp",
+    "source_kind": "synthetic",
+    "shape": "timestamp",
+    "sql": "SELECT TIMESTAMP '2024-01-01 01:02:03' || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "2024-01-01 01:02:03x",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT TIMESTAMP '2024-01-01 01:02:03' || 'x' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "2024-01-01 01:02:03x"
+  },
+  {
+    "id": "concatenation-20-time-zone",
+    "source_kind": "synthetic",
+    "shape": "time-zone",
+    "sql": "SELECT TIME WITH TIME ZONE '12:00+00' || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "12:00:00+00x",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT TIME WITH TIME ZONE '12:00+00' || 'x' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "12:00:00+00x"
+  },
+  {
+    "id": "concatenation-21-interval",
+    "source_kind": "synthetic",
+    "shape": "interval",
+    "sql": "SELECT INTERVAL '1 day' || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "1 dayx",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT INTERVAL '1 day' || 'x' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "1 dayx"
+  },
+  {
+    "id": "concatenation-22-uuid",
+    "source_kind": "synthetic",
+    "shape": "uuid",
+    "sql": "SELECT '00000000-0000-0000-0000-000000000001'::UUID || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "00000000-0000-0000-0000-000000000001x",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '00000000-0000-0000-0000-000000000001'::UUID || 'x' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "00000000-0000-0000-0000-000000000001x"
+  },
+  {
+    "id": "concatenation-23-json-text",
+    "source_kind": "synthetic",
+    "shape": "json-text",
+    "sql": "SELECT '{\"a\":1}'::JSON || 'x'::TEXT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "{\"a\":1}x",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::JSON || 'x'::TEXT AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "{\"a\":1}x"
+  },
+  {
+    "id": "concatenation-24-jsonb-text",
+    "source_kind": "synthetic",
+    "shape": "jsonb-text",
+    "sql": "SELECT '{\"a\":1}'::JSONB || 'x'::TEXT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "{\"a\": 1}x",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::JSONB || 'x'::TEXT AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "{\"a\": 1}x"
+  },
+  {
+    "id": "concatenation-25-text-jsonb",
+    "source_kind": "synthetic",
+    "shape": "text-jsonb",
+    "sql": "SELECT 'x'::TEXT || '{\"a\":1}'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x{\"a\": 1}",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT 'x'::TEXT || '{\"a\":1}'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "x{\"a\": 1}"
+  },
+  {
+    "id": "concatenation-26-bytea-text",
+    "source_kind": "synthetic",
+    "shape": "bytea-text",
+    "sql": "SELECT '\\x6162'::BYTEA || 'x'::TEXT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "\\x6162x",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '\\x6162'::BYTEA || 'x'::TEXT AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "\\x6162x"
+  },
+  {
+    "id": "concatenation-27-text-bytea",
+    "source_kind": "synthetic",
+    "shape": "text-bytea",
+    "sql": "SELECT 'x'::TEXT || '\\x6162'::BYTEA AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x\\x6162",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT 'x'::TEXT || '\\x6162'::BYTEA AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "x\\x6162"
+  },
+  {
+    "id": "concatenation-28-jsonb-objects",
+    "source_kind": "synthetic",
+    "shape": "jsonb-objects",
+    "sql": "SELECT '{\"a\":1}'::JSONB || '{\"b\":2}'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "{\"a\": 1, \"b\": 2}",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::JSONB || '{\"b\":2}'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "{\"a\": 1, \"b\": 2}"
+  },
+  {
+    "id": "concatenation-29-jsonb-override",
+    "source_kind": "synthetic",
+    "shape": "jsonb-override",
+    "sql": "SELECT '{\"a\":1}'::JSONB || '{\"a\":2}'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "{\"a\": 2}",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::JSONB || '{\"a\":2}'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "{\"a\": 2}"
+  },
+  {
+    "id": "concatenation-30-jsonb-arrays",
+    "source_kind": "synthetic",
+    "shape": "jsonb-arrays",
+    "sql": "SELECT '[1,2]'::JSONB || '[3]'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "[1, 2, 3]",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '[1,2]'::JSONB || '[3]'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "[1, 2, 3]"
+  },
+  {
+    "id": "concatenation-31-jsonb-scalars",
+    "source_kind": "synthetic",
+    "shape": "jsonb-scalars",
+    "sql": "SELECT '1'::JSONB || '2'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "[1, 2]",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '1'::JSONB || '2'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "[1, 2]"
+  },
+  {
+    "id": "concatenation-32-jsonb-object-array",
+    "source_kind": "synthetic",
+    "shape": "jsonb-object-array",
+    "sql": "SELECT '{\"a\":1}'::JSONB || '[2]'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "[{\"a\": 1}, 2]",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{\"a\":1}'::JSONB || '[2]'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "[{\"a\": 1}, 2]"
+  },
+  {
+    "id": "concatenation-33-unknown-jsonb",
+    "source_kind": "synthetic",
+    "shape": "unknown-jsonb",
+    "sql": "SELECT '{}' || '{\"b\":2}'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "{\"b\": 2}",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{}' || '{\"b\":2}'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "{\"b\": 2}"
+  },
+  {
+    "id": "concatenation-34-jsonb-unknown",
+    "source_kind": "synthetic",
+    "shape": "jsonb-unknown",
+    "sql": "SELECT '[1]'::JSONB || '[2]' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "[1, 2]",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '[1]'::JSONB || '[2]' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "[1, 2]"
+  },
+  {
+    "id": "concatenation-35-jsonb-sql-null",
+    "source_kind": "synthetic",
+    "shape": "jsonb-sql-null",
+    "sql": "SELECT NULL::JSONB || '{}'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": null,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT NULL::JSONB || '{}'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": null
+  },
+  {
+    "id": "concatenation-36-jsonb-json-null",
+    "source_kind": "synthetic",
+    "shape": "jsonb-json-null",
+    "sql": "SELECT 'null'::JSONB || '1'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "[null, 1]",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT 'null'::JSONB || '1'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "[null, 1]"
+  },
+  {
+    "id": "concatenation-37-bytea",
+    "source_kind": "synthetic",
+    "shape": "bytea",
+    "sql": "SELECT '\\x6162'::BYTEA || '\\x6364'::BYTEA AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x61626364",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '\\x6162'::BYTEA || '\\x6364'::BYTEA AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "\\x61626364"
+  },
+  {
+    "id": "concatenation-38-empty-bytea",
+    "source_kind": "synthetic",
+    "shape": "empty-bytea",
+    "sql": "SELECT '\\x'::BYTEA || '\\x6162'::BYTEA AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x6162",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '\\x'::BYTEA || '\\x6162'::BYTEA AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "\\x6162"
+  },
+  {
+    "id": "concatenation-39-unknown-bytea",
+    "source_kind": "synthetic",
+    "shape": "unknown-bytea",
+    "sql": "SELECT '\\x61' || '\\x62'::BYTEA AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x6162",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '\\x61' || '\\x62'::BYTEA AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "\\x6162"
+  },
+  {
+    "id": "concatenation-40-bytea-unknown",
+    "source_kind": "synthetic",
+    "shape": "bytea-unknown",
+    "sql": "SELECT '\\x61'::BYTEA || '\\x62' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x6162",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '\\x61'::BYTEA || '\\x62' AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "\\x6162"
+  },
+  {
+    "id": "concatenation-41-null-bytea",
+    "source_kind": "synthetic",
+    "shape": "null-bytea",
+    "sql": "SELECT NULL::BYTEA || '\\x61'::BYTEA AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": null,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT NULL::BYTEA || '\\x61'::BYTEA AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": null
+  },
+  {
+    "id": "concatenation-42-anonymous-order",
+    "source_kind": "synthetic",
+    "shape": "anonymous-order",
+    "sql": "SELECT ? || ? AS v;",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "a",
+      "b"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ? || ? AS v;",
+    "sqlite_sql": "SELECT ? || ? AS v;",
+    "sqlite_value": "ab"
+  },
+  {
+    "id": "concatenation-43-reordered-repeat",
+    "source_kind": "synthetic",
+    "shape": "reordered-repeat",
+    "sql": "SELECT $2 || $1 || $2 AS v;",
+    "parameter_types": "int,text",
+    "parameter_values": [
+      1,
+      "x"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x1x",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?2 || ?1 || ?2 AS v;",
+    "sqlite_sql": "SELECT ?2 || ?1 || ?2 AS v;",
+    "sqlite_value": "x1x"
+  },
+  {
+    "id": "concatenation-44-nullable-binding",
+    "source_kind": "synthetic",
+    "shape": "nullable-binding",
+    "sql": "SELECT $1 || $2 AS v;",
+    "parameter_types": "text?,text",
+    "parameter_values": [
+      null,
+      "x"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?1 || ?2 AS v;",
+    "sqlite_sql": "SELECT ?1 || ?2 AS v;",
+    "sqlite_value": null
+  },
+  {
+    "id": "concatenation-45-jsonb-binding",
+    "source_kind": "synthetic",
+    "shape": "jsonb-binding",
+    "sql": "SELECT $1 || '{\"b\":2}' AS v;",
+    "parameter_types": "jsonb",
+    "parameter_values": [
+      "{\"a\":1}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "jsonb",
+    "postgres_display_type": "jsonb",
+    "expected_value": "{\"a\": 1, \"b\": 2}",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?1 || '{\"b\":2}' AS v;",
+    "sqlite_sql": "SELECT ?1 || '{\"b\":2}' AS v;",
+    "sqlite_value": "{\"a\":1}{\"b\":2}"
+  },
+  {
+    "id": "concatenation-46-bytea-binding",
+    "source_kind": "synthetic",
+    "shape": "bytea-binding",
+    "sql": "SELECT $1 || ($2 || '\\x'::BYTEA) AS v;",
+    "parameter_types": "bytea,bytea",
+    "parameter_values": [
+      "\\x61",
+      "\\x62"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x6162",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ?1 || (?2 || '\\x'::BYTEA) AS v;",
+    "sqlite_sql": null,
+    "sqlite_value": "\\x6162"
+  },
+  {
+    "id": "concatenation-47-precedence",
+    "source_kind": "synthetic",
+    "shape": "precedence",
+    "sql": "SELECT 'x' || 1 + 2 * 3 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "x7",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'x' || 1 + 2 * 3 AS v;",
+    "sqlite_sql": "SELECT 'x' || 1 + 2 * 3 AS v;",
+    "sqlite_value": 6
+  },
+  {
+    "id": "concatenation-48-parenthesized-arithmetic",
+    "source_kind": "synthetic",
+    "shape": "parenthesized-arithmetic",
+    "sql": "SELECT (1 + 2) || 'x' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "3x",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT (1 + 2) || 'x' AS v;",
+    "sqlite_sql": "SELECT (1 + 2) || 'x' AS v;",
+    "sqlite_value": "3x"
+  },
+  {
+    "id": "concatenation-49-conditional",
+    "source_kind": "synthetic",
+    "shape": "conditional",
+    "sql": "SELECT COALESCE(NULL,'x') || CASE WHEN TRUE THEN 'y' ELSE 'z' END AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "xy",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT COALESCE(NULL,'x') || CASE WHEN TRUE THEN 'y' ELSE 'z' END AS v;",
+    "sqlite_sql": "SELECT COALESCE(NULL,'x') || CASE WHEN TRUE THEN 'y' ELSE 'z' END AS v;",
+    "sqlite_value": "xy"
+  },
+  {
+    "id": "concatenation-50-predicate",
+    "source_kind": "synthetic",
+    "shape": "predicate",
+    "sql": "SELECT $1 || 'x' AS v WHERE ($1 || 'x') = 'ax';",
+    "parameter_types": "text",
+    "parameter_values": [
+      "a"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ax",
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?1 || 'x' AS v WHERE (?1 || 'x') = 'ax';",
+    "sqlite_sql": "SELECT ?1 || 'x' AS v WHERE (?1 || 'x') = 'ax';",
+    "sqlite_value": "ax"
+  }
+]

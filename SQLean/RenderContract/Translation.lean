@@ -23,6 +23,7 @@ mutual
     | .parameter parameter => .parameter (translateParameter parameter)
     | .column qualifier name => .column qualifier name
     | .binary op left right => .binary op (translateExpr left) (translateExpr right)
+    | .concat left right => .concat (translateExpr left) (translateExpr right)
     | .quantifiedComparison op quantifier left right =>
         .quantifiedComparison op quantifier (translateExpr left) (translateExpr right)
     | .unary op arg => .unary op (translateExpr arg)

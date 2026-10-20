@@ -134,6 +134,19 @@ mutual
           match signature : binarySignature op left.type right.type with
           | none => .error (binaryFailure op a b left.type right.type)
           | some type => .ok ⟨type, left.uses ++ right.uses, .binary left.valid right.valid signature⟩
+      | .concat a b => do
+          let left ← checkExpr fuel params scope a
+          let right ← checkExpr fuel params scope b
+          match signature : concatSignature (scalarInput a left.type) (scalarInput b right.type) with
+          | some selected => .ok ⟨some ⟨selected.output,
+                (scalarInput a left.type).nullable || (scalarInput b right.type).nullable⟩,
+              left.uses ++ right.uses, .concat left.valid right.valid signature⟩
+          | none => .error (if (left.type.any fun type => type.base.isArray) ||
+                (right.type.any fun type => type.base.isArray) then
+              unsupported "array_concatenation"
+                "Array concatenation, append and prepend require separate polymorphic and NULL rules"
+            else invalid "concatenation_signature"
+              "No admitted PostgreSQL scalar concatenation operator accepts these input types")
       | .unary .neg (.literal (.int 2147483648)) => .ok ⟨some ⟨.int32, false⟩, [], .minInt32⟩
       | .unary .neg (.literal (.int 9223372036854775808)) => .ok ⟨some ⟨.int64, false⟩, [], .minInt64⟩
       | .unary op a => do
@@ -607,7 +620,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
     | _ =>
       let children : List Advanced.Expr := match expr with
         | .binary _ a b | .pattern a b _ | .nullIf a b
-        | .quantifiedComparison _ _ a b => [a, b]
+        | .quantifiedComparison _ _ a b | .concat a b => [a, b]
         | .unary _ a | .cast a _ | .isNull a _ | .inQuery a _ => [a]
         | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
         | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args

@@ -74,6 +74,7 @@ mutual
     | .parameter (.anonymous index) => if pg then "$" ++ toString index else "?"
     | .column qualifier name => (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ quoteName name
     | .binary op l r => paren (exprSql pg l ++ " " ++ binSql op ++ " " ++ exprSql pg r)
+    | .concat left right => paren (exprSql pg left ++ " || " ++ exprSql pg right)
     | .quantifiedComparison op quantifier left right =>
         paren (exprSql pg left ++ " " ++ op.toSql ++ " " ++ quantifier.toSql ++
           paren (exprSql pg right))

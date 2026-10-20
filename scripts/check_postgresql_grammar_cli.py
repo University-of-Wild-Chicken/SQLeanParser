@@ -274,7 +274,7 @@ def load_cases(include_statement_families=True):
           for factor in ["functions", "conditional", "pagination", "extended_types", "locking",
                          "join_contract", "using_contract", "natural_contract", "derived_contract",
                          "array_types", "array_constructors", "array_quantified", "array_subscripts",
-                         "row_comparisons"]],
+                         "row_comparisons", "concatenation"]],
     ]
     if include_statement_families:
         paths.append(ROOT / "fixtures/statement_families/concrete.jsonl")

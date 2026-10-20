@@ -40,6 +40,7 @@ mutual
     | .parameter (.anonymous index) => "?" ++ toString index
     | .column qualifier name => (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ quoteName name
     | .binary op l r => paren (exprSql l ++ " " ++ binSql op ++ " " ++ exprSql r)
+    | .concat left right => paren (exprSql left ++ " || " ++ exprSql right)
     -- Excluded by the checked SQLite profile; the total spelling is retained
     -- solely for structural laws over every finite advanced AST.
     | .quantifiedComparison op quantifier left right =>

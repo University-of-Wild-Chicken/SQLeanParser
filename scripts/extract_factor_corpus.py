@@ -36,6 +36,7 @@ POPULATIONS = {
     "array_quantified": {"hatchet": 29, "postgres": 18, "sqlc": 3},
     "array_subscripts": {"postgres": 24, "duckdb": 26},
     "row_comparisons": {"hatchet": 16, "postgres": 8, "temporal": 6, "sqlite": 20},
+    "concatenation": {"hatchet": 1, "postgres": 49},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -505,6 +506,84 @@ def observe_row_comparisons(parsed: dict) -> list[dict]:
     return result
 
 
+CONCATENATION_OPERAND_FORMS = {"A_Const", "A_Expr", "TypeCast", "FuncCall", "ColumnRef"}
+CONCATENATION_DECLARED_TYPES = {"text", "pg_catalog.bpchar", "pg_catalog.varchar", "jsonb", "bytea"}
+
+
+def validate_concatenations(entries: list[dict]) -> None:
+    """Validate syntax observations, without assigning an overload or result type."""
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("concatenation factor is absent")
+    for entry in entries:
+        if not isinstance(entry, dict) or set(entry) != {"left", "right"}:
+            raise ValueError("invalid concatenation observation")
+        for side in ("left", "right"):
+            operand = entry[side]
+            if (not isinstance(operand, dict) or set(operand) != {"form", "declared_type"}
+                    or not isinstance(operand["form"], str)
+                    or operand["form"] not in CONCATENATION_OPERAND_FORMS):
+                raise ValueError("invalid concatenation operand observation")
+            declared = operand["declared_type"]
+            if operand["form"] == "TypeCast":
+                if not isinstance(declared, str) or declared not in CONCATENATION_DECLARED_TYPES:
+                    raise ValueError("invalid immediate concatenation cast observation")
+            elif declared is not None:
+                raise ValueError("concatenation source cannot invent an operand type")
+
+
+def observe_concatenations(parsed: dict) -> list[dict]:
+    """Observe this finite text/JSONB/BYTEA source population.
+
+    Immediate cast declarations are retained. Function results and column
+    types remain unknown; this source screen is not operator resolution.
+    """
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("concatenation source must be a SELECT")
+    result = []
+
+    def operand(value):
+        if not isinstance(value, dict) or len(value) != 1:
+            raise ValueError("concatenation requires two expression operands")
+        form = next(iter(value))
+        declared = None
+        if form == "TypeCast":
+            type_name = value[form].get("typeName", {})
+            if type_name.get("arrayBounds"):
+                raise ValueError("array concatenation is outside this source population")
+            declared = ".".join(part.get("String", {}).get("sval", "")
+                                for part in type_name.get("names", []))
+        return {"form": form, "declared_type": declared}
+
+    def walk(value):
+        if isinstance(value, list):
+            for child in value:
+                walk(child)
+        elif isinstance(value, dict):
+            for kind, node in value.items():
+                if not isinstance(node, dict):
+                    walk(node)
+                    continue
+                if kind in {"A_ArrayExpr", "A_Indices", "A_Indirection", "RowExpr"}:
+                    raise ValueError("array/row form is outside this concatenation population")
+                if kind in {"TypeName", "typeName"} and node.get("arrayBounds"):
+                    raise ValueError("array concatenation is outside this source population")
+                if kind == "SubLink" and node.get("subLinkType") in {
+                        "ANY_SUBLINK", "ALL_SUBLINK", "ARRAY_SUBLINK", "ROWCOMPARE_SUBLINK"}:
+                    raise ValueError("array/quantified subquery is outside this concatenation population")
+                if kind == "A_Expr" and node.get("kind") == "AEXPR_OP":
+                    names = [part.get("String", {}).get("sval") for part in node.get("name", [])]
+                    if names == ["||"]:
+                        result.append({"left": operand(node.get("lexpr")),
+                                       "right": operand(node.get("rexpr"))})
+                    elif len(names) != 1 or names[0] not in COMPARISON_OPERATORS | {"+", "-", "*", "/"}:
+                        raise ValueError("another extended operator is outside this concatenation population")
+                walk(node)
+
+    walk(parsed)
+    validate_concatenations(result)
+    return result
+
+
 def observe_oracle(sql: str, factor: str) -> dict:
     import pglast
     from pglast import ast, enums, parse_sql, parser, visitors
@@ -566,7 +645,7 @@ def observe_oracle(sql: str, factor: str) -> dict:
     observer.locks = []
     observer(tree)
     allowed = {"general-function-call", "comma-from", "expression-limit-offset", "extended-type"}
-    if factor in {"conditional", "locking", "derived_contract", "array_types", "array_quantified", "row_comparisons"} | JOIN_FACTORS:
+    if factor in {"conditional", "locking", "derived_contract", "array_types", "array_quantified", "row_comparisons", "concatenation"} | JOIN_FACTORS:
         allowed.add("conditional-expression")
     if factor in {"locking", "array_types", "row_comparisons"}:
         allowed.add("row-locking")
@@ -576,6 +655,8 @@ def observe_oracle(sql: str, factor: str) -> dict:
         allowed.add("quantified-comparison")
     if factor == "row_comparisons":
         allowed.add("row-constructor")
+    if factor == "concatenation":
+        allowed.add("extended-operator")
     unexpected = set(features(json.loads(parser.parse_sql_json(sql)))) - allowed
     if unexpected:
         raise ValueError(f"source has later-factor dependencies: {sorted(unexpected)}")
@@ -646,6 +727,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "row_comparisons":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["row_comparisons"] = observe_row_comparisons(parsed)
+    if factor == "concatenation":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation["concatenations"] = observe_concatenations(parsed)
     return observation
 
 
@@ -665,6 +749,7 @@ def validate_population(records: list[dict], factor: str) -> None:
     subscript_dimensions, subscript_groups = Counter(), Counter()
     subscript_nested = 0
     row_operators, row_arities, row_forms = Counter(), Counter(), Counter()
+    concat_left, concat_right, concat_casts = Counter(), Counter(), Counter()
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -692,6 +777,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("array_subscripts")
         if factor == "row_comparisons":
             expected_keys.add("row_comparisons")
+        if factor == "concatenation":
+            expected_keys.add("concatenations")
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -760,6 +847,13 @@ def validate_population(records: list[dict], factor: str) -> None:
             row_operators.update(entry["operator"] for entry in comparisons)
             row_arities.update(entry["arity"] for entry in comparisons)
             row_forms.update((entry["left_form"], entry["right_form"]) for entry in comparisons)
+        if factor == "concatenation":
+            entries = observation["concatenations"]
+            validate_concatenations(entries)
+            concat_left.update(entry["left"]["form"] for entry in entries)
+            concat_right.update(entry["right"]["form"] for entry in entries)
+            concat_casts.update(entry[side]["declared_type"] for entry in entries for side in ("left", "right")
+                                if entry[side]["declared_type"] is not None)
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -795,6 +889,12 @@ def validate_population(records: list[dict], factor: str) -> None:
             or row_arities != {2: 56, 3: 12, 4: 3, 5: 1}
             or row_forms != {("implicit", "implicit"): 71, ("explicit", "explicit"): 1}):
         raise ValueError("row comparison population must retain its 72 pairs and source forms")
+    if factor == "concatenation" and (
+            concat_left != {"A_Expr": 35, "TypeCast": 30, "A_Const": 15, "FuncCall": 5, "ColumnRef": 1}
+            or concat_right != {"A_Const": 39, "FuncCall": 25, "TypeCast": 20, "A_Expr": 2}
+            or concat_casts != {"jsonb": 42, "text": 4, "pg_catalog.bpchar": 2,
+                                "pg_catalog.varchar": 1, "bytea": 1}):
+        raise ValueError("concatenation population must retain its 86 nodes and declared casts")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -813,7 +913,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "row_comparisons"} | ARRAY_FACTORS | JOIN_FACTORS:
+            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation"} | ARRAY_FACTORS | JOIN_FACTORS:
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -830,7 +930,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if factor != "array_subscripts" or name != "duckdb":
                 raise ValueError("SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_sqllogic_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract", "row_comparisons"} | ARRAY_FACTORS | JOIN_FACTORS:
+        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation"} | ARRAY_FACTORS | JOIN_FACTORS:
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])

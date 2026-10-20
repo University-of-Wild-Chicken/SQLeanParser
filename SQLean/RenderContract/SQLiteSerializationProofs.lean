@@ -23,6 +23,7 @@ mutual
     | parameter parameter => cases parameter <;> simp only [translateExpr, translateParameter, Advanced.SQLite.exprSql]
     | column qualifier name => simp only [translateExpr, Advanced.SQLite.exprSql]
     | binary op left right => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated left, exprSql_translated right]
+    | concat left right => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated left, exprSql_translated right]
     | quantifiedComparison op quantifier left right =>
         simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated left, exprSql_translated right]
     | unary op arg => cases op <;> simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]

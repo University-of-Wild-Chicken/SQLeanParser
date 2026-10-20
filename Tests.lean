@@ -54,6 +54,8 @@ import Tests.ArraySubscriptContract
 import Tests.ArraySubscriptRendering
 import Tests.RowComparisonContract
 import Tests.RowComparisonRendering
+import Tests.ConcatenationContract
+import Tests.ConcatenationRendering
 
 namespace SQLean.Tests
 
@@ -174,6 +176,12 @@ def run : IO Unit := do
   IO.println s!"PASS: {rowComparisonCorpus} row comparison full-query certificates"
   let rowComparisonRendering ← rowComparisonRenderingTests
   IO.println s!"PASS: {rowComparisonRendering} row comparison parsing and rendering checks"
+  let concatenationContract ← concatenationContractTests
+  IO.println s!"PASS: {concatenationContract} concatenation validity and operator checks"
+  let concatenationCorpus ← concatenationCorpusTests
+  IO.println s!"PASS: {concatenationCorpus} concatenation full-query certificates"
+  let concatenationRendering ← concatenationRenderingTests
+  IO.println s!"PASS: {concatenationRendering} concatenation parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

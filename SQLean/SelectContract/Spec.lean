@@ -158,6 +158,11 @@ mutual
     | binary (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
         (signature : binarySignature op ta tb = some result) :
         ExprValid params scope (.binary op a b) result (ua ++ ub)
+    | concat (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+        (signature : concatSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
+        ExprValid params scope (.concat a b)
+          (some ⟨selected.output, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩)
+          (ua ++ ub)
     | rowComparison (left : ExprListValid params scope a ta ua)
         (right : ExprListValid params scope b tb ub)
         (signature : rowComparisonSignature op (scalarInputs a ta) (scalarInputs b tb) = some selected) :

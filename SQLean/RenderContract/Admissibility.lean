@@ -116,7 +116,7 @@ mutual
         else invalid "representation.numeric-token" "decimal field is not a decimal/exponent token"
     | .parameter parameter => pure { parameters := [parameter] }
     | .column qualifier name => checkOptionalName qualifier; checkName name; leaf
-    | .binary _ left right | .pattern left right _ =>
+    | .binary _ left right | .concat left right | .pattern left right _ =>
         combine [inspectExpr left, inspectExpr right]
     | .quantifiedComparison _ _ left right =>
         if ambiguousQuantifiedRight right then

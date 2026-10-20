@@ -136,7 +136,7 @@ private def lexLoop (sqlite : Bool) : Nat → List Char → SourcePos → Nat �
             let (rest, next) ← skipBlock (!sqlite) (input.length + 1) 1 ds (advance (advance p c) d)
             lexLoop sqlite fuel rest next anonymous numbered acc
           else if (c == '<' && (d == '>' || d == '=')) || (c == '>' && d == '=') ||
-              (c == '!' && d == '=') || (c == ':' && d == ':') then
+              (c == '!' && d == '=') || (c == ':' && d == ':') || (c == '|' && d == '|') then
             lexLoop sqlite fuel ds (advance (advance p c) d) anonymous numbered
               ({kind := .symbol (String.ofList [c,d]), position := p} :: acc)
           else if "(),;*./+-=<>[]:".contains c then
@@ -270,8 +270,8 @@ private def binInfo (token : Lexeme) : Option (BinOp × Nat) := match token.keyw
   | .symbol "=" => some (.eq, 4) | .symbol "<>" | .symbol "!=" => some (.ne, 4)
   | .symbol "<" => some (.lt, 4) | .symbol "<=" => some (.le, 4)
   | .symbol ">" => some (.gt, 4) | .symbol ">=" => some (.ge, 4)
-  | .symbol "+" => some (.add, 5) | .symbol "-" => some (.sub, 5)
-  | .symbol "*" => some (.mul, 6) | .symbol "/" => some (.div, 6)
+  | .symbol "+" => some (.add, 6) | .symbol "-" => some (.sub, 6)
+  | .symbol "*" => some (.mul, 7) | .symbol "/" => some (.div, 7)
   | _ => none
 private def aggregateFn : String → Option AggregateFn
   | "count" => some .count | "sum" => some .sum | "avg" => some .avg
@@ -354,8 +354,8 @@ mutual
     | 0 => fail "expression nesting bound exceeded"
     | fuel + 1 => do
       if ← eat "not" then return .unary .not (← expression fuel 4)
-      if ← eat "+" then return .unary .pos (← expression fuel 7)
-      if ← eat "-" then return .unary .neg (← expression fuel 7)
+      if ← eat "+" then return .unary .pos (← expression fuel 9)
+      if ← eat "-" then return .unary .neg (← expression fuel 9)
       if ← eat "null" then return .null
       if ← eat "true" then return .literal (.bool true)
       if ← eat "false" then return .literal (.bool false)
@@ -537,7 +537,7 @@ mutual
   private def tailExpr : Nat → Nat → Expr → Bool → Parser Expr
     | 0, _, _, _ => fail "expression input bound exceeded"
     | fuel + 1, minPrec, left, compared => do
-      if minPrec <= 8 && (← eat "::") then
+      if minPrec <= 10 && (← eat "::") then
         let type ← dataType fuel
         return ← tailExpr fuel minPrec (.cast left type) compared
       let notPredicate := match (← get) with
@@ -582,6 +582,14 @@ mutual
             pure (if negated then .unary .not result else result)
         tailExpr fuel minPrec result true
       else
+        if ← isAt "||" then
+          -- PostgreSQL places general operators below arithmetic, whereas
+          -- SQLite concatenation binds more tightly than multiplication.
+          let prec := if ← read then 8 else 5
+          if prec < minPrec then return left
+          let _ ← pop
+          let right ← expression fuel (prec + 1)
+          return ← tailExpr fuel minPrec (.concat left right) false
         match binInfo (← peek).kind with
         | some (op, prec) =>
           if prec < minPrec then return left
