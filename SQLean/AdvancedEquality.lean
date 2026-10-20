@@ -64,6 +64,11 @@ mutual
     case array.array a0 b0 =>
       letI : Decidable (a0 = b0) := exactListExprDecEq a0 b0
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.array.injEq])
+    case quantifiedComparison.quantifiedComparison a0 a1 a2 a3 b0 b1 b2 b3 =>
+      letI : Decidable (a2 = b2) := exactExprDecEq a2 b2
+      letI : Decidable (a3 = b3) := exactExprDecEq a3 b3
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2 ∧ a3 = b3)
+        (by simp only [Expr.quantifiedComparison.injEq])
     case greatest.greatest a0 b0 =>
       letI : Decidable (a0 = b0) := exactListExprDecEq a0 b0
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.greatest.injEq])

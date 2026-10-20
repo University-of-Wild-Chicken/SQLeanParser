@@ -24,6 +24,8 @@ mutual
     | parameter parameter => cases parameter <;> simp only [translateExpr, translateParameter, exprSql, ite_true]
     | column qualifier name => simp only [translateExpr, exprSql]
     | binary op left right => simp only [translateExpr, exprSql, exprSql_translated pg left, exprSql_translated pg right]
+    | quantifiedComparison op quantifier left right =>
+        simp only [translateExpr, exprSql, exprSql_translated pg left, exprSql_translated pg right]
     | unary op arg => cases op <;> simp only [translateExpr, exprSql, exprSql_translated pg arg]
     | countAll => simp only [translateExpr, exprSql]
     | aggregate fn arg distinct => simp only [translateExpr, exprSql, exprSql_translated pg arg]

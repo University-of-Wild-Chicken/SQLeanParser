@@ -80,6 +80,10 @@ mutual
     | binary left right signature =>
         simpa only [translateExpr, List.map_append] using
           ExprValid.binary (expr_valid_translated left) (expr_valid_translated right) signature
+    | quantifiedComparison left right signature =>
+        simpa only [translateExpr, List.map_append] using
+          ExprValid.quantifiedComparison (expr_valid_translated left) (expr_valid_translated right)
+            (by simpa only [scalar_input_translated] using signature)
     | unary arg signature ordinary =>
         simpa only [translateExpr] using ExprValid.unary (expr_valid_translated arg) signature
           ((ordinary_unary_translated _ _).mpr ordinary)

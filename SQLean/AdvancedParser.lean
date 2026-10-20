@@ -166,7 +166,7 @@ private def reserved : List String :=
    "nulls", "distinct", "on", "as", "join", "inner", "left", "right", "full", "outer", "cross", "natural",
    "using", "lateral", "union", "intersect", "except", "with", "recursive", "all", "and", "or", "not",
    "is", "null", "true", "false", "in", "exists", "between", "like", "ilike", "filter", "cast",
-   "case", "when", "then", "else", "end", "coalesce", "nullif", "greatest", "least", "array",
+   "case", "when", "then", "else", "end", "coalesce", "nullif", "greatest", "least", "array", "any", "some",
    "current_date", "current_time", "current_timestamp", "localtime", "localtimestamp",
    "current_user", "session_user", "system_user", "current_role", "current_catalog", "current_schema", "user",
    "isnull", "notnull", "only", "for",
@@ -546,6 +546,24 @@ mutual
           if prec < minPrec then return left
           if prec == 4 && compared then fail "parenthesize chained comparisons"
           let _ ← pop
+          if prec == 4 && ((← isAt "any") || (← isAt "some") || (← isAt "all")) then
+            if ← read then fail "quantified array comparisons are not supported by the SQLite profile"
+            let comparison ← match op with
+              | .eq => pure ComparisonOp.eq | .ne => pure ComparisonOp.ne
+              | .lt => pure ComparisonOp.lt | .le => pure ComparisonOp.le
+              | .gt => pure ComparisonOp.gt | .ge => pure ComparisonOp.ge
+              | _ => fail "expected comparison operator"
+            let quantifier ← if ← eat "any" then pure ArrayQuantifier.any
+              else if ← eat "some" then pure ArrayQuantifier.some
+              else do expect "all"; pure ArrayQuantifier.all
+            expect "("
+            let right ← expression fuel 0
+            expect ")"
+            -- Parentheses around SELECT do not disambiguate it into an array
+            -- expression in PostgreSQL. A cast or other wrapper does.
+            if let .scalarQuery _ := right then
+              fail "quantified subquery comparison is outside the array-expression profile"
+            return ← tailExpr fuel minPrec (.quantifiedComparison comparison quantifier left right) true
           let right ← expression fuel (prec + 1)
           tailExpr fuel minPrec (.binary op left right) (prec == 4)
         | none => pure left

@@ -58,6 +58,19 @@ inductive SetOp where
   | union | intersect | except
   deriving Repr, BEq, DecidableEq, Inhabited
 
+inductive ComparisonOp where
+  | eq | ne | lt | le | gt | ge
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+def ComparisonOp.toBinOp : ComparisonOp → BinOp
+  | .eq => .eq | .ne => .ne | .lt => .lt
+  | .le => .le | .gt => .gt | .ge => .ge
+
+/-- SOME is semantically ANY; retain its spelling in the typed syntax. -/
+inductive ArrayQuantifier where
+  | any | some | all
+  deriving Repr, BEq, DecidableEq, Inhabited
+
 inductive LockStrength where
   | update | noKeyUpdate | share | keyShare
   deriving Repr, BEq, DecidableEq, Inhabited
@@ -91,6 +104,9 @@ mutual
     /-- PostgreSQL ARRAY[...] constructor. Nested bracket shorthand normalizes
     to nested constructors; declared dimensions remain runtime properties. -/
     | array (elements : List Expr)
+    /-- Comparison against elements of an array expression. Quantified
+    subqueries are a separate SQL form and are not represented here. -/
+    | quantifiedComparison (op : ComparisonOp) (quantifier : ArrayQuantifier) (left right : Expr)
     /-- Ordinary positional function call; name components retain quoting/case
     through the parser's ordinary identifier rules. -/
     | call (name : List Name) (args : List Expr)

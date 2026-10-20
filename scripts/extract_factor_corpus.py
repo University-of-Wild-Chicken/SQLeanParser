@@ -15,7 +15,7 @@ import re
 from audit_postgresql_corpus import features
 from extract_application_corpus import first_sql_text
 from extract_extended_type_corpus import (
-    NEW_FAMILIES, OLD_FAMILIES, parameter_slots, select_sql,
+    NEW_FAMILIES, OLD_FAMILIES, parameter_slots, select_sql, sql_code,
 )
 from extract_pagination_corpus import checked_file, comparison_key, sha256
 from extract_statement_corpus import selected_sql, statement_spans
@@ -32,6 +32,7 @@ POPULATIONS = {
     "derived_contract": {"postgres": 47, "sqlc": 3},
     "array_types": {"postgres": 42, "hatchet": 7, "sqlc": 1},
     "array_constructors": {"postgres": 49, "sqlc": 1},
+    "array_quantified": {"hatchet": 29, "postgres": 18, "sqlc": 3},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -41,7 +42,8 @@ JOIN_KINDS = {"cross", "inner", "left", "right", "full"}
 MERGED_FACTORS = {"using_contract": "using", "natural_contract": "natural"}
 JOIN_FACTORS = {"join_contract", *MERGED_FACTORS}
 ARRAY_ELEMENT_FAMILIES = {"int4", "int8", "text", "float8", "interval", "timestamptz", "uuid"}
-ARRAY_FACTORS = {"array_types", "array_constructors"}
+ARRAY_FACTORS = {"array_types", "array_constructors", "array_quantified"}
+COMPARISON_OPERATORS = {"=", "<>", "<", "<=", ">", ">="}
 
 
 def validate_join_tree(tree: dict, *, root: bool = True, allow_merged: bool = False) -> set[str]:
@@ -299,6 +301,74 @@ def observe_array_constructors(parsed: dict) -> list[dict]:
     return result
 
 
+def validate_array_quantified(comparisons: list[dict]) -> None:
+    if not isinstance(comparisons, list) or not comparisons:
+        raise ValueError("array quantified factor is absent")
+    for entry in comparisons:
+        if (not isinstance(entry, dict)
+                or set(entry) != {"operator", "source_operator", "quantifier", "right_form"}
+                or not isinstance(entry["operator"], str)
+                or entry["operator"] not in COMPARISON_OPERATORS
+                or not isinstance(entry["source_operator"], str)
+                or entry["source_operator"].replace("!=", "<>") != entry["operator"]
+                or not isinstance(entry["quantifier"], str)
+                or entry["quantifier"] not in {"any", "some", "all"}
+                or not isinstance(entry["right_form"], str)
+                or entry["right_form"] not in {"TypeCast", "A_Const", "ParamRef", "A_ArrayExpr"}):
+            raise ValueError("invalid quantified-array observation")
+
+
+def observe_array_quantified(parsed: dict, sql: str) -> list[dict]:
+    """Observe source spelling as well as PostgreSQL's normalized ANY/ALL node.
+
+    PostgreSQL JSON locations are UTF-8 byte offsets. The comment/string mask
+    retains Python character positions, so convert offsets before matching.
+    This screen does not resolve operator overloads, names, or application types.
+    """
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("quantified-array source must be a SELECT")
+    result, masked, encoded = [], sql_code(sql), sql.encode("utf-8")
+
+    def walk(value):
+        if isinstance(value, list):
+            for child in value:
+                walk(child)
+        elif isinstance(value, dict):
+            for kind, node in value.items():
+                if not isinstance(node, dict):
+                    walk(node)
+                    continue
+                if kind in {"A_Indices", "A_Indirection", "RowExpr", "SubLink"}:
+                    raise ValueError("subscript/row/subquery is outside the quantified-array population")
+                if kind == "A_Expr" and node.get("kind") in {"AEXPR_OP_ANY", "AEXPR_OP_ALL"}:
+                    names = [part.get("String", {}).get("sval") for part in node.get("name", [])]
+                    if len(names) != 1 or names[0] not in COMPARISON_OPERATORS:
+                        raise ValueError("custom quantified operator is outside this population")
+                    location = node.get("location")
+                    if type(location) is not int or not 0 <= location < len(encoded):
+                        raise ValueError("invalid quantified operator byte location")
+                    try:
+                        offset = len(encoded[:location].decode("utf-8"))
+                    except UnicodeDecodeError as error:
+                        raise ValueError("invalid quantified operator byte location") from error
+                    match = re.match(r"(<>|!=|<=|>=|=|<|>)\s*(ANY|SOME|ALL)\s*\(",
+                                     masked[offset:], re.I)
+                    if (match is None or match[1].replace("!=", "<>") != names[0]
+                            or ((match[2].lower() == "all")
+                                != (node["kind"] == "AEXPR_OP_ALL"))):
+                        raise ValueError("quantified operator source spelling disagrees with raw AST")
+                    right = node.get("rexpr", {})
+                    if not isinstance(right, dict) or len(right) != 1:
+                        raise ValueError("invalid quantified right operand observation")
+                    result.append({"operator": names[0], "source_operator": match[1],
+                                   "quantifier": match[2].lower(), "right_form": next(iter(right))})
+                walk(node)
+
+    walk(parsed)
+    validate_array_quantified(result)
+    return result
+
+
 def observe_oracle(sql: str, factor: str) -> dict:
     import pglast
     from pglast import ast, enums, parse_sql, parser, visitors
@@ -360,12 +430,14 @@ def observe_oracle(sql: str, factor: str) -> dict:
     observer.locks = []
     observer(tree)
     allowed = {"general-function-call", "comma-from", "expression-limit-offset", "extended-type"}
-    if factor in {"conditional", "locking", "derived_contract", "array_types"} | JOIN_FACTORS:
+    if factor in {"conditional", "locking", "derived_contract", "array_types", "array_quantified"} | JOIN_FACTORS:
         allowed.add("conditional-expression")
     if factor in {"locking", "array_types"}:
         allowed.add("row-locking")
     if factor in ARRAY_FACTORS:
         allowed.add("array-or-subscripting")
+    if factor == "array_quantified":
+        allowed.add("quantified-comparison")
     unexpected = set(features(json.loads(parser.parse_sql_json(sql)))) - allowed
     if unexpected:
         raise ValueError(f"source has later-factor dependencies: {sorted(unexpected)}")
@@ -427,6 +499,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "array_constructors":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["array_constructors"] = observe_array_constructors(parsed)
+    if factor == "array_quantified":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation["array_quantified"] = observe_array_quantified(parsed, sql)
     return observation
 
 
@@ -442,6 +517,7 @@ def validate_population(records: list[dict], factor: str) -> None:
     derived_alias_cases, derived_max_depth = 0, 0
     array_elements = set()
     constructor_count, constructor_empty, constructor_nested, constructor_depth = 0, 0, 0, 0
+    quantified_ops, quantifiers, quantified_right = Counter(), Counter(), Counter()
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -463,6 +539,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("array_types")
         if factor == "array_constructors":
             expected_keys.add("array_constructors")
+        if factor == "array_quantified":
+            expected_keys.add("array_quantified")
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -511,6 +589,12 @@ def validate_population(records: list[dict], factor: str) -> None:
             constructor_empty += sum(entry["length"] == 0 for entry in constructors)
             constructor_nested += any(entry["depth"] > 1 for entry in constructors)
             constructor_depth = max(constructor_depth, *(entry["depth"] for entry in constructors))
+        if factor == "array_quantified":
+            comparisons = observation["array_quantified"]
+            validate_array_quantified(comparisons)
+            quantified_ops.update(entry["source_operator"] for entry in comparisons)
+            quantifiers.update(entry["quantifier"] for entry in comparisons)
+            quantified_right.update(entry["right_form"] for entry in comparisons)
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -531,6 +615,11 @@ def validate_population(records: list[dict], factor: str) -> None:
             constructor_count != 94 or constructor_empty != 1
             or constructor_nested != 12 or constructor_depth != 6):
         raise ValueError("constructor population must retain its 94 nodes, typed empty, and nesting")
+    if factor == "array_quantified" and (
+            quantified_ops != {"=": 45, ">=": 4, "!=": 1, ">": 1}
+            or quantifiers != {"any": 41, "all": 10}
+            or quantified_right != {"TypeCast": 34, "A_Const": 13, "ParamRef": 2, "A_ArrayExpr": 2}):
+        raise ValueError("quantified population must retain its 51 nodes and source spellings")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:

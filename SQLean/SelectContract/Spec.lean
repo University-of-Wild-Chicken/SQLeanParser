@@ -198,6 +198,11 @@ mutual
           (scalarInputs (bs.map Prod.fst) conditions) (scalarInputs (bs.map Prod.snd) results)
           ((e.map fun expr => scalarInput expr te).getD (.unknown true)) = some result) :
         ExprValid params scope (.caseExpr a bs e) (some result) (ua ++ ub ++ ue)
+    | quantifiedComparison (left : ExprValid params scope a ta ua)
+        (right : ExprValid params scope b tb ub)
+        (signature : quantifiedComparisonSignature op (scalarInput a ta) (scalarInput b tb) = some selected) :
+        ExprValid params scope (.quantifiedComparison op quantifier a b)
+          (some ⟨.bool, true⟩) (ua ++ ub)
     | inList (arg : ExprValid params scope a ta ua) (values : ExprListValid params scope es ts us)
         (nonempty : es ≠ []) (signature : comparisonListSignature (ta :: ts) = some result) :
         ExprValid params scope (.inList a es) result (ua ++ us)

@@ -70,6 +70,7 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor derived_contract --check
           python3 scripts/extract_factor_corpus.py --factor array_types --check
           python3 scripts/extract_factor_corpus.py --factor array_constructors --check
+          python3 scripts/extract_factor_corpus.py --factor array_quantified --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -162,6 +163,9 @@ jobs:
 
       - name: Check ARRAY constructors, contextual casts, and runtime boundaries
         run: python3 scripts/check_array_constructors_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check ANY, SOME, ALL and exact scalar operator signatures
+        run: python3 scripts/check_array_quantified_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

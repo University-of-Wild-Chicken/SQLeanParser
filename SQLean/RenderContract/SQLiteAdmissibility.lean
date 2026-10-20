@@ -29,6 +29,7 @@ def checkSQLiteDataType (type : DataType) : Except Failure Unit :=
 mutual
   def checkSQLiteExpr (expr : Advanced.Expr) : Except Failure Unit := do
     match expr with
+    | .quantifiedComparison .. => unsupported "array-quantified-comparison"
     | .binary _ left right | .filteredAggregate left right =>
         checkSQLiteExpr left; checkSQLiteExpr right
     | .pattern left right insensitive =>

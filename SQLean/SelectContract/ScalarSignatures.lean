@@ -276,6 +276,33 @@ def equalityOverload (left right : ScalarInput) : Option FunctionOverload :=
       | none => resolveOverload equalityCatalog [left, right]
     | none => resolveOverload equalityCatalog [left, right]
 
+/-- PostgreSQL 16 provides all six strict Boolean comparison operators for
+these 32 scalar input pairs. The selected arguments are retained explicitly;
+common-type selection is not an operator-resolution rule. -/
+def comparisonOverload : Advanced.ComparisonOp → ScalarInput → ScalarInput → Option FunctionOverload
+  | .eq | .ne | .lt | .le | .gt | .ge => equalityOverload
+
+/-- Resolve a scalar operator against an array's scalar element. Unknown NULL
+or string RHS inputs are contextually converted to the selected right-input
+array type; a concrete non-array RHS is never treated as unknown. The full
+operator signature records both selected input types and its Boolean result. -/
+def quantifiedComparisonSignature (op : Advanced.ComparisonOp)
+    (left right : ScalarInput) : Option FunctionOverload := do
+  let element ← match right with
+    | .unknown nullable => some (.unknown nullable)
+    | .known ⟨.array element, _⟩ => some (.known ⟨element, true⟩)
+    | .known _ => none
+  let selected ← comparisonOverload op left element
+  match selected.inputs with
+  | [_, rightInput] =>
+    if selected.output != .bool || rightInput.isArray then none
+    else
+      let coerces := match right with
+        | .unknown _ => true
+        | .known type => implicitCast type.base rightInput.asArray
+      if coerces then some selected else none
+  | _ => none
+
 def nullIfSignature (left right : ScalarInput) : Option ExactType := do
   let signature ← equalityOverload left right
   let first ← signature.inputs.head?

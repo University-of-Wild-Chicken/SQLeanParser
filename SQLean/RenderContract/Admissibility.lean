@@ -98,6 +98,12 @@ private def ambiguousScalarList : List Advanced.Expr → Bool
   | [.scalarQuery _] => true
   | _ => false
 
+/-- Parenthesizing a scalar query does not distinguish this tree from the
+PostgreSQL quantified-subquery grammar. A wrapper would change the AST. -/
+private def ambiguousQuantifiedRight : Advanced.Expr → Bool
+  | .scalarQuery _ => true
+  | _ => false
+
 mutual
   def inspectExpr (expr : Advanced.Expr) : Except Failure Footprint := do
     match expr with
@@ -112,6 +118,11 @@ mutual
     | .column qualifier name => checkOptionalName qualifier; checkName name; leaf
     | .binary _ left right | .pattern left right _ =>
         combine [inspectExpr left, inspectExpr right]
+    | .quantifiedComparison _ _ left right =>
+        if ambiguousQuantifiedRight right then
+          .error (.unsupported ⟨"coverage.quantified-subquery",
+            "a bare scalar-query right operand collides with quantified-subquery syntax"⟩)
+        else combine [inspectExpr left, inspectExpr right]
     | .unary _ arg | .aggregate _ arg _ | .isNull arg _ => combine [inspectExpr arg]
     | .cast arg type =>
         checkDataType type

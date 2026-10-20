@@ -1,0 +1,969 @@
+[
+  {
+    "id": "array-quantified-01-equal-any",
+    "source_kind": "synthetic",
+    "shape": "equal-any",
+    "sql": "SELECT 4 = ANY(ARRAY[1,4,7]) AS v;",
+    "sqlite_sql": "SELECT 4 = ANY(ARRAY[1,4,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-02-equal-some",
+    "source_kind": "synthetic",
+    "shape": "equal-some",
+    "sql": "SELECT 2 = SOME(ARRAY[1,4,7]) AS v;",
+    "sqlite_sql": "SELECT 2 = SOME(ARRAY[1,4,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false"
+  },
+  {
+    "id": "array-quantified-03-equal-all",
+    "source_kind": "synthetic",
+    "shape": "equal-all",
+    "sql": "SELECT 4 = ALL(ARRAY[4,4]) AS v;",
+    "sqlite_sql": "SELECT 4 = ALL(ARRAY[4,4]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-04-not-equal-any",
+    "source_kind": "synthetic",
+    "shape": "not-equal-any",
+    "sql": "SELECT 4 <> ANY(ARRAY[4,4]) AS v;",
+    "sqlite_sql": "SELECT 4 <> ANY(ARRAY[4,4]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false"
+  },
+  {
+    "id": "array-quantified-05-not-equal-some",
+    "source_kind": "synthetic",
+    "shape": "not-equal-some",
+    "sql": "SELECT 4 <> SOME(ARRAY[1,4]) AS v;",
+    "sqlite_sql": "SELECT 4 <> SOME(ARRAY[1,4]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-06-not-equal-all",
+    "source_kind": "synthetic",
+    "shape": "not-equal-all",
+    "sql": "SELECT 4 <> ALL(ARRAY[1,7]) AS v;",
+    "sqlite_sql": "SELECT 4 <> ALL(ARRAY[1,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-07-less-any",
+    "source_kind": "synthetic",
+    "shape": "less-any",
+    "sql": "SELECT 4 < ANY(ARRAY[1,7]) AS v;",
+    "sqlite_sql": "SELECT 4 < ANY(ARRAY[1,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-08-less-some",
+    "source_kind": "synthetic",
+    "shape": "less-some",
+    "sql": "SELECT 8 < SOME(ARRAY[1,7]) AS v;",
+    "sqlite_sql": "SELECT 8 < SOME(ARRAY[1,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false"
+  },
+  {
+    "id": "array-quantified-09-less-all",
+    "source_kind": "synthetic",
+    "shape": "less-all",
+    "sql": "SELECT 0 < ALL(ARRAY[1,7]) AS v;",
+    "sqlite_sql": "SELECT 0 < ALL(ARRAY[1,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-10-less-equal-any",
+    "source_kind": "synthetic",
+    "shape": "less-equal-any",
+    "sql": "SELECT 4 <= ANY(ARRAY[1,4]) AS v;",
+    "sqlite_sql": "SELECT 4 <= ANY(ARRAY[1,4]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-11-less-equal-some",
+    "source_kind": "synthetic",
+    "shape": "less-equal-some",
+    "sql": "SELECT 8 <= SOME(ARRAY[1,7]) AS v;",
+    "sqlite_sql": "SELECT 8 <= SOME(ARRAY[1,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false"
+  },
+  {
+    "id": "array-quantified-12-less-equal-all",
+    "source_kind": "synthetic",
+    "shape": "less-equal-all",
+    "sql": "SELECT 4 <= ALL(ARRAY[4,7]) AS v;",
+    "sqlite_sql": "SELECT 4 <= ALL(ARRAY[4,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-13-greater-any",
+    "source_kind": "synthetic",
+    "shape": "greater-any",
+    "sql": "SELECT 4 > ANY(ARRAY[1,7]) AS v;",
+    "sqlite_sql": "SELECT 4 > ANY(ARRAY[1,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-14-greater-some",
+    "source_kind": "synthetic",
+    "shape": "greater-some",
+    "sql": "SELECT 0 > SOME(ARRAY[1,7]) AS v;",
+    "sqlite_sql": "SELECT 0 > SOME(ARRAY[1,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false"
+  },
+  {
+    "id": "array-quantified-15-greater-all",
+    "source_kind": "synthetic",
+    "shape": "greater-all",
+    "sql": "SELECT 8 > ALL(ARRAY[1,7]) AS v;",
+    "sqlite_sql": "SELECT 8 > ALL(ARRAY[1,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-16-greater-equal-any",
+    "source_kind": "synthetic",
+    "shape": "greater-equal-any",
+    "sql": "SELECT 4 >= ANY(ARRAY[4,7]) AS v;",
+    "sqlite_sql": "SELECT 4 >= ANY(ARRAY[4,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-17-greater-equal-some",
+    "source_kind": "synthetic",
+    "shape": "greater-equal-some",
+    "sql": "SELECT 0 >= SOME(ARRAY[1,7]) AS v;",
+    "sqlite_sql": "SELECT 0 >= SOME(ARRAY[1,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false"
+  },
+  {
+    "id": "array-quantified-18-greater-equal-all",
+    "source_kind": "synthetic",
+    "shape": "greater-equal-all",
+    "sql": "SELECT 7 >= ALL(ARRAY[1,7]) AS v;",
+    "sqlite_sql": "SELECT 7 >= ALL(ARRAY[1,7]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-19-not-equal-alias",
+    "source_kind": "synthetic",
+    "shape": "not-equal-alias",
+    "sql": "SELECT 4 != ANY(ARRAY[4,5]) AS v;",
+    "sqlite_sql": "SELECT 4 != ANY(ARRAY[4,5]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-20-empty-any-null-left",
+    "source_kind": "synthetic",
+    "shape": "empty-any-null-left",
+    "sql": "SELECT NULL::INTEGER = ANY(ARRAY[]::INTEGER[]) AS v;",
+    "sqlite_sql": "SELECT NULL::INTEGER = ANY(ARRAY[]::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false"
+  },
+  {
+    "id": "array-quantified-21-empty-all-null-left",
+    "source_kind": "synthetic",
+    "shape": "empty-all-null-left",
+    "sql": "SELECT NULL::INTEGER > ALL('{}'::INTEGER[]) AS v;",
+    "sqlite_sql": "SELECT NULL::INTEGER > ALL('{}'::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-22-empty-some",
+    "source_kind": "synthetic",
+    "shape": "empty-some",
+    "sql": "SELECT 9 = SOME('{}'::INTEGER[]) AS v;",
+    "sqlite_sql": "SELECT 9 = SOME('{}'::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false"
+  },
+  {
+    "id": "array-quantified-23-null-array",
+    "source_kind": "synthetic",
+    "shape": "null-array",
+    "sql": "SELECT 1 = ANY(NULL::INTEGER[]) AS v;",
+    "sqlite_sql": "SELECT 1 = ANY(NULL::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null
+  },
+  {
+    "id": "array-quantified-24-null-scalar",
+    "source_kind": "synthetic",
+    "shape": "null-scalar",
+    "sql": "SELECT NULL::INTEGER = ALL(ARRAY[1,2]) AS v;",
+    "sqlite_sql": "SELECT NULL::INTEGER = ALL(ARRAY[1,2]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null
+  },
+  {
+    "id": "array-quantified-25-null-element-any",
+    "source_kind": "synthetic",
+    "shape": "null-element-any",
+    "sql": "SELECT 9 = ANY(ARRAY[1,NULL]) AS v;",
+    "sqlite_sql": "SELECT 9 = ANY(ARRAY[1,NULL]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null
+  },
+  {
+    "id": "array-quantified-26-true-over-null",
+    "source_kind": "synthetic",
+    "shape": "true-over-null",
+    "sql": "SELECT 1 = ANY(ARRAY[NULL,1]) AS v;",
+    "sqlite_sql": "SELECT 1 = ANY(ARRAY[NULL,1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-27-false-over-null",
+    "source_kind": "synthetic",
+    "shape": "false-over-null",
+    "sql": "SELECT 2 = ALL(ARRAY[NULL,1]) AS v;",
+    "sqlite_sql": "SELECT 2 = ALL(ARRAY[NULL,1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false"
+  },
+  {
+    "id": "array-quantified-28-null-element-all",
+    "source_kind": "synthetic",
+    "shape": "null-element-all",
+    "sql": "SELECT 1 = ALL(ARRAY[NULL,1]) AS v;",
+    "sqlite_sql": "SELECT 1 = ALL(ARRAY[NULL,1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null
+  },
+  {
+    "id": "array-quantified-29-multidimensional-any",
+    "source_kind": "synthetic",
+    "shape": "multidimensional-any",
+    "sql": "SELECT 3 = ANY(ARRAY[[1,2],[3,4]]) AS v;",
+    "sqlite_sql": "SELECT 3 = ANY(ARRAY[[1,2],[3,4]]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-30-multidimensional-all",
+    "source_kind": "synthetic",
+    "shape": "multidimensional-all",
+    "sql": "SELECT 0 < ALL(ARRAY[[1,2],[3,4]]) AS v;",
+    "sqlite_sql": "SELECT 0 < ALL(ARRAY[[1,2],[3,4]]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-31-numeric-integer",
+    "source_kind": "synthetic",
+    "shape": "numeric-integer",
+    "sql": "SELECT 1.5 < ANY(ARRAY[1,2]) AS v;",
+    "sqlite_sql": "SELECT 1.5 < ANY(ARRAY[1,2]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-32-real-bigint",
+    "source_kind": "synthetic",
+    "shape": "real-bigint",
+    "sql": "SELECT 2::REAL = SOME(ARRAY[1,2]::BIGINT[]) AS v;",
+    "sqlite_sql": "SELECT 2::REAL = SOME(ARRAY[1,2]::BIGINT[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-33-numeric-modifiers",
+    "source_kind": "synthetic",
+    "shape": "numeric-modifiers",
+    "sql": "SELECT 1.23::NUMERIC(6,2) = ANY(ARRAY[1.234::NUMERIC(7,3),1.23::NUMERIC(6,2)]) AS v;",
+    "sqlite_sql": "SELECT 1.23::NUMERIC(6,2) = ANY(ARRAY[1.234::NUMERIC(7,3),1.23::NUMERIC(6,2)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-34-date",
+    "source_kind": "synthetic",
+    "shape": "date",
+    "sql": "SELECT DATE '2024-01-01' < ALL(ARRAY[DATE '2024-01-02',DATE '2024-02-01']) AS v;",
+    "sqlite_sql": "SELECT DATE '2024-01-01' < ALL(ARRAY[DATE '2024-01-02',DATE '2024-02-01']) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-35-date-timestamp",
+    "source_kind": "synthetic",
+    "shape": "date-timestamp",
+    "sql": "SELECT DATE '2024-01-01' = ANY(ARRAY[TIMESTAMP '2024-01-01 00:00:00',TIMESTAMP '2024-02-01 00:00:00']) AS v;",
+    "sqlite_sql": "SELECT DATE '2024-01-01' = ANY(ARRAY[TIMESTAMP '2024-01-01 00:00:00',TIMESTAMP '2024-02-01 00:00:00']) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-36-time-null-element",
+    "source_kind": "synthetic",
+    "shape": "time-null-element",
+    "sql": "SELECT TIME '12:00' > SOME(ARRAY[TIME '11:00',NULL]) AS v;",
+    "sqlite_sql": "SELECT TIME '12:00' > SOME(ARRAY[TIME '11:00',NULL]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-37-interval",
+    "source_kind": "synthetic",
+    "shape": "interval",
+    "sql": "SELECT INTERVAL '2 hours' >= ALL(ARRAY[INTERVAL '60 minutes',INTERVAL '2 hours']) AS v;",
+    "sqlite_sql": "SELECT INTERVAL '2 hours' >= ALL(ARRAY[INTERVAL '60 minutes',INTERVAL '2 hours']) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-38-text-order",
+    "source_kind": "synthetic",
+    "shape": "text-order",
+    "sql": "SELECT 'b'::TEXT > ALL(ARRAY['a','aa']) AS v;",
+    "sqlite_sql": "SELECT 'b'::TEXT > ALL(ARRAY['a','aa']) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-39-uuid",
+    "source_kind": "synthetic",
+    "shape": "uuid",
+    "sql": "SELECT '00000000-0000-0000-0000-000000000002'::UUID = ANY(ARRAY['00000000-0000-0000-0000-000000000001','00000000-0000-0000-0000-000000000002']::UUID[]) AS v;",
+    "sqlite_sql": "SELECT '00000000-0000-0000-0000-000000000002'::UUID = ANY(ARRAY['00000000-0000-0000-0000-000000000001','00000000-0000-0000-0000-000000000002']::UUID[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-40-bytea",
+    "source_kind": "synthetic",
+    "shape": "bytea",
+    "sql": "SELECT '\\x00'::BYTEA <> ALL(ARRAY['\\x01','\\x02']::BYTEA[]) AS v;",
+    "sqlite_sql": "SELECT '\\x00'::BYTEA <> ALL(ARRAY['\\x01','\\x02']::BYTEA[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-41-unknown-array-literal",
+    "source_kind": "synthetic",
+    "shape": "unknown-array-literal",
+    "sql": "SELECT 2 = ANY('{1,2,3}') AS v;",
+    "sqlite_sql": "SELECT 2 = ANY('{1,2,3}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-42-unknown-empty-array",
+    "source_kind": "synthetic",
+    "shape": "unknown-empty-array",
+    "sql": "SELECT NULL::INTEGER = ALL('{}') AS v;",
+    "sqlite_sql": "SELECT NULL::INTEGER = ALL('{}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-43-unknown-null-array",
+    "source_kind": "synthetic",
+    "shape": "unknown-null-array",
+    "sql": "SELECT 2 = SOME(NULL) AS v;",
+    "sqlite_sql": "SELECT 2 = SOME(NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null
+  },
+  {
+    "id": "array-quantified-44-unknown-null-scalar",
+    "source_kind": "synthetic",
+    "shape": "unknown-null-scalar",
+    "sql": "SELECT NULL = ANY(ARRAY[1,2]) AS v;",
+    "sqlite_sql": "SELECT NULL = ANY(ARRAY[1,2]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null
+  },
+  {
+    "id": "array-quantified-45-both-unknown-text",
+    "source_kind": "synthetic",
+    "shape": "both-unknown-text",
+    "sql": "SELECT 'b' = ANY('{a,b}') AS v;",
+    "sqlite_sql": "SELECT 'b' = ANY('{a,b}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-46-anonymous-order",
+    "source_kind": "synthetic",
+    "shape": "anonymous-order",
+    "sql": "SELECT ? = ANY(ARRAY[?,?]) AS v;",
+    "sqlite_sql": "SELECT ? = ANY(ARRAY[?,?]) AS v;",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      5,
+      1,
+      5
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-47-numbered-reorder-repeat",
+    "source_kind": "synthetic",
+    "shape": "numbered-reorder-repeat",
+    "sql": "SELECT $2 = SOME(ARRAY[$1,$2,$1]) AS v;",
+    "sqlite_sql": "SELECT ?2 = SOME(ARRAY[?1,?2,?1]) AS v;",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      4,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-48-nullable-array-binding",
+    "source_kind": "synthetic",
+    "shape": "nullable-array-binding",
+    "sql": "SELECT $1 <> ALL($2) AS v;",
+    "sqlite_sql": "SELECT ?1 <> ALL(?2) AS v;",
+    "parameter_types": "int?,int[]?",
+    "parameter_values": [
+      1,
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null
+  },
+  {
+    "id": "array-quantified-49-numeric-array-binding",
+    "source_kind": "synthetic",
+    "shape": "numeric-array-binding",
+    "sql": "SELECT $1 < ANY($2) AS v;",
+    "sqlite_sql": "SELECT ?1 < ANY(?2) AS v;",
+    "parameter_types": "bigint,numeric[]",
+    "parameter_values": [
+      3,
+      "{2.5,4.5}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  },
+  {
+    "id": "array-quantified-50-multiple-quantifiers-bindings",
+    "source_kind": "synthetic",
+    "shape": "multiple-quantifiers-bindings",
+    "sql": "SELECT ($2 = ANY($1)) AND ($2 < ALL($3)) AS v;",
+    "sqlite_sql": "SELECT (?2 = ANY(?1)) AND (?2 < ALL(?3)) AS v;",
+    "parameter_types": "int[],int,int[]",
+    "parameter_values": [
+      "{1,4}",
+      4,
+      "{5,6}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true"
+  }
+]

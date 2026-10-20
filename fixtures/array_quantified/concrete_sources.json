@@ -1,0 +1,1223 @@
+{
+  "format_version": 1,
+  "factor": "array_quantified",
+  "expected_count": 50,
+  "expected_sources": {
+    "hatchet": 29,
+    "postgres": 18,
+    "sqlc": 3
+  },
+  "sources": {
+    "hatchet": {
+      "repository": "https://github.com/hatchet-dev/hatchet",
+      "commit": "392e7c472221cdab235cca674640e98f904e1ea0",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/hatchet-LICENSE.txt",
+      "license_sha256": "7388b34bd1ad4b9db3c72dcb73f434ea27c88e5ca8f02a24d4f970c906d79be3",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "pkg/repository/sqlcv1/concurrency.sql.go",
+          "sha256": "d810142f2d50d94b20b2198a6a34184060ebe22927fee0320dc645968cf7d637",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/concurrency.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/filters.sql.go",
+          "sha256": "80580a1ef9a0fa6939d5f92ed2aba10590e146585a32a936b099a6a3fa5ef498",
+          "local_path": "fixtures/statement_families/sources/hatchet/pkg/repository/sqlcv1/filters.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/olap.sql.go",
+          "sha256": "b6c819d1f09a5c8fbbba708577a8d914c4f7181ecb0bea2b4603cdbca9452233",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/olap.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/queue.sql.go",
+          "sha256": "af5416c8ea8ea8ad39857d80ee19b840568e9275f716091ec7158c778c07460f",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/queue.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/rate_limits.sql.go",
+          "sha256": "c25ca99ad67d04446c7a378d665c938b22aca91e5dbf70061a71a83ba5a9acee",
+          "local_path": "fixtures/statement_families/sources/hatchet/pkg/repository/sqlcv1/rate_limits.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/tasks.sql.go",
+          "sha256": "b439f6e7e5642fb90e79d61e568ceb849ded87c86d04aa1e093b9d78240979e4",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/tasks.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/triggers.sql.go",
+          "sha256": "247e2242f4b7720b885321841d3c5c09ef536eb2d61f9dc4fe6847b786956e19",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/triggers.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/workers.sql.go",
+          "sha256": "66b3e2518cab2f497148ab2c524167305db1cfbf76eac48e2a946014c3a8b4d5",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/workers.sql.go"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/workflows.sql.go",
+          "sha256": "0dd7b734ad4688e380ad82330b391c8cb8a7b1fe7e8d0eba9566728b1e561ed0",
+          "local_path": "fixtures/extended_types/sources/hatchet/pkg/repository/sqlcv1/workflows.sql.go"
+        }
+      ]
+    },
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/arrays.sql",
+          "sha256": "9d4ce22f3dfe91ccc0426d2599149d66f8e1d09f5b2d42034d19136971cd9279",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/arrays.sql"
+        },
+        {
+          "path": "src/test/regress/sql/create_view.sql",
+          "sha256": "91ec903766d666d8263b3921aa69c6b646e6993d2eeccac17d74690cc89ca0a9",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/create_view.sql"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/any/pgx/v5/query.sql",
+          "sha256": "773d78ee79b8cd0521bd5f780d2891efeb282de370c6c9bab44576802d1246bf",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/any/pgx/v5/query.sql"
+        },
+        {
+          "path": "internal/sql/preprocess/testdata/postgresql/slice_is_an_array/output.sql",
+          "sha256": "e2f59d65c5d5098879eaac8808ec5f68ae80eba92d8afb57048588436ac19059",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/sql/preprocess/testdata/postgresql/slice_is_an_array/output.sql"
+        },
+        {
+          "path": "internal/sql/preprocess/testdata/postgresql/slice_string_constant/output.sql",
+          "sha256": "a56d472a7e8e6ceb1a990c6bd26ad941874db91b2b6e77c87f47e53b7d7502ad",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/sql/preprocess/testdata/postgresql/slice_string_constant/output.sql"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/concurrency.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTenantConcurrencyStrategiesByIds"
+      },
+      "sql_sha256": "eecc7af2ab4173da1708c6efab7ef642b1d54ccd79e60e57236b7e0ba117d3fc",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/concurrency.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTenantConcurrencyStrategiesByNames"
+      },
+      "sql_sha256": "988ef80d6f094a8eee49e98ac0889fa9dcc9a3b2f8d1ec0dcf8316b46c17021d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/concurrency.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listConcurrencyStrategiesByStepId"
+      },
+      "sql_sha256": "2cdbb96c22d65d2e16e00958c036a0560a2c759f8dedc0cc98fbbfb33614a5eb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/filters.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listFilters"
+      },
+      "sql_sha256": "fc3b5951a874ea30e5c1db95d1e7ea5f85d7cf496b6f2211b2e251bccd61d25a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          },
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTasksByExternalIds"
+      },
+      "sql_sha256": "997e9dc1c3fd038509604972d78f86600a4eeb0b104890fd5214d41c3637ef75",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "readPayloadsOLAP"
+      },
+      "sql_sha256": "a50ae8ffb4f56d56ccbe79b7b8a04b92f694692d0a6e03dcccc3c45b5b776723",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getBatchedQueueItemsByIds"
+      },
+      "sql_sha256": "5cd9870602038da029a9114fafd0cc5ec55466fdd08ed70e260412176a0b43a0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getDesiredLabels"
+      },
+      "sql_sha256": "d7ebbcbf4b1d3de9097ef4f2700005630874f861f4b9dcdbaa2650b33d2e4c64",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getStepSlotRequests"
+      },
+      "sql_sha256": "39e380b543eac757d975aee451b2665d67a10cb90c3f09417fd78603663c8ded",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listActionsForWorkersLegacyFallback"
+      },
+      "sql_sha256": "c431ff479ca514a8b02bd0f6e5336253ec04ec9b7a069bcff724860dbedd1b29",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listBatchedQueueItemsForStep"
+      },
+      "sql_sha256": "6d653b3953ab4bb2c5657ba3a263a004c0d83a6f0cb9945e352e49cba4b2e16c",
+      "observed_syntax": {
+        "function_names": [
+          "array_length"
+        ],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "array_quantified": [
+          {
+            "operator": "<>",
+            "source_operator": "!=",
+            "quantifier": "all",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listExistingBatchedQueueItemIds"
+      },
+      "sql_sha256": "48d589f1f39c7304bf9cfc82e3c0cf6027981f62d9c2f34c26c8c38ca298532d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listLiveWorkerActionHashes"
+      },
+      "sql_sha256": "8d52029dcd303f20e87e5fd810c99dbc94fd784e6164e2a187cac0ef9048db21",
+      "observed_syntax": {
+        "function_names": [
+          "now"
+        ],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listStepsWithBatchConfig"
+      },
+      "sql_sha256": "d3e9095de58ca9015fec3c2ce42416e9b749bd18c33f3a53359548fc5791bec3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/rate_limits.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listRateLimitsForSteps"
+      },
+      "sql_sha256": "0add85d1c4d59a3830429fa77d2bf06eb08c5c9a15b5cd19f2d124fc84c5e782",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tasks.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTasks"
+      },
+      "sql_sha256": "825d94e83dd2e39a7b4ec77167b3f603a3b1d6b451ba8e9a275111d2cf397a94",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/tasks.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "lookupExternalIds"
+      },
+      "sql_sha256": "c248be234814e27d428bd9d7abd852e9fb85251b65744469635a1610901068a9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/triggers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listWorkflowsByNames"
+      },
+      "sql_sha256": "0334445c602120959eff60e492171e466f840c364a1694718c5c7a6905072358",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getWorkerActionsByWorkerId"
+      },
+      "sql_sha256": "3c95492247caf75b5c74a096fd8ed0be5cab744bac56d94bb4e457363126d084",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listActionsByActionIds"
+      },
+      "sql_sha256": "26bedca151a784b228934975cbdfb5d8eddba29ac5058f29ac1516525beeb5fe",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listDispatcherIdsForWorkers"
+      },
+      "sql_sha256": "7342789f7aaac83dddfe2fecf55c0f390129a70fb1d32cb14bc75f17f02d0023",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listManyWorkerLabels"
+      },
+      "sql_sha256": "be5ee03bc568075e68aa932f761d991aef7ddee544968f00c4578589ca68f5dd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listWorkerLabels"
+      },
+      "sql_sha256": "1423bf5befa17eb4cb366c9c9ead71457eec81681fc23bfa947d9143444b5f0a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listWorkerSlotConfigs"
+      },
+      "sql_sha256": "194b1446b935770856a1c964003dadb0c18325f2f7eda8d1857720db0b66532f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getLatestWorkflowVersionForWorkflows"
+      },
+      "sql_sha256": "f1ecd68024b9cb870eaebc61afe3f9946ebd0a5a8431cdd9354f389adeb46b6d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getWorkflowVersionForEngine"
+      },
+      "sql_sha256": "f9003420e769fe72d48e87c5bdd88e3f9960724f4fa4d6e1ae487d4cef544f88",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listStepMatchConditions"
+      },
+      "sql_sha256": "fe3a284a3ccfc8777973e091cfec87f6563408491ab7ae21a4992175aca3a989",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listWorkflowNamesByIds"
+      },
+      "sql_sha256": "f06f0e0f26a1824f24f2de72b5d41a0d1d400aba0630f0fde6be261441d2a852",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listWorkflowVersionsByIds"
+      },
+      "sql_sha256": "97c16bfc337e6e3f981234d915d1d39030ff0a62384375b0758684a928687eaf",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/any/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19,
+        "end": 67,
+        "statement_index": 0
+      },
+      "sql_sha256": "750dbdce6dd2761e7b81d1c0722e0d7241d669f4585d230e5919b36868d61432",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/sql/preprocess/testdata/postgresql/slice_is_an_array/output.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 0,
+        "end": 40,
+        "statement_index": 0
+      },
+      "sql_sha256": "f645148fda1f64db3323ec00173fa9bf737ec0c99b1ddf2bb0d8d31c7297bcac",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "ParamRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/sql/preprocess/testdata/postgresql/slice_string_constant/output.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 0,
+        "end": 39,
+        "statement_index": 0
+      },
+      "sql_sha256": "952721c21d0247601b7284fa0340361051cd30b279032095b26d39c0bd998e30",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "ParamRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13743,
+        "end": 13771,
+        "statement_index": 202
+      },
+      "sql_sha256": "66aed14312c51e147729150eda4af462a6622d88cc38a822602c3e02fe2a6c61",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13772,
+        "end": 13801,
+        "statement_index": 203
+      },
+      "sql_sha256": "e8609088d2818a9ef19ea8c8009eaabdceb8cb874633eac0d799143e7158993d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13802,
+        "end": 13831,
+        "statement_index": 204
+      },
+      "sql_sha256": "1812230d99edcdb9a9ddd66a54f1c591dc3849b4e34bc9ab6328c18f9be72b96",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "all",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13832,
+        "end": 13862,
+        "statement_index": 205
+      },
+      "sql_sha256": "90e697091fa356eef1175eb96a07639eb41aa72903b2d4f5663c9c7a9c14e588",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": ">=",
+            "source_operator": ">=",
+            "quantifier": "all",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13881,
+        "end": 13918,
+        "statement_index": 206
+      },
+      "sql_sha256": "fe7b116a5259470a35fcd3eb997fe60d31a1edf080e29fcca299921c6e10631c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": ">=",
+            "source_operator": ">=",
+            "quantifier": "all",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13919,
+        "end": 13950,
+        "statement_index": 207
+      },
+      "sql_sha256": "351550d7d53dd81f1afc90937aa34e7beac9c7225fa47bf2fa0f5234b562ec67",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": ">=",
+            "source_operator": ">=",
+            "quantifier": "all",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13951,
+        "end": 13982,
+        "statement_index": 208
+      },
+      "sql_sha256": "b8afe9f1cbb2fb7bb289b42c421f5ac99dda5fb27e95324fb93a68d296484444",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": ">=",
+            "source_operator": ">=",
+            "quantifier": "any",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14001,
+        "end": 14034,
+        "statement_index": 209
+      },
+      "sql_sha256": "0c26d7c82d3d05e94b70c4329c8e2859a180f6e43eea5885bacf4c67b5a676bf",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "A_ArrayExpr"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14035,
+        "end": 14068,
+        "statement_index": 210
+      },
+      "sql_sha256": "f5408082bb99480f3ee509eb5c5afd90f4d736a8d4bc9b86eb5e15289369be5e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": ">",
+            "source_operator": ">",
+            "quantifier": "all",
+            "right_form": "A_ArrayExpr"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14139,
+        "end": 14169,
+        "statement_index": 213
+      },
+      "sql_sha256": "a6d543f16a21a5133685915e226e713df121ffe7b159247c9ba506d50f142770",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14170,
+        "end": 14205,
+        "statement_index": 214
+      },
+      "sql_sha256": "e03931ce281484b7c3cf47bf776ac56f618b95194e36862ff64104619a41634f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14206,
+        "end": 14237,
+        "statement_index": 215
+      },
+      "sql_sha256": "d4b363d8619e543aa5ac22defc97114fc548f5652d96d0993998b284621d8f1d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14238,
+        "end": 14270,
+        "statement_index": 216
+      },
+      "sql_sha256": "1112e48b8a810bc2483342d02b48e6ad8ec8eef55e419b2944d83142674b2c21",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14271,
+        "end": 14301,
+        "statement_index": 217
+      },
+      "sql_sha256": "8580eb747b9c7ff3a51a8a5cfe3cbe12ca2bd44747ff703fa1d6bac69557de39",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "all",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14302,
+        "end": 14337,
+        "statement_index": 218
+      },
+      "sql_sha256": "83a270620e28434e27ec188b50242bf0be9f24e23017ebb0acdb68a992c43591",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "all",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14338,
+        "end": 14369,
+        "statement_index": 219
+      },
+      "sql_sha256": "2ef668cdaf3d6587835d9e40a2333cfaa8612e5f79f6e03373f764e3246132f8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "all",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14370,
+        "end": 14403,
+        "statement_index": 220
+      },
+      "sql_sha256": "7843cf56a507e5744ce26bc450c3b0e2f1d1bdfc9f9a74f7ae0ecaf42e3edfc9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "all",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_view.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 21708,
+        "end": 21767,
+        "statement_index": 274
+      },
+      "sql_sha256": "a6c4615d412991c455444370a72d55d2b341d18ff4c45b709c67d85ce1c79442",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_quantified": [
+          {
+            "operator": "=",
+            "source_operator": "=",
+            "quantifier": "any",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    }
+  ]
+}

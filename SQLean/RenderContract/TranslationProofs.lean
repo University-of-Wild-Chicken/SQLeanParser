@@ -25,6 +25,8 @@ mutual
     | parameter parameter => simp only [translateExpr, translateParameter_idempotent]
     | column qualifier name => simp only [translateExpr]
     | binary op left right => simp only [translateExpr, translateExpr_idempotent left, translateExpr_idempotent right]
+    | quantifiedComparison op quantifier left right =>
+        simp only [translateExpr, translateExpr_idempotent left, translateExpr_idempotent right]
     | unary op arg => simp only [translateExpr, translateExpr_idempotent arg]
     | countAll => simp only [translateExpr]
     | aggregate fn arg distinct => simp only [translateExpr, translateExpr_idempotent arg]

@@ -48,6 +48,8 @@ import Tests.ArrayTypeContract
 import Tests.ArrayTypeRendering
 import Tests.ArrayConstructorContract
 import Tests.ArrayConstructorRendering
+import Tests.ArrayQuantifiedContract
+import Tests.ArrayQuantifiedRendering
 
 namespace SQLean.Tests
 
@@ -150,6 +152,12 @@ def run : IO Unit := do
   IO.println s!"PASS: {arrayConstructorCorpus} ARRAY constructor full-query certificates"
   let arrayConstructorRendering ← arrayConstructorRenderingTests
   IO.println s!"PASS: {arrayConstructorRendering} ARRAY constructor parsing and rendering checks"
+  let arrayQuantifiedContract ← arrayQuantifiedContractTests
+  IO.println s!"PASS: {arrayQuantifiedContract} quantified array validity and operator checks"
+  let arrayQuantifiedCorpus ← arrayQuantifiedCorpusTests
+  IO.println s!"PASS: {arrayQuantifiedCorpus} quantified array full-query certificates"
+  let arrayQuantifiedRendering ← arrayQuantifiedRenderingTests
+  IO.println s!"PASS: {arrayQuantifiedRendering} quantified array parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

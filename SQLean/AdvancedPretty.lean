@@ -44,6 +44,11 @@ def DataType.toSql (type : DataType) : String :=
 private def binSql : BinOp → String
   | .eq => "=" | .ne => "<>" | .lt => "<" | .le => "<=" | .gt => ">" | .ge => ">="
   | .and => "AND" | .or => "OR" | .add => "+" | .sub => "-" | .mul => "*" | .div => "/"
+def ComparisonOp.toSql : ComparisonOp → String
+  | .eq => "=" | .ne => "<>" | .lt => "<" | .le => "<=" | .gt => ">" | .ge => ">="
+
+def ArrayQuantifier.toSql : ArrayQuantifier → String
+  | .any => "ANY" | .some => "SOME" | .all => "ALL"
 private def aggregateSql : AggregateFn → String
   | .count => "COUNT" | .sum => "SUM" | .avg => "AVG" | .min => "MIN" | .max => "MAX"
 private def joinSql : JoinKind → String
@@ -69,6 +74,9 @@ mutual
     | .parameter (.anonymous index) => if pg then "$" ++ toString index else "?"
     | .column qualifier name => (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ quoteName name
     | .binary op l r => paren (exprSql pg l ++ " " ++ binSql op ++ " " ++ exprSql pg r)
+    | .quantifiedComparison op quantifier left right =>
+        paren (exprSql pg left ++ " " ++ op.toSql ++ " " ++ quantifier.toSql ++
+          paren (exprSql pg right))
     | .unary op arg => paren ((match op with | .pos => "+" | .neg => "-" | .not => "NOT ") ++ exprSql pg arg)
     | .countAll => "COUNT(*)"
     | .aggregate fn arg distinct => aggregateSql fn ++ paren ((if distinct then "DISTINCT " else "") ++ exprSql pg arg)

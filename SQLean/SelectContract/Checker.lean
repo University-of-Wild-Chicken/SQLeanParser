@@ -213,6 +213,15 @@ mutual
               "CASE requires Boolean conditions and branches with one implicit common result type")
           | some result => .ok ⟨some result, operandTyped.uses ++ branchesTyped.uses ++ otherwiseTyped.uses,
               .caseExpr operandTyped.valid branchesTyped.valid otherwiseTyped.valid signature⟩
+      | .quantifiedComparison op quantifier left right => do
+          let leftTyped ← checkExpr fuel params scope left
+          let rightTyped ← checkExpr fuel params scope right
+          match signature : quantifiedComparisonSignature op
+              (scalarInput left leftTyped.type) (scalarInput right rightTyped.type) with
+          | none => .error (invalid "quantified_comparison_signature"
+              "ANY/SOME/ALL requires a scalar Boolean comparison operator and an array or contextually typed unknown RHS")
+          | some _selected => .ok ⟨some ⟨.bool, true⟩, leftTyped.uses ++ rightTyped.uses,
+              .quantifiedComparison (quantifier := quantifier) leftTyped.valid rightTyped.valid signature⟩
       | .inList a values => do
           if nonempty : values ≠ [] then
             let arg ← checkExpr fuel params scope a
@@ -520,7 +529,8 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
     | .countAll | .aggregate .. | .filteredAggregate .. => pure true
     | _ =>
       let children : List Advanced.Expr := match expr with
-        | .binary _ a b | .pattern a b _ | .nullIf a b => [a, b]
+        | .binary _ a b | .pattern a b _ | .nullIf a b
+        | .quantifiedComparison _ _ a b => [a, b]
         | .unary _ a | .cast a _ | .isNull a _ | .inQuery a _ => [a]
         | .array args | .call _ args | .coalesce args | .greatest args | .least args => args
         | .caseExpr operand branches otherwise =>

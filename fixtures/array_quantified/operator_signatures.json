@@ -1,0 +1,962 @@
+[
+  {
+    "operator": "=",
+    "left": "smallint",
+    "right": "smallint"
+  },
+  {
+    "operator": "=",
+    "left": "smallint",
+    "right": "integer"
+  },
+  {
+    "operator": "=",
+    "left": "smallint",
+    "right": "bigint"
+  },
+  {
+    "operator": "=",
+    "left": "integer",
+    "right": "smallint"
+  },
+  {
+    "operator": "=",
+    "left": "integer",
+    "right": "integer"
+  },
+  {
+    "operator": "=",
+    "left": "integer",
+    "right": "bigint"
+  },
+  {
+    "operator": "=",
+    "left": "bigint",
+    "right": "smallint"
+  },
+  {
+    "operator": "=",
+    "left": "bigint",
+    "right": "integer"
+  },
+  {
+    "operator": "=",
+    "left": "bigint",
+    "right": "bigint"
+  },
+  {
+    "operator": "=",
+    "left": "real",
+    "right": "real"
+  },
+  {
+    "operator": "=",
+    "left": "real",
+    "right": "double precision"
+  },
+  {
+    "operator": "=",
+    "left": "double precision",
+    "right": "real"
+  },
+  {
+    "operator": "=",
+    "left": "double precision",
+    "right": "double precision"
+  },
+  {
+    "operator": "=",
+    "left": "date",
+    "right": "date"
+  },
+  {
+    "operator": "=",
+    "left": "date",
+    "right": "timestamp"
+  },
+  {
+    "operator": "=",
+    "left": "date",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "=",
+    "left": "timestamp",
+    "right": "date"
+  },
+  {
+    "operator": "=",
+    "left": "timestamp",
+    "right": "timestamp"
+  },
+  {
+    "operator": "=",
+    "left": "timestamp",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "=",
+    "left": "timestamp with time zone",
+    "right": "date"
+  },
+  {
+    "operator": "=",
+    "left": "timestamp with time zone",
+    "right": "timestamp"
+  },
+  {
+    "operator": "=",
+    "left": "timestamp with time zone",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "=",
+    "left": "numeric",
+    "right": "numeric"
+  },
+  {
+    "operator": "=",
+    "left": "text",
+    "right": "text"
+  },
+  {
+    "operator": "=",
+    "left": "char",
+    "right": "char"
+  },
+  {
+    "operator": "=",
+    "left": "boolean",
+    "right": "boolean"
+  },
+  {
+    "operator": "=",
+    "left": "time",
+    "right": "time"
+  },
+  {
+    "operator": "=",
+    "left": "time with time zone",
+    "right": "time with time zone"
+  },
+  {
+    "operator": "=",
+    "left": "interval",
+    "right": "interval"
+  },
+  {
+    "operator": "=",
+    "left": "uuid",
+    "right": "uuid"
+  },
+  {
+    "operator": "=",
+    "left": "jsonb",
+    "right": "jsonb"
+  },
+  {
+    "operator": "=",
+    "left": "bytea",
+    "right": "bytea"
+  },
+  {
+    "operator": "<>",
+    "left": "smallint",
+    "right": "smallint"
+  },
+  {
+    "operator": "<>",
+    "left": "smallint",
+    "right": "integer"
+  },
+  {
+    "operator": "<>",
+    "left": "smallint",
+    "right": "bigint"
+  },
+  {
+    "operator": "<>",
+    "left": "integer",
+    "right": "smallint"
+  },
+  {
+    "operator": "<>",
+    "left": "integer",
+    "right": "integer"
+  },
+  {
+    "operator": "<>",
+    "left": "integer",
+    "right": "bigint"
+  },
+  {
+    "operator": "<>",
+    "left": "bigint",
+    "right": "smallint"
+  },
+  {
+    "operator": "<>",
+    "left": "bigint",
+    "right": "integer"
+  },
+  {
+    "operator": "<>",
+    "left": "bigint",
+    "right": "bigint"
+  },
+  {
+    "operator": "<>",
+    "left": "real",
+    "right": "real"
+  },
+  {
+    "operator": "<>",
+    "left": "real",
+    "right": "double precision"
+  },
+  {
+    "operator": "<>",
+    "left": "double precision",
+    "right": "real"
+  },
+  {
+    "operator": "<>",
+    "left": "double precision",
+    "right": "double precision"
+  },
+  {
+    "operator": "<>",
+    "left": "date",
+    "right": "date"
+  },
+  {
+    "operator": "<>",
+    "left": "date",
+    "right": "timestamp"
+  },
+  {
+    "operator": "<>",
+    "left": "date",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "<>",
+    "left": "timestamp",
+    "right": "date"
+  },
+  {
+    "operator": "<>",
+    "left": "timestamp",
+    "right": "timestamp"
+  },
+  {
+    "operator": "<>",
+    "left": "timestamp",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "<>",
+    "left": "timestamp with time zone",
+    "right": "date"
+  },
+  {
+    "operator": "<>",
+    "left": "timestamp with time zone",
+    "right": "timestamp"
+  },
+  {
+    "operator": "<>",
+    "left": "timestamp with time zone",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "<>",
+    "left": "numeric",
+    "right": "numeric"
+  },
+  {
+    "operator": "<>",
+    "left": "text",
+    "right": "text"
+  },
+  {
+    "operator": "<>",
+    "left": "char",
+    "right": "char"
+  },
+  {
+    "operator": "<>",
+    "left": "boolean",
+    "right": "boolean"
+  },
+  {
+    "operator": "<>",
+    "left": "time",
+    "right": "time"
+  },
+  {
+    "operator": "<>",
+    "left": "time with time zone",
+    "right": "time with time zone"
+  },
+  {
+    "operator": "<>",
+    "left": "interval",
+    "right": "interval"
+  },
+  {
+    "operator": "<>",
+    "left": "uuid",
+    "right": "uuid"
+  },
+  {
+    "operator": "<>",
+    "left": "jsonb",
+    "right": "jsonb"
+  },
+  {
+    "operator": "<>",
+    "left": "bytea",
+    "right": "bytea"
+  },
+  {
+    "operator": "<",
+    "left": "smallint",
+    "right": "smallint"
+  },
+  {
+    "operator": "<",
+    "left": "smallint",
+    "right": "integer"
+  },
+  {
+    "operator": "<",
+    "left": "smallint",
+    "right": "bigint"
+  },
+  {
+    "operator": "<",
+    "left": "integer",
+    "right": "smallint"
+  },
+  {
+    "operator": "<",
+    "left": "integer",
+    "right": "integer"
+  },
+  {
+    "operator": "<",
+    "left": "integer",
+    "right": "bigint"
+  },
+  {
+    "operator": "<",
+    "left": "bigint",
+    "right": "smallint"
+  },
+  {
+    "operator": "<",
+    "left": "bigint",
+    "right": "integer"
+  },
+  {
+    "operator": "<",
+    "left": "bigint",
+    "right": "bigint"
+  },
+  {
+    "operator": "<",
+    "left": "real",
+    "right": "real"
+  },
+  {
+    "operator": "<",
+    "left": "real",
+    "right": "double precision"
+  },
+  {
+    "operator": "<",
+    "left": "double precision",
+    "right": "real"
+  },
+  {
+    "operator": "<",
+    "left": "double precision",
+    "right": "double precision"
+  },
+  {
+    "operator": "<",
+    "left": "date",
+    "right": "date"
+  },
+  {
+    "operator": "<",
+    "left": "date",
+    "right": "timestamp"
+  },
+  {
+    "operator": "<",
+    "left": "date",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "<",
+    "left": "timestamp",
+    "right": "date"
+  },
+  {
+    "operator": "<",
+    "left": "timestamp",
+    "right": "timestamp"
+  },
+  {
+    "operator": "<",
+    "left": "timestamp",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "<",
+    "left": "timestamp with time zone",
+    "right": "date"
+  },
+  {
+    "operator": "<",
+    "left": "timestamp with time zone",
+    "right": "timestamp"
+  },
+  {
+    "operator": "<",
+    "left": "timestamp with time zone",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "<",
+    "left": "numeric",
+    "right": "numeric"
+  },
+  {
+    "operator": "<",
+    "left": "text",
+    "right": "text"
+  },
+  {
+    "operator": "<",
+    "left": "char",
+    "right": "char"
+  },
+  {
+    "operator": "<",
+    "left": "boolean",
+    "right": "boolean"
+  },
+  {
+    "operator": "<",
+    "left": "time",
+    "right": "time"
+  },
+  {
+    "operator": "<",
+    "left": "time with time zone",
+    "right": "time with time zone"
+  },
+  {
+    "operator": "<",
+    "left": "interval",
+    "right": "interval"
+  },
+  {
+    "operator": "<",
+    "left": "uuid",
+    "right": "uuid"
+  },
+  {
+    "operator": "<",
+    "left": "jsonb",
+    "right": "jsonb"
+  },
+  {
+    "operator": "<",
+    "left": "bytea",
+    "right": "bytea"
+  },
+  {
+    "operator": "<=",
+    "left": "smallint",
+    "right": "smallint"
+  },
+  {
+    "operator": "<=",
+    "left": "smallint",
+    "right": "integer"
+  },
+  {
+    "operator": "<=",
+    "left": "smallint",
+    "right": "bigint"
+  },
+  {
+    "operator": "<=",
+    "left": "integer",
+    "right": "smallint"
+  },
+  {
+    "operator": "<=",
+    "left": "integer",
+    "right": "integer"
+  },
+  {
+    "operator": "<=",
+    "left": "integer",
+    "right": "bigint"
+  },
+  {
+    "operator": "<=",
+    "left": "bigint",
+    "right": "smallint"
+  },
+  {
+    "operator": "<=",
+    "left": "bigint",
+    "right": "integer"
+  },
+  {
+    "operator": "<=",
+    "left": "bigint",
+    "right": "bigint"
+  },
+  {
+    "operator": "<=",
+    "left": "real",
+    "right": "real"
+  },
+  {
+    "operator": "<=",
+    "left": "real",
+    "right": "double precision"
+  },
+  {
+    "operator": "<=",
+    "left": "double precision",
+    "right": "real"
+  },
+  {
+    "operator": "<=",
+    "left": "double precision",
+    "right": "double precision"
+  },
+  {
+    "operator": "<=",
+    "left": "date",
+    "right": "date"
+  },
+  {
+    "operator": "<=",
+    "left": "date",
+    "right": "timestamp"
+  },
+  {
+    "operator": "<=",
+    "left": "date",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "<=",
+    "left": "timestamp",
+    "right": "date"
+  },
+  {
+    "operator": "<=",
+    "left": "timestamp",
+    "right": "timestamp"
+  },
+  {
+    "operator": "<=",
+    "left": "timestamp",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "<=",
+    "left": "timestamp with time zone",
+    "right": "date"
+  },
+  {
+    "operator": "<=",
+    "left": "timestamp with time zone",
+    "right": "timestamp"
+  },
+  {
+    "operator": "<=",
+    "left": "timestamp with time zone",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": "<=",
+    "left": "numeric",
+    "right": "numeric"
+  },
+  {
+    "operator": "<=",
+    "left": "text",
+    "right": "text"
+  },
+  {
+    "operator": "<=",
+    "left": "char",
+    "right": "char"
+  },
+  {
+    "operator": "<=",
+    "left": "boolean",
+    "right": "boolean"
+  },
+  {
+    "operator": "<=",
+    "left": "time",
+    "right": "time"
+  },
+  {
+    "operator": "<=",
+    "left": "time with time zone",
+    "right": "time with time zone"
+  },
+  {
+    "operator": "<=",
+    "left": "interval",
+    "right": "interval"
+  },
+  {
+    "operator": "<=",
+    "left": "uuid",
+    "right": "uuid"
+  },
+  {
+    "operator": "<=",
+    "left": "jsonb",
+    "right": "jsonb"
+  },
+  {
+    "operator": "<=",
+    "left": "bytea",
+    "right": "bytea"
+  },
+  {
+    "operator": ">",
+    "left": "smallint",
+    "right": "smallint"
+  },
+  {
+    "operator": ">",
+    "left": "smallint",
+    "right": "integer"
+  },
+  {
+    "operator": ">",
+    "left": "smallint",
+    "right": "bigint"
+  },
+  {
+    "operator": ">",
+    "left": "integer",
+    "right": "smallint"
+  },
+  {
+    "operator": ">",
+    "left": "integer",
+    "right": "integer"
+  },
+  {
+    "operator": ">",
+    "left": "integer",
+    "right": "bigint"
+  },
+  {
+    "operator": ">",
+    "left": "bigint",
+    "right": "smallint"
+  },
+  {
+    "operator": ">",
+    "left": "bigint",
+    "right": "integer"
+  },
+  {
+    "operator": ">",
+    "left": "bigint",
+    "right": "bigint"
+  },
+  {
+    "operator": ">",
+    "left": "real",
+    "right": "real"
+  },
+  {
+    "operator": ">",
+    "left": "real",
+    "right": "double precision"
+  },
+  {
+    "operator": ">",
+    "left": "double precision",
+    "right": "real"
+  },
+  {
+    "operator": ">",
+    "left": "double precision",
+    "right": "double precision"
+  },
+  {
+    "operator": ">",
+    "left": "date",
+    "right": "date"
+  },
+  {
+    "operator": ">",
+    "left": "date",
+    "right": "timestamp"
+  },
+  {
+    "operator": ">",
+    "left": "date",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": ">",
+    "left": "timestamp",
+    "right": "date"
+  },
+  {
+    "operator": ">",
+    "left": "timestamp",
+    "right": "timestamp"
+  },
+  {
+    "operator": ">",
+    "left": "timestamp",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": ">",
+    "left": "timestamp with time zone",
+    "right": "date"
+  },
+  {
+    "operator": ">",
+    "left": "timestamp with time zone",
+    "right": "timestamp"
+  },
+  {
+    "operator": ">",
+    "left": "timestamp with time zone",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": ">",
+    "left": "numeric",
+    "right": "numeric"
+  },
+  {
+    "operator": ">",
+    "left": "text",
+    "right": "text"
+  },
+  {
+    "operator": ">",
+    "left": "char",
+    "right": "char"
+  },
+  {
+    "operator": ">",
+    "left": "boolean",
+    "right": "boolean"
+  },
+  {
+    "operator": ">",
+    "left": "time",
+    "right": "time"
+  },
+  {
+    "operator": ">",
+    "left": "time with time zone",
+    "right": "time with time zone"
+  },
+  {
+    "operator": ">",
+    "left": "interval",
+    "right": "interval"
+  },
+  {
+    "operator": ">",
+    "left": "uuid",
+    "right": "uuid"
+  },
+  {
+    "operator": ">",
+    "left": "jsonb",
+    "right": "jsonb"
+  },
+  {
+    "operator": ">",
+    "left": "bytea",
+    "right": "bytea"
+  },
+  {
+    "operator": ">=",
+    "left": "smallint",
+    "right": "smallint"
+  },
+  {
+    "operator": ">=",
+    "left": "smallint",
+    "right": "integer"
+  },
+  {
+    "operator": ">=",
+    "left": "smallint",
+    "right": "bigint"
+  },
+  {
+    "operator": ">=",
+    "left": "integer",
+    "right": "smallint"
+  },
+  {
+    "operator": ">=",
+    "left": "integer",
+    "right": "integer"
+  },
+  {
+    "operator": ">=",
+    "left": "integer",
+    "right": "bigint"
+  },
+  {
+    "operator": ">=",
+    "left": "bigint",
+    "right": "smallint"
+  },
+  {
+    "operator": ">=",
+    "left": "bigint",
+    "right": "integer"
+  },
+  {
+    "operator": ">=",
+    "left": "bigint",
+    "right": "bigint"
+  },
+  {
+    "operator": ">=",
+    "left": "real",
+    "right": "real"
+  },
+  {
+    "operator": ">=",
+    "left": "real",
+    "right": "double precision"
+  },
+  {
+    "operator": ">=",
+    "left": "double precision",
+    "right": "real"
+  },
+  {
+    "operator": ">=",
+    "left": "double precision",
+    "right": "double precision"
+  },
+  {
+    "operator": ">=",
+    "left": "date",
+    "right": "date"
+  },
+  {
+    "operator": ">=",
+    "left": "date",
+    "right": "timestamp"
+  },
+  {
+    "operator": ">=",
+    "left": "date",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": ">=",
+    "left": "timestamp",
+    "right": "date"
+  },
+  {
+    "operator": ">=",
+    "left": "timestamp",
+    "right": "timestamp"
+  },
+  {
+    "operator": ">=",
+    "left": "timestamp",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": ">=",
+    "left": "timestamp with time zone",
+    "right": "date"
+  },
+  {
+    "operator": ">=",
+    "left": "timestamp with time zone",
+    "right": "timestamp"
+  },
+  {
+    "operator": ">=",
+    "left": "timestamp with time zone",
+    "right": "timestamp with time zone"
+  },
+  {
+    "operator": ">=",
+    "left": "numeric",
+    "right": "numeric"
+  },
+  {
+    "operator": ">=",
+    "left": "text",
+    "right": "text"
+  },
+  {
+    "operator": ">=",
+    "left": "char",
+    "right": "char"
+  },
+  {
+    "operator": ">=",
+    "left": "boolean",
+    "right": "boolean"
+  },
+  {
+    "operator": ">=",
+    "left": "time",
+    "right": "time"
+  },
+  {
+    "operator": ">=",
+    "left": "time with time zone",
+    "right": "time with time zone"
+  },
+  {
+    "operator": ">=",
+    "left": "interval",
+    "right": "interval"
+  },
+  {
+    "operator": ">=",
+    "left": "uuid",
+    "right": "uuid"
+  },
+  {
+    "operator": ">=",
+    "left": "jsonb",
+    "right": "jsonb"
+  },
+  {
+    "operator": ">=",
+    "left": "bytea",
+    "right": "bytea"
+  }
+]
