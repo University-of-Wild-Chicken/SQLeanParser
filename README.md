@@ -27,6 +27,17 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.27 keyword-function increment](docs/keyword-functions-contract-v0.27.md)
+admits PostgreSQL keyword names in ordinary function calls, including `LEFT`
+and `RIGHT`, while retaining their restrictions as bare identifiers.
+Two exact TEXT/INTEGER signatures preserve nullability and output labels.
+Fifty authored queries and 49 unchanged source queries receive full
+certificates; the catalog-dependent River example receives rendering
+certificates. The [industrial replay](docs/corpus/keyword-functions-v0.27/README.md)
+accepts 257 of 276 statements. A recorded source/native-binary discrepancy
+for `RIGHT` at the minimum INTEGER count is excluded from portable value
+expectations.
+
 The [v0.26 named-argument increment](docs/named-arguments-contract-v0.26.md)
 adds `=>` and `:=` function arguments while retaining their lexical order.
 Independent binding rules check positional prefixes, exact names, unique
@@ -317,6 +328,7 @@ python3 scripts/check_qualified_names_cli.py --local-bin /usr/lib/postgresql/16/
 python3 scripts/check_json_existence_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_context_values_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_named_arguments_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_keyword_functions_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -446,7 +458,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.26` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.27` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

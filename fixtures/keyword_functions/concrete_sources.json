@@ -1,0 +1,1903 @@
+{
+  "format_version": 1,
+  "factor": "keyword_functions",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 1,
+    "river": 1,
+    "materialize": 14,
+    "doltgresql": 34
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/text.sql",
+          "sha256": "da10a5e9762b359b32362d77c984d72d583beaea0d9da56590ec72d7b72aa2ba",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/text.sql"
+        }
+      ]
+    },
+    "river": {
+      "repository": "https://github.com/riverqueue/river",
+      "commit": "1354a059d7cbe5790acc7a755a2ab7ac6d2f1ed8",
+      "license": "MPL-2.0",
+      "license_file": "fixtures/external_postgresql/licenses/river-LICENSE.txt",
+      "license_sha256": "393eaf2b92b3d49bea139e39b6fd205b6e99c499999986aec5554586a830dfdd",
+      "source_kind": "application-query",
+      "files": [
+        {
+          "path": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+          "local_path": "fixtures/external_postgresql/sources/river/riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+          "sha256": "9060b668edeea083bead3865bf090925c629ecd3d01a8b856a307aca4e3aa80f"
+        }
+      ]
+    },
+    "materialize": {
+      "repository": "https://github.com/MaterializeInc/materialize",
+      "commit": "726570dba1d2e4d839c707a84a986fb3b3acc5c3",
+      "ref": "pinned main snapshot",
+      "license": "BSL-1.1 (change date 2030-10-20; change license Apache-2.0)",
+      "source_kind": "engine-regression",
+      "source_dialect": "materialize",
+      "license_file": "fixtures/factor_sources/licenses/materialize-20261020-LICENSE",
+      "license_sha256": "5d4ca070f541414a03ad8b84021e4ba3deeca4025e4b4274053abaa2e93ec032",
+      "files": [
+        {
+          "path": "test/sqllogictest/string.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/string.slt",
+          "sha256": "98eab76069667eec2135137658e7f5357e403912058e86337f2db0e7008e022d"
+        }
+      ]
+    },
+    "doltgresql": {
+      "repository": "https://github.com/dolthub/doltgresql",
+      "commit": "b905594b000601fc5ea8db38c432b21683af01fb",
+      "license": "Apache-2.0",
+      "license_file": "fixtures/factor_sources/licenses/doltgresql-LICENSE",
+      "license_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "source_kind": "generated-engine-regression",
+      "source_dialect": "DoltgreSQL PostgreSQL-compatible function coverage",
+      "files": [
+        {
+          "path": "testing/generation/function_coverage/output/left_test.go",
+          "local_path": "fixtures/factor_sources/sources/doltgresql/testing/generation/function_coverage/output/left_test.go",
+          "sha256": "56ade306679100a0f2a37dad6a9d0272b101726caa1df88ca1b0435849d97edc"
+        },
+        {
+          "path": "testing/generation/function_coverage/output/right_test.go",
+          "local_path": "fixtures/factor_sources/sources/doltgresql/testing/generation/function_coverage/output/right_test.go",
+          "sha256": "49f582c085ea6501212a3f7ce03dd78025e9c6c16926f8652b2c320dfc3dd5f2"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/text.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1255,
+        "end": 1332,
+        "statement_index": 16
+      },
+      "sql_sha256": "30f784ef7bc2d70a413923584f44daa103d7dcc0cc1da20d6f19db14226f1b54",
+      "observed_syntax": {
+        "function_names": [
+          "left",
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          },
+          {
+            "function": "right",
+            "byte_location": 42,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "river",
+      "path": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "indexReindexArtifacts"
+      },
+      "sql_sha256": "13d221fdefece897e2a9cf6a7c5c6e4e0927eba87e0054912eea2b5bad21956b",
+      "observed_syntax": {
+        "function_names": [
+          "current_schema",
+          "left",
+          "length"
+        ],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "source_free": false,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 373,
+            "argument_forms": [
+              "ColumnRef",
+              "FuncCall"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1251,
+        "start": 17798,
+        "end": 17820
+      },
+      "sql_sha256": "443bd21643640c6160dc8965c766ecc7b91f8d62b853ad049f152d667b5ea11e",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              true,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1256,
+        "start": 17839,
+        "end": 17864
+      },
+      "sql_sha256": "08c755cfe4dce173e849d7a68d720510320d5cf99a742a0e05af05fc7483f427",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              true
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1263,
+        "start": 17907,
+        "end": 17929
+      },
+      "sql_sha256": "56e75e67426d8cf228cb8637412952acaf556c34fe96ead6dd814dba44649e14",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1268,
+        "start": 17951,
+        "end": 17973
+      },
+      "sql_sha256": "485bea1f2b15428acd2de276f5e57789964dabc46e4e365c9dba30af4c999289",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1273,
+        "start": 17990,
+        "end": 18013
+      },
+      "sql_sha256": "a08869d3e2b4c3e05f99c248162a9968a9e3d42e327fe591cb91c8b059a69cb0",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1287,
+        "start": 18181,
+        "end": 18215
+      },
+      "sql_sha256": "d72612d2943dbed8725b7aed3281b938b83183f23e55a24b3044647159ce1576",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1293,
+        "start": 18251,
+        "end": 18285
+      },
+      "sql_sha256": "591590598e0c077dc28833ae9cb66a28e0a2e8c93c53ae3b46b8a9a27ea7c308",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1381,
+        "start": 19504,
+        "end": 19527
+      },
+      "sql_sha256": "c0b64aa9f43c7b7f3cde8d71e460d1a3404ae88c033f1e030d1b40e326c0ab1b",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              true,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1386,
+        "start": 19546,
+        "end": 19572
+      },
+      "sql_sha256": "c137b9ef443d0a37b1a4566fea3386befc23543e36ce98a1d423befdb61c4499",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              true
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1393,
+        "start": 19615,
+        "end": 19638
+      },
+      "sql_sha256": "5e5a8712f20293daa483655803bab49aad93669f0eb3549fca88cf8d2e1865ed",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1398,
+        "start": 19660,
+        "end": 19683
+      },
+      "sql_sha256": "3f1007e51f44f64d0c92032a811988959549dd4ae8e209637564747cd696101e",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1403,
+        "start": 19700,
+        "end": 19724
+      },
+      "sql_sha256": "162b212f31fb28c91dfde76a8b72360d2b32364520afc7418a8eb3771cfc468e",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1417,
+        "start": 19942,
+        "end": 19977
+      },
+      "sql_sha256": "3f11b7c9f3f4236f7d5b4c477ac139991defd9848b631700742b010217cb2056",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1423,
+        "start": 20011,
+        "end": 20046
+      },
+      "sql_sha256": "10b144a70edb88e6b14cef883448c30940ac53c0af969b912f3b481c71f7f7dd",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Const"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 1287,
+        "end": 1322,
+        "token_index": 187
+      },
+      "sql_sha256": "869f4bbdc54f05e13b4018e9ca495c377f4ac7050e610fb2fd380f5c0989c463",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 3096,
+        "end": 3134,
+        "token_index": 619
+      },
+      "sql_sha256": "e451d52bb29b607a10e34e106879118c101445495bd43049e0284a792bef5fc8",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Expr"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 4987,
+        "end": 5029,
+        "token_index": 1051
+      },
+      "sql_sha256": "c8003513c169c2066b1bb476e8f492ea77da30b0f15384dc1e1aec02198e8e10",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 6830,
+        "end": 6878,
+        "token_index": 1483
+      },
+      "sql_sha256": "a1045dd7552ab41bfe8420d6aacb531e09ba8afb169b15c8ca12a11bc200c5ad",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 7133,
+        "end": 7167,
+        "token_index": 1555
+      },
+      "sql_sha256": "5361acf6b5ccd12d9928c6a5fe5ebf093463c6d697260f02abd244acb3bb0f3f",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Expr"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 9001,
+        "end": 9036,
+        "token_index": 1987
+      },
+      "sql_sha256": "a2333611cba5166f5037aed465a03826a96ff45d71a62fc340daef487ea91ce4",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 10863,
+        "end": 10901,
+        "token_index": 2419
+      },
+      "sql_sha256": "e2296e4ced3c3bd672072afdbbc76a722d6ee85499fa40851835594e814faaea",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 12761,
+        "end": 12805,
+        "token_index": 2851
+      },
+      "sql_sha256": "71abb021ad0c99db64d3db99e19f3a064eef24b9866a5f41739a6880879a1bd1",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Expr"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 14700,
+        "end": 14750,
+        "token_index": 3283
+      },
+      "sql_sha256": "dc847521658b095b818bae343acd3ce506ff1ea45136e6ed632de475a7a00fed",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 15026,
+        "end": 15063,
+        "token_index": 3355
+      },
+      "sql_sha256": "c314b14fd3efedfc7a3627b21fb07ad6c1dadc6f4c9e3efb59ea7be5741a4aec",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 16981,
+        "end": 17021,
+        "token_index": 3787
+      },
+      "sql_sha256": "86096db7f59f1b040be158174c6b37ccb1c80edaff275647efdf9743a2429b2e",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 18966,
+        "end": 19010,
+        "token_index": 4219
+      },
+      "sql_sha256": "10b8ce667232c0374437dfa8972abc69e52897c0244b268062bf1364bea7152a",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Expr"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 20926,
+        "end": 20974,
+        "token_index": 4651
+      },
+      "sql_sha256": "9557a7a2ecae39f7c4b1fe2f384f6bdd2e494267b213c101e9aae1d6f5180168",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 22891,
+        "end": 22949,
+        "token_index": 4957
+      },
+      "sql_sha256": "33e8baa97a087b955593d0476264224534b8f5b9fb3dc2ccbaae63f9fe06945b",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Expr"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 23211,
+        "end": 23253,
+        "token_index": 5020
+      },
+      "sql_sha256": "1a26aea172a6fccfce751fc6fabd34dc5ba51c84263a62bc8e58874bd68998fc",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 813,
+        "end": 845,
+        "token_index": 67
+      },
+      "sql_sha256": "f3297251d9eeb171761841a1ffd0b681abe96aad792bd1192783c2759f069802",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/left_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 2093,
+        "end": 2141,
+        "token_index": 379
+      },
+      "sql_sha256": "86c0da48189d5744a54824f076d06b8c21ac4b56e20d986ed58c7f4949a1a472",
+      "observed_syntax": {
+        "function_names": [
+          "left"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "left",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 1294,
+        "end": 1330,
+        "token_index": 187
+      },
+      "sql_sha256": "b5ccbf7d2be8b64980127e168c9c89dd64ce649afe19f9e2ef7ef153c2b20b90",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 3121,
+        "end": 3160,
+        "token_index": 619
+      },
+      "sql_sha256": "aebf2c582d561a50d36b5d28794f936325bd98b7efd875180ad47470b33d5bb0",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Expr"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 5030,
+        "end": 5073,
+        "token_index": 1051
+      },
+      "sql_sha256": "a8445393f4b82d395dc25e17293e4ab04757feb7f7e3a8282433af94a6fec870",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 6891,
+        "end": 6940,
+        "token_index": 1483
+      },
+      "sql_sha256": "a1fe29505d58bd6dc1e78dd03fa078e04fe6fdbedea7b7abb5f1d1d85c92be10",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 7197,
+        "end": 7232,
+        "token_index": 1555
+      },
+      "sql_sha256": "e2020f8b14e9ff978a7c2817b95ee0b60182f6e203be73daafc60c4464b53f45",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Expr"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 9083,
+        "end": 9119,
+        "token_index": 1987
+      },
+      "sql_sha256": "cc8414445ec41e8337384e0ba89b981ccd8723cf193e3174713ef11ab97f87aa",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 10963,
+        "end": 11002,
+        "token_index": 2419
+      },
+      "sql_sha256": "9fd9cd2afe693a4d125d37c36ea20ea234c3bbb81104162711adfdb5970c2ba9",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 12879,
+        "end": 12924,
+        "token_index": 2851
+      },
+      "sql_sha256": "9f31b87afd39174f0756510322e339e4cdec8c5d7990184186b752e6548dba92",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Expr"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 14836,
+        "end": 14887,
+        "token_index": 3283
+      },
+      "sql_sha256": "35f73867efee18b5604447c8b84eac65d59e1dfa40f5b93f3e0b878dda01b3c7",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 15165,
+        "end": 15203,
+        "token_index": 3355
+      },
+      "sql_sha256": "aec751044ad5459a6bea0b7857bac11d3e5822d7cc6b0ffe9969c0d7e75cc6dc",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 17138,
+        "end": 17179,
+        "token_index": 3787
+      },
+      "sql_sha256": "7e188f2bdc82f36807aed019b59ae9c186854bea8d6ce7eed869e000362d70e4",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 19141,
+        "end": 19186,
+        "token_index": 4219
+      },
+      "sql_sha256": "190cc8e625cd5b4ea36f089d7eb88d6a7b483d1cdb113a80c3261cc8af712dca",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Expr"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 21119,
+        "end": 21168,
+        "token_index": 4651
+      },
+      "sql_sha256": "bfa41eca49c66b38907f92586698da8455c63c971afc4b91ecd4302520485a46",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 23102,
+        "end": 23161,
+        "token_index": 4957
+      },
+      "sql_sha256": "0489d9d35f9d8bcb527ff7ae51f29ae388f45b3fd63ad8539277001189d5aaa5",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "A_Expr"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 23425,
+        "end": 23468,
+        "token_index": 5020
+      },
+      "sql_sha256": "99d36b50176e01bdf47bfb05470c3f0724d54c567fc58d9e3e5150bc5df4ff09",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 815,
+        "end": 848,
+        "token_index": 67
+      },
+      "sql_sha256": "cae28b348d5f87c875260fc1047e096409294eb8b460209ae5c8f83f9384a495",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "source": "doltgresql",
+      "path": "testing/generation/function_coverage/output/right_test.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 2108,
+        "end": 2157,
+        "token_index": 379
+      },
+      "sql_sha256": "08f00c7fd7a3a46ac99bd57759fa7900eecafa1d8b664d0fef13d96d11337558",
+      "observed_syntax": {
+        "function_names": [
+          "right"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "keyword_functions": [
+          {
+            "function": "right",
+            "byte_location": 7,
+            "argument_forms": [
+              "A_Const",
+              "TypeCast"
+            ],
+            "literal_nulls": [
+              false,
+              false
+            ],
+            "explicit_casts": [
+              null,
+              "int4"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

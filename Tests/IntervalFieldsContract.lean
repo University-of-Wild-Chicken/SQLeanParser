@@ -32,7 +32,7 @@ private def intervalCertificate (query : Advanced.Query)
     (catalog : Advanced.Catalog := []) (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "interval fields SELECT"
-    ((SelectContract.checkQuery .basicV26 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV27 catalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "interval fields identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -115,7 +115,7 @@ def intervalFieldsContractTests : IO Nat := do
       SQLean.Tests.assert (!(decide (SelectContract.DataTypeWellFormed target)))
         "noncanonical interval metadata must fail well-formedness"
       let precisionGap := fields.allowsPrecision && modifiers == [7]
-      match SelectContract.checkQuery .basicV26 [] [] (intervalProjection (.cast .null target)) with
+      match SelectContract.checkQuery .basicV27 [] [] (intervalProjection (.cast .null target)) with
       | .error (.unsupported diagnostic) =>
           SQLean.Tests.assert (precisionGap && diagnostic.code == "interval_precision")
             "native precision clamping is an unsupported canonical boundary"
@@ -124,7 +124,7 @@ def intervalFieldsContractTests : IO Nat := do
             "interval cast metadata diagnosis"
       | _ => throw (IO.userError "invalid interval cast metadata acquired a certificate")
       let params : SelectContract.ParameterEnv := [⟨1, target, false⟩]
-      match SelectContract.checkQuery .basicV26 [] params
+      match SelectContract.checkQuery .basicV27 [] params
           (intervalProjection (.parameter (.numbered 1))) with
       | .error (.unsupported diagnostic) =>
           SQLean.Tests.assert (precisionGap && diagnostic.code == "interval_precision")
@@ -168,7 +168,7 @@ def intervalFieldsContractTests : IO Nat := do
       count := count + 1
   let query ← expectOk "qualified interval fuel"
     (Advanced.parseQuery "SELECT INTERVAL '1' YEAR")
-  match SelectContract.checkQuery .basicV26 [] [] query 0 with
+  match SelectContract.checkQuery .basicV27 [] [] query 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "qualified interval fuel exhaustion must be Inconclusive")
   count := count + 1
@@ -177,13 +177,13 @@ def intervalFieldsContractTests : IO Nat := do
     let catalog : Advanced.Catalog := [{
       name := "durations", columns := [{name := "v", type := ⟨typeName, [7]⟩}]
     }]
-    match SelectContract.checkQuery .basicV26 catalog [] query with
+    match SelectContract.checkQuery .basicV27 catalog [] query with
     | .error (.unsupported diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == "interval_precision")
           "catalog precision clamping is outside canonical coverage"
     | _ => throw (IO.userError "excess catalog precision must be Unsupported")
     count := count + 1
-  match SelectContract.checkPaginationBounds .basicV26 [⟨1, unsupportedType, false⟩] query with
+  match SelectContract.checkPaginationBounds .basicV27 [⟨1, unsupportedType, false⟩] query with
   | .error (.unsupported diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "interval_precision")
         "bounds-only certificates retain the same exact metadata coverage"
@@ -191,7 +191,7 @@ def intervalFieldsContractTests : IO Nat := do
   count := count + 1
   let duplicateParams : SelectContract.ParameterEnv :=
     [⟨1, unsupportedType, false⟩, ⟨1, ⟨.interval, []⟩, false⟩]
-  match SelectContract.checkQuery .basicV26 [] duplicateParams query with
+  match SelectContract.checkQuery .basicV27 [] duplicateParams query with
   | .error (.invalid diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "invalid_environment")
         "unrelated invalid metadata must not be hidden by an unsupported precision"
@@ -201,7 +201,7 @@ def intervalFieldsContractTests : IO Nat := do
     name := "durations", columns := [
       {name := "v", type := unsupportedType}, {name := "v", type := ⟨.interval, []⟩}]
   }]
-  match SelectContract.checkQuery .basicV26 badCatalog [] query with
+  match SelectContract.checkQuery .basicV27 badCatalog [] query with
   | .error (.invalid diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "invalid_environment")
         "precision coverage must retain unrelated catalog invalidity"

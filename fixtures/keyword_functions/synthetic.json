@@ -1,0 +1,1126 @@
+[
+  {
+    "id": "keyword-functions-01-left-ascii",
+    "source_kind": "synthetic",
+    "shape": "left-ascii",
+    "sql": "SELECT left('abcdef',2) AS v;",
+    "postgres_input": "SELECT left('abcdef',2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abcdef',2) AS v;"
+  },
+  {
+    "id": "keyword-functions-02-left-zero",
+    "source_kind": "synthetic",
+    "shape": "left-zero",
+    "sql": "SELECT left('abcdef',0) AS v;",
+    "postgres_input": "SELECT left('abcdef',0) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abcdef',0) AS v;"
+  },
+  {
+    "id": "keyword-functions-03-left-negative",
+    "source_kind": "synthetic",
+    "shape": "left-negative",
+    "sql": "SELECT left('abcdef',-2) AS v;",
+    "postgres_input": "SELECT left('abcdef',-2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abcd",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abcdef',-2) AS v;"
+  },
+  {
+    "id": "keyword-functions-04-left-int32-maximum",
+    "source_kind": "synthetic",
+    "shape": "left-int32-maximum",
+    "sql": "SELECT left('abcdef',2147483647) AS v;",
+    "postgres_input": "SELECT left('abcdef',2147483647) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abcdef",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abcdef',2147483647) AS v;"
+  },
+  {
+    "id": "keyword-functions-05-left-empty",
+    "source_kind": "synthetic",
+    "shape": "left-empty",
+    "sql": "SELECT left('',2) AS v;",
+    "postgres_input": "SELECT left('',2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('',2) AS v;"
+  },
+  {
+    "id": "keyword-functions-06-left-unicode",
+    "source_kind": "synthetic",
+    "shape": "left-unicode",
+    "sql": "SELECT left('é😀abc',2) AS v;",
+    "postgres_input": "SELECT left('é😀abc',2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "é😀",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('é😀abc',2) AS v;"
+  },
+  {
+    "id": "keyword-functions-07-left-combining-codepoints",
+    "source_kind": "synthetic",
+    "shape": "left-combining-codepoints",
+    "sql": "SELECT left('éxy',1) AS v;",
+    "postgres_input": "SELECT left('éxy',1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "e",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('éxy',1) AS v;"
+  },
+  {
+    "id": "keyword-functions-08-left-char-padding",
+    "source_kind": "synthetic",
+    "shape": "left-char-padding",
+    "sql": "SELECT left('a  '::CHAR(4),2) AS v;",
+    "postgres_input": "SELECT left('a  '::CHAR(4),2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "a",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('a  '::CHAR(4),2) AS v;"
+  },
+  {
+    "id": "keyword-functions-09-left-varchar-padding",
+    "source_kind": "synthetic",
+    "shape": "left-varchar-padding",
+    "sql": "SELECT left('a  '::VARCHAR(4),2) AS v;",
+    "postgres_input": "SELECT left('a  '::VARCHAR(4),2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "a ",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('a  '::VARCHAR(4),2) AS v;"
+  },
+  {
+    "id": "keyword-functions-10-left-name-input",
+    "source_kind": "synthetic",
+    "shape": "left-name-input",
+    "sql": "SELECT left('abcde'::NAME,2) AS v;",
+    "postgres_input": "SELECT left('abcde'::NAME,2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abcde'::NAME,2) AS v;"
+  },
+  {
+    "id": "keyword-functions-11-left-unknown-count",
+    "source_kind": "synthetic",
+    "shape": "left-unknown-count",
+    "sql": "SELECT left('abcdef','2') AS v;",
+    "postgres_input": "SELECT left('abcdef','2') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abcdef','2') AS v;"
+  },
+  {
+    "id": "keyword-functions-12-left-smallint-count",
+    "source_kind": "synthetic",
+    "shape": "left-smallint-count",
+    "sql": "SELECT left('abcdef',2::SMALLINT) AS v;",
+    "postgres_input": "SELECT left('abcdef',2::SMALLINT) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abcdef',2::SMALLINT) AS v;"
+  },
+  {
+    "id": "keyword-functions-13-left-numbered-reversed",
+    "source_kind": "synthetic",
+    "shape": "left-numbered-reversed",
+    "sql": "SELECT left($2,$1) AS v;",
+    "postgres_input": "SELECT left($2,$1) AS v;",
+    "parameter_types": "integer,text",
+    "parameter_values": [
+      2,
+      "abcdef"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left(?2,?1) AS v;"
+  },
+  {
+    "id": "keyword-functions-14-left-anonymous",
+    "source_kind": "synthetic",
+    "shape": "left-anonymous",
+    "sql": "SELECT left(?,?) AS v;",
+    "postgres_input": "SELECT left($1,$2) AS v;",
+    "parameter_types": "text,integer",
+    "parameter_values": [
+      "abcdef",
+      3
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abc",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left(?,?) AS v;"
+  },
+  {
+    "id": "keyword-functions-15-left-nullable-text",
+    "source_kind": "synthetic",
+    "shape": "left-nullable-text",
+    "sql": "SELECT left($1,$2) AS v;",
+    "postgres_input": "SELECT left($1,$2) AS v;",
+    "parameter_types": "text?,integer",
+    "parameter_values": [
+      null,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left(?1,?2) AS v;"
+  },
+  {
+    "id": "keyword-functions-16-left-nullable-count",
+    "source_kind": "synthetic",
+    "shape": "left-nullable-count",
+    "sql": "SELECT left($2,CAST($1 AS INTEGER)) AS v;",
+    "postgres_input": "SELECT left($2,CAST($1 AS INTEGER)) AS v;",
+    "parameter_types": "integer?,text",
+    "parameter_values": [
+      null,
+      "abc"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left(?2,CAST(?1 AS INTEGER)) AS v;"
+  },
+  {
+    "id": "keyword-functions-17-left-null-subject",
+    "source_kind": "synthetic",
+    "shape": "left-null-subject",
+    "sql": "SELECT left(NULL,2) AS v;",
+    "postgres_input": "SELECT left(NULL,2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left(NULL,2) AS v;"
+  },
+  {
+    "id": "keyword-functions-18-left-null-count",
+    "source_kind": "synthetic",
+    "shape": "left-null-count",
+    "sql": "SELECT left('abc',NULL) AS v;",
+    "postgres_input": "SELECT left('abc',NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abc',NULL) AS v;"
+  },
+  {
+    "id": "keyword-functions-19-left-null-both",
+    "source_kind": "synthetic",
+    "shape": "left-null-both",
+    "sql": "SELECT left(NULL,NULL) AS v;",
+    "postgres_input": "SELECT left(NULL,NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left(NULL,NULL) AS v;"
+  },
+  {
+    "id": "keyword-functions-20-left-explicit-numeric-conversion",
+    "source_kind": "synthetic",
+    "shape": "left-explicit-numeric-conversion",
+    "sql": "SELECT left('abcdef',CAST(2.6 AS INTEGER)) AS v;",
+    "postgres_input": "SELECT left('abcdef',CAST(2.6 AS INTEGER)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abc",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abcdef',CAST(2.6 AS INTEGER)) AS v;"
+  },
+  {
+    "id": "keyword-functions-21-left-count-expression",
+    "source_kind": "synthetic",
+    "shape": "left-count-expression",
+    "sql": "SELECT left('abcdef',1+1) AS v;",
+    "postgres_input": "SELECT left('abcdef',1+1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abcdef',1+1) AS v;"
+  },
+  {
+    "id": "keyword-functions-22-left-nested-length",
+    "source_kind": "synthetic",
+    "shape": "left-nested-length",
+    "sql": "SELECT left('abcdef',length('ab')) AS v;",
+    "postgres_input": "SELECT left('abcdef',length('ab')) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abcdef',length('ab')) AS v;"
+  },
+  {
+    "id": "keyword-functions-23-left-coalesce",
+    "source_kind": "synthetic",
+    "shape": "left-coalesce",
+    "sql": "SELECT COALESCE(left(NULL,2),left('abcdef',3)) AS v;",
+    "postgres_input": "SELECT COALESCE(left(NULL,2),left('abcdef',3)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abc",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT COALESCE(left(NULL,2),left('abcdef',3)) AS v;"
+  },
+  {
+    "id": "keyword-functions-24-left-qualified",
+    "source_kind": "synthetic",
+    "shape": "left-qualified",
+    "sql": "SELECT pg_catalog.left('abcde',3) AS v;",
+    "postgres_input": "SELECT pg_catalog.left('abcde',3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abc",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT pg_catalog.left('abcde',3) AS v;"
+  },
+  {
+    "id": "keyword-functions-25-left-comparison",
+    "source_kind": "synthetic",
+    "shape": "left-comparison",
+    "sql": "SELECT left('abc',1) = 'a' AS v;",
+    "postgres_input": "SELECT left('abc',1) = 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT left('abc',1) = 'a' AS v;"
+  },
+  {
+    "id": "keyword-functions-26-right-ascii",
+    "source_kind": "synthetic",
+    "shape": "right-ascii",
+    "sql": "SELECT right('abcdef',2) AS v;",
+    "postgres_input": "SELECT right('abcdef',2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ef",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abcdef',2) AS v;"
+  },
+  {
+    "id": "keyword-functions-27-right-zero",
+    "source_kind": "synthetic",
+    "shape": "right-zero",
+    "sql": "SELECT right('abcdef',0) AS v;",
+    "postgres_input": "SELECT right('abcdef',0) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abcdef',0) AS v;"
+  },
+  {
+    "id": "keyword-functions-28-right-negative",
+    "source_kind": "synthetic",
+    "shape": "right-negative",
+    "sql": "SELECT right('abcdef',-2) AS v;",
+    "postgres_input": "SELECT right('abcdef',-2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "cdef",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abcdef',-2) AS v;"
+  },
+  {
+    "id": "keyword-functions-29-right-int32-maximum",
+    "source_kind": "synthetic",
+    "shape": "right-int32-maximum",
+    "sql": "SELECT right('abcdef',2147483647) AS v;",
+    "postgres_input": "SELECT right('abcdef',2147483647) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abcdef",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abcdef',2147483647) AS v;"
+  },
+  {
+    "id": "keyword-functions-30-right-empty",
+    "source_kind": "synthetic",
+    "shape": "right-empty",
+    "sql": "SELECT right('',2) AS v;",
+    "postgres_input": "SELECT right('',2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('',2) AS v;"
+  },
+  {
+    "id": "keyword-functions-31-right-unicode",
+    "source_kind": "synthetic",
+    "shape": "right-unicode",
+    "sql": "SELECT right('é😀abc',2) AS v;",
+    "postgres_input": "SELECT right('é😀abc',2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bc",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('é😀abc',2) AS v;"
+  },
+  {
+    "id": "keyword-functions-32-right-combining-codepoints",
+    "source_kind": "synthetic",
+    "shape": "right-combining-codepoints",
+    "sql": "SELECT right('éxy',1) AS v;",
+    "postgres_input": "SELECT right('éxy',1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "y",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('éxy',1) AS v;"
+  },
+  {
+    "id": "keyword-functions-33-right-char-padding",
+    "source_kind": "synthetic",
+    "shape": "right-char-padding",
+    "sql": "SELECT right('a  '::CHAR(4),2) AS v;",
+    "postgres_input": "SELECT right('a  '::CHAR(4),2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "a",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('a  '::CHAR(4),2) AS v;"
+  },
+  {
+    "id": "keyword-functions-34-right-varchar-padding",
+    "source_kind": "synthetic",
+    "shape": "right-varchar-padding",
+    "sql": "SELECT right('a  '::VARCHAR(4),2) AS v;",
+    "postgres_input": "SELECT right('a  '::VARCHAR(4),2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "  ",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('a  '::VARCHAR(4),2) AS v;"
+  },
+  {
+    "id": "keyword-functions-35-right-name-input",
+    "source_kind": "synthetic",
+    "shape": "right-name-input",
+    "sql": "SELECT right('abcde'::NAME,2) AS v;",
+    "postgres_input": "SELECT right('abcde'::NAME,2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "de",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abcde'::NAME,2) AS v;"
+  },
+  {
+    "id": "keyword-functions-36-right-unknown-count",
+    "source_kind": "synthetic",
+    "shape": "right-unknown-count",
+    "sql": "SELECT right('abcdef','2') AS v;",
+    "postgres_input": "SELECT right('abcdef','2') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ef",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abcdef','2') AS v;"
+  },
+  {
+    "id": "keyword-functions-37-right-smallint-count",
+    "source_kind": "synthetic",
+    "shape": "right-smallint-count",
+    "sql": "SELECT right('abcdef',2::SMALLINT) AS v;",
+    "postgres_input": "SELECT right('abcdef',2::SMALLINT) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ef",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abcdef',2::SMALLINT) AS v;"
+  },
+  {
+    "id": "keyword-functions-38-right-numbered-reversed",
+    "source_kind": "synthetic",
+    "shape": "right-numbered-reversed",
+    "sql": "SELECT right($2,$1) AS v;",
+    "postgres_input": "SELECT right($2,$1) AS v;",
+    "parameter_types": "integer,text",
+    "parameter_values": [
+      2,
+      "abcdef"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ef",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right(?2,?1) AS v;"
+  },
+  {
+    "id": "keyword-functions-39-right-anonymous",
+    "source_kind": "synthetic",
+    "shape": "right-anonymous",
+    "sql": "SELECT right(?,?) AS v;",
+    "postgres_input": "SELECT right($1,$2) AS v;",
+    "parameter_types": "text,integer",
+    "parameter_values": [
+      "abcdef",
+      3
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "def",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right(?,?) AS v;"
+  },
+  {
+    "id": "keyword-functions-40-right-nullable-text",
+    "source_kind": "synthetic",
+    "shape": "right-nullable-text",
+    "sql": "SELECT right($1,$2) AS v;",
+    "postgres_input": "SELECT right($1,$2) AS v;",
+    "parameter_types": "text?,integer",
+    "parameter_values": [
+      null,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right(?1,?2) AS v;"
+  },
+  {
+    "id": "keyword-functions-41-right-nullable-count",
+    "source_kind": "synthetic",
+    "shape": "right-nullable-count",
+    "sql": "SELECT right($2,CAST($1 AS INTEGER)) AS v;",
+    "postgres_input": "SELECT right($2,CAST($1 AS INTEGER)) AS v;",
+    "parameter_types": "integer?,text",
+    "parameter_values": [
+      null,
+      "abc"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right(?2,CAST(?1 AS INTEGER)) AS v;"
+  },
+  {
+    "id": "keyword-functions-42-right-null-subject",
+    "source_kind": "synthetic",
+    "shape": "right-null-subject",
+    "sql": "SELECT right(NULL,2) AS v;",
+    "postgres_input": "SELECT right(NULL,2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right(NULL,2) AS v;"
+  },
+  {
+    "id": "keyword-functions-43-right-null-count",
+    "source_kind": "synthetic",
+    "shape": "right-null-count",
+    "sql": "SELECT right('abc',NULL) AS v;",
+    "postgres_input": "SELECT right('abc',NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abc',NULL) AS v;"
+  },
+  {
+    "id": "keyword-functions-44-right-null-both",
+    "source_kind": "synthetic",
+    "shape": "right-null-both",
+    "sql": "SELECT right(NULL,NULL) AS v;",
+    "postgres_input": "SELECT right(NULL,NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right(NULL,NULL) AS v;"
+  },
+  {
+    "id": "keyword-functions-45-right-explicit-numeric-conversion",
+    "source_kind": "synthetic",
+    "shape": "right-explicit-numeric-conversion",
+    "sql": "SELECT right('abcdef',CAST(2.6 AS INTEGER)) AS v;",
+    "postgres_input": "SELECT right('abcdef',CAST(2.6 AS INTEGER)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "def",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abcdef',CAST(2.6 AS INTEGER)) AS v;"
+  },
+  {
+    "id": "keyword-functions-46-right-count-expression",
+    "source_kind": "synthetic",
+    "shape": "right-count-expression",
+    "sql": "SELECT right('abcdef',1+1) AS v;",
+    "postgres_input": "SELECT right('abcdef',1+1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ef",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abcdef',1+1) AS v;"
+  },
+  {
+    "id": "keyword-functions-47-right-nested-length",
+    "source_kind": "synthetic",
+    "shape": "right-nested-length",
+    "sql": "SELECT right('abcdef',length('ab')) AS v;",
+    "postgres_input": "SELECT right('abcdef',length('ab')) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ef",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abcdef',length('ab')) AS v;"
+  },
+  {
+    "id": "keyword-functions-48-right-coalesce",
+    "source_kind": "synthetic",
+    "shape": "right-coalesce",
+    "sql": "SELECT COALESCE(right(NULL,2),right('abcdef',3)) AS v;",
+    "postgres_input": "SELECT COALESCE(right(NULL,2),right('abcdef',3)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "def",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT COALESCE(right(NULL,2),right('abcdef',3)) AS v;"
+  },
+  {
+    "id": "keyword-functions-49-right-qualified",
+    "source_kind": "synthetic",
+    "shape": "right-qualified",
+    "sql": "SELECT pg_catalog.right('abcde',3) AS v;",
+    "postgres_input": "SELECT pg_catalog.right('abcde',3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "cde",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT pg_catalog.right('abcde',3) AS v;"
+  },
+  {
+    "id": "keyword-functions-50-right-comparison",
+    "source_kind": "synthetic",
+    "shape": "right-comparison",
+    "sql": "SELECT right('abc',1) = 'c' AS v;",
+    "postgres_input": "SELECT right('abc',1) = 'c' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT right('abc',1) = 'c' AS v;"
+  }
+]

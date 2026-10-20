@@ -23,7 +23,7 @@ private def substringCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "SUBSTRING SELECT"
-    ((SelectContract.checkQuery .basicV26 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV27 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "SUBSTRING identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -109,7 +109,7 @@ def substringContractTests : IO Nat := do
           if valid then
             SQLean.Tests.assert ((← substringCertificate query params) ==
                 [⟨"v", ⟨.text, expectedNullable⟩⟩]) s!"SUBSTRING typed argument: {sql}; {parameter}"
-          else match SelectContract.checkQuery .basicV26 [] params query with
+          else match SelectContract.checkQuery .basicV27 [] params query with
           | .error (.invalid diagnostic) =>
               SQLean.Tests.assert (["substring_signature", "substring_length_cast"].contains diagnostic.code)
                 s!"SUBSTRING unsupported concrete signature diagnosis: {sql}; {parameter}"
@@ -125,7 +125,7 @@ def substringContractTests : IO Nat := do
         let result : SelectContract.ScalarType := if declaration == "BYTEA" then .bytea else .text
         SQLean.Tests.assert ((← substringCertificate query params) == [⟨"v", ⟨result, nullable⟩⟩])
           s!"SUBSTRING subject type and erased modifiers: {parameter}"
-      else match SelectContract.checkQuery .basicV26 [] params query with
+      else match SelectContract.checkQuery .basicV27 [] params query with
       | .error (.invalid diagnostic) =>
           SQLean.Tests.assert (diagnostic.code == "substring_signature") "invalid SUBSTRING subject"
       | _ => throw (IO.userError s!"SUBSTRING invalid subject accepted: {parameter}")
@@ -162,7 +162,7 @@ def substringContractTests : IO Nat := do
       "SELECT SUBSTRING()", "SELECT SUBSTRING('abc')", "SELECT SUBSTRING('a', 1, 2, 3)",
       "SELECT SUBSTR('abc', 'a'::TEXT)"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV26 [] [] query with
+    match SelectContract.checkQuery .basicV27 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"SUBSTRING invalid arity or type: {sql}")
     count := count + 1
@@ -170,7 +170,7 @@ def substringContractTests : IO Nat := do
       "SELECT SUBSTRING((SELECT 'abc') FROM 1)",
       "SELECT SUBSTRING(unregistered_subject() FOR 2)"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV26 [] [] query with
+    match SelectContract.checkQuery .basicV27 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"SUBSTRING child coverage status: {sql}")
     count := count + 1
@@ -179,7 +179,7 @@ def substringContractTests : IO Nat := do
       if arity != form.arity then
         let expr : Advanced.Expr := .substring form (List.replicate arity (.literal (.int 1)))
         let query : Advanced.Query := {body := .select {items := [.expression expr none]}}
-        match SelectContract.checkQuery .basicV26 [] [] query with
+        match SelectContract.checkQuery .basicV27 [] [] query with
         | .error (.invalid diagnostic) =>
             SQLean.Tests.assert (diagnostic.code == "substring_arity") "manual special-form arity"
         | _ => throw (IO.userError "malformed hand-built SUBSTRING acquired a certificate")
@@ -202,12 +202,12 @@ def substringContractTests : IO Nat := do
   for uses in [[1,3,2], [1,2,4]] do
     let expr : Advanced.Expr := .substring .forFrom (uses.map fun n => .parameter (.anonymous n))
     let query : Advanced.Query := {body := .select {items := [.expression expr none]}}
-    match SelectContract.checkQuery .basicV26 [] params query with
+    match SelectContract.checkQuery .basicV27 [] params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "SUBSTRING semantic permutation must not bypass lexical parameter order")
     count := count + 1
   let query ← expectOk "SUBSTRING fuel" (Advanced.parseQuery "SELECT SUBSTRING('abc' FROM 1)")
-  match SelectContract.checkQuery .basicV26 [] [] query 0 with
+  match SelectContract.checkQuery .basicV27 [] [] query 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "SUBSTRING fuel exhaustion must be Inconclusive")
   pure (count + 1)

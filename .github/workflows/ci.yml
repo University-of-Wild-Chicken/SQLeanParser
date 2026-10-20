@@ -88,6 +88,7 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor json_existence --check
           python3 scripts/extract_factor_corpus.py --factor context_values --check
           python3 scripts/extract_factor_corpus.py --factor named_arguments --check
+          python3 scripts/extract_factor_corpus.py --factor keyword_functions --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -225,6 +226,8 @@ jobs:
         run: python3 scripts/check_context_values_cli.py --local-bin /usr/lib/postgresql/16/bin
       - name: Verify named function arguments and PostgreSQL defaults
         run: python3 scripts/check_named_arguments_cli.py --local-bin /usr/lib/postgresql/16/bin
+      - name: Verify keyword function calls against PostgreSQL
+        run: python3 scripts/check_keyword_functions_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

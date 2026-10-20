@@ -80,6 +80,8 @@ import Tests.ContextValuesContract
 import Tests.ContextValuesRendering
 import Tests.NamedArgumentsContract
 import Tests.NamedArgumentsRendering
+import Tests.KeywordFunctionsContract
+import Tests.KeywordFunctionsRendering
 
 namespace SQLean.Tests
 
@@ -300,6 +302,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {namedArgumentsConcrete} unchanged named-call full-query certificates (all 50 rendered)"
   let namedArgumentsRendering ← namedArgumentsRenderingTests
   IO.println s!"PASS: {namedArgumentsRendering} named-call parsing and rendering checks"
+  let keywordFunctionsContract ← keywordFunctionsContractTests
+  IO.println s!"PASS: {keywordFunctionsContract} keyword function signature and coercion checks"
+  let keywordFunctionsCorpus ← keywordFunctionsCorpusTests
+  IO.println s!"PASS: {keywordFunctionsCorpus} keyword function full-query certificates"
+  let keywordFunctionsConcrete ← keywordFunctionsConcreteContractTests
+  IO.println s!"PASS: {keywordFunctionsConcrete} unchanged keyword function certificates (all 50 rendered)"
+  let keywordFunctionsRendering ← keywordFunctionsRenderingTests
+  IO.println s!"PASS: {keywordFunctionsRendering} keyword function parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

@@ -1,0 +1,24 @@
+{
+  "source": {
+    "url": "https://raw.githubusercontent.com/postgres/postgres/f0595c3d839debdb140903621c1b44a4f4d86256/src/backend/utils/adt/varlena.c",
+    "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+    "sha256": "2fd36782cec91e87dc93166423294d627e07bf8fb2fa36fc30b89414a2d3f236",
+    "line_range": [
+      5552,
+      5557
+    ]
+  },
+  "binary": {
+    "path": "/home/augustus/.local/opt/sqlean-postgresql-16/usr/lib/postgresql/16/bin/postgres",
+    "sha256": "201d8daff9a5bd9df70b820471b965c39f5a776d677f395232c477d051270722"
+  },
+  "version": {
+    "server_version": "16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)",
+    "server_version_num": "160015",
+    "version": "PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit"
+  },
+  "sql": "SET plan_cache_mode=force_generic_plan;\nPREPARE p(text,integer) AS SELECT left($1,$2),right($1,$2);\nEXECUTE p('abcde',-2147483648);\nSELECT left('abcde',-2147483648),right('abcde',-2147483648);\nSELECT left('abcde',-2147483647),right('abcde',-2147483647);\nSELECT json_agg(json_build_object('name',proname,'implementation',prosrc,'inputs',oidvectortypes(proargtypes),'output',prorettype::regtype::text,'strict',proisstrict,'volatile',provolatile,'parallel',proparallel)) FROM pg_proc WHERE pronamespace='pg_catalog'::regnamespace AND proname IN ('left','right');\n",
+  "native_stdout": "|abcde\n|abcde\n|\n[{\"name\" : \"left\", \"implementation\" : \"text_left\", \"inputs\" : \"text, integer\", \"output\" : \"text\", \"strict\" : true, \"volatile\" : \"i\", \"parallel\" : \"s\"}, {\"name\" : \"right\", \"implementation\" : \"text_right\", \"inputs\" : \"text, integer\", \"output\" : \"text\", \"strict\" : true, \"volatile\" : \"i\", \"parallel\" : \"s\"}]\n",
+  "scope": "Finite authored observations of a source/binary discrepancy; cause not established. Not a portable execution oracle or proof of PostgreSQL runtime semantics.",
+  "source_sql_executed": false
+}

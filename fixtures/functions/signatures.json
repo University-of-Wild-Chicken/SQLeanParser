@@ -662,5 +662,21 @@
     ],
     "name": "make_interval",
     "output": "interval"
+  },
+  {
+    "inputs": [
+      "text",
+      "integer"
+    ],
+    "name": "left",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text",
+      "integer"
+    ],
+    "name": "right",
+    "output": "text"
   }
 ]

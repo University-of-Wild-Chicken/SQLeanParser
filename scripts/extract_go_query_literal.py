@@ -15,7 +15,8 @@ def whole_select(sql: str) -> None:
         raise ValueError("query literal is not one complete static SELECT")
 
 
-def selected_go_query(source: str, selector: dict) -> tuple[str, int, dict]:
+def selected_go_query(source: str, selector: dict, *,
+                      assertion_query: bool = False) -> tuple[str, int, dict]:
     keys = {"kind", "start", "end", "token_index"}
     if (set(selector) != keys or selector["kind"] != "go_string_literal"
             or any(type(selector[key]) is not int for key in keys - {"kind"})):
@@ -46,7 +47,10 @@ def selected_go_query(source: str, selector: dict) -> tuple[str, int, dict]:
         len(before) >= 4 and [item.text for item in before[-3:]] == ["(", "ctx", ","]
         and before[-4].text in {"QueryRow", "QueryRowContext"}
         and after and after[0].text == ")")
-    if not (map_value or call_argument):
+    assertion_field = (assertion_query and len(before) >= 3
+                       and [item.text for item in before[-3:]] == ["{", "Query", ":"]
+                       and after and after[0].text == ",")
+    if not ((assertion_field if assertion_query else map_value or call_argument)):
         raise ValueError("query literal is outside the pinned map/call contexts")
     sql = json.loads(token.text)
     whole_select(sql)

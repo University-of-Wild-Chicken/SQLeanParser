@@ -508,7 +508,7 @@ def functionNames : List Name :=
    "character_length", "octet_length", "btrim", "ltrim", "rtrim", "replace", "substr", "substring",
    "to_date", "to_timestamp", "now", "transaction_timestamp", "statement_timestamp",
    "clock_timestamp", "pi", "random", "json_typeof", "jsonb_typeof", "json_array_length",
-   "jsonb_array_length", "concat", "concat_ws", "num_nulls", "num_nonnulls"] ++ contextFunctionNames ++ ["make_interval"]
+   "jsonb_array_length", "concat", "concat_ws", "num_nulls", "num_nonnulls"] ++ contextFunctionNames ++ ["make_interval", "left", "right"]
 
 /-- Explicit supported built-in inventory. Overloads for SQL arrays, ranges,
 composite values and other absent scalar types are not implicitly admitted. -/
@@ -528,6 +528,7 @@ def functionCatalog (name : Name) : List FunctionOverload :=
   | "div" => [⟨[.numeric [], .numeric []], .numeric []⟩]
   | "mod" => [.smallInt, .int32, .int64, .numeric []].map fun type => ⟨[type, type], type⟩
   | "lower" | "upper" => [⟨[.text], .text⟩]
+  | "left" | "right" => [⟨[.text, .int32], .text⟩]
   | "length" => unaryOverloads [.text, .char [], .bytea] (some .int32) ++
       [⟨[.bytea, .name], .int32⟩]
   | "char_length" | "character_length" => unaryOverloads [.text, .char []] (some .int32)

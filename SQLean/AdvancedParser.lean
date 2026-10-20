@@ -848,8 +848,17 @@ mutual
     | 0 => fail "qualified name input bound exceeded"
     | fuel + 1 => do
       let first ← peek
-      let name ← identifier
+      -- PostgreSQL type_function_name admits TYPE_FUNC_NAME_KEYWORD as an
+      -- unqualified function head. The same token is not a ColId and cannot
+      -- become a bare column or the first component of a qualified path.
+      let functionKeyword := !(← read) && match first.kind with
+        | .word name => (SQLean.PostgresGrammar.Generated.keyword name.toLower).any
+            (fun keyword => keyword.category == "TYPE_FUNC_NAME_KEYWORD")
+        | _ => false
+      let name ← if functionKeyword then attributeName else identifier
       let tail ← nameTail fuel
+      if functionKeyword && (!tail.isEmpty || !(← isAt "(")) then
+        fail "type/function keyword requires an unqualified function call"
       if !(← read) && !tail.isEmpty && invalidQualifiedHead first then
         fail "the first qualified-name component must be a column identifier"
       pure (name :: tail)
