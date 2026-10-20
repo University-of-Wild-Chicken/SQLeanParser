@@ -1,18 +1,9 @@
 import SQLean.RelationalValidation
+import SQLean.CatalogSyntax
 
 /-! Catalog metadata for DDL and conflict-target checking. This describes schema
 structure, not current rows, indexes' physical state, or concurrent transactions. -/
 namespace SQLean.Advanced
-
-structure CatalogTable where
-  name : Name
-  columns : List Column
-  uniqueKeys : List (List Name) := []
-  primaryKey : List Name := []
-  namedKeys : List (Name × List Name) := []
-  deriving Repr, BEq, Inhabited
-
-abbrev Catalog := List CatalogTable
 
 def Column.sqlType (column : Column) : SqlType :=
   if column.primaryKey || column.nullable == some false then column.type.sqlType

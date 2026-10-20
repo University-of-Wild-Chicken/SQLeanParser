@@ -79,6 +79,9 @@ jobs:
       - name: Run Lean tests and proof examples
         run: lake exe sqlean_tests
 
+      - name: Check SELECT assurance tiers
+        run: python3 scripts/check_assurance_cli.py
+
       - name: Check SQLite CLI compatibility
         run: |
           python3 scripts/check_crud_cli.py

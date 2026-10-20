@@ -2,11 +2,20 @@
 
 A Lean 4 SQL parser with public AST interfaces, canonical SQL rendering, and proof-carrying static validation. It supports SELECT with joins, grouping, aggregates, derived tables, ordinary and recursive CTEs, UNION/UNION ALL, and queries without FROM, plus single-table INSERT, UPDATE, and DELETE. PostgreSQL extensions include DISTINCT ON, aggregate FILTER, casts, LIKE/ILIKE, IN/BETWEEN, NULLS ordering, and mutation RETURNING. The advanced statement interface also supports correlated IN/EXISTS and scalar subqueries, LATERAL, USING/NATURAL joins, INTERSECT/EXCEPT, ON CONFLICT, INSERT SELECT, NULL, exact decimal/exponent literals, typed parameters, and table DDL. The project uses Lean **4.34.0**, with no external Lean package dependencies.
 
+The [SELECT validity contract draft](docs/SELECT_validity_contract.md) now has a
+first implementation with explicit assurance tiers. The independent proof tier
+currently covers basic source-free and single-table SELECTs. The broader SELECT
+family and mutation/DDL syntax remain available through the existing APIs and
+the expanded executable-check tier. This is an initial contract milestone,
+not a claim that the complete draft has been implemented.
+
 Build and test from the repository root:
 
 ```sh
 lake build
 lake exe sqlean_tests
+python3 scripts/check_assurance_cli.py
+python3 -m unittest discover -s scripts -p 'test_*.py' -v
 python3 scripts/generate_crud_examples.py --check
 python3 scripts/check_crud_cli.py
 python3 scripts/generate_relational_examples.py --check
@@ -26,6 +35,12 @@ both PostgreSQL corpora and the actual parameter-execution check against
 PostgreSQL 16. Both jobs use Ubuntu 24.04 and Python 3.12. PostgreSQL checks use
 temporary private clusters; no database secrets are required. New runs cancel
 superseded runs for the same branch or pull request.
+
+The Lean build also checks independent SELECT derivations and rejects contract
+declarations depending on nonstandard axioms, including `sorryAx`. Offline tests
+guard the specification's import boundary: it may depend on its normative
+profile, immutable syntax/catalog definitions, and `Std`, but not on executable
+validators. The assurance CLI regression suite runs in the integration job.
 
 To run the PostgreSQL oracle, supply a directory containing `initdb`, `pg_ctl`,
 and `psql` (for example, the output of `pg_config --bindir`):
@@ -92,13 +107,130 @@ printf '%s\n' 'SELECT id FROM users' | lake exe sqlean
 
 The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionally validates the statement and reports selected/RETURNING output types (or the mutation category when no rows are returned). Syntax/validation failures exit with status 1; invalid CLI arguments exit with status 2. Parsing or certifying SQL does not execute it. DDL validation reports an in-memory catalog transition without changing a database.
 
+SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
+keep their behavior. Choose one tier before checking:
+
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.1` profile.
+  `valid` carries an independent declarative derivation in the Lean API.
+  `invalid` reports a violated profile condition, `unsupported` reports a
+  missing rule or excluded feature, and `inconclusive` reports budget exhaustion.
+- `--assurance checked` uses the existing expanded static checks. Success is
+  named `checked`, with `checker-acceptance` evidence and coarse type families.
+  A rejection is named `rejected`, not a refutation of the independent contract.
+  This tier retains joins, grouping, subqueries, CTEs, set operations, dialect
+  extensions, and mutation/DDL checking.
+- `--assurance syntax` reports `parsed` without checking catalog bindings or
+  types. It does not read a supplied schema or infer parameter types.
+
+Assurance mode emits exactly one JSON report, without canonical SQL. The
+`assurance` field identifies the requested tier; `evidence` is `none` on every
+failure. Successful SELECT reports include ordered `outputColumns` with names,
+types, and nullability. A contract report uses `typePrecision: "exact"`; the
+expanded tier uses `"family"`. The JSON is a report, not a serialized Lean proof.
+Contract certificates are indexed by the exact profile, catalog, parameter
+environment, and advanced query AST, and expose a catalog-preservation theorem.
+There is no automatic fallback from a failed contract check to weaker evidence.
+
+```sh
+lake exe sqlean --assurance contract --schema fixtures/crud/schema.json \
+  'SELECT name, id FROM users WHERE age >= 18 ORDER BY id'
+lake exe sqlean --assurance contract --param-types 'int?' \
+  'SELECT $1 AS value WHERE $1 IS NOT NULL'
+lake exe sqlean --assurance checked --schema fixtures/advanced/schema.json \
+  'SELECT COUNT(*) AS total FROM users'
+lake exe sqlean --assurance syntax 'SELECT unknown FROM absent'
+```
+
+Exit status is 0 for `valid`/`checked`/`parsed`, 1 for
+`invalid`/`rejected` or a parse error, 2 for invalid CLI options, 3 for
+`unsupported`, and 4 for `inconclusive`. Parse errors remain separate from
+AST-validity outcomes and are printed on stderr. `--max-depth N` changes the
+SELECT checking budget (default 1,024); zero is inconclusive, not invalid SQL.
+It cannot be used with syntax mode, and custom budgets for mutations/DDL are
+unsupported. Assurance mode cannot be combined with `--ast` or `--postgres`.
+
+The first independent profile has the following explicit boundary:
+
+- Source-free or single-table SELECT, optional table aliases, nonempty projection,
+  expression aliases, `*` and qualified wildcards, WHERE, ordinary DISTINCT,
+  ORDER BY, and nonnegative literal LIMIT/OFFSET. Top-level duplicate labels
+  retain their positions; sorting by an ambiguous label is invalid. Table
+  aliases hide the original name. Projection aliases are unavailable to WHERE
+  and sibling projection expressions.
+- Concrete INT32, TEXT, and BOOLEAN, with a separate nullable bit. Integer AST
+  literals from 0 through 2,147,483,647 have INT32 type; unary signs retain it.
+  Larger integer literals, decimal/exponent literals, BIGINT, VARCHAR, NUMERIC,
+  REAL, DOUBLE PRECISION, and type modifiers need future exact-type rules.
+  All supplied catalog and parameter types must be supported, including unused
+  declarations. Unsupported types are never silently collapsed into INT32 or TEXT.
+- Arithmetic requires INT32; Boolean operators require BOOLEAN. Comparisons
+  require the same concrete base type, including nullable operands. LIKE
+  requires TEXT. Casts among the three supported base types are permitted;
+  successful conversion of actual values is not proved. IN requires a nonempty
+  list with one common concrete type; BETWEEN uses the same common-type rule.
+- A bare NULL has unknown type until context supplies one. A matching concrete
+  operand can supply that context; NULL cannot reconcile two incompatible types.
+  All-NULL comparisons use TEXT, and a projected unconstrained NULL becomes
+  nullable TEXT. NULL Boolean operands are contextual BOOLEAN. Unknown arithmetic
+  and unary signs without a concrete numeric type are rejected. Null tests return
+  non-null BOOLEAN. Other expressions conservatively propagate nullable inputs;
+  WHERE does not refine output nullability.
+- Numbered parameters denote positive declared identities and may repeat.
+  Anonymous parameters must occur as 1,2,... in source order; mixing styles is
+  invalid even for manually constructed ASTs. Contract parameter declarations
+  retain concrete `Advanced.DataType` values, rather than `SqlType` families.
+- Ordinary sorting permits input expressions, unique bare output names, and
+  one-based output positions. Output names take precedence over input names;
+  aliases are not substituted inside larger expressions. DISTINCT sorting is
+  currently certified only by output names or positions. Other DISTINCT sort
+  expressions return Unsupported pending a projected-expression identity rule.
+
+Independent rules for joins, derived sources, grouping/aggregates, correlation,
+LATERAL, CTEs/recursion, set operations, and source column-renaming remain future
+milestones. DISTINCT ON and ILIKE require separate dialect rules. These forms
+remain supported by the expanded parser/checker. The contract draft remains the
+target for the general SELECT family; the first implementation does not claim
+complete coverage or completeness of its checker.
+
+The implementation separates [normative profile tables](SQLean/SelectContract/Profile.lean),
+[inductive validity judgments](SQLean/SelectContract/Spec.lean), and a
+[proof-producing checker](SQLean/SelectContract/Checker.lean).
+`SelectContract.checkQuery_sound` connects success to `SelectContract.SelectValid`;
+the latter does not call an executable validator or inference procedure.
+[Assurance APIs](SQLean/Assurance.lean) wrap the four contract outcomes and expose
+the expanded check as a separate tier. For example:
+
+```lean
+import SQLean.Assurance
+open SQLean
+
+def contractQuery : Advanced.Query := {
+  body := .select { items := [.expression (.literal (.int 1)) (some "one")] } }
+
+#eval (SelectContract.checkQuery .basicV01 [] [] contractQuery).map
+  (fun certificate => certificate.output)
+
+example (certificate : SelectContract.Certificate profile catalog params query) :
+    SelectContract.SelectValid profile catalog params query certificate.output :=
+  certificate.valid
+
+example (certificate : SelectContract.Certificate profile catalog params query) :
+    certificate.outputCatalog = catalog := certificate.catalog_unchanged
+```
+
+The earlier declarative certificates retain their original profiles. They are
+not automatically certificates for this new contract. None of these tiers
+establishes parser/renderer correctness, runtime cast or arithmetic safety,
+subquery cardinality, recursive termination, authorization, or transaction
+execution. Database comparisons remain finite test evidence.
+
 Schemas are supplied externally as JSON:
 
 ```json
 {"tables":[{"name":"flags","columns":[{"name":"id","type":"int"},{"name":"enabled","type":"bool"},{"name":"label","type":"text"}]}]}
 ```
 
-JSON schema input types are `int`, `text`, `bool`, and `real`; columns may specify `"nullable": true` and otherwise default to non-null. Table/column names must be nonempty and unique in their scope, and tables must have columns. Schema names are exact; ordinary unquoted SQL identifiers normalize to lowercase. [The CRUD schema](fixtures/crud/schema.json) contains `users`, `inventory`, and `flags`; [the relational schema](fixtures/relational/schema.json) contains users, orders, departments, employees, and flags. These compatibility fixtures contain only required, non-null columns without defaults, so their INSERT statements must supply every column. `parseSchemaJson` returns the original `Schema` interface; `Advanced.parseCatalogJson` additionally preserves defaults and key metadata, as described with the advanced catalog API below. The CLI uses that catalog decoder and selects advanced validation when the schema needs its richer metadata.
+The original `parseSchemaJson` interface accepts JSON types `int`, `text`, `bool`, and `real`; columns may specify `"nullable": true` and otherwise default to non-null. Table/column names must be nonempty and unique in their scope, and tables must have columns. Schema names are exact; ordinary unquoted SQL identifiers normalize to lowercase. [The CRUD schema](fixtures/crud/schema.json) contains `users`, `inventory`, and `flags`; [the relational schema](fixtures/relational/schema.json) contains users, orders, departments, employees, and flags. These compatibility fixtures contain only required, non-null columns without defaults, so their INSERT statements must supply every column. `parseSchemaJson` returns the original `Schema` interface; `Advanced.parseCatalogJson` additionally preserves defaults and key metadata, as described with the advanced catalog API below. The CLI uses that catalog decoder and selects advanced validation when the schema needs its richer metadata.
 
 For example, join orders before grouping customers and filter by their number of matching orders:
 
@@ -390,7 +522,7 @@ lake exe sqlean --schema fixtures/advanced/schema.json --param-types int \
   'SELECT id FROM users WHERE id = $1'
 ```
 
-Parameter types are `int,text,bool,real`; a suffix `?` permits NULL values, for example `int,text?`. Schema JSON accepts these same base families with an optional `nullable` Boolean (default false), a `default` SQL-expression string, table `uniqueKeys` arrays, a `primaryKey` column array, and a `namedKeys` object mapping constraint names to column arrays. `Advanced.parseCatalogJson` validates this metadata. ON CONFLICT targets must match a declared unique key or named constraint. DO UPDATE requires a target; its expressions can qualify the target table or `excluded`. Unqualified names shared by both scopes are ambiguous. Omitted INSERT columns require a default or nullable type; INSERT SELECT checks arity and assignment compatibility.
+Compatibility parameter types are `int,text,bool,real`; a suffix `?` permits NULL values, for example `int,text?`. Contract parameter input additionally recognizes concrete `bigint`, `double`, `numeric`, and `varchar` declarations so unsupported exact types can be reported without collapsing them. Advanced schema JSON retains concrete `int`, `bigint`, `text`, `bool`, `real`, `double precision`, `numeric`, and `varchar` declarations and an optional `modifiers` array of nonnegative integers. It also accepts a `nullable` Boolean (default false), a `default` SQL-expression string, table `uniqueKeys` arrays, a `primaryKey` column array, and a `namedKeys` object mapping constraint names to column arrays. `Advanced.parseCatalogJson` validates this metadata with the expanded checker; `Advanced.decodeCatalogJson` only decodes its structure, allowing the contract checker to validate the environment independently. ON CONFLICT targets must match a declared unique key or named constraint. DO UPDATE requires a target; its expressions can qualify the target table or `excluded`. Unqualified names shared by both scopes are ambiguous. Omitted INSERT columns require a default or nullable type; INSERT SELECT checks arity and assignment compatibility.
 
 Table DDL supports CREATE TABLE / IF NOT EXISTS, column NULL/NOT NULL and constant DEFAULT expressions, and column/table PRIMARY KEY and UNIQUE constraints. Types include INT/INTEGER, BIGINT, TEXT, VARCHAR with optional length, BOOLEAN, REAL, DOUBLE PRECISION, and NUMERIC with optional precision/scale. ALTER TABLE supports ADD/DROP COLUMN with existence guards, RENAME COLUMN/TO, compatible ALTER COLUMN TYPE, SET/DROP NOT NULL, and SET/DROP DEFAULT. Multiple actions must affect distinct columns; RENAME is standalone. This conservatively avoids PostgreSQL's phase-dependent combinations. DROP TABLE supports IF EXISTS and RESTRICT/CASCADE. The catalog models only tables and local unique/primary constraints, not external dependency graphs or row data.
 

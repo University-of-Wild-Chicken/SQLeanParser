@@ -54,9 +54,18 @@ private def catalogColumn (json : Lean.Json) : Except String Column := do
   let name ← (← json.getObjVal? "name").getStr?
   let typeName ← (← json.getObjVal? "type").getStr?
   let type : DataType ← match typeName with
-    | "int" => pure ⟨.int, []⟩ | "text" => pure ⟨.text, []⟩
-    | "bool" => pure ⟨.bool, []⟩ | "real" => pure ⟨.real, []⟩
+    | "int" | "integer" | "int32" => pure ⟨.int, []⟩
+    | "bigint" | "int64" => pure ⟨.bigInt, []⟩
+    | "text" => pure ⟨.text, []⟩
+    | "bool" | "boolean" => pure ⟨.bool, []⟩
+    | "real" => pure ⟨.real, []⟩
+    | "double" | "double precision" => pure ⟨.doublePrecision, []⟩
+    | "numeric" | "decimal" => pure ⟨.numeric, []⟩
+    | "varchar" => pure ⟨.varchar, []⟩
     | _ => throw s!"unknown SQL type '{typeName}'"
+  let modifiers ← match optionalJson json "modifiers" with
+    | none => pure [] | some value => (← value.getArr?).toList.mapM Lean.Json.getNat?
+  let type := { type with modifiers }
   let nullable ← match optionalJson json "nullable" with
     | none => pure false | some value => value.getBool?
   let defaultValue ← match optionalJson json "default" with
@@ -79,11 +88,16 @@ private def catalogTable (json : Lean.Json) : Except String CatalogTable := do
         pure (key, ← namesJson names)
   pure { name, columns, uniqueKeys, primaryKey, namedKeys }
 
+/-- Decode catalog structure without running a validity checker. This lets an
+independent contract validator classify invalid environments itself. -/
+def decodeCatalogJson (source : String) : Except String Catalog := do
+  let json ← Lean.Json.parse source
+  (← (← json.getObjVal? "tables").getArr?).toList.mapM catalogTable
+
 /-- Extended schema JSON adds nullable columns, SQL default expressions and
 unique/primary/named keys used for DDL transitions and ON CONFLICT checking. -/
 def parseCatalogJson (source : String) : Except String Catalog := do
-  let json ← Lean.Json.parse source
-  let catalog ← (← (← json.getObjVal? "tables").getArr?).toList.mapM catalogTable
+  let catalog ← decodeCatalogJson source
   let _ ← (checkCatalogDefaults catalog).mapError toString
   pure catalog
 

@@ -1,16 +1,20 @@
 import SQLean
 import SQLean.SchemaJson
+import Lean.Data.Json
 
 open SQLean
+open Lean (toJson)
 
 private def usage : String :=
-  "Usage: sqlean [--ast] [--schema schema.json] [--param-types int,text] [--postgres] [--file query.sql | SQL]\n\
+  "Usage: sqlean [--ast] [--schema schema.json] [--param-types int,text] [--postgres] [--assurance contract|checked|syntax] [--max-depth N] [--file query.sql | SQL]\n\
    Parse one SELECT, INSERT, UPDATE, or DELETE, or CREATE/ALTER/DROP TABLE.\n\
    With no SQL or --file, read stdin.\n\
    --ast                  Print the public Lean AST\n\
    --schema schema.json   Also certify table/column resolution and types\n\
    --param-types TYPES    Parameter types in position order (int,text,bool,real; suffix ? permits NULL)\n\
    --postgres             Render anonymous ? parameters as PostgreSQL $n\n\
+   --assurance LEVEL      Emit a JSON assurance report (contract, checked, or syntax)\n\
+   --max-depth N          SELECT assurance recursion budget (default 1024; zero is inconclusive)\n\
    --help                 Show this help\n"
 
 private structure Options where
@@ -21,12 +25,26 @@ private structure Options where
   help : Bool := false
   parameterTypes : Option String := none
   postgres : Bool := false
+  assurance : Option Assurance.Level := none
+  maxDepth : Option Nat := none
 
 private def parseArgs : List String → Options → Except String Options
   | [], options => pure options
   | "--help" :: rest, options => parseArgs rest { options with help := true }
   | "--ast" :: rest, options => parseArgs rest { options with ast := true }
   | "--postgres" :: rest, options => parseArgs rest { options with postgres := true }
+  | "--assurance" :: level :: rest, options => do
+      if options.assurance.isSome then throw "--assurance may only be specified once"
+      let level ← match level with
+        | "contract" => pure Assurance.Level.declarative
+        | "checked" => pure .executable
+        | "syntax" => pure .syntax
+        | _ => throw "--assurance requires contract, checked, or syntax"
+      parseArgs rest { options with assurance := some level }
+  | "--max-depth" :: value :: rest, options => do
+      if options.maxDepth.isSome then throw "--max-depth may only be specified once"
+      let some depth := value.toNat? | throw "--max-depth requires a nonnegative integer"
+      parseArgs rest { options with maxDepth := some depth }
   | "--param-types" :: types :: rest, options =>
       if options.parameterTypes.isSome then throw "--param-types may only be specified once"
       else parseArgs rest { options with parameterTypes := some types }
@@ -38,6 +56,8 @@ private def parseArgs : List String → Options → Except String Options
         throw "supply exactly one SQL argument or --file"
       else parseArgs rest { options with queryFile := some path }
   | "--schema" :: [], _ => throw "--schema requires a path"
+  | "--assurance" :: [], _ => throw "--assurance requires contract, checked, or syntax"
+  | "--max-depth" :: [], _ => throw "--max-depth requires a nonnegative integer"
   | "--param-types" :: [], _ => throw "--param-types requires comma-separated types"
   | "--file" :: [], _ => throw "--file requires a path"
   | arg :: rest, options =>
@@ -45,6 +65,97 @@ private def parseArgs : List String → Options → Except String Options
       else if options.source.isSome || options.queryFile.isSome then
         throw "supply one quoted SQL argument or --file"
       else parseArgs rest { options with source := some arg }
+
+private def validateOptions (options : Options) : Except String Options := do
+  if options.assurance.isSome && (options.ast || options.postgres) then
+    throw "--assurance emits JSON and cannot be combined with --ast or --postgres"
+  if options.maxDepth.isSome && (options.assurance.isNone || options.assurance == some .syntax) then
+    throw "--max-depth requires --assurance contract or checked"
+  pure options
+
+private def diagnosticJson (diagnostic : SelectContract.Diagnostic) : Lean.Json :=
+  Lean.Json.mkObj [("code", toJson diagnostic.code), ("message", toJson diagnostic.message)]
+
+private def contractColumnJson (column : SelectContract.OutputColumn) : Lean.Json :=
+  let name := match column.type.base with | .int32 => "int32" | .text => "text" | .bool => "bool"
+  Lean.Json.mkObj [("name", toJson column.name), ("type", toJson name),
+    ("nullable", toJson column.type.nullable)]
+
+private def expandedColumnJson (column : ColumnDef) : Lean.Json :=
+  let name := match column.type.base with
+    | .int => "int" | .text => "text" | .bool => "bool" | _ => "real"
+  Lean.Json.mkObj [("name", toJson column.name), ("type", toJson name),
+    ("nullable", toJson column.type.isNullable)]
+
+private def report (level : Assurance.Level) (status : String)
+    (columns : Option (List Lean.Json) := none) (diagnostic : Option SelectContract.Diagnostic := none)
+    (catalogUnchanged : Bool := false) : IO UInt32 := do
+  let profile := match level with
+    | .declarative => SelectContract.Profile.basicV01.name
+    | .executable => "sqlean-expanded-v0"
+    | .syntax => "sqlean-syntax-v0"
+  let evidence := match status with
+    | "valid" => "declarative-derivation" | "checked" => "checker-acceptance"
+    | "parsed" => "parsed-ast" | _ => "none"
+  let mut fields := [("assurance", toJson level.name), ("status", toJson status),
+    ("profile", toJson profile), ("evidence", toJson evidence)]
+  if let some columns := columns then
+    fields := fields ++ [("outputColumns", .arr columns.toArray),
+      ("typePrecision", toJson (if level == .declarative then "exact" else "family"))]
+  if let some diagnostic := diagnostic then fields := fields ++ [("diagnostic", diagnosticJson diagnostic)]
+  if catalogUnchanged then fields := fields ++ [("catalogUnchanged", toJson true)]
+  IO.println (Lean.Json.mkObj fields).compress
+  pure (match status with
+    | "valid" | "checked" | "parsed" => 0
+    | "unsupported" => 3 | "inconclusive" => 4 | _ => 1)
+
+private def runAssurance (options : Options) (level : Assurance.Level) (source : String) : IO UInt32 := do
+  let statement ← match Advanced.parse source with
+    | .ok statement => pure statement
+    | .error error => throw (IO.userError s!"parse error: {error}")
+  if level == .syntax then return ← report level "parsed"
+  let schemaSource ← match options.schemaFile with
+    | some path => IO.FS.readFile path
+    | none => pure "{\"tables\":[]}"
+  let catalog ← match Advanced.decodeCatalogJson schemaSource with
+    | .ok catalog => pure catalog
+    | .error error =>
+      return ← report level (if level == .declarative then "invalid" else "rejected") none
+        (some ⟨"environment.decode", error⟩)
+  let fuel := options.maxDepth.getD 1024
+  if level == .declarative then
+    let params ← match Assurance.parseContractParameterTypes (options.parameterTypes.getD "") with
+      | .ok params => pure params
+      | .error error => return ← report level "invalid" none (some ⟨"environment.parameters", error⟩)
+    match statement with
+    | .query query =>
+      match Assurance.checkContract .basicV01 catalog params query fuel with
+      | .valid certificate => report level "valid" (some (certificate.output.map contractColumnJson)) none true
+      | .invalid diagnostic => report level "invalid" none (some diagnostic)
+      | .unsupported diagnostic => report level "unsupported" none (some diagnostic)
+      | .inconclusive diagnostic => report level "inconclusive" none (some diagnostic)
+    | _ => report level "unsupported" none (some ⟨"coverage.statement", "this contract covers SELECT statements"⟩)
+  else
+    let params ← match Advanced.parseParameterTypes (options.parameterTypes.getD "") with
+      | .ok params => pure params
+      | .error error => return ← report level "rejected" none (some ⟨"environment.parameters", error⟩)
+    match statement with
+    | .query query =>
+      match Assurance.checkExpanded catalog params query fuel with
+      | .checked certificate => report level "checked" (some (certificate.output.map expandedColumnJson)) none true
+      | .rejected diagnostic => report level "rejected" none (some diagnostic)
+      | .inconclusive diagnostic => report level "inconclusive" none (some diagnostic)
+    | _ =>
+      if options.maxDepth.isSome then
+        return ← report level "unsupported" none
+          (some ⟨"coverage.statement-budget", "custom --max-depth is available for SELECT only"⟩)
+      match Advanced.checkStatementDetailed catalog params statement with
+      | .ok result =>
+        report level "checked" (some (result.outputTypes.map (fun type => expandedColumnJson ⟨"", type⟩)))
+      | .error error =>
+          if error.message == "advanced validation depth exhausted" then
+            report level "inconclusive" none (some ⟨"resource.depth", error.message⟩)
+          else report level "rejected" none (some ⟨"expanded.rejected", error.message⟩)
 
 private def readStdin : IO String := do
   let stdin ← IO.getStdin
@@ -60,6 +171,7 @@ private def run (options : Options) : IO UInt32 := do
     | some source, _ => pure source
     | _, some path => IO.FS.readFile path
     | _, _ => readStdin
+  if let some level := options.assurance then return ← runAssurance options level source
   let statement ← match parseStatement source with
     | .ok statement => pure statement
     | .error error => throw (IO.userError s!"parse error: {error}")
@@ -113,7 +225,7 @@ private def run (options : Options) : IO UInt32 := do
   pure 0
 
 def main (args : List String) : IO UInt32 := do
-  match parseArgs args {} with
+  match (parseArgs args {}) >>= validateOptions with
   | .error error =>
     (← IO.getStderr).putStrLn s!"{error}\n{usage}"
     pure 2

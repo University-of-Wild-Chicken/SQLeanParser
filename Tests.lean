@@ -22,6 +22,8 @@ import Tests.AdvancedParsing
 import Tests.AdvancedValidation
 import Tests.AdvancedStatements
 import Tests.AdvancedCorpus
+import Tests.SelectContract
+import Tests.SelectContractTrust
 
 namespace SQLean.Tests
 
@@ -72,6 +74,8 @@ def run : IO Unit := do
   IO.println s!"PASS: {advancedStatements} advanced mutation, DDL, catalog, and API checks"
   let advancedCorpus ← advancedCorpusTests
   IO.println s!"PASS: {advancedCorpus} advanced examples (50 per query class) certified and round-tripped"
+  let contract ← selectContractTests
+  IO.println s!"PASS: {contract} independent SELECT contract and assurance API checks"
   IO.println "All tests passed. Lean proof examples compiled successfully."
 
 end SQLean.Tests
