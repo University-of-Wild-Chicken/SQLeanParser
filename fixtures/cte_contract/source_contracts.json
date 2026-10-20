@@ -1,0 +1,172 @@
+[
+  {
+    "id": "cte_contract:postgres:src/test/regress/sql/with.sql:statement-0",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "y",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "y",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:postgres:src/test/regress/sql/with.sql:statement-148",
+    "output_columns": [
+      {
+        "name": "foo",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:postgres:src/test/regress/sql/with.sql:statement-297",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:sqlc:internal/endtoend/testdata/cte_join_self/postgresql/pgx/query.sql:statement-0",
+    "output_columns": [
+      {
+        "name": "id1",
+        "type": "text",
+        "nullable": false
+      },
+      {
+        "name": "id2",
+        "type": "text",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:sqlc:internal/endtoend/testdata/cte_select_one/postgresql/pgx/query.sql:statement-0",
+    "output_columns": [
+      {
+        "name": "foo",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:materialize:test/sqllogictest/cte.slt:sqllogic-query-260",
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:materialize:test/sqllogictest/cte.slt:sqllogic-query-273",
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:materialize:test/sqllogictest/cte.slt:sqllogic-query-287",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:materialize:test/sqllogictest/cockroach/with.slt:sqllogic-query-80",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "bool",
+        "nullable": false
+      },
+      {
+        "name": "b",
+        "type": "bool",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:materialize:test/sqllogictest/cockroach/with.slt:sqllogic-query-86",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "bool",
+        "nullable": false
+      },
+      {
+        "name": "b",
+        "type": "bool",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:materialize:test/sqllogictest/cockroach/with.slt:sqllogic-query-109",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:materialize:test/sqllogictest/cockroach/with.slt:sqllogic-query-200",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "cte_contract:duckdb:test/sql/cte/test_cte.test:sqllogic-query-61",
+    "output_columns": [
+      {
+        "name": "zzz",
+        "type": "int32",
+        "nullable": false
+      },
+      {
+        "name": "y",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  }
+]

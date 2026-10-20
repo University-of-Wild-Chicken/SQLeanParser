@@ -27,6 +27,16 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.29 ordinary CTE increment](docs/cte-contract-v0.29.md) adds independent
+nonrecursive SELECT CTE validity: sequential lexical visibility, nested
+shadowing, positional output aliases and exact column types. CTE definitions
+contribute parameters once in written order, including unused definitions.
+References retain a distinct namespace origin without fabricating catalog
+tables. Fifty authored queries and thirteen unchanged sources receive complete
+certificates; all fifty sources receive checked rendering. Native observations
+keep PostgreSQL and SQLite scoping differences explicit. Recursive CTE validity
+and the other remaining PostgreSQL contracts still gate the alpha release.
+
 The [v0.28 null-predicate increment](docs/null-predicates-contract-v0.28.md)
 adds `IS [NOT] DISTINCT FROM`, postfix `ISNULL`/`NOTNULL`, and flat-row
 null tests. Independent rules distinguish raw NULL shortcuts, exact scalar
@@ -343,6 +353,7 @@ python3 scripts/check_context_values_cli.py --local-bin /usr/lib/postgresql/16/b
 python3 scripts/check_named_arguments_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_keyword_functions_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_null_predicates_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_cte_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -472,7 +483,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.28` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.29` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.
@@ -577,6 +588,10 @@ The current independent profile has the following explicit boundary:
   aliases are not substituted inside larger expressions. DISTINCT sorting is
   currently certified only by output names or positions. Other DISTINCT sort
   expressions return Unsupported pending a projected-expression identity rule.
+  PostgreSQL's raw integer constants, including folded unary-minus chains,
+  denote positions. Bare noninteger constants are rejected; unary plus and
+  explicit casts remain ordinary expressions. The INT4 token boundary is
+  retained even when a standalone numeric literal has a wider SQL type.
 - Pagination expressions are typed in an empty local scope: input columns and
   output aliases are unavailable. Supported numeric types use explicit
   assignment conversion to PostgreSQL's `int8` row-count target; an untyped NULL
@@ -586,9 +601,9 @@ The current independent profile has the following explicit boundary:
   The separate `checkPaginationBounds` API certifies only the outer bounds of
   a query and cannot establish full-query validity or parameter notation.
 
-Independent rules for grouping/aggregates, correlation, LATERAL,
-CTEs/recursion, set operations, and base-table column-renaming remain future
-milestones. DISTINCT ON and ILIKE require separate dialect rules. These forms
+Independent rules for grouping/aggregates, correlation, LATERAL, recursive
+CTEs, set operations and expression subqueries remain future milestones.
+DISTINCT ON also requires a separate rule. These forms
 remain supported by the expanded parser/checker. The contract draft remains the
 target for the general SELECT family; the first implementation does not claim
 complete coverage or completeness of its checker.

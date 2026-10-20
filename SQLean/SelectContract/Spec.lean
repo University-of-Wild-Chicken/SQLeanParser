@@ -547,7 +547,7 @@ Column lookup can still be ambiguous; the namespace itself remains well formed. 
 def NamespaceCompatible (left right : RelationNamespace) : Prop :=
   left.name ≠ right.name ∨
     (left.aliased = false ∧ right.aliased = false ∧
-      left.origin.isSome = true ∧ right.origin.isSome = true ∧ left.origin ≠ right.origin)
+      left.origin.isBase = true ∧ right.origin.isBase = true ∧ left.origin ≠ right.origin)
 
 instance (left right : RelationNamespace) : Decidable (NamespaceCompatible left right) := by
   unfold NamespaceCompatible
@@ -608,11 +608,33 @@ def ColumnAliasesValid (names : List Name) (output : List OutputColumn) : Prop :
 instance (names : List Name) (output : List OutputColumn) : Decidable (ColumnAliasesValid names output) :=
   inferInstanceAs (Decidable (_ ∧ _))
 
-/-- Sort syntax categories are part of the name-resolution rule, not an
-executable typing predicate. -/
-def SortExpression : Advanced.Expr → Prop
-  | .literal (.int _) | .column none _ none => False
-  | _ => True
+/-- PostgreSQL SQL92 sort constants retain their raw token category.
+Only signed chains of integer tokens that fit the scanner's INT4 category are
+ordinals. Unary plus is an operator expression; it must not be folded here. -/
+inductive SortSyntax where
+  | integer (position : Int)
+  | numericConstant
+  | otherConstant
+  | expression
+  deriving Repr, BEq, DecidableEq
+
+def sortSyntax : Advanced.Expr → SortSyntax
+  | .literal (.int n) =>
+      if n ≤ 2147483647 then .integer (Int.ofNat n) else .numericConstant
+  | .decimal _ => .numericConstant
+  | .null | .literal (.text _) | .literal (.bool _) => .otherConstant
+  | .unary .neg arg => match sortSyntax arg with
+      | .integer n => .integer (-n)
+      | .numericConstant => .numericConstant
+      | _ => .expression
+  | _ => .expression
+
+/-- Constants use the SQL92 rules above. Bare output names use name resolution;
+all other admitted expressions use ordinary scalar typing. -/
+def SortExpression (expr : Advanced.Expr) : Prop :=
+  sortSyntax expr = .expression ∧ match expr with
+    | .column none _ none => False
+    | _ => True
 
 instance (expr : Advanced.Expr) : Decidable (SortExpression expr) := by
   unfold SortExpression
@@ -634,8 +656,10 @@ instance (distinct : Bool) (output : List OutputColumn) : Decidable (DistinctAll
 names are an error. Compound expressions see input bindings, not aliases. -/
 inductive SortValid (params : ParameterEnv) (scope : Scope) (output : List OutputColumn) (distinct : Bool) :
     Advanced.Expr → List Parameter → Prop where
-  | ordinal (positive : 0 < n) (inRange : n ≤ output.length) (orderable : OrdinalOrderable output n) :
-      SortValid params scope output distinct (.literal (.int n)) []
+  | ordinal (constant : sortSyntax expr = .integer position)
+      (positive : 0 < position) (inRange : position.toNat ≤ output.length)
+      (orderable : OrdinalOrderable output position.toNat) :
+      SortValid params scope output distinct expr []
   | outputName (resolved : output.filter (·.name == name) = [column])
       (orderable : column.type.base.orderable = true) :
       SortValid params scope output distinct (.column none name) []
@@ -722,7 +746,7 @@ def PaginationBoundsCertificate.runtimeObligation
 order. This deliberately differs from unique namespace resolution for columns. -/
 def LockTarget (scope : Scope) (target : Name) : Prop :=
   target ≠ "" ∧ ∃ relation ∈ scope.relations.find? (fun relation => relation.name == target),
-    relation.origin.isSome = true ∧ relation.nullable = false
+    relation.origin.isBase = true ∧ relation.nullable = false
 
 instance (scope : Scope) (target : Name) : Decidable (LockTarget scope target) := by
   unfold LockTarget
@@ -730,7 +754,7 @@ instance (scope : Scope) (target : Name) : Decidable (LockTarget scope target) :
 
 def LockTargets (scope : Scope) (targets : List Name) : Prop :=
   if targets = [] then ∀ relation ∈ scope.relations,
-    relation.origin.isSome = true ∧ relation.nullable = false
+    relation.origin = .cte ∨ (relation.origin.isBase = true ∧ relation.nullable = false)
   else ∀ target ∈ targets, LockTarget scope target
 
 instance (scope : Scope) (targets : List Name) : Decidable (LockTargets scope targets) := by
@@ -747,65 +771,82 @@ inductive LockingValid (scope : Scope) (distinct : Bool) :
       (tail : LockingValid scope distinct clauses) :
       LockingValid scope distinct (clause :: clauses)
 
+def CTENamesValid (ctes : List Advanced.CTE) : Prop :=
+  (ctes.map Advanced.CTE.name).Nodup ∧ ∀ cte ∈ ctes, cte.name ≠ ""
+
+instance (ctes : List Advanced.CTE) : Decidable (CTENamesValid ctes) := by
+  unfold CTENamesValid
+  infer_instance
+
 mutual
   /-- Every ON predicate sees exactly its two child scopes, before this join's
   own NULL extension. Parameters are visited left source, right source, then ON.
   USING/NATURAL preserve separate qualified and exposed scopes. Non-LATERAL
   derived sources expose a certified child row without fabricating catalog metadata. -/
   inductive SourceValid (profile : Profile) (catalog : Catalog) (params : ParameterEnv) :
-      Option Advanced.From → Scope → List Parameter → Prop where
-    | empty : SourceValid profile catalog params none .empty []
-    | table (present : table ∈ catalog) (resolved : table.matchesReference name schema = true)
+      CTEEnv → Option Advanced.From → Scope → List Parameter → Prop where
+    | empty : SourceValid profile catalog params env none .empty []
+    | table (unshadowed : schema.isSome = true ∨ env.lookup name = none)
+        (present : table ∈ catalog) (resolved : table.matchesReference name schema = true)
         (aliasValid : ∀ aliasName ∈ alias, aliasName ≠ "")
         (columns : TableColumns table table.columns bindings) :
-        SourceValid profile catalog params (some (.table name alias [] schema)) (Scope.ofTable table.identity alias bindings) []
-    | tableRenamed (present : table ∈ catalog) (resolved : table.matchesReference name schema = true)
+        SourceValid profile catalog params env (some (.table name alias [] schema)) (Scope.ofTable table.identity alias bindings) []
+    | tableRenamed (unshadowed : schema.isSome = true ∨ env.lookup name = none)
+        (present : table ∈ catalog) (resolved : table.matchesReference name schema = true)
         (aliasValid : alias ≠ "")
         (columns : TableColumns table table.columns bindings)
         (aliasesValid : ColumnAliasesValid aliases bindings) :
-        SourceValid profile catalog params (some (.table name (some alias) aliases schema))
+        SourceValid profile catalog params env (some (.table name (some alias) aliases schema))
           (Scope.ofTable table.identity (some alias) (renameOutput aliases bindings)) []
-    | cross (leftValid : SourceValid profile catalog params (some left) leftScope leftUses)
-        (rightValid : SourceValid profile catalog params (some right) rightScope rightUses)
+    | cte (resolved : env.lookup name = some binding)
+        (aliasValid : ∀ aliasName ∈ alias, aliasName ≠ "")
+        (columnsValid : ColumnAliasesValid columns binding.output)
+        (aliasRequired : columns = [] ∨ alias.isSome = true) :
+        SourceValid profile catalog params env (some (.table name alias columns none))
+          (Scope.ofCTE name alias (renameOutput columns binding.output)) []
+    | cross (leftValid : SourceValid profile catalog params env (some left) leftScope leftUses)
+        (rightValid : SourceValid profile catalog params env (some right) rightScope rightUses)
         (aliases : JoinAliasesDistinct leftScope rightScope) :
-        SourceValid profile catalog params (some (.join .cross left right .none))
+        SourceValid profile catalog params env (some (.join .cross left right .none))
           (leftScope ++ rightScope) (leftUses ++ rightUses)
-    | on (leftValid : SourceValid profile catalog params (some left) leftScope leftUses)
-        (rightValid : SourceValid profile catalog params (some right) rightScope rightUses)
+    | on (leftValid : SourceValid profile catalog params env (some left) leftScope leftUses)
+        (rightValid : SourceValid profile catalog params env (some right) rightScope rightUses)
         (aliases : JoinAliasesDistinct leftScope rightScope)
         (kindValid : kind ≠ .cross)
         (condition : PredicateValid params (leftScope ++ rightScope) (some expr) onUses) :
-        SourceValid profile catalog params (some (.join kind left right (.on expr)))
+        SourceValid profile catalog params env (some (.join kind left right (.on expr)))
           (joinScope kind leftScope rightScope) (leftUses ++ rightUses ++ onUses)
-    | using (leftValid : SourceValid profile catalog params (some left) leftScope leftUses)
-        (rightValid : SourceValid profile catalog params (some right) rightScope rightUses)
+    | using (leftValid : SourceValid profile catalog params env (some left) leftScope leftUses)
+        (rightValid : SourceValid profile catalog params env (some right) rightScope rightUses)
         (aliases : JoinAliasesDistinct leftScope rightScope)
         (kindValid : kind ≠ .cross) (nonempty : keys ≠ []) (unique : keys.Nodup)
         (keysValid : JoinKeysValid kind leftScope.output rightScope.output keys merged) :
-        SourceValid profile catalog params (some (.join kind left right (.using keys)))
+        SourceValid profile catalog params env (some (.join kind left right (.using keys)))
           (mergedJoinScope kind leftScope rightScope keys merged) (leftUses ++ rightUses)
-    | natural (leftValid : SourceValid profile catalog params (some left) leftScope leftUses)
-        (rightValid : SourceValid profile catalog params (some right) rightScope rightUses)
+    | natural (leftValid : SourceValid profile catalog params env (some left) leftScope leftUses)
+        (rightValid : SourceValid profile catalog params env (some right) rightScope rightUses)
         (aliases : JoinAliasesDistinct leftScope rightScope)
         (kindValid : kind ≠ .cross)
         (unique : (naturalJoinKeys leftScope.output rightScope.output).Nodup)
         (keysValid : JoinKeysValid kind leftScope.output rightScope.output
           (naturalJoinKeys leftScope.output rightScope.output) merged) :
-        SourceValid profile catalog params (some (.join kind left right .natural))
+        SourceValid profile catalog params env (some (.join kind left right .natural))
           (mergedJoinScope kind leftScope rightScope
             (naturalJoinKeys leftScope.output rightScope.output) merged) (leftUses ++ rightUses)
-    | derived (queryValid : QueryValid profile catalog params query output uses)
+    | derived (queryValid : QueryValid profile catalog params env query output uses)
         (aliasValid : alias ≠ "") (columnsValid : ColumnAliasesValid columns output)
         (nonLateral : lateral = false) :
-        SourceValid profile catalog params (some (.derived query alias columns lateral))
+        SourceValid profile catalog params env (some (.derived query alias columns lateral))
           (Scope.ofOutput alias (renameOutput columns output)) uses
 
   /-- Internal query derivations collect complete lexical occurrences. Nested
   queries do not restart anonymous ordinals or assert global notation validity. -/
   inductive QueryValid (profile : Profile) (catalog : Catalog) (params : ParameterEnv) :
-      Advanced.Query → List OutputColumn → List Parameter → Prop where
+      CTEEnv → Advanced.Query → List OutputColumn → List Parameter → Prop where
     | basic {select : Advanced.Select}
-        (source : SourceValid profile catalog params select.source scope sourceUses)
+        (names : CTENamesValid ctes)
+        (definitions : CTEsValid profile catalog params env ctes visible cteUses)
+        (source : SourceValid profile catalog params visible select.source scope sourceUses)
         (items : ItemsValid params scope select.items output selectUses)
         (nonempty : output ≠ [])
         (distinctComparable : DistinctAllowed select.distinct output)
@@ -816,10 +857,21 @@ mutual
         (lockingValid : LockingValid scope select.distinct locking)
         (noGrouping : select.groupBy = []) (noHaving : select.having = none)
         (noDistinctOn : select.distinctOn = []) :
-        QueryValid profile catalog params
-          ⟨.select select, [], false, orderBy, limit, offset, locking, offsetFirst⟩ output
-          (if offsetFirst then selectUses ++ sourceUses ++ whereUses ++ orderUses ++ offsetUses ++ limitUses
+        QueryValid profile catalog params env
+          ⟨.select select, ctes, false, orderBy, limit, offset, locking, offsetFirst⟩ output
+          (cteUses ++ if offsetFirst then selectUses ++ sourceUses ++ whereUses ++ orderUses ++ offsetUses ++ limitUses
            else selectUses ++ sourceUses ++ whereUses ++ orderUses ++ limitUses ++ offsetUses)
+  /-- Definitions are analyzed in order. A name becomes visible only after its
+  own query is certified, allowing inherited/base lookup in its defining body.
+  References reuse output metadata and never duplicate definition occurrences. -/
+  inductive CTEsValid (profile : Profile) (catalog : Catalog) (params : ParameterEnv) :
+      CTEEnv → List Advanced.CTE → CTEEnv → List Parameter → Prop where
+    | nil : CTEsValid profile catalog params env [] env []
+    | cons (body : QueryValid profile catalog params env head.query output uses)
+        (aliases : ColumnAliasesValid head.columns output)
+        (tail : CTEsValid profile catalog params
+          (⟨head.name, renameOutput head.columns output⟩ :: env) remaining visible restUses) :
+        CTEsValid profile catalog params env (head :: remaining) visible (uses ++ restUses)
 end
 
 /-- The public judgment checks exact metadata and parameter notation once,
@@ -828,7 +880,7 @@ inductive SelectValid (profile : Profile) (catalog : Catalog) (params : Paramete
     Advanced.Query → List OutputColumn → Prop where
   | certified (environment : WellFormedEnvironment catalog params)
       (supported : SupportedEnvironment catalog params)
-      (query : QueryValid profile catalog params ast output uses)
+      (query : QueryValid profile catalog params [] ast output uses)
       (parameterOrder : ParameterOrder uses) :
       SelectValid profile catalog params ast output
 

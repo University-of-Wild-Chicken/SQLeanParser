@@ -1,0 +1,43 @@
+{
+  "tables": [
+    {
+      "name": "items",
+      "schema": "public",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "score",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "name": "labels",
+      "schema": "public",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "category",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    }
+  ]
+}

@@ -280,7 +280,7 @@ class QualifiedNamesCliTests(unittest.TestCase):
         parse_reasons = {
             "column-aliases": "reserved identifier key",
             "partial-aliases": "reserved identifier key",
-            "substring": "SQL-standard SUBSTRING syntax is not supported by the SQLite profile",
+            "substring": "1:32: expected )",
             "locking": "SQLite does not support row-locking clauses",
             "locking-first-inner": "SQLite does not support row-locking clauses",
             "locking-first-left": "SQLite does not support row-locking clauses",
@@ -294,7 +294,8 @@ class QualifiedNamesCliTests(unittest.TestCase):
             exit_code, status, code = ((1, "invalid", "input.parse") if reason else
                                       (3, "unsupported", "coverage.sqlite.schema-qualification"))
             good = {"status": status, "diagnostic": {"code": code,
-                    "message": "1:23: " + reason if reason else "schema-qualified relations are unsupported"},
+                    "message": (reason if shape == "substring" else "1:23: " + reason) if reason else
+                               "schema-qualified relations are unsupported"},
                     "evidence": "none"}
             with patch.object(checker.subprocess, "run", return_value=subprocess.CompletedProcess(
                     [], exit_code, json.dumps(good), "")) as run:
@@ -304,6 +305,8 @@ class QualifiedNamesCliTests(unittest.TestCase):
             mutations = ["exit", "status", "code", "evidence", "sql", "parameterMap", "theorems"]
             if reason:
                 mutations += ["message", "missing_message", "wrong_parse_boundary"]
+            if shape == "substring":
+                mutations += ["wrong_parse_position"]
             for mutation in mutations:
                 report, result_code = deepcopy(good), exit_code
                 if mutation == "exit":
@@ -318,6 +321,8 @@ class QualifiedNamesCliTests(unittest.TestCase):
                     report["diagnostic"]["message"] = "unexpected input"
                 elif mutation == "missing_message":
                     del report["diagnostic"]["message"]
+                elif mutation == "wrong_parse_position":
+                    report["diagnostic"]["message"] = "1:31: expected )"
                 elif mutation == "wrong_parse_boundary":
                     report["diagnostic"]["message"] = (
                         "reserved identifier key" if reason != "reserved identifier key" else

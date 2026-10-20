@@ -27,7 +27,7 @@ private def patternCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "pattern SELECT"
-    ((SelectContract.checkQuery .basicV28 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV29 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "pattern identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -162,14 +162,14 @@ def patternMatchingContractTests : IO Nat := do
       for sql in [s!"SELECT NULL::{declaration} {operator} 'a'",
           s!"SELECT 'a' {operator} NULL::{declaration}"] do
         let query ← expectOk sql (Advanced.parseQuery sql)
-        match SelectContract.checkQuery .basicV28 [] [] query with
+        match SelectContract.checkQuery .basicV29 [] [] query with
         | .error (.invalid _) => pure ()
         | _ => throw (IO.userError s!"nonstring pattern input must be Invalid: {sql}")
         count := count + 1
   for sql in ["SELECT (SELECT 'a') ILIKE 'a'", "SELECT 'a' ~ (SELECT 'a')",
       "SELECT unknown_function() ~ 'a'", "SELECT ROW('a') ILIKE 'a'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV28 [] [] query with
+    match SelectContract.checkQuery .basicV29 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"pattern child coverage must remain Unsupported: {sql}")
     count := count + 1
@@ -192,12 +192,12 @@ def patternMatchingContractTests : IO Nat := do
       Advanced.Expr.regex (.parameter (.anonymous 2)) (.parameter (.anonymous 1)) false false,
       .pattern (.parameter (.anonymous 1)) (.parameter (.numbered 2)) true] do
     let query : Advanced.Query := { body := .select { items := [.expression expression] } }
-    match SelectContract.checkQuery .basicV28 [] params query with
+    match SelectContract.checkQuery .basicV29 [] params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "malformed pattern parameter order/style must be Invalid")
     count := count + 1
   let query ← expectOk "pattern exhaustion" (Advanced.parseQuery "SELECT 'a' ~* 'A'")
-  match SelectContract.checkQuery .basicV28 [] [] query 1 with
+  match SelectContract.checkQuery .basicV29 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "pattern exhaustion must be Inconclusive")
   count := count + 1

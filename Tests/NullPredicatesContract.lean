@@ -41,7 +41,7 @@ private def nullField (id : String) (record : Lean.Json) (field : String) : IO S
 private def nullCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) : IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "null predicate SELECT"
-    ((SelectContract.checkQuery .basicV28 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV29 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "null predicate identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -86,12 +86,12 @@ private def expectNullPair (query : Advanced.Query) (params : SelectContract.Par
     SQLean.Tests.assert ((← nullCertificate query params) == [⟨"v", ⟨.bool, false⟩⟩])
       s!"DISTINCT exact declared inputs: {left}, {right}"
   else if left == "JSON[]" && right == "JSON[]" then
-    match SelectContract.checkQuery .basicV28 [] params query with
+    match SelectContract.checkQuery .basicV29 [] params query with
     | .error (.unsupported diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == "array_element_operator")
           "JSON array native runtime equality gap must remain explicit"
     | _ => throw (IO.userError "uncertified JSON array equality acquired a certificate")
-  else match SelectContract.checkQuery .basicV28 [] params query with
+  else match SelectContract.checkQuery .basicV29 [] params query with
     | .error (.invalid diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == "distinct_signature")
           "known incompatible equality operands must be Invalid"
@@ -156,7 +156,7 @@ def nullPredicatesContractTests : IO Nat := do
         (s!"NULL {op} ARRAY[]", "array_constructor_type")] do
       let sql := s!"SELECT {expr}"
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV28 [] [] query with
+      match SelectContract.checkQuery .basicV29 [] [] query with
       | .error (.invalid diagnostic) =>
           SQLean.Tests.assert (diagnostic.code == code) s!"exact DISTINCT failure for {expr}"
       | _ => throw (IO.userError s!"invalid DISTINCT expression acquired a certificate: {expr}")
@@ -165,7 +165,7 @@ def nullPredicatesContractTests : IO Nat := do
         s!"ROW(1) {op} 'record input'", s!"(SELECT 1) {op} NULL",
         s!"'{"{}"}'::JSON[] {op} '{"{}"}'::JSON[]"] do
       let query ← expectOk expr (Advanced.parseQuery s!"SELECT {expr}")
-      match SelectContract.checkQuery .basicV28 [] [] query with
+      match SelectContract.checkQuery .basicV29 [] [] query with
       | .error (.unsupported _) => pure ()
       | _ => throw (IO.userError s!"unmodeled composite/subquery/equality dependency accepted: {expr}")
       count := count + 1
@@ -183,7 +183,7 @@ def nullPredicatesContractTests : IO Nat := do
       count := count + 1
     for expr in ["ROW(ROW(1))", "(SELECT 1)"] do
       let query ← expectOk expr (Advanced.parseQuery s!"SELECT {expr} {spelling}")
-      match SelectContract.checkQuery .basicV28 [] [] query with
+      match SelectContract.checkQuery .basicV29 [] [] query with
       | .error (.unsupported _) => pure ()
       | _ => throw (IO.userError "null test acquired unsupported composite/subquery evidence")
       count := count + 1
@@ -195,18 +195,18 @@ def nullPredicatesContractTests : IO Nat := do
     SQLean.Tests.assert ((← nullOutput sql) == [⟨label, ⟨type, false⟩⟩]) "null-predicate default labels"
     count := count + 1
   let query ← expectOk "null predicate fuel" (Advanced.parseQuery "SELECT ROW(1) IS DISTINCT FROM ROW(2)")
-  match SelectContract.checkQuery .basicV28 [] [] query 1 with
+  match SelectContract.checkQuery .basicV29 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "null predicate fuel exhaustion must remain Inconclusive")
   let params ← expectOk "null predicate lexical types" (Assurance.parseContractParameterTypes "INTEGER,INTEGER")
   let query : Advanced.Query := {body := .select {items := [.expression
     (.distinctFrom (.parameter (.anonymous 2)) (.parameter (.anonymous 1)))]}}
-  match SelectContract.checkQuery .basicV28 [] params query with
+  match SelectContract.checkQuery .basicV29 [] params query with
   | .error (.invalid diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "parameter_notation") "DISTINCT cannot reorder anonymous uses"
   | _ => throw (IO.userError "DISTINCT anonymous order was not enforced")
   let missing ← expectOk "raw NULL parameter" (Advanced.parseQuery "SELECT $1 IS DISTINCT FROM NULL")
-  match SelectContract.checkQuery .basicV28 [] [] missing with
+  match SelectContract.checkQuery .basicV29 [] [] missing with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "raw NULL comparison invented a missing parameter declaration")
   pure (count + 3)
@@ -307,7 +307,7 @@ private def nullConcreteFactor (factor : String)
         have _identity := identity.roundTrip
         have _postgres := postgres.roundTrip
         if nestedRows.contains id then
-          match SelectContract.checkQuery .basicV28 [] [] query with
+          match SelectContract.checkQuery .basicV29 [] [] query with
           | .error (.unsupported diagnostic) =>
               SQLean.Tests.assert (diagnostic.code == "record_value")
                 s!"{id}: nested composite source must retain its explicit typing boundary"

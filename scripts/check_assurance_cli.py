@@ -26,7 +26,7 @@ EXIT_CODES = {
 }
 ASSURANCE = {"contract": "declarative", "checked": "executable", "syntax": "syntax"}
 PROFILES = {
-    "contract": "sqlean-basic-select-v0.28",
+    "contract": "sqlean-basic-select-v0.29",
     "checked": "sqlean-expanded-v0",
     "syntax": "sqlean-syntax-v0",
 }
@@ -106,8 +106,9 @@ CASES = [
          "SELECT city, COUNT(*) AS n FROM users GROUP BY city", "unsupported"),
     Case("scalar subquery is an acknowledged contract gap",
          "SELECT (SELECT 1) AS n", "unsupported", schema=None),
-    Case("CTE is an acknowledged contract gap",
-         "WITH x AS (SELECT id FROM users) SELECT id FROM x", "unsupported"),
+    Case("CTE preserves certified output",
+         "WITH x AS (SELECT id FROM users) SELECT id FROM x",
+         columns=(("id", "int32", False),)),
     Case("set operation is an acknowledged contract gap",
          "SELECT id FROM users UNION SELECT id FROM flags", "unsupported"),
     Case("DISTINCT ON is a dialect extension",

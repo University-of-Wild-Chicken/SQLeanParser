@@ -1,0 +1,5321 @@
+[
+  {
+    "id": "cte-01-integer",
+    "source_kind": "synthetic",
+    "shape": "integer",
+    "sql": "WITH c AS (SELECT 1 AS x) SELECT x FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT 1 AS x) SELECT x FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-02-unknown-text",
+    "source_kind": "synthetic",
+    "shape": "unknown-text",
+    "sql": "WITH c AS (SELECT 'abc' AS x) SELECT x || x AS doubled FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT 'abc' AS x) SELECT x || x AS doubled FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "doubled",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "abcabc"
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "doubled"
+    ],
+    "sqlite_expected_rows": [
+      [
+        "abcabc"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "abcabc"
+        ]
+      ],
+      "items_only": [
+        [
+          "abcabc"
+        ]
+      ],
+      "labels_only": [
+        [
+          "abcabc"
+        ]
+      ],
+      "both": [
+        [
+          "abcabc"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          "abcabc"
+        ]
+      ],
+      "items_only": [
+        [
+          "abcabc"
+        ]
+      ],
+      "labels_only": [
+        [
+          "abcabc"
+        ]
+      ],
+      "both": [
+        [
+          "abcabc"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-03-unknown-null",
+    "source_kind": "synthetic",
+    "shape": "unknown-null",
+    "sql": "WITH c AS (SELECT NULL AS x) SELECT x FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT NULL AS x) SELECT x FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-04-typed-null",
+    "source_kind": "synthetic",
+    "shape": "typed-null",
+    "sql": "WITH c AS (SELECT CAST(NULL AS INTEGER) AS x) SELECT x FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT CAST(NULL AS INTEGER) AS x) SELECT x FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-05-full-aliases",
+    "source_kind": "synthetic",
+    "shape": "full-aliases",
+    "sql": "WITH c(a,b) AS (SELECT 1 AS x, 'z' AS y) SELECT c.* FROM c;",
+    "sqlite_sql": "WITH c(a,b) AS (SELECT 1 AS x, 'z' AS y) SELECT c.* FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "b",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "z"
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "a",
+      "b"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        "z"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          "z"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          "z"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-06-prefix-alias",
+    "source_kind": "synthetic",
+    "shape": "prefix-alias",
+    "sql": "WITH c(a) AS (SELECT 1 AS x, 'z' AS y) SELECT a,y FROM c;",
+    "sqlite_sql": "WITH c(a) AS (SELECT 1 AS x, 'z' AS y) SELECT a,y FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "y",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "z"
+      ]
+    ],
+    "sqlite_mode": "analysis_error",
+    "sqlite_error": "table c has 2 values for 1 columns",
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "a",
+      "y"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        "z"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          "z"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          "z"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-07-duplicate-labels",
+    "source_kind": "synthetic",
+    "shape": "duplicate-labels",
+    "sql": "WITH c AS (SELECT 1 AS x, 2 AS x) SELECT * FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT 1 AS x, 2 AS x) SELECT * FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        2
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x",
+      "x:1"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          2
+        ]
+      ],
+      "both": [
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          2
+        ]
+      ],
+      "both": [
+        [
+          1,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-08-duplicate-aliases",
+    "source_kind": "synthetic",
+    "shape": "duplicate-aliases",
+    "sql": "WITH c(x,x) AS (SELECT 1, 2) SELECT c.* FROM c;",
+    "sqlite_sql": "WITH c(x,x) AS (SELECT 1, 2) SELECT c.* FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        2
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x",
+      "x:1"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          2
+        ]
+      ],
+      "both": [
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          2
+        ]
+      ],
+      "both": [
+        [
+          1,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-09-unused-parameter",
+    "source_kind": "synthetic",
+    "shape": "unused-parameter",
+    "sql": "WITH unused AS (SELECT ? AS x) SELECT ? AS y;",
+    "sqlite_sql": "WITH unused AS (SELECT ? AS x) SELECT ? AS y;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      7,
+      9
+    ],
+    "output_columns": [
+      {
+        "name": "y",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        9
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "y"
+    ],
+    "sqlite_expected_rows": [
+      [
+        9
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          9
+        ]
+      ],
+      "items_only": [
+        [
+          9
+        ]
+      ],
+      "labels_only": [
+        [
+          9
+        ]
+      ],
+      "both": [
+        [
+          9
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          9
+        ]
+      ],
+      "items_only": [
+        [
+          9
+        ]
+      ],
+      "labels_only": [
+        [
+          9
+        ]
+      ],
+      "both": [
+        [
+          9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-10-repeated-reference",
+    "source_kind": "synthetic",
+    "shape": "repeated-reference",
+    "sql": "WITH c AS (SELECT ? AS x) SELECT a.x,b.x FROM c a CROSS JOIN c b;",
+    "sqlite_sql": "WITH c AS (SELECT ? AS x) SELECT a.x,b.x FROM c a CROSS JOIN c b;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        7,
+        7
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x",
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        7,
+        7
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          7,
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          7,
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          7,
+          7
+        ]
+      ],
+      "both": [
+        [
+          7,
+          7
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          7,
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          7,
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          7,
+          7
+        ]
+      ],
+      "both": [
+        [
+          7,
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-11-sequential",
+    "source_kind": "synthetic",
+    "shape": "sequential",
+    "sql": "WITH a AS (SELECT 1 AS x), b AS (SELECT x+1 AS y FROM a) SELECT y FROM b;",
+    "sqlite_sql": "WITH a AS (SELECT 1 AS x), b AS (SELECT x+1 AS y FROM a) SELECT y FROM b;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "y",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "y"
+    ],
+    "sqlite_expected_rows": [
+      [
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-12-three-siblings",
+    "source_kind": "synthetic",
+    "shape": "three-siblings",
+    "sql": "WITH a AS (SELECT 1 AS x), b AS (SELECT x+1 AS x FROM a), c AS (SELECT x+1 AS x FROM b) SELECT x FROM c;",
+    "sqlite_sql": "WITH a AS (SELECT 1 AS x), b AS (SELECT x+1 AS x FROM a), c AS (SELECT x+1 AS x FROM b) SELECT x FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        3
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          3
+        ]
+      ],
+      "items_only": [
+        [
+          3
+        ]
+      ],
+      "labels_only": [
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          3
+        ]
+      ],
+      "items_only": [
+        [
+          3
+        ]
+      ],
+      "labels_only": [
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-13-inherited-derived",
+    "source_kind": "synthetic",
+    "shape": "inherited-derived",
+    "sql": "WITH c AS (SELECT 1 AS x) SELECT d.x FROM (SELECT x FROM c) d;",
+    "sqlite_sql": "WITH c AS (SELECT 1 AS x) SELECT d.x FROM (SELECT x FROM c) d;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-14-nested-shadow",
+    "source_kind": "synthetic",
+    "shape": "nested-shadow",
+    "sql": "WITH c AS (SELECT 1 AS x) SELECT d.x FROM (WITH c AS (SELECT 2 AS x) SELECT x FROM c) d;",
+    "sqlite_sql": "WITH c AS (SELECT 1 AS x) SELECT d.x FROM (WITH c AS (SELECT 2 AS x) SELECT x FROM c) d;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-15-own-body-outer",
+    "source_kind": "synthetic",
+    "shape": "own-body-outer",
+    "sql": "WITH c AS (SELECT 1 AS x) SELECT d.x FROM (WITH c AS (SELECT x+1 AS x FROM c) SELECT x FROM c) d;",
+    "sqlite_sql": "WITH c AS (SELECT 1 AS x) SELECT d.x FROM (WITH c AS (SELECT x+1 AS x FROM c) SELECT x FROM c) d;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ]
+    ],
+    "sqlite_mode": "analysis_error",
+    "sqlite_error": "circular reference: c",
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-16-later-name-outer",
+    "source_kind": "synthetic",
+    "shape": "later-name-outer",
+    "sql": "WITH c AS (SELECT 1 AS x) SELECT d.x FROM (WITH a AS (SELECT x+1 AS x FROM c), c AS (SELECT 2 AS x) SELECT x FROM a) d;",
+    "sqlite_sql": "WITH c AS (SELECT 1 AS x) SELECT d.x FROM (WITH a AS (SELECT x+1 AS x FROM c), c AS (SELECT 2 AS x) SELECT x FROM a) d;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          3
+        ]
+      ],
+      "items_only": [
+        [
+          3
+        ]
+      ],
+      "labels_only": [
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-17-inner-with",
+    "source_kind": "synthetic",
+    "shape": "inner-with",
+    "sql": "WITH c AS (WITH a AS (SELECT 1 AS x) SELECT x+1 AS x FROM a) SELECT x FROM c;",
+    "sqlite_sql": "WITH c AS (WITH a AS (SELECT 1 AS x) SELECT x+1 AS x FROM a) SELECT x FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ]
+      ],
+      "items_only": [
+        [
+          2
+        ]
+      ],
+      "labels_only": [
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-18-quoted-dot",
+    "source_kind": "synthetic",
+    "shape": "quoted-dot",
+    "sql": "WITH \"c.dot\" AS (SELECT 1 AS x) SELECT \"c.dot\".x FROM \"c.dot\";",
+    "sqlite_sql": "WITH \"c.dot\" AS (SELECT 1 AS x) SELECT \"c.dot\".x FROM \"c.dot\";",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-19-reference-alias",
+    "source_kind": "synthetic",
+    "shape": "reference-alias",
+    "sql": "WITH c AS (SELECT 1 AS x, 'z' AS y) SELECT d.a,d.y FROM c AS d(a);",
+    "sqlite_sql": "WITH c AS (SELECT 1 AS x, 'z' AS y) SELECT d.a,d.y FROM c AS d(a);",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "y",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "z"
+      ]
+    ],
+    "sqlite_mode": "render_unsupported",
+    "sqlite_error": null,
+    "sqlite_diagnostic": "coverage.sqlite.relation-column-aliases",
+    "sqlite_output_names": [
+      "a",
+      "y"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        "z"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          "z"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          "z"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          "z"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-20-ordered-body",
+    "source_kind": "synthetic",
+    "shape": "ordered-body",
+    "sql": "WITH c AS (SELECT 1 AS x ORDER BY x LIMIT 1 OFFSET 0) SELECT x FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT 1 AS x ORDER BY x LIMIT 1 OFFSET 0) SELECT x FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-21-empty-body",
+    "source_kind": "synthetic",
+    "shape": "empty-body",
+    "sql": "WITH c AS (SELECT 1 AS x WHERE FALSE) SELECT x FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT 1 AS x WHERE FALSE) SELECT x FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [],
+      "both": []
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [],
+      "both": []
+    }
+  },
+  {
+    "id": "cte-22-unknown-null-test",
+    "source_kind": "synthetic",
+    "shape": "unknown-null-test",
+    "sql": "WITH c AS (SELECT NULL AS x) SELECT x IS NULL AS missing FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT NULL AS x) SELECT x IS NULL AS missing FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "missing",
+        "type": "bool",
+        "nullable": false,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "missing"
+    ],
+    "sqlite_expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-23-null-distinct",
+    "source_kind": "synthetic",
+    "shape": "null-distinct",
+    "sql": "WITH c AS (SELECT CAST(NULL AS INTEGER) AS x) SELECT x IS NOT DISTINCT FROM NULL AS same FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT CAST(NULL AS INTEGER) AS x) SELECT x IS NOT DISTINCT FROM NULL AS same FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "same",
+        "type": "bool",
+        "nullable": false,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "same"
+    ],
+    "sqlite_expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-24-lexical-parameters",
+    "source_kind": "synthetic",
+    "shape": "lexical-parameters",
+    "sql": "WITH unused AS (SELECT ? AS x), c AS (SELECT ? AS x) SELECT ? AS marker,c.x FROM c WHERE c.x > ? ORDER BY c.x LIMIT ? OFFSET ?;",
+    "sqlite_sql": "WITH unused AS (SELECT ? AS x), c AS (SELECT ? AS x) SELECT ? AS marker,c.x FROM c WHERE c.x > ? ORDER BY c.x LIMIT ? OFFSET ?;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "int,int,int,int,int,int",
+    "parameter_values": [
+      100,
+      7,
+      9,
+      0,
+      1,
+      0
+    ],
+    "output_columns": [
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        9,
+        7
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "marker",
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        9,
+        7
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          9,
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          9,
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          9,
+          7
+        ]
+      ],
+      "both": [
+        [
+          9,
+          7
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          9,
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          9,
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          9,
+          7
+        ]
+      ],
+      "both": [
+        [
+          9,
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-25-reordered-numbered",
+    "source_kind": "synthetic",
+    "shape": "reordered-numbered",
+    "sql": "WITH a AS (SELECT $2 AS x), b AS (SELECT $1 AS y) SELECT x,y FROM a CROSS JOIN b;",
+    "sqlite_sql": "WITH a AS (SELECT ?2 AS x), b AS (SELECT ?1 AS y) SELECT x,y FROM a CROSS JOIN b;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      9,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "y",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        7,
+        9
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x",
+      "y"
+    ],
+    "sqlite_expected_rows": [
+      [
+        7,
+        9
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          7,
+          9
+        ]
+      ],
+      "items_only": [
+        [
+          7,
+          9
+        ]
+      ],
+      "labels_only": [
+        [
+          7,
+          9
+        ]
+      ],
+      "both": [
+        [
+          7,
+          9
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          7,
+          9
+        ]
+      ],
+      "items_only": [
+        [
+          7,
+          9
+        ]
+      ],
+      "labels_only": [
+        [
+          7,
+          9
+        ]
+      ],
+      "both": [
+        [
+          7,
+          9
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-26-varchar-modifier",
+    "source_kind": "synthetic",
+    "shape": "varchar-modifier",
+    "sql": "WITH c AS (SELECT CAST('abcd' AS VARCHAR(3)) AS x) SELECT x FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT CAST('abcd' AS VARCHAR(3)) AS x) SELECT x FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "varchar(3)",
+        "nullable": false,
+        "postgres_type": "VARCHAR(3)",
+        "postgres_display_type": "character varying(3)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "abc"
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        "abcd"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "abc"
+        ]
+      ],
+      "items_only": [
+        [
+          "abc"
+        ]
+      ],
+      "labels_only": [
+        [
+          "abc"
+        ]
+      ],
+      "both": [
+        [
+          "abc"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          "abcd"
+        ]
+      ],
+      "items_only": [
+        [
+          "abcd"
+        ]
+      ],
+      "labels_only": [
+        [
+          "abcd"
+        ]
+      ],
+      "both": [
+        [
+          "abcd"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-27-numeric-modifier",
+    "source_kind": "synthetic",
+    "shape": "numeric-modifier",
+    "sql": "WITH c AS (SELECT CAST(1.234 AS NUMERIC(6,2)) AS x) SELECT x FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT CAST(1.234 AS NUMERIC(6,2)) AS x) SELECT x FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "numeric(6,2)",
+        "nullable": false,
+        "postgres_type": "NUMERIC(6,2)",
+        "postgres_display_type": "numeric(6,2)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "1.23"
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1.234
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "1.23"
+        ]
+      ],
+      "items_only": [
+        [
+          "1.23"
+        ]
+      ],
+      "labels_only": [
+        [
+          "1.23"
+        ]
+      ],
+      "both": [
+        [
+          "1.23"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1.234
+        ]
+      ],
+      "items_only": [
+        [
+          1.234
+        ]
+      ],
+      "labels_only": [
+        [
+          1.234
+        ]
+      ],
+      "both": [
+        [
+          1.234
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-28-array-null-element",
+    "source_kind": "synthetic",
+    "shape": "array-null-element",
+    "sql": "WITH c AS (SELECT ARRAY[1,NULL] AS x) SELECT x FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT ARRAY[1,NULL] AS x) SELECT x FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "integer[]",
+        "nullable": false,
+        "postgres_type": "INTEGER[]",
+        "postgres_display_type": "integer[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{1,NULL}"
+      ]
+    ],
+    "sqlite_mode": "input_excluded",
+    "sqlite_error": null,
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        "{1,NULL}"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{1,NULL}"
+        ]
+      ],
+      "items_only": [
+        [
+          "{1,NULL}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{1,NULL}"
+        ]
+      ],
+      "both": [
+        [
+          "{1,NULL}"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          "{1,NULL}"
+        ]
+      ],
+      "items_only": [
+        [
+          "{1,NULL}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{1,NULL}"
+        ]
+      ],
+      "both": [
+        [
+          "{1,NULL}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-29-cte-only-lock",
+    "source_kind": "synthetic",
+    "shape": "cte-only-lock",
+    "sql": "WITH c AS (SELECT DISTINCT 1 AS x) SELECT x FROM c FOR UPDATE;",
+    "sqlite_sql": "WITH c AS (SELECT DISTINCT 1 AS x) SELECT x FROM c FOR UPDATE;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "sqlite_mode": "input_excluded",
+    "sqlite_error": null,
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-30-nullable-cte-lock",
+    "source_kind": "synthetic",
+    "shape": "nullable-cte-lock",
+    "sql": "WITH a AS (SELECT 1 AS x), b AS (SELECT 2 AS y) SELECT a.x,b.y FROM a LEFT JOIN b ON FALSE FOR SHARE;",
+    "sqlite_sql": "WITH a AS (SELECT 1 AS x), b AS (SELECT 2 AS y) SELECT a.x,b.y FROM a LEFT JOIN b ON FALSE FOR SHARE;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "y",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        null
+      ]
+    ],
+    "sqlite_mode": "input_excluded",
+    "sqlite_error": null,
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_output_names": [
+      "x",
+      "y"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          null
+        ]
+      ],
+      "both": [
+        [
+          1,
+          null
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          1,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          null
+        ]
+      ],
+      "both": [
+        [
+          1,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-31-base-0",
+    "source_kind": "synthetic",
+    "shape": "base-0",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT c.* FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT c.* FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "id",
+      "score",
+      "name"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-32-coalesced-chain-0",
+    "source_kind": "synthetic",
+    "shape": "coalesced-chain-0",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0), d AS (SELECT id,COALESCE(score,0) AS points FROM c) SELECT id,points FROM d;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0), d AS (SELECT id,COALESCE(score,0) AS points FROM c) SELECT id,points FROM d;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "points",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        10
+      ],
+      [
+        4,
+        40
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "id",
+      "points"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        10
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        10
+      ],
+      [
+        4,
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          10
+        ],
+        [
+          4,
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          10
+        ],
+        [
+          4,
+          40
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          10
+        ],
+        [
+          4,
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          10
+        ],
+        [
+          4,
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-33-base-shadow-0",
+    "source_kind": "synthetic",
+    "shape": "base-shadow-0",
+    "sql": "WITH items AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT * FROM items;",
+    "sqlite_sql": "WITH items AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT * FROM items;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "sqlite_mode": "analysis_error",
+    "sqlite_error": "circular reference: items",
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "id",
+      "score",
+      "name"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-34-qualified-bypass-0",
+    "source_kind": "synthetic",
+    "shape": "qualified-bypass-0",
+    "sql": "WITH items AS (SELECT 99 AS id) SELECT id,score,name FROM public.items WHERE id >= 0;",
+    "sqlite_sql": "WITH items AS (SELECT 99 AS id) SELECT id,score,name FROM public.items WHERE id >= 0;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "sqlite_mode": "render_unsupported",
+    "sqlite_error": null,
+    "sqlite_diagnostic": "coverage.sqlite.schema-qualification",
+    "sqlite_output_names": [
+      "id",
+      "score",
+      "name"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        10,
+        "Ada"
+      ],
+      [
+        2,
+        null,
+        "Bea"
+      ],
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada"
+        ],
+        [
+          2,
+          null,
+          "Bea"
+        ],
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-35-left-on-0",
+    "source_kind": "synthetic",
+    "shape": "left-on-0",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT c.id,l.category FROM c LEFT JOIN labels l ON c.id=l.id;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT c.id,l.category FROM c LEFT JOIN labels l ON c.id=l.id;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "A"
+      ],
+      [
+        1,
+        "B"
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        3,
+        "C"
+      ],
+      [
+        4,
+        null
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "id",
+      "category"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        "A"
+      ],
+      [
+        1,
+        "B"
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        3,
+        "C"
+      ],
+      [
+        4,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          null
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          "A"
+        ],
+        [
+          1,
+          "B"
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          "C"
+        ],
+        [
+          4,
+          null
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          null
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          "A"
+        ],
+        [
+          1,
+          "B"
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          "C"
+        ],
+        [
+          4,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-36-natural-0",
+    "source_kind": "synthetic",
+    "shape": "natural-0",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT c.*,l.category FROM c NATURAL LEFT JOIN labels l;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT c.*,l.category FROM c NATURAL LEFT JOIN labels l;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10,
+        "Ada",
+        "A"
+      ],
+      [
+        1,
+        10,
+        "Ada",
+        "B"
+      ],
+      [
+        2,
+        null,
+        "Bea",
+        null
+      ],
+      [
+        3,
+        10,
+        "Cy",
+        "C"
+      ],
+      [
+        4,
+        40,
+        "Di",
+        null
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "id",
+      "score",
+      "name",
+      "category"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        10,
+        "Ada",
+        "A"
+      ],
+      [
+        1,
+        10,
+        "Ada",
+        "B"
+      ],
+      [
+        2,
+        null,
+        "Bea",
+        null
+      ],
+      [
+        3,
+        10,
+        "Cy",
+        "C"
+      ],
+      [
+        4,
+        40,
+        "Di",
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada",
+          null
+        ],
+        [
+          2,
+          null,
+          "Bea",
+          null
+        ],
+        [
+          3,
+          10,
+          "Cy",
+          null
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada",
+          "A"
+        ],
+        [
+          1,
+          10,
+          "Ada",
+          "B"
+        ],
+        [
+          2,
+          null,
+          "Bea",
+          null
+        ],
+        [
+          3,
+          10,
+          "Cy",
+          "C"
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          10,
+          "Ada",
+          null
+        ],
+        [
+          2,
+          null,
+          "Bea",
+          null
+        ],
+        [
+          3,
+          10,
+          "Cy",
+          null
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          10,
+          "Ada",
+          "A"
+        ],
+        [
+          1,
+          10,
+          "Ada",
+          "B"
+        ],
+        [
+          2,
+          null,
+          "Bea",
+          null
+        ],
+        [
+          3,
+          10,
+          "Cy",
+          "C"
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-37-full-using-0",
+    "source_kind": "synthetic",
+    "shape": "full-using-0",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT id AS merged_id,c.id AS original_id,l.category FROM c FULL JOIN labels l USING(id);",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT id AS merged_id,c.id AS original_id,l.category FROM c FULL JOIN labels l USING(id);",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "merged_id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "original_id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1,
+        "A"
+      ],
+      [
+        1,
+        1,
+        "B"
+      ],
+      [
+        2,
+        2,
+        null
+      ],
+      [
+        3,
+        3,
+        "C"
+      ],
+      [
+        4,
+        4,
+        null
+      ],
+      [
+        5,
+        null,
+        "E"
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "merged_id",
+      "original_id",
+      "category"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        1,
+        "A"
+      ],
+      [
+        1,
+        1,
+        "B"
+      ],
+      [
+        2,
+        2,
+        null
+      ],
+      [
+        3,
+        3,
+        "C"
+      ],
+      [
+        4,
+        4,
+        null
+      ],
+      [
+        5,
+        null,
+        "E"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          1,
+          null
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          null
+        ],
+        [
+          4,
+          4,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          null,
+          "A"
+        ],
+        [
+          1,
+          null,
+          "B"
+        ],
+        [
+          3,
+          null,
+          "C"
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          1,
+          "A"
+        ],
+        [
+          1,
+          1,
+          "B"
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          "C"
+        ],
+        [
+          4,
+          4,
+          null
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          1,
+          null
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          null
+        ],
+        [
+          4,
+          4,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          null,
+          "A"
+        ],
+        [
+          1,
+          null,
+          "B"
+        ],
+        [
+          3,
+          null,
+          "C"
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ],
+      "both": [
+        [
+          1,
+          1,
+          "A"
+        ],
+        [
+          1,
+          1,
+          "B"
+        ],
+        [
+          2,
+          2,
+          null
+        ],
+        [
+          3,
+          3,
+          "C"
+        ],
+        [
+          4,
+          4,
+          null
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-38-distinct-page-0",
+    "source_kind": "synthetic",
+    "shape": "distinct-page-0",
+    "sql": "WITH c AS (SELECT DISTINCT score FROM items WHERE id >= 0 ORDER BY score NULLS LAST LIMIT 2) SELECT score FROM c WHERE score IS NOT NULL;",
+    "sqlite_sql": "WITH c AS (SELECT DISTINCT score FROM items WHERE id >= 0 ORDER BY score NULLS LAST LIMIT 2) SELECT score FROM c WHERE score IS NOT NULL;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        10
+      ],
+      [
+        40
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "score"
+    ],
+    "sqlite_expected_rows": [
+      [
+        10
+      ],
+      [
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-39-body-lock-0",
+    "source_kind": "synthetic",
+    "shape": "body-lock-0",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0 FOR KEY SHARE) SELECT id FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0 FOR KEY SHARE) SELECT id FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "sqlite_mode": "input_excluded",
+    "sqlite_error": null,
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_output_names": [
+      "id"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-40-base-target-lock-0",
+    "source_kind": "synthetic",
+    "shape": "base-target-lock-0",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT c.id,l.category FROM c JOIN labels l ON c.id=l.id FOR UPDATE OF l;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 0) SELECT c.id,l.category FROM c JOIN labels l ON c.id=l.id FOR UPDATE OF l;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "A"
+      ],
+      [
+        1,
+        "B"
+      ],
+      [
+        3,
+        "C"
+      ]
+    ],
+    "sqlite_mode": "input_excluded",
+    "sqlite_error": null,
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_output_names": [
+      "id",
+      "category"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        "A"
+      ],
+      [
+        1,
+        "B"
+      ],
+      [
+        3,
+        "C"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          "A"
+        ],
+        [
+          1,
+          "B"
+        ],
+        [
+          3,
+          "C"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          "A"
+        ],
+        [
+          1,
+          "B"
+        ],
+        [
+          3,
+          "C"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-41-base-3",
+    "source_kind": "synthetic",
+    "shape": "base-3",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT c.* FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT c.* FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "id",
+      "score",
+      "name"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-42-coalesced-chain-3",
+    "source_kind": "synthetic",
+    "shape": "coalesced-chain-3",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3), d AS (SELECT id,COALESCE(score,0) AS points FROM c) SELECT id,points FROM d;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3), d AS (SELECT id,COALESCE(score,0) AS points FROM c) SELECT id,points FROM d;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "points",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        10
+      ],
+      [
+        4,
+        40
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "id",
+      "points"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3,
+        10
+      ],
+      [
+        4,
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10
+        ],
+        [
+          4,
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10
+        ],
+        [
+          4,
+          40
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10
+        ],
+        [
+          4,
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10
+        ],
+        [
+          4,
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-43-base-shadow-3",
+    "source_kind": "synthetic",
+    "shape": "base-shadow-3",
+    "sql": "WITH items AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT * FROM items;",
+    "sqlite_sql": "WITH items AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT * FROM items;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "sqlite_mode": "analysis_error",
+    "sqlite_error": "circular reference: items",
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "id",
+      "score",
+      "name"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-44-qualified-bypass-3",
+    "source_kind": "synthetic",
+    "shape": "qualified-bypass-3",
+    "sql": "WITH items AS (SELECT 99 AS id) SELECT id,score,name FROM public.items WHERE id >= 3;",
+    "sqlite_sql": "WITH items AS (SELECT 99 AS id) SELECT id,score,name FROM public.items WHERE id >= 3;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "sqlite_mode": "render_unsupported",
+    "sqlite_error": null,
+    "sqlite_diagnostic": "coverage.sqlite.schema-qualification",
+    "sqlite_output_names": [
+      "id",
+      "score",
+      "name"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3,
+        10,
+        "Cy"
+      ],
+      [
+        4,
+        40,
+        "Di"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy"
+        ],
+        [
+          4,
+          40,
+          "Di"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-45-left-on-3",
+    "source_kind": "synthetic",
+    "shape": "left-on-3",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT c.id,l.category FROM c LEFT JOIN labels l ON c.id=l.id;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT c.id,l.category FROM c LEFT JOIN labels l ON c.id=l.id;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        "C"
+      ],
+      [
+        4,
+        null
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "id",
+      "category"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3,
+        "C"
+      ],
+      [
+        4,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          "C"
+        ],
+        [
+          4,
+          null
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          "C"
+        ],
+        [
+          4,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-46-natural-3",
+    "source_kind": "synthetic",
+    "shape": "natural-3",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT c.*,l.category FROM c NATURAL LEFT JOIN labels l;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT c.*,l.category FROM c NATURAL LEFT JOIN labels l;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        10,
+        "Cy",
+        "C"
+      ],
+      [
+        4,
+        40,
+        "Di",
+        null
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "id",
+      "score",
+      "name",
+      "category"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3,
+        10,
+        "Cy",
+        "C"
+      ],
+      [
+        4,
+        40,
+        "Di",
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy",
+          null
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy",
+          "C"
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          10,
+          "Cy",
+          null
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          10,
+          "Cy",
+          "C"
+        ],
+        [
+          4,
+          40,
+          "Di",
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-47-full-using-3",
+    "source_kind": "synthetic",
+    "shape": "full-using-3",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT id AS merged_id,c.id AS original_id,l.category FROM c FULL JOIN labels l USING(id);",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT id AS merged_id,c.id AS original_id,l.category FROM c FULL JOIN labels l USING(id);",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "merged_id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "original_id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": true,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        3,
+        "C"
+      ],
+      [
+        4,
+        4,
+        null
+      ],
+      [
+        1,
+        null,
+        "A"
+      ],
+      [
+        1,
+        null,
+        "B"
+      ],
+      [
+        5,
+        null,
+        "E"
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "merged_id",
+      "original_id",
+      "category"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3,
+        3,
+        "C"
+      ],
+      [
+        4,
+        4,
+        null
+      ],
+      [
+        1,
+        null,
+        "A"
+      ],
+      [
+        1,
+        null,
+        "B"
+      ],
+      [
+        5,
+        null,
+        "E"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          3,
+          null
+        ],
+        [
+          4,
+          4,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          null,
+          "A"
+        ],
+        [
+          1,
+          null,
+          "B"
+        ],
+        [
+          3,
+          null,
+          "C"
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ],
+      "both": [
+        [
+          3,
+          3,
+          "C"
+        ],
+        [
+          4,
+          4,
+          null
+        ],
+        [
+          1,
+          null,
+          "A"
+        ],
+        [
+          1,
+          null,
+          "B"
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3,
+          3,
+          null
+        ],
+        [
+          4,
+          4,
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          1,
+          null,
+          "A"
+        ],
+        [
+          1,
+          null,
+          "B"
+        ],
+        [
+          3,
+          null,
+          "C"
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ],
+      "both": [
+        [
+          3,
+          3,
+          "C"
+        ],
+        [
+          4,
+          4,
+          null
+        ],
+        [
+          1,
+          null,
+          "A"
+        ],
+        [
+          1,
+          null,
+          "B"
+        ],
+        [
+          5,
+          null,
+          "E"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-48-distinct-page-3",
+    "source_kind": "synthetic",
+    "shape": "distinct-page-3",
+    "sql": "WITH c AS (SELECT DISTINCT score FROM items WHERE id >= 3 ORDER BY score NULLS LAST LIMIT 2) SELECT score FROM c WHERE score IS NOT NULL;",
+    "sqlite_sql": "WITH c AS (SELECT DISTINCT score FROM items WHERE id >= 3 ORDER BY score NULLS LAST LIMIT 2) SELECT score FROM c WHERE score IS NOT NULL;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "score",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        10
+      ],
+      [
+        40
+      ]
+    ],
+    "sqlite_mode": "execute",
+    "sqlite_error": null,
+    "sqlite_diagnostic": null,
+    "sqlite_output_names": [
+      "score"
+    ],
+    "sqlite_expected_rows": [
+      [
+        10
+      ],
+      [
+        40
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          10
+        ],
+        [
+          40
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-49-body-lock-3",
+    "source_kind": "synthetic",
+    "shape": "body-lock-3",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3 FOR KEY SHARE) SELECT id FROM c;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3 FOR KEY SHARE) SELECT id FROM c;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "sqlite_mode": "input_excluded",
+    "sqlite_error": null,
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_output_names": [
+      "id"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "id": "cte-50-base-target-lock-3",
+    "source_kind": "synthetic",
+    "shape": "base-target-lock-3",
+    "sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT c.id,l.category FROM c JOIN labels l ON c.id=l.id FOR UPDATE OF l;",
+    "sqlite_sql": "WITH c AS (SELECT id,score,name FROM items WHERE id >= 3) SELECT c.id,l.category FROM c JOIN labels l ON c.id=l.id FOR UPDATE OF l;",
+    "catalogFile": "fixtures/cte_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "nullable": false,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        3,
+        "C"
+      ]
+    ],
+    "sqlite_mode": "input_excluded",
+    "sqlite_error": null,
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_output_names": [
+      "id",
+      "category"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3,
+        "C"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          "C"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [],
+      "both": [
+        [
+          3,
+          "C"
+        ]
+      ]
+    }
+  }
+]

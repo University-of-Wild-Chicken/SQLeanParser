@@ -57,10 +57,10 @@ private def scalarFormCategoryTests (category : String) : IO Nat := do
       (Assurance.parseContractParameterTypes parameterTypes)
     let query ← expectOk s!"{id}: parse" (Advanced.parseQuery sql)
     let certificate ← expectOk s!"{id}: complete SELECT certificate"
-      ((SelectContract.checkQuery .basicV28 [] params query).mapError reprStr)
-    have _valid : SelectContract.SelectValid .basicV28 [] params query certificate.output :=
+      ((SelectContract.checkQuery .basicV29 [] params query).mapError reprStr)
+    have _valid : SelectContract.SelectValid .basicV29 [] params query certificate.output :=
       certificate.valid
-    have _preserved : SelectContract.SelectValid .basicV28 [] params
+    have _preserved : SelectContract.SelectValid .basicV29 [] params
         (RenderContract.translateParameters query) certificate.output :=
       RenderContract.translateParameters_valid certificate.valid
     match certificate.output with
@@ -117,7 +117,7 @@ def scalarFormBoundaryTests : IO Nat := do
       .select {items := [.expression (.isNull (.literal (.int 1)) negated)]})
       "postfix null-test keyword must normalize to the exact null-test AST"
     let certificate ← expectOk spelling
-      ((SelectContract.checkQuery .basicV28 [] [] query).mapError reprStr)
+      ((SelectContract.checkQuery .basicV29 [] [] query).mapError reprStr)
     SQLean.Tests.assert (certificate.output == [⟨"?column?", ⟨.bool, false⟩⟩])
       "postfix null test must have a nonnullable Boolean output"
   let contexts : List (String × Advanced.ContextValue × SelectContract.ScalarType × Bool) := [
@@ -130,7 +130,7 @@ def scalarFormBoundaryTests : IO Nat := do
     SQLean.Tests.assert (query.body == .select {items := [.expression (.contextValue value)]})
       "context keyword was reinterpreted as an ordinary column"
     let cert ← expectOk keyword
-      ((SelectContract.checkQuery .basicV28 [] [] query).mapError reprStr)
+      ((SelectContract.checkQuery .basicV29 [] [] query).mapError reprStr)
     SQLean.Tests.assert (cert.output == [⟨keyword.toLower, ⟨type, nullable⟩⟩])
       "context result label, NAME/TEXT identity or nullability changed"
   let quoted := [
@@ -154,7 +154,7 @@ def scalarFormBoundaryTests : IO Nat := do
   for (expression, base, nullable) in typed do
     let query ← expectOk expression (Advanced.parseQuery s!"SELECT {expression} AS v")
     let certificate ← expectOk expression
-      ((SelectContract.checkQuery .basicV28 [] [] query).mapError reprStr)
+      ((SelectContract.checkQuery .basicV29 [] [] query).mapError reprStr)
     SQLean.Tests.assert (certificate.output == [⟨"v", ⟨base, nullable⟩⟩])
       s!"wrong conditional exact result: {expression}: {reprStr certificate.output}"
   let invalid := [
@@ -164,14 +164,14 @@ def scalarFormBoundaryTests : IO Nat := do
     "SELECT lower(1)", "SELECT abs(TRUE)", "SELECT concat()", "SELECT concat_ws(',')" ]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV28 [] [] query with
+    match SelectContract.checkQuery .basicV29 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected independently invalid scalar form: {sql}")
   let parameterSql := "SELECT CASE WHEN ? THEN ? WHEN ? THEN ? ELSE ? END AS v"
   let params ← expectOk "CASE parameter declarations" (Assurance.parseContractParameterTypes "bool,int,bool,int,int")
   let query ← expectOk "CASE parameter order" (Advanced.parseQuery parameterSql)
   let certificate ← expectOk "CASE full parameter certificate"
-    ((SelectContract.checkQuery .basicV28 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV29 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let rendered ← expectOk "CASE ordered parameter rendering"
     ((RenderContract.check .postgres16V01 query).mapError reprStr)

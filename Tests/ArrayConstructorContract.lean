@@ -36,7 +36,7 @@ private def constructorOutput (sql : String) (parameterTypes : String := "") :
   let query ← expectOk sql (Advanced.parseQuery sql)
   let params ← expectOk sql (Assurance.parseContractParameterTypes parameterTypes)
   let certificate ← expectOk sql
-    ((SelectContract.checkQuery .basicV28 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV29 [] params query).mapError reprStr)
   have _valid := certificate.valid
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk sql ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -121,7 +121,7 @@ def arrayConstructorContractTests : IO Nat := do
     "SELECT ARRAY[COUNT(*)] FOR UPDATE"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV28 [] [] query with
+    match SelectContract.checkQuery .basicV29 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid constructor query: {sql}")
     count := count + 1
@@ -133,7 +133,7 @@ def arrayConstructorContractTests : IO Nat := do
     "SELECT ARRAY[COUNT(*)]"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV28 [] [] query with
+    match SelectContract.checkQuery .basicV29 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported constructor boundary: {sql}")
     count := count + 1
@@ -151,7 +151,7 @@ def arrayConstructorContractTests : IO Nat := do
   let query ← expectOk sql (Advanced.parseQuery sql)
   let params ← expectOk sql (Assurance.parseContractParameterTypes "int,int,int,int,text")
   let certificate ← expectOk sql
-    ((SelectContract.checkQuery .basicV28 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV29 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   SQLean.Tests.assert (Advanced.queryParameters 1024 query ==
       (List.range 5).map (fun n => .anonymous (n + 1)))
@@ -159,11 +159,11 @@ def arrayConstructorContractTests : IO Nat := do
   count := count + 1
   let bad : Advanced.Query := { body := .select { items := [
     .expression (.array [.parameter (.anonymous 2), .parameter (.anonymous 1)])] } }
-  match SelectContract.checkQuery .basicV28 [] params bad with
+  match SelectContract.checkQuery .basicV29 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "manual reordered constructor parameters must be Invalid")
   count := count + 1
-  match SelectContract.checkQuery .basicV28 [] params query 2 with
+  match SelectContract.checkQuery .basicV29 [] params query 2 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "constructor budget exhaustion must be Inconclusive")
   count := count + 1

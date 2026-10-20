@@ -30,7 +30,7 @@ private def contextCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) (catalog : Advanced.Catalog := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "context-value SELECT"
-    ((SelectContract.checkQuery .basicV28 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV29 catalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "context identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -238,20 +238,20 @@ def contextValuesContractTests : IO Nat := do
       "SELECT ARRAY[CURRENT_USER] = ARRAY['x'::TEXT]",
       "SELECT ARRAY[CURRENT_USER] @> ARRAY['x'::TEXT]"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV28 [] [] query with
+    match SelectContract.checkQuery .basicV29 [] [] query with
     | .error (.invalid _) => pure ()
     | other => throw (IO.userError s!"expected Invalid for concrete incompatible NAME query {sql}: {reprStr (other.map (fun _ => ())) }")
     count := count + 1
   for sql in ["SELECT application.current_schema()", "SELECT current_setting('role')",
       "SELECT version()", "SELECT CURRENT_USER = (SELECT CURRENT_USER)"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV28 [] [] query with
+    match SelectContract.checkQuery .basicV29 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"unmodeled context dependency must remain Unsupported: {sql}")
     count := count + 1
   for modifiers in [[1], [0], [1, 2]] do
     let query : Advanced.Query := {body := .select {items := [.expression (.cast .null ⟨.name, modifiers⟩)]}}
-    match SelectContract.checkQuery .basicV28 [] [] query with
+    match SelectContract.checkQuery .basicV29 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "NAME never admits declaration modifiers")
     count := count + 1
@@ -264,7 +264,7 @@ def contextValuesContractTests : IO Nat := do
     [⟨"n", ⟨.name, false⟩⟩, ⟨"ns", ⟨.array .name, true⟩⟩, ⟨"equal_user", ⟨.bool, false⟩⟩])
     "exact NAME catalog columns remain distinct from TEXT"
   let bare : Advanced.Query := {body := .select {items := [.expression (.contextValue .currentUser)]}}
-  match SelectContract.checkQuery .basicV28 [] [] bare 0 with
+  match SelectContract.checkQuery .basicV29 [] [] bare 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "context resource exhaustion must remain Inconclusive")
   pure (count + 2)

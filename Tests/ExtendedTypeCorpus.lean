@@ -40,10 +40,10 @@ def extendedTypeCorpusTests : IO Nat := do
       (Assurance.parseContractParameterTypes parameterTypes)
     let query ← expectOk s!"{id}: parse" (Advanced.parseQuery sql)
     let certificate ← expectOk s!"{id}: complete SELECT certificate"
-      ((SelectContract.checkQuery .basicV28 [] params query).mapError reprStr)
-    have _valid : SelectContract.SelectValid .basicV28 [] params query certificate.output :=
+      ((SelectContract.checkQuery .basicV29 [] params query).mapError reprStr)
+    have _valid : SelectContract.SelectValid .basicV29 [] params query certificate.output :=
       certificate.valid
-    have _preserved : SelectContract.SelectValid .basicV28 [] params
+    have _preserved : SelectContract.SelectValid .basicV29 [] params
         (RenderContract.translateParameters query) certificate.output :=
       RenderContract.translateParameters_valid certificate.valid
     match certificate.output with

@@ -3,6 +3,8 @@
 This deliberately small source-format reader does not run SQL or test directives.
 It accepts comments, blank lines, statement records, and query records. Query
 results are skipped as opaque text; they are never PostgreSQL expectations.
+The CTE factor may explicitly bound recognition at its selected query header;
+other callers continue to require the entire file to use this finite format.
 """
 from __future__ import annotations
 
@@ -14,7 +16,9 @@ HEADER = re.compile(r"query [IRTB]+(?: (?:nosort|rowsort|valuesort))?")
 SELECTOR_KEYS = {"kind", "start", "end", "header_line"}
 
 
-def query_blocks(source: str) -> list[dict]:
+def query_blocks(source: str, *, stop_at_header: int | None = None) -> list[dict]:
+    if stop_at_header is not None and (type(stop_at_header) is not int or stop_at_header < 1):
+        raise ValueError("invalid bounded SQLLogicTest prefix")
     lines = source.splitlines(keepends=True)
     offsets, position = [], 0
     for line in lines:
@@ -48,6 +52,8 @@ def query_blocks(source: str) -> list[dict]:
             raise ValueError("empty SQLLogicTest query block")
         result.append({"header_line": header_line, "start": start, "end": end,
                        "query_header": header})
+        if header_line == stop_at_header:
+            return result
         index += 1
         # Consume the result section before considering any further headers.
         while index < len(lines) and lines[index].strip():
@@ -55,11 +61,13 @@ def query_blocks(source: str) -> list[dict]:
     return result
 
 
-def selected_sqllogic_sql(source: str, selector: dict) -> tuple[str, int, dict]:
+def selected_sqllogic_sql(source: str, selector: dict, *,
+                         prefix_only: bool = False) -> tuple[str, int, dict]:
     if (set(selector) != SELECTOR_KEYS or selector["kind"] != "sqllogic_query"
             or any(type(selector[key]) is not int for key in SELECTOR_KEYS - {"kind"})):
         raise ValueError("invalid SQLLogicTest query selector")
-    block = next((entry for entry in query_blocks(source)
+    block = next((entry for entry in query_blocks(
+                  source, stop_at_header=selector["header_line"] if prefix_only else None)
                   if entry["header_line"] == selector["header_line"]), None)
     if block is None or any(block[key] != selector[key] for key in ("start", "end")):
         raise ValueError("selection is not a complete SQLLogicTest query block")

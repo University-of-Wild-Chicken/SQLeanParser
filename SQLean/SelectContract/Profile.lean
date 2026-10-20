@@ -11,11 +11,11 @@ formalization of PostgreSQL's general overload-resolution algorithm. -/
 namespace SQLean.SelectContract
 
 inductive Profile where
-  | basicV28
+  | basicV29
   deriving Repr, BEq, DecidableEq, Inhabited
 
 def Profile.name : Profile → String
-  | .basicV28 => "sqlean-basic-select-v0.28"
+  | .basicV29 => "sqlean-basic-select-v0.29"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes
@@ -122,12 +122,35 @@ structure OutputColumn where
   type : ExactType
   deriving Repr, BEq, DecidableEq, Inhabited
 
-/-- One namespace entry per visible relation, before column lookup.
-`origin = none` denotes a derived source. An explicit alias hides the origin
-from qualified-name resolution, even when it repeats the base name. -/
+/-- CTEs carry certified row metadata, never invented physical catalog entries. -/
+structure CTEBinding where
+  name : Name
+  output : List OutputColumn
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+abbrev CTEEnv := List CTEBinding
+
+/-- Nearest completed definition wins; shadowed outer definitions remain behind it. -/
+def CTEEnv.lookup (env : CTEEnv) (name : Name) : Option CTEBinding :=
+  env.find? (fun binding => binding.name == name)
+
+inductive RelationOrigin where
+  | base (identity : Advanced.RelationIdentity)
+  | derived
+  | cte
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+def RelationOrigin.base? : RelationOrigin → Option Advanced.RelationIdentity
+  | .base identity => some identity
+  | _ => none
+
+def RelationOrigin.isBase (origin : RelationOrigin) : Bool := origin.base?.isSome
+
+/-- Namespace provenance distinguishes physical sources, derived queries, and
+WITH references. An explicit alias hides the original physical qualification. -/
 structure RelationNamespace where
   name : Name
-  origin : Option Advanced.RelationIdentity
+  origin : RelationOrigin
   aliased : Bool
   columns : List OutputColumn
   nullable : Bool := false
@@ -142,10 +165,13 @@ def Scope.empty : Scope := ⟨[], []⟩
 
 def Scope.ofTable (identity : Advanced.RelationIdentity) (alias : Option Name)
     (output : List OutputColumn) : Scope :=
-  ⟨[⟨alias.getD identity.name, some identity, alias.isSome, output, false⟩], output⟩
+  ⟨[⟨alias.getD identity.name, .base identity, alias.isSome, output, false⟩], output⟩
 
 def Scope.ofOutput (qualifier : Name) (output : List OutputColumn) : Scope :=
-  ⟨[⟨qualifier, none, true, output, false⟩], output⟩
+  ⟨[⟨qualifier, .derived, true, output, false⟩], output⟩
+
+def Scope.ofCTE (name : Name) (alias : Option Name) (output : List OutputColumn) : Scope :=
+  ⟨[⟨alias.getD name, .cte, alias.isSome, output, false⟩], output⟩
 
 def Scope.append (left right : Scope) : Scope :=
   ⟨left.relations ++ right.relations, left.output ++ right.output⟩
@@ -156,7 +182,7 @@ def RelationNamespace.matches (relation : RelationNamespace) (name : Name)
     (schema : Option Name := none) : Bool :=
   match schema with
   | none => relation.name == name
-  | some schema => !relation.aliased && relation.origin.any (fun identity =>
+  | some schema => !relation.aliased && relation.origin.base?.any (fun identity =>
       identity.schema == some schema && identity.name == name)
 
 def Scope.matchingRelations (scope : Scope) (name : Name) (schema : Option Name := none) :

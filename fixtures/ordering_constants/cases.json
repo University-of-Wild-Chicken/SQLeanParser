@@ -1,0 +1,974 @@
+[
+  {
+    "id": "ordering-constant-001",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 1",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-002",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 2",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-003",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 3",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-004",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 0",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-005",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -1",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-006",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -2",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-007",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -0",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-008",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +0",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-009",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +1",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-010",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +2",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-011",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +3",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-012",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY (1)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-013",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY ((2))",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-014",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY ((0))",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-015",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY ((-1))",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-016",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY ((+3))",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-017",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY - -1",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-018",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-1)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-019",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-2)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-020",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-3)",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-021",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(+1)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-022",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +(-1)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-023",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(+0)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-024",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +(-0)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-025",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY - -0",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-026",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY - - -1",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-027",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-(-1))",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-028",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY + +3",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-029",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 1.0",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-030",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 1.2",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-031",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 0.0",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-032",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -0.0",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-033",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -1.0",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-034",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +1.0",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-035",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY (+1.0)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-036",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(+1.0)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-037",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY TRUE",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-038",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY FALSE",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-039",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY NULL",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-040",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY (TRUE)",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-041",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY ((NULL))",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-042",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 'x'",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-043",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY ('x')",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-044",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY '1'",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-045",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 2147483647",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-046",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 2147483648",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-047",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -2147483647",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-048",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -2147483648",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-049",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -2147483649",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-050",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +2147483648",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-051",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-2147483648)",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-052",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 01",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-053",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 001",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-054",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 1e0",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-055",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -1e0",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-056",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +1e0",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-057",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY CAST(NULL AS INTEGER)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-058",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY NULL::INTEGER",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-059",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY TRUE::BOOLEAN",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-060",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY CAST('x' AS TEXT)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-061",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY TEXT 'x'",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-062",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY DATE '2024-01-01'",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-063",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 1::INTEGER",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-064",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY (-1)::INTEGER",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-065",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY CAST(3 AS INTEGER)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-066",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 1+0",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-067",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 0+1",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-068",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -1+0",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-069",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY 1*2",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-070",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY FALSE OR TRUE",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-071",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY NOT FALSE",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-072",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY COALESCE(NULL,1)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-073",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY CASE WHEN TRUE THEN 1 ELSE 2 END",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-074",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY ROW(1,2)",
+    "parameter_types": "",
+    "expected_status": "unsupported",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-075",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY ARRAY[1,2]",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-076",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY x",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-077",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY y",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-078",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY (x)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-079",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +x",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42703",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-080",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -x",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42703",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-081",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY $1",
+    "parameter_types": "int",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-082",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -NULL",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42725",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-083",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -'1'",
+    "parameter_types": "",
+    "expected_status": "unsupported",
+    "postgres_sqlstate": "42725",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-084",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -TRUE",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42883",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-085",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +NULL",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-086",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +'1'",
+    "parameter_types": "",
+    "expected_status": "unsupported",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-087",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +TRUE",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42883",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-088",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-NULL)",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42725",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-089",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-'1')",
+    "parameter_types": "",
+    "expected_status": "unsupported",
+    "postgres_sqlstate": "42725",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-090",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-TRUE)",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42883",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-091",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(NULL::INTEGER)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-092",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -('1'::INTEGER)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-093",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -NULL::NUMERIC",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-094",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -NULL::TEXT",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42883",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-095",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(1=1)",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42883",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-096",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -1::BIGINT",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-097",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(1::BIGINT)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-098",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-2147483647)",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-099",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-(-2147483647))",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42P10",
+    "diagnostic": "order_position"
+  },
+  {
+    "id": "ordering-constant-100",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY - -2147483648",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-101",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +2147483649",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-102",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -9223372036854775808",
+    "parameter_types": "",
+    "expected_status": "invalid",
+    "postgres_sqlstate": "42601",
+    "diagnostic": "order_constant"
+  },
+  {
+    "id": "ordering-constant-103",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +9223372036854775808",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-104",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -1.0::NUMERIC",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-105",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -(-1.0::NUMERIC)",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-106",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -TRUE::INTEGER",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-107",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY -FALSE::INTEGER",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  },
+  {
+    "id": "ordering-constant-108",
+    "source_kind": "synthetic",
+    "sql": "SELECT 11 AS x,22 AS y ORDER BY +FALSE::INTEGER",
+    "parameter_types": "",
+    "expected_status": "valid",
+    "postgres_sqlstate": "00000",
+    "diagnostic": null
+  }
+]

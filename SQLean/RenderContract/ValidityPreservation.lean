@@ -440,16 +440,29 @@ decreasing_by all_goals (simp_all <;> omega)
     sourceDerivedNames (source.map translateSource) = sourceDerivedNames source := by
   cases source <;> simp [sourceDerivedNames]
 
+@[simp] theorem sort_syntax_translated (expr : Advanced.Expr) :
+    sortSyntax (translateExpr expr) = sortSyntax expr := by
+  cases expr with
+  | unary op arg =>
+      cases op <;> simp only [translateExpr, sortSyntax]
+      rw [sort_syntax_translated arg]
+  | _ => simp only [translateExpr, translateExpr_case, sortSyntax]
+termination_by sizeOf expr
+
 @[simp] theorem translated_sort_expression (expr : Advanced.Expr) :
     SortExpression (translateExpr expr) ↔ SortExpression expr := by
-  cases expr <;> simp only [translateExpr, translateExpr_case, SortExpression]
+  unfold SortExpression
+  rw [sort_syntax_translated]
+  cases expr <;> simp only [translateExpr, translateExpr_case]
+
 
 theorem sort_valid_translated (valid : SortValid params scope output distinct expr uses) :
     SortValid params scope output distinct (translateExpr expr)
       (uses.map translateParameter) := by
   cases valid with
-  | ordinal positive inRange orderable =>
-      simpa only [translateExpr, List.map_nil] using SortValid.ordinal positive inRange orderable
+  | ordinal constant positive inRange orderable =>
+      exact SortValid.ordinal (by simpa only [sort_syntax_translated] using constant)
+        positive inRange orderable
   | outputName resolved orderable =>
       simpa only [translateExpr, List.map_nil] using SortValid.outputName resolved orderable
   | inputName noOutput ordinary typed orderable =>
@@ -517,17 +530,20 @@ mutual
   their child scope, outer joins retain exact output nullability, USING/NATURAL
   retain both qualified order and merged row order, and occurrences remain in
   left-source, right-source, ON order. Implicit key comparisons add no parameters. -/
-  theorem source_valid_translated (valid : SourceValid profile catalog params source scope uses) :
-      SourceValid profile catalog params (source.map translateSource) scope
+  theorem source_valid_translated (valid : SourceValid profile catalog params env source scope uses) :
+      SourceValid profile catalog params env (source.map translateSource) scope
         (uses.map translateParameter) := by
     cases valid with
     | empty => exact SourceValid.empty
-    | table present sameName aliasValid columns =>
+    | table unshadowed present sameName aliasValid columns =>
         simpa only [Option.map_some, translateSource, List.map_nil] using
-          SourceValid.table present sameName aliasValid columns
-    | tableRenamed present resolved aliasValid columns aliasesValid =>
+          SourceValid.table unshadowed present sameName aliasValid columns
+    | tableRenamed unshadowed present resolved aliasValid columns aliasesValid =>
         simpa only [Option.map_some, translateSource, List.map_nil] using
-          SourceValid.tableRenamed present resolved aliasValid columns aliasesValid
+          SourceValid.tableRenamed unshadowed present resolved aliasValid columns aliasesValid
+    | cte resolved aliasValid columnsValid aliasRequired =>
+        simpa only [Option.map_some, translateSource, List.map_nil] using
+          SourceValid.cte resolved aliasValid columnsValid aliasRequired
     | cross leftValid rightValid aliases =>
         simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
           SourceValid.cross (source_valid_translated leftValid) (source_valid_translated rightValid)
@@ -556,18 +572,20 @@ mutual
   /-- Every internal query derivation retains its complete occurrence list,
   including recursively nested derived sources. No child restarts numbering. -/
   theorem query_valid_translated
-      (valid : QueryValid profile catalog params query output uses) :
-      QueryValid profile catalog params (translateParameters query) output
+      (valid : QueryValid profile catalog params env query output uses) :
+      QueryValid profile catalog params env (translateParameters query) output
         (uses.map translateParameter) := by
     cases valid with
-    | @basic scope sourceUses output selectUses whereUses orderBy orderUses limit limitUses
-        offset offsetUses locking offsetFirst select source items nonempty distinctComparable
+    | @basic ctes env visible cteUses scope sourceUses output selectUses whereUses orderBy orderUses limit limitUses
+        offset offsetUses locking offsetFirst select names definitions source items nonempty distinctComparable
         predicate orders limitValid offsetValid lockingValid noGrouping noHaving noDistinctOn =>
       cases offsetFirst <;>
         simp only [translateParameters, translateQueryBody, List.attach_map_val,
-          List.map_nil, Bool.false_eq_true, ↓reduceIte, List.map_append]
+          Bool.false_eq_true, ↓reduceIte, List.map_append]
       all_goals
         apply QueryValid.basic
+        · simpa [CTENamesValid, List.map_map, Function.comp_def, translateCTE] using names
+        · simpa only [List.attach_map_val] using ctes_valid_translated definitions
         · have translated := source_valid_translated source
           simp only [translateSelect]
           cases relation : select.source <;> simpa [relation] using translated
@@ -589,6 +607,21 @@ mutual
         · simp only [translateSelect, List.attach_map_val, noDistinctOn, List.map_nil]
   termination_by sizeOf query
   decreasing_by all_goals (cases select; simp_all; omega)
+
+  /-- Definition order and exposed names are unchanged; each body contributes
+  its translated occurrences once, independently of references. -/
+  theorem ctes_valid_translated
+      (valid : CTEsValid profile catalog params env ctes visible uses) :
+      CTEsValid profile catalog params env (ctes.map translateCTE) visible
+        (uses.map translateParameter) := by
+    cases valid with
+    | nil => exact .nil
+    | @cons env output uses remaining visible restUses head body aliases tail =>
+        simpa only [List.map_cons, List.map_append, translateCTE] using
+          CTEsValid.cons (head := {head with query := translateParameters head.query}) (query_valid_translated body)
+            aliases (ctes_valid_translated tail)
+  termination_by sizeOf ctes
+  decreasing_by all_goals (cases head; simp_all; omega)
 end
 
 /-- Translating anonymous occurrences to numbered parameters preserves every

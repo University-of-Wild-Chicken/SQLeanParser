@@ -59,7 +59,9 @@ def sqlite_rejection(sql):
     code = report.get("diagnostic", {}).get("code")
     parse_reason = (
         "SQLite does not support row-locking clauses" if "FOR UPDATE" in sql else
-        "SQL-standard SUBSTRING syntax is not supported by the SQLite profile" if "SUBSTRING(" in sql else
+        # The ordinary-call and special-form alternatives fail at the same
+        # FROM token in authored case 44. The first alternative wins that tie.
+        "1:32: expected )" if "SUBSTRING(" in sql else
         "reserved identifier key" if "AS u(key" in sql else None)
     if parse_reason is not None:
         # Existing SQLite input restrictions precede the new namespace boundary.

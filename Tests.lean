@@ -82,6 +82,9 @@ import Tests.NamedArgumentsContract
 import Tests.NamedArgumentsRendering
 import Tests.KeywordFunctionsContract
 import Tests.KeywordFunctionsRendering
+import Tests.OrderingConstantsContract
+import Tests.CTEContract
+import Tests.CTERendering
 import Tests.NullPredicatesContract
 import Tests.NullPredicatesRendering
 
@@ -320,6 +323,16 @@ def run : IO Unit := do
   IO.println s!"PASS: {nullPredicatesConcrete} unchanged NULL predicate certificates (all 100 rendered)"
   let nullPredicatesRendering ← nullPredicatesRenderingTests
   IO.println s!"PASS: {nullPredicatesRendering} NULL predicate parsing and rendering checks"
+  let orderingConstants ← orderingConstantsContractTests
+  IO.println s!"PASS: {orderingConstants} PostgreSQL ORDER BY constant classifications"
+  let cteContract ← cteContractTests
+  IO.println s!"PASS: {cteContract} CTE scope, typing and locking checks"
+  let cteCorpus ← cteCorpusTests
+  IO.println s!"PASS: {cteCorpus} CTE full-query certificates"
+  let cteConcrete ← cteConcreteContractTests
+  IO.println s!"PASS: {cteConcrete} unchanged closed CTE certificates (all 50 rendered)"
+  let cteRendering ← cteRenderingTests
+  IO.println s!"PASS: {cteRendering} CTE parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests
