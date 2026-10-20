@@ -1,0 +1,558 @@
+{
+  "fixtures/crud/select.sql:15": {
+    "sourceSha256": "528824d73c924b79e8811d5d80531383a0084283d4aba79c304e92f9dc831409",
+    "sourceLabels": [
+      "age / 10"
+    ],
+    "renderedLabels": [
+      "(\"age\" / 10)"
+    ]
+  },
+  "fixtures/crud/select.sql:18": {
+    "sourceSha256": "d7053a56948d7d95dc19f77dfe5d8ec8d7cb24546a622be6611600529a6a07bf",
+    "sourceLabels": [
+      "NOT enabled"
+    ],
+    "renderedLabels": [
+      "(NOT \"enabled\")"
+    ]
+  },
+  "fixtures/crud/select.sql:22": {
+    "sourceSha256": "d4777b7b08ef52948794de2f823e80e84d130e9b58658779fdc63d5450b4f9d7",
+    "sourceLabels": [
+      "sku",
+      "price * quantity"
+    ],
+    "renderedLabels": [
+      "sku",
+      "(\"price\" * \"quantity\")"
+    ]
+  },
+  "fixtures/crud/select.sql:35": {
+    "sourceSha256": "b95dfce6ea76950d30743b47b489ad4836c8b650d2b5e847d8c87cacc963d4ff",
+    "sourceLabels": [
+      "age + 1",
+      "name"
+    ],
+    "renderedLabels": [
+      "(\"age\" + 1)",
+      "name"
+    ]
+  },
+  "fixtures/crud/select.sql:41": {
+    "sourceSha256": "588a085c654f94855cc65ce625fbf10fa14ca2ff0d038e280be643fe8bc66bf8",
+    "sourceLabels": [
+      "-age",
+      "+id"
+    ],
+    "renderedLabels": [
+      "(-\"age\")",
+      "(+\"id\")"
+    ]
+  },
+  "fixtures/crud/select.sql:42": {
+    "sourceSha256": "b8f8d3d87125c8713294319692a6b07e83c19b3b6bd23e8ce57f9e61d079577e",
+    "sourceLabels": [
+      "-(price * quantity)",
+      "+sku"
+    ],
+    "renderedLabels": [
+      "(-(\"price\" * \"quantity\"))",
+      "(+\"sku\")"
+    ]
+  },
+  "fixtures/crud/select.sql:43": {
+    "sourceSha256": "2ecf8dcfa011caeb94c26cf487fc0133ae6ee7b27401249dc355820877ed0077",
+    "sourceLabels": [
+      "NOT enabled",
+      "TRUE",
+      "FALSE"
+    ],
+    "renderedLabels": [
+      "(NOT \"enabled\")",
+      "TRUE",
+      "FALSE"
+    ]
+  },
+  "fixtures/crud/select.sql:44": {
+    "sourceSha256": "f8ff789cf8b30e3c1979b9b984258ef97f5565c9db60112b2b20463a8417b4e8",
+    "sourceLabels": [
+      "NOT age = 18"
+    ],
+    "renderedLabels": [
+      "(NOT (\"age\" = 18))"
+    ]
+  },
+  "fixtures/crud/select.sql:46": {
+    "sourceSha256": "34de64e59b5ccf148a6a1bcf4af91f27c02850118ba59dd255e752565d852aa8",
+    "sourceLabels": [
+      "enabled = TRUE",
+      "enabled != FALSE"
+    ],
+    "renderedLabels": [
+      "(\"enabled\" = TRUE)",
+      "(\"enabled\" <> FALSE)"
+    ]
+  },
+  "fixtures/crud/select.sql:47": {
+    "sourceSha256": "b6a5618d728b4d8d33d12827986b0969916facbec631d540a4d972335d69eb26",
+    "sourceLabels": [
+      "-(-age)",
+      "+(id + 1)"
+    ],
+    "renderedLabels": [
+      "(-(-\"age\"))",
+      "(+(\"id\" + 1))"
+    ]
+  },
+  "fixtures/crud/select.sql:49": {
+    "sourceSha256": "fb76cf6c0fd2b9d436abd1fcbaf13eee735caec258a5d8bcc81a69574b5b696c",
+    "sourceLabels": [
+      "id",
+      "NOT NOT enabled"
+    ],
+    "renderedLabels": [
+      "id",
+      "(NOT (NOT \"enabled\"))"
+    ]
+  },
+  "fixtures/crud/select.sql:50": {
+    "sourceSha256": "915ed0cfaa7cb6d33805c5124bfeed0f892eafb7391a4b2e3387b6b9f0c258f0",
+    "sourceLabels": [
+      "TRUE AND NOT FALSE",
+      "-5 + +3 * 2"
+    ],
+    "renderedLabels": [
+      "(TRUE AND (NOT FALSE))",
+      "((-5) + ((+3) * 2))"
+    ]
+  },
+  "fixtures/relational/ctes.sql:19": {
+    "sourceSha256": "1e4e7bd0e374d31144368c2646e489a8d5e7fa15bcda244bcfa3b47e84b41a3a",
+    "sourceLabels": [
+      "SUM(total)"
+    ],
+    "renderedLabels": [
+      "SUM(\"total\")"
+    ]
+  },
+  "fixtures/relational/ctes.sql:20": {
+    "sourceSha256": "177b3d3c316333724579d4b978627a581a6fb3389777b6ada1b4332104852247",
+    "sourceLabels": [
+      "MAX(total)"
+    ],
+    "renderedLabels": [
+      "MAX(\"total\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:6": {
+    "sourceSha256": "5aa5840da4b0acf82263f0935d44cd3f964ce4bf8ba120e6fc39dcf3c31dd25c",
+    "sourceLabels": [
+      "MIN(amount)",
+      "MAX(amount)"
+    ],
+    "renderedLabels": [
+      "MIN(\"amount\")",
+      "MAX(\"amount\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:7": {
+    "sourceSha256": "4b92f5ced1268b67a9d6b8eebe529a6328515fcf78def521e16a24b1cd8b6a67",
+    "sourceLabels": [
+      "MIN(name)",
+      "MAX(name)"
+    ],
+    "renderedLabels": [
+      "MIN(\"name\")",
+      "MAX(\"name\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:8": {
+    "sourceSha256": "2547ac4bebb6223a4e9cbac1f5250fd06f6bdbbc3e7df44f48454fb685fa9a90",
+    "sourceLabels": [
+      "COUNT(*)",
+      "SUM(amount)",
+      "AVG(amount)",
+      "MIN(amount)",
+      "MAX(amount)"
+    ],
+    "renderedLabels": [
+      "COUNT(*)",
+      "SUM(\"amount\")",
+      "AVG(\"amount\")",
+      "MIN(\"amount\")",
+      "MAX(\"amount\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:9": {
+    "sourceSha256": "591badba92972cab6bb88f18e7169a1f8ed569a5bd58981bd74488fe01576253",
+    "sourceLabels": [
+      "SUM(DISTINCT amount)",
+      "AVG(DISTINCT amount)"
+    ],
+    "renderedLabels": [
+      "SUM(DISTINCT \"amount\")",
+      "AVG(DISTINCT \"amount\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:10": {
+    "sourceSha256": "7271ce0a87aa7dd380350c80845196cb71b275ecf3022d653db5af9a52e9d18d",
+    "sourceLabels": [
+      "MIN(DISTINCT city)",
+      "MAX(DISTINCT city)"
+    ],
+    "renderedLabels": [
+      "MIN(DISTINCT \"city\")",
+      "MAX(DISTINCT \"city\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:13": {
+    "sourceSha256": "5fdaec1248576b84f3e9ad6a5919c876769c0f0a6446b13bdbd6747b7578bd4c",
+    "sourceLabels": [
+      "status",
+      "COUNT(*)",
+      "SUM(amount)"
+    ],
+    "renderedLabels": [
+      "status",
+      "COUNT(*)",
+      "SUM(\"amount\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:14": {
+    "sourceSha256": "b497cb61a7c0af574ce019db8cdc3294a5c5df8afdcb5bdad1f99a10643f012c",
+    "sourceLabels": [
+      "user_id",
+      "status",
+      "SUM(amount)"
+    ],
+    "renderedLabels": [
+      "user_id",
+      "status",
+      "SUM(\"amount\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:17": {
+    "sourceSha256": "19fcb1dc69027d554cf61370fdfdd82b235e26bcdd49521caca25f0c586b77e9",
+    "sourceLabels": [
+      "city",
+      "age / 10",
+      "COUNT(*)"
+    ],
+    "renderedLabels": [
+      "city",
+      "(\"age\" / 10)",
+      "COUNT(*)"
+    ]
+  },
+  "fixtures/relational/grouping.sql:20": {
+    "sourceSha256": "79352a4a282465f97984b170e2a7a68a93f2d876b206c8168d7b2f61a745f1da",
+    "sourceLabels": [
+      "user_id",
+      "AVG(amount)"
+    ],
+    "renderedLabels": [
+      "user_id",
+      "AVG(\"amount\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:21": {
+    "sourceSha256": "77ba467be424efc8ed750bbe484e13cd00665826e2bdfa3e3028208b6a4035d7",
+    "sourceLabels": [
+      "user_id",
+      "MIN(amount)",
+      "MAX(amount)"
+    ],
+    "renderedLabels": [
+      "user_id",
+      "MIN(\"amount\")",
+      "MAX(\"amount\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:23": {
+    "sourceSha256": "7f9fc115dbd66de678439acc1489b6d55c8f8ce1984c7482eaee8cfd64517237",
+    "sourceLabels": [
+      "SUM(amount)"
+    ],
+    "renderedLabels": [
+      "SUM(\"amount\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:25": {
+    "sourceSha256": "83464d2858026d7adbf312826598cb0661761affbdac599540a058ba7acc50b0",
+    "sourceLabels": [
+      "status",
+      "COUNT(DISTINCT user_id)"
+    ],
+    "renderedLabels": [
+      "status",
+      "COUNT(DISTINCT \"user_id\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:29": {
+    "sourceSha256": "b09814657af2da4a186662150124551334ecd80f6528ada02f02ddbb6acaf5b7",
+    "sourceLabels": [
+      "id",
+      "SUM(o.amount)",
+      "AVG(o.amount)"
+    ],
+    "renderedLabels": [
+      "id",
+      "SUM(\"o\".\"amount\")",
+      "AVG(\"o\".\"amount\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:30": {
+    "sourceSha256": "3e33e88eb2dfc4dc7e1429f44df7ecc88c772a2e5a1011e1fb9b06c655a9292d",
+    "sourceLabels": [
+      "name",
+      "COUNT(e.id)",
+      "AVG(e.salary)"
+    ],
+    "renderedLabels": [
+      "name",
+      "COUNT(\"e\".\"id\")",
+      "AVG(\"e\".\"salary\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:32": {
+    "sourceSha256": "1c7b55e87e4d986646af025bb6308864cbff90115bdf860f4ad6ecddc2822775",
+    "sourceLabels": [
+      "status",
+      "COUNT(DISTINCT u.city)"
+    ],
+    "renderedLabels": [
+      "status",
+      "COUNT(DISTINCT \"u\".\"city\")"
+    ]
+  },
+  "fixtures/relational/grouping.sql:40": {
+    "sourceSha256": "a09fbd93ee78c3ed76b7eb1b382b2b30f876f736f4420a42900c0f8db987240c",
+    "sourceLabels": [
+      "user_id",
+      "SUM(amount + 1)",
+      "AVG(amount * 2)"
+    ],
+    "renderedLabels": [
+      "user_id",
+      "SUM((\"amount\" + 1))",
+      "AVG((\"amount\" * 2))"
+    ]
+  },
+  "fixtures/relational/subqueries.sql:31": {
+    "sourceSha256": "71def4ec7262c88d2715279be4abb39f48a948c611df53af7cddb70b852c0ef1",
+    "sourceLabels": [
+      "SUM(x.total)"
+    ],
+    "renderedLabels": [
+      "SUM(\"x\".\"total\")"
+    ]
+  },
+  "fixtures/relational/subqueries.sql:32": {
+    "sourceSha256": "d5b3104581a423a8ef504f58b777f2be7c7da427cca97788e0c2db9804a56c4a",
+    "sourceLabels": [
+      "MAX(x.population)"
+    ],
+    "renderedLabels": [
+      "MAX(\"x\".\"population\")"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:3": {
+    "sourceSha256": "eae0e161aa42daecd49d0a516c802f62b27483359e00cd6519315d7d5fa06bd9",
+    "sourceLabels": [
+      "-1"
+    ],
+    "renderedLabels": [
+      "(-1)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:4": {
+    "sourceSha256": "a153e6ead91f7a9178980a12367abb14f4365b8da6c30d1e61089edf70d10baa",
+    "sourceLabels": [
+      "+2"
+    ],
+    "renderedLabels": [
+      "(+2)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:10": {
+    "sourceSha256": "33384d8f1ed36da2d75aa7f09f2675b62aee2f8f6afd922f30abe49536dee806",
+    "sourceLabels": [
+      "NOT TRUE"
+    ],
+    "renderedLabels": [
+      "(NOT TRUE)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:11": {
+    "sourceSha256": "b9f958a06796a3c773570e3ea2fb559a85ffebee1542538d6c43740f011b1e6c",
+    "sourceLabels": [
+      "1 + 2"
+    ],
+    "renderedLabels": [
+      "(1 + 2)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:12": {
+    "sourceSha256": "947c93c0f16af0b133b1586488e67fd56f7fc45a1946f8e54939f977b82ade1b",
+    "sourceLabels": [
+      "7 - 3"
+    ],
+    "renderedLabels": [
+      "(7 - 3)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:13": {
+    "sourceSha256": "604e7e4b63ebf9c159385c6c64b1d9ab0d8f7acdff660ad8df6fbd220befcf5b",
+    "sourceLabels": [
+      "4 * 5"
+    ],
+    "renderedLabels": [
+      "(4 * 5)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:14": {
+    "sourceSha256": "a70cea497ea02b6d30670cb69ed55571836865ab68098cbccb0a02b8c6618e82",
+    "sourceLabels": [
+      "12 / 3"
+    ],
+    "renderedLabels": [
+      "(12 / 3)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:15": {
+    "sourceSha256": "4bfb1df53328280b6992e59c110df7f10df4abc4ed4b77a5f3bd0c35f61ea793",
+    "sourceLabels": [
+      "2 + 3 * 4"
+    ],
+    "renderedLabels": [
+      "(2 + (3 * 4))"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:16": {
+    "sourceSha256": "23111de6a26dffa542c3786fcc854654b5490f8d245a60235e6e0ef41447ce0a",
+    "sourceLabels": [
+      "(2 + 3) * 4"
+    ],
+    "renderedLabels": [
+      "((2 + 3) * 4)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:17": {
+    "sourceSha256": "7933818630117d3c2c8e64e90bfbf4cbf6c10a2ffba67611acdd2abc98084b59",
+    "sourceLabels": [
+      "-(-3)"
+    ],
+    "renderedLabels": [
+      "(-(-3))"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:18": {
+    "sourceSha256": "287df1e0cac60a5dfe7aaaf9e14da1a6b341045a80621a54ef6867de578861da",
+    "sourceLabels": [
+      "1 = 1"
+    ],
+    "renderedLabels": [
+      "(1 = 1)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:19": {
+    "sourceSha256": "ce29ff6dd5766d83bfb93eddeb72e372294f61be58bec0ed4ab946edef406886",
+    "sourceLabels": [
+      "1 <> 2"
+    ],
+    "renderedLabels": [
+      "(1 <> 2)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:20": {
+    "sourceSha256": "0145c37270053b0fb5161ce91082fcef79968e7b6ce0399f1c950d8fd7b7c93b",
+    "sourceLabels": [
+      "1 < 2"
+    ],
+    "renderedLabels": [
+      "(1 < 2)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:21": {
+    "sourceSha256": "087f102916c26070b299e7da8617b814f840f1f4ef690606496ed24fa69061cf",
+    "sourceLabels": [
+      "2 <= 2"
+    ],
+    "renderedLabels": [
+      "(2 <= 2)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:22": {
+    "sourceSha256": "d2c8b275b14218825441190d077015faa0a780d3805a002868465384dcb2b810",
+    "sourceLabels": [
+      "3 > 2"
+    ],
+    "renderedLabels": [
+      "(3 > 2)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:23": {
+    "sourceSha256": "6dbc9ba149307823db14decafde658f2fe2d648c825d5835fd1ce9a6c0d076ec",
+    "sourceLabels": [
+      "3 >= 3"
+    ],
+    "renderedLabels": [
+      "(3 >= 3)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:24": {
+    "sourceSha256": "487dc3afdfafcd692166950949087f909649f9f35227817aacab9f6e52a9fd2d",
+    "sourceLabels": [
+      "'a' = 'a'"
+    ],
+    "renderedLabels": [
+      "('a' = 'a')"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:25": {
+    "sourceSha256": "5579b2f5830bb9e1b96ca751ae9ef6512505d22105dd28b84c03ad9835386eda",
+    "sourceLabels": [
+      "TRUE AND FALSE"
+    ],
+    "renderedLabels": [
+      "(TRUE AND FALSE)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:26": {
+    "sourceSha256": "6a15cc30dafc121a15f1c1b38f6ac38aa1f8badc9683b2e7b24ce46b626eece3",
+    "sourceLabels": [
+      "FALSE OR TRUE AND FALSE"
+    ],
+    "renderedLabels": [
+      "(FALSE OR (TRUE AND FALSE))"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:27": {
+    "sourceSha256": "37f5f0ad0d3af214a76cb9c6ee95623f3991ca1d8a205cf602f63dad1699ae1f",
+    "sourceLabels": [
+      "NOT (1 = 2)"
+    ],
+    "renderedLabels": [
+      "(NOT (1 = 2))"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:28": {
+    "sourceSha256": "26608071da1cb33cbc1851ccc30676f465f79e6c127fcddc572d08f383d096f3",
+    "sourceLabels": [
+      "1 IS NULL"
+    ],
+    "renderedLabels": [
+      "(1 IS NULL)"
+    ]
+  },
+  "fixtures/industrial/source_free.sql:29": {
+    "sourceSha256": "eeb68ab9f430594a8c6fe8bed88b4ffbedf9a50ec8fc6d0624f0400d22c5a158",
+    "sourceLabels": [
+      "'text' IS NOT NULL"
+    ],
+    "renderedLabels": [
+      "('text' IS NOT NULL)"
+    ]
+  }
+}

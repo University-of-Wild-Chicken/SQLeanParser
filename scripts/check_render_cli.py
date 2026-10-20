@@ -182,6 +182,10 @@ SETUP = [
     "INSERT INTO render_a VALUES (1), (2);",
     "CREATE TEMP TABLE render_b (id INTEGER, keep BOOLEAN);",
     "INSERT INTO render_b VALUES (1, FALSE);",
+    "CREATE TEMP TABLE render_left (id INTEGER, left_value TEXT);",
+    "INSERT INTO render_left VALUES (1, 'left-one'), (2, 'left-two'), (NULL, 'left-null');",
+    "CREATE TEMP TABLE render_right (id INTEGER, right_value TEXT);",
+    "INSERT INTO render_right VALUES (1, 'right-one'), (3, 'right-three'), (NULL, 'right-null');",
 ]
 
 
@@ -243,6 +247,48 @@ def postgres_checks(args):
          ["n", "next"], [["1", "2"], ["2", "3"]], "ordered"),
         ("WITH RECURSIVE c(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM c WHERE n < 3) SELECT n FROM c ORDER BY n",
          ["n"], [["1"], ["2"], ["3"]], "ordered"),
+        ("SELECT DISTINCT ON (grp) grp AS g, id AS n, label AS value "
+         "FROM render_rows ORDER BY grp, id DESC NULLS LAST",
+         ["g", "n", "value"], [["1", "2", "b"], ["2", "3", None]], "ordered"),
+        ("SELECT grp AS g, COUNT(*) AS n, COUNT(DISTINCT id) AS unique_ids, "
+         "SUM(id) AS total, MIN(id) AS smallest, MAX(id) AS largest "
+         "FROM render_rows GROUP BY grp HAVING COUNT(*) > 1 ORDER BY grp",
+         ["g", "n", "unique_ids", "total", "smallest", "largest"],
+         [["1", "3", "2", "5", "1", "2"]], "ordered"),
+        ("SELECT COUNT(*) FILTER (WHERE label IS NULL) AS null_count, "
+         "SUM(DISTINCT id) FILTER (WHERE grp = 1) AS distinct_sum, "
+         "CAST(AVG(id) FILTER (WHERE grp = 1) AS NUMERIC(5,2)) AS mean, "
+         "SUM(id) FILTER (WHERE id > 99) AS empty_sum, "
+         "COUNT(id) FILTER (WHERE id > 99) AS empty_count FROM render_rows",
+         ["null_count", "distinct_sum", "mean", "empty_sum", "empty_count"],
+         [["1", "3", "1.67", None, "0"]], "ordered"),
+        ("SELECT COUNT(*) AS n, SUM(id) AS total, AVG(id) AS mean, "
+         "MIN(id) AS smallest, MAX(id) AS largest FROM render_rows WHERE FALSE",
+         ["n", "total", "mean", "smallest", "largest"],
+         [["0", None, None, None, None]], "ordered"),
+        ("SELECT id AS merged, l.left_value AS left_value, r.right_value AS right_value "
+         "FROM render_left l FULL JOIN render_right r USING (id)",
+         ["merged", "left_value", "right_value"],
+         [["1", "left-one", "right-one"], ["2", "left-two", None],
+          ["3", None, "right-three"], [None, "left-null", None], [None, None, "right-null"]], "bag"),
+        ("SELECT id AS merged, left_value, right_value FROM render_left NATURAL FULL JOIN render_right",
+         ["merged", "left_value", "right_value"],
+         [["1", "left-one", "right-one"], ["2", "left-two", None],
+          ["3", None, "right-three"], [None, "left-null", None], [None, None, "right-null"]], "bag"),
+        ("SELECT id AS n FROM render_rows INTERSECT ALL "
+         "SELECT id FROM render_rows WHERE grp = 1 ORDER BY n",
+         ["n"], [["1"], ["2"], ["2"]], "ordered"),
+        ("SELECT id AS n FROM render_rows EXCEPT ALL SELECT id FROM render_a ORDER BY n",
+         ["n"], [["2"], ["3"]], "ordered"),
+        ("WITH c(n) AS (SELECT 9) SELECT c.n AS outer_n, "
+         "(WITH c(n) AS (SELECT 2) SELECT n FROM c) AS inner_n FROM c",
+         ["outer_n", "inner_n"], [["9", "2"]], "ordered"),
+        ("WITH first_cte(n) AS (SELECT 2), second_cte(n) AS (SELECT n + 3 FROM first_cte) "
+         "SELECT n FROM second_cte",
+         ["n"], [["5"]], "ordered"),
+        ("SELECT a.id AS n, q.next AS next FROM render_a a LEFT JOIN LATERAL "
+         "(SELECT a.id + 1 AS next WHERE a.id = 1) q ON TRUE ORDER BY a.id",
+         ["n", "next"], [["1", "2"], ["2", None]], "ordered"),
     ]
     count = 0
     with connection(args) as psql:

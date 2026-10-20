@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Check the new dialect profiles against fixed, independent result expectations.
 
-Always runs 150 SQLite examples. --local-bin/--dsn additionally runs 50 PostgreSQL
-NUMERIC-scale examples. Source and rendered SQL are both checked, using actual
-parameter binding rather than text substitution. These are finite observations,
-not a claim that SQLite and PostgreSQL have interchangeable semantics.
+Always runs 150 SQLite examples plus curated SELECT constructor observations.
+--local-bin/--dsn additionally runs 50 PostgreSQL NUMERIC-scale examples. Source
+and rendered SQL are both checked, using actual parameter binding rather than
+text substitution. These are finite observations, not a claim that SQLite and
+PostgreSQL have interchangeable semantics.
 """
 
 from __future__ import annotations
@@ -74,6 +75,82 @@ def compare(case, labels, rows):
         assert Counter(actual) == Counter(expected), (case["sql"], actual, expected)
     else:
         assert actual == expected, (case["sql"], actual, expected)
+
+
+def sqlite_result(db, sql):
+    """Bound execution independently of query predicates, including recursion."""
+    callbacks = 0
+
+    def progress():
+        nonlocal callbacks
+        callbacks += 1
+        return callbacks >= 500
+
+    db.set_progress_handler(progress, 1000)
+    try:
+        cursor = db.execute(sql)
+        return [column[0] for column in cursor.description], cursor.fetchall()
+    finally:
+        db.set_progress_handler(None, 0)
+
+
+def sqlite_syntax_observations(db):
+    """Authored SQLite-native results for admitted SELECT constructor families."""
+    db.executescript(
+        "CREATE TABLE render_left(id INTEGER, left_value TEXT);"
+        "INSERT INTO render_left VALUES(1,'left-one'),(2,'left-two'),(NULL,'left-null');"
+        "CREATE TABLE render_right(id INTEGER, right_value TEXT);"
+        "INSERT INTO render_right VALUES(1,'right-one'),(3,'right-three'),(NULL,'right-null');"
+    )
+    observations = [
+        ("SELECT id AS merged, l.left_value AS left_value, r.right_value AS right_value "
+         "FROM render_left l FULL JOIN render_right r USING (id)",
+         ["merged", "left_value", "right_value"],
+         [[1, "left-one", "right-one"], [2, "left-two", None], [3, None, "right-three"],
+          [None, "left-null", None], [None, None, "right-null"]], "bag"),
+        ("SELECT id AS merged, left_value, right_value FROM render_left NATURAL LEFT JOIN render_right",
+         ["merged", "left_value", "right_value"],
+         [[1, "left-one", "right-one"], [2, "left-two", None], [None, "left-null", None]], "bag"),
+        ("SELECT id AS merged, l.id AS left_id, r.id AS right_id "
+         "FROM render_left l RIGHT JOIN render_right r USING (id)",
+         ["merged", "left_id", "right_id"], [[1, 1, 1], [3, None, 3], [None, None, None]], "bag"),
+        ("SELECT label AS label, COUNT(*) AS n, SUM(id) AS total, MIN(id) AS first_id, "
+         "MAX(id) AS last_id FROM dialect_rows GROUP BY label HAVING COUNT(*) > 1 ORDER BY label",
+         ["label", "n", "total", "first_id", "last_id"], [["b", 2, 4, 2, 2]], "ordered"),
+        ("SELECT COUNT(DISTINCT id) AS unique_ids, "
+         "SUM(DISTINCT id) FILTER (WHERE id < 4) AS distinct_sum, "
+         "AVG(id) FILTER (WHERE id = 2) AS mean, "
+         "COUNT(*) FILTER (WHERE label IS NULL) AS null_count FROM dialect_rows",
+         ["unique_ids", "distinct_sum", "mean", "null_count"], [[7, 6, 2.0, 1]], "ordered"),
+        ("SELECT COUNT(*) AS n, SUM(id) AS total, AVG(id) AS mean, MIN(id) AS smallest, "
+         "MAX(id) AS largest FROM dialect_rows WHERE FALSE",
+         ["n", "total", "mean", "smallest", "largest"], [[0, None, None, None, None]], "ordered"),
+        ("SELECT d.id AS id, d.label AS label FROM "
+         "(SELECT id, label FROM dialect_rows WHERE id <= 3) d WHERE d.id > 1 ORDER BY d.id",
+         ["id", "label"], [[2, "b"], [2, "b"], [3, None]], "ordered"),
+        ("SELECT d.id AS id, d.id IN (SELECT i.id FROM dialect_rows i "
+         "WHERE i.id = d.id AND i.label IS NOT NULL) AS member, "
+         "EXISTS (SELECT 1 FROM dialect_rows i WHERE i.id = d.id AND i.label IS NULL) AS has_null "
+         "FROM dialect_rows d WHERE d.id <= 3 ORDER BY d.id",
+         ["id", "member", "has_null"], [[1, 1, 0], [2, 1, 0], [2, 1, 0], [3, 0, 1]], "ordered"),
+        ("SELECT 1 IN (SELECT NULL) AS unknown_member, "
+         "NOT EXISTS (SELECT 1 WHERE FALSE) AS absent",
+         ["unknown_member", "absent"], [[None, 1]], "ordered"),
+        ("WITH RECURSIVE walk(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM walk WHERE n < 4) "
+         "SELECT n FROM walk ORDER BY n",
+         ["n"], [[1], [2], [3], [4]], "ordered"),
+        ("WITH c(n) AS (SELECT 9) SELECT c.n AS outer_n, "
+         "(WITH c(n) AS (SELECT 2) SELECT n FROM c) AS inner_n FROM c",
+         ["outer_n", "inner_n"], [[9, 2]], "ordered"),
+    ]
+    for source, labels, expected, comparison in observations:
+        report = render("sqlite", source)
+        assert render("sqlite", report["sql"])["sql"] == report["sql"], report
+        case = {"sql": source, "columns": labels, "rows": expected, "comparison": comparison}
+        for sql in (source, report["sql"]):
+            actual_labels, rows = sqlite_result(db, sql)
+            compare(case, actual_labels, rows)
+    return 2 * len(observations)
 
 
 def sqlite_checks(metadata):
@@ -175,6 +252,7 @@ def sqlite_checks(metadata):
             for sql in (source, render("sqlite", source)["sql"]):
                 assert db.execute(sql).fetchall() == expected, (source, sql, expected)
                 count += 1
+        count += sqlite_syntax_observations(db)
     finally:
         db.close()
     return count

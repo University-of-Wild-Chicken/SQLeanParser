@@ -38,6 +38,9 @@ jobs:
       - name: Run offline regressions
         run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
 
+      - name: Reject Lean proof placeholders and bypasses
+        run: python3 scripts/check_lean_trust.py --source-only
+
       - name: Check generated fixtures
         run: |
           for generator in scripts/generate_*_examples.py; do
@@ -77,10 +80,18 @@ jobs:
           use-github-cache: "false"
 
       - name: Run Lean tests and proof examples
-        run: lake exe sqlean_tests
+        run: |
+          lake exe sqlean_tests
+          lake exe sqlean_scope_tests
+
+      - name: Audit all project declarations and proof dependencies
+        run: python3 scripts/check_lean_trust.py --evidence-json .lake/trust-audit.json
 
       - name: Check SELECT assurance tiers
         run: python3 scripts/check_assurance_cli.py
+
+      - name: Check renderer profiles across the SELECT syntax corpus
+        run: python3 scripts/check_renderer_corpus.py
 
       - name: Check SQLite CLI compatibility
         run: |
@@ -90,6 +101,16 @@ jobs:
 
       # Each checker creates and removes its own private Unix-socket cluster.
       # Run as the normal runner user: PostgreSQL initdb refuses root.
+      # These are finite database observations, separate from Lean compilation
+      # and structural round-trip certificates; not universal SQL semantics.
+      - name: Check SELECT renderer against PostgreSQL 16
+        run: python3 scripts/check_render_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check SELECT dialects against SQLite and PostgreSQL 16
+        run: |
+          python3 -c 'import sqlite3; print("SQLite runtime:", sqlite3.sqlite_version); assert sqlite3.sqlite_version_info >= (3, 39, 0), "SQLite 3.39+ required"'
+          python3 scripts/check_dialect_cli.py --local-bin /usr/lib/postgresql/16/bin
+
       - name: Check PostgreSQL corpus
         run: python3 scripts/check_postgresql_cli.py --local-bin /usr/lib/postgresql/16/bin
 

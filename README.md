@@ -34,6 +34,7 @@ lake exe sqlean_tests
 lake exe sqlean_scope_tests
 python3 scripts/check_assurance_cli.py
 python3 scripts/check_render_cli.py
+python3 scripts/check_renderer_corpus.py
 python3 scripts/check_lean_trust.py
 python3 -m unittest discover -s scripts -p 'test_*.py' -v
 python3 scripts/generate_crud_examples.py --check
@@ -58,6 +59,28 @@ PostgreSQL 16, including the rendering and dialect checks. Both jobs use Ubuntu
 24.04 and Python 3.12. PostgreSQL checks use
 temporary private clusters; no database secrets are required. New runs cancel
 superseded runs for the same branch or pull request.
+
+The renderer CI replay sends **1,237 SELECT queries from the compatibility
+corpora** through `--render-assurance identity` and `postgres`, then checks
+canonical rerendering and parameter maps. The inventory includes the original SELECTs, CRUD reads,
+joins, grouping, derived tables, ordinary/recursive CTEs, set operations, and
+the SELECT portions of the PostgreSQL and advanced corpora. Non-SELECT
+statements remain in their existing mutation/DDL suites. Missing fixtures or
+unexpected renderer rejections fail the replay.
+The 200 dialect fixtures retain their separate checked-rendering suite.
+
+The same replay checks **400 portable SELECTs** with the SQLite renderer and
+executes source/rendered pairs on empty and seeded databases. It compares
+column counts, duplicate-preserving rows, and ordered results where specified.
+SQLite-generated expression labels differ in
+[54 explicitly recorded cases](fixtures/renderer_label_expectations.json);
+the remaining cases also require equal labels. These exceptions do not disable
+row or column-count checks, and new label differences fail CI.
+Separate native witnesses cover DISTINCT ON, richer aggregates and FILTER,
+USING/NATURAL joins, set multiplicities, nested CTE scope, and correlated
+subqueries. SQLite and PostgreSQL use their own expected results. These are
+finite observations alongside Lean reconstruction proofs, not a universal
+database-semantic equivalence claim.
 
 The project-wide trust audit rejects proof placeholders, project-defined axioms,
 native proof shortcuts, user-authored unsafe/partial declarations, and kernel-check bypasses.
