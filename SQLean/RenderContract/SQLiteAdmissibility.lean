@@ -35,6 +35,7 @@ mutual
     | .containment .. => unsupported "containment"
     | .overlap .. => unsupported "overlap"
     | .extract .. => unsupported "extract"
+    | .substring .. => unsupported "substring"
     | .binary _ left right | .concat left right | .filteredAggregate left right =>
         checkSQLiteExpr left; checkSQLiteExpr right
     | .pattern left right insensitive =>

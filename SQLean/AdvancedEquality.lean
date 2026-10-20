@@ -52,6 +52,9 @@ mutual
     case call.call a0 a1 b0 b1 =>
       letI : Decidable (a1 = b1) := exactListExprDecEq a1 b1
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.call.injEq])
+    case substring.substring a0 a1 b0 b1 =>
+      letI : Decidable (a1 = b1) := exactListExprDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.substring.injEq])
     case caseExpr.caseExpr a0 a1 a2 b0 b1 b2 =>
       letI : Decidable (a0 = b0) := exactOptionExprDecEq a0 b0
       letI : Decidable (a1 = b1) := exactBranchesDecEq a1 b1

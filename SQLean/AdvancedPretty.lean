@@ -29,6 +29,17 @@ def IntervalFields.toSql : IntervalFields → String
   | .hourToMinute => "HOUR TO MINUTE" | .hourToSecond => "HOUR TO SECOND"
   | .minuteToSecond => "MINUTE TO SECOND"
 
+/-- Render lexical argument order exactly. The checked boundary rejects a
+malformed argument count before this total printer is used for a certificate. -/
+def substringSql (form : SubstringForm) (args : List String) : String :=
+  "SUBSTRING(" ++ (match form, args with
+    | .from, [subject, start] => subject ++ " FROM " ++ start
+    | .forOnly, [subject, count] => subject ++ " FOR " ++ count
+    | .fromFor, [subject, start, count] => subject ++ " FROM " ++ start ++ " FOR " ++ count
+    | .forFrom, [subject, count, start] => subject ++ " FOR " ++ count ++ " FROM " ++ start
+    | .similar, [subject, pattern, escape] => subject ++ " SIMILAR " ++ pattern ++ " ESCAPE " ++ escape
+    | _, _ => comma args) ++ ")"
+
 /-- Modifiers belong to the scalar element declaration. Array brackets follow
 the complete declaration, including any time-zone qualifier. -/
 def TypeName.toSql (name : TypeName) (modifiers : List Nat) : String :=
@@ -107,6 +118,10 @@ mutual
         paren (exprSql pg left ++ (if containedBy then " <@ " else " @> ") ++ exprSql pg right)
     | .overlap left right => paren (exprSql pg left ++ " && " ++ exprSql pg right)
     | .extract field arg => "EXTRACT(" ++ quoteText field ++ " FROM " ++ exprSql pg arg ++ ")"
+    | .substring form args => substringSql form
+        (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          exprSql pg arg.val)
     | .cast arg type => "CAST(" ++ exprSql pg arg ++ " AS " ++ type.toSql ++ ")"
     | .subscript base subscripts => paren (exprSql pg base) ++ String.join
         (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>

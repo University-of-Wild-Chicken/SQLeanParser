@@ -1,0 +1,2025 @@
+{
+  "format_version": 1,
+  "factor": "substring",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 27,
+    "cockroach": 11,
+    "materialize": 12
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/strings.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/strings.sql",
+          "sha256": "a7828ef7fed9179d3de172fba7a81b75268606b7d43acda8943bce17c72480db"
+        },
+        {
+          "path": "src/test/regress/sql/regex.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/src/test/regress/sql/regex.sql",
+          "sha256": "60d3c8ec90520d3d64eb10f10273d0837155a7e4f0b3994d40e197cf35fd613d"
+        }
+      ]
+    },
+    "cockroach": {
+      "repository": "https://github.com/cockroachdb/cockroach",
+      "commit": "5b78463ed2e7106a8477b63fa837564ad02bb510",
+      "ref": "v22.1.0",
+      "license": "Apache-2.0 (BSL-1.1 change date 2025-04-01)",
+      "source_kind": "engine-regression",
+      "source_dialect": "cockroachdb",
+      "files": [
+        {
+          "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+          "local_path": "fixtures/factor_sources/sources/cockroach/pkg/sql/logictest/testdata/logic_test/builtin_function",
+          "sha256": "e5c67898e40b405cd16acc0bcc02bf19e17d7cf1788a73007fd2b426c12b65a8"
+        }
+      ],
+      "license_file": "fixtures/factor_sources/licenses/cockroach-v22.1-BSL.txt",
+      "license_sha256": "b18788e78d6c5a3498b8857abfef58c19ae06b241d38a4023a514e8f8702248d",
+      "additional_notices": [
+        {
+          "path": "LICENSE",
+          "local_path": "fixtures/factor_sources/licenses/cockroach-v22.1-LICENSE",
+          "sha256": "8a2fba9d26592ff3538f44c96d1b894ef44649058b4d04f3fda49518a9c4ae11"
+        },
+        {
+          "path": "licenses/APL.txt",
+          "local_path": "fixtures/factor_sources/licenses/cockroach-v22.1-APACHE.txt",
+          "sha256": "24f9c32c2d3b165c1f9eb4a8aa2c582412a06b3c0c4630f9c77c4f5a6c3937e5"
+        }
+      ]
+    },
+    "materialize": {
+      "repository": "https://github.com/MaterializeInc/materialize",
+      "commit": "726570dba1d2e4d839c707a84a986fb3b3acc5c3",
+      "ref": "pinned main snapshot",
+      "license": "BSL-1.1 (change date 2030-10-20; change license Apache-2.0)",
+      "source_kind": "engine-regression",
+      "source_dialect": "materialize",
+      "files": [
+        {
+          "path": "test/sqllogictest/string.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/string.slt",
+          "sha256": "98eab76069667eec2135137658e7f5357e403912058e86337f2db0e7008e022d"
+        }
+      ],
+      "license_file": "fixtures/factor_sources/licenses/materialize-20261020-LICENSE",
+      "license_sha256": "5d4ca070f541414a03ad8b84021e4ba3deeca4025e4b4274053abaa2e93ec032"
+    }
+  },
+  "selections": [
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 73,
+        "start": 3836,
+        "end": 3901
+      },
+      "sql_sha256": "c6a94ee56175c5c9550b6d0d0d054963763e06cb82344f2615c80449cb10b307",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "1234567890",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "equality",
+            "alias": "34567890"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 74,
+        "start": 3903,
+        "end": 3964
+      },
+      "sql_sha256": "9a1cca9304f2e07909dcb4e8df7109d872888fb31a88cbfea92e2becc54a7ac6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "1234567890",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 4,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "equality",
+            "alias": "456"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 75,
+        "start": 3989,
+        "end": 4049
+      },
+      "sql_sha256": "41a6773eea894b64b6d37e36cafe87423f610de5f4a48b8c2e98808fcb077cd8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "string",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2147483646,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "tring"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 76,
+        "start": 4050,
+        "end": 4113
+      },
+      "sql_sha256": "8662e55802051a10ecc8fb918d735501a9e4b4964f54e97379dac77e17d32331",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "string",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": -10,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2147483646,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "string"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 78,
+        "start": 4251,
+        "end": 4321
+      },
+      "sql_sha256": "fc9c3f4a90ea73dc860d8efde925fa9e23ebb7d0bfa52f914b5adaf4a59a6e34",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "a#\"(b_d)#\"%",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "bcd"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 79,
+        "start": 4347,
+        "end": 4411
+      },
+      "sql_sha256": "9359c16e2b41e0a7183386dbf70852d46e27b78baad7c3b28dd492ff13a9cce8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "a#\"(b_d)#\"%",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "bcd"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 80,
+        "start": 4444,
+        "end": 4522
+      },
+      "sql_sha256": "0cbbf3cf4806fbb1718d7a8c87ba172b23fd9c4ca20833f2ab287400d29a41b4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#\"(b_d)#\"%",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "is-null",
+            "alias": "True"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 81,
+        "start": 4558,
+        "end": 4628
+      },
+      "sql_sha256": "7f9e7a97f74b461b0c972163d8405eafe70b34ff31403ede15e6b92c6f9fb51f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "%",
+                "cast": null
+              },
+              {
+                "form": "null",
+                "value": null,
+                "cast": null
+              }
+            ],
+            "wrapper": "is-null",
+            "alias": "True"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 82,
+        "start": 4629,
+        "end": 4693
+      },
+      "sql_sha256": "a45766a949b1ccb8820029bc92fa225f18dd976d845ead387f354c5fb3ba13b4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "null",
+                "value": null,
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "%",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "is-null",
+            "alias": "True"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 83,
+        "start": 4694,
+        "end": 4764
+      },
+      "sql_sha256": "76718a6919621f6cd07df3b337adb246e68a42262265d192c00e53dcb44a60ad",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "null",
+                "value": null,
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "is-null",
+            "alias": "True"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 84,
+        "start": 4816,
+        "end": 4884
+      },
+      "sql_sha256": "e8e5813dc8e98a6eb62dce597c7c29679c652f06c7dda455b8d0fda91c7fc777",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "a#\"%#\"g",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "bcdef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 85,
+        "start": 4885,
+        "end": 4957
+      },
+      "sql_sha256": "dea50b8142aab6f917f621456273c9833cbb2cffe069b4d067c96639295154aa",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "a*#\"%#\"g*",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "abcdefg"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 86,
+        "start": 5010,
+        "end": 5080
+      },
+      "sql_sha256": "06c08c207f60ab2edfbe2179df1963621e0d86b9ee1d48d023d17f3a1e81b0cb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "a|b#\"%#\"g",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "bcdef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 87,
+        "start": 5081,
+        "end": 5151
+      },
+      "sql_sha256": "1bb7ed9fda03f51599513d26eecb009c453cf82919a9ed9d31898c48f451553d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "a#\"%#\"x|g",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "bcdef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 88,
+        "start": 5152,
+        "end": 5223
+      },
+      "sql_sha256": "b7f8f73bff66bc265a9ff5fc7567753c6756a7dd5bdad07f4d9f6ffb463e637b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "a#\"%|ab#\"g",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "bcdef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 90,
+        "start": 5421,
+        "end": 5488
+      },
+      "sql_sha256": "8ce9e8b37a3b4fe0c221f9c19fcc0a8f613a34f3cd7eb4f07ce0f97f6351dbd1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "a#\"%g",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "bcdefg"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 91,
+        "start": 5489,
+        "end": 5555
+      },
+      "sql_sha256": "05c400f70b5df35f950d7e391230965a06e3cf13aaa72512b88aab8af45144f4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "similar-escape",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "a%g",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "#",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "abcdefg"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 92,
+        "start": 5696,
+        "end": 5744
+      },
+      "sql_sha256": "6830ce4bf7cc392bafbfbdcbabc86c160595cbdc5d454ab82fb12f28800ed4c3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "c.e",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "cde"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 93,
+        "start": 5822,
+        "end": 5873
+      },
+      "sql_sha256": "65944c509a892c9f667593a63211f90218bcd3a90776659e5c4707f43e347075",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdefg",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "b(.*)f",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "cde"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 94,
+        "start": 5941,
+        "end": 5995
+      },
+      "sql_sha256": "14a36633703d1c99a0cc418c49651a7d4e81e72de9ae7c085f27e766115449b5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "foo",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "foo(bar)?",
+                "cast": null
+              }
+            ],
+            "wrapper": "is-null",
+            "alias": "t"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 430,
+        "start": 29538,
+        "end": 29594
+      },
+      "sql_sha256": "43b4026d7fd840a75074d8b7a8cc83c742d446259129bb3f879479f54d1e068f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "1234567890",
+                "cast": "bytea"
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "34567890"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 431,
+        "start": 29595,
+        "end": 29655
+      },
+      "sql_sha256": "1491145f22bb88be9abf6c108c8b25a6f35f6d726411113c506dd941401f9aba",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "1234567890",
+                "cast": "bytea"
+              },
+              {
+                "form": "integer",
+                "value": 4,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "456"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 432,
+        "start": 29656,
+        "end": 29723
+      },
+      "sql_sha256": "33e53de8502d477570ab0aa1de261a1cf9b67846d306addae316d6c1820b540a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "string",
+                "cast": "bytea"
+              },
+              {
+                "form": "integer",
+                "value": 2,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2147483646,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "tring"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 433,
+        "start": 29724,
+        "end": 29794
+      },
+      "sql_sha256": "8b18c2cfa8a9da1c5feaf832ffea8ad64f888c58dfe639be9a2992145fc51334",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "string",
+                "cast": "bytea"
+              },
+              {
+                "form": "integer",
+                "value": -10,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2147483646,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": "string"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/regex.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 12,
+        "start": 736,
+        "end": 809
+      },
+      "sql_sha256": "2050354e81e330299fa640600e1a15f3cf41fd452f9789200c4faa7710427aa6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "asd TO foo",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": " TO (([a-z0-9._]+|\"([^\"]+|\"\")+\")+)",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/regex.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 13,
+        "start": 810,
+        "end": 846
+      },
+      "sql_sha256": "49494d3ffc330a0e49d5871718f72cbad4eae69a6adaa40e15136c656ce675be",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "a",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "((a))+",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/regex.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "statement_index": 14,
+        "start": 847,
+        "end": 883
+      },
+      "sql_sha256": "10120cdc1551eec992c795a1666d5a8dea568855019be5b88eb40951000e3008",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "a",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "((a)+)",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 155,
+        "start": 3368,
+        "end": 3400
+      },
+      "sql_sha256": "217b1eb9cd8cb3c9f33d92c92a843899675d3a5fe27783b95d02bba079844e5b",
+      "observed_syntax": {
+        "function_names": [
+          "substring"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "ordinary",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "RoacH",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 160,
+        "start": 3418,
+        "end": 3450
+      },
+      "sql_sha256": "6cc92bc748c4ea6e03c7c05d48a131a8383c04a11472871c0ba39563fbbb4b71",
+      "observed_syntax": {
+        "function_names": [
+          "substring"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "ordinary",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "💩oacH",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 165,
+        "start": 3468,
+        "end": 3507
+      },
+      "sql_sha256": "84f3616d74257c2321a15f9f68a6cc8e9179e9d25fad67d660e434f1bcc984db",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "RoacH",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 170,
+        "start": 3525,
+        "end": 3564
+      },
+      "sql_sha256": "466a96ee78ea0112dc732e115872624655194bc96046ad1deb96cbd16fb36ea2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "for-from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "RoacH",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 185,
+        "start": 3672,
+        "end": 3705
+      },
+      "sql_sha256": "e66e9230cfd8186497e6bd7077c94b7ca0ccec8d850f604203c6ccb4dfc84ed3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "RoacH",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 218,
+        "start": 4114,
+        "end": 4146
+      },
+      "sql_sha256": "2173b79a5d8bdb1ab66a373b9b273ecb26c1eb64d4cefb34d4af2c1256dbfe93",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "12345",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 1,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": "pg_catalog.int4"
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 223,
+        "start": 4164,
+        "end": 4202
+      },
+      "sql_sha256": "3e199aa44337f504096cbfcfc741e7cc54bb9fd5803334902bb40a85281267cf",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "foobar",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "o.b",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 228,
+        "start": 4220,
+        "end": 4266
+      },
+      "sql_sha256": "2b437bfab1ec4d7fb9b914e587655dbadd5c57172de84a8adba28dfcd9d5fbac",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "f(oabaroob",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "\\(o(.)b",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 233,
+        "start": 4282,
+        "end": 4336
+      },
+      "sql_sha256": "784d8c5a4faa2dc8ab786aafe2ec4d7b9e756aa0b3f0b1af0aa42ee24fe5096e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "f(oabaroob",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "+(o(.)b",
+                "cast": null
+              },
+              {
+                "form": "string",
+                "value": "+",
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 296,
+        "start": 5790,
+        "end": 5824
+      },
+      "sql_sha256": "e2b7c0c3dd4b45cbf89f37405011d072a272e6979f7097cdb895ed00ffe2a6e1",
+      "observed_syntax": {
+        "function_names": [
+          "substring"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "ordinary",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abc",
+                "cast": "bytea"
+              },
+              {
+                "form": "integer",
+                "value": 0,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "cockroach",
+      "path": "pkg/sql/logictest/testdata/logic_test/builtin_function",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 311,
+        "start": 6035,
+        "end": 6072
+      },
+      "sql_sha256": "efec92d8785f0750a862cd34f9e7a5917c881ba46d2fd4ece6e96f93b2e0804b",
+      "observed_syntax": {
+        "function_names": [
+          "substring"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "ordinary",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abc",
+                "cast": "bytea"
+              },
+              {
+                "form": "integer",
+                "value": 0,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 4,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 415,
+        "start": 6554,
+        "end": 6588
+      },
+      "sql_sha256": "69aa296a512b542952164c127d2fbaa79a5bec014bd4894dc30401169f1f455b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 420,
+        "start": 6608,
+        "end": 6641
+      },
+      "sql_sha256": "bea8b47fa388973f0534719fa4048ce51b8736519b7fa5dabcee12fcd0430f53",
+      "observed_syntax": {
+        "function_names": [
+          "substring"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "ordinary",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 0,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 425,
+        "start": 6658,
+        "end": 6691
+      },
+      "sql_sha256": "0befe57e917808b124a7f0db52aa4eec43733fd5c25f2ad394cd131e391d285f",
+      "observed_syntax": {
+        "function_names": [
+          "substring"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "ordinary",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 1,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 430,
+        "start": 6709,
+        "end": 6742
+      },
+      "sql_sha256": "efe7f97ef8a5e3a838cd6b63a9a05984264b9f01dfe7490e6c08a8e9dad1acb0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 1,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": "pg_catalog.int4"
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 435,
+        "start": 6760,
+        "end": 6794
+      },
+      "sql_sha256": "e1aed5dd44083bc971df78dd20cbe20b8e82be4e3e8dcb4cc7f237102316601a",
+      "observed_syntax": {
+        "function_names": [
+          "substring"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "ordinary",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 440,
+        "start": 6812,
+        "end": 6853
+      },
+      "sql_sha256": "bda09de3e0a95d9db7bce49a899e0410396505fe44e9bca20473cb72d2b6df09",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 456,
+        "start": 7094,
+        "end": 7130
+      },
+      "sql_sha256": "414efd3bb09fe3c1875c1afcd7d6ef6ecc8367895eed18ea94a2595bb524a1eb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": -1,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 461,
+        "start": 7151,
+        "end": 7201
+      },
+      "sql_sha256": "859fd43872c5cf7ff945295cfbdca3ef6b52cfa6d10786157724a04a0f52de7f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2147483647,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 466,
+        "start": 7221,
+        "end": 7271
+      },
+      "sql_sha256": "788cdb7be4c4590a1fb61d52969a2f16ecebb3e7e5732bc5306c449f6cb1f4b2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2147483647,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 471,
+        "start": 7293,
+        "end": 7352
+      },
+      "sql_sha256": "ebb47d800de86964750d48a863bc1a29c64f8b44ec53638e03d242bf8feb37bc",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2147483647,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2147483647,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 476,
+        "start": 7374,
+        "end": 7417
+      },
+      "sql_sha256": "018f04485581dbff2af4e2152e05e0d02555b3454c6ad3400391646961a27049",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 1,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 2147483647,
+                "cast": "pg_catalog.int4"
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/string.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 489,
+        "start": 7546,
+        "end": 7588
+      },
+      "sql_sha256": "4efbd3b0ae6756a8f1b8d293933bbf3889af6f0c6fd885cf6247aeb91c676fa2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "substrings": [
+          {
+            "form": "from-for",
+            "arguments": [
+              {
+                "form": "string",
+                "value": "abcdef",
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": -1,
+                "cast": null
+              },
+              {
+                "form": "integer",
+                "value": 3,
+                "cast": null
+              }
+            ],
+            "wrapper": "plain",
+            "alias": null
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -134,6 +134,12 @@ mutual
     | .extract field arg =>
         if field.contains '\x00' then invalid "representation.extract-field-nul" "EXTRACT field contains NUL"
         else combine [inspectExpr arg]
+    | .substring form args =>
+        if args.length != form.arity then
+          invalid "representation.substring-arity" "SUBSTRING form has the wrong argument count"
+        else combine (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          inspectExpr arg.val)
     | .cast arg type =>
         checkDataType type
         combine [inspectExpr arg, .ok {depth := arrayTypeDepth type.name}]

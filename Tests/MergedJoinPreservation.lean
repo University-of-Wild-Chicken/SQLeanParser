@@ -38,13 +38,13 @@ private def rightScope : Scope := .ofBindings [
   ⟨"r", ⟨"b", ⟨.bool, false⟩⟩⟩]
 private def auxScope : Scope := .ofBindings [⟨"x", ⟨"z", ⟨.int32, false⟩⟩⟩]
 
-private theorem left_valid : SourceValid .basicV21 catalog params (some leftSource) leftScope [] :=
+private theorem left_valid : SourceValid .basicV22 catalog params (some leftSource) leftScope [] :=
   .table (table := leftTable) (by simp [catalog]) rfl (by simp)
     (.cons rfl (.cons rfl (.cons rfl .nil)))
-private theorem right_valid : SourceValid .basicV21 catalog params (some rightSource) rightScope [] :=
+private theorem right_valid : SourceValid .basicV22 catalog params (some rightSource) rightScope [] :=
   .table (table := rightTable) (by simp [catalog]) rfl (by simp)
     (.cons rfl (.cons rfl (.cons rfl .nil)))
-private theorem aux_valid : SourceValid .basicV21 catalog params (some auxSource) auxScope [] :=
+private theorem aux_valid : SourceValid .basicV22 catalog params (some auxSource) auxScope [] :=
   .table (table := auxTable) (by simp [catalog]) rfl (by simp) (.cons rfl .nil)
 
 private def merged : List OutputColumn :=
@@ -61,7 +61,7 @@ private theorem using_keys :
     (.cons (leftColumn := ⟨"k", ⟨.int32, false⟩⟩)
       (rightColumn := ⟨"k", ⟨.int64, true⟩⟩) (base := .int64) rfl rfl rfl rfl .nil)
 
-private theorem using_valid : SourceValid .basicV21 catalog params (some usingSource) usingScope [] :=
+private theorem using_valid : SourceValid .basicV22 catalog params (some usingSource) usingScope [] :=
   .using left_valid right_valid (by decide) (by decide) (by decide) (by decide) using_keys
 
 example : usingScope.output =
@@ -80,7 +80,7 @@ example : Resolves usingScope none "k" ⟨"k", ⟨.int64, true⟩⟩ := by decid
 example : Resolves usingScope (some "l") "k" ⟨"k", ⟨.int32, true⟩⟩ := by decide
 example : ¬ Resolves usingScope (some "") "k" ⟨"k", ⟨.int64, true⟩⟩ := by decide
 
-example : SourceValid .basicV21 catalog params (some (translateSource usingSource)) usingScope [] :=
+example : SourceValid .basicV22 catalog params (some (translateSource usingSource)) usingScope [] :=
   source_valid_translated using_valid
 
 private def naturalMerged : List OutputColumn :=
@@ -92,7 +92,7 @@ private def naturalScope : Scope :=
 example : naturalJoinKeys leftScope.output rightScope.output = ["k", "v"] := by decide
 
 private theorem natural_valid :
-    SourceValid .basicV21 catalog params (some naturalSource) naturalScope [] :=
+    SourceValid .basicV22 catalog params (some naturalSource) naturalScope [] :=
   .natural left_valid right_valid (by decide) (by decide) (by decide)
     (.cons (leftColumn := ⟨"k", ⟨.int32, false⟩⟩)
       (rightColumn := ⟨"k", ⟨.int64, true⟩⟩) (base := .int64) rfl rfl rfl rfl
@@ -100,12 +100,12 @@ private theorem natural_valid :
         (rightColumn := ⟨"v", ⟨.varchar [8], false⟩⟩) (base := .varchar [])
         rfl rfl rfl rfl .nil))
 
-example : SourceValid .basicV21 catalog params (some (translateSource naturalSource)) naturalScope [] :=
+example : SourceValid .basicV22 catalog params (some (translateSource naturalSource)) naturalScope [] :=
   source_valid_translated natural_valid
 
 /-- Zero shared names is a legal NATURAL join, including FULL; both exposed
 rows remain intact and acquire the ordinary outer-join NULL extension. -/
-example : SourceValid .basicV21 catalog params (some (.join .full leftSource auxSource .natural))
+example : SourceValid .basicV22 catalog params (some (.join .full leftSource auxSource .natural))
     (joinScope .full leftScope auxScope) [] :=
   .natural left_valid aux_valid (by decide) (by decide) (by decide) .nil
 
@@ -133,13 +133,13 @@ private def nestedSource : Advanced.From := .join .inner usingSource auxSource (
 private def nestedScope : Scope := usingScope.append auxScope
 
 private theorem nested_valid :
-    SourceValid .basicV21 catalog params (some nestedSource) nestedScope [.anonymous 2] :=
+    SourceValid .basicV22 catalog params (some nestedSource) nestedScope [.anonymous 2] :=
   .on using_valid aux_valid (by decide) (by decide)
     (.present (.binary (.column (scope := nestedScope) (qualifier := none) (name := "k")
       (column := ⟨"k", ⟨.int64, true⟩⟩) rfl)
       (.parameter (binding := ⟨2, ⟨.bigInt, []⟩, false⟩) (by simp [params]) rfl rfl) rfl) rfl)
 
-example : SourceValid .basicV21 catalog params (some (translateSource nestedSource))
+example : SourceValid .basicV22 catalog params (some (translateSource nestedSource))
     nestedScope [.numbered 2] :=
   source_valid_translated nested_valid
 
@@ -150,7 +150,7 @@ private def query : Advanced.Query := {
 private def output : List OutputColumn := ⟨"selected", ⟨.int32, false⟩⟩ :: nestedScope.output
 
 private theorem query_derivation :
-    QueryValid .basicV21 catalog params query output [.anonymous 1, .anonymous 2] := by
+    QueryValid .basicV22 catalog params query output [.anonymous 1, .anonymous 2] := by
   unfold query
   apply QueryValid.basic (scope := nestedScope)
     (sourceUses := [.anonymous 2]) (selectUses := [.anonymous 1])
@@ -170,10 +170,10 @@ private theorem query_derivation :
   · rfl
   · rfl
 
-private theorem query_valid : SelectValid .basicV21 catalog params query output :=
+private theorem query_valid : SelectValid .basicV22 catalog params query output :=
   .certified (by decide) (by decide) query_derivation (Or.inr rfl)
 
-example : SelectValid .basicV21 catalog params (translateParameters query) output :=
+example : SelectValid .basicV22 catalog params (translateParameters query) output :=
   translateParameters_valid query_valid
 
 end SQLean.Tests.MergedJoinPreservation

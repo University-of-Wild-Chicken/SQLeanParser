@@ -27,7 +27,7 @@ private def extractCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "EXTRACT SELECT"
-    ((SelectContract.checkQuery .basicV21 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV22 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "EXTRACT identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -97,7 +97,7 @@ def extractContractTests : IO Nat := do
           SQLean.Tests.assert ((← extractCertificate query params) ==
               [⟨"v", ⟨.numeric [], nullable || infinityNullable⟩⟩])
             s!"EXTRACT exact temporal result: {parameter}"
-        else match SelectContract.checkQuery .basicV21 [] params query with
+        else match SelectContract.checkQuery .basicV22 [] params query with
         | .error (.invalid diagnostic) =>
             SQLean.Tests.assert (diagnostic.code == "extract_signature")
               s!"EXTRACT concrete invalid signature: {parameter}"
@@ -122,7 +122,7 @@ def extractContractTests : IO Nat := do
       "EXTRACT(year FROM DATE '2024-01-01')"] do
     let sql := s!"SELECT EXTRACT(year FROM {arg})"
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV21 [] [] query with
+    match SelectContract.checkQuery .basicV22 [] [] query with
     | .error (.invalid diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == "extract_signature") s!"EXTRACT invalid input: {sql}"
     | _ => throw (IO.userError s!"EXTRACT invalid/ambiguous input accepted: {sql}")
@@ -131,7 +131,7 @@ def extractContractTests : IO Nat := do
       "SELECT EXTRACT(year FROM (SELECT DATE '2024-01-01'))",
       "SELECT EXTRACT(year FROM unregistered_temporal_function())"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV21 [] [] query with
+    match SelectContract.checkQuery .basicV22 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"EXTRACT unsupported child must retain its status: {sql}")
     count := count + 1
@@ -164,7 +164,7 @@ def extractContractTests : IO Nat := do
     count := count + 1
   let query ← expectOk "EXTRACT fuel query" (Advanced.parseQuery "SELECT EXTRACT(second FROM $1)")
   let params ← expectOk "EXTRACT parameter" (Assurance.parseContractParameterTypes "TIME")
-  match SelectContract.checkQuery .basicV21 [] params query 0 with
+  match SelectContract.checkQuery .basicV22 [] params query 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "EXTRACT fuel exhaustion must be Inconclusive")
   count := count + 1
@@ -174,13 +174,13 @@ def extractContractTests : IO Nat := do
   let mixed : Advanced.Query := {body := .select {items := [
     .expression (.extract "second" (.parameter (.anonymous 1))) none,
     .expression (.extract "hour" (.parameter (.numbered 1))) none]}}
-  match SelectContract.checkQuery .basicV21 [] params mixed with
+  match SelectContract.checkQuery .basicV22 [] params mixed with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "Hand-built EXTRACT AST must not bypass mixed placeholder rejection")
   count := count + 1
   for sql in ["SELECT EXTRACT(year FROM $2)"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV21 [] params query with
+    match SelectContract.checkQuery .basicV22 [] params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"EXTRACT malformed parameter usage must be Invalid: {sql}")
     count := count + 1

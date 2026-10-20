@@ -20,6 +20,16 @@ def IntervalFields.allowsPrecision : IntervalFields → Bool
   | .second | .dayToSecond | .hourToSecond | .minuteToSecond => true
   | _ => false
 
+/-- SQL-standard SUBSTRING spellings. Arguments remain in lexical order;
+FOR ... FROM ... must not renumber anonymous parameter occurrences. -/
+inductive SubstringForm where
+  | from | fromFor | forFrom | forOnly | similar
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+def SubstringForm.arity : SubstringForm → Nat
+  | .from | .forOnly => 2
+  | .fromFor | .forFrom | .similar => 3
+
 inductive TypeName where
   | int | bigInt | text | varchar | bool | real | doublePrecision | numeric
   | smallInt | char | date | time | timeTZ | timestamp | timestampTZ
@@ -139,6 +149,7 @@ mutual
     /-- PostgreSQL EXTRACT special syntax. The field is a decoded SQL string,
     never an expression or an interpolated SQL fragment. -/
     | extract (field : String) (arg : Expr)
+    | substring (form : SubstringForm) (args : List Expr)
     | cast (arg : Expr) (target : DataType)
     /-- PostgreSQL ARRAY[...] constructor. Nested bracket shorthand normalizes
     to nested constructors; declared dimensions remain runtime properties. -/

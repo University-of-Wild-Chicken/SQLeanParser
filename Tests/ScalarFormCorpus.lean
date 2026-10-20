@@ -34,7 +34,7 @@ private def signatureFixtureTests : IO Unit := do
   let expected := SelectContract.functionNames.flatMap fun name =>
     (SelectContract.functionCatalog name).map fun signature =>
       (name, signature.inputs.map label, label signature.output)
-  SQLean.Tests.assert (actual.length == 78 && actual == expected)
+  SQLean.Tests.assert (actual.length == 84 && actual == expected)
     "native signature fixture differs from the normative function inventory"
 
 private def scalarFormCategoryTests (category : String) : IO Nat := do
@@ -57,10 +57,10 @@ private def scalarFormCategoryTests (category : String) : IO Nat := do
       (Assurance.parseContractParameterTypes parameterTypes)
     let query ← expectOk s!"{id}: parse" (Advanced.parseQuery sql)
     let certificate ← expectOk s!"{id}: complete SELECT certificate"
-      ((SelectContract.checkQuery .basicV21 [] params query).mapError reprStr)
-    have _valid : SelectContract.SelectValid .basicV21 [] params query certificate.output :=
+      ((SelectContract.checkQuery .basicV22 [] params query).mapError reprStr)
+    have _valid : SelectContract.SelectValid .basicV22 [] params query certificate.output :=
       certificate.valid
-    have _preserved : SelectContract.SelectValid .basicV21 [] params
+    have _preserved : SelectContract.SelectValid .basicV22 [] params
         (RenderContract.translateParameters query) certificate.output :=
       RenderContract.translateParameters_valid certificate.valid
     match certificate.output with
@@ -134,7 +134,7 @@ def scalarFormBoundaryTests : IO Nat := do
   for (expression, base, nullable) in typed do
     let query ← expectOk expression (Advanced.parseQuery s!"SELECT {expression} AS v")
     let certificate ← expectOk expression
-      ((SelectContract.checkQuery .basicV21 [] [] query).mapError reprStr)
+      ((SelectContract.checkQuery .basicV22 [] [] query).mapError reprStr)
     SQLean.Tests.assert (certificate.output == [⟨"v", ⟨base, nullable⟩⟩])
       s!"wrong conditional exact result: {expression}: {reprStr certificate.output}"
   let invalid := [
@@ -144,14 +144,14 @@ def scalarFormBoundaryTests : IO Nat := do
     "SELECT lower(1)", "SELECT abs(TRUE)", "SELECT concat()", "SELECT concat_ws(',')" ]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV21 [] [] query with
+    match SelectContract.checkQuery .basicV22 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected independently invalid scalar form: {sql}")
   let parameterSql := "SELECT CASE WHEN ? THEN ? WHEN ? THEN ? ELSE ? END AS v"
   let params ← expectOk "CASE parameter declarations" (Assurance.parseContractParameterTypes "bool,int,bool,int,int")
   let query ← expectOk "CASE parameter order" (Advanced.parseQuery parameterSql)
   let certificate ← expectOk "CASE full parameter certificate"
-    ((SelectContract.checkQuery .basicV21 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV22 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let rendered ← expectOk "CASE ordered parameter rendering"
     ((RenderContract.check .postgres16V01 query).mapError reprStr)

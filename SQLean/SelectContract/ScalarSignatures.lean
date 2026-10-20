@@ -244,6 +244,20 @@ def resolveOverload (catalog : List FunctionOverload) (args : List ScalarInput) 
       | [candidate] => some candidate
       | _ => none
 
+/-- The six admitted PostgreSQL substring declarations. The two BIT
+signatures require a separate exact bit-string type foundation. -/
+def substringCatalog : List FunctionOverload :=
+  [⟨[.text, .int32], .text⟩, ⟨[.text, .int32, .int32], .text⟩,
+   ⟨[.bytea, .int32], .bytea⟩, ⟨[.bytea, .int32, .int32], .bytea⟩,
+   ⟨[.text, .text], .text⟩, ⟨[.text, .text, .text], .text⟩]
+
+/-- Regex extraction can return SQL NULL when no match is found, even with
+non-NULL operands. Positional extraction only propagates operand NULL flags.
+The selected declaration, rather than special-syntax spelling, decides this. -/
+def substringNullable (selected : FunctionOverload) (inputs : List ScalarInput) : Bool :=
+  selected.inputs == [.text, .text] || selected.inputs == [.text, .text, .text] ||
+    inputs.any ScalarInput.nullable
+
 /-- PostgreSQL 16's six SQL EXTRACT declarations. The syntactic field is
 passed as TEXT; temporal input modifiers do not select a different overload.
 Every declaration returns unmodified NUMERIC, unlike date_part's FLOAT8. -/
@@ -397,7 +411,7 @@ def numericTypes : List ScalarType :=
 def functionNames : List Name :=
   ["abs", "sign", "ceil", "ceiling", "floor", "sqrt", "exp", "ln", "cbrt", "degrees", "radians",
    "round", "trunc", "log", "power", "div", "mod", "lower", "upper", "length", "char_length",
-   "character_length", "octet_length", "btrim", "ltrim", "rtrim", "replace", "substr",
+   "character_length", "octet_length", "btrim", "ltrim", "rtrim", "replace", "substr", "substring",
    "to_date", "to_timestamp", "now", "transaction_timestamp", "statement_timestamp",
    "clock_timestamp", "pi", "random", "json_typeof", "jsonb_typeof", "json_array_length",
    "jsonb_array_length", "concat", "concat_ws", "num_nulls", "num_nonnulls"]
@@ -426,6 +440,7 @@ def functionCatalog (name : Name) : List FunctionOverload :=
   | "btrim" | "ltrim" | "rtrim" =>
       [⟨[.text], .text⟩, ⟨[.text, .text], .text⟩, ⟨[.bytea, .bytea], .bytea⟩]
   | "replace" => [⟨[.text, .text, .text], .text⟩]
+  | "substring" => substringCatalog
   | "substr" => [⟨[.text, .int32], .text⟩, ⟨[.text, .int32, .int32], .text⟩,
       ⟨[.bytea, .int32], .bytea⟩, ⟨[.bytea, .int32, .int32], .bytea⟩]
   | "to_date" => [⟨[.text, .text], .date⟩]
@@ -460,7 +475,8 @@ def callSignature (name : List Name) (args : List ScalarInput) : Option ExactTyp
     if args.isEmpty then none else some ⟨.int32, false⟩
   else
     let overload ← resolveOverload (functionCatalog name) args
-    some ⟨overload.output, args.any ScalarInput.nullable⟩
+    some ⟨overload.output, if name == "substring" then substringNullable overload args
+      else args.any ScalarInput.nullable⟩
 
 /-- PostgreSQL common-type selection is directional and distinct from numeric
 operator overload selection. For example INT32/REAL resolves to REAL here. -/

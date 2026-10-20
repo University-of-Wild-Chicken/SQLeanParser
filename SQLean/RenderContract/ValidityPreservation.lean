@@ -170,6 +170,10 @@ mutual
     | call args signature =>
         simpa only [translateExpr, List.attach_map_val] using
           ExprValid.call (expr_list_valid_translated args) (by simpa using signature)
+    | substring args arguments signature =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.substring (expr_list_valid_translated args)
+            (by simpa only [scalar_inputs_translated] using arguments) signature
     | coalesce args signature =>
         simpa only [translateExpr, List.attach_map_val] using
           ExprValid.coalesce (expr_list_valid_translated args) (by simpa using signature)

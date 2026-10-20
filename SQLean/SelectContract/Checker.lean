@@ -108,6 +108,24 @@ structure SubscriptsCertificate (params : ParameterEnv) (scope : Scope)
   uses : List Parameter
   valid : SubscriptsValid params scope indices uses
 
+private def checkSubstringArguments (form : Advanced.SubstringForm) (args : List ScalarInput) :
+    Except Failure {callInputs // SubstringArguments form args callInputs} :=
+  match form, args with
+  | .from, [subject, start] => .ok ⟨[subject, start], .from⟩
+  | .fromFor, [subject, start, length] => .ok ⟨[subject, start, length], .fromFor⟩
+  | .forFrom, [subject, length, start] => .ok ⟨[subject, start, length], .forFrom⟩
+  | .similar, [subject, pattern, escape] => .ok ⟨[subject, pattern, escape], .similar⟩
+  | .forOnly, [subject, .unknown nullable] =>
+      .ok ⟨[subject, .known ⟨.int32, false⟩, .known ⟨.int32, nullable⟩], .forOnly (.unknown nullable)⟩
+  | .forOnly, [subject, .known input] =>
+      if allowed : explicitCastAllowed input.base .int32 = true then
+        match result : castSignature (some input) .int32 with
+        | some target => .ok ⟨[subject, .known ⟨.int32, false⟩, .known target],
+            .forOnly (.known allowed result)⟩
+        | none => .error (invalid "substring_length_cast" "SUBSTRING FOR-only requires an explicit INT32 cast")
+      else .error (invalid "substring_length_cast" "SUBSTRING FOR-only length has no explicit INT32 cast")
+  | _, _ => .error (invalid "substring_arity" "SUBSTRING special syntax has the wrong number of arguments")
+
 mutual
   def checkExpr (fuel : Nat) (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) :
       Except Failure (ExprCertificate params scope expr) :=
@@ -287,6 +305,16 @@ mutual
           | some result => .ok ⟨some result, args.uses, .array args.valid signature⟩
       | .row _ => .error (unsupported "record_value"
           "Standalone and nested record values require a separate composite-type contract")
+      | .substring form args => do
+          if args.length != form.arity then
+            throw (invalid "substring_arity" "SUBSTRING special syntax has the wrong number of arguments")
+          let argsTyped ← checkExprList fuel params scope args
+          let arguments ← checkSubstringArguments form (scalarInputs args argsTyped.types)
+          match signature : resolveOverload substringCatalog arguments.val with
+          | none => .error (invalid "substring_signature"
+              "SUBSTRING has no unique applicable TEXT/BYTEA positional or TEXT regex overload")
+          | some selected => .ok ⟨some ⟨selected.output, substringNullable selected arguments.val⟩,
+              argsTyped.uses, .substring argsTyped.valid arguments.property signature⟩
       | .call name args => do
           let argsTyped ← checkExprList fuel params scope args
           match signature : callSignature name (scalarInputs args argsTyped.types) with
@@ -718,7 +746,8 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
         | .containment a b _ | .overlap a b => [a, b]
         | .unary _ a | .cast a _ | .extract _ a | .isNull a _ | .inQuery a _ => [a]
         | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
-        | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args
+        | .array args | .row args | .call _ args | .substring _ args
+        | .coalesce args | .greatest args | .least args => args
         | .caseExpr operand branches otherwise =>
           operand.toList ++ branches.flatMap (fun (branch : Advanced.Expr × Advanced.Expr) =>
             [branch.1, branch.2]) ++ otherwise.toList

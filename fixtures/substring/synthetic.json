@@ -1,0 +1,1023 @@
+[
+  {
+    "id": "substring-01-from",
+    "source_kind": "synthetic",
+    "shape": "from",
+    "sql": "SELECT SUBSTRING('abcdef' FROM 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bcdef",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM 2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-02-from-zero",
+    "source_kind": "synthetic",
+    "shape": "from-zero",
+    "sql": "SELECT SUBSTRING('abcdef' FROM 0) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abcdef",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM 0) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-03-from-negative",
+    "source_kind": "synthetic",
+    "shape": "from-negative",
+    "sql": "SELECT SUBSTRING('abcdef' FROM -2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abcdef",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM -2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-04-from-beyond-end",
+    "source_kind": "synthetic",
+    "shape": "from-beyond-end",
+    "sql": "SELECT SUBSTRING('abcdef' FROM 20) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM 20) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-05-from-end",
+    "source_kind": "synthetic",
+    "shape": "from-end",
+    "sql": "SELECT SUBSTRING('abcdef' FROM 7) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM 7) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-06-unicode-characters",
+    "source_kind": "synthetic",
+    "shape": "unicode-characters",
+    "sql": "SELECT SUBSTRING('Aé🙂界Z' FROM 2 FOR 3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "é🙂界",
+    "sqlite_input": "SELECT SUBSTRING('Aé🙂界Z' FROM 2 FOR 3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-07-from-for",
+    "source_kind": "synthetic",
+    "shape": "from-for",
+    "sql": "SELECT SUBSTRING('abcdef' FROM 2 FOR 3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bcd",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM 2 FOR 3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-08-from-zero-for",
+    "source_kind": "synthetic",
+    "shape": "from-zero-for",
+    "sql": "SELECT SUBSTRING('abcdef' FROM 0 FOR 3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM 0 FOR 3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-09-from-negative-for",
+    "source_kind": "synthetic",
+    "shape": "from-negative-for",
+    "sql": "SELECT SUBSTRING('abcdef' FROM -1 FOR 3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "a",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM -1 FOR 3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-10-before-start",
+    "source_kind": "synthetic",
+    "shape": "before-start",
+    "sql": "SELECT SUBSTRING('abcdef' FROM -5 FOR 3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM -5 FOR 3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-11-length-beyond-end",
+    "source_kind": "synthetic",
+    "shape": "length-beyond-end",
+    "sql": "SELECT SUBSTRING('abcdef' FROM 6 FOR 20) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "f",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM 6 FOR 20) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-12-zero-length",
+    "source_kind": "synthetic",
+    "shape": "zero-length",
+    "sql": "SELECT SUBSTRING('abcdef' FROM 2 FOR 0) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM 2 FOR 0) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-13-for-only",
+    "source_kind": "synthetic",
+    "shape": "for-only",
+    "sql": "SELECT SUBSTRING('abcdef' FOR 3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abc",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FOR 3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-14-for-zero",
+    "source_kind": "synthetic",
+    "shape": "for-zero",
+    "sql": "SELECT SUBSTRING('abcdef' FOR 0) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FOR 0) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-15-for-boolean-true",
+    "source_kind": "synthetic",
+    "shape": "for-boolean-true",
+    "sql": "SELECT SUBSTRING('abcdef' FOR TRUE) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "a",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FOR TRUE) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-16-for-boolean-false",
+    "source_kind": "synthetic",
+    "shape": "for-boolean-false",
+    "sql": "SELECT SUBSTRING('abcdef' FOR FALSE) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FOR FALSE) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-17-for-rounded-numeric",
+    "source_kind": "synthetic",
+    "shape": "for-rounded-numeric",
+    "sql": "SELECT SUBSTRING('abcdef' FOR 2.6) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abc",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FOR 2.6) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-18-for-known-text",
+    "source_kind": "synthetic",
+    "shape": "for-known-text",
+    "sql": "SELECT SUBSTRING('abcdef' FOR '2'::TEXT) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FOR '2'::TEXT) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-19-for-from",
+    "source_kind": "synthetic",
+    "shape": "for-from",
+    "sql": "SELECT SUBSTRING('abcdef' FOR 3 FROM 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bcd",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FOR 3 FROM 2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-20-similar-positional",
+    "source_kind": "synthetic",
+    "shape": "similar-positional",
+    "sql": "SELECT SUBSTRING('abcdef' SIMILAR 2 ESCAPE 3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bcd",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' SIMILAR 2 ESCAPE 3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-21-bytea-from",
+    "source_kind": "synthetic",
+    "shape": "bytea-from",
+    "sql": "SELECT SUBSTRING('abcdef'::BYTEA FROM 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x6263646566",
+    "sqlite_input": "SELECT SUBSTRING('abcdef'::BYTEA FROM 2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-22-bytea-from-for",
+    "source_kind": "synthetic",
+    "shape": "bytea-from-for",
+    "sql": "SELECT SUBSTRING('abcdef'::BYTEA FROM 2 FOR 3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x626364",
+    "sqlite_input": "SELECT SUBSTRING('abcdef'::BYTEA FROM 2 FOR 3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-23-bytea-for",
+    "source_kind": "synthetic",
+    "shape": "bytea-for",
+    "sql": "SELECT SUBSTRING('abcdef'::BYTEA FOR 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x6162",
+    "sqlite_input": "SELECT SUBSTRING('abcdef'::BYTEA FOR 2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-24-bytea-for-from",
+    "source_kind": "synthetic",
+    "shape": "bytea-for-from",
+    "sql": "SELECT SUBSTRING('abcdef'::BYTEA FOR 3 FROM 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x626364",
+    "sqlite_input": "SELECT SUBSTRING('abcdef'::BYTEA FOR 3 FROM 2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-25-bytea-similar-positional",
+    "source_kind": "synthetic",
+    "shape": "bytea-similar-positional",
+    "sql": "SELECT SUBSTRING('abcdef'::BYTEA SIMILAR 2 ESCAPE 3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x626364",
+    "sqlite_input": "SELECT SUBSTRING('abcdef'::BYTEA SIMILAR 2 ESCAPE 3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-26-bytea-zero-byte",
+    "source_kind": "synthetic",
+    "shape": "bytea-zero-byte",
+    "sql": "SELECT SUBSTRING('\\x000102ff'::BYTEA FROM 2 FOR 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x0102",
+    "sqlite_input": "SELECT SUBSTRING('\\x000102ff'::BYTEA FROM 2 FOR 2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-27-bytea-empty",
+    "source_kind": "synthetic",
+    "shape": "bytea-empty",
+    "sql": "SELECT SUBSTRING('abcdef'::BYTEA FOR 0) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x",
+    "sqlite_input": "SELECT SUBSTRING('abcdef'::BYTEA FOR 0) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-28-bytea-before-start",
+    "source_kind": "synthetic",
+    "shape": "bytea-before-start",
+    "sql": "SELECT SUBSTRING('abcdef'::BYTEA FROM 0 FOR 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x61",
+    "sqlite_input": "SELECT SUBSTRING('abcdef'::BYTEA FROM 0 FOR 2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-29-bytea-null",
+    "source_kind": "synthetic",
+    "shape": "bytea-null",
+    "sql": "SELECT SUBSTRING(NULL::BYTEA FROM 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": null,
+    "sqlite_input": "SELECT SUBSTRING(NULL::BYTEA FROM 2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-30-for-json-number",
+    "source_kind": "synthetic",
+    "shape": "for-json-number",
+    "sql": "SELECT SUBSTRING('abcdef'::BYTEA FOR '2'::JSONB) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "bytea",
+    "postgres_display_type": "bytea",
+    "expected_value": "\\x6162",
+    "sqlite_input": "SELECT SUBSTRING('abcdef'::BYTEA FOR '2'::JSONB) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-31-regex-capture",
+    "source_kind": "synthetic",
+    "shape": "regex-capture",
+    "sql": "SELECT SUBSTRING('abc123def' FROM '([0-9]+)') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "123",
+    "sqlite_input": "SELECT SUBSTRING('abc123def' FROM '([0-9]+)') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-32-regex-first-capture",
+    "source_kind": "synthetic",
+    "shape": "regex-first-capture",
+    "sql": "SELECT SUBSTRING('abcdef' FROM '(a)(b)') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "a",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM '(a)(b)') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-33-regex-whole-match",
+    "source_kind": "synthetic",
+    "shape": "regex-whole-match",
+    "sql": "SELECT SUBSTRING('abcdef' FROM 'bc.') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bcd",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM 'bc.') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-34-regex-no-match",
+    "source_kind": "synthetic",
+    "shape": "regex-no-match",
+    "sql": "SELECT SUBSTRING('abcdef' FROM 'xyz') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM 'xyz') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-35-regex-null-pattern",
+    "source_kind": "synthetic",
+    "shape": "regex-null-pattern",
+    "sql": "SELECT SUBSTRING('abcdef' FROM NULL::TEXT) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM NULL::TEXT) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-36-similar-capture",
+    "source_kind": "synthetic",
+    "shape": "similar-capture",
+    "sql": "SELECT SUBSTRING('abcdef' SIMILAR '%#\"bc#\"%' ESCAPE '#') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bc",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' SIMILAR '%#\"bc#\"%' ESCAPE '#') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-37-similar-whole-match",
+    "source_kind": "synthetic",
+    "shape": "similar-whole-match",
+    "sql": "SELECT SUBSTRING('abcdef' SIMILAR '%' ESCAPE '#') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "abcdef",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' SIMILAR '%' ESCAPE '#') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-38-similar-no-match",
+    "source_kind": "synthetic",
+    "shape": "similar-no-match",
+    "sql": "SELECT SUBSTRING('abcdef' SIMILAR 'xyz' ESCAPE '#') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "sqlite_input": "SELECT SUBSTRING('abcdef' SIMILAR 'xyz' ESCAPE '#') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-39-from-for-regex",
+    "source_kind": "synthetic",
+    "shape": "from-for-regex",
+    "sql": "SELECT SUBSTRING('abcdef' FROM '%#\"bc#\"%' FOR '#') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bc",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FROM '%#\"bc#\"%' FOR '#') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-40-for-from-regex",
+    "source_kind": "synthetic",
+    "shape": "for-from-regex",
+    "sql": "SELECT SUBSTRING('abcdef' FOR '#' FROM '%#\"bc#\"%') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bc",
+    "sqlite_input": "SELECT SUBSTRING('abcdef' FOR '#' FROM '%#\"bc#\"%') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-41-anonymous",
+    "source_kind": "synthetic",
+    "shape": "anonymous",
+    "sql": "SELECT SUBSTRING(? FROM ? FOR ?) AS v;",
+    "parameter_types": "text,int,int",
+    "parameter_values": [
+      "abcdef",
+      2,
+      3
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bcd",
+    "sqlite_input": "SELECT SUBSTRING(? FROM ? FOR ?) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-42-anonymous-reversed",
+    "source_kind": "synthetic",
+    "shape": "anonymous-reversed",
+    "sql": "SELECT SUBSTRING(? FOR ? FROM ?) AS v;",
+    "parameter_types": "text,int,int",
+    "parameter_values": [
+      "abcdef",
+      3,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bcd",
+    "sqlite_input": "SELECT SUBSTRING(? FOR ? FROM ?) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-43-numbered-reordered",
+    "source_kind": "synthetic",
+    "shape": "numbered-reordered",
+    "sql": "SELECT SUBSTRING($3 FOR $1 FROM $2) AS v;",
+    "parameter_types": "int,int,text",
+    "parameter_values": [
+      3,
+      2,
+      "abcdef"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bcd",
+    "sqlite_input": "SELECT SUBSTRING(?3 FOR ?1 FROM ?2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-44-numbered-repeated",
+    "source_kind": "synthetic",
+    "shape": "numbered-repeated",
+    "sql": "SELECT SUBSTRING($1 FROM $2 FOR $2) AS v;",
+    "parameter_types": "text,int",
+    "parameter_values": [
+      "abcdef",
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bc",
+    "sqlite_input": "SELECT SUBSTRING(?1 FROM ?2 FOR ?2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-45-nullable-binding",
+    "source_kind": "synthetic",
+    "shape": "nullable-binding",
+    "sql": "SELECT SUBSTRING($1 FROM $2) AS v;",
+    "parameter_types": "text?,int",
+    "parameter_values": [
+      null,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": null,
+    "sqlite_input": "SELECT SUBSTRING(?1 FROM ?2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-46-for-bound-text",
+    "source_kind": "synthetic",
+    "shape": "for-bound-text",
+    "sql": "SELECT SUBSTRING($1 FOR $2) AS v;",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "abcdef",
+      "2"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "ab",
+    "sqlite_input": "SELECT SUBSTRING(?1 FOR ?2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-47-ordinary-positional",
+    "source_kind": "synthetic",
+    "shape": "ordinary-positional",
+    "sql": "SELECT substring('abcdef', 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bcdef",
+    "sqlite_input": "SELECT substring('abcdef', 2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-48-ordinary-regex",
+    "source_kind": "synthetic",
+    "shape": "ordinary-regex",
+    "sql": "SELECT substring('abcdef', 'bc.') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bcd",
+    "sqlite_input": "SELECT substring('abcdef', 'bc.') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-49-coalesced-no-match",
+    "source_kind": "synthetic",
+    "shape": "coalesced-no-match",
+    "sql": "SELECT COALESCE(SUBSTRING('abcdef' FROM 'xyz'), 'fallback') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "fallback",
+    "sqlite_input": "SELECT COALESCE(SUBSTRING('abcdef' FROM 'xyz'), 'fallback') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "substring-50-char-padding-conversion",
+    "source_kind": "synthetic",
+    "shape": "char-padding-conversion",
+    "sql": "SELECT SUBSTRING(CAST('abc' AS CHAR(6)) FROM 2 FOR 5) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "bc",
+    "sqlite_input": "SELECT SUBSTRING(CAST('abc' AS CHAR(6)) FROM 2 FOR 5) AS v;",
+    "sqlite_supported": false
+  }
+]

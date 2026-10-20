@@ -63,6 +63,10 @@ mutual
         paren (exprSql left ++ (if containedBy then " <@ " else " @> ") ++ exprSql right)
     | .overlap left right => paren (exprSql left ++ " && " ++ exprSql right)
     | .extract field arg => "EXTRACT(" ++ quoteText field ++ " FROM " ++ exprSql arg ++ ")"
+    | .substring form args => substringSql form
+        (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          exprSql arg.val)
     | .cast arg type => "CAST(" ++ exprSql arg ++ " AS " ++ type.toSql ++ ")"
     -- Excluded by SQLite admissibility; this total structural spelling is only
     -- used by serialization laws over arbitrary finite ASTs.

@@ -504,6 +504,34 @@ mutual
         let arg ← expression fuel 0
         expect ")"
         return .extract field arg
+      if (← isAt "substring") && ((← get).drop 1).head?.any (fun t => t.kind == .symbol "(") then
+        let _ ← pop
+        expect "("
+        if ← eat ")" then return .call ["substring"] []
+        let subject ← expression fuel 0
+        if ← eat ")" then return .call ["substring"] [subject]
+        if ← eat "," then
+          let args ← separated (expression fuel 0) fuel
+          expect ")"
+          return .call ["substring"] (subject :: args)
+        if ← read then fail "SQL-standard SUBSTRING syntax is not supported by the SQLite profile"
+        let (form, args) ← if ← eat "from" then do
+          let start ← expression fuel 0
+          if ← eat "for" then
+            pure (SubstringForm.fromFor, [subject, start, ← expression fuel 0])
+          else pure (.from, [subject, start])
+          else if ← eat "for" then do
+            let count ← expression fuel 0
+            if ← eat "from" then
+              pure (.forFrom, [subject, count, ← expression fuel 0])
+            else pure (.forOnly, [subject, count])
+          else do
+            expect "similar"
+            let pattern ← expression fuel 0
+            expect "escape"
+            pure (.similar, [subject, pattern, ← expression fuel 0])
+        expect ")"
+        return .substring form args
       if ← eat "case" then
         let operand ← if ← isAt "when" then pure none else do pure (some (← expression fuel 0))
         let branches ← caseBranches fuel

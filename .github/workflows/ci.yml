@@ -83,6 +83,7 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor array_overlap --check
           python3 scripts/extract_factor_corpus.py --factor extract --check
           python3 scripts/extract_factor_corpus.py --factor interval_fields --check
+          python3 scripts/extract_factor_corpus.py --factor substring --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -208,6 +209,9 @@ jobs:
 
       - name: Check interval field qualifiers and exact native type modifiers
         run: python3 scripts/check_interval_fields_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check SUBSTRING contracts and native text and bytea observations
+        run: python3 scripts/check_substring_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

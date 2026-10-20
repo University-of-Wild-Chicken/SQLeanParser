@@ -27,6 +27,17 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.22 SUBSTRING increment](docs/substring-contract-v0.22.md)
+adds all five SQL-standard keyword forms and six concrete TEXT/BYTEA
+declarations, including regex extraction. The contract distinguishes
+FOR-only's explicit INTEGER conversion from positional overload resolution,
+preserves lexical parameter order in reversed FOR/FROM forms, and marks
+regex results nullable even for non-NULL inputs. BIT/VARBIT declarations
+remain separate type coverage work.
+Fifty synthetic queries and 50 unchanged source queries receive full
+certificates. The [industrial replay](docs/corpus/substring-v0.22/README.md)
+now accepts 246 of 276 statements, including TPC-H Q22.
+
 The [v0.21 interval qualifier increment](docs/interval-fields-contract-v0.21.md)
 adds all 13 field/range forms, including `YEAR TO MONTH` and
 `DAY TO SECOND(p)`, to literals, casts, array types and catalog declarations.
@@ -257,6 +268,7 @@ python3 scripts/check_pattern_matching_cli.py --local-bin /usr/lib/postgresql/16
 python3 scripts/check_json_extraction_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_json_containment_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_interval_fields_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_substring_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -386,7 +398,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.21` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.22` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

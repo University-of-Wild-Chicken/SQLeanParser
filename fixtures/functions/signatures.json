@@ -481,6 +481,57 @@
   {
     "inputs": [
       "text",
+      "integer"
+    ],
+    "name": "substring",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text",
+      "integer",
+      "integer"
+    ],
+    "name": "substring",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "bytea",
+      "integer"
+    ],
+    "name": "substring",
+    "output": "bytea"
+  },
+  {
+    "inputs": [
+      "bytea",
+      "integer",
+      "integer"
+    ],
+    "name": "substring",
+    "output": "bytea"
+  },
+  {
+    "inputs": [
+      "text",
+      "text"
+    ],
+    "name": "substring",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text",
+      "text",
+      "text"
+    ],
+    "name": "substring",
+    "output": "text"
+  },
+  {
+    "inputs": [
+      "text",
       "text"
     ],
     "name": "to_date",

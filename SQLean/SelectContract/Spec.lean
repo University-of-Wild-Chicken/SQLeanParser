@@ -137,6 +137,27 @@ instance (expr : Advanced.Expr) : Decidable (OrdinaryArrayElement expr) := by
   unfold OrdinaryArrayElement
   split <;> infer_instance
 
+/-- FOR-only SUBSTRING inserts an explicit INT32 cast. This conversion is
+not an implicit positional-argument coercion and carries its own evidence. -/
+inductive SubstringLengthValid : ScalarInput → ExactType → Prop where
+  | unknown (nullable : Bool) :
+      SubstringLengthValid (.unknown nullable) ⟨.int32, nullable⟩
+  | known (allowed : explicitCastAllowed input.base .int32 = true)
+      (result : castSignature (some input) .int32 = some target) :
+      SubstringLengthValid (.known input) target
+
+/-- Native call argument order is separate from lexical expression order.
+Only FOR-only inserts arguments/conversion; FOR/FROM permutes typed inputs,
+while the independent expression derivation retains original parameter uses. -/
+inductive SubstringArguments : Advanced.SubstringForm → List ScalarInput → List ScalarInput → Prop where
+  | from : SubstringArguments .from [subject, start] [subject, start]
+  | fromFor : SubstringArguments .fromFor [subject, start, length] [subject, start, length]
+  | forFrom : SubstringArguments .forFrom [subject, length, start] [subject, start, length]
+  | similar : SubstringArguments .similar [subject, pattern, escape] [subject, pattern, escape]
+  | forOnly (conversion : SubstringLengthValid length target) :
+      SubstringArguments .forOnly [subject, length]
+        [subject, .known ⟨.int32, false⟩, .known target]
+
 mutual
   inductive ExprValid (params : ParameterEnv) (scope : Scope) : Advanced.Expr → ExprType → List Parameter → Prop where
     | int (range : n ≤ 2147483647) : ExprValid params scope (.literal (.int n)) (some ⟨.int32, false⟩) []
@@ -222,6 +243,11 @@ mutual
     | castArray (args : ArrayValid params scope base es uses)
         (supported : concreteType target = some base) (declaration : DataTypeWellFormed target) :
         ExprValid params scope (.cast (.array es) target) (some ⟨base, false⟩) uses
+    | substring (args : ExprListValid params scope es ts uses)
+        (arguments : SubstringArguments form (scalarInputs es ts) callInputs)
+        (signature : resolveOverload substringCatalog callInputs = some selected) :
+        ExprValid params scope (.substring form es)
+          (some ⟨selected.output, substringNullable selected callInputs⟩) uses
     | call (args : ExprListValid params scope es ts uses)
         (signature : callSignature name (scalarInputs es ts) = some result) :
         ExprValid params scope (.call name es) (some result) uses
@@ -348,6 +374,7 @@ def outputLabel : Advanced.Expr → Nat × Name
   | .array _ => (2, "array")
   | .row _ => (2, "row")
   | .extract .. => (2, "extract")
+  | .substring .. => (2, "substring")
   | .cast arg target =>
       let inherited := outputLabel arg
       if inherited.1 ≤ 1 then (1, typeNameLabel target.name) else inherited

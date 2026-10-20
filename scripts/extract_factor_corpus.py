@@ -22,6 +22,8 @@ from extract_statement_corpus import selected_sql, statement_spans
 from extract_tcl_sql import selected_tcl_sql
 from extract_sqllogic_sql import selected_sqllogic_sql
 from extract_rust_query_sql import selected_rust_sql
+from extract_cockroach_sqllogic_sql import selected_cockroach_sql
+from observe_substring_source import observe_substrings, validate_substrings
 
 ROOT = Path(__file__).resolve().parents[1]
 POPULATIONS = {
@@ -48,6 +50,7 @@ POPULATIONS = {
                       "sqlc": 1, "yugabyte": 1},
     "extract": {"postgres": 50},
     "interval_fields": {"postgres": 49, "duckdb": 1},
+    "substring": {"postgres": 27, "cockroach": 11, "materialize": 12},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -1165,6 +1168,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
             if (factor == "extract" and names == ["pg_catalog", "extract"]
                     and node.funcformat == enums.CoercionForm.COERCE_SQL_SYNTAX):
                 return  # The closed source observer checks this special syntax below.
+            if (factor == "substring" and names == ["pg_catalog", "substring"]
+                    and node.funcformat == enums.CoercionForm.COERCE_SQL_SYNTAX):
+                return  # Literal arguments and exact source form are checked below.
             if (len(names) != 1 or node.func_variadic or node.over or node.agg_order
                     or node.agg_within_group
                     or any(isinstance(arg, ast.NamedArgExpr) for arg in node.args or ())):
@@ -1303,6 +1309,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "interval_fields":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation.update(observe_interval_fields(parsed))
+    if factor == "substring":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation.update(observe_substrings(parsed, sql))
     if factor in PATTERN_OPERATORS:
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["pattern_matches"] = observe_pattern_matches(parsed, factor)
@@ -1338,6 +1347,7 @@ def validate_population(records: list[dict], factor: str) -> None:
     containment_scopes = Counter()
     temporal_types, temporal_fields, temporal_infinities = Counter(), Counter(), Counter()
     interval_masks, interval_precisions = Counter(), Counter()
+    substring_forms, substring_casts, substring_wrappers = Counter(), Counter(), Counter()
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -1375,6 +1385,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.update(("temporal_extractions", "source_free"))
         if factor == "interval_fields":
             expected_keys.update(("interval_fields", "source_free"))
+        if factor == "substring":
+            expected_keys.update(("substrings", "source_free"))
         if factor in PATTERN_OPERATORS:
             expected_keys.add("pattern_matches")
         if factor == "json_extraction":
@@ -1493,6 +1505,16 @@ def validate_population(records: list[dict], factor: str) -> None:
             validate_interval_fields(entries)
             interval_masks.update(entry["mask"] for entry in entries)
             interval_precisions.update(entry["precision"] for entry in entries)
+        if factor == "substring":
+            entries = observation["substrings"]
+            validate_substrings(entries)
+            if (observation["source_free"] is not True or observation["conditional_forms"]
+                    or observation["function_names"] != (
+                        ["substring"] if entries[0]["form"] == "ordinary" else [])):
+                raise ValueError("SUBSTRING source must retain its closed source-free syntax")
+            substring_forms.update(entry["form"] for entry in entries)
+            substring_casts.update(entry["arguments"][0]["cast"] for entry in entries)
+            substring_wrappers.update(entry["wrapper"] for entry in entries)
         if factor in PATTERN_OPERATORS:
             entries = observation["pattern_matches"]
             validate_pattern_matches(entries, factor)
@@ -1618,6 +1640,12 @@ def validate_population(records: list[dict], factor: str) -> None:
                                1032: 4, 3080: 3, 7176: 7, 3072: 3, 7168: 6, 6144: 11}
             or interval_precisions != {None: 38, 2: 12}):
         raise ValueError("interval field population must retain all 13 explicit ranges and exact precisions")
+    if factor == "substring" and (
+            substring_forms != {"from-for": 14, "from": 13, "similar-escape": 12,
+                                "ordinary": 7, "for": 3, "for-from": 1}
+            or substring_casts != {None: 44, "bytea": 6}
+            or substring_wrappers != {"plain": 43, "is-null": 5, "equality": 2}):
+        raise ValueError("SUBSTRING source forms, declared casts or projection wrappers changed")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -1640,7 +1668,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract", "interval_fields"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract", "interval_fields", "substring"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -1665,7 +1693,11 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if factor != "array_overlap" or name != "readyset" or not path.endswith(".rs"):
                 raise ValueError("Rust query selection is outside its explicit source factor")
             sql, line, detail = selected_rust_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract", "interval_fields"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+        elif selection["selector"]["kind"] == "cockroach_sqllogic_query":
+            if factor != "substring" or name not in {"cockroach", "materialize"}:
+                raise ValueError("Cockroach SQLLogicTest selection is outside its explicit source factor")
+            sql, line, detail = selected_cockroach_sql(files[key], selection["selector"])
+        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract", "interval_fields", "substring"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])
@@ -1675,7 +1707,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
         suffix = (f"tcl-{detail['command_start']}-statement-{detail['statement_index']}"
                   if detail.get("extraction") == "tcl_sql_statement"
                   else f"sqllogic-query-{detail['header_line']}"
-                  if detail.get("extraction") == "sqllogic_query"
+                  if detail.get("extraction") in {"sqllogic_query", "cockroach_sqllogic_query"}
                   else f"rust-string-{detail['source_start']}"
                   if detail.get("extraction") == "rust_string"
                   else detail.get("symbol", f"statement-{detail.get('statement_index')}"))

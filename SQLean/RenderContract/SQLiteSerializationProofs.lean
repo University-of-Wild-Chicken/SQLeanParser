@@ -63,6 +63,12 @@ mutual
             have : sizeOf element < sizeOf elements := List.sizeOf_lt_of_mem member
             exprSql_translated element
         simp only [translateExpr, Advanced.SQLite.exprSql, List.attach_map_val, List.map_map, Function.comp_def, mapped]
+    | substring form args =>
+        have mapped : args.map (fun arg => Advanced.SQLite.exprSql (translateExpr arg)) = args.map (Advanced.SQLite.exprSql) :=
+          List.map_congr_left fun arg member =>
+            have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+            exprSql_translated arg
+        simp only [translateExpr, Advanced.SQLite.exprSql, List.attach_map_val, List.map_map, Function.comp_def, mapped]
     | call name args =>
         have mapped : args.map (fun arg => Advanced.SQLite.exprSql (translateExpr arg)) = args.map (Advanced.SQLite.exprSql) :=
           List.map_congr_left fun arg member =>
