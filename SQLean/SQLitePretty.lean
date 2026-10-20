@@ -1,0 +1,136 @@
+import SQLean.AdvancedPretty
+
+/-! SQLite serialization of the independently restricted representable domain.
+Compound operators are printed as left-associated flat sequences; the checked
+boundary rejects right-nested operands and operand-owned clauses rather than
+rewriting them into derived SELECTs. Numbered slots use native SQLite ?NNN. -/
+namespace SQLean.Advanced.SQLite
+
+private def quoteName (s : String) : String := "\"" ++ s.replace "\"" "\"\"" ++ "\""
+private def quoteText (s : String) : String := "'" ++ s.replace "'" "''" ++ "'"
+private def comma (xs : List String) : String := String.intercalate ", " xs
+private def paren (s : String) : String := "(" ++ s ++ ")"
+private def nameList (xs : List Name) : String := paren (comma (xs.map quoteName))
+
+private def binSql : BinOp → String
+  | .eq => "=" | .ne => "<>" | .lt => "<" | .le => "<=" | .gt => ">" | .ge => ">="
+  | .and => "AND" | .or => "OR" | .add => "+" | .sub => "-" | .mul => "*" | .div => "/"
+private def aggregateSql : AggregateFn → String
+  | .count => "COUNT" | .sum => "SUM" | .avg => "AVG" | .min => "MIN" | .max => "MAX"
+private def joinSql : JoinKind → String
+  | .inner => "INNER JOIN" | .left => "LEFT JOIN" | .right => "RIGHT JOIN"
+  | .full => "FULL JOIN" | .cross => "CROSS JOIN"
+private def setSql : SetOp → String
+  | .union => "UNION" | .intersect => "INTERSECT" | .except => "EXCEPT"
+
+/- The mutually recursive printer follows strict AST subterms. The size measures
+below are used only to prove termination and are erased from executable code.
+There is no fuel, truncation, or replacement SQL on any rendering branch.
+The five recursion helpers expose equations for structural serialization proofs;
+applications should prefer Expr.toSql, Query.toSql, or the checked render API. -/
+mutual
+  def exprSql (expr : Expr) : String :=
+    match expr with
+    | .literal (.int n) => toString n
+    | .literal (.text s) => quoteText s
+    | .literal (.bool b) => if b then "TRUE" else "FALSE"
+    | .null => "NULL"
+    | .decimal raw => raw
+    | .parameter (.numbered index) => "?" ++ toString index
+    | .parameter (.anonymous index) => "?" ++ toString index
+    | .column qualifier name => (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ quoteName name
+    | .binary op l r => paren (exprSql l ++ " " ++ binSql op ++ " " ++ exprSql r)
+    | .unary op arg => paren ((match op with | .pos => "+" | .neg => "-" | .not => "NOT ") ++ exprSql arg)
+    | .countAll => "COUNT(*)"
+    | .aggregate fn arg distinct => aggregateSql fn ++ paren ((if distinct then "DISTINCT " else "") ++ exprSql arg)
+    | .isNull arg negated => paren (exprSql arg ++ if negated then " IS NOT NULL" else " IS NULL")
+    | .pattern arg pattern insensitive => paren (exprSql arg ++ (if insensitive then " ILIKE " else " LIKE ") ++ exprSql pattern)
+    | .cast arg type => "CAST(" ++ exprSql arg ++ " AS " ++ type.toSql ++ ")"
+    | .filteredAggregate aggregate predicate => exprSql aggregate ++ " FILTER (WHERE " ++ exprSql predicate ++ ")"
+    | .inList arg values => paren (exprSql arg ++ " IN " ++ paren (comma
+        (values.attach.map fun (value : {v : Expr // v ∈ values}) =>
+          have : sizeOf value.val < sizeOf values := List.sizeOf_lt_of_mem value.property
+          exprSql value.val)))
+    | .between arg lower upper negated => paren (exprSql arg ++
+        (if negated then " NOT BETWEEN " else " BETWEEN ") ++ exprSql lower ++ " AND " ++ exprSql upper)
+    | .inQuery arg query => paren (exprSql arg ++ " IN " ++ paren (querySql query))
+    | .exists query => "EXISTS " ++ paren (querySql query)
+    | .scalarQuery query => paren (querySql query)
+  termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def itemSql (item : SelectItem) : String :=
+    match item with
+    | .all qualifier => (qualifier.map (fun q => quoteName q ++ ".")).getD "" ++ "*"
+    | .expression expr alias => exprSql expr ++ (alias.map (fun a => " AS " ++ quoteName a)).getD ""
+  termination_by sizeOf item
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def sourceSql (source : From) : String :=
+    match source with
+    | .table name alias columns => quoteName name ++
+      (alias.map (fun a => " AS " ++ quoteName a)).getD "" ++ (if columns.isEmpty then "" else nameList columns)
+    | .derived query alias columns lateral => (if lateral then "LATERAL " else "") ++
+      paren (querySql query) ++ " AS " ++ quoteName alias ++ (if columns.isEmpty then "" else nameList columns)
+    | .join kind left right condition => paren (sourceSql left ++ " " ++
+      (match condition with | .natural => "NATURAL " | _ => "") ++ joinSql kind ++ " " ++ sourceSql right ++
+      (match condition with
+       | .none | .natural => ""
+       | .on expr => " ON " ++ exprSql expr
+       | .using names => " USING " ++ nameList names))
+  termination_by sizeOf source
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def selectSql (select : Select) : String :=
+    "SELECT " ++ (if select.distinct then "DISTINCT " else if select.distinctOn.isEmpty then ""
+      else "DISTINCT ON " ++ paren (comma (select.distinctOn.attach.map
+        fun (expr : {e : Expr // e ∈ select.distinctOn}) =>
+          have : sizeOf expr.val < sizeOf select.distinctOn := List.sizeOf_lt_of_mem expr.property
+          exprSql expr.val)) ++ " ") ++
+    comma (select.items.attach.map fun (item : {i : SelectItem // i ∈ select.items}) =>
+      have : sizeOf item.val < sizeOf select.items := List.sizeOf_lt_of_mem item.property
+      itemSql item.val) ++
+    (match _h : select.source with | none => "" | some source => " FROM " ++ sourceSql source) ++
+    (match _h : select.whereClause with | none => "" | some expr => " WHERE " ++ exprSql expr) ++
+    (if select.groupBy.isEmpty then "" else " GROUP BY " ++ comma
+      (select.groupBy.attach.map fun (expr : {e : Expr // e ∈ select.groupBy}) =>
+        have : sizeOf expr.val < sizeOf select.groupBy := List.sizeOf_lt_of_mem expr.property
+        exprSql expr.val)) ++
+    (match _h : select.having with | none => "" | some expr => " HAVING " ++ exprSql expr)
+  termination_by sizeOf select
+  decreasing_by all_goals cases select; simp_all; omega
+
+  def querySql (query : Query) : String :=
+    (if query.ctes.isEmpty then "" else "WITH " ++ (if query.recursive then "RECURSIVE " else "") ++
+      comma (query.ctes.attach.map fun (cte : {c : CTE // c ∈ query.ctes}) =>
+        have : sizeOf cte.val < sizeOf query.ctes := List.sizeOf_lt_of_mem cte.property
+        have : sizeOf cte.val.query < sizeOf cte.val := by cases cte.val; simp; omega
+        quoteName cte.val.name ++ (if cte.val.columns.isEmpty then "" else nameList cte.val.columns) ++
+          " AS " ++ paren (querySql cte.val.query)) ++ " ") ++
+    (match _h : query.body with
+     | .select select => selectSql select
+     | .set op all left right => querySql left ++ " " ++ setSql op ++
+         (if all then " ALL " else " ") ++ querySql right) ++
+    (if query.orderBy.isEmpty then "" else " ORDER BY " ++ comma
+      (query.orderBy.attach.map fun (order : {o : OrderBy // o ∈ query.orderBy}) =>
+        have : sizeOf order.val < sizeOf query.orderBy := List.sizeOf_lt_of_mem order.property
+        have : sizeOf order.val.expr < sizeOf order.val := by cases order.val; simp; omega
+        exprSql order.val.expr ++ (if order.val.descending then " DESC" else " ASC") ++
+        (order.val.nullsFirst.map (fun first => if first then " NULLS FIRST" else " NULLS LAST")).getD "")) ++
+    (query.limit.map (fun n => " LIMIT " ++ toString n)).getD "" ++
+    (query.offset.map (fun n => " OFFSET " ++ toString n)).getD ""
+  termination_by sizeOf query
+  decreasing_by all_goals cases query; simp_all; omega
+end
+
+
+end SQLean.Advanced.SQLite
+
+namespace SQLean.Advanced
+
+/-- Low-level SQLite query printer; use RenderContract.check for coverage evidence. -/
+def Query.toSQLite (query : Query) : String := SQLite.querySql query
+
+def renderSQLite (query : Query) : String := query.toSQLite ++ ";"
+
+end SQLean.Advanced

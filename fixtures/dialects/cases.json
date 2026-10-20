@@ -1,0 +1,2971 @@
+{
+  "sqlite_numbered_parameters": [
+    {
+      "sql": "SELECT ?2 + 1 AS second, ?1 AS first, ?2 AS repeated;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "second",
+        "first",
+        "repeated"
+      ],
+      "rows": [
+        [
+          21,
+          10,
+          20
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?3 + 1 AS third, ?1 AS first;",
+      "parameters": [
+        10,
+        999,
+        30
+      ],
+      "columns": [
+        "third",
+        "first"
+      ],
+      "rows": [
+        [
+          31,
+          10
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 BETWEEN ?2 AND ?3 + 1 AS within;",
+      "parameters": [
+        3,
+        1,
+        2
+      ],
+      "columns": [
+        "within"
+      ],
+      "rows": [
+        [
+          1
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 AS absent, ?2 AS marker, '?1' AS quoted;",
+      "parameters": [
+        null,
+        "NULL"
+      ],
+      "columns": [
+        "absent",
+        "marker",
+        "quoted"
+      ],
+      "rows": [
+        [
+          null,
+          "NULL",
+          "?1"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "WITH x(value) AS (SELECT ?2 + 1) SELECT ?1 AS first, value AS second FROM x;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "first",
+        "second"
+      ],
+      "rows": [
+        [
+          10,
+          21
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT (SELECT ?2 + 1) AS nested, ?1 AS first;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "nested",
+        "first"
+      ],
+      "rows": [
+        [
+          21,
+          10
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 IN (?2, ?3 + 1) AS member, ?1 IS NULL AS absent;",
+      "parameters": [
+        2,
+        2,
+        8
+      ],
+      "columns": [
+        "member",
+        "absent"
+      ],
+      "rows": [
+        [
+          1,
+          0
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 * 1 AS value WHERE ?1;",
+      "parameters": [
+        true,
+        20
+      ],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          20
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 + 1 AS value UNION ALL SELECT ?1;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          21
+        ],
+        [
+          10
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT COUNT(*) FILTER (WHERE id >= ?2 + 1) AS count FROM dialect_rows WHERE id <= ?1;",
+      "parameters": [
+        7,
+        1
+      ],
+      "columns": [
+        "count"
+      ],
+      "rows": [
+        [
+          7
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 + 2 AS second, ?1 AS first, ?2 AS repeated;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "second",
+        "first",
+        "repeated"
+      ],
+      "rows": [
+        [
+          22,
+          10,
+          20
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?3 + 2 AS third, ?1 AS first;",
+      "parameters": [
+        10,
+        999,
+        30
+      ],
+      "columns": [
+        "third",
+        "first"
+      ],
+      "rows": [
+        [
+          32,
+          10
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 BETWEEN ?2 AND ?3 + 2 AS within;",
+      "parameters": [
+        3,
+        1,
+        2
+      ],
+      "columns": [
+        "within"
+      ],
+      "rows": [
+        [
+          1
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 AS absent, ?2 AS marker, '?2' AS quoted;",
+      "parameters": [
+        null,
+        "NULL"
+      ],
+      "columns": [
+        "absent",
+        "marker",
+        "quoted"
+      ],
+      "rows": [
+        [
+          null,
+          "NULL",
+          "?2"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "WITH x(value) AS (SELECT ?2 + 2) SELECT ?1 AS first, value AS second FROM x;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "first",
+        "second"
+      ],
+      "rows": [
+        [
+          10,
+          22
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT (SELECT ?2 + 2) AS nested, ?1 AS first;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "nested",
+        "first"
+      ],
+      "rows": [
+        [
+          22,
+          10
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 IN (?2, ?3 + 2) AS member, ?1 IS NULL AS absent;",
+      "parameters": [
+        2,
+        2,
+        8
+      ],
+      "columns": [
+        "member",
+        "absent"
+      ],
+      "rows": [
+        [
+          1,
+          0
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 * 2 AS value WHERE ?1;",
+      "parameters": [
+        true,
+        20
+      ],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          40
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 + 2 AS value UNION ALL SELECT ?1;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          22
+        ],
+        [
+          10
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT COUNT(*) FILTER (WHERE id >= ?2 + 2) AS count FROM dialect_rows WHERE id <= ?1;",
+      "parameters": [
+        7,
+        1
+      ],
+      "columns": [
+        "count"
+      ],
+      "rows": [
+        [
+          5
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 + 3 AS second, ?1 AS first, ?2 AS repeated;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "second",
+        "first",
+        "repeated"
+      ],
+      "rows": [
+        [
+          23,
+          10,
+          20
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?3 + 3 AS third, ?1 AS first;",
+      "parameters": [
+        10,
+        999,
+        30
+      ],
+      "columns": [
+        "third",
+        "first"
+      ],
+      "rows": [
+        [
+          33,
+          10
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 BETWEEN ?2 AND ?3 + 3 AS within;",
+      "parameters": [
+        3,
+        1,
+        2
+      ],
+      "columns": [
+        "within"
+      ],
+      "rows": [
+        [
+          1
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 AS absent, ?2 AS marker, '?3' AS quoted;",
+      "parameters": [
+        null,
+        "NULL"
+      ],
+      "columns": [
+        "absent",
+        "marker",
+        "quoted"
+      ],
+      "rows": [
+        [
+          null,
+          "NULL",
+          "?3"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "WITH x(value) AS (SELECT ?2 + 3) SELECT ?1 AS first, value AS second FROM x;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "first",
+        "second"
+      ],
+      "rows": [
+        [
+          10,
+          23
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT (SELECT ?2 + 3) AS nested, ?1 AS first;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "nested",
+        "first"
+      ],
+      "rows": [
+        [
+          23,
+          10
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 IN (?2, ?3 + 3) AS member, ?1 IS NULL AS absent;",
+      "parameters": [
+        2,
+        2,
+        8
+      ],
+      "columns": [
+        "member",
+        "absent"
+      ],
+      "rows": [
+        [
+          1,
+          0
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 * 3 AS value WHERE ?1;",
+      "parameters": [
+        true,
+        20
+      ],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          60
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 + 3 AS value UNION ALL SELECT ?1;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          23
+        ],
+        [
+          10
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT COUNT(*) FILTER (WHERE id >= ?2 + 3) AS count FROM dialect_rows WHERE id <= ?1;",
+      "parameters": [
+        7,
+        1
+      ],
+      "columns": [
+        "count"
+      ],
+      "rows": [
+        [
+          4
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 + 4 AS second, ?1 AS first, ?2 AS repeated;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "second",
+        "first",
+        "repeated"
+      ],
+      "rows": [
+        [
+          24,
+          10,
+          20
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?3 + 4 AS third, ?1 AS first;",
+      "parameters": [
+        10,
+        999,
+        30
+      ],
+      "columns": [
+        "third",
+        "first"
+      ],
+      "rows": [
+        [
+          34,
+          10
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 BETWEEN ?2 AND ?3 + 4 AS within;",
+      "parameters": [
+        3,
+        1,
+        2
+      ],
+      "columns": [
+        "within"
+      ],
+      "rows": [
+        [
+          1
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 AS absent, ?2 AS marker, '?4' AS quoted;",
+      "parameters": [
+        null,
+        "NULL"
+      ],
+      "columns": [
+        "absent",
+        "marker",
+        "quoted"
+      ],
+      "rows": [
+        [
+          null,
+          "NULL",
+          "?4"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "WITH x(value) AS (SELECT ?2 + 4) SELECT ?1 AS first, value AS second FROM x;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "first",
+        "second"
+      ],
+      "rows": [
+        [
+          10,
+          24
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT (SELECT ?2 + 4) AS nested, ?1 AS first;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "nested",
+        "first"
+      ],
+      "rows": [
+        [
+          24,
+          10
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 IN (?2, ?3 + 4) AS member, ?1 IS NULL AS absent;",
+      "parameters": [
+        2,
+        2,
+        8
+      ],
+      "columns": [
+        "member",
+        "absent"
+      ],
+      "rows": [
+        [
+          1,
+          0
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 * 4 AS value WHERE ?1;",
+      "parameters": [
+        true,
+        20
+      ],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          80
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 + 4 AS value UNION ALL SELECT ?1;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          24
+        ],
+        [
+          10
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT COUNT(*) FILTER (WHERE id >= ?2 + 4) AS count FROM dialect_rows WHERE id <= ?1;",
+      "parameters": [
+        7,
+        1
+      ],
+      "columns": [
+        "count"
+      ],
+      "rows": [
+        [
+          3
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 + 5 AS second, ?1 AS first, ?2 AS repeated;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "second",
+        "first",
+        "repeated"
+      ],
+      "rows": [
+        [
+          25,
+          10,
+          20
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?3 + 5 AS third, ?1 AS first;",
+      "parameters": [
+        10,
+        999,
+        30
+      ],
+      "columns": [
+        "third",
+        "first"
+      ],
+      "rows": [
+        [
+          35,
+          10
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 BETWEEN ?2 AND ?3 + 5 AS within;",
+      "parameters": [
+        3,
+        1,
+        2
+      ],
+      "columns": [
+        "within"
+      ],
+      "rows": [
+        [
+          1
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 AS absent, ?2 AS marker, '?5' AS quoted;",
+      "parameters": [
+        null,
+        "NULL"
+      ],
+      "columns": [
+        "absent",
+        "marker",
+        "quoted"
+      ],
+      "rows": [
+        [
+          null,
+          "NULL",
+          "?5"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "WITH x(value) AS (SELECT ?2 + 5) SELECT ?1 AS first, value AS second FROM x;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "first",
+        "second"
+      ],
+      "rows": [
+        [
+          10,
+          25
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT (SELECT ?2 + 5) AS nested, ?1 AS first;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "nested",
+        "first"
+      ],
+      "rows": [
+        [
+          25,
+          10
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?1 IN (?2, ?3 + 5) AS member, ?1 IS NULL AS absent;",
+      "parameters": [
+        2,
+        2,
+        8
+      ],
+      "columns": [
+        "member",
+        "absent"
+      ],
+      "rows": [
+        [
+          1,
+          0
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 * 5 AS value WHERE ?1;",
+      "parameters": [
+        true,
+        20
+      ],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          100
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT ?2 + 5 AS value UNION ALL SELECT ?1;",
+      "parameters": [
+        10,
+        20
+      ],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          25
+        ],
+        [
+          10
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT COUNT(*) FILTER (WHERE id >= ?2 + 5) AS count FROM dialect_rows WHERE id <= ?1;",
+      "parameters": [
+        7,
+        1
+      ],
+      "columns": [
+        "count"
+      ],
+      "rows": [
+        [
+          2
+        ]
+      ],
+      "comparison": "ordered"
+    }
+  ],
+  "sqlite_compound_queries": [
+    {
+      "sql": "SELECT 1 AS value UNION SELECT 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 1 AS value UNION ALL SELECT 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 1 AS value INTERSECT SELECT 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          1
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 1 AS value EXCEPT SELECT 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          1
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 1 AS value UNION SELECT 2 INTERSECT SELECT 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          2
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 1 AS value EXCEPT SELECT 2 UNION ALL SELECT 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 1 AS value UNION ALL SELECT 1 INTERSECT SELECT 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          1
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT NULL AS absent_1 UNION SELECT NULL;",
+      "parameters": [],
+      "columns": [
+        "absent_1"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT NULL AS value UNION ALL SELECT NULL EXCEPT SELECT 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "WITH x(value) AS (SELECT 1 UNION ALL SELECT 2) SELECT value FROM x EXCEPT SELECT 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          2
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 2 AS value UNION SELECT 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 2 AS value UNION ALL SELECT 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          2
+        ],
+        [
+          2
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 2 AS value INTERSECT SELECT 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          2
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 2 AS value EXCEPT SELECT 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          2
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 2 AS value UNION SELECT 3 INTERSECT SELECT 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 2 AS value EXCEPT SELECT 3 UNION ALL SELECT 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          2
+        ],
+        [
+          2
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 2 AS value UNION ALL SELECT 2 INTERSECT SELECT 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          2
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT NULL AS absent_2 UNION SELECT NULL;",
+      "parameters": [],
+      "columns": [
+        "absent_2"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT NULL AS value UNION ALL SELECT NULL EXCEPT SELECT 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "WITH x(value) AS (SELECT 2 UNION ALL SELECT 3) SELECT value FROM x EXCEPT SELECT 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 3 AS value UNION SELECT 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 3 AS value UNION ALL SELECT 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ],
+        [
+          3
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 3 AS value INTERSECT SELECT 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 3 AS value EXCEPT SELECT 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 3 AS value UNION SELECT 4 INTERSECT SELECT 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          4
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 3 AS value EXCEPT SELECT 4 UNION ALL SELECT 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ],
+        [
+          3
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 3 AS value UNION ALL SELECT 3 INTERSECT SELECT 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT NULL AS absent_3 UNION SELECT NULL;",
+      "parameters": [],
+      "columns": [
+        "absent_3"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT NULL AS value UNION ALL SELECT NULL EXCEPT SELECT 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "WITH x(value) AS (SELECT 3 UNION ALL SELECT 4) SELECT value FROM x EXCEPT SELECT 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          4
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 4 AS value UNION SELECT 5;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 4 AS value UNION ALL SELECT 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          4
+        ],
+        [
+          4
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 4 AS value INTERSECT SELECT 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          4
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 4 AS value EXCEPT SELECT 5;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          4
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 4 AS value UNION SELECT 5 INTERSECT SELECT 5;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 4 AS value EXCEPT SELECT 5 UNION ALL SELECT 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          4
+        ],
+        [
+          4
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 4 AS value UNION ALL SELECT 4 INTERSECT SELECT 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          4
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT NULL AS absent_4 UNION SELECT NULL;",
+      "parameters": [],
+      "columns": [
+        "absent_4"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT NULL AS value UNION ALL SELECT NULL EXCEPT SELECT 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "WITH x(value) AS (SELECT 4 UNION ALL SELECT 5) SELECT value FROM x EXCEPT SELECT 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 5 AS value UNION SELECT 6;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ],
+        [
+          6
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 5 AS value UNION ALL SELECT 5;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ],
+        [
+          5
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 5 AS value INTERSECT SELECT 5;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 5 AS value EXCEPT SELECT 6;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 5 AS value UNION SELECT 6 INTERSECT SELECT 6;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          6
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 5 AS value EXCEPT SELECT 6 UNION ALL SELECT 5;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ],
+        [
+          5
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT 5 AS value UNION ALL SELECT 5 INTERSECT SELECT 5;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT NULL AS absent_5 UNION SELECT NULL;",
+      "parameters": [],
+      "columns": [
+        "absent_5"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "SELECT NULL AS value UNION ALL SELECT NULL EXCEPT SELECT 5;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "bag"
+    },
+    {
+      "sql": "WITH x(value) AS (SELECT 5 UNION ALL SELECT 6) SELECT value FROM x EXCEPT SELECT 5;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          6
+        ]
+      ],
+      "comparison": "bag"
+    }
+  ],
+  "sqlite_limit_comma": [
+    {
+      "sql": "SELECT id AS value FROM dialect_rows ORDER BY id LIMIT 0, 0;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows WHERE id >= 3 ORDER BY id DESC LIMIT 1, 0;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT DISTINCT id AS value FROM dialect_rows ORDER BY id LIMIT 2, 0;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value, label AS text FROM dialect_rows ORDER BY id LIMIT 3, 0;",
+      "parameters": [],
+      "columns": [
+        "value",
+        "text"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id + 10 AS shifted FROM dialect_rows ORDER BY id DESC LIMIT 4, 0;",
+      "parameters": [],
+      "columns": [
+        "shifted"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows ORDER BY id LIMIT 5, 0;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows WHERE id >= 3 ORDER BY id DESC LIMIT 6, 0;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT DISTINCT id AS value FROM dialect_rows ORDER BY id LIMIT 7, 0;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value, label AS text FROM dialect_rows ORDER BY id LIMIT 8, 0;",
+      "parameters": [],
+      "columns": [
+        "value",
+        "text"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id + 10 AS shifted FROM dialect_rows ORDER BY id DESC LIMIT 9, 0;",
+      "parameters": [],
+      "columns": [
+        "shifted"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows ORDER BY id LIMIT 0, 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          1
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows WHERE id >= 3 ORDER BY id DESC LIMIT 1, 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          6
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT DISTINCT id AS value FROM dialect_rows ORDER BY id LIMIT 2, 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value, label AS text FROM dialect_rows ORDER BY id LIMIT 3, 1;",
+      "parameters": [],
+      "columns": [
+        "value",
+        "text"
+      ],
+      "rows": [
+        [
+          3,
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id + 10 AS shifted FROM dialect_rows ORDER BY id DESC LIMIT 4, 1;",
+      "parameters": [],
+      "columns": [
+        "shifted"
+      ],
+      "rows": [
+        [
+          13
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows ORDER BY id LIMIT 5, 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows WHERE id >= 3 ORDER BY id DESC LIMIT 6, 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT DISTINCT id AS value FROM dialect_rows ORDER BY id LIMIT 7, 1;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value, label AS text FROM dialect_rows ORDER BY id LIMIT 8, 1;",
+      "parameters": [],
+      "columns": [
+        "value",
+        "text"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id + 10 AS shifted FROM dialect_rows ORDER BY id DESC LIMIT 9, 1;",
+      "parameters": [],
+      "columns": [
+        "shifted"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows ORDER BY id LIMIT 0, 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows WHERE id >= 3 ORDER BY id DESC LIMIT 1, 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          6
+        ],
+        [
+          5
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT DISTINCT id AS value FROM dialect_rows ORDER BY id LIMIT 2, 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value, label AS text FROM dialect_rows ORDER BY id LIMIT 3, 2;",
+      "parameters": [],
+      "columns": [
+        "value",
+        "text"
+      ],
+      "rows": [
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          "d"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id + 10 AS shifted FROM dialect_rows ORDER BY id DESC LIMIT 4, 2;",
+      "parameters": [],
+      "columns": [
+        "shifted"
+      ],
+      "rows": [
+        [
+          13
+        ],
+        [
+          12
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows ORDER BY id LIMIT 5, 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ],
+        [
+          6
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows WHERE id >= 3 ORDER BY id DESC LIMIT 6, 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT DISTINCT id AS value FROM dialect_rows ORDER BY id LIMIT 7, 2;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value, label AS text FROM dialect_rows ORDER BY id LIMIT 8, 2;",
+      "parameters": [],
+      "columns": [
+        "value",
+        "text"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id + 10 AS shifted FROM dialect_rows ORDER BY id DESC LIMIT 9, 2;",
+      "parameters": [],
+      "columns": [
+        "shifted"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows ORDER BY id LIMIT 0, 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          2
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows WHERE id >= 3 ORDER BY id DESC LIMIT 1, 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          6
+        ],
+        [
+          5
+        ],
+        [
+          4
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT DISTINCT id AS value FROM dialect_rows ORDER BY id LIMIT 2, 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value, label AS text FROM dialect_rows ORDER BY id LIMIT 3, 3;",
+      "parameters": [],
+      "columns": [
+        "value",
+        "text"
+      ],
+      "rows": [
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          "d"
+        ],
+        [
+          5,
+          "e"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id + 10 AS shifted FROM dialect_rows ORDER BY id DESC LIMIT 4, 3;",
+      "parameters": [],
+      "columns": [
+        "shifted"
+      ],
+      "rows": [
+        [
+          13
+        ],
+        [
+          12
+        ],
+        [
+          12
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows ORDER BY id LIMIT 5, 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ],
+        [
+          6
+        ],
+        [
+          7
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows WHERE id >= 3 ORDER BY id DESC LIMIT 6, 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT DISTINCT id AS value FROM dialect_rows ORDER BY id LIMIT 7, 3;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value, label AS text FROM dialect_rows ORDER BY id LIMIT 8, 3;",
+      "parameters": [],
+      "columns": [
+        "value",
+        "text"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id + 10 AS shifted FROM dialect_rows ORDER BY id DESC LIMIT 9, 3;",
+      "parameters": [],
+      "columns": [
+        "shifted"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows ORDER BY id LIMIT 0, 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows WHERE id >= 3 ORDER BY id DESC LIMIT 1, 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          6
+        ],
+        [
+          5
+        ],
+        [
+          4
+        ],
+        [
+          3
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT DISTINCT id AS value FROM dialect_rows ORDER BY id LIMIT 2, 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          6
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value, label AS text FROM dialect_rows ORDER BY id LIMIT 3, 4;",
+      "parameters": [],
+      "columns": [
+        "value",
+        "text"
+      ],
+      "rows": [
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          "d"
+        ],
+        [
+          5,
+          "e"
+        ],
+        [
+          6,
+          "f"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id + 10 AS shifted FROM dialect_rows ORDER BY id DESC LIMIT 4, 4;",
+      "parameters": [],
+      "columns": [
+        "shifted"
+      ],
+      "rows": [
+        [
+          13
+        ],
+        [
+          12
+        ],
+        [
+          12
+        ],
+        [
+          11
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows ORDER BY id LIMIT 5, 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          5
+        ],
+        [
+          6
+        ],
+        [
+          7
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value FROM dialect_rows WHERE id >= 3 ORDER BY id DESC LIMIT 6, 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT DISTINCT id AS value FROM dialect_rows ORDER BY id LIMIT 7, 4;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id AS value, label AS text FROM dialect_rows ORDER BY id LIMIT 8, 4;",
+      "parameters": [],
+      "columns": [
+        "value",
+        "text"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT id + 10 AS shifted FROM dialect_rows ORDER BY id DESC LIMIT 9, 4;",
+      "parameters": [],
+      "columns": [
+        "shifted"
+      ],
+      "rows": [],
+      "comparison": "ordered"
+    }
+  ],
+  "postgres_numeric_scale": [
+    {
+      "sql": "SELECT CAST(0.001 AS NUMERIC(1,3)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.001"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST('0.001' AS NUMERIC(1,3)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.001"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0 AS NUMERIC(1,3)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.000"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(NULL AS NUMERIC(1,3)) AS absent;",
+      "parameters": [],
+      "columns": [
+        "absent"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(-0.001 AS NUMERIC(1,3)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "-0.001"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.001 + 0.001 AS NUMERIC(1,3)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.002"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT 0.0016::NUMERIC(1,3) AS rounded;",
+      "parameters": [],
+      "columns": [
+        "rounded"
+      ],
+      "rows": [
+        [
+          "0.002"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(CAST(0.001 AS NUMERIC(2,4)) AS NUMERIC(1,3)) AS nested;",
+      "parameters": [],
+      "columns": [
+        "nested"
+      ],
+      "rows": [
+        [
+          "0.001"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.001 AS NUMERIC(1,3)) = CAST('0.001' AS NUMERIC(1,3)) AS equal;",
+      "parameters": [],
+      "columns": [
+        "equal"
+      ],
+      "rows": [
+        [
+          "t"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST($1 AS NUMERIC(1,3)) AS a, CAST($1 AS NUMERIC(1,3)) AS b, CAST($2 AS NUMERIC(1,3)) AS c;",
+      "parameters": [
+        "0.001",
+        null
+      ],
+      "columns": [
+        "a",
+        "b",
+        "c"
+      ],
+      "rows": [
+        [
+          "0.001",
+          "0.001",
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.0002 AS NUMERIC(2,4)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.0002"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST('0.0002' AS NUMERIC(2,4)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.0002"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0 AS NUMERIC(2,4)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.0000"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(NULL AS NUMERIC(2,4)) AS absent;",
+      "parameters": [],
+      "columns": [
+        "absent"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(-0.0002 AS NUMERIC(2,4)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "-0.0002"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.0002 + 0.0002 AS NUMERIC(2,4)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.0004"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT 0.00026::NUMERIC(2,4) AS rounded;",
+      "parameters": [],
+      "columns": [
+        "rounded"
+      ],
+      "rows": [
+        [
+          "0.0003"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(CAST(0.0002 AS NUMERIC(3,5)) AS NUMERIC(2,4)) AS nested;",
+      "parameters": [],
+      "columns": [
+        "nested"
+      ],
+      "rows": [
+        [
+          "0.0002"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.0002 AS NUMERIC(2,4)) = CAST('0.0002' AS NUMERIC(2,4)) AS equal;",
+      "parameters": [],
+      "columns": [
+        "equal"
+      ],
+      "rows": [
+        [
+          "t"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST($1 AS NUMERIC(2,4)) AS a, CAST($1 AS NUMERIC(2,4)) AS b, CAST($2 AS NUMERIC(2,4)) AS c;",
+      "parameters": [
+        "0.0002",
+        null
+      ],
+      "columns": [
+        "a",
+        "b",
+        "c"
+      ],
+      "rows": [
+        [
+          "0.0002",
+          "0.0002",
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.00003 AS NUMERIC(3,5)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.00003"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST('0.00003' AS NUMERIC(3,5)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.00003"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0 AS NUMERIC(3,5)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.00000"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(NULL AS NUMERIC(3,5)) AS absent;",
+      "parameters": [],
+      "columns": [
+        "absent"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(-0.00003 AS NUMERIC(3,5)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "-0.00003"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.00003 + 0.00003 AS NUMERIC(3,5)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.00006"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT 0.000036::NUMERIC(3,5) AS rounded;",
+      "parameters": [],
+      "columns": [
+        "rounded"
+      ],
+      "rows": [
+        [
+          "0.00004"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(CAST(0.00003 AS NUMERIC(4,6)) AS NUMERIC(3,5)) AS nested;",
+      "parameters": [],
+      "columns": [
+        "nested"
+      ],
+      "rows": [
+        [
+          "0.00003"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.00003 AS NUMERIC(3,5)) = CAST('0.00003' AS NUMERIC(3,5)) AS equal;",
+      "parameters": [],
+      "columns": [
+        "equal"
+      ],
+      "rows": [
+        [
+          "t"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST($1 AS NUMERIC(3,5)) AS a, CAST($1 AS NUMERIC(3,5)) AS b, CAST($2 AS NUMERIC(3,5)) AS c;",
+      "parameters": [
+        "0.00003",
+        null
+      ],
+      "columns": [
+        "a",
+        "b",
+        "c"
+      ],
+      "rows": [
+        [
+          "0.00003",
+          "0.00003",
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.000004 AS NUMERIC(4,6)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.000004"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST('0.000004' AS NUMERIC(4,6)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.000004"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0 AS NUMERIC(4,6)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.000000"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(NULL AS NUMERIC(4,6)) AS absent;",
+      "parameters": [],
+      "columns": [
+        "absent"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(-0.000004 AS NUMERIC(4,6)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "-0.000004"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.000004 + 0.000004 AS NUMERIC(4,6)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.000008"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT 0.0000046::NUMERIC(4,6) AS rounded;",
+      "parameters": [],
+      "columns": [
+        "rounded"
+      ],
+      "rows": [
+        [
+          "0.000005"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(CAST(0.000004 AS NUMERIC(5,7)) AS NUMERIC(4,6)) AS nested;",
+      "parameters": [],
+      "columns": [
+        "nested"
+      ],
+      "rows": [
+        [
+          "0.000004"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.000004 AS NUMERIC(4,6)) = CAST('0.000004' AS NUMERIC(4,6)) AS equal;",
+      "parameters": [],
+      "columns": [
+        "equal"
+      ],
+      "rows": [
+        [
+          "t"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST($1 AS NUMERIC(4,6)) AS a, CAST($1 AS NUMERIC(4,6)) AS b, CAST($2 AS NUMERIC(4,6)) AS c;",
+      "parameters": [
+        "0.000004",
+        null
+      ],
+      "columns": [
+        "a",
+        "b",
+        "c"
+      ],
+      "rows": [
+        [
+          "0.000004",
+          "0.000004",
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.0000005 AS NUMERIC(5,7)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.0000005"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST('0.0000005' AS NUMERIC(5,7)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.0000005"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0 AS NUMERIC(5,7)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.0000000"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(NULL AS NUMERIC(5,7)) AS absent;",
+      "parameters": [],
+      "columns": [
+        "absent"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(-0.0000005 AS NUMERIC(5,7)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "-0.0000005"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.0000005 + 0.0000005 AS NUMERIC(5,7)) AS value;",
+      "parameters": [],
+      "columns": [
+        "value"
+      ],
+      "rows": [
+        [
+          "0.0000010"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT 0.00000056::NUMERIC(5,7) AS rounded;",
+      "parameters": [],
+      "columns": [
+        "rounded"
+      ],
+      "rows": [
+        [
+          "0.0000006"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(CAST(0.0000005 AS NUMERIC(6,8)) AS NUMERIC(5,7)) AS nested;",
+      "parameters": [],
+      "columns": [
+        "nested"
+      ],
+      "rows": [
+        [
+          "0.0000005"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST(0.0000005 AS NUMERIC(5,7)) = CAST('0.0000005' AS NUMERIC(5,7)) AS equal;",
+      "parameters": [],
+      "columns": [
+        "equal"
+      ],
+      "rows": [
+        [
+          "t"
+        ]
+      ],
+      "comparison": "ordered"
+    },
+    {
+      "sql": "SELECT CAST($1 AS NUMERIC(5,7)) AS a, CAST($1 AS NUMERIC(5,7)) AS b, CAST($2 AS NUMERIC(5,7)) AS c;",
+      "parameters": [
+        "0.0000005",
+        null
+      ],
+      "columns": [
+        "a",
+        "b",
+        "c"
+      ],
+      "rows": [
+        [
+          "0.0000005",
+          "0.0000005",
+          null
+        ]
+      ],
+      "comparison": "ordered"
+    }
+  ]
+}

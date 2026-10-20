@@ -15,3 +15,7 @@ root = "TestMain"
 
 [[lean_lib]]
 name = "Tests"
+
+[[lean_exe]]
+name = "sqlean_scope_tests"
+root = "ScopeContractMain"

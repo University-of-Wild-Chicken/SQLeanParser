@@ -8,6 +8,13 @@ private inductive Lexeme where
   | word (value : String) | quoted (value : String) | number (value : String)
   | text (value : String) | symbol (value : String) | parameter (value : Parameter) | eof
   deriving Repr, BEq, Inhabited
+
+/-- Keyword recognition is case-insensitive in both dialects. SQLite keeps the
+original spelling for identifiers; PostgreSQL folds unquoted identifiers. -/
+private def Lexeme.keyword : Lexeme → Lexeme
+  | .word value => .word value.toLower
+  | other => other
+
 private structure LexToken where
   kind : Lexeme
   position : SourcePos
@@ -37,18 +44,19 @@ private def quoted (delimiter : Char) (opening : SourcePos) :
 private def skipLine : List Char → SourcePos → List Char × SourcePos
   | [], p => ([], p)
   | c :: cs, p => if c == '\n' then (cs, advance p c) else skipLine cs (advance p c)
-private def skipBlock : Nat → Nat → List Char → SourcePos → Except ParseError (List Char × SourcePos)
+private def skipBlock (nested : Bool) :
+    Nat → Nat → List Char → SourcePos → Except ParseError (List Char × SourcePos)
   | 0, _, _, p => .error { position := p, message := "unterminated block comment" }
   | _ + 1, _, [], p => .error { position := p, message := "unterminated block comment" }
   | fuel + 1, depth, c :: cs, p =>
     match cs with
     | d :: ds =>
-      if c == '/' && d == '*' then skipBlock fuel (depth + 1) ds (advance (advance p c) d)
+      if nested && c == '/' && d == '*' then skipBlock nested fuel (depth + 1) ds (advance (advance p c) d)
       else if c == '*' && d == '/' then
         if depth == 1 then .ok (ds, advance (advance p c) d)
-        else skipBlock fuel (depth - 1) ds (advance (advance p c) d)
-      else skipBlock fuel depth cs (advance p c)
-    | [] => skipBlock fuel depth cs (advance p c)
+        else skipBlock nested fuel (depth - 1) ds (advance (advance p c) d)
+      else skipBlock nested fuel depth cs (advance p c)
+    | [] => skipBlock nested fuel depth cs (advance p c)
 
 private def readNumeric (input : List Char) (p : SourcePos) :
     Except ParseError (String × List Char × SourcePos) := do
@@ -76,58 +84,70 @@ private def readNumeric (input : List Char) (p : SourcePos) :
   | [] => pure ()
   pure (raw, rest, p')
 
-private def lexLoop : Nat → List Char → SourcePos → Nat → Bool → List LexToken → Except ParseError (List LexToken)
+private def lexLoop (sqlite : Bool) : Nat → List Char → SourcePos → Nat → Bool → List LexToken → Except ParseError (List LexToken)
   | 0, _, p, _, _, _ => .error { position := p, message := "lexer input bound exceeded" }
   | fuel + 1, input, p, anonymous, numbered, acc => do
     match input with
     | [] => pure (({kind := .eof, position := p} :: acc).reverse)
     | c :: cs =>
       if c == ' ' || c == '\t' || c == '\r' || c == '\n' then
-        lexLoop fuel cs (advance p c) anonymous numbered acc
+        lexLoop sqlite fuel cs (advance p c) anonymous numbered acc
       else if wordStart c then
         let (name, rest, next) := readWhile wordChar cs (advance p c) [c]
-        lexLoop fuel rest next anonymous numbered ({kind := .word name.toLower, position := p} :: acc)
+        let spelling := if sqlite then name else name.toLower
+        lexLoop sqlite fuel rest next anonymous numbered ({kind := .word spelling, position := p} :: acc)
       else if digit c || (c == '.' && cs.head?.any digit) then
         let (raw, rest, next) ← readNumeric input p
-        lexLoop fuel rest next anonymous numbered ({kind := .number raw, position := p} :: acc)
+        lexLoop sqlite fuel rest next anonymous numbered ({kind := .number raw, position := p} :: acc)
       else if c == '\'' || c == '"' then
         let (value, rest, next) ← quoted c p cs (advance p c) []
         if c == '"' && value.isEmpty then throw {position := p, message := "empty identifier"}
         let kind := if c == '\'' then Lexeme.text value else .quoted value
-        lexLoop fuel rest next anonymous numbered ({kind, position := p} :: acc)
+        lexLoop sqlite fuel rest next anonymous numbered ({kind, position := p} :: acc)
       else if c == '?' then
-        if numbered then throw {position := p, message := "cannot mix ? and $n parameter styles"}
-        lexLoop fuel cs (advance p c) (anonymous + 1) numbered
-          ({kind := .parameter (.anonymous (anonymous + 1)), position := p} :: acc)
+        if cs.head?.any digit then
+          if !sqlite then throw {position := p, message := "?NNN parameters require the SQLite parser interface"}
+          if anonymous > 0 then throw {position := p, message := "cannot mix ? and ?NNN parameter styles"}
+          let (raw, rest, next) := readWhile digit cs (advance p c) []
+          let some index := raw.toNat? | throw {position := p, message := "expected positive parameter index"}
+          if index == 0 then throw {position := p, message := "parameter indexes begin at one"}
+          if rest.head?.any wordChar then throw {position := next, message := "invalid parameter suffix"}
+          lexLoop sqlite fuel rest next anonymous true
+            ({kind := .parameter (.numbered index), position := p} :: acc)
+        else
+          if numbered then throw {position := p, message := "cannot mix anonymous and numbered parameter styles"}
+          lexLoop sqlite fuel cs (advance p c) (anonymous + 1) numbered
+            ({kind := .parameter (.anonymous (anonymous + 1)), position := p} :: acc)
       else if c == '$' then
+        if sqlite then throw {position := p, message := "SQLite named $ parameters are outside this profile; use ?NNN"}
         if anonymous > 0 then throw {position := p, message := "cannot mix ? and $n parameter styles"}
         let (raw, rest, next) := readWhile digit cs (advance p c) []
         let some index := raw.toNat? | throw {position := p, message := "expected positive parameter index"}
         if index == 0 then throw {position := p, message := "parameter indexes begin at one"}
         if rest.head?.any wordChar then throw {position := next, message := "invalid parameter suffix"}
-        lexLoop fuel rest next anonymous true ({kind := .parameter (.numbered index), position := p} :: acc)
+        lexLoop sqlite fuel rest next anonymous true ({kind := .parameter (.numbered index), position := p} :: acc)
       else
         match cs with
         | d :: ds =>
           if c == '-' && d == '-' then
             let (rest, next) := skipLine ds (advance (advance p c) d)
-            lexLoop fuel rest next anonymous numbered acc
+            lexLoop sqlite fuel rest next anonymous numbered acc
           else if c == '/' && d == '*' then
-            let (rest, next) ← skipBlock (input.length + 1) 1 ds (advance (advance p c) d)
-            lexLoop fuel rest next anonymous numbered acc
+            let (rest, next) ← skipBlock (!sqlite) (input.length + 1) 1 ds (advance (advance p c) d)
+            lexLoop sqlite fuel rest next anonymous numbered acc
           else if (c == '<' && (d == '>' || d == '=')) || (c == '>' && d == '=') ||
               (c == '!' && d == '=') || (c == ':' && d == ':') then
-            lexLoop fuel ds (advance (advance p c) d) anonymous numbered
+            lexLoop sqlite fuel ds (advance (advance p c) d) anonymous numbered
               ({kind := .symbol (String.ofList [c,d]), position := p} :: acc)
           else if "(),;*./+-=<>".contains c then
-            lexLoop fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
+            lexLoop sqlite fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
           else throw {position := p, message := s!"unsupported character '{c}'"}
         | [] =>
           if "(),;*./+-=<>".contains c then
-            lexLoop fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
+            lexLoop sqlite fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
           else throw {position := p, message := s!"unsupported character '{c}'"}
 
-private abbrev Parser := StateT (List LexToken) (Except ParseError)
+private abbrev Parser := ReaderT Bool (StateT (List LexToken) (Except ParseError))
 private def peek : Parser LexToken := do pure ((← get).headD {kind := .eof, position := {}})
 private def pop : Parser LexToken := do
   let token ← peek
@@ -136,7 +156,7 @@ private def pop : Parser LexToken := do
 private def fail {α : Type} (message : String) : Parser α := do
   throw { position := (← peek).position, message }
 private def isAt (value : String) : Parser Bool := do
-  pure (match (← peek).kind with | .word s | .symbol s => s == value | _ => false)
+  pure (match (← peek).kind.keyword with | .word s | .symbol s => s == value | _ => false)
 private def eat (value : String) : Parser Bool := do
   if ← isAt value then let _ ← pop; pure true else pure false
 private def expect (value : String) : Parser Unit := do
@@ -152,13 +172,13 @@ private def reserved : List String :=
 private def identifier : Parser Name := do
   match (← pop).kind with
   | .quoted s => pure s
-  | .word s => if reserved.contains s then fail s!"reserved identifier {s}" else pure s
+  | .word s => if reserved.contains s.toLower then fail s!"reserved identifier {s}" else pure s
   | _ => fail "expected identifier"
 private def alias? : Parser (Option Name) := do
   if ← eat "as" then return some (← identifier)
   match (← peek).kind with
   | .quoted _ => return some (← identifier)
-  | .word s => if !reserved.contains s then return some (← identifier) else pure none
+  | .word s => if !reserved.contains s.toLower then return some (← identifier) else pure none
   | _ => pure none
 private def natural : Parser Nat := do
   match (← pop).kind with
@@ -179,7 +199,7 @@ private def optionalNames (fuel : Nat) : Parser (List Name) := do
 
 private def dataType (fuel : Nat) : Parser DataType := do
   let token ← pop
-  let name ← match token.kind with
+  let name ← match token.kind.keyword with
     | .word "int" | .word "integer" | .word "int4" => pure TypeName.int
     | .word "bigint" | .word "int8" => pure .bigInt
     | .word "text" => pure .text
@@ -200,11 +220,11 @@ private def dataType (fuel : Nat) : Parser DataType := do
   | _, [] => pure ()
   | .varchar, [n] => if n == 0 then fail "VARCHAR length must be positive"
   | .numeric, [p] => if p == 0 || p > 1000 then fail "NUMERIC precision must be between 1 and 1000"
-  | .numeric, [p,s] => if p == 0 || p > 1000 || s > p then fail "unsupported NUMERIC precision/scale"
+  | .numeric, [p,s] => if p == 0 || p > 1000 || s > 1000 then fail "unsupported NUMERIC precision/scale"
   | _, _ => fail "invalid type modifiers"
   pure {name, modifiers}
 
-private def binInfo : Lexeme → Option (BinOp × Nat)
+private def binInfo (token : Lexeme) : Option (BinOp × Nat) := match token.keyword with
   | .word "or" => some (.or, 1) | .word "and" => some (.and, 2)
   | .symbol "=" => some (.eq, 4) | .symbol "<>" | .symbol "!=" => some (.ne, 4)
   | .symbol "<" => some (.lt, 4) | .symbol "<=" => some (.le, 4)
@@ -215,11 +235,24 @@ private def binInfo : Lexeme → Option (BinOp × Nat)
 private def aggregateFn : String → Option AggregateFn
   | "count" => some .count | "sum" => some .sum | "avg" => some .avg
   | "min" => some .min | "max" => some .max | _ => none
+/-- Try complete alternatives from the same token position. A parenthesized
+SELECT prefix is ambiguous with a scalar expression or a derived-first join;
+only consuming the complete enclosing production can disambiguate it. -/
+private def alternative (first second : Parser α) : Parser α := fun sqlite tokens =>
+  match first sqlite tokens with
+  | .ok result => .ok result
+  | .error firstError =>
+    match second sqlite tokens with
+    | .ok result => .ok result
+    | .error secondError =>
+      .error (if firstError.position.offset ≥ secondError.position.offset then firstError else secondError)
+
+/-- This is a lookahead hint, not proof that the entire group is a query. -/
 private def queryStart : Parser Bool := do
   let tokens := (← get).dropWhile (fun t => t.kind == .symbol "(")
   pure (match tokens.head? with
-    | some {kind := .word "select", ..} | some {kind := .word "with", ..} => true
-    | _ => false)
+    | some token => token.kind.keyword == .word "select" || token.kind.keyword == .word "with"
+    | none => false)
 
 private def parseJoinKind : Parser (Option JoinKind) := do
   if ← eat "left" then
@@ -273,13 +306,16 @@ mutual
         expect ")"
         return .cast value type
       if ← eat "(" then
-        if ← queryStart then
-          let q ← query fuel
+        let grouped : Parser Expr := do
+          let value ← expression fuel 0
           expect ")"
-          return .scalarQuery q
-        let value ← expression fuel 0
-        expect ")"
-        return value
+          pure value
+        if ← queryStart then
+          return ← alternative (do
+            let q ← query fuel
+            expect ")"
+            pure (.scalarQuery q)) grouped
+        return ← grouped
       match (← peek).kind with
       | .number raw =>
         let _ ← pop
@@ -289,7 +325,7 @@ mutual
       | .text value => let _ ← pop; return .literal (.text value)
       | .parameter value => let _ ← pop; return .parameter value
       | .word word =>
-        match aggregateFn word with
+        match aggregateFn word.toLower with
         | some fn =>
           let _ ← pop
           if ← eat "(" then
@@ -325,10 +361,11 @@ mutual
         let type ← dataType fuel
         return ← tailExpr fuel minPrec (.cast left type) compared
       let notPredicate := match (← get) with
-        | {kind := .word "not", ..} :: next :: _ =>
-          match next.kind with
-          | .word "in" | .word "between" | .word "like" | .word "ilike" => true
-          | _ => false
+        | first :: next :: _ =>
+          first.kind.keyword == .word "not" &&
+            match next.kind.keyword with
+            | .word "in" | .word "between" | .word "like" | .word "ilike" => true
+            | _ => false
         | _ => false
       let predStart := (← isAt "is") || (← isAt "in") || (← isAt "between") ||
         (← isAt "like") || (← isAt "ilike") || notPredicate
@@ -342,10 +379,16 @@ mutual
           pure (.isNull left notNull)
           else if ← eat "in" then do
             expect "("
-            let result ← if ← queryStart then do
-              pure (.inQuery left (← query fuel))
-              else do pure (.inList left (← separated (expression fuel 0) fuel))
-            expect ")"
+            let valueList : Parser Expr := do
+              let values ← separated (expression fuel 0) fuel
+              expect ")"
+              pure (.inList left values)
+            let result ← if ← queryStart then
+              alternative (do
+                let q ← query fuel
+                expect ")"
+                pure (.inQuery left q)) valueList
+              else valueList
             pure (if negated then .unary .not result else result)
           else if ← eat "between" then do
             let lower ← expression fuel 5
@@ -390,16 +433,19 @@ mutual
     | fuel + 1 => do
       let lateral ← eat "lateral"
       if ← eat "(" then
-        if ← queryStart then
-          let q ← query fuel
+        let grouped : Parser From := do
+          if lateral then fail "LATERAL requires a subquery"
+          let source ← fromExpr fuel
           expect ")"
-          let some alias ← alias? | fail "derived tables require an alias"
-          let columns ← optionalNames fuel
-          return .derived q alias columns lateral
-        if lateral then fail "LATERAL requires a subquery"
-        let source ← fromExpr fuel
-        expect ")"
-        return source
+          pure source
+        if ← queryStart then
+          return ← alternative (do
+            let q ← query fuel
+            expect ")"
+            let some alias ← alias? | fail "derived tables require an alias"
+            let columns ← optionalNames fuel
+            pure (.derived q alias columns lateral)) grouped
+        return ← grouped
       if lateral then fail "LATERAL requires a derived table"
       let name ← identifier
       let alias ← alias?
@@ -410,8 +456,32 @@ mutual
     | 0 => fail "FROM nesting bound exceeded"
     | fuel + 1 => do
       let first ← fromAtom fuel
-      let first ← joinTail fuel first
-      commaTail fuel first
+      if ← read then sqliteSourceTail fuel first
+      else
+        let first ← joinTail fuel first
+        commaTail fuel first
+
+  /-- SQLite evaluates comma joins and explicit JOINs at the same precedence,
+  from left to right. Parenthesized sources still preserve explicit grouping. -/
+  private def sqliteSourceTail : Nat → From → Parser From
+    | 0, _ => fail "FROM input bound exceeded"
+    | fuel + 1, left => do
+      if ← eat "," then
+        let right ← fromAtom fuel
+        return ← sqliteSourceTail fuel (.join .cross left right .none)
+      let naturalJoin ← eat "natural"
+      let kind ← parseJoinKind
+      match kind with
+      | none => if naturalJoin then fail "expected JOIN after NATURAL" else pure left
+      | some kind =>
+        if naturalJoin && kind == .cross then fail "NATURAL CROSS JOIN is invalid"
+        let right ← fromAtom fuel
+        let condition ← if naturalJoin then pure JoinCondition.natural
+          else if kind == .cross then pure .none
+          else if ← eat "on" then pure (.on (← expression fuel 0))
+          else if ← eat "using" then pure (.using (← names fuel))
+          else fail "JOIN requires ON or USING"
+        sqliteSourceTail fuel (.join kind left right condition)
 
   private def commaTail : Nat → From → Parser From
     | 0, _ => fail "FROM input bound exceeded"
@@ -495,6 +565,21 @@ mutual
         let right ← intersectTail fuel right
         unionTail fuel {body := .set op all left right}
 
+  /-- SQLite compound operators have equal precedence and associate leftward. -/
+  private def sqliteSetTail : Nat → Query → Parser Query
+    | 0, _ => fail "set operation input bound exceeded"
+    | fuel + 1, left => do
+      let op ← if ← eat "union" then pure (some SetOp.union)
+        else if ← eat "intersect" then pure (some .intersect)
+        else if ← eat "except" then pure (some .except) else pure none
+      match op with
+      | none => pure left
+      | some op =>
+        let all ← eat "all"
+        if all && op != .union then fail "SQLite supports ALL only with UNION"
+        let right ← selectCore fuel
+        sqliteSetTail fuel {body := .set op all left right}
+
   private def orderItem : Nat → Parser OrderBy
     | 0 => fail "ORDER BY nesting bound exceeded"
     | fuel + 1 => do
@@ -524,11 +609,22 @@ mutual
       let recursive ← if withClause then eat "recursive" else pure false
       let ctes ← if withClause then separated (cte fuel) fuel else pure []
       let q ← queryAtom fuel
-      let q ← intersectTail fuel q
-      let q ← unionTail fuel q
+      let sqlite ← read
+      let q ← if sqlite then sqliteSetTail fuel q else do
+        let q ← intersectTail fuel q
+        unionTail fuel q
       let orderBy ← if ← eat "order" then do expect "by"; separated (orderItem fuel) fuel else pure []
-      let limit ← if ← eat "limit" then pure (some (← natural)) else pure none
-      let offset ← if ← eat "offset" then pure (some (← natural)) else pure none
+      let (limit, commaOffset) ← if ← eat "limit" then do
+        let first ← natural
+        if sqlite && (← eat ",") then
+          pure (some (← natural), some first)
+        else pure (some first, none)
+        else pure (none, none)
+      let offset ← if ← eat "offset" then do
+        if sqlite && (limit.isNone || commaOffset.isSome) then
+          fail "SQLite OFFSET requires LIMIT and cannot follow comma LIMIT"
+        pure (some (← natural))
+        else pure commaOffset
       let outerModifiers := !orderBy.isEmpty || limit.isSome || offset.isSome
       let innerModifiers := !q.orderBy.isEmpty || q.limit.isSome || q.offset.isSome
       if (outerModifiers && innerModifiers) || (!ctes.isEmpty && !q.ctes.isEmpty) then
@@ -690,15 +786,16 @@ private def statement (fuel : Nat) : Parser Statement := do
     return .dropTable name ifExists (← dropMode)
   return .query (← query fuel)
 
-private def runComplete {α : Type} (source : String) (parser : Nat → Parser α) : Except ParseError α := do
+private def runComplete {α : Type} (source : String) (parser : Nat → Parser α)
+    (sqlite : Bool := false) : Except ParseError α := do
   let chars := source.toList
-  let tokens ← lexLoop (chars.length + 1) chars {} 0 false []
+  let tokens ← lexLoop sqlite (chars.length + 1) chars {} 0 false []
   let (result, _) ← (do
     let value ← parser (tokens.length * 12 + 64)
     let _ ← eat ";"
     match (← peek).kind with
     | .eof => pure value
-    | _ => fail "unexpected trailing SQL input").run tokens
+    | _ => fail "unexpected trailing SQL input").run sqlite |>.run tokens
   pure result
 
 /-- Parse one statement. Mixing numbered and anonymous parameters is rejected. -/
@@ -708,5 +805,12 @@ def parseExpression (source : String) : Except ParseError Expr :=
   runComplete source (fun fuel => expression fuel 0)
 /-- Uniform query entry point, independent of legacy SELECT AST dispatch. -/
 def parseQuery (source : String) : Except ParseError Query := runComplete source query
+
+/-- SQLite parameter identities, preserved identifier spelling, non-nesting
+comments, and left-associative compound/join precedence. Target-profile
+coverage is checked separately by the rendering boundary. -/
+def parseSQLiteQuery (source : String) : Except ParseError Query := runComplete source query true
+
+def parseSQLite (source : String) : Except ParseError Statement := runComplete source statement true
 
 end SQLean.Advanced

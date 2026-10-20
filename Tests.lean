@@ -24,6 +24,10 @@ import Tests.AdvancedStatements
 import Tests.AdvancedCorpus
 import Tests.SelectContract
 import Tests.SelectContractTrust
+import Tests.ScopeContract
+import Tests.ScopeContractTrust
+import Tests.RenderContract
+import Tests.DialectRendering
 
 namespace SQLean.Tests
 
@@ -76,6 +80,11 @@ def run : IO Unit := do
   IO.println s!"PASS: {advancedCorpus} advanced examples (50 per query class) certified and round-tripped"
   let contract ← selectContractTests
   IO.println s!"PASS: {contract} independent SELECT contract and assurance API checks"
+  let render ← renderContractTests
+  IO.println s!"PASS: {render} SELECT rendering, exact round-trip, binding-map, and corpus checks"
+  let dialect ← dialectRenderingTests
+  IO.println s!"PASS: {dialect} SQLite and PostgreSQL dialect rendering checks"
+  ScopeContract.run
   IO.println "All tests passed. Lean proof examples compiled successfully."
 
 end SQLean.Tests

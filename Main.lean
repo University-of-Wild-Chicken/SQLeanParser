@@ -6,7 +6,7 @@ open SQLean
 open Lean (toJson)
 
 private def usage : String :=
-  "Usage: sqlean [--ast] [--schema schema.json] [--param-types int,text] [--postgres] [--assurance contract|checked|syntax] [--max-depth N] [--file query.sql | SQL]\n\
+  "Usage: sqlean [--ast] [--schema schema.json] [--param-types int,text] [--postgres] [--assurance contract|checked|syntax] [--render-assurance identity|postgres|sqlite] [--max-depth N] [--file query.sql | SQL]\n\
    Parse one SELECT, INSERT, UPDATE, or DELETE, or CREATE/ALTER/DROP TABLE.\n\
    With no SQL or --file, read stdin.\n\
    --ast                  Print the public Lean AST\n\
@@ -14,7 +14,8 @@ private def usage : String :=
    --param-types TYPES    Parameter types in position order (int,text,bool,real; suffix ? permits NULL)\n\
    --postgres             Render anonymous ? parameters as PostgreSQL $n\n\
    --assurance LEVEL      Emit a JSON assurance report (contract, checked, or syntax)\n\
-   --max-depth N          SELECT assurance recursion budget (default 1024; zero is inconclusive)\n\
+   --render-assurance MODE  Emit checked SELECT serialization and parameter-map JSON\n\
+   --max-depth N          SELECT assurance depth budget (default 1024; zero is inconclusive)\n\
    --help                 Show this help\n"
 
 private structure Options where
@@ -26,6 +27,7 @@ private structure Options where
   parameterTypes : Option String := none
   postgres : Bool := false
   assurance : Option Assurance.Level := none
+  renderAssurance : Option RenderContract.Profile := none
   maxDepth : Option Nat := none
 
 private def parseArgs : List String → Options → Except String Options
@@ -33,6 +35,14 @@ private def parseArgs : List String → Options → Except String Options
   | "--help" :: rest, options => parseArgs rest { options with help := true }
   | "--ast" :: rest, options => parseArgs rest { options with ast := true }
   | "--postgres" :: rest, options => parseArgs rest { options with postgres := true }
+  | "--render-assurance" :: mode :: rest, options => do
+      if options.renderAssurance.isSome then throw "--render-assurance may only be specified once"
+      let profile ← match mode with
+        | "identity" => pure RenderContract.Profile.identityV01
+        | "postgres" => pure .postgres16V01
+        | "sqlite" => pure .sqliteV01
+        | _ => throw "--render-assurance requires identity, postgres, or sqlite"
+      parseArgs rest { options with renderAssurance := some profile }
   | "--assurance" :: level :: rest, options => do
       if options.assurance.isSome then throw "--assurance may only be specified once"
       let level ← match level with
@@ -57,6 +67,7 @@ private def parseArgs : List String → Options → Except String Options
       else parseArgs rest { options with queryFile := some path }
   | "--schema" :: [], _ => throw "--schema requires a path"
   | "--assurance" :: [], _ => throw "--assurance requires contract, checked, or syntax"
+  | "--render-assurance" :: [], _ => throw "--render-assurance requires identity, postgres, or sqlite"
   | "--max-depth" :: [], _ => throw "--max-depth requires a nonnegative integer"
   | "--param-types" :: [], _ => throw "--param-types requires comma-separated types"
   | "--file" :: [], _ => throw "--file requires a path"
@@ -67,11 +78,66 @@ private def parseArgs : List String → Options → Except String Options
       else parseArgs rest { options with source := some arg }
 
 private def validateOptions (options : Options) : Except String Options := do
+  if options.renderAssurance.isSome &&
+      (options.assurance.isSome || options.ast || options.postgres ||
+       options.schemaFile.isSome || options.parameterTypes.isSome) then
+    throw "--render-assurance cannot be combined with validation or other output modes"
   if options.assurance.isSome && (options.ast || options.postgres) then
     throw "--assurance emits JSON and cannot be combined with --ast or --postgres"
-  if options.maxDepth.isSome && (options.assurance.isNone || options.assurance == some .syntax) then
-    throw "--max-depth requires --assurance contract or checked"
+  if options.maxDepth.isSome && options.renderAssurance.isNone &&
+      (options.assurance.isNone || options.assurance == some .syntax) then
+    throw "--max-depth requires --assurance contract/checked or --render-assurance"
   pure options
+
+private def bindingMapJson (entry : RenderContract.BindingMapEntry) : Lean.Json :=
+  let (style, index) := match entry.source with
+    | .numbered n => ("numbered", n) | .anonymous n => ("anonymous", n)
+  Lean.Json.mkObj [
+    ("source", Lean.Json.mkObj [("style", toJson style), ("index", toJson index)]),
+    ("target", toJson entry.target)]
+
+private def reportRender (profile : RenderContract.Profile) (status : String)
+    (sql : Option String := none) (parameterMap : List RenderContract.BindingMapEntry := [])
+    (diagnostic : Option RenderContract.Diagnostic := none) : IO UInt32 := do
+  let mut fields := [
+    ("assurance", toJson "checked-roundtrip"), ("profile", toJson profile.name),
+    ("mode", toJson profile.mode), ("status", toJson status),
+    ("evidence", toJson (if status == "rendered" then "checked-instance" else "none")),
+    ("rendererVersion", toJson "0.2"),
+    ("semanticPreservation", toJson false),
+    ("assumptions", toJson profile.assumptions),
+    ("trustedFoundations", toJson ["Lean kernel", "propext", "Classical.choice", "Quot.sound",
+      "Lean compiler/runtime for executable reports"]),
+    ("scope", toJson "SELECT AST serialization; independent target semantics not established")]
+  if let some sql := sql then
+    fields := fields ++ [
+      ("sql", toJson sql), ("parameterMap", .arr (parameterMap.map bindingMapJson).toArray),
+      ("theorems", toJson ["SQLean.RenderContract.check_roundTrip",
+        "SQLean.RenderContract.check_admissible", "SQLean.RenderContract.check_canonical",
+        "SQLean.RenderContract.render_expected_stable",
+        "SQLean.RenderContract.Certificate.parameter_slots_injective",
+        "SQLean.RenderContract.Certificate.parameter_map_complete",
+        "SQLean.RenderContract.Certificate.transport_preserves"])]
+  if let some diagnostic := diagnostic then
+    fields := fields ++ [("diagnostic", Lean.Json.mkObj [
+      ("code", toJson diagnostic.code), ("message", toJson diagnostic.message)])]
+  IO.println (Lean.Json.mkObj fields).compress
+  pure (match status with
+    | "rendered" => 0 | "unsupported" => 3 | "inconclusive" => 4 | _ => 1)
+
+private def runRenderAssurance (options : Options) (profile : RenderContract.Profile)
+    (source : String) : IO UInt32 := do
+  let parsed := if profile == .sqliteV01 then Advanced.parseSQLite source else Advanced.parse source
+  let statement ← match parsed with
+    | .ok statement => pure statement
+    | .error error =>
+        return ← reportRender profile "invalid" none [] (some ⟨"input.parse", toString error⟩)
+  match statement with
+  | .query query =>
+    match RenderContract.check profile query (options.maxDepth.getD 1024) with
+    | .ok certificate => reportRender profile "rendered" (some certificate.sql) certificate.parameterMap
+    | .error failure => reportRender profile failure.status none [] (some failure.diagnostic)
+  | _ => reportRender profile "unsupported" none [] (some ⟨"coverage.statement", "the rendering contract covers SELECT statements"⟩)
 
 private def diagnosticJson (diagnostic : SelectContract.Diagnostic) : Lean.Json :=
   Lean.Json.mkObj [("code", toJson diagnostic.code), ("message", toJson diagnostic.message)]
@@ -171,6 +237,7 @@ private def run (options : Options) : IO UInt32 := do
     | some source, _ => pure source
     | _, some path => IO.FS.readFile path
     | _, _ => readStdin
+  if let some profile := options.renderAssurance then return ← runRenderAssurance options profile source
   if let some level := options.assurance then return ← runAssurance options level source
   let statement ← match parseStatement source with
     | .ok statement => pure statement

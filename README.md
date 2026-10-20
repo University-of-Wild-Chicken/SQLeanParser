@@ -9,12 +9,32 @@ family and mutation/DDL syntax remain available through the existing APIs and
 the expanded executable-check tier. This is an initial contract milestone,
 not a claim that the complete draft has been implemented.
 
+The [SELECT renderer contract](docs/SELECT_render_contract.md) also has an
+initial implementation. It adds a separate checked serialization boundary for
+the expanded SELECT AST, exact reconstruction certificates, and explicit
+parameter transport. A second iteration proves general parameter-translation
+and serialization laws, then adds a SQLite rendering profile alongside
+PostgreSQL. Independent database semantic preservation remains an open
+obligation; static validity and rendering assurance are separate APIs.
+
+The [name/scope contract](docs/SELECT_scope_contract.md) adds an independent
+fragment for source tables, aliases, CROSS JOIN, and nested correlated EXISTS.
+Its resolver has kernel-checked soundness, completeness, uniqueness, and
+failure/refutation theorems. It checks names only; the bridge to the production
+checker is currently tested on finite cases, not proved generally. Its
+PostgreSQL-oriented alias visibility rules are separate from SQLite rendering
+and do not expand the public validity tier. Import
+`SQLean.ScopeContract.Embedding` to use the fragment API.
+
 Build and test from the repository root:
 
 ```sh
 lake build
 lake exe sqlean_tests
+lake exe sqlean_scope_tests
 python3 scripts/check_assurance_cli.py
+python3 scripts/check_render_cli.py
+python3 scripts/check_lean_trust.py
 python3 -m unittest discover -s scripts -p 'test_*.py' -v
 python3 scripts/generate_crud_examples.py --check
 python3 scripts/check_crud_cli.py
@@ -25,22 +45,35 @@ python3 scripts/check_industrial_cli.py
 python3 scripts/generate_postgresql_examples.py --check
 python3 scripts/test_postgresql_results.py
 python3 scripts/generate_advanced_examples.py --check
+python3 scripts/generate_dialect_examples.py --check
+python3 scripts/check_dialect_cli.py --local-bin /usr/lib/postgresql/16/bin
 ```
 
 [GitHub Actions CI](.github/workflows/ci.yml) runs on pushes, pull requests, and
 manual dispatch. A Python job runs all offline regression tests and checks all
-five generated corpora. A second job builds the library, CLI, and test executable
+six generated corpora. A second job builds the library, CLI, and test executable
 from scratch using `lean-toolchain`, runs the Lean and SQLite suites, then runs
 both PostgreSQL corpora and the actual parameter-execution check against
-PostgreSQL 16. Both jobs use Ubuntu 24.04 and Python 3.12. PostgreSQL checks use
+PostgreSQL 16, including the rendering and dialect checks. Both jobs use Ubuntu
+24.04 and Python 3.12. PostgreSQL checks use
 temporary private clusters; no database secrets are required. New runs cancel
 superseded runs for the same branch or pull request.
 
-The Lean build also checks independent SELECT derivations and rejects contract
-declarations depending on nonstandard axioms, including `sorryAx`. Offline tests
+The project-wide trust audit rejects proof placeholders, project-defined axioms,
+native proof shortcuts, user-authored unsafe/partial declarations, and kernel-check bypasses.
+It inventories every Lean source module, including private declarations, and
+checks transitive axiom dependencies. The only allowed foundational axioms are
+Lean's `propext`, `Classical.choice`, and `Quot.sound`; this is explicitly **not**
+a claim that Lean uses no logical foundations. Negative probes test that the
+audit actually rejects forbidden declarations. Lean-generated executable
+recursion helpers are permitted only when attached to a safe kernel definition
+or safe opaque declaration,
+and their axiom dependencies are still audited. Offline tests
 guard the specification's import boundary: it may depend on its normative
 profile, immutable syntax/catalog definitions, and `Std`, but not on executable
-validators. The assurance CLI regression suite runs in the integration job.
+validators. Rendering admissibility similarly cannot import the parser,
+renderer, or static checker. The assurance, rendering, and dialect CLI suites
+run in the integration job.
 
 To run the PostgreSQL oracle, supply a directory containing `initdb`, `pg_ctl`,
 and `psql` (for example, the output of `pg_config --bindir`):
@@ -66,7 +99,7 @@ equivalence for arbitrary database states. Run `--local-bin` as a non-root user
 
 The Lean test executable checks syntax, expression precedence, schema and type errors, certificates, and SQL round trips. The Python checks use only the standard library. The generators check that example files match their deterministic source; the CRUD, relational, and industrial CLI checks independently compile each example and its rendered SQL using SQLite `EXPLAIN`, without executing mutations. The relational and industrial checks also compare SELECT results on empty and seeded SQLite databases. Recursive examples use finite data or explicit bounds, and the industrial checker caps SQLite execution work. The PostgreSQL checker performs 600 source/canonical result comparisons, 100 RETURNING mutation-state comparisons, and 36 independently specified result checks.
 
-The compatibility corpora contain **50 examples per added query category**, 50 per CRUD category, and the original 100 SELECT examples. The 750 advanced examples are listed later in this README:
+The compatibility corpora contain **50 examples per added query category**, 50 per CRUD category, and the original 100 SELECT examples. The 750 advanced examples are listed later in this README. The latest [dialect corpus](fixtures/dialects) adds 200 examples: 50 each for SQLite numbered parameters, SQLite compound queries, SQLite comma-style LIMIT, and PostgreSQL NUMERIC scales above precision. Its JSON metadata supplies independent expected rows, labels, and bound values.
 
 | Category | Examples | New functionality |
 | --- | --- | --- |
@@ -89,7 +122,7 @@ The compatibility corpora contain **50 examples per added query category**, 50 p
 | Delete / DELETE | [50 examples](fixtures/crud/delete.sql) | Optional filters, comparisons, boolean combinations. |
 | Original SELECT MVP | [100 examples](fixtures/queries.sql) | Regression coverage for the original expression grammar and API. |
 
-Every corpus statement is parsed, certified against its schema, rendered, and reparsed with equal ASTs using the corresponding API. The original PostgreSQL SELECT corpus uses the uniform `parseRelQuery` interface, since normalized BETWEEN expressions can also fit the legacy grammar. The advanced corpus uses `Advanced.parse` and `Advanced.render` to keep its AST interface stable. Each line is a separate input; passing an entire corpus file to the single-statement CLI is an error. Regenerate fixtures with the corresponding `scripts/generate_*_examples.py` script.
+The original and compatibility corpus statements are parsed, certified against their schemas, rendered, and reparsed with equal ASTs using the corresponding APIs. The new dialect corpus instead checks exact rendering certificates and native database results; it does not claim stronger static-validity coverage. The original PostgreSQL SELECT corpus uses the uniform `parseRelQuery` interface, since normalized BETWEEN expressions can also fit the legacy grammar. The advanced corpus uses `Advanced.parse` and `Advanced.render` to keep its AST interface stable. Each line is a separate input; passing an entire corpus file to the single-statement CLI is an error. Regenerate fixtures with the corresponding `scripts/generate_*_examples.py` script.
 
 Use the CLI with one SQL argument, a file containing one statement, or standard input:
 
@@ -223,6 +256,168 @@ not automatically certificates for this new contract. None of these tiers
 establishes parser/renderer correctness, runtime cast or arithmetic safety,
 subquery cardinality, recursive termination, authorization, or transaction
 execution. Database comparisons remain finite test evidence.
+
+Checked SELECT rendering uses the uniform `Advanced.Query` AST. It requires no
+schema: `SELECT missing FROM absent` can serialize faithfully while failing a
+separate validity check. Existing `render`, `renderPostgres`, and legacy APIs
+retain their signatures and syntax coverage; arbitrary ASTs passed to those
+unchecked APIs do not receive a rendering certificate.
+
+```sh
+lake exe sqlean --render-assurance identity 'SELECT missing FROM absent'
+lake exe sqlean --render-assurance postgres \
+  'WITH c(x) AS (SELECT ?) SELECT ?, (SELECT ?), x FROM c'
+lake exe sqlean --render-assurance sqlite \
+  'SELECT ?2 AS second, ?1 AS first UNION ALL SELECT ?1, ?2 LIMIT 0, 2'
+python3 scripts/check_render_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_dialect_cli.py --local-bin /usr/lib/postgresql/16/bin
+```
+
+`--render-assurance identity` selects `sqlean-select-render-v0.1`, preserving
+numbered markers and anonymous `?` markers. This identity profile is a SQLean
+parameter dialect, not a claim that PostgreSQL accepts `?` directly.
+`--render-assurance postgres` selects `postgresql-16-select-render-v0.1` and
+translates anonymous ordinal `i` to `$i`. These two profiles fix UTF-8 client/server
+encoding, `standard_conforming_strings=on`, a 63-byte identifier limit, and the
+same catalog/search path/namespace interpretation. These are required target
+assumptions, not settings the renderer silently changes. See PostgreSQL 16's
+[lexical rules](https://www.postgresql.org/docs/16/sql-syntax-lexical.html).
+
+`--render-assurance sqlite` selects `sqlite-3.39-select-render-v0.1`.
+It emits explicit `?NNN` markers, preserving slot indices and repeated references.
+SQLite `$name` markers are named bindings allocated in encounter order, so this
+profile rejects them rather than treating `$2` as slot 2. Bare `?` input uses
+global occurrence order; mixing bare and numbered markers is excluded.
+The profile assumes SQLite 3.39 or later, UTF-8 input, a variable limit of at
+least 32766, and unchanged database/namespace/collation settings. It retains
+the common 63-byte identifier restriction as a conservative profile boundary.
+See SQLite's [parameter rules](https://www.sqlite.org/lang_expr.html#parameters)
+and [SELECT syntax](https://www.sqlite.org/lang_select.html).
+
+`Advanced.parseSQLiteQuery` and `Advanced.parseSQLite` select SQLite's
+left-associative, equal-precedence set operations and recognize `LIMIT offset,
+count`. They also associate comma joins and explicit JOINs from left to right,
+preserve unquoted identifier spelling, and use non-nesting block comments.
+Default parsing retains PostgreSQL's INTERSECT/JOIN precedence, unquoted-name
+folding, and nested block comments.
+The SQLite-oriented parser shares other expression syntax with the expanded
+parser: for example, it accepts `::` input and renders standard CAST. It is a
+conversion interface, not an exact recognizer of native SQLite source syntax.
+`Advanced.renderSQLite` is the total unchecked query printer; use
+`RenderContract.check .sqliteV01` to obtain a certificate.
+
+Successful JSON reports have `status: "rendered"`, `assurance:
+"checked-roundtrip"`, SQL, a binding map, the profile/mode, and named theorem
+obligations. `semanticPreservation` is explicitly false: full SQL semantics have
+not been established. Each map entry identifies the original parameter style
+and index and its target slot. Repeated numbered references share one entry;
+anonymous references must occur exactly as 1..N across CTEs, DISTINCT ON,
+projection, sources/joins, predicates, grouping, and ordering. Mixed styles
+return `unsupported`. PostgreSQL mode limits slots to 1..65535, matching the
+[PostgreSQL 16 parameter limit](https://www.postgresql.org/docs/16/limits.html);
+SQLite mode limits them to 1..32766. Supply parameter
+values and concrete declared types separately, using the same returned map.
+`translateParameters_idempotent` proves, for every finite advanced query, that
+applying this parameter-only AST translation a second time makes no further change.
+
+The [independent admissibility specification](SQLean/RenderContract/Admissibility.lean)
+checks every represented field before rendering. It rejects empty/NUL/overlong
+identifiers, NUL text, malformed decimal tokens, contradictory DISTINCT flags,
+a recursion marker with no CTE, empty projections/IN/USING lists, invalid join
+condition combinations, and FILTER on a nonaggregate. Decimal and exponent
+spelling is retained without floating-point conversion. Identifiers remain
+quoted exact names; text retains quotes, backslashes, newlines, and Unicode.
+The supported cast modifier subset is `VARCHAR(1..10485760)`,
+`NUMERIC(1..1000)`, and `NUMERIC(p,s)` with `1 <= p <= 1000` and
+`0 <= s <= 1000`. This includes scales above precision supported by
+[PostgreSQL 16](https://www.postgresql.org/docs/16/datatype-numeric.html).
+Negative scales remain outside the natural-number modifier AST. A singleton
+IN-list whose only element is a scalar
+subquery is also `unsupported`: its serialization is ambiguous with the distinct
+IN-subquery constructor. The renderer does not insert an artificial cast or
+arithmetic expression to disambiguate it.
+
+The separate [SQLite coverage rules](SQLean/RenderContract/SQLiteAdmissibility.lean)
+exclude ILIKE, DISTINCT ON, LATERAL, relation-alias column lists, INTERSECT ALL,
+EXCEPT ALL, and OFFSET without LIMIT. Compound queries must associate to the
+left, with no operand-local WITH, ORDER BY, LIMIT, or OFFSET. Global clauses
+remain available. These restrictions preserve the AST without inserting wrapper
+SELECTs to emulate parentheses that SQLite does not accept.
+SQLite's native typing, casts, NULL behavior, and identifier resolution still
+apply: numeric type modifiers do not acquire PostgreSQL precision semantics,
+division by zero can yield NULL, and visible columns named TRUE/FALSE can shadow
+those literals. The execution tests record these differences explicitly.
+
+The [checked boundary](SQLean/RenderContract/Checker.lean) returns either an
+indexed `Certificate profile query` or a structured failure:
+`invalid` means an inadmissible representation; `unsupported` means a stated
+profile gap; `inconclusive` means the requested depth budget was exceeded;
+`mismatch` means a renderer/parser reconstruction disagreement.
+Failures publish no SQL. Exit codes are respectively 1, 3, 4, and 1; successful
+rendering exits 0 and argument errors exit 2. `--max-depth` defaults to 1024 and
+checks inspected AST depth before serialization/reparsing. Inspection itself is
+total and is not an operating-system memory/time bound. Process failure or
+external resource exhaustion must still be handled by the caller.
+
+```lean
+import SQLean.RenderContract
+open SQLean
+
+def renderedQuery : Advanced.Query := {
+  body := .select {items := [.expression (.parameter (.anonymous 1)) (some "value")]} }
+
+#eval (RenderContract.check .postgres16V01 renderedQuery).map
+  (fun certificate => (certificate.sql, certificate.parameterMap))
+
+example (certificate : RenderContract.Certificate profile query) :
+    RenderContract.parseRendered profile certificate.sql =
+      .ok (RenderContract.expectedQuery profile query) :=
+  certificate.roundTrip
+
+example (profile : RenderContract.Profile) (query : Advanced.Query) :
+    RenderContract.renderSql profile (RenderContract.expectedQuery profile query) =
+      RenderContract.renderSql profile query :=
+  RenderContract.render_expected_stable profile query
+```
+
+The certificate proves exact full reparsing with Lean equality over **every AST
+field**, canonical rerendered bytes, and the independently specified
+admissibility conditions. Parameter-map completeness, injectivity on referenced
+bindings, and transport of separately supplied values/types have separate
+theorems. `identity_validity_preserved` transfers an existing independent
+validity derivation, including its ordered output schema, to the reconstructed
+identity-mode AST. This is not a schema theorem about PostgreSQL execution.
+The mathematical renderer now uses total structural recursion over finite ASTs;
+there is no fuel or replacement-SQL fallback.
+
+The second proof iteration adds universal structural results in
+[SerializationProofs](SQLean/RenderContract/SerializationProofs.lean),
+[SQLiteSerializationProofs](SQLean/RenderContract/SQLiteSerializationProofs.lean),
+and [ValidityPreservation](SQLean/RenderContract/ValidityPreservation.lean).
+For every finite query AST, parameter translation leaves PostgreSQL and SQLite
+rendered bytes unchanged; `render_expected_stable` supplies canonical stability
+directly to certificates. `translateParameters_valid` preserves any existing
+basic-SELECT validity derivation and its exact ordered output schema under the
+same index-keyed parameter environment. `translated_validity_preserved` transfers
+that derivation to the reconstructed target AST. These are AST theorems, not
+claims that the two databases execute the query identically.
+
+Full reconstruction remains certified per successful checked instance. A theorem that **every**
+admissible query passes the round-trip boundary remains open, as do independent
+target-grammar fidelity, name-resolution preservation under target semantics,
+and the contract's complete behavioral equivalence (bags, ordering ties,
+permitted LIMIT outcomes, errors, and divergence). Source-to-rendered semantics
+also requires a separate parser theorem. Hand-built AST regressions and fixed
+SQLite/PostgreSQL observations supply finite evidence, including hostile lexical data,
+deep nesting, actual parameter execution, duplicates/NULLs, and modeled errors;
+they do not close those universal obligations.
+For reproducible trust evidence, run
+`python3 scripts/check_lean_trust.py --evidence-json .lake/trust-audit.json`.
+The manifest records the Git revision, dirty state, hashes of the exact
+source/configuration inventory and compiled artifacts, and the Lean version.
+CLI rendering JSON names its profile and renderer version; associate deployment
+reports with this build manifest to identify the exact code. The manifest
+attests the trust audit, not independent SQL semantics.
 
 Schemas are supplied externally as JSON:
 
@@ -580,4 +775,10 @@ checkStatement_iff:
 
 The full relational certificate composes child query proofs, CTE scope extensions, recursive anchor/step checks, compound output compatibility, output naming checks, and the flat core derivation. `checkRelQuery_iff` establishes that the full checker accepts exactly the queries satisfying `ValidRelQuery` for the supplied schema and AST. The statement certificate API and its equivalence theorem also cover relational SELECTs. The `.extended` constructor embeds the explicitly algorithmic advanced static-check contract described above; it does not add an independent declarative typing derivation for the advanced syntax. These proofs use standard Lean axioms; there are no `sorry` placeholders or custom axioms.
 
-These are static guarantees. The parser/renderer have regression and round-trip tests, not general grammar-correctness or round-trip proofs. The library does not execute queries or prove row-level constraints, division safety, recursive termination/cycle safety, write effects, transaction behavior, or ACID properties. For example, `1 / 0` remains well typed. SQLite and PostgreSQL checks provide additional test evidence, not a formal semantic equivalence claim.
+These are static guarantees. The checked SELECT renderer additionally carries
+exact instance reconstruction proofs described above; general
+grammar-correctness and universal round-trip proofs remain open. The library
+does not execute queries or prove row-level constraints, division safety,
+recursive termination/cycle safety, write effects, transaction behavior, or
+ACID properties. For example, `1 / 0` remains well typed. SQLite and PostgreSQL
+checks provide additional test evidence, not a formal semantic equivalence claim.

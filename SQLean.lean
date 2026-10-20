@@ -8,3 +8,4 @@ import SQLean.RelationalValidation
 import SQLean.NestedValidation
 import SQLean.API
 import SQLean.Assurance
+import SQLean.RenderContract
