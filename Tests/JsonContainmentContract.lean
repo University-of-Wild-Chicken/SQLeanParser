@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -32,7 +32,7 @@ private def containmentCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "JSONB containment SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "JSONB containment identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -82,7 +82,7 @@ private def containmentInventoryTests : IO Nat := do
     let query : Advanced.Query := { body := .select { items := [
       .expression (.containment (.cast .null leftDeclaration) (.cast .null rightDeclaration)
         direction) (some "v")] } }
-    SQLean.Tests.assert ((← containmentCertificate query) == [⟨"v", ⟨.bool, true⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← containmentCertificate query) [{name := "v", type := ⟨.bool, true⟩}])
       "containment inventory full-query output"
     observed := direction :: observed
   SQLean.Tests.assert (decide observed.Nodup &&
@@ -99,21 +99,19 @@ def jsonContainmentContractTests : IO Nat := do
       for rightNullable in [false, true] do
         let params := (if leftNullable then "jsonb?" else "jsonb") ++ "," ++
           (if rightNullable then "jsonb?" else "jsonb")
-        SQLean.Tests.assert ((← containmentOutput s!"SELECT $1 {spelling} $2 AS v" params) ==
-          [⟨"v", ⟨.bool, leftNullable || rightNullable⟩⟩])
+        SQLean.Tests.assert (sameOutputTypes (← containmentOutput s!"SELECT $1 {spelling} $2 AS v" params) [{name := "v", type := ⟨.bool, leftNullable || rightNullable⟩}])
           "containment nullability must propagate exactly the operand flags"
         count := count + 1
     for (unknown, nullable) in [("'{}'", false), ("'null'", false), ("NULL", true)] do
       for sql in [s!"SELECT {unknown} {spelling} $1 AS v",
           s!"SELECT $1 {spelling} {unknown} AS v"] do
-        SQLean.Tests.assert ((← containmentOutput sql "jsonb") ==
-          [⟨"v", ⟨.bool, nullable⟩⟩]) s!"single unknown JSONB context: {sql}"
+        SQLean.Tests.assert (sameOutputTypes (← containmentOutput sql "jsonb") [{name := "v", type := ⟨.bool, nullable⟩}]) s!"single unknown JSONB context: {sql}"
         count := count + 1
     for left in ["NULL", "'{}'", "'null'"] do
       for right in ["NULL", "'{}'", "'null'"] do
         let sql := s!"SELECT {left} {spelling} {right}"
         let query ← expectOk sql (Advanced.parseQuery sql)
-        match SelectContract.checkQuery .basicV31 [] [] query with
+        match SelectContract.checkQuery .basicV32 [] [] query with
         | .error (.invalid diagnostic) =>
             SQLean.Tests.assert (diagnostic.code == "json_containment_signature")
               "unknown containment must retain the signature diagnostic"
@@ -128,7 +126,7 @@ def jsonContainmentContractTests : IO Nat := do
           (s!"NULL::{declaration}", "NULL"), ("NULL", s!"NULL::{declaration}")] do
         let sql := s!"SELECT {left} {spelling} {right}"
         let query ← expectOk sql (Advanced.parseQuery sql)
-        match SelectContract.checkQuery .basicV31 [] [] query with
+        match SelectContract.checkQuery .basicV32 [] [] query with
         | .error (.invalid _) => pure ()
         | _ => throw (IO.userError s!"unavailable non-JSONB containment signature: {sql}")
         count := count + 1
@@ -143,17 +141,16 @@ def jsonContainmentContractTests : IO Nat := do
       let sql := s!"SELECT {left} {spelling} {right}"
       let query ← expectOk sql (Advanced.parseQuery sql)
       if expected == "valid" then
-        SQLean.Tests.assert ((← containmentCertificate query) == [⟨"?column?", ⟨.bool, nullable⟩⟩])
+        SQLean.Tests.assert (sameOutputTypes (← containmentCertificate query) [{name := "?column?", type := ⟨.bool, nullable⟩}])
           s!"promoted array containment output: {sql}"
-      else match SelectContract.checkQuery .basicV31 [] [] query with
+      else match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.unsupported diagnostic) =>
           SQLean.Tests.assert (expected == "unsupported" && diagnostic.code == "array_element_equality")
             "array element equality boundary"
       | .error (.invalid _) => SQLean.Tests.assert (expected == "invalid") "array signature boundary"
       | _ => throw (IO.userError s!"unexpected array containment boundary: {sql}")
       count := count + 1
-    SQLean.Tests.assert ((← containmentOutput ("SELECT '{}'::JSONB " ++ spelling ++ " '{}'::JSONB")) ==
-      [⟨"?column?", ⟨.bool, false⟩⟩]) "containment default label"
+    SQLean.Tests.assert (sameOutputTypes (← containmentOutput ("SELECT '{}'::JSONB " ++ spelling ++ " '{}'::JSONB")) [{name := "?column?", type := ⟨.bool, false⟩}]) "containment default label"
     count := count + 1
   let examples : List (String × SelectContract.ScalarType × Bool) := [
     ("SELECT '{\"a\":1,\"b\":2}'::JSONB @> '{\"a\":1}' AS v", .bool, false),
@@ -177,7 +174,7 @@ def jsonContainmentContractTests : IO Nat := do
     ("SELECT 1 AS v WHERE '{}'::JSONB @> '{}'", .int32, false),
     ("SELECT '{}'::JSONB @> '{}' = TRUE AS v", .bool, false)]
   for (sql, output, nullable) in examples do
-    SQLean.Tests.assert ((← containmentOutput sql) == [⟨"v", ⟨output, nullable⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← containmentOutput sql) [{name := "v", type := ⟨output, nullable⟩}])
       s!"containment composition/output: {sql}"
     count := count + 1
   for sql in [
@@ -186,7 +183,7 @@ def jsonContainmentContractTests : IO Nat := do
       "SELECT unknown_function() @> '{}'",
       "SELECT ROW(1,2) <@ '{}'::JSONB"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"containment child coverage must stay Unsupported: {sql}")
     count := count + 1
@@ -195,7 +192,7 @@ def jsonContainmentContractTests : IO Nat := do
       ("SELECT $2 <@ $1 AS v", "jsonb?,jsonb", true),
       ("SELECT (CASE WHEN ? THEN ? ELSE ? END) @> ? AS v", "bool,jsonb,jsonb,jsonb", false),
       ("SELECT ? @> d.a AS v FROM (SELECT ?::JSONB AS a) d", "jsonb,jsonb", false)] do
-    SQLean.Tests.assert ((← containmentOutput sql params) == [⟨"v", ⟨.bool, nullable⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← containmentOutput sql params) [{name := "v", type := ⟨.bool, nullable⟩}])
       s!"containment lexical parameter order: {sql}"
     count := count + 1
   let params ← expectOk "containment bindings" (Assurance.parseContractParameterTypes "jsonb,jsonb")
@@ -203,12 +200,12 @@ def jsonContainmentContractTests : IO Nat := do
       Advanced.Expr.containment (.parameter (.numbered 1)) (.parameter (.anonymous 2)),
       .containment (.parameter (.anonymous 2)) (.parameter (.anonymous 1)) true] do
     let query : Advanced.Query := { body := .select { items := [.expression expr] } }
-    match SelectContract.checkQuery .basicV31 [] params query with
+    match SelectContract.checkQuery .basicV32 [] params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "mixed or reordered containment parameters must be Invalid")
     count := count + 1
   let query ← expectOk "containment exhaustion" (Advanced.parseQuery "SELECT '{}'::JSONB @> '{}'")
-  match SelectContract.checkQuery .basicV31 [] [] query 1 with
+  match SelectContract.checkQuery .basicV32 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "containment exhaustion must be Inconclusive")
   pure (count + 1)
@@ -293,7 +290,7 @@ def jsonContainmentConcreteContractTests : IO Nat := do
           SQLean.Tests.assert (select.source.isNone && query.ctes.isEmpty)
             s!"{id}: certified concrete population must remain source-free"
       | _ => throw (IO.userError s!"{id}: unexpected certified concrete structure")
-      SQLean.Tests.assert ((← containmentCertificate query) == [⟨"?column?", ⟨.bool, false⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes (← containmentCertificate query) [{name := "?column?", type := ⟨.bool, false⟩}])
         s!"{id}: exact concrete containment certificate output"
       count := count + 1
     else

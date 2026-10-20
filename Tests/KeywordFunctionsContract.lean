@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -31,7 +31,7 @@ private def keywordField (id : String) (record : Lean.Json) (field : String) : I
 private def keywordCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) : IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "keyword function SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "keyword function identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -93,10 +93,9 @@ def keywordFunctionsContractTests : IO Nat := do
               (first ++ (if leftNullable then "?" else "") ++ "," ++
                 second ++ (if rightNullable then "?" else "")))
             if admitted then
-              SQLean.Tests.assert ((← keywordCertificate query params) ==
-                [⟨"v", ⟨.text, leftNullable || rightNullable⟩⟩])
+              SQLean.Tests.assert (sameOutputTypes (← keywordCertificate query params) [{name := "v", type := ⟨.text, leftNullable || rightNullable⟩}])
                 s!"{name}: admitted exact inputs {first}, {second}"
-            else match SelectContract.checkQuery .basicV31 [] params query with
+            else match SelectContract.checkQuery .basicV32 [] params query with
               | .error (.invalid diagnostic) =>
                   SQLean.Tests.assert (diagnostic.code == "function_signature")
                     s!"{name}: incompatible declared inputs must fail signature resolution"
@@ -111,7 +110,7 @@ def keywordFunctionsContractTests : IO Nat := do
         ("CAST('é😀' AS NAME),2", false), ("'áb',1", false), ("'👨‍👩‍👧',-1", false),
         ("NULL,CAST('bad' AS INTEGER)", true)] do
       let sql := s!"SELECT {name}({arguments})"
-      SQLean.Tests.assert ((← keywordOutput sql) == [⟨name, ⟨.text, nullable⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes (← keywordOutput sql) [{name := name, type := ⟨.text, nullable⟩}])
         s!"{name}: contextual input or deferred value obligation"
       count := count + 1
     for (sql, params, nullable) in [
@@ -121,19 +120,18 @@ def keywordFunctionsContractTests : IO Nat := do
         (s!"SELECT {name}(CAST(? AS NAME),CAST(? AS INTEGER)) AS v", "TEXT?,NUMERIC", true),
         (s!"SELECT pg_catalog.{name}('abc',2) AS v", "", false),
         (s!"SELECT \"{name}\"('abc',2) AS v", "", false)] do
-      SQLean.Tests.assert ((← keywordOutput sql params) == [⟨"v", ⟨.text, nullable⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes (← keywordOutput sql params) [{name := "v", type := ⟨.text, nullable⟩}])
         "keyword calls retain lexical occurrence order and exact declarations"
       count := count + 1
     for expr in [s!"{name}('abc',2)", s!"CAST({name}('abc',2) AS TEXT)",
         s!"CASE WHEN TRUE THEN {name}('abc',1) ELSE {name}('xyz',1) END"] do
-      SQLean.Tests.assert ((← keywordOutput s!"SELECT {expr}") ==
-        [⟨name, ⟨.text, false⟩⟩]) "strong function label survives composition"
+      SQLean.Tests.assert (sameOutputTypes (← keywordOutput s!"SELECT {expr}") [{name := name, type := ⟨.text, false⟩}]) "strong function label survives composition"
       count := count + 1
     for arguments in ["", "'abc'", "'abc',1,2", "'abc',2147483648",
         "'abc',TRUE", "'abc',2.5", "'abc',CAST('2' AS TEXT)", "CAST('abc' AS BYTEA),1"] do
       let sql := s!"SELECT {name}({arguments})"
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV31 [] [] query with
+      match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.invalid diagnostic) =>
           SQLean.Tests.assert (diagnostic.code == "function_signature") "known wrong signature is Invalid"
       | _ => throw (IO.userError s!"{sql}: known incompatible signature accepted")
@@ -141,18 +139,18 @@ def keywordFunctionsContractTests : IO Nat := do
     for sql in [s!"SELECT application.{name}('abc',1)", s!"SELECT \"{name.toUpper}\"('abc',1)",
         s!"SELECT {name}(string=>'abc',n=>1)", s!"SELECT {name}((SELECT 'abc'),1)"] do
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV31 [] [] query with
+      match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.unsupported _) => pure ()
       | _ => throw (IO.userError s!"{sql}: unregistered routine/dependency must remain Unsupported")
       count := count + 1
   let query ← expectOk "keyword resource limit" (Advanced.parseQuery "SELECT left('abc',1)")
-  match SelectContract.checkQuery .basicV31 [] [] query 1 with
+  match SelectContract.checkQuery .basicV32 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "keyword call resource limit must remain Inconclusive")
   let query : Advanced.Query := {body := .select {items := [.expression
     (.call ["right"] [.parameter (.anonymous 2), .parameter (.anonymous 1)])]}}
   let params ← expectOk "keyword lexical declarations" (Assurance.parseContractParameterTypes "INTEGER,TEXT")
-  match SelectContract.checkQuery .basicV31 [] params query with
+  match SelectContract.checkQuery .basicV32 [] params query with
   | .error (.invalid diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "parameter_notation")
         "function argument types must not permit anonymous occurrence reordering"
@@ -195,9 +193,9 @@ private def keywordSourceRegistry : List (String × List SelectContract.OutputCo
   let materialize := "keyword_functions:materialize:test/sqllogictest/string.slt:sqllogic-query-"
   let dolt := "keyword_functions:doltgresql:testing/generation/function_coverage/output/"
   let single := fun (id name : String) (nullable : Bool) =>
-    (id, [SelectContract.OutputColumn.mk name ⟨.text, nullable⟩])
+    (id, [({name := name, type := ⟨.text, nullable⟩} : SelectContract.OutputColumn)])
   [("keyword_functions:postgres:src/test/regress/sql/text.sql:statement-16",
-    [⟨"left", ⟨.text, false⟩⟩, ⟨"right", ⟨.text, false⟩⟩])] ++
+    [{name := "left", type := ⟨.text, false⟩}, {name := "right", type := ⟨.text, false⟩}])] ++
   ([1251, 1256, 1263, 1268, 1273, 1287, 1293] : List Nat).map
     (fun index => single (materialize ++ toString index) "left" ([1251, 1256].contains index)) ++
   ([1381, 1386, 1393, 1398, 1403, 1417, 1423] : List Nat).map
@@ -253,7 +251,7 @@ def keywordFunctionsConcreteContractTests : IO Nat := do
       match keywordSourceRegistry.lookup id with
       | none => throw (IO.userError s!"{id}: source has no registered complete-query expectation")
       | some expected =>
-          SQLean.Tests.assert ((← keywordCertificate query) == expected)
+          SQLean.Tests.assert (sameOutputTypes (← keywordCertificate query) expected)
             s!"{id}: exact registered output names, types and nullable flags"
       certified := certified + 1
     ids := id :: ids

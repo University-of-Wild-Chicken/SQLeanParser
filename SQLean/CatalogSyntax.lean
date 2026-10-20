@@ -1,4 +1,5 @@
 import SQLean.AdvancedSyntax
+import SQLean.CollationSyntax
 
 /-! Immutable catalog representation shared by executable checks and independent
 specifications. This module contains no validation or inference procedures. -/
@@ -19,6 +20,9 @@ structure CatalogTable where
   namedKeys : List (Name × List Name) := []
   schema : Option Name := none
   exposeUnqualified : Bool := true
+  /-- Omission is a caller assertion of the native type-default collation.
+  This sidecar does not change the shared DDL column syntax. -/
+  columnCollations : List (Name × CollationId) := []
   deriving Repr, BEq, Inhabited
 
 def CatalogTable.identity (table : CatalogTable) : RelationIdentity :=
@@ -35,6 +39,7 @@ def CatalogTable.matchesReference (table : CatalogTable) (name : Name)
 abbrev Catalog := List CatalogTable
 
 def Catalog.schemaAware (catalog : Catalog) : Bool :=
-  catalog.any (fun table => table.schema.isSome || !table.exposeUnqualified)
+  catalog.any (fun table =>
+    table.schema.isSome || !table.exposeUnqualified || !table.columnCollations.isEmpty)
 
 end SQLean.Advanced

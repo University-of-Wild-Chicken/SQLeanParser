@@ -2,7 +2,7 @@ import SQLean.Assurance
 import SQLean.SchemaJson
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -15,17 +15,21 @@ private def integerArm : Advanced.Query :=
 
 /-- Unknown input evidence is distinct from complete SELECT's TEXT output. -/
 private theorem nullArm_valid :
-    SetOperandValid .basicV31 [] [] [] nullArm [⟨"?column?", .unknown true⟩] [] := by
+    SetOperandValid .basicV32 [] [] [] nullArm
+      [{name := "?column?", input := .unknown true, origin := .unknownConstant, sortKey := some (none, [])}] [] := by
   apply SetOperandValid.basic (cteUses := []) (visible := []) (by decide) .nil
     (scope := .empty) (sourceUses := []) (selectUses := []) (whereUses := [])
     (orderUses := []) (limitUses := []) (offsetUses := [])
-    (output := [⟨"?column?", ⟨.text, true⟩⟩]) (pending := [⟨"?column?", .unknown true⟩])
+    (output := [{name := "?column?", type := ⟨.text, true⟩}])
+    (pending := [{name := "?column?", input := .unknown true, origin := .unknownConstant, sortKey := some (none, [])}])
   · exact .empty
-  · exact .expression .null (by simp) .nil
-  · exact .expression .null (by simp) .nil
+  · exact .expression .null (.atom .null .null) (by simp) .nil
+  · exact .expression .null (.atom .null .null) (by simp) .nil
   · decide
   · decide
+  · exact Or.inl rfl
   · exact .absent
+  · exact .nil
   · exact .nil
   · exact .absent
   · exact .absent
@@ -35,19 +39,21 @@ private theorem nullArm_valid :
   · rfl
 
 private theorem integerArm_valid :
-    SetOperandValid .basicV31 [] [] [] integerArm
-      [⟨"?column?", .known ⟨.int32, false⟩⟩] [] := by
+    SetOperandValid .basicV32 [] [] [] integerArm
+      [{name := "?column?", input := .known ⟨.int32, false⟩}] [] := by
   apply SetOperandValid.basic (cteUses := []) (visible := []) (by decide) .nil
     (scope := .empty) (sourceUses := []) (selectUses := []) (whereUses := [])
     (orderUses := []) (limitUses := []) (offsetUses := [])
-    (output := [⟨"?column?", ⟨.int32, false⟩⟩])
-    (pending := [⟨"?column?", .known ⟨.int32, false⟩⟩])
+    (output := [{name := "?column?", type := ⟨.int32, false⟩}])
+    (pending := [{name := "?column?", input := .known ⟨.int32, false⟩}])
   · exact .empty
-  · exact .expression (.int (by decide)) (by simp) .nil
-  · exact .expression (.int (by decide)) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
   · decide
   · decide
+  · exact Or.inl rfl
   · exact .absent
+  · exact .nil
   · exact .nil
   · exact .absent
   · exact .absent
@@ -58,18 +64,23 @@ private theorem integerArm_valid :
 
 private def nullUnion : Advanced.Query := {body := .set .union true nullArm integerArm}
 private theorem nullUnion_valid :
-    SelectValid .basicV31 [] [] nullUnion [⟨"?column?", ⟨.int32, true⟩⟩] := by
+    SelectValid .basicV32 [] [] nullUnion [{name := "?column?", type := ⟨.int32, true⟩}] := by
   apply SelectValid.certified (uses := [])
+  · decide
   · decide
   · decide
   · exact .set (cteUses := []) (visible := []) (by decide) .nil
       nullArm_valid integerArm_valid rfl rfl
-      (.cons (by decide) (by decide) (by decide) (by decide) .nil)
+      (.cons
+        (left := {name := "?column?", input := .unknown true, origin := .unknownConstant, sortKey := some (none, [])})
+        (right := {name := "?column?", input := .known ⟨.int32, false⟩})
+        (base := .int32) (derivation := .none)
+        (by decide) (by decide) (by decide) (by decide) rfl (Or.inl ⟨rfl, rfl⟩) .nil)
       (by decide) .nil .absent .absent
   · decide
 
-example : SelectValid .basicV31 [] [] (RenderContract.translateParameters nullUnion)
-    [⟨"?column?", ⟨.int32, true⟩⟩] :=
+example : SelectValid .basicV32 [] [] (RenderContract.translateParameters nullUnion)
+    [{name := "?column?", type := ⟨.int32, true⟩}] :=
   RenderContract.translateParameters_valid nullUnion_valid
 
 example : (Certificate.mk _ nullUnion_valid).outputCatalog = [] := rfl
@@ -95,12 +106,12 @@ private def setExpected (record : Lean.Json) : IO (List OutputColumn) := do
     let name ← setField column "name"
     let base ← setType (← setField column "type")
     let nullable ← expectOk name ((column.getObjVal? "nullable") >>= Lean.Json.getBool?)
-    pure ⟨name, ⟨base, nullable⟩⟩
+    pure {name := name, type := ⟨base, nullable⟩}
 
 private def setCertificate (query : Advanced.Query) (catalog : Advanced.Catalog := [])
     (params : ParameterEnv := []) : IO (List OutputColumn) := do
   let certificate ← expectOk "complete set query"
-    ((SelectContract.checkQuery .basicV31 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 catalog params query).mapError reprStr)
   have _catalog := certificate.catalog_unchanged
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "set identity" ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -114,29 +125,29 @@ private def setOutput (sql : String) : IO (List OutputColumn) := do
 
 def setOperationsContractTests : IO Nat := do
   let valid : List (String × List OutputColumn) := [
-    ("SELECT NULL AS x UNION SELECT 1", [⟨"x", ⟨.int32, true⟩⟩]),
-    ("SELECT '1' AS x INTERSECT SELECT 1", [⟨"x", ⟨.int32, false⟩⟩]),
-    ("SELECT 'bad' AS x UNION SELECT 1", [⟨"x", ⟨.int32, false⟩⟩]),
-    ("SELECT NULL AS x UNION ALL (SELECT NULL UNION SELECT 1)", [⟨"x", ⟨.int32, true⟩⟩]),
-    ("(SELECT NULL AS x LIMIT 1) UNION SELECT 1", [⟨"x", ⟨.int32, true⟩⟩]),
-    ("(SELECT NULL AS x ORDER BY 1+1) UNION SELECT 1", [⟨"x", ⟨.int32, true⟩⟩]),
+    ("SELECT NULL AS x UNION SELECT 1", [{name := "x", type := ⟨.int32, true⟩}]),
+    ("SELECT '1' AS x INTERSECT SELECT 1", [{name := "x", type := ⟨.int32, false⟩}]),
+    ("SELECT 'bad' AS x UNION SELECT 1", [{name := "x", type := ⟨.int32, false⟩}]),
+    ("SELECT NULL AS x UNION ALL (SELECT NULL UNION SELECT 1)", [{name := "x", type := ⟨.int32, true⟩}]),
+    ("(SELECT NULL AS x LIMIT 1) UNION SELECT 1", [{name := "x", type := ⟨.int32, true⟩}]),
+    ("(SELECT NULL AS x ORDER BY 1+1) UNION SELECT 1", [{name := "x", type := ⟨.int32, true⟩}]),
     ("(SELECT NULL AS x,NULL AS y ORDER BY 1) UNION SELECT NULL,1",
-      [⟨"x", ⟨.text, true⟩⟩, ⟨"y", ⟨.int32, true⟩⟩]),
+      [{name := "x", type := ⟨.text, true⟩}, {name := "y", type := ⟨.int32, true⟩}]),
     ("(SELECT NULL AS x,NULL AS x ORDER BY x) UNION ALL SELECT NULL,1",
-      [⟨"x", ⟨.text, true⟩⟩, ⟨"x", ⟨.int32, true⟩⟩]),
-    ("SELECT 1 AS x,1 AS x ORDER BY x", [⟨"x", ⟨.int32, false⟩⟩, ⟨"x", ⟨.int32, false⟩⟩]),
+      [{name := "x", type := ⟨.text, true⟩}, {name := "x", type := ⟨.int32, true⟩}]),
+    ("SELECT 1 AS x,1 AS x ORDER BY x", [{name := "x", type := ⟨.int32, false⟩}, {name := "x", type := ⟨.int32, false⟩}]),
     ("SELECT CAST(1 AS NUMERIC(8,2)) AS x UNION SELECT CAST(2 AS NUMERIC(8,2))",
-      [⟨"x", ⟨.numeric [8,2], false⟩⟩]),
-    ("SELECT CAST(1 AS NUMERIC(8,2)) AS x UNION SELECT NULL", [⟨"x", ⟨.numeric [], true⟩⟩]),
-    ("SELECT CAST('a' AS CHAR(3)) AS x UNION ALL SELECT CAST('b' AS TEXT)", [⟨"x", ⟨.char [], false⟩⟩]),
-    ("SELECT CAST('a' AS TEXT) AS x UNION ALL SELECT CAST('b' AS CHAR(3))", [⟨"x", ⟨.text, false⟩⟩]),
-    ("SELECT ARRAY[1] AS x UNION SELECT ARRAY[CAST(2 AS BIGINT)]", [⟨"x", ⟨.array .int64, false⟩⟩]),
-    ("WITH RECURSIVE c AS (SELECT 1 UNION SELECT 2) SELECT * FROM c", [⟨"?column?", ⟨.int32, false⟩⟩]),
-    ("WITH c AS (SELECT NULL UNION SELECT 1) SELECT * FROM c", [⟨"?column?", ⟨.int32, true⟩⟩]),
-    ("SELECT * FROM (SELECT 1 AS x FOR UPDATE) d UNION SELECT 2", [⟨"x", ⟨.int32, false⟩⟩]),
-    ("WITH c AS (SELECT 1 AS x UNION SELECT 2) SELECT * FROM c FOR UPDATE", [⟨"x", ⟨.int32, false⟩⟩])]
+      [{name := "x", type := ⟨.numeric [8,2], false⟩}]),
+    ("SELECT CAST(1 AS NUMERIC(8,2)) AS x UNION SELECT NULL", [{name := "x", type := ⟨.numeric [], true⟩}]),
+    ("SELECT CAST('a' AS CHAR(3)) AS x UNION ALL SELECT CAST('b' AS TEXT)", [{name := "x", type := ⟨.char [], false⟩}]),
+    ("SELECT CAST('a' AS TEXT) AS x UNION ALL SELECT CAST('b' AS CHAR(3))", [{name := "x", type := ⟨.text, false⟩}]),
+    ("SELECT ARRAY[1] AS x UNION SELECT ARRAY[CAST(2 AS BIGINT)]", [{name := "x", type := ⟨.array .int64, false⟩}]),
+    ("WITH RECURSIVE c AS (SELECT 1 UNION SELECT 2) SELECT * FROM c", [{name := "?column?", type := ⟨.int32, false⟩}]),
+    ("WITH c AS (SELECT NULL UNION SELECT 1) SELECT * FROM c", [{name := "?column?", type := ⟨.int32, true⟩}]),
+    ("SELECT * FROM (SELECT 1 AS x FOR UPDATE) d UNION SELECT 2", [{name := "x", type := ⟨.int32, false⟩}]),
+    ("WITH c AS (SELECT 1 AS x UNION SELECT 2) SELECT * FROM c FOR UPDATE", [{name := "x", type := ⟨.int32, false⟩}])]
   for (sql, output) in valid do
-    SQLean.Tests.assert ((← setOutput sql) == output) s!"set exact metadata {sql}"
+    SQLean.Tests.assert (sameOutputTypes (← setOutput sql) output) s!"set exact metadata {sql}"
   let invalid := [
     "SELECT NULL UNION SELECT NULL UNION SELECT 1",
     "(SELECT NULL AS x ORDER BY 1) UNION SELECT 1",
@@ -158,7 +169,7 @@ def setOperationsContractTests : IO Nat := do
     "(SELECT 1 UNION SELECT 2) FOR UPDATE"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | result => throw (IO.userError s!"set Invalid expected {sql}: {reprStr (result.map (fun _ => ()))}")
   let unsupported := [
@@ -168,7 +179,7 @@ def setOperationsContractTests : IO Nat := do
     "SELECT (SELECT 1) UNION SELECT 2"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | result => throw (IO.userError s!"set Unsupported expected {sql}: {reprStr (result.map (fun _ => ()))}")
   let mut count := valid.length + invalid.length + unsupported.length
@@ -177,9 +188,9 @@ def setOperationsContractTests : IO Nat := do
       let sql := s!"SELECT NULL::{type} AS x {op} SELECT NULL::{type}"
       let query ← expectOk sql (Advanced.parseQuery sql)
       if op == "UNION ALL" then
-        SQLean.Tests.assert ((← setCertificate query) == [⟨"x", ⟨← setType type, true⟩⟩]) sql
+        SQLean.Tests.assert (sameOutputTypes (← setCertificate query) [{name := "x", type := ⟨← setType type, true⟩}]) sql
       else
-        match SelectContract.checkQuery .basicV31 [] [] query with
+        match SelectContract.checkQuery .basicV32 [] [] query with
         | .error (.invalid _) => pure ()
         | result => throw (IO.userError s!"analysis-time element equality {sql}: {reprStr (result.map (fun _ => ()))}")
       count := count + 1
@@ -203,7 +214,7 @@ def setOperationsContractTests : IO Nat := do
       let sql := s!"SELECT {value} AS x,{value} AS x ORDER BY {ordering}"
       for statement in [sql, s!"({sql}) UNION ALL SELECT NULL,NULL"] do
         let query ← expectOk statement (Advanced.parseQuery statement)
-        match SelectContract.checkQuery .basicV31 [] [] query with
+        match SelectContract.checkQuery .basicV32 [] [] query with
         | .error (.invalid diagnostic) =>
           SQLean.Tests.assert (diagnostic.code == "ambiguous_output") "sequential unknown target resolution"
         | result => throw (IO.userError s!"sequential sort ambiguity {statement}: {reprStr (result.map (fun _ => ()))}")
@@ -227,7 +238,7 @@ def setOperationsCorpusTests : IO Nat := do
       (← setField record "catalogFile") == "fixtures/set_operations/schema.json") id
     let params ← expectOk id (Assurance.parseContractParameterTypes (← setField record "parameter_types"))
     let query ← expectOk id (Advanced.parseQuery sql)
-    SQLean.Tests.assert ((← setCertificate query catalog params) == (← setExpected record))
+    SQLean.Tests.assert (sameOutputTypes (← setCertificate query catalog params) (← setExpected record))
       s!"{id}: exact set type, modifier, label and nullability"
     ids := id :: ids
     sqls := sql :: sqls
@@ -238,68 +249,68 @@ def setOperationsCorpusTests : IO Nat := do
   pure records.size
 
 private def setSourceRegistry : List (String × String × List OutputColumn) := [
-  ("union", "union:postgres:src/test/regress/sql/subselect.sql:statement-6", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-0", [⟨"two", ⟨.int32, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-1", [⟨"one", ⟨.int32, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-2", [⟨"two", ⟨.int32, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-3", [⟨"two", ⟨.int32, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-4", [⟨"three", ⟨.int32, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-5", [⟨"two", ⟨.int32, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-6", [⟨"three", ⟨.int32, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-7", [⟨"two", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-8", [⟨"two", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-9", [⟨"two", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-10", [⟨"one", ⟨.doublePrecision, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-11", [⟨"two", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-12", [⟨"two", ⟨.doublePrecision, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-13", [⟨"three", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-14", [⟨"two", ⟨.doublePrecision, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-15", [⟨"three", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-16", [⟨"two", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-167", [⟨"t", ⟨.int32, false⟩⟩, ⟨"x", ⟨.int32, false⟩⟩]),
-  ("union", "union:postgres:src/test/regress/sql/with.sql:statement-155", [⟨"x", ⟨.int32, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-5", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-11", [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.text, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-17", [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.text, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-24", [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.text, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-33", [⟨"?column?", ⟨.text, true⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-77", [⟨"?column?", ⟨.text, true⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-84", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-89", [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.text, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-103", [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.text, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-109", [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.text, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_union_by_name.test:sqllogic-query-147", [⟨"c", ⟨.int32, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-37", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-43", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-48", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-6", [⟨"?column?", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-11", [⟨"?column?", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-18", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-23", [⟨"?column?", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-28", [⟨"?column?", ⟨.numeric [], false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_union_order.test:sqllogic-query-5", [⟨"?column?", ⟨.int32, true⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/test_union_binding.test:sqllogic-query-281", [⟨"a", ⟨.timestamp [], true⟩⟩, ⟨"b", ⟨.timestamp [], true⟩⟩, ⟨"id", ⟨.int32, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/union_all_projection_pushdown.test:sqllogic-query-70", [⟨"i", ⟨.text, false⟩⟩]),
-  ("union", "union:duckdb:test/sql/setops/union_aggregate.test:sqllogic-query-62", [⟨"i", ⟨.int32, false⟩⟩]),
-  ("union", "union:sqlite:test/with2.test:tcl-16531-statement-0", [⟨"x", ⟨.int32, false⟩⟩, ⟨"z", ⟨.int32, false⟩⟩]),
-  ("union", "union:sqlite:test/join5.test:tcl-5324-statement-0", [⟨"fruit", ⟨.text, false⟩⟩, ⟨"fruit", ⟨.text, false⟩⟩, ⟨"isyellow", ⟨.int32, true⟩⟩]),
-  ("union", "union:sqlite:test/with3.test:tcl-1159-statement-0", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("union", "union:sqlite:test/select4.test:tcl-14031-statement-0", [⟨"x", ⟨.int32, false⟩⟩, ⟨"y", ⟨.int32, false⟩⟩]),
-  ("union", "union:sqlite:test/with1.test:tcl-24290-statement-0", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("union", "union:sqlite:test/with1.test:tcl-24490-statement-0", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("union", "union:sqlite:test/with1.test:tcl-24690-statement-0", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("intersect", "intersect:postgres:src/test/regress/sql/union.sql:statement-35", [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("intersect", "intersect:postgres:src/test/regress/sql/union.sql:statement-36", [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("intersect", "intersect:duckdb:test/sql/setops/test_setops.test:sqllogic-query-42", [⟨"?column?", ⟨.text, true⟩⟩]),
-  ("intersect", "intersect:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-22", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("intersect", "intersect:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-27", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("intersect", "intersect:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-32", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("except", "except:postgres:src/test/regress/sql/union.sql:statement-37", [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("except", "except:postgres:src/test/regress/sql/union.sql:statement-38", [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("except", "except:duckdb:test/sql/setops/test_setops.test:sqllogic-query-38", [⟨"?column?", ⟨.text, true⟩⟩]),
-  ("except", "except:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-6", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("except", "except:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-11", [⟨"?column?", ⟨.int32, false⟩⟩]),
-  ("except", "except:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-17", [⟨"?column?", ⟨.int32, false⟩⟩])]
+  ("union", "union:postgres:src/test/regress/sql/subselect.sql:statement-6", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-0", [{name := "two", type := ⟨.int32, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-1", [{name := "one", type := ⟨.int32, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-2", [{name := "two", type := ⟨.int32, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-3", [{name := "two", type := ⟨.int32, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-4", [{name := "three", type := ⟨.int32, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-5", [{name := "two", type := ⟨.int32, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-6", [{name := "three", type := ⟨.int32, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-7", [{name := "two", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-8", [{name := "two", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-9", [{name := "two", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-10", [{name := "one", type := ⟨.doublePrecision, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-11", [{name := "two", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-12", [{name := "two", type := ⟨.doublePrecision, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-13", [{name := "three", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-14", [{name := "two", type := ⟨.doublePrecision, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-15", [{name := "three", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-16", [{name := "two", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/union.sql:statement-167", [{name := "t", type := ⟨.int32, false⟩}, {name := "x", type := ⟨.int32, false⟩}]),
+  ("union", "union:postgres:src/test/regress/sql/with.sql:statement-155", [{name := "x", type := ⟨.int32, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-5", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-11", [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.text, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-17", [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.text, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-24", [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.text, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-33", [{name := "?column?", type := ⟨.text, true⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-77", [{name := "?column?", type := ⟨.text, true⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-84", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-89", [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.text, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-103", [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.text, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_setops.test:sqllogic-query-109", [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.text, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_union_by_name.test:sqllogic-query-147", [{name := "c", type := ⟨.int32, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-37", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-43", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-48", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-6", [{name := "?column?", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-11", [{name := "?column?", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-18", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-23", [{name := "?column?", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_union_type_cast.test:sqllogic-query-28", [{name := "?column?", type := ⟨.numeric [], false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_union_order.test:sqllogic-query-5", [{name := "?column?", type := ⟨.int32, true⟩}]),
+  ("union", "union:duckdb:test/sql/setops/test_union_binding.test:sqllogic-query-281", [{name := "a", type := ⟨.timestamp [], true⟩}, {name := "b", type := ⟨.timestamp [], true⟩}, {name := "id", type := ⟨.int32, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/union_all_projection_pushdown.test:sqllogic-query-70", [{name := "i", type := ⟨.text, false⟩}]),
+  ("union", "union:duckdb:test/sql/setops/union_aggregate.test:sqllogic-query-62", [{name := "i", type := ⟨.int32, false⟩}]),
+  ("union", "union:sqlite:test/with2.test:tcl-16531-statement-0", [{name := "x", type := ⟨.int32, false⟩}, {name := "z", type := ⟨.int32, false⟩}]),
+  ("union", "union:sqlite:test/join5.test:tcl-5324-statement-0", [{name := "fruit", type := ⟨.text, false⟩}, {name := "fruit", type := ⟨.text, false⟩}, {name := "isyellow", type := ⟨.int32, true⟩}]),
+  ("union", "union:sqlite:test/with3.test:tcl-1159-statement-0", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("union", "union:sqlite:test/select4.test:tcl-14031-statement-0", [{name := "x", type := ⟨.int32, false⟩}, {name := "y", type := ⟨.int32, false⟩}]),
+  ("union", "union:sqlite:test/with1.test:tcl-24290-statement-0", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("union", "union:sqlite:test/with1.test:tcl-24490-statement-0", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("union", "union:sqlite:test/with1.test:tcl-24690-statement-0", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("intersect", "intersect:postgres:src/test/regress/sql/union.sql:statement-35", [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.int32, false⟩}]),
+  ("intersect", "intersect:postgres:src/test/regress/sql/union.sql:statement-36", [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.int32, false⟩}]),
+  ("intersect", "intersect:duckdb:test/sql/setops/test_setops.test:sqllogic-query-42", [{name := "?column?", type := ⟨.text, true⟩}]),
+  ("intersect", "intersect:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-22", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("intersect", "intersect:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-27", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("intersect", "intersect:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-32", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("except", "except:postgres:src/test/regress/sql/union.sql:statement-37", [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.int32, false⟩}]),
+  ("except", "except:postgres:src/test/regress/sql/union.sql:statement-38", [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.int32, false⟩}]),
+  ("except", "except:duckdb:test/sql/setops/test_setops.test:sqllogic-query-38", [{name := "?column?", type := ⟨.text, true⟩}]),
+  ("except", "except:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-6", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("except", "except:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-11", [{name := "?column?", type := ⟨.int32, false⟩}]),
+  ("except", "except:duckdb:test/sql/setops/setops_pushdown.test:sqllogic-query-17", [{name := "?column?", type := ⟨.int32, false⟩}])]
 
 def setOperationsConcreteContractTests : IO Nat := do
   let registryJson ← expectOk "set source registry" (Lean.Json.parse
@@ -337,7 +348,7 @@ def setOperationsConcreteContractTests : IO Nat := do
     | some (_, _, expected) =>
       SQLean.Tests.assert ((Advanced.queryParameters 1024 query).isEmpty)
         s!"{id}: no invented source parameter assumptions"
-      SQLean.Tests.assert ((← setCertificate query) == expected) s!"{id}: exact authentic output"
+      SQLean.Tests.assert (sameOutputTypes (← setCertificate query) expected) s!"{id}: exact authentic output"
       certified := certified + 1
     ids := id :: ids
     sqls := sql :: sqls

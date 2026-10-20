@@ -66,7 +66,6 @@ def boundaries():
         "SELECT * FROM (SELECT COUNT(*) AS n FROM items) d",
         "SELECT * FROM (SELECT id FROM items) d FOR UPDATE",
         "SELECT * FROM (SELECT id FROM items) d FOR UPDATE OF d",
-        "SELECT * FROM (SELECT id FROM items UNION SELECT id FROM labels) d",
     ]
     valid = [
         "SELECT * FROM (SELECT id, id FROM items) d",
@@ -78,7 +77,14 @@ def boundaries():
         for sql in queries:
             assert_report(["--assurance", "contract", "--schema", str(FIXTURES / "schema.json"), sql],
                           status, "contract")
-    return len(invalid) + len(unsupported) + len(valid)
+    # Set-operation contracts now apply inside derived sources. Both declared
+    # inputs expose a nonnullable INTEGER id, which retains no collation.
+    report = assert_report(
+        ["--assurance", "contract", "--schema", str(FIXTURES / "schema.json"),
+         "SELECT * FROM (SELECT id FROM items UNION SELECT id FROM labels) d"],
+        "valid", "contract", (("id", "int32", False),))
+    assert report.get("outputCollations") == [None], report
+    return len(invalid) + len(unsupported) + len(valid) + 1
 
 
 def reject_sqlite(case):

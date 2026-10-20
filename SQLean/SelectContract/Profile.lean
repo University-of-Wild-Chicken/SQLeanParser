@@ -10,12 +10,16 @@ src/backend/parser/parse_coerce.c. This finite signature inventory is not a
 formalization of PostgreSQL's general overload-resolution algorithm. -/
 namespace SQLean.SelectContract
 
-inductive Profile where
-  | basicV31
+structure Profile where
+  collations : CollationEnv := .builtin
   deriving Repr, BEq, DecidableEq, Inhabited
 
-def Profile.name : Profile → String
-  | .basicV31 => "sqlean-basic-select-v0.31"
+def Profile.basicV32 : Profile := {}
+
+def Profile.withCollations (profile : Profile) (collations : CollationEnv) : Profile :=
+  {profile with collations}
+
+def Profile.name (_profile : Profile) : String := "sqlean-basic-select-v0.32"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes
@@ -101,6 +105,25 @@ operator availability. This profile does not certify that later runtime gap. -/
 def ScalarType.arrayOperatorGap (type : ScalarType) : Bool :=
   type.isArray && !type.orderable
 
+/-- Native typcollation, used for a fresh constant or parameter. It is not an
+expression's collation: coercions and operators can retain another identity. -/
+def ScalarType.defaultCollation : ScalarType → Option CollationId
+  | .name => some .c
+  | .text | .varchar _ | .char _ => some .databaseDefault
+  | .array element => element.defaultCollation
+  | _ => none
+
+def ScalarType.collatable (type : ScalarType) : Bool :=
+  type.defaultCollation.isSome
+
+def ScalarType.collationResult (type : ScalarType)
+    (input : CollationDerivation) : CollationDerivation :=
+  match type.defaultCollation with
+  | none => .none
+  | some id => match input with
+    | .none => .implicit id
+    | other => other
+
 structure ExactType where
   base : ScalarType
   nullable : Bool := false
@@ -120,6 +143,7 @@ abbrev ParameterEnv := List ParameterBinding
 structure OutputColumn where
   name : Name
   type : ExactType
+  collation : Option CollationId := type.base.defaultCollation
   deriving Repr, BEq, DecidableEq, Inhabited
 
 /-- CTEs carry certified row metadata, never invented physical catalog entries. -/

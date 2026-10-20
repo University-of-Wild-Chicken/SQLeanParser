@@ -25,54 +25,55 @@ private def params : SelectContract.ParameterEnv :=
 
 private def leftSource : Advanced.From := .table "left_table" (some "l")
 private def rightSource : Advanced.From := .table "right_table" (some "r")
-private def leftScope : Scope := .ofTable leftTable.identity (some "l") [⟨"id", ⟨.int32, false⟩⟩]
-private def rightScope : Scope := .ofTable rightTable.identity (some "r") [⟨"id", ⟨.int32, false⟩⟩]
+private def leftScope : Scope := .ofTable leftTable.identity (some "l") [{name := "id", type := ⟨.int32, false⟩}]
+private def rightScope : Scope := .ofTable rightTable.identity (some "r") [{name := "id", type := ⟨.int32, false⟩}]
 private def nullableRight : Scope := nullableScope rightScope
 private def anon (index : Nat) : Advanced.Expr := .parameter (.anonymous index)
 
 private theorem left_valid :
-    SourceValid .basicV31 catalog params [] (some leftSource) leftScope [] :=
+    SourceValid .basicV32 catalog params [] (some leftSource) leftScope [] :=
   .table (table := leftTable) (Or.inr rfl) (by simp [catalog]) rfl (by simp) (.cons rfl .nil)
 
 private theorem right_valid :
-    SourceValid .basicV31 catalog params [] (some rightSource) rightScope [] :=
+    SourceValid .basicV32 catalog params [] (some rightSource) rightScope [] :=
   .table (table := rightTable) (Or.inr rfl) (by simp [catalog]) rfl (by simp) (.cons rfl .nil)
 
 private theorem on_valid (scope : Scope) :
-    PredicateValid params scope (some (anon 2)) [.anonymous 2] :=
+    PredicateValid .basicV32 params scope (some (anon 2)) [.anonymous 2] :=
   .present (.parameter (binding := ⟨2, ⟨.bool, []⟩, false⟩)
-    (by simp [params]) rfl rfl) rfl
+    (by simp [params]) rfl rfl)
+    (.parameter (binding := ⟨2, ⟨.bool, []⟩, false⟩) (by simp [params]) rfl rfl) rfl
 
 private def joined (kind : JoinKind) : Advanced.From :=
   .join kind leftSource rightSource (.on (anon 2))
 
 private theorem joined_valid (kind : JoinKind) (ordinary : kind ≠ .cross) :
-    SourceValid .basicV31 catalog params [] (some (joined kind))
+    SourceValid .basicV32 catalog params [] (some (joined kind))
       (joinScope kind leftScope rightScope) [.anonymous 2] := by
   exact .on left_valid right_valid (by decide) ordinary (on_valid _)
 
-example : SourceValid .basicV31 catalog params []
+example : SourceValid .basicV32 catalog params []
     (some (.join .cross leftSource rightSource .none))
     (leftScope.append rightScope) [] :=
   .cross left_valid right_valid (by decide)
 
-example : SourceValid .basicV31 catalog params [] (some (joined .inner))
+example : SourceValid .basicV32 catalog params [] (some (joined .inner))
     (leftScope.append rightScope) [.anonymous 2] :=
   joined_valid .inner (by decide)
 
-example : SourceValid .basicV31 catalog params [] (some (joined .left))
+example : SourceValid .basicV32 catalog params [] (some (joined .left))
     (leftScope.append nullableRight) [.anonymous 2] :=
   joined_valid .left (by decide)
 
-example : SourceValid .basicV31 catalog params [] (some (joined .right))
+example : SourceValid .basicV32 catalog params [] (some (joined .right))
     ((nullableScope leftScope).append rightScope) [.anonymous 2] :=
   joined_valid .right (by decide)
 
-example : SourceValid .basicV31 catalog params [] (some (joined .full))
+example : SourceValid .basicV32 catalog params [] (some (joined .full))
     ((nullableScope leftScope).append nullableRight) [.anonymous 2] :=
   joined_valid .full (by decide)
 
-example : SourceValid .basicV31 catalog params [] (some (translateSource (joined .left)))
+example : SourceValid .basicV32 catalog params [] (some (translateSource (joined .left)))
     (leftScope.append nullableRight) [.numbered 2] :=
   source_valid_translated (joined_valid .left (by decide))
 
@@ -94,11 +95,11 @@ private def query : Advanced.Query := {
   locking := [⟨.update, ["l"], .nowait⟩] }
 
 private def output : List OutputColumn :=
-  [⟨"selected", ⟨.int32, false⟩⟩, ⟨"id", ⟨.int32, false⟩⟩, ⟨"id", ⟨.int32, true⟩⟩]
+  [{name := "selected", type := ⟨.int32, false⟩}, {name := "id", type := ⟨.int32, false⟩}, {name := "id", type := ⟨.int32, true⟩}]
 
 /-- A nonvacuous full-query derivation, independent of checker acceptance. -/
 private theorem query_derivation :
-    QueryValid .basicV31 catalog params [] query output [.anonymous 1, .anonymous 2] := by
+    QueryValid .basicV32 catalog params [] query output [.anonymous 1, .anonymous 2] := by
   unfold query
   apply QueryValid.basic (cteUses := []) (visible := []) (by decide) .nil (scope := leftScope.append nullableRight)
     (sourceUses := [.anonymous 2]) (selectUses := [.anonymous 1])
@@ -106,11 +107,19 @@ private theorem query_derivation :
   · exact joined_valid .left (by decide)
   · exact .expression (expr := anon 1) (alias := some "selected")
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
+      (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
+      (by simp) (.all (qualifier := none) (selected := (leftScope.append nullableRight).output)
+        rfl (by decide) .nil)
+  · exact .expression (expr := anon 1) (alias := some "selected")
+      (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
+      (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
       (by simp) (.all (qualifier := none) (selected := (leftScope.append nullableRight).output)
         rfl (by decide) .nil)
   · decide
   · exact Or.inl rfl
+  · exact Or.inl rfl
   · exact .absent
+  · exact .nil
   · exact .nil
   · exact .absent
   · exact .absent
@@ -119,10 +128,10 @@ private theorem query_derivation :
   · rfl
   · rfl
 
-private theorem query_valid : SelectValid .basicV31 catalog params query output :=
-  .certified (by decide) (by decide) query_derivation (Or.inr rfl)
+private theorem query_valid : SelectValid .basicV32 catalog params query output :=
+  .certified (by decide) (by decide) (by decide) query_derivation (Or.inr rfl)
 
-example : SelectValid .basicV31 catalog params (translateParameters query) output :=
+example : SelectValid .basicV32 catalog params (translateParameters query) output :=
   translateParameters_valid query_valid
 
 /-- Reversing SELECT/FROM occurrence order cannot satisfy the source notation

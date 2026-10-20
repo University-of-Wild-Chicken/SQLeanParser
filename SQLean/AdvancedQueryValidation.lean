@@ -190,7 +190,7 @@ private def expressionName : Expr → Name
   | .call name _ | .namedCall name _ => name.getLastD "?column?"
   | .caseExpr .. => "case" | .coalesce .. => "coalesce" | .nullIf .. => "nullif"
   | .greatest .. => "greatest" | .least .. => "least"
-  | .cast arg _ | .filteredAggregate arg _ => expressionName arg
+  | .cast arg _ | .collate arg _ | .filteredAggregate arg _ => expressionName arg
   | _ => "?column?"
 
 private structure TypedOutput where
@@ -211,7 +211,7 @@ private def hasAggregate : Nat → Expr → Bool
   | fuel + 1, expr => match expr with
     | .countAll | .aggregate .. | .filteredAggregate .. => true
     | .distinctFrom left right _ | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => hasAggregate fuel left || hasAggregate fuel right
-    | .extract _ arg | .unary _ arg | .isNull arg _ | .cast arg _ => hasAggregate fuel arg
+    | .extract _ arg | .unary _ arg | .isNull arg _ | .cast arg _ | .collate arg _ => hasAggregate fuel arg
     | .subscript base indices => hasAggregate fuel base || (indices.flatMap Subscript.expressions).any (hasAggregate fuel)
     | .array args | .row args | .substring _ args | .call _ args | .coalesce args | .greatest args | .least args => args.any (hasAggregate fuel)
     | .namedCall _ args => args.any (fun arg => hasAggregate fuel arg.expression)
@@ -255,6 +255,7 @@ private def canonical : Nat → List Scope → Expr → Expr
     | .isNull arg neg => .isNull (canonical fuel scopes arg) neg
     | .extract field arg => .extract field (canonical fuel scopes arg)
     | .cast arg target => .cast (canonical fuel scopes arg) target
+    | .collate arg name => .collate (canonical fuel scopes arg) name
     | .pattern arg pattern insensitive => .pattern (canonical fuel scopes arg) (canonical fuel scopes pattern) insensitive
     | .aggregate fn arg distinct => .aggregate fn (canonical fuel scopes arg) distinct
     | .filteredAggregate arg pred => .filteredAggregate (canonical fuel scopes arg) (canonical fuel scopes pred)
@@ -348,7 +349,7 @@ mutual
     | 0, _ => []
     | fuel + 1, expr => match expr with
       | .distinctFrom l r _ | .overlap l r | .containment l r _ | .jsonExistence _ l r | .jsonAccess _ l r | .regex l r _ _ | .concat l r | .quantifiedComparison _ _ l r | .binary _ l r | .pattern l r _ | .filteredAggregate l r | .nullIf l r => exprTables fuel l ++ exprTables fuel r
-      | .extract _ e | .unary _ e | .isNull e _ | .cast e _ | .aggregate _ e _ => exprTables fuel e
+      | .extract _ e | .unary _ e | .isNull e _ | .cast e _ | .collate e _ | .aggregate _ e _ => exprTables fuel e
       | .subscript base indices => exprTables fuel base ++ (indices.flatMap Subscript.expressions).flatMap (exprTables fuel)
       | .namedCall _ args => args.flatMap (fun arg => exprTables fuel arg.expression)
       | .array args | .row args | .substring _ args | .call _ args | .coalesce args | .greatest args | .least args => args.flatMap (exprTables fuel)
@@ -382,7 +383,7 @@ private def simpleRecursiveExpr : Nat → Expr → Bool
   | fuel + 1, expr => match expr with
     | .exists _ | .scalarQuery _ | .inQuery .. | .countAll | .aggregate .. | .filteredAggregate .. => false
     | .distinctFrom left right _ | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => simpleRecursiveExpr fuel left && simpleRecursiveExpr fuel right
-    | .extract _ e | .unary _ e | .cast e _ | .isNull e _ => simpleRecursiveExpr fuel e
+    | .extract _ e | .unary _ e | .cast e _ | .collate e _ | .isNull e _ => simpleRecursiveExpr fuel e
     | .subscript base indices => simpleRecursiveExpr fuel base && (indices.flatMap Subscript.expressions).all (simpleRecursiveExpr fuel)
     | .namedCall _ args => args.all (fun arg => simpleRecursiveExpr fuel arg.expression)
     | .array args | .row args | .substring _ args | .call _ args | .coalesce args | .greatest args | .least args => args.all (simpleRecursiveExpr fuel)
@@ -452,7 +453,7 @@ mutual
       | _ =>
         let children : List Expr := match expr with
           | .distinctFrom a b _ | .overlap a b | .containment a b _ | .jsonExistence _ a b | .jsonAccess _ a b | .regex a b _ _ | .concat a b | .quantifiedComparison _ _ a b | .binary _ a b | .pattern a b _ | .nullIf a b | .filteredAggregate a b => [a, b]
-          | .extract _ a | .unary _ a | .cast a _ | .isNull a _ | .aggregate _ a _ => [a]
+          | .extract _ a | .unary _ a | .cast a _ | .collate a _ | .isNull a _ | .aggregate _ a _ => [a]
           | .subscript base indices => base :: indices.flatMap Subscript.expressions
           | .namedCall _ args => args.map CallArgument.expression
           | .array args | .row args | .substring _ args | .call _ args | .coalesce args | .greatest args | .least args => args
@@ -577,6 +578,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
           let nullable := arg.isNullable ||
             (arg.base == .opaque .jsonb && (type.numeric || type == .bool))
           pure (some (if nullable then type.asNullable else type))
+      | .collate .. =>
+        invalid "COLLATE requires an explicit collation environment and provenance; use the independent contract tier"
       | .subscript .. =>
         invalid "array subscripts require exact element types and bound coercions; use the independent contract tier"
       | .distinctFrom .. =>
@@ -762,7 +765,7 @@ an explicit validation error. Parameter declarations are supplied by the caller.
       | .distinctFrom left right _ | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right =>
         checkGrouped fuel schema params scopes groups left
         checkGrouped fuel schema params scopes groups right
-      | .extract _ arg | .unary _ arg | .isNull arg _ | .cast arg _ => checkGrouped fuel schema params scopes groups arg
+      | .extract _ arg | .unary _ arg | .isNull arg _ | .cast arg _ | .collate arg _ => checkGrouped fuel schema params scopes groups arg
       | .subscript base indices =>
         checkGrouped fuel schema params scopes groups base
         (indices.flatMap Subscript.expressions).forM (checkGrouped fuel schema params scopes groups)
@@ -931,7 +934,7 @@ mutual
       | .parameter parameter => [parameter]
       | .distinctFrom left right _ | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .filteredAggregate left right | .nullIf left right =>
         expressionParameters fuel left ++ expressionParameters fuel right
-      | .extract _ arg | .unary _ arg | .cast arg _ | .isNull arg _ | .aggregate _ arg _ => expressionParameters fuel arg
+      | .extract _ arg | .unary _ arg | .cast arg _ | .collate arg _ | .isNull arg _ | .aggregate _ arg _ => expressionParameters fuel arg
       | .subscript base indices => expressionParameters fuel base ++ (indices.flatMap Subscript.expressions).flatMap (expressionParameters fuel)
       | .namedCall _ args => args.flatMap (fun arg => expressionParameters fuel arg.expression)
       | .array args | .row args | .substring _ args | .call _ args | .coalesce args | .greatest args | .least args => args.flatMap (expressionParameters fuel)

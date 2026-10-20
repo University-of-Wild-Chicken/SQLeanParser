@@ -103,6 +103,34 @@ class SqlParameterObserverTests(unittest.TestCase):
         numbered = "SELECT make_interval(secs=>$2, days:=$1), '{}'::jsonb ? 'x'"
         self.assertEqual([t.value for t in parameter_spans(numbered)], [("numbered", 2), ("numbered", 1)])
 
+    def test_collation_components_are_names_not_binding_roles(self):
+        cases = [
+            'SELECT «?» COLLATE "C" ? «?»',
+            'SELECT «?» COLLATE between ? «?»',
+            'SELECT «?» COLLATE schema.select ? «?»',
+            'SELECT «?» COLLATE "a.b"."?""$1" ? «?»',
+            'SELECT «?» COLLATE /* ? */ between ? /* ? */ «?»',
+            'SELECT «?» COLLATE "C" COLLATE between ? «?»',
+            'SELECT t.collate ? «?», «?»',
+            'SELECT (ARRAY[«?»] COLLATE "C")[«?»]',
+            'SELECT SUBSTRING(«?» COLLATE "C" FOR «?» FROM «?»)',
+            'WITH c AS (SELECT «?» COLLATE "C") SELECT «?» COLLATE "C" ? «?»',
+        ]
+        for authored in cases:
+            source, spans, translated = annotated(authored)
+            with self.subTest(source=source):
+                self.assertEqual([(t.start, t.end) for t in parameter_spans(source)], spans)
+                self.assertEqual(question_parameters(source), translated)
+                self.assertEqual(postgres_parameters(source), translated)
+        keywords = (ROOT / "fixtures/postgresql_grammar/source/src/include/parser/kwlist.h").read_text()
+        heads = re.findall(r'PG_KEYWORD\("([^"]+)",\s*\w+,\s*(?:UNRESERVED_KEYWORD|COL_NAME_KEYWORD),', keywords)
+        attributes = re.findall(r'PG_KEYWORD\("([^"]+)",', keywords)
+        for name in heads + ["s." + name for name in attributes]:
+            source = f"SELECT ? COLLATE {name} ? ?"
+            with self.subTest(name=name):
+                self.assertEqual([(t.start, t.end) for t in parameter_spans(source)],
+                                 [(7, 8), (len(source) - 1, len(source))])
+
     def test_pinned_parameter_name_keyword_categories(self):
         source = (ROOT / "fixtures/postgresql_grammar/source/src/include/parser/kwlist.h").read_text()
         names = re.findall(r'PG_KEYWORD\("([^"]+)",\s*\w+,\s*(?:UNRESERVED_KEYWORD|TYPE_FUNC_NAME_KEYWORD),', source)

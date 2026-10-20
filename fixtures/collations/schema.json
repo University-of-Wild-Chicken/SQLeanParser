@@ -1,0 +1,71 @@
+{
+  "tables": [
+    {
+      "name": "words",
+      "schema": "public",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "value",
+          "type": "text",
+          "nullable": false
+        }
+      ],
+      "columnCollations": [
+        {
+          "column": "value",
+          "collation": "C"
+        }
+      ]
+    },
+    {
+      "name": "labels",
+      "schema": "public",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "value",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    }
+  ],
+  "collations": {
+    "encoding": "UTF8",
+    "entries": [
+      {
+        "id": "default",
+        "schema": "pg_catalog",
+        "name": "default",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "C",
+        "schema": "pg_catalog",
+        "name": "C",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "POSIX",
+        "schema": "pg_catalog",
+        "name": "POSIX",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:c_order",
+        "schema": "fixture",
+        "name": "c_order",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      }
+    ]
+  }
+}

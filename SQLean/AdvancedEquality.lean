@@ -51,6 +51,9 @@ mutual
     case cast.cast a0 a1 b0 b1 =>
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.cast.injEq])
+    case collate.collate a0 a1 b0 b1 =>
+      letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.collate.injEq])
     case call.call a0 a1 b0 b1 =>
       letI : Decidable (a1 = b1) := exactListExprDecEq a1 b1
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.call.injEq])

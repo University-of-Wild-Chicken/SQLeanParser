@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -30,7 +30,7 @@ private def contextCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) (catalog : Advanced.Catalog := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "context-value SELECT"
-    ((SelectContract.checkQuery .basicV31 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 catalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "context identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -178,7 +178,7 @@ def contextValuesContractTests : IO Nat := do
   for (expr, label, base, nullable) in forms do
     for projected in [expr, s!"CAST({expr} AS {base.dataType.toSql})",
         s!"CASE WHEN TRUE THEN {expr} ELSE {expr} END"] do
-      SQLean.Tests.assert ((← contextOutput s!"SELECT {projected}") == [⟨label, ⟨base, nullable⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes (← contextOutput s!"SELECT {projected}") [{name := label, type := ⟨base, nullable⟩}])
         s!"context exact native label/type/nullability: {projected}"
       count := count + 1
   let cases : List (String × SelectContract.ScalarType × Bool) := [
@@ -207,7 +207,7 @@ def contextValuesContractTests : IO Nat := do
     ("ARRAY[CURRENT_USER] || ARRAY['fallback'::TEXT]", .array .name, false),
     ("ARRAY['fallback'::TEXT] || ARRAY[CURRENT_USER]", .array .text, false)]
   for (expr, base, nullable) in cases do
-    SQLean.Tests.assert ((← contextOutput s!"SELECT {expr} AS v") == [⟨"v", ⟨base, nullable⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← contextOutput s!"SELECT {expr} AS v") [{name := "v", type := ⟨base, nullable⟩}])
       s!"NAME composition exact result: {expr}"
     count := count + 1
   for left in ["CURRENT_USER", "CURRENT_SCHEMA", "CAST(NULL AS NAME)"] do
@@ -215,8 +215,7 @@ def contextValuesContractTests : IO Nat := do
         "CAST('a' AS VARCHAR(3))", "NULL"] do
       for op in ["=", "<>", "<", "<=", ">", ">=", "LIKE", "NOT LIKE", "ILIKE", "NOT ILIKE", "~", "~*", "!~", "!~*"] do
         let expected := left != "CURRENT_USER" || right == "NULL"
-        SQLean.Tests.assert ((← contextOutput s!"SELECT {left} {op} {right} AS v") ==
-          [⟨"v", ⟨.bool, expected⟩⟩]) s!"NAME comparison/pattern composition: {left} {op} {right}"
+        SQLean.Tests.assert (sameOutputTypes (← contextOutput s!"SELECT {left} {op} {right} AS v") [{name := "v", type := ⟨.bool, expected⟩}]) s!"NAME comparison/pattern composition: {left} {op} {right}"
         count := count + 1
   for (expr, params, base, nullable) in [
       ("$1", "NAME", SelectContract.ScalarType.name, false),
@@ -229,7 +228,7 @@ def contextValuesContractTests : IO Nat := do
       ("ROW(CURRENT_USER, $2) = ROW($1, $2)", "NAME,INTEGER", .bool, true),
       ("CURRENT_USER = ANY($1)", "NAME[]", .bool, true),
       ("CURRENT_USER = ANY($1)", "TEXT[]", .bool, true)] do
-    SQLean.Tests.assert ((← contextOutput s!"SELECT {expr} AS v" params) == [⟨"v", ⟨base, nullable⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← contextOutput s!"SELECT {expr} AS v" params) [{name := "v", type := ⟨base, nullable⟩}])
       s!"NAME exact binding and lexical parameter transport: {expr}"
     count := count + 1
   for sql in ["SELECT CURRENT_USER + 1", "SELECT current_schemas(1)",
@@ -238,20 +237,20 @@ def contextValuesContractTests : IO Nat := do
       "SELECT ARRAY[CURRENT_USER] = ARRAY['x'::TEXT]",
       "SELECT ARRAY[CURRENT_USER] @> ARRAY['x'::TEXT]"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | other => throw (IO.userError s!"expected Invalid for concrete incompatible NAME query {sql}: {reprStr (other.map (fun _ => ())) }")
     count := count + 1
   for sql in ["SELECT application.current_schema()", "SELECT current_setting('role')",
       "SELECT version()", "SELECT CURRENT_USER = (SELECT CURRENT_USER)"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"unmodeled context dependency must remain Unsupported: {sql}")
     count := count + 1
   for modifiers in [[1], [0], [1, 2]] do
     let query : Advanced.Query := {body := .select {items := [.expression (.cast .null ⟨.name, modifiers⟩)]}}
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "NAME never admits declaration modifiers")
     count := count + 1
@@ -260,11 +259,10 @@ def contextValuesContractTests : IO Nat := do
     {name := "ns", type := ⟨.array .name, []⟩}]}]
   let query ← expectOk "NAME source columns" (Advanced.parseQuery
     "SELECT n, ns, n = CURRENT_USER AS equal_user FROM names")
-  SQLean.Tests.assert ((← contextCertificate query [] catalog) ==
-    [⟨"n", ⟨.name, false⟩⟩, ⟨"ns", ⟨.array .name, true⟩⟩, ⟨"equal_user", ⟨.bool, false⟩⟩])
+  SQLean.Tests.assert (sameOutputTypes (← contextCertificate query [] catalog) [{name := "n", type := ⟨.name, false⟩}, {name := "ns", type := ⟨.array .name, true⟩}, {name := "equal_user", type := ⟨.bool, false⟩}])
     "exact NAME catalog columns remain distinct from TEXT"
   let bare : Advanced.Query := {body := .select {items := [.expression (.contextValue .currentUser)]}}
-  match SelectContract.checkQuery .basicV31 [] [] bare 0 with
+  match SelectContract.checkQuery .basicV32 [] [] bare 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "context resource exhaustion must remain Inconclusive")
   pure (count + 2)
@@ -306,19 +304,19 @@ Thirteen closed source queries obtain full certificates; the other thirty-seven
 retain rendering certificates without invented schemas/session-helper contracts. -/
 def contextValuesConcreteContractTests : IO Nat := do
   let registered : List (String × List SelectContract.OutputColumn) := [
-    ("context_values:postgres:src/test/regress/sql/expressions.sql:statement-12", [⟨"?column?", ⟨.bool, false⟩⟩]),
-    ("context_values:postgres:src/test/regress/sql/expressions.sql:statement-13", [⟨"current_schema", ⟨.name, true⟩⟩]),
-    ("context_values:postgres:src/test/regress/sql/guc.sql:statement-156", [⟨"?column?", ⟨.bool, false⟩⟩]),
-    ("context_values:postgres:src/test/regress/sql/privileges.sql:statement-150", [⟨"session_user", ⟨.name, false⟩⟩, ⟨"current_user", ⟨.name, false⟩⟩]),
-    ("context_values:postgres:src/test/regress/sql/temp.sql:statement-160", [⟨"is_temp_schema", ⟨.bool, true⟩⟩]),
-    ("context_values:materialize:test/sqllogictest/current_database.slt:sqllogic-query-12", [⟨"current_database", ⟨.name, false⟩⟩]),
-    ("context_values:materialize:test/sqllogictest/schemas.slt:sqllogic-query-41", [⟨"current_schema", ⟨.name, true⟩⟩]),
-    ("context_values:duckdb:test/sql/pg_catalog/system_functions.test:sqllogic-query-6", [⟨"current_user", ⟨.name, false⟩⟩]),
-    ("context_values:duckdb:test/sql/pg_catalog/system_functions.test:sqllogic-query-11", [⟨"current_catalog", ⟨.name, false⟩⟩]),
-    ("context_values:duckdb:test/sql/pg_catalog/system_functions.test:sqllogic-query-26", [⟨"user", ⟨.name, false⟩⟩]),
-    ("context_values:duckdb:test/sql/pg_catalog/system_functions.test:sqllogic-query-31", [⟨"session_user", ⟨.name, false⟩⟩]),
-    ("context_values:pgweb:pkg/client/client.go:go-string-15103", [⟨"current_user", ⟨.name, false⟩⟩, ⟨"current_database", ⟨.name, false⟩⟩]),
-    ("context_values:river:riverdriver/riverpgxv5/river_pgx_v5_driver.go:go-string-44649", [⟨"coalesce", ⟨.name, false⟩⟩])]
+    ("context_values:postgres:src/test/regress/sql/expressions.sql:statement-12", [{name := "?column?", type := ⟨.bool, false⟩}]),
+    ("context_values:postgres:src/test/regress/sql/expressions.sql:statement-13", [{name := "current_schema", type := ⟨.name, true⟩}]),
+    ("context_values:postgres:src/test/regress/sql/guc.sql:statement-156", [{name := "?column?", type := ⟨.bool, false⟩}]),
+    ("context_values:postgres:src/test/regress/sql/privileges.sql:statement-150", [{name := "session_user", type := ⟨.name, false⟩}, {name := "current_user", type := ⟨.name, false⟩}]),
+    ("context_values:postgres:src/test/regress/sql/temp.sql:statement-160", [{name := "is_temp_schema", type := ⟨.bool, true⟩}]),
+    ("context_values:materialize:test/sqllogictest/current_database.slt:sqllogic-query-12", [{name := "current_database", type := ⟨.name, false⟩}]),
+    ("context_values:materialize:test/sqllogictest/schemas.slt:sqllogic-query-41", [{name := "current_schema", type := ⟨.name, true⟩}]),
+    ("context_values:duckdb:test/sql/pg_catalog/system_functions.test:sqllogic-query-6", [{name := "current_user", type := ⟨.name, false⟩}]),
+    ("context_values:duckdb:test/sql/pg_catalog/system_functions.test:sqllogic-query-11", [{name := "current_catalog", type := ⟨.name, false⟩}]),
+    ("context_values:duckdb:test/sql/pg_catalog/system_functions.test:sqllogic-query-26", [{name := "user", type := ⟨.name, false⟩}]),
+    ("context_values:duckdb:test/sql/pg_catalog/system_functions.test:sqllogic-query-31", [{name := "session_user", type := ⟨.name, false⟩}]),
+    ("context_values:pgweb:pkg/client/client.go:go-string-15103", [{name := "current_user", type := ⟨.name, false⟩}, {name := "current_database", type := ⟨.name, false⟩}]),
+    ("context_values:river:riverdriver/riverpgxv5/river_pgx_v5_driver.go:go-string-44649", [{name := "coalesce", type := ⟨.name, false⟩}])]
   let expectedIds : List String := [
     "context_values:postgres:contrib/pg_stat_statements/sql/user_activity.sql:statement-15",
     "context_values:postgres:contrib/postgres_fdw/sql/postgres_fdw.sql:statement-1828",
@@ -407,7 +405,7 @@ def contextValuesConcreteContractTests : IO Nat := do
         match query.body with
         | .select select => SQLean.Tests.assert select.source.isNone s!"{id}: closed source acquired FROM"
         | _ => throw (IO.userError s!"{id}: closed source body changed")
-        SQLean.Tests.assert ((← contextCertificate query) == expected)
+        SQLean.Tests.assert (sameOutputTypes (← contextCertificate query) expected)
           s!"{id}: exact original-source full certificate"
         certified := certified + 1
         positions := positions + expected.length

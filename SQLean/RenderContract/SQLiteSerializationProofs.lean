@@ -46,6 +46,7 @@ mutual
         simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated left, exprSql_translated right]
     | extract field arg => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
     | cast arg target => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
+    | collate arg name => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
     | subscript base subscripts =>
         have mapped : subscripts.map (fun subscript => Advanced.SQLite.subscriptSql (translateSubscript subscript)) =
             subscripts.map Advanced.SQLite.subscriptSql :=

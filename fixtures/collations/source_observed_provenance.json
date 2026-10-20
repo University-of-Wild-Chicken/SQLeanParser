@@ -1,0 +1,126 @@
+{
+  "format_version": 1,
+  "interpretation": "observed authored fixture collations combined with conditional caller-asserted source CREATE declarations; not an original deployment snapshot",
+  "source_execution": "not-performed",
+  "native_source_analysis": "not-performed",
+  "fixture_observation_file": "fixtures/collations/provenance/fixture-catalog-observation.json",
+  "fixture_observation_sha256": "6c3894274d1b6e1e726375ca27dd938fa8975af630af47341bca6847f86511ee",
+  "source_declaration_context_sha256": "20c57b8317d9127fe1c086ddaedaca83ff8a9b2f64e2c9af604bd568a53d58b2",
+  "imported_bindings": [
+    {
+      "id": "custom:fixture-observed:pg_catalog:de-x-icu:all-encodings",
+      "observed_oid": "12462",
+      "schema": "pg_catalog",
+      "name": "de-x-icu",
+      "encoding": null,
+      "basis": "opaque reference to the uniquely identified row in the retained fixture snapshot"
+    },
+    {
+      "id": "custom:fixture-observed:pg_catalog:en-x-icu:all-encodings",
+      "observed_oid": "12490",
+      "schema": "pg_catalog",
+      "name": "en-x-icu",
+      "encoding": null,
+      "basis": "opaque reference to the uniquely identified row in the retained fixture snapshot"
+    },
+    {
+      "id": "custom:fixture-observed:pg_catalog:en_US:UTF8",
+      "observed_oid": "12346",
+      "schema": "pg_catalog",
+      "name": "en_US",
+      "encoding": "UTF8",
+      "basis": "opaque reference to the uniquely identified row in the retained fixture snapshot"
+    },
+    {
+      "id": "custom:fixture-observed:pg_catalog:sv-x-icu:all-encodings",
+      "observed_oid": "13084",
+      "schema": "pg_catalog",
+      "name": "sv-x-icu",
+      "encoding": null,
+      "basis": "opaque reference to the uniquely identified row in the retained fixture snapshot"
+    },
+    {
+      "id": "custom:fixture-observed:pg_catalog:sv_SE:UTF8",
+      "observed_oid": "16384",
+      "schema": "pg_catalog",
+      "name": "sv_SE",
+      "encoding": "UTF8",
+      "basis": "opaque reference to the uniquely identified row in the retained fixture snapshot"
+    },
+    {
+      "id": "custom:fixture-observed:pg_catalog:tr-x-icu:all-encodings",
+      "observed_oid": "13121",
+      "schema": "pg_catalog",
+      "name": "tr-x-icu",
+      "encoding": null,
+      "basis": "opaque reference to the uniquely identified row in the retained fixture snapshot"
+    },
+    {
+      "id": "custom:fixture-observed:pg_catalog:tr_TR:UTF8",
+      "observed_oid": "16385",
+      "schema": "pg_catalog",
+      "name": "tr_TR",
+      "encoding": "UTF8",
+      "basis": "opaque reference to the uniquely identified row in the retained fixture snapshot"
+    },
+    {
+      "id": "custom:fixture-observed:pg_catalog:ucs_basic:UTF8",
+      "observed_oid": "962",
+      "schema": "pg_catalog",
+      "name": "ucs_basic",
+      "encoding": "UTF8",
+      "basis": "opaque reference to the uniquely identified row in the retained fixture snapshot"
+    },
+    {
+      "id": "custom:fixture-observed:pg_catalog:und-x-icu:all-encodings",
+      "observed_oid": "12347",
+      "schema": "pg_catalog",
+      "name": "und-x-icu",
+      "encoding": null,
+      "basis": "opaque reference to the uniquely identified row in the retained fixture snapshot"
+    },
+    {
+      "id": "custom:fixture-observed:pg_catalog:unicode:all-encodings",
+      "observed_oid": "963",
+      "schema": "pg_catalog",
+      "name": "unicode",
+      "encoding": null,
+      "basis": "opaque reference to the uniquely identified row in the retained fixture snapshot"
+    }
+  ],
+  "conditional_declaration_ids": [
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-206",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-210",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-213",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-214",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-216",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-219",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-223",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-225",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-232",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-233",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-247",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-250",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-252",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-3",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-8",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-226",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-234",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-240",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-254",
+    "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-256"
+  ],
+  "catalogFile": "fixtures/collations/source_observed_catalog.json",
+  "catalog_sha256": "8eba54673978a1c0b1bc129cf634d31ded89693fe2a9f3cee41ddf700964bd0c",
+  "registryFile": "fixtures/collations/source_observed_contracts.json",
+  "registry_sha256": "1e239ea06880853d6f7fb6d1b683f1da3b074aaf05fbbae2b2d3b86adf7b576c",
+  "assumptions": [
+    "retain the ten observed imported collation identities and their metadata",
+    "successful written source DDL in collate_tests with source search_path and no shadowing",
+    "same UTF8 connection encoding",
+    "source-defined ICU objects use their written options and documented declaration defaults",
+    "no source statement or source setup is executed"
+  ],
+  "scope": "static certificates under this declared combined context; no claim of original source deployment or locale-dependent result equivalence"
+}

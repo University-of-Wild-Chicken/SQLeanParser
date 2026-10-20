@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -27,7 +27,7 @@ private def patternCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "pattern SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "pattern identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -81,7 +81,7 @@ private def patternOperatorInventoryTests : IO Nat := do
       | .ilike => Advanced.Expr.pattern a b true
       | .regex insensitive negated => .regex a b insensitive negated
     let query : Advanced.Query := { body := .select { items := [.expression expression (some "v")] } }
-    SQLean.Tests.assert ((← patternCertificate query) == [⟨"v", ⟨.bool, true⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← patternCertificate query) [{name := "v", type := ⟨.bool, true⟩}])
       s!"pattern catalog full-query certificate: {spelling}, {left}"
     observed := (spelling, left, right, output, function) :: observed
   let expected := SelectContract.stringMatchOperators.flatMap fun operator =>
@@ -102,16 +102,14 @@ def patternMatchingContractTests : IO Nat := do
     for (left, leftNullable) in operands do
       for (right, rightNullable) in operands do
         let sql := s!"SELECT {left} {operator} {right} AS v"
-        SQLean.Tests.assert ((← patternOutput sql) ==
-          [⟨"v", ⟨.bool, leftNullable || rightNullable⟩⟩]) s!"pattern operand/context: {sql}"
+        SQLean.Tests.assert (sameOutputTypes (← patternOutput sql) [{name := "v", type := ⟨.bool, leftNullable || rightNullable⟩}]) s!"pattern operand/context: {sql}"
         count := count + 1
     for leftNullable in [false, true] do
       for rightNullable in [false, true] do
         let declarations := "char(5)" ++ (if leftNullable then "?" else "") ++
           ",varchar(3)" ++ (if rightNullable then "?" else "")
         let sql := s!"SELECT $1 {operator} $2 AS v"
-        SQLean.Tests.assert ((← patternOutput sql declarations) ==
-          [⟨"v", ⟨.bool, leftNullable || rightNullable⟩⟩]) s!"pattern nullable parameters: {sql}"
+        SQLean.Tests.assert (sameOutputTypes (← patternOutput sql declarations) [{name := "v", type := ⟨.bool, leftNullable || rightNullable⟩}]) s!"pattern nullable parameters: {sql}"
         count := count + 1
   for left in [SelectContract.ScalarType.text, .varchar [5], .char [5]] do
     for right in [SelectContract.ScalarType.text, .varchar [3], .char [3]] do
@@ -141,19 +139,19 @@ def patternMatchingContractTests : IO Nat := do
     "SELECT 'abc' ~ CAST('abc' AS CHAR(5)) AS v",
     "SELECT 'abc' ~ '[' AS v"]
   for sql in examples do
-    SQLean.Tests.assert ((← patternOutput sql) == [⟨"v", ⟨.bool, false⟩⟩]) s!"pattern composition: {sql}"
+    SQLean.Tests.assert (sameOutputTypes (← patternOutput sql) [{name := "v", type := ⟨.bool, false⟩}]) s!"pattern composition: {sql}"
     count := count + 1
   for sql in ["SELECT NULL ~ '[' AS v", "SELECT 'abc' ILIKE NULL AS v",
       "SELECT NULL NOT ILIKE 'x' AS v"] do
-    SQLean.Tests.assert ((← patternOutput sql) == [⟨"v", ⟨.bool, true⟩⟩]) s!"pattern NULL result: {sql}"
+    SQLean.Tests.assert (sameOutputTypes (← patternOutput sql) [{name := "v", type := ⟨.bool, true⟩}]) s!"pattern NULL result: {sql}"
     count := count + 1
   for sql in ["SELECT 'abc' ~ 'a' || 'bc' AS v", "SELECT 'abc' !~ '^a' || 'x' AS v",
       "SELECT 'abc' ~* 'ABC' || 'x' AS v", "SELECT 'abc' !~* 'ABC' || 'x' AS v"] do
-    SQLean.Tests.assert ((← patternOutput sql) == [⟨"v", ⟨.text, false⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← patternOutput sql) [{name := "v", type := ⟨.text, false⟩}])
       s!"generic regex/concat operator precedence: {sql}"
     count := count + 1
   for sql in ["SELECT 'a' ILIKE 'a'", "SELECT 'a' ~ 'a'"] do
-    SQLean.Tests.assert ((← patternOutput sql) == [⟨"?column?", ⟨.bool, false⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← patternOutput sql) [{name := "?column?", type := ⟨.bool, false⟩}])
       "pattern default output label"
     count := count + 1
   for declaration in ["integer", "numeric(8,2)", "boolean", "date", "uuid",
@@ -162,21 +160,21 @@ def patternMatchingContractTests : IO Nat := do
       for sql in [s!"SELECT NULL::{declaration} {operator} 'a'",
           s!"SELECT 'a' {operator} NULL::{declaration}"] do
         let query ← expectOk sql (Advanced.parseQuery sql)
-        match SelectContract.checkQuery .basicV31 [] [] query with
+        match SelectContract.checkQuery .basicV32 [] [] query with
         | .error (.invalid _) => pure ()
         | _ => throw (IO.userError s!"nonstring pattern input must be Invalid: {sql}")
         count := count + 1
   for sql in ["SELECT (SELECT 'a') ILIKE 'a'", "SELECT 'a' ~ (SELECT 'a')",
       "SELECT unknown_function() ~ 'a'", "SELECT ROW('a') ILIKE 'a'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"pattern child coverage must remain Unsupported: {sql}")
     count := count + 1
   for sql in ["SELECT CAST('a' AS BYTEA) LIKE CAST('a' AS BYTEA) AS v",
       "SELECT CAST('a' AS BYTEA) NOT LIKE CAST('b' AS BYTEA) AS v",
       "SELECT 'abc' LIKE 'a%' AS v"] do
-    SQLean.Tests.assert ((← patternOutput sql) == [⟨"v", ⟨.bool, false⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← patternOutput sql) [{name := "v", type := ⟨.bool, false⟩}])
       s!"existing LIKE/BYTEA rule changed: {sql}"
     count := count + 1
   for (sql, declarations) in [
@@ -184,7 +182,7 @@ def patternMatchingContractTests : IO Nat := do
       ("SELECT $2 ILIKE $1 AS v", "text,char(5)"),
       ("SELECT ? ILIKE d.p AS v FROM (SELECT ? || ? AS p) d WHERE ? !~ ?",
         "text,text,text,text,text")] do
-    SQLean.Tests.assert ((← patternOutput sql declarations) == [⟨"v", ⟨.bool, false⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← patternOutput sql declarations) [{name := "v", type := ⟨.bool, false⟩}])
       s!"pattern lexical parameter order: {sql}"
     count := count + 1
   let params ← expectOk "pattern parameters" (Assurance.parseContractParameterTypes "text,text")
@@ -192,12 +190,12 @@ def patternMatchingContractTests : IO Nat := do
       Advanced.Expr.regex (.parameter (.anonymous 2)) (.parameter (.anonymous 1)) false false,
       .pattern (.parameter (.anonymous 1)) (.parameter (.numbered 2)) true] do
     let query : Advanced.Query := { body := .select { items := [.expression expression] } }
-    match SelectContract.checkQuery .basicV31 [] params query with
+    match SelectContract.checkQuery .basicV32 [] params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "malformed pattern parameter order/style must be Invalid")
     count := count + 1
   let query ← expectOk "pattern exhaustion" (Advanced.parseQuery "SELECT 'a' ~* 'A'")
-  match SelectContract.checkQuery .basicV31 [] [] query 1 with
+  match SelectContract.checkQuery .basicV32 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "pattern exhaustion must be Inconclusive")
   count := count + 1

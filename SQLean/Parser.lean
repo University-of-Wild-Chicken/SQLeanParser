@@ -687,7 +687,7 @@ private def requiresAdvancedStatement (tokens : List Token) : Bool :=
     | .word name =>
       ["current_date", "current_time", "current_timestamp", "localtime", "localtimestamp",
        "current_user", "session_user", "system_user", "current_role", "current_catalog",
-       "current_schema", "user", "isnull", "notnull", "only", "array", "any", "some"].contains name
+       "current_schema", "user", "isnull", "notnull", "collate", "only", "array", "any", "some"].contains name
     | _ => false
 
 /-- Parse exactly one SELECT (including WITH), INSERT, UPDATE, or DELETE

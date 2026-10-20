@@ -21,6 +21,7 @@ inductive ScalarInput where
 def scalarInput (expr : Advanced.Expr) (type : ExprType) : ScalarInput :=
   match expr with
   | .literal (.text _) => .unknown false
+  | .collate arg _ => scalarInput arg type
   | _ => match type with | none => .unknown true | some type => .known type
 
 def scalarInputs (exprs : List Advanced.Expr) (types : List ExprType) : List ScalarInput :=

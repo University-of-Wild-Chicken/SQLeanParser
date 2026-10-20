@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -31,7 +31,7 @@ private def arrayConcatCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "array concatenation SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "array concatenation identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -126,11 +126,10 @@ def arrayConcatenationContractTests : IO Nat := do
               (SelectContract.arrayConcatSignature (.known ⟨leftType, true⟩)
                 (.known ⟨rightType, true⟩) == some ⟨operator, inputs, element.asArray⟩)
               s!"array concatenation exact selected instantiation: {sql}"
-            SQLean.Tests.assert ((← arrayConcatCertificate query) ==
-              [⟨"v", ⟨element.asArray, operator == .cat⟩⟩])
+            SQLean.Tests.assert (sameOutputTypes (← arrayConcatCertificate query) [{name := "v", type := ⟨element.asArray, operator == .cat⟩}])
               s!"array concatenation matrix output: {sql}"
         | none =>
-            match SelectContract.checkQuery .basicV31 [] [] query with
+            match SelectContract.checkQuery .basicV32 [] [] query with
             | .error (.invalid diagnostic) =>
                 SQLean.Tests.assert (diagnostic.code == "concatenation_signature")
                   s!"incompatible array element signature: {sql}"
@@ -139,8 +138,7 @@ def arrayConcatenationContractTests : IO Nat := do
     for (unknown, nullable) in [("NULL", true), ("'{}'", false)] do
       for sql in [s!"SELECT NULL::{leftName}[] || {unknown} AS v",
           s!"SELECT {unknown} || NULL::{leftName}[] AS v"] do
-        SQLean.Tests.assert ((← arrayConcatOutput sql) ==
-          [⟨"v", ⟨leftBase.asArray, nullable⟩⟩])
+        SQLean.Tests.assert (sameOutputTypes (← arrayConcatOutput sql) [{name := "v", type := ⟨leftBase.asArray, nullable⟩}])
           s!"unknown operand must select array_cat: {sql}"
         count := count + 1
   for operator in SelectContract.arrayConcatOperators do
@@ -153,8 +151,7 @@ def arrayConcatenationContractTests : IO Nat := do
         let parameters := left ++ (if leftNullable then "?" else "") ++ "," ++
           right ++ (if rightNullable then "?" else "")
         let nullable := operator == .cat && leftNullable && rightNullable
-        SQLean.Tests.assert ((← arrayConcatOutput "SELECT $1 || $2 AS v" parameters) ==
-          [⟨"v", ⟨.array .int32, nullable⟩⟩]) "array family-specific NULL propagation"
+        SQLean.Tests.assert (sameOutputTypes (← arrayConcatOutput "SELECT $1 || $2 AS v" parameters) [{name := "v", type := ⟨.array .int32, nullable⟩}]) "array family-specific NULL propagation"
         count := count + 1
   let examples : List (String × SelectContract.ScalarType × Bool) := [
     ("SELECT NULL::INTEGER[] || ARRAY[1,NULL,3] AS v", .int32, false),
@@ -191,15 +188,14 @@ def arrayConcatenationContractTests : IO Nat := do
     ("SELECT (NULL::INTEGER[] || NULL::INTEGER) || 2 AS v", .int32, false),
     ("SELECT d.a || 2 AS v FROM (SELECT ARRAY[1] AS a) d", .int32, false)]
   for (sql, element, nullable) in examples do
-    SQLean.Tests.assert ((← arrayConcatOutput sql) == [⟨"v", ⟨element.asArray, nullable⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← arrayConcatOutput sql) [{name := "v", type := ⟨element.asArray, nullable⟩}])
       s!"array concatenation composition/type: {sql}"
     count := count + 1
-  SQLean.Tests.assert ((← arrayConcatOutput "SELECT ARRAY[1] || ARRAY[2]") ==
-    [⟨"?column?", ⟨.array .int32, false⟩⟩]) "array concatenation default label"
+  SQLean.Tests.assert (sameOutputTypes (← arrayConcatOutput "SELECT ARRAY[1] || ARRAY[2]") [{name := "?column?", type := ⟨.array .int32, false⟩}]) "array concatenation default label"
   count := count + 1
   for sql in ["SELECT ARRAY[] || ARRAY[1]", "SELECT ARRAY[1] || ARRAY[]"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"untyped empty constructors must remain Invalid: {sql}")
     count := count + 1
@@ -207,7 +203,7 @@ def arrayConcatenationContractTests : IO Nat := do
       "SELECT (SELECT 1) || ARRAY[2]", "SELECT ARRAY[1] || unknown_function()",
       "SELECT ROW(1,2) || ARRAY[1]"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"array child coverage must remain Unsupported: {sql}")
     count := count + 1
@@ -216,20 +212,19 @@ def arrayConcatenationContractTests : IO Nat := do
       ("SELECT $2 || $1 AS v", "int?,int[]?", false),
       ("SELECT (? || ?) || ? AS v", "int[]?,int[]?,int[]?", true),
       ("SELECT ? || d.a AS v FROM (SELECT ?::INTEGER[] AS a) d", "int,int[]?", false)] do
-    SQLean.Tests.assert ((← arrayConcatOutput sql parameters) ==
-      [⟨"v", ⟨.array .int32, nullable⟩⟩]) s!"array lexical parameter order: {sql}"
+    SQLean.Tests.assert (sameOutputTypes (← arrayConcatOutput sql parameters) [{name := "v", type := ⟨.array .int32, nullable⟩}]) s!"array lexical parameter order: {sql}"
     count := count + 1
   let params ← expectOk "array bindings" (Assurance.parseContractParameterTypes "int[],int[]")
   for expr in [
       Advanced.Expr.concat (.parameter (.numbered 1)) (.parameter (.anonymous 2)),
       .concat (.parameter (.anonymous 2)) (.parameter (.anonymous 1))] do
     let query : Advanced.Query := { body := .select { items := [.expression expr] } }
-    match SelectContract.checkQuery .basicV31 [] params query with
+    match SelectContract.checkQuery .basicV32 [] params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "mixed/reordered array parameters must be Invalid")
     count := count + 1
   let query ← expectOk "array exhaustion" (Advanced.parseQuery "SELECT ARRAY[1] || ARRAY[2]")
-  match SelectContract.checkQuery .basicV31 [] [] query 1 with
+  match SelectContract.checkQuery .basicV32 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "array concatenation exhaustion must be Inconclusive")
   pure (count + 1)
@@ -330,7 +325,7 @@ def arrayConcatenationConcreteContractTests : IO Nat := do
     | _ => throw (IO.userError s!"{id}: unexpected concrete certified query structure")
     SQLean.Tests.assert (Advanced.queryParameters 1024 query == [])
       s!"{id}: concrete query contains undeclared parameters"
-    SQLean.Tests.assert ((← arrayConcatCertificate query) == [⟨name, ⟨element.asArray, false⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← arrayConcatCertificate query) [{name := name, type := ⟨element.asArray, false⟩}])
       s!"{id}: exact PostgreSQL concrete array concatenation output"
     ids := id :: ids
     statements := sql :: statements

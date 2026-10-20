@@ -26,7 +26,7 @@ EXIT_CODES = {
 }
 ASSURANCE = {"contract": "declarative", "checked": "executable", "syntax": "syntax"}
 PROFILES = {
-    "contract": "sqlean-basic-select-v0.31",
+    "contract": "sqlean-basic-select-v0.32",
     "checked": "sqlean-expanded-v0",
     "syntax": "sqlean-syntax-v0",
 }

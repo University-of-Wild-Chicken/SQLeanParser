@@ -279,7 +279,7 @@ def load_cases(include_statement_families=True):
                          "extract", "interval_fields", "substring", "qualified_names", "json_existence",
                          "context_values", "named_arguments", "keyword_functions",
                          "distinct_from", "null_predicates", "cte_contract", "set_operations",
-                         "recursive_contract"]],
+                         "recursive_contract", "collations"]],
     ]
     if include_statement_families:
         paths.append(ROOT / "fixtures/statement_families/concrete.jsonl")

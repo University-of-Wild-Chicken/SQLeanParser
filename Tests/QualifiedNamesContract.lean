@@ -2,7 +2,7 @@ import SQLean.Assurance
 import SQLean.SchemaJson
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -31,29 +31,32 @@ private def qualifiedCatalog : Advanced.Catalog := [
     columns := [{name := "from", type := ⟨.int, []⟩, nullable := some false}]}]
 
 private def leftNamespace : SelectContract.Scope :=
-  .ofTable ⟨some "s1", "t"⟩ none [⟨"id", ⟨.int32, false⟩⟩]
+  .ofTable ⟨some "s1", "t"⟩ none [{name := "id", type := ⟨.int32, false⟩}]
 
 private def rightNamespace : SelectContract.Scope :=
-  .ofTable ⟨some "s2", "t"⟩ none [⟨"id", ⟨.int64, true⟩⟩]
+  .ofTable ⟨some "s2", "t"⟩ none [{name := "id", type := ⟨.int64, true⟩}]
 
 /-- These namespace and locking witnesses do not call a checker. -/
+example : SelectContract.CollationEnvironment .basicV32 qualifiedCatalog := by decide
 example : SelectContract.JoinAliasesDistinct leftNamespace rightNamespace := by decide
 example : SelectContract.Resolves (leftNamespace ++ rightNamespace) (some "t")
-    "id" ⟨"id", ⟨.int32, false⟩⟩ (some "s1") := by decide
+    "id" {name := "id", type := ⟨.int32, false⟩} (some "s1") := by decide
 example : ¬ SelectContract.Resolves (leftNamespace ++ rightNamespace) (some "t")
-    "id" ⟨"id", ⟨.int32, false⟩⟩ := by decide
+    "id" {name := "id", type := ⟨.int32, false⟩} := by decide
 example : SelectContract.LockTargets
     (SelectContract.joinScope .left leftNamespace rightNamespace) ["t"] := by decide
 example : ¬ SelectContract.LockTargets
     (SelectContract.joinScope .right leftNamespace rightNamespace) ["t"] := by decide
-example : SelectContract.SourceValid .basicV31 [qualifiedLeft] [] []
+example : SelectContract.SourceValid .basicV32 [qualifiedLeft] [] []
     (some (.table "t" (some "x") ["key_id"] (some "s1")))
     (.ofTable ⟨some "s1", "t"⟩ (some "x")
-      [⟨"key_id", ⟨.int32, false⟩⟩, ⟨"tag", ⟨.text, false⟩⟩,
-       ⟨"only_left", ⟨.text, false⟩⟩]) [] := by
+      [{name := "key_id", type := ⟨.int32, false⟩, collation := none},
+       {name := "tag", type := ⟨.text, false⟩, collation := some .databaseDefault},
+       {name := "only_left", type := ⟨.text, false⟩, collation := some .databaseDefault}]) [] := by
   apply SelectContract.SourceValid.tableRenamed (Or.inl rfl) (table := qualifiedLeft)
-    (bindings := [⟨"id", ⟨.int32, false⟩⟩, ⟨"tag", ⟨.text, false⟩⟩,
-      ⟨"only_left", ⟨.text, false⟩⟩])
+    (bindings := [{name := "id", type := ⟨.int32, false⟩, collation := none},
+      {name := "tag", type := ⟨.text, false⟩, collation := some .databaseDefault},
+      {name := "only_left", type := ⟨.text, false⟩, collation := some .databaseDefault}])
   · simp
   · rfl
   · decide
@@ -67,7 +70,7 @@ private def qualifiedCertificate (query : Advanced.Query)
     (catalog : Advanced.Catalog := qualifiedCatalog)
     (params : SelectContract.ParameterEnv := []) : IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "qualified SELECT"
-    ((SelectContract.checkQuery .basicV31 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 catalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "qualified identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -132,7 +135,7 @@ def qualifiedNamesContractTests : IO Nat := do
     for projection in ["t.id", "t.only_left", "t.*"] do
       let sql := s!"SELECT {projection} FROM {source}"
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV31 qualifiedCatalog [] query with
+      match SelectContract.checkQuery .basicV32 qualifiedCatalog [] query with
       | .error (.invalid diagnostic) =>
           SQLean.Tests.assert (diagnostic.code == "ambiguous_relation_reference")
             "relation ambiguity must precede column lookup"
@@ -169,7 +172,7 @@ def qualifiedNamesContractTests : IO Nat := do
       "SELECT * FROM s1.t LEFT JOIN s2.t ON TRUE FOR UPDATE",
       "SELECT s1.t.id FROM s1.t LEFT JOIN s2.t ON TRUE FOR UPDATE OF t FOR SHARE OF missing"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 qualifiedCatalog [] query with
+    match SelectContract.checkQuery .basicV32 qualifiedCatalog [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"qualified namespace or lock error accepted: {sql}")
     count := count + 1
@@ -207,7 +210,7 @@ def qualifiedNamesContractTests : IO Nat := do
       ("SELECT pg_temp.t.* FROM s1.t", "namespace_alias"),
       ("SELECT q.id FROM (SELECT id FROM s1.t) q FOR UPDATE OF q", "derived_locking")] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 qualifiedCatalog [] query with
+    match SelectContract.checkQuery .basicV32 qualifiedCatalog [] query with
     | .error (.unsupported diagnostic) => SQLean.Tests.assert (diagnostic.code == code) s!"{sql}: explicit gap"
     | _ => throw (IO.userError s!"qualified coverage boundary mislabeled: {sql}")
     count := count + 1
@@ -224,7 +227,7 @@ def qualifiedNamesContractTests : IO Nat := do
     let query : Advanced.Query := {body := .select {
       items := [.all]
       source := some (.table "t" none aliases (some "s1"))}}
-    match SelectContract.checkQuery .basicV31 qualifiedCatalog [] query with
+    match SelectContract.checkQuery .basicV32 qualifiedCatalog [] query with
     | .error (.invalid diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == "table_column_aliases") "manual alias list requires relation alias"
     | _ => throw (IO.userError "column aliases without a relation alias acquired a certificate")
@@ -232,20 +235,19 @@ def qualifiedNamesContractTests : IO Nat := do
   let emptyColumnAlias : Advanced.Query := {body := .select {
     items := [.all]
     source := some (.table "t" (some "x") [""] (some "s1"))}}
-  match SelectContract.checkQuery .basicV31 qualifiedCatalog [] emptyColumnAlias with
+  match SelectContract.checkQuery .basicV32 qualifiedCatalog [] emptyColumnAlias with
   | .error (.invalid diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "table_column_aliases") "empty column alias rejected"
   | _ => throw (IO.userError "empty table column alias acquired a certificate")
   count := count + 1
   let switched := qualifiedCatalog.map fun table =>
     if table.name == "t" then {table with exposeUnqualified := table.schema == some "s2"} else table
-  SQLean.Tests.assert ((← qualifiedOutput "SELECT s2.t.id FROM t" switched) ==
-      [⟨"id", ⟨.int64, true⟩⟩]) "explicit exposure changes the selected identity"
+  SQLean.Tests.assert (sameOutputTypes (← qualifiedOutput "SELECT s2.t.id FROM t" switched) [{name := "id", type := ⟨.int64, true⟩}]) "explicit exposure changes the selected identity"
   count := count + 1
   let hidden := qualifiedCatalog.map fun table => {table with exposeUnqualified := false}
   discard <| qualifiedOutput "SELECT s1.t.id FROM s1.t" hidden
   let bare ← expectOk "unexposed" (Advanced.parseQuery "SELECT * FROM t")
-  match SelectContract.checkQuery .basicV31 hidden [] bare with
+  match SelectContract.checkQuery .basicV32 hidden [] bare with
   | .error (.invalid diagnostic) => SQLean.Tests.assert (diagnostic.code == "relation_binding") "no inferred search path"
   | _ => throw (IO.userError "unqualified exposure was guessed from qualified catalog entries")
   count := count + 2
@@ -256,11 +258,11 @@ def qualifiedNamesContractTests : IO Nat := do
       [{qualifiedLeft with schema := some ""}]] do
     SQLean.Tests.assert (!(decide (SelectContract.CatalogWellFormed catalog))) "invalid exact catalog namespace"
     expectError "advanced catalog namespace check" (Advanced.checkCatalog catalog)
-    match SelectContract.checkQuery .basicV31 catalog [] bare with
+    match SelectContract.checkQuery .basicV32 catalog [] bare with
     | .error (.invalid diagnostic) => SQLean.Tests.assert (diagnostic.code == "invalid_environment") "invalid metadata tier"
     | _ => throw (IO.userError "invalid namespace metadata acquired a certificate")
     count := count + 1
-  match SelectContract.checkQuery .basicV31
+  match SelectContract.checkQuery .basicV32
       [{qualifiedLeft with schema := some "pg_temp"}] [] bare with
   | .error (.unsupported diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "namespace_alias") "pg_temp is an alias, not a distinct physical identity"
@@ -281,12 +283,12 @@ def qualifiedNamesContractTests : IO Nat := do
       Advanced.SelectItem.expression (.column none "id" (some "s1")),
       Advanced.SelectItem.all none (some "s1")] do
     let query : Advanced.Query := {body := .select {items := [item], source := some (.table "t" none [] (some "s1"))}}
-    match SelectContract.checkQuery .basicV31 qualifiedCatalog [] query with
+    match SelectContract.checkQuery .basicV32 qualifiedCatalog [] query with
     | .error (.invalid diagnostic) => SQLean.Tests.assert (diagnostic.code == "qualified_reference_shape") "manual qualifier shape"
     | _ => throw (IO.userError "schema without a relation qualifier acquired a certificate")
     count := count + 1
   let query ← expectOk "qualified fuel" (Advanced.parseQuery "SELECT s1.t.id FROM s1.t")
-  match SelectContract.checkQuery .basicV31 qualifiedCatalog [] query 0 with
+  match SelectContract.checkQuery .basicV32 qualifiedCatalog [] query 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "qualified fuel exhaustion must be Inconclusive")
   pure (count + 1)

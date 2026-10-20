@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -25,7 +25,7 @@ private def concatCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "concatenation SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "concatenation identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -85,7 +85,7 @@ def concatenationContractTests : IO Nat := do
         ("SELECT 'null' || $1 AS v", contextual),
         ("SELECT $1 || 'null' AS v", contextual)] do
       let actual ← concatOutput sql declaration
-      SQLean.Tests.assert (actual == [⟨"v", ⟨expected, false⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨expected, false⟩}])
         s!"concat exact parameter/context output: {declaration}; {sql}"
       count := count + 1
     let expectedLeft : SelectContract.ConcatSignature :=
@@ -110,7 +110,7 @@ def concatenationContractTests : IO Nat := do
           right ++ (if nullableRight then "?" else "")
         let actual ← concatOutput "SELECT $1 || $2 AS v" declarations
         SQLean.Tests.assert
-          (actual == [⟨"v", ⟨expected, nullableLeft || nullableRight⟩⟩])
+          (actual == [{name := "v", type := ⟨expected, nullableLeft || nullableRight⟩}])
           s!"concat NULL propagation: {declarations}"
         count := count + 1
   let examples : List (String × SelectContract.ExactType) := [
@@ -145,10 +145,9 @@ def concatenationContractTests : IO Nat := do
     ("SELECT 'a' || 'b' = 'ab' AS v", ⟨.bool, false⟩),
     ("SELECT 'abc' LIKE 'a' || '%' AS v", ⟨.bool, false⟩)]
   for (sql, expected) in examples do
-    SQLean.Tests.assert ((← concatOutput sql) == [⟨"v", expected⟩]) s!"concat expression: {sql}"
+    SQLean.Tests.assert (sameOutputTypes (← concatOutput sql) [{name := "v", type := expected}]) s!"concat expression: {sql}"
     count := count + 1
-  SQLean.Tests.assert ((← concatOutput "SELECT 'a' || 'b'") ==
-    [⟨"?column?", ⟨.text, false⟩⟩]) "concat default label must not inherit either operand"
+  SQLean.Tests.assert (sameOutputTypes (← concatOutput "SELECT 'a' || 'b'") [{name := "?column?", type := ⟨.text, false⟩}]) "concat default label must not inherit either operand"
   count := count + 1
   for sql in [
       "SELECT 1 || 2", "SELECT TRUE || FALSE", "SELECT 1 || TRUE",
@@ -156,7 +155,7 @@ def concatenationContractTests : IO Nat := do
       "SELECT '{}'::JSON || '{}'::JSONB", "SELECT 'a'::BYTEA || 1",
       "SELECT 'a'::BYTEA || '{}'::JSONB", "SELECT DATE '2024-01-01' || DATE '2024-01-02'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid concat operands: {sql}")
     count := count + 1
@@ -167,14 +166,14 @@ def concatenationContractTests : IO Nat := do
       ("SELECT ARRAY[1] || '{2}'", .int32), ("SELECT '{1}' || ARRAY[2]", .int32),
       ("SELECT 'x'::TEXT || ARRAY['y']", .text),
       ("SELECT ARRAY['x'] || 'y'::TEXT", .text)] do
-    SQLean.Tests.assert ((← concatOutput sql) == [⟨"?column?", ⟨element.asArray, false⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← concatOutput sql) [{name := "?column?", type := ⟨element.asArray, false⟩}])
       s!"promoted array concatenation exact output: {sql}"
     count := count + 1
   for sql in [
       "SELECT ROW(1,2) || 'x'", "SELECT 'x' || ROW(1,2)",
       "SELECT (SELECT 'x') || 'y'", "SELECT 'x' || unknown_function()"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported concat context: {sql}")
     count := count + 1
@@ -183,18 +182,18 @@ def concatenationContractTests : IO Nat := do
       ("SELECT $2 || $1 || $2 AS v", "int,text"),
       ("SELECT ? || d.v AS v FROM (SELECT ? || ? AS v) d WHERE ? || ? = 'ab'",
         "text,text,text,text,text")] do
-    SQLean.Tests.assert ((← concatOutput sql declarations) == [⟨"v", ⟨.text, false⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← concatOutput sql declarations) [{name := "v", type := ⟨.text, false⟩}])
       s!"concat lexical parameter order: {sql}"
     count := count + 1
   let params ← expectOk "concat parameters" (Assurance.parseContractParameterTypes "text,text")
   let bad : Advanced.Query := { body := .select { items := [
     .expression (.concat (.parameter (.anonymous 2)) (.parameter (.anonymous 1)))] } }
-  match SelectContract.checkQuery .basicV31 [] params bad with
+  match SelectContract.checkQuery .basicV32 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "concat swapped anonymous ordinals must be Invalid")
   count := count + 1
   let query ← expectOk "concat exhaustion" (Advanced.parseQuery "SELECT 'a' || ('b' || 'c')")
-  match SelectContract.checkQuery .basicV31 [] [] query 1 with
+  match SelectContract.checkQuery .basicV32 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "concat exhaustion must be Inconclusive")
   count := count + 1

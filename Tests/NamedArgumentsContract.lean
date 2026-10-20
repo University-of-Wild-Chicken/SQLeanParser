@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -66,7 +66,7 @@ private def namedField (id : String) (record : Lean.Json) (field : String) : IO 
 private def namedCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) : IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "named/default SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "named identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -136,7 +136,7 @@ def namedArgumentsContractTests : IO Nat := do
         let arguments := indices.map fun index =>
           s!"{names[index]!} {spelling} {index + 1}"
         let sql := "SELECT make_interval(" ++ String.intercalate ", " arguments ++ ") AS v"
-        SQLean.Tests.assert ((← namedOutput sql) == [⟨"v", ⟨.interval [], false⟩⟩])
+        SQLean.Tests.assert (sameOutputTypes (← namedOutput sql) [{name := "v", type := ⟨.interval [], false⟩}])
           s!"default omission/lexical mapping: {sql}"
         count := count + 1
   let declarations : List (String × Bool × Bool) := [
@@ -155,17 +155,15 @@ def namedArgumentsContractTests : IO Nat := do
         let params ← expectOk declaration (Assurance.parseContractParameterTypes
           (declaration ++ (if nullable then "?" else "")))
         if (if name == "secs" then secondsSlot else integerSlot) then
-          SQLean.Tests.assert ((← namedCertificate query params) ==
-            [⟨"v", ⟨.interval [], nullable⟩⟩]) s!"named exact implicit argument coercion: {name}, {declaration}"
-        else match SelectContract.checkQuery .basicV31 [] params query with
+          SQLean.Tests.assert (sameOutputTypes (← namedCertificate query params) [{name := "v", type := ⟨.interval [], nullable⟩}]) s!"named exact implicit argument coercion: {name}, {declaration}"
+        else match SelectContract.checkQuery .basicV32 [] params query with
           | .error (.invalid diagnostic) =>
               SQLean.Tests.assert (diagnostic.code == "function_signature") "known argument type must fail coercion"
           | _ => throw (IO.userError s!"incompatible declared make_interval argument accepted: {name}, {declaration}")
         count := count + 1
   for length in List.range 8 do
     let args := (List.range length).map fun n => toString (n + 1)
-    SQLean.Tests.assert ((← namedOutput ("SELECT make_interval(" ++ String.intercalate "," args ++ ")")) ==
-      [⟨"make_interval", ⟨.interval [], false⟩⟩]) "positional prefix and omitted defaults"
+    SQLean.Tests.assert (sameOutputTypes (← namedOutput ("SELECT make_interval(" ++ String.intercalate "," args ++ ")")) [{name := "make_interval", type := ⟨.interval [], false⟩}]) "positional prefix and omitted defaults"
     count := count + 1
   for (sql, params, nullable) in [
       ("SELECT make_interval(secs => ?, days => ?, years => ?) AS v", "DOUBLE PRECISION,INTEGER,INTEGER", false),
@@ -177,13 +175,12 @@ def namedArgumentsContractTests : IO Nat := do
       ("SELECT make_interval(days => 'not an integer') AS v", "", false),
       ("SELECT make_interval(secs => 'Infinity'::DOUBLE PRECISION) AS v", "", false),
       ("SELECT make_interval(years => NULL, secs => 'Infinity'::DOUBLE PRECISION) AS v", "", true)] do
-    SQLean.Tests.assert ((← namedOutput sql params) == [⟨"v", ⟨.interval [], nullable⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← namedOutput sql params) [{name := "v", type := ⟨.interval [], nullable⟩}])
       s!"named lexical bindings and runtime-value boundary: {sql}"
     count := count + 1
   for expr in ["make_interval(days=>1)", "CAST(make_interval(days=>1) AS INTERVAL)",
       "CASE WHEN TRUE THEN make_interval(days=>1) ELSE make_interval() END"] do
-    SQLean.Tests.assert ((← namedOutput s!"SELECT {expr}") ==
-      [⟨"make_interval", ⟨.interval [], false⟩⟩]) "default strong function label"
+    SQLean.Tests.assert (sameOutputTypes (← namedOutput s!"SELECT {expr}") [{name := "make_interval", type := ⟨.interval [], false⟩}]) "default strong function label"
     count := count + 1
   for (sql, expectedCode) in [
       ("SELECT make_interval(days=>1,2)", "named_argument_order"),
@@ -194,7 +191,7 @@ def namedArgumentsContractTests : IO Nat := do
       ("SELECT make_interval(\"Years\"=>1)", "named_argument_name"),
       ("SELECT make_interval(1,2,3,4,5,6,7,8)", "function_arity")] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == expectedCode) s!"exact named-binding failure: {sql}"
     | _ => throw (IO.userError s!"malformed argument binding acquired a certificate: {sql}")
@@ -203,7 +200,7 @@ def namedArgumentsContractTests : IO Nat := do
       "SELECT abs(x=>1)", "SELECT make_date(year=>2024,month=>1,day=>2)",
       "SELECT make_interval(days=>(SELECT 1))"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"unregistered named routine/dependency must remain Unsupported: {sql}")
     count := count + 1
@@ -214,7 +211,7 @@ def namedArgumentsContractTests : IO Nat := do
         "missing required slot cannot manufacture a default"
   | _ => throw (IO.userError "missing required slot accepted")
   let query ← expectOk "named fuel" (Advanced.parseQuery "SELECT make_interval(days=>1)")
-  match SelectContract.checkQuery .basicV31 [] [] query 1 with
+  match SelectContract.checkQuery .basicV32 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "named resource exhaustion must remain Inconclusive")
   let args := [Advanced.CallArgument.named "secs" (.parameter (.anonymous 2)),
@@ -222,7 +219,7 @@ def namedArgumentsContractTests : IO Nat := do
   let query : Advanced.Query := {body := .select {items := [.expression (.namedCall ["make_interval"] args)]}}
   let params ← expectOk "named parameter declarations"
     (Assurance.parseContractParameterTypes "INTEGER,DOUBLE PRECISION")
-  match SelectContract.checkQuery .basicV31 [] params query with
+  match SelectContract.checkQuery .basicV32 [] params query with
   | .error (.invalid diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "parameter_notation")
         "declaration-slot order cannot override anonymous lexical order"
@@ -365,8 +362,8 @@ def namedArgumentsConcreteContractTests : IO Nat := do
           s!"{id}: registered interface provenance changed"
       let params ← expectOk id (Assurance.parseContractParameterTypes parameterTypes)
       let expected : List SelectContract.OutputColumn := if id == pgId 323 then
-        [⟨"?column?", ⟨.bool, false⟩⟩] else [⟨"make_interval", ⟨.interval [], false⟩⟩]
-      SQLean.Tests.assert ((← namedCertificate query params) == expected)
+        [{name := "?column?", type := ⟨.bool, false⟩}] else [{name := "make_interval", type := ⟨.interval [], false⟩}]
+      SQLean.Tests.assert (sameOutputTypes (← namedCertificate query params) expected)
         s!"{id}: exact complete source certificate"
       certified := certified + 1
     else

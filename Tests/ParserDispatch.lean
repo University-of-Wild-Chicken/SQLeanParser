@@ -45,6 +45,17 @@ def parserDispatchTests : IO Nat := do
   match ← expectOk "ordinary row column" (parseStatement "SELECT row FROM users") with
   | .select _ => pure ()
   | _ => throw (IO.userError "ROW lookahead changed an ordinary compatibility column")
-  pure (3 * (special.length + contextValues.length) + predicates.length + quoted.length + rows.length + 3)
+  match ← expectOk "COLLATE dispatch" (parseStatement "SELECT id COLLATE \"C\" FROM users") with
+  | .extended (.query {body := .select select, ..}) =>
+      SQLean.Tests.assert
+        (select.items == [.expression (.collate (.column none "id") ["C"])])
+        "COLLATE lost the operand or identifier components"
+  | _ => throw (IO.userError "COLLATE lost its advanced AST")
+  for sql in ["SELECT id COLLATE FROM users", "SELECT collate FROM users"] do
+    expectError sql (parseStatement sql)
+  for sql in ["SELECT \"collate\" FROM users", "SELECT id AS \"collate\" FROM users",
+      "SELECT id AS collate FROM users", "SELECT id FROM users /* COLLATE */"] do
+    let _ ← expectOk sql (parseStatement sql)
+  pure (3 * (special.length + contextValues.length) + predicates.length + quoted.length + rows.length + 10)
 
 end SQLean.Tests

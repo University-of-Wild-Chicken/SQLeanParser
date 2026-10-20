@@ -50,6 +50,41 @@ private def optionalJson (json : Lean.Json) (name : String) : Option Lean.Json :
 private def namesJson (json : Lean.Json) : Except String (List Name) := do
   (← json.getArr?).toList.mapM Lean.Json.getStr?
 
+private def collationIdJson (json : Lean.Json) : Except String CollationId := do
+  let label ← json.getStr?
+  match label with
+  | "default" => pure .databaseDefault
+  | "C" => pure .c
+  | "POSIX" => pure .posix
+  | other =>
+    if other.startsWith "custom:" then
+      pure (.custom (other.drop 7).toString)
+    else throw s!"unknown collation identity '{other}'"
+
+private def collationEntryJson (json : Lean.Json) : Except String CollationEntry := do
+  let id ← collationIdJson (← json.getObjVal? "id")
+  let schema ← (← json.getObjVal? "schema").getStr?
+  let name ← (← json.getObjVal? "name").getStr?
+  let encoding ← match optionalJson json "encoding" with
+    | none | some .null => pure none
+    | some value => pure (some (← value.getStr?))
+  let deterministic ← match optionalJson json "deterministic" with
+    | none => pure true | some value => value.getBool?
+  let exposeUnqualified ← match optionalJson json "exposeUnqualified" with
+    | none => pure false | some value => value.getBool?
+  pure {id, schema, name, encoding, deterministic, exposeUnqualified}
+
+/-- Decode an explicit native collation snapshot without certifying its
+well-formedness. Absence retains the documented built-in UTF8 environment. -/
+def decodeCollationEnvJson (source : String) : Except String CollationEnv := do
+  let json ← Lean.Json.parse source
+  match optionalJson json "collations" with
+  | none => pure .builtin
+  | some snapshot =>
+    let encoding ← (← snapshot.getObjVal? "encoding").getStr?
+    let entries ← (← (← snapshot.getObjVal? "entries").getArr?).toList.mapM collationEntryJson
+    pure {encoding, entries}
+
 private def catalogColumn (json : Lean.Json) : Except String Column := do
   let name ← (← json.getObjVal? "name").getStr?
   let typeName ← (← json.getObjVal? "type").getStr?
@@ -90,7 +125,13 @@ private def catalogTable (json : Lean.Json) : Except String CatalogTable := do
     | none => pure []
     | some value => (← value.getObj?).toList.mapM fun (key, names) => do
         pure (key, ← namesJson names)
-  pure { name, columns, uniqueKeys, primaryKey, namedKeys, schema, exposeUnqualified }
+  let columnCollations ← match optionalJson json "columnCollations" with
+    | none => pure []
+    | some value => (← value.getArr?).toList.mapM fun item => do
+      let column ← (← item.getObjVal? "column").getStr?
+      let collation ← collationIdJson (← item.getObjVal? "collation")
+      pure (column, collation)
+  pure { name, columns, uniqueKeys, primaryKey, namedKeys, schema, exposeUnqualified, columnCollations }
 
 /-- Decode catalog structure without running a validity checker. This lets an
 independent contract validator classify invalid environments itself. -/

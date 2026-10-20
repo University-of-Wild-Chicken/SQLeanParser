@@ -2,7 +2,7 @@ import SQLean.Assurance
 import SQLean.SchemaJson
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -19,7 +19,7 @@ private def derivedOutput (sql : String) (params : SelectContract.ParameterEnv :
     IO (List SelectContract.OutputColumn) := do
   let query ← expectOk sql (Advanced.parseQuery sql)
   let certificate ← expectOk sql
-    ((SelectContract.checkQuery .basicV31 derivedCatalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 derivedCatalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let _ ← expectOk sql ((RenderContract.check .identityV01 query).mapError reprStr)
   let _ ← expectOk sql ((RenderContract.check .postgres16V01 query).mapError reprStr)
@@ -45,28 +45,28 @@ def derivedContractTests : IO Nat := do
     count := count + 1
   let exact : List (String × List SelectContract.OutputColumn) := [
     ("SELECT * FROM (SELECT id, label FROM t) q(a)",
-      [⟨"a", ⟨.int32, false⟩⟩, ⟨"label", ⟨.text, true⟩⟩]),
+      [{name := "a", type := ⟨.int32, false⟩}, {name := "label", type := ⟨.text, true⟩}]),
     ("SELECT q.* FROM (SELECT id, label FROM t) q(a, b)",
-      [⟨"a", ⟨.int32, false⟩⟩, ⟨"b", ⟨.text, true⟩⟩]),
+      [{name := "a", type := ⟨.int32, false⟩}, {name := "b", type := ⟨.text, true⟩}]),
     ("SELECT * FROM (SELECT id AS same_name, label AS same_name FROM t) q",
-      [⟨"same_name", ⟨.int32, false⟩⟩, ⟨"same_name", ⟨.text, true⟩⟩]),
+      [{name := "same_name", type := ⟨.int32, false⟩}, {name := "same_name", type := ⟨.text, true⟩}]),
     ("SELECT q.* FROM (SELECT id, label FROM t) q(same_name, same_name)",
-      [⟨"same_name", ⟨.int32, false⟩⟩, ⟨"same_name", ⟨.text, true⟩⟩]),
+      [{name := "same_name", type := ⟨.int32, false⟩}, {name := "same_name", type := ⟨.text, true⟩}]),
     ("SELECT * FROM (SELECT id AS same_name, label AS same_name FROM t) q(a, b)",
-      [⟨"a", ⟨.int32, false⟩⟩, ⟨"b", ⟨.text, true⟩⟩]),
+      [{name := "a", type := ⟨.int32, false⟩}, {name := "b", type := ⟨.text, true⟩}]),
     ("SELECT q.id, q.label FROM u LEFT JOIN (SELECT id, label FROM t) q ON u.id = q.id",
-      [⟨"id", ⟨.int32, true⟩⟩, ⟨"label", ⟨.text, true⟩⟩]),
+      [{name := "id", type := ⟨.int32, true⟩}, {name := "label", type := ⟨.text, true⟩}]),
     ("SELECT q.* FROM (SELECT CAST(1 AS NUMERIC(8, 2)) AS amount) q",
-      [⟨"amount", ⟨.numeric [8, 2], false⟩⟩]),
+      [{name := "amount", type := ⟨.numeric [8, 2], false⟩}]),
     ("SELECT q.* FROM (SELECT NULL AS missing_value) q",
-      [⟨"missing_value", ⟨.text, true⟩⟩]),
+      [{name := "missing_value", type := ⟨.text, true⟩}]),
     ("SELECT q.* FROM (SELECT id, label FROM t) q(label)",
-      [⟨"label", ⟨.int32, false⟩⟩, ⟨"label", ⟨.text, true⟩⟩]),
+      [{name := "label", type := ⟨.int32, false⟩}, {name := "label", type := ⟨.text, true⟩}]),
     ("SELECT q.* FROM (SELECT id AS a, id AS b FROM t) q(b, a)",
-      [⟨"b", ⟨.int32, false⟩⟩, ⟨"a", ⟨.int32, false⟩⟩]) ]
+      [{name := "b", type := ⟨.int32, false⟩}, {name := "a", type := ⟨.int32, false⟩}]) ]
   for (sql, expected) in exact do
     let actual ← derivedOutput sql
-    SQLean.Tests.assert (actual == expected) s!"derived output metadata: {sql}"
+    SQLean.Tests.assert (sameOutputTypes actual expected) s!"derived output metadata: {sql}"
     count := count + 1
   let invalid := [
     "SELECT q.same_name FROM (SELECT id AS same_name, label AS same_name FROM t) q",
@@ -83,14 +83,14 @@ def derivedContractTests : IO Nat := do
     "SELECT * FROM (SELECT id AS same_name, label AS same_name FROM t) q JOIN u USING (same_name)" ]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 derivedCatalog [] query with
+    match SelectContract.checkQuery .basicV32 derivedCatalog [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid derived query: {sql}")
     count := count + 1
-  SQLean.Tests.assert ((← derivedOutput "SELECT * FROM (WITH inner_q AS (SELECT id FROM t) SELECT id FROM inner_q) q") == [⟨"id", ⟨.int32, false⟩⟩])
+  SQLean.Tests.assert (sameOutputTypes (← derivedOutput "SELECT * FROM (WITH inner_q AS (SELECT id FROM t) SELECT id FROM inner_q) q") [{name := "id", type := ⟨.int32, false⟩}])
     "derived queries inherit and expose certified CTE output"
   count := count + 1
-  SQLean.Tests.assert ((← derivedOutput "SELECT * FROM (SELECT id FROM t UNION SELECT id FROM u) q") == [⟨"id", ⟨.int32, false⟩⟩])
+  SQLean.Tests.assert (sameOutputTypes (← derivedOutput "SELECT * FROM (SELECT id FROM t UNION SELECT id FROM u) q") [{name := "id", type := ⟨.int32, false⟩}])
     "derived set result retains exact metadata"
   count := count + 1
   let unsupported := [
@@ -106,7 +106,7 @@ def derivedContractTests : IO Nat := do
     "SELECT 1 IN (SELECT id FROM t)" ]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 derivedCatalog [] query with
+    match SelectContract.checkQuery .basicV32 derivedCatalog [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported derived boundary: {sql}")
     count := count + 1
@@ -116,7 +116,7 @@ def derivedContractTests : IO Nat := do
       Advanced.From.derived child "q" [""],
       Advanced.From.derived child "q" ["a", "b"] ] do
     let query : Advanced.Query := { body := .select { items := [.all], source := some source } }
-    match SelectContract.checkQuery .basicV31 derivedCatalog [] query with
+    match SelectContract.checkQuery .basicV32 derivedCatalog [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "malformed derived alias metadata must be Invalid")
     count := count + 1
@@ -125,7 +125,7 @@ def derivedContractTests : IO Nat := do
   let sql := "SELECT ? AS outer_value, q.* FROM (SELECT ? AS inner_value FROM (SELECT ? AS deep_value) d WHERE ? > 0 ORDER BY inner_value LIMIT ?) q WHERE ? > 0 LIMIT ?"
   let query ← expectOk sql (Advanced.parseQuery sql)
   let certificate ← expectOk sql
-    ((SelectContract.checkQuery .basicV31 derivedCatalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 derivedCatalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   SQLean.Tests.assert (Advanced.queryParameters 1024 query ==
       (List.range 7).map (fun n => Advanced.Parameter.anonymous (n + 1)))
@@ -140,25 +140,25 @@ def derivedContractTests : IO Nat := do
     let query : Advanced.Query := { body := .select {
       items := [.expression (.parameter outer)]
       source := some (.derived innerQuery "q") } }
-    match SelectContract.checkQuery .basicV31 derivedCatalog params query with
+    match SelectContract.checkQuery .basicV32 derivedCatalog params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "parameter styles must not mix across derived query boundaries")
     count := count + 1
   let repeated ← expectOk "numbered repeats across queries"
     (Advanced.parseQuery "SELECT $1 AS outside FROM (SELECT $1 AS inside_value) q")
   let _ ← expectOk "numbered repeats across queries"
-    ((SelectContract.checkQuery .basicV31 derivedCatalog params repeated).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 derivedCatalog params repeated).mapError reprStr)
   count := count + 1
   let repeatedChild : Advanced.Query := { body := .select {
     items := [.expression (.parameter (.anonymous 1)) (some "value")] } }
   let repeatedAnon : Advanced.Query := { body := .select {
     items := [.expression (.parameter (.anonymous 1))]
     source := some (.derived repeatedChild "q") } }
-  match SelectContract.checkQuery .basicV31 derivedCatalog params repeatedAnon with
+  match SelectContract.checkQuery .basicV32 derivedCatalog params repeatedAnon with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "derived queries must not restart anonymous ordinal numbering")
   count := count + 1
-  match SelectContract.checkQuery .basicV31 derivedCatalog params query 2 with
+  match SelectContract.checkQuery .basicV32 derivedCatalog params query 2 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "derived traversal exhaustion must be Inconclusive")
   count := count + 1
@@ -193,11 +193,11 @@ def derivedCorpusTests : IO Nat := do
         | "text" => pure .text
         | "bool" => pure .bool
         | _ => throw (IO.userError s!"{id}: unexpected output type {type}")
-      pure (SelectContract.OutputColumn.mk name ⟨base, nullable⟩)
+      pure (({name := name, type := ⟨base, nullable⟩} : SelectContract.OutputColumn))
     let query ← expectOk id (Advanced.parseQuery sql)
     let certificate ← expectOk id
-      ((SelectContract.checkQuery .basicV31 catalog params query).mapError reprStr)
-    SQLean.Tests.assert (certificate.output == expected) s!"{id}: exact output mismatch"
+      ((SelectContract.checkQuery .basicV32 catalog params query).mapError reprStr)
+    SQLean.Tests.assert (sameOutputTypes certificate.output expected) s!"{id}: exact output mismatch"
     have _preserved := RenderContract.translateParameters_valid certificate.valid
     let identity ← expectOk id ((RenderContract.check .identityV01 query).mapError reprStr)
     let postgres ← expectOk id ((RenderContract.check .postgres16V01 query).mapError reprStr)

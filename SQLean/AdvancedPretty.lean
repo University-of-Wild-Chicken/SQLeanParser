@@ -136,6 +136,8 @@ mutual
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
           exprSql pg arg.val)
     | .cast arg type => "CAST(" ++ exprSql pg arg ++ " AS " ++ type.toSql ++ ")"
+    | .collate arg name =>
+        "(" ++ exprSql pg arg ++ " COLLATE " ++ String.intercalate "." (name.map quoteName) ++ ")"
     | .subscript base subscripts => paren (exprSql pg base) ++ String.join
         (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>
           have : sizeOf subscript.val < sizeOf subscripts := List.sizeOf_lt_of_mem subscript.property

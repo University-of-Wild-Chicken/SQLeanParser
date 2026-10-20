@@ -2,7 +2,7 @@ import SQLean.Assurance
 import SQLean.SchemaJson
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -10,24 +10,27 @@ open SelectContract
 
 private def recAnchor : Advanced.Query :=
   {body := .select {items := [.expression (.literal (.int 1)) (some "x")]}}
-private def recAnchorColumns : List OutputColumn := [⟨"x", ⟨.int32, false⟩⟩]
-private def recInputs : List PendingColumn := [⟨"x", .known ⟨.int32, false⟩⟩]
-private def recColumns : List OutputColumn := [⟨"x", ⟨.int32, true⟩⟩]
+private def recAnchorColumns : List OutputColumn := [{name := "x", type := ⟨.int32, false⟩}]
+private def recInputs : List PendingColumn := [{name := "x", input := .known ⟨.int32, false⟩}]
+private def recColumns : List OutputColumn := [{name := "x", type := ⟨.int32, true⟩}]
 private def recEnv : CTEEnv := [⟨"r", recColumns⟩]
 private def recScope : Scope := .ofCTE "r" none recColumns
 private def recStep : Advanced.Query :=
   {body := .select {items := [.expression (.literal (.int 1)) (some "x")], source := some (.table "r")}}
 private def recDefinition : Advanced.CTE := ⟨"r", {body := .set .union true recAnchor recStep}, []⟩
 
-private theorem recAnchor_valid : QueryValid .basicV31 [] [] [] recAnchor recAnchorColumns [] := by
+private theorem recAnchor_valid : QueryValid .basicV32 [] [] [] recAnchor recAnchorColumns [] := by
   apply QueryValid.basic (cteUses := []) (visible := []) (by decide) .nil
     (scope := .empty) (sourceUses := []) (selectUses := []) (whereUses := [])
     (orderUses := []) (limitUses := []) (offsetUses := [])
   · exact .empty
-  · exact .expression (.int (by decide)) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
   · decide
   · decide
+  · exact Or.inl rfl
   · exact .absent
+  · exact .nil
   · exact .nil
   · exact .absent
   · exact .absent
@@ -36,17 +39,19 @@ private theorem recAnchor_valid : QueryValid .basicV31 [] [] [] recAnchor recAnc
   · rfl
   · rfl
 
-private theorem recAnchor_inputs : SetOperandValid .basicV31 [] [] [] recAnchor recInputs [] := by
+private theorem recAnchor_inputs : SetOperandValid .basicV32 [] [] [] recAnchor recInputs [] := by
   apply SetOperandValid.basic (cteUses := []) (visible := []) (by decide) .nil
     (scope := .empty) (sourceUses := []) (selectUses := []) (whereUses := [])
     (orderUses := []) (limitUses := []) (offsetUses := [])
     (output := recAnchorColumns) (pending := recInputs)
   · exact .empty
-  · exact .expression (.int (by decide)) (by simp) .nil
-  · exact .expression (.int (by decide)) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
   · decide
   · decide
+  · exact Or.inl rfl
   · exact .absent
+  · exact .nil
   · exact .nil
   · exact .absent
   · exact .absent
@@ -55,17 +60,19 @@ private theorem recAnchor_inputs : SetOperandValid .basicV31 [] [] [] recAnchor 
   · rfl
   · rfl
 
-private theorem recStep_inputs : SetOperandValid .basicV31 [] [] recEnv recStep recInputs [] := by
+private theorem recStep_inputs : SetOperandValid .basicV32 [] [] recEnv recStep recInputs [] := by
   apply SetOperandValid.basic (cteUses := []) (visible := recEnv) (by decide) .nil
     (scope := recScope) (sourceUses := []) (selectUses := []) (whereUses := [])
     (orderUses := []) (limitUses := []) (offsetUses := [])
     (output := recAnchorColumns) (pending := recInputs)
   · exact .cte (binding := ⟨"r", recColumns⟩) rfl (by simp) (by decide) (Or.inl rfl)
-  · exact .expression (.int (by decide)) (by simp) .nil
-  · exact .expression (.int (by decide)) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
   · decide
   · decide
+  · exact Or.inl rfl
   · exact .absent
+  · exact .nil
   · exact .nil
   · exact .absent
   · exact .absent
@@ -77,7 +84,7 @@ private theorem recStep_inputs : SetOperandValid .basicV31 [] [] recEnv recStep 
 /-- A genuine self-recursive definition, derived without executing the checker.
 The recursively exposed row is nullable even though both projections are 1. -/
 private theorem recDefinition_valid :
-    RecursiveCTEValid .basicV31 [] [] [] recDefinition recColumns [] := by
+    RecursiveCTEValid .basicV32 [] [] [] recDefinition recColumns [] := by
   apply RecursiveCTEValid.union (prefixUses := []) (visible := [])
     (anchorOutput := recAnchorColumns) (leftInputs := recInputs) (rightInputs := recInputs)
     (mergedOutput := recAnchorColumns) (leftUses := []) (rightUses := [])
@@ -94,14 +101,18 @@ private theorem recDefinition_valid :
   · exact recStep_inputs
   · rfl
   · rfl
-  · exact .cons (by decide) (by decide) (by decide) (by decide) .nil
+  · exact .cons
+      (left := {name := "x", input := .known ⟨.int32, false⟩})
+      (right := {name := "x", input := .known ⟨.int32, false⟩})
+      (base := .int32) (derivation := .none)
+      (by decide) (by decide) (by decide) (by decide) rfl (Or.inl ⟨rfl, rfl⟩) .nil
   · rfl
-  · exact Or.inl rfl
+  · rfl
 
-example : RecursiveCTEValid .basicV31 [] [] [] (RenderContract.translateCTE recDefinition) recColumns [] :=
+example : RecursiveCTEValid .basicV32 [] [] [] (RenderContract.translateCTE recDefinition) recColumns [] :=
   RenderContract.recursive_cte_valid_translated recDefinition_valid
 example : recursiveOutput recColumns = recColumns := rfl
-example : RecursiveCollationSafe [] [] [] "r" recDefinition.query recColumns := Or.inl rfl
+example : recColumns.map OutputColumn.collation = recAnchorColumns.map OutputColumn.collation := rfl
 
 private def recField (record : Lean.Json) (field : String) : IO String :=
   expectOk field ((record.getObjVal? field) >>= Lean.Json.getStr?)
@@ -123,12 +134,12 @@ private def recExpected (record : Lean.Json) : IO (List OutputColumn) := do
     let name ← recField column "name"
     let type ← recType (← recField column "type")
     let nullable ← expectOk name ((column.getObjVal? "nullable") >>= Lean.Json.getBool?)
-    pure ⟨name, ⟨type, nullable⟩⟩
+    pure {name := name, type := ⟨type, nullable⟩}
 
 private def recCertificate (query : Advanced.Query) (catalog : Advanced.Catalog := [])
     (params : ParameterEnv := []) : IO (List OutputColumn) := do
   let certificate ← expectOk "recursive independent contract"
-    ((SelectContract.checkQuery .basicV31 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 catalog params query).mapError reprStr)
   have _catalog := certificate.catalog_unchanged
   have _preservation := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "recursive identity" ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -138,7 +149,10 @@ private def recCertificate (query : Advanced.Query) (catalog : Advanced.Catalog 
   pure certificate.output
 
 def recursiveContractTests : IO Nat := do
+  let defaultAnchor := "WITH RECURSIVE r AS (SELECT 'a'::TEXT AS x UNION ALL SELECT ('b'::NAME)::TEXT FROM r) SELECT * FROM r"
+  let nameAnchor := "WITH RECURSIVE r AS (SELECT ('a'::NAME)::TEXT AS x UNION ALL SELECT 'b'::TEXT FROM r) SELECT * FROM r"
   let valid := [
+    nameAnchor,
     "WITH RECURSIVE r AS (SELECT 1 AS x UNION ALL SELECT x+1 FROM r WHERE x<3) SELECT x FROM r",
     "WITH RECURSIVE r AS (SELECT 1 AS x UNION SELECT x FROM r) SELECT x FROM r",
     "WITH RECURSIVE r AS (SELECT NULL AS x UNION ALL SELECT x FROM r WHERE FALSE) SELECT x FROM r",
@@ -163,8 +177,13 @@ def recursiveContractTests : IO Nat := do
     "WITH RECURSIVE r(z,z) AS (SELECT 1,2 UNION ALL SELECT 3,4 FROM r WHERE FALSE) SELECT * FROM r"]
   for sql in valid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    let _ ← recCertificate query
+    let output ← recCertificate query
+    if sql == nameAnchor then
+      SQLean.Tests.assert
+        (output == [{name := "x", type := ⟨.text, true⟩, collation := some .c}])
+        "NAME anchor retains C collation and recursive nullable output"
   let invalid := [
+    defaultAnchor,
     "WITH RECURSIVE r AS (SELECT * FROM r) SELECT * FROM r",
     "WITH RECURSIVE r AS (SELECT x FROM r UNION ALL SELECT 1) SELECT * FROM r",
     "WITH RECURSIVE r AS (SELECT 1 AS x UNION ALL SELECT a.x FROM r a CROSS JOIN r b) SELECT * FROM r",
@@ -188,20 +207,18 @@ def recursiveContractTests : IO Nat := do
     "WITH RECURSIVE r(z,z) AS (SELECT 1,2 UNION ALL SELECT z,z FROM r) SELECT * FROM r"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | other => throw (IO.userError s!"expected recursive invalid: {sql}: {reprStr (other.map fun _ => ())}")
   let unsupported := [
     "WITH RECURSIVE a AS (SELECT x FROM b), b AS (SELECT 1 AS x) SELECT * FROM a",
     "WITH RECURSIVE a AS (SELECT 1 AS x UNION ALL SELECT x FROM b), b AS (SELECT 1 AS x UNION ALL SELECT x FROM a) SELECT * FROM a",
-    "WITH RECURSIVE r AS (SELECT 'a'::TEXT AS x UNION ALL SELECT ('b'::NAME)::TEXT FROM r) SELECT * FROM r",
-    "WITH RECURSIVE r AS (SELECT ('a'::NAME)::TEXT AS x UNION ALL SELECT 'b'::TEXT FROM r) SELECT * FROM r",
     "WITH RECURSIVE r AS (SELECT 1 AS x UNION ALL SELECT MAX(x) FROM r) SELECT * FROM r",
     "WITH RECURSIVE r AS (SELECT 1 AS x UNION ALL SELECT x FROM r GROUP BY x) SELECT * FROM r",
     "WITH RECURSIVE r AS (SELECT 1 AS x UNION ALL SELECT (SELECT x FROM r)) SELECT * FROM r"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | other => throw (IO.userError s!"expected recursive coverage boundary: {sql}: {reprStr (other.map fun _ => ())}")
   let parameterCases := [
@@ -216,7 +233,7 @@ def recursiveContractTests : IO Nat := do
       s!"recursive definitions count lexical occurrences once: {sql}"
   let query ← expectOk "recursive resource" (Advanced.parseQuery valid.head!)
   for fuel in [0,1,2] do
-    match SelectContract.checkQuery .basicV31 [] [] query fuel with
+    match SelectContract.checkQuery .basicV32 [] [] query fuel with
     | .error (.inconclusive _) => pure ()
     | _ => throw (IO.userError "recursive fuel exhaustion did not remain inconclusive")
   pure (valid.length + invalid.length + unsupported.length + parameterCases.length + 3)
@@ -235,34 +252,34 @@ def recursiveCorpusTests : IO Nat := do
     let params ← expectOk id (Assurance.parseContractParameterTypes (← recField record "parameter_types"))
     let query ← expectOk id (Advanced.parseQuery sql)
     let output ← recCertificate query catalog params
-    SQLean.Tests.assert (output == (← recExpected record)) s!"{id}: exact recursive output {reprStr output}"
+    SQLean.Tests.assert (sameOutputTypes output (← recExpected record)) s!"{id}: exact recursive output {reprStr output}"
     ids := id :: ids
     sqls := sql :: sqls
   SQLean.Tests.assert (decide ids.Nodup && decide sqls.Nodup) "unique authored recursive population"
   pure records.size
 
 private def recursiveSourceRegistry : List (String × List OutputColumn) :=
-  [("recursive_contract:postgres:src/test/regress/sql/with.sql:statement-9", [⟨"n", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:postgres:src/test/regress/sql/with.sql:statement-11", [⟨"n", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:postgres:src/test/regress/sql/with.sql:statement-103", [⟨"id", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:postgres:src/test/regress/sql/with.sql:statement-104", [⟨"id", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:postgres:src/test/regress/sql/with.sql:statement-157", [⟨"x", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/recursive_cte_column_pruning.test:sqllogic-query-72", [⟨"a", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-6", [⟨"x", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-13", [⟨"x", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-21", [⟨"zz", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-28", [⟨"zz", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-36", [⟨"x", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-42", [⟨"x", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-58", [⟨"x", ⟨.int32, true⟩⟩, ⟨"y", ⟨.text, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-87", [⟨"x", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-94", [⟨"x", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/recursive_array_slice.test:sqllogic-query-60", [⟨"arr", ⟨(.array .int32), true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union_all.test:sqllogic-query-6", [⟨"x", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union_all.test:sqllogic-query-14", [⟨"x", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union_all.test:sqllogic-query-30", [⟨"x", ⟨.int32, true⟩⟩, ⟨"y", ⟨.text, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_nested_recursive_cte.test:sqllogic-query-5", [⟨"x", ⟨.int32, true⟩⟩]),
-   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_tutorial.test:sqllogic-query-109", [⟨"n", ⟨.int32, true⟩⟩, ⟨"fibₙ", ⟨.int64, true⟩⟩])]
+  [("recursive_contract:postgres:src/test/regress/sql/with.sql:statement-9", [{name := "n", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:postgres:src/test/regress/sql/with.sql:statement-11", [{name := "n", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:postgres:src/test/regress/sql/with.sql:statement-103", [{name := "id", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:postgres:src/test/regress/sql/with.sql:statement-104", [{name := "id", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:postgres:src/test/regress/sql/with.sql:statement-157", [{name := "x", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/recursive_cte_column_pruning.test:sqllogic-query-72", [{name := "a", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-6", [{name := "x", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-13", [{name := "x", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-21", [{name := "zz", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-28", [{name := "zz", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-36", [{name := "x", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-42", [{name := "x", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-58", [{name := "x", type := ⟨.int32, true⟩}, {name := "y", type := ⟨.text, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-87", [{name := "x", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-94", [{name := "x", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/recursive_array_slice.test:sqllogic-query-60", [{name := "arr", type := ⟨(.array .int32), true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union_all.test:sqllogic-query-6", [{name := "x", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union_all.test:sqllogic-query-14", [{name := "x", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union_all.test:sqllogic-query-30", [{name := "x", type := ⟨.int32, true⟩}, {name := "y", type := ⟨.text, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_nested_recursive_cte.test:sqllogic-query-5", [{name := "x", type := ⟨.int32, true⟩}]),
+   ("recursive_contract:duckdb:test/sql/cte/test_recursive_cte_tutorial.test:sqllogic-query-109", [{name := "n", type := ⟨.int32, true⟩}, {name := "fibₙ", type := ⟨.int64, true⟩}])]
 
 def recursiveConcreteContractTests : IO Nat := do
   let registry ← expectOk "fixed recursive metadata"
@@ -289,7 +306,7 @@ def recursiveConcreteContractTests : IO Nat := do
     | none => pure ()
     | some (_, expected) =>
       SQLean.Tests.assert ((Advanced.queryParameters 1024 query).isEmpty) s!"{id}: no invented source parameters"
-      SQLean.Tests.assert ((← recCertificate query) == expected) s!"{id}: exact closed recursive output"
+      SQLean.Tests.assert (sameOutputTypes (← recCertificate query) expected) s!"{id}: exact closed recursive output"
       certified := certified + 1
     ids := id :: ids
   SQLean.Tests.assert (certified == 21 && decide ids.Nodup &&

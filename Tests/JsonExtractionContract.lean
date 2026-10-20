@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -26,7 +26,7 @@ private def jsonCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "JSON extraction SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "JSON extraction identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -77,7 +77,7 @@ private def jsonOperatorInventoryTests : IO Nat := do
     let query : Advanced.Query := { body := .select { items := [
       .expression (.jsonAccess op (.cast .null leftDeclaration) (.cast .null rightDeclaration))
         (some "v")] } }
-    SQLean.Tests.assert ((← jsonCertificate query) == [⟨"v", ⟨output, true⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← jsonCertificate query) [{name := "v", type := ⟨output, true⟩}])
       "extraction inventory full-query output"
     observed := (op, selected) :: observed
   let expected := SelectContract.jsonAccessOperators.flatMap fun op =>
@@ -109,16 +109,16 @@ def jsonExtractionContractTests : IO Nat := do
         let sql := s!"SELECT NULL::{source} {spelling} NULL::{key} AS v"
         let query ← expectOk sql (Advanced.parseQuery sql)
         if (if isPath then pathAllowed else arrowAllowed) then
-          SQLean.Tests.assert ((← jsonCertificate query) == [⟨"v", ⟨output, true⟩⟩])
+          SQLean.Tests.assert (sameOutputTypes (← jsonCertificate query) [{name := "v", type := ⟨output, true⟩}])
             s!"extraction implicit key/path coercion: {sql}"
         else
-          match SelectContract.checkQuery .basicV31 [] [] query with
+          match SelectContract.checkQuery .basicV32 [] [] query with
           | .error (.invalid _) => pure ()
           | _ => throw (IO.userError s!"invalid extraction key type accepted: {sql}")
         count := count + 1
       for key in ["NULL", "'a'", "'{}'"] do
         let sql := s!"SELECT NULL::{source} {spelling} {key} AS v"
-        SQLean.Tests.assert ((← jsonOutput sql) == [⟨"v", ⟨output, true⟩⟩])
+        SQLean.Tests.assert (sameOutputTypes (← jsonOutput sql) [{name := "v", type := ⟨output, true⟩}])
           s!"unknown RHS extraction context: {sql}"
         count := count + 1
       for leftNullable in [false, true] do
@@ -126,12 +126,10 @@ def jsonExtractionContractTests : IO Nat := do
           let parameters := source ++ (if leftNullable then "?" else "") ++
             (if isPath then ",VARCHAR(5)[]" else ",SMALLINT") ++
             (if rightNullable then "?" else "")
-          SQLean.Tests.assert ((← jsonOutput s!"SELECT $1 {spelling} $2 AS v" parameters) ==
-            [⟨"v", ⟨output, true⟩⟩]) "extraction must remain nullable for non-NULL operands"
+          SQLean.Tests.assert (sameOutputTypes (← jsonOutput s!"SELECT $1 {spelling} $2 AS v" parameters) [{name := "v", type := ⟨output, true⟩}]) "extraction must remain nullable for non-NULL operands"
           count := count + 1
       let rhs := if isPath then "'{}'" else "'a'"
-      SQLean.Tests.assert ((← jsonOutput ("SELECT '{}'::" ++ s!"{source} {spelling} {rhs}")) ==
-        [⟨"?column?", ⟨output, true⟩⟩]) "extraction default label must not inherit operand labels"
+      SQLean.Tests.assert (sameOutputTypes (← jsonOutput ("SELECT '{}'::" ++ s!"{source} {spelling} {rhs}")) [{name := "?column?", type := ⟨output, true⟩}]) "extraction default label must not inherit operand labels"
       count := count + 1
   for op in SelectContract.jsonAccessOperators do
     let spelling := SelectContract.jsonAccessSpelling op
@@ -139,14 +137,14 @@ def jsonExtractionContractTests : IO Nat := do
     for source in ["NULL", "'{}'", "'null'"] do
       let sql := s!"SELECT {source} {spelling} {key}"
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV31 [] [] query with
+      match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.invalid _) => pure ()
       | _ => throw (IO.userError s!"ambiguous unknown extraction input must be Invalid: {sql}")
       count := count + 1
     for source in ["TEXT", "INTEGER", "BYTEA", "BOOLEAN", "UUID", "JSON[]", "JSONB[]"] do
       let sql := s!"SELECT NULL::{source} {spelling} {key}"
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV31 [] [] query with
+      match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.invalid _) => pure ()
       | _ => throw (IO.userError s!"non-JSON extraction input must be Invalid: {sql}")
       count := count + 1
@@ -181,7 +179,7 @@ def jsonExtractionContractTests : IO Nat := do
     ("SELECT d.a -> 'a' AS v FROM (SELECT '{\"a\":1}'::JSON AS a) d", .json),
     ("SELECT DISTINCT '{\"a\":1}'::JSONB -> 'a' AS v ORDER BY v", .jsonb)]
   for (sql, output) in examples do
-    SQLean.Tests.assert ((← jsonOutput sql) == [⟨"v", ⟨output, true⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← jsonOutput sql) [{name := "v", type := ⟨output, true⟩}])
       s!"extraction composition/output: {sql}"
     count := count + 1
   for sql in [
@@ -190,7 +188,7 @@ def jsonExtractionContractTests : IO Nat := do
       "SELECT '[1]'::JSONB -> 2147483648",
       "SELECT '[1]'::JSONB -> -2147483649"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"extraction enclosing/INTEGER boundary must be Invalid: {sql}")
     count := count + 1
@@ -200,7 +198,7 @@ def jsonExtractionContractTests : IO Nat := do
       "SELECT unknown_function() -> 'a'",
       "SELECT ROW(1,2) -> 'a'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"extraction child coverage must stay Unsupported: {sql}")
     count := count + 1
@@ -209,18 +207,18 @@ def jsonExtractionContractTests : IO Nat := do
       ("SELECT $2 #>> $1 AS v", "varchar(5)[],json", .text),
       ("SELECT (CASE WHEN ? THEN ? ELSE ? END) -> (? || ?) AS v", "bool,jsonb,jsonb,text,text", .jsonb),
       ("SELECT d.a #> ARRAY[?,?] AS v FROM (SELECT ?::JSONB AS a) d", "text,text,jsonb", .jsonb)] do
-    SQLean.Tests.assert ((← jsonOutput sql parameters) == [⟨"v", ⟨output, true⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← jsonOutput sql parameters) [{name := "v", type := ⟨output, true⟩}])
       s!"extraction lexical parameter order: {sql}"
     count := count + 1
   let params ← expectOk "extraction parameters" (Assurance.parseContractParameterTypes "jsonb,text")
   let bad : Advanced.Query := { body := .select { items := [.expression
     (.jsonAccess .field (.parameter (.numbered 1)) (.parameter (.anonymous 2)))] } }
-  match SelectContract.checkQuery .basicV31 [] params bad with
+  match SelectContract.checkQuery .basicV32 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "mixed extraction parameter styles must be Invalid")
   count := count + 1
   let query ← expectOk "extraction exhaustion" (Advanced.parseQuery "SELECT '{}'::JSONB -> 'a'")
-  match SelectContract.checkQuery .basicV31 [] [] query 1 with
+  match SelectContract.checkQuery .basicV32 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "extraction exhaustion must be Inconclusive")
   count := count + 1
@@ -343,7 +341,7 @@ def jsonExtractionConcreteContractTests : IO Nat := do
     | _ => throw (IO.userError s!"{id}: unexpected concrete query structure")
     SQLean.Tests.assert (Advanced.queryParameters 1024 query == [])
       s!"{id}: concrete query contains undeclared parameters"
-    SQLean.Tests.assert ((← jsonCertificate query) == [⟨"?column?", ⟨output, true⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← jsonCertificate query) [{name := "?column?", type := ⟨output, true⟩}])
       s!"{id}: exact concrete extraction certificate output"
     ids := id :: ids
     statements := sql :: statements

@@ -1,0 +1,354 @@
+{
+  "localedef_commands": [
+    [
+      "localedef",
+      "--no-archive",
+      "-i",
+      "sv_SE",
+      "-f",
+      "UTF-8",
+      "/tmp/sqlean-collation-research/isolated-locales/sv_SE.utf8"
+    ],
+    [
+      "localedef",
+      "--no-archive",
+      "-i",
+      "tr_TR",
+      "-f",
+      "UTF-8",
+      "/tmp/sqlean-collation-research/isolated-locales/tr_TR.utf8"
+    ],
+    [
+      "localedef",
+      "--no-archive",
+      "-i",
+      "en_US",
+      "-f",
+      "UTF-8",
+      "/tmp/sqlean-collation-research/isolated-locales/en_US.utf8"
+    ]
+  ],
+  "locale_inputs": [
+    {
+      "path": "/usr/share/i18n/locales/sv_SE",
+      "sha256": "535490e000f9ab971b48a47167f27cdaa11f3cea630bd759dcb461d2c6d01ad7"
+    },
+    {
+      "path": "/usr/share/i18n/locales/tr_TR",
+      "sha256": "7bdc5a2d8b59fb88981decec907c7adb23252e89b5ccc72a79622a9b52d2f53a"
+    },
+    {
+      "path": "/usr/share/i18n/locales/en_US",
+      "sha256": "ef412f94d27e3c5bf24e101bfec3035d9ed2205353914e3f975ea332c9bc5195"
+    }
+  ],
+  "native_setup": "CREATE COLLATION pg_catalog.\"sv_SE\" (provider=libc, locale='sv_SE.utf8'); CREATE COLLATION pg_catalog.\"tr_TR\" (provider=libc, locale='tr_TR.utf8');",
+  "observed": [
+    {
+      "oid": "12462",
+      "nspname": "pg_catalog",
+      "collname": "de-x-icu",
+      "collprovider": "i",
+      "collisdeterministic": true,
+      "collencoding": -1,
+      "collcollate": null,
+      "collctype": null,
+      "colliculocale": "de",
+      "collicurules": null,
+      "collversion": "153.121"
+    },
+    {
+      "oid": "12490",
+      "nspname": "pg_catalog",
+      "collname": "en-x-icu",
+      "collprovider": "i",
+      "collisdeterministic": true,
+      "collencoding": -1,
+      "collcollate": null,
+      "collctype": null,
+      "colliculocale": "en",
+      "collicurules": null,
+      "collversion": "153.121"
+    },
+    {
+      "oid": "12346",
+      "nspname": "pg_catalog",
+      "collname": "en_US",
+      "collprovider": "c",
+      "collisdeterministic": true,
+      "collencoding": 6,
+      "collcollate": "en_US.utf8",
+      "collctype": "en_US.utf8",
+      "colliculocale": null,
+      "collicurules": null,
+      "collversion": "2.39"
+    },
+    {
+      "oid": "13084",
+      "nspname": "pg_catalog",
+      "collname": "sv-x-icu",
+      "collprovider": "i",
+      "collisdeterministic": true,
+      "collencoding": -1,
+      "collcollate": null,
+      "collctype": null,
+      "colliculocale": "sv",
+      "collicurules": null,
+      "collversion": "153.121.44.8"
+    },
+    {
+      "oid": "16384",
+      "nspname": "pg_catalog",
+      "collname": "sv_SE",
+      "collprovider": "c",
+      "collisdeterministic": true,
+      "collencoding": 6,
+      "collcollate": "sv_SE.utf8",
+      "collctype": "sv_SE.utf8",
+      "colliculocale": null,
+      "collicurules": null,
+      "collversion": "2.39"
+    },
+    {
+      "oid": "13121",
+      "nspname": "pg_catalog",
+      "collname": "tr-x-icu",
+      "collprovider": "i",
+      "collisdeterministic": true,
+      "collencoding": -1,
+      "collcollate": null,
+      "collctype": null,
+      "colliculocale": "tr",
+      "collicurules": null,
+      "collversion": "153.121.44.8"
+    },
+    {
+      "oid": "16385",
+      "nspname": "pg_catalog",
+      "collname": "tr_TR",
+      "collprovider": "c",
+      "collisdeterministic": true,
+      "collencoding": 6,
+      "collcollate": "tr_TR.utf8",
+      "collctype": "tr_TR.utf8",
+      "colliculocale": null,
+      "collicurules": null,
+      "collversion": "2.39"
+    },
+    {
+      "oid": "962",
+      "nspname": "pg_catalog",
+      "collname": "ucs_basic",
+      "collprovider": "c",
+      "collisdeterministic": true,
+      "collencoding": 6,
+      "collcollate": "C",
+      "collctype": "C",
+      "colliculocale": null,
+      "collicurules": null,
+      "collversion": null
+    },
+    {
+      "oid": "12347",
+      "nspname": "pg_catalog",
+      "collname": "und-x-icu",
+      "collprovider": "i",
+      "collisdeterministic": true,
+      "collencoding": -1,
+      "collcollate": null,
+      "collctype": null,
+      "colliculocale": "und",
+      "collicurules": null,
+      "collversion": "153.121"
+    },
+    {
+      "oid": "963",
+      "nspname": "pg_catalog",
+      "collname": "unicode",
+      "collprovider": "i",
+      "collisdeterministic": true,
+      "collencoding": -1,
+      "collcollate": null,
+      "collctype": null,
+      "colliculocale": "und",
+      "collicurules": null,
+      "collversion": "153.121"
+    }
+  ],
+  "source_execution": "not-performed",
+  "scope": "isolated authored fixture catalog, not source deployment",
+  "format_version": 1,
+  "requested": [
+    "de-x-icu",
+    "en-x-icu",
+    "en_US",
+    "sv-x-icu",
+    "sv_SE",
+    "tr-x-icu",
+    "tr_TR",
+    "ucs_basic",
+    "und-x-icu",
+    "unicode"
+  ],
+  "catalog_query": "SELECT row_to_json(x) FROM (SELECT c.oid,n.nspname,c.collname,c.collprovider,c.collisdeterministic,c.collencoding,c.collcollate,c.collctype,c.colliculocale,c.collicurules,c.collversion FROM pg_collation c JOIN pg_namespace n ON n.oid=c.collnamespace WHERE c.collname IN ('de-x-icu','en-x-icu','en_US','sv-x-icu','sv_SE','tr-x-icu','tr_TR','ucs_basic','und-x-icu','unicode') ORDER BY n.nspname,c.collname,c.collencoding) x;",
+  "version_query": "SELECT json_build_object('version',version(),'server_version',current_setting('server_version'),'server_version_num',current_setting('server_version_num'),'server_encoding',current_setting('server_encoding'),'client_encoding',current_setting('client_encoding'),'database_collation',(SELECT datcollate FROM pg_database WHERE datname=current_database()),'database_ctype',(SELECT datctype FROM pg_database WHERE datname=current_database()));",
+  "native_version": {
+    "version": "PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit",
+    "server_version": "16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)",
+    "server_version_num": "160015",
+    "server_encoding": "UTF8",
+    "client_encoding": "UTF8",
+    "database_collation": "C",
+    "database_ctype": "C"
+  },
+  "glibc_version": "glibc 2.39",
+  "native_ddl_origin": "authored fixture setup; no downloaded SQL executed",
+  "locale_binary_hashes": [
+    {
+      "path": "en_US.utf8/LC_ADDRESS",
+      "sha256": "c39329bc8f9fd0a7bd7faa9256cf3b8e39ec91ff989662066f243466269cc164"
+    },
+    {
+      "path": "en_US.utf8/LC_COLLATE",
+      "sha256": "f062bf818ec7c394208e4b12db855fbe3765ca1463b2e0cfe05e434f1c293981"
+    },
+    {
+      "path": "en_US.utf8/LC_CTYPE",
+      "sha256": "59015993b1b671273461ef1167d7a9ad76dc090d521c91102e962217ed6b6dba"
+    },
+    {
+      "path": "en_US.utf8/LC_IDENTIFICATION",
+      "sha256": "2dfac9ea94abf72ba888bcbe5ba582a99fbca1b7c6a2598e80b1028d12a71ecf"
+    },
+    {
+      "path": "en_US.utf8/LC_MEASUREMENT",
+      "sha256": "c2200fc75f8f268d9e8d71072064f64d94497e5abd58abd5ab1506c3a40dbd1a"
+    },
+    {
+      "path": "en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES",
+      "sha256": "ff22236475c720a2c0c598e18dcaa0c2350de8bb335bcb6bbc994346b688f4e0"
+    },
+    {
+      "path": "en_US.utf8/LC_MONETARY",
+      "sha256": "aa4205372efcb950e2cb6f37d3629397a1d6e420b62e2acab45ce9eb98c9db8c"
+    },
+    {
+      "path": "en_US.utf8/LC_NAME",
+      "sha256": "2d776e660519a0af4e766d36c0698101f73e1aed52c30b14588205ee5d76adf1"
+    },
+    {
+      "path": "en_US.utf8/LC_NUMERIC",
+      "sha256": "5172617c05a37b20bf980ca047b35da4ccc281be9672df40b267dbc0a7d69c09"
+    },
+    {
+      "path": "en_US.utf8/LC_PAPER",
+      "sha256": "b4b7da39151376fdb0e8f7c35d0dc2335d2f1149fdb23882143ac1604c3f8a43"
+    },
+    {
+      "path": "en_US.utf8/LC_TELEPHONE",
+      "sha256": "30b9a5f08480a634e2f016e1e2af957ae34e7bc849600376b8ac6ce2c9d536a6"
+    },
+    {
+      "path": "en_US.utf8/LC_TIME",
+      "sha256": "9bcdb29af2d6244ad5bffc068fe5bec91bb2daf8a7bdebb1faf95b906c665f0c"
+    },
+    {
+      "path": "sv_SE.utf8/LC_ADDRESS",
+      "sha256": "7690dfb34576de447dd66ca2e0c1a7ebabcf5d21ccb928d45dafe2345628dc00"
+    },
+    {
+      "path": "sv_SE.utf8/LC_COLLATE",
+      "sha256": "4e251e2d7df7180e767763808e46a01cf2a25186ec356cea216bc1ff6543e3e5"
+    },
+    {
+      "path": "sv_SE.utf8/LC_CTYPE",
+      "sha256": "2d1212819f49a57beb50a9fdfb369bd813fd28020b596a158c4d111682a395b6"
+    },
+    {
+      "path": "sv_SE.utf8/LC_IDENTIFICATION",
+      "sha256": "6c9f26e8465ad93ba1b6d7e1fd5694fafffa4181281e123b0f6722e4affcc515"
+    },
+    {
+      "path": "sv_SE.utf8/LC_MEASUREMENT",
+      "sha256": "bb14a6f2cbd5092a755e8f272079822d3e842620dd4542a8dfa1e5e72fc6115b"
+    },
+    {
+      "path": "sv_SE.utf8/LC_MESSAGES/SYS_LC_MESSAGES",
+      "sha256": "ed2938058c8daa89c9d39148a83e1b45f6e98d20e72496ed2a91ec406730d291"
+    },
+    {
+      "path": "sv_SE.utf8/LC_MONETARY",
+      "sha256": "ae6da7ebffe2c64fc1381da55eb770e8992a5f1c61d81f70255d286e48ffaec6"
+    },
+    {
+      "path": "sv_SE.utf8/LC_NAME",
+      "sha256": "710d69ab9ac421f7da9a54bcc5a6cca6ce07f1a3a52840a2fd86879d9417a961"
+    },
+    {
+      "path": "sv_SE.utf8/LC_NUMERIC",
+      "sha256": "3e59075d835cbc5a340e99e1316a915033160687e9c82cecd8a8d4d3359ed075"
+    },
+    {
+      "path": "sv_SE.utf8/LC_PAPER",
+      "sha256": "cde048b81e2a026517cc707c906aebbd50f5ee3957b6f0c1c04699dffcb7c015"
+    },
+    {
+      "path": "sv_SE.utf8/LC_TELEPHONE",
+      "sha256": "19fa927fde3f9e414f1976c8905e5fdae7d8d3e35224d8651b560d516f9592e9"
+    },
+    {
+      "path": "sv_SE.utf8/LC_TIME",
+      "sha256": "70779ed27b5d34b3dff1b1893606d1a3015b926b95400544a514cc870fc9b7bc"
+    },
+    {
+      "path": "tr_TR.utf8/LC_ADDRESS",
+      "sha256": "fef48f78446e045ec165f7d3ec200e591548eb374703a1e23dd6cc8cfa4558aa"
+    },
+    {
+      "path": "tr_TR.utf8/LC_COLLATE",
+      "sha256": "64f38ff5bf682fc9ff535c2b810d54102ca462936d821bd162cabb04bc18b407"
+    },
+    {
+      "path": "tr_TR.utf8/LC_CTYPE",
+      "sha256": "152971ab68c678b80bf151bb08f31a8f9bda6d3382cda0624122c7d2aafa0191"
+    },
+    {
+      "path": "tr_TR.utf8/LC_IDENTIFICATION",
+      "sha256": "745a84326449b1988841400a01176e3a1cad16bedc6a4fb249325960889ee42d"
+    },
+    {
+      "path": "tr_TR.utf8/LC_MEASUREMENT",
+      "sha256": "bb14a6f2cbd5092a755e8f272079822d3e842620dd4542a8dfa1e5e72fc6115b"
+    },
+    {
+      "path": "tr_TR.utf8/LC_MESSAGES/SYS_LC_MESSAGES",
+      "sha256": "16266a19dc3bcf077069ff88ad48230efe07b4f3d73f02bb0880a2dbd15fb00e"
+    },
+    {
+      "path": "tr_TR.utf8/LC_MONETARY",
+      "sha256": "32d4ec33c1663ac7dd9d04c0e23c03e9750b8bcb7ceb46fe2a6b5cf56fdb1eb0"
+    },
+    {
+      "path": "tr_TR.utf8/LC_NAME",
+      "sha256": "0f928a08253591e1dbacddbd2eff71177adb849de14848d914fd6b51610ea134"
+    },
+    {
+      "path": "tr_TR.utf8/LC_NUMERIC",
+      "sha256": "81f7e04a844efd03acebe488604de9564374fa91fdb3ca0048c0c64295a30f31"
+    },
+    {
+      "path": "tr_TR.utf8/LC_PAPER",
+      "sha256": "cde048b81e2a026517cc707c906aebbd50f5ee3957b6f0c1c04699dffcb7c015"
+    },
+    {
+      "path": "tr_TR.utf8/LC_TELEPHONE",
+      "sha256": "bc1281d07f8ba97f78a9e934b1491fc8b5725a8ce475937064da3269b2970394"
+    },
+    {
+      "path": "tr_TR.utf8/LC_TIME",
+      "sha256": "7beb0894f0e05d68903594331d92ab06bcde534714fa83b4336b46cdb63fee23"
+    }
+  ],
+  "postgres_binary_sha256": "201d8daff9a5bd9df70b820471b965c39f5a776d677f395232c477d051270722",
+  "utf8_charmap_sha256": "1104351c3f552b2b29327fcef4517b1d17334486e83c0c7903cfed924b44e89d"
+}

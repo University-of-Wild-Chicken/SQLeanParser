@@ -72,6 +72,8 @@ mutual
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
           exprSql arg.val)
     | .cast arg type => "CAST(" ++ exprSql arg ++ " AS " ++ type.toSql ++ ")"
+    | .collate arg name =>
+        "(" ++ exprSql arg ++ " COLLATE " ++ String.intercalate "." (name.map quoteName) ++ ")"
     -- Excluded by SQLite admissibility; this total structural spelling is only
     -- used by serialization laws over arbitrary finite ASTs.
     | .subscript base subscripts => paren (exprSql base) ++ String.join

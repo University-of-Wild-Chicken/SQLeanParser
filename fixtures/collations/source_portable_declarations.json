@@ -1,0 +1,56 @@
+{
+  "tables": [
+    {
+      "name": "collate_test1",
+      "schema": "collate_tests",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "a",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "b",
+          "type": "text",
+          "nullable": false
+        }
+      ],
+      "columnCollations": [
+        {
+          "column": "b",
+          "collation": "C"
+        }
+      ]
+    }
+  ],
+  "collations": {
+    "encoding": "UTF8",
+    "entries": [
+      {
+        "id": "default",
+        "schema": "pg_catalog",
+        "name": "default",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "C",
+        "schema": "pg_catalog",
+        "name": "C",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "POSIX",
+        "schema": "pg_catalog",
+        "name": "POSIX",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      }
+    ]
+  }
+}

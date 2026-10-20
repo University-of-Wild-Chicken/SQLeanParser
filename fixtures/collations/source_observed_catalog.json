@@ -1,0 +1,353 @@
+{
+  "tables": [
+    {
+      "name": "collate_test1",
+      "schema": "collate_tests",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "a",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "b",
+          "type": "text",
+          "nullable": false
+        }
+      ],
+      "columnCollations": [
+        {
+          "column": "b",
+          "collation": "custom:fixture-observed:pg_catalog:en-x-icu:all-encodings"
+        }
+      ]
+    },
+    {
+      "name": "collate_test2",
+      "schema": "collate_tests",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "a",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "b",
+          "type": "text",
+          "nullable": true
+        }
+      ],
+      "columnCollations": [
+        {
+          "column": "b",
+          "collation": "custom:fixture-observed:pg_catalog:sv-x-icu:all-encodings"
+        }
+      ]
+    },
+    {
+      "name": "test7",
+      "schema": "collate_tests",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "a",
+          "type": "text",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "name": "test6",
+      "schema": "collate_tests",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "a",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "b",
+          "type": "text",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "name": "test6a",
+      "schema": "collate_tests",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "a",
+          "type": "int32",
+          "nullable": true
+        },
+        {
+          "name": "b",
+          "type": "text[]",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "name": "test1cs",
+      "schema": "collate_tests",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": true
+        }
+      ],
+      "columnCollations": [
+        {
+          "column": "x",
+          "collation": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246"
+        }
+      ]
+    },
+    {
+      "name": "test3cs",
+      "schema": "collate_tests",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": true
+        }
+      ],
+      "columnCollations": [
+        {
+          "column": "x",
+          "collation": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246"
+        }
+      ]
+    }
+  ],
+  "collations": {
+    "encoding": "UTF8",
+    "entries": [
+      {
+        "id": "default",
+        "schema": "pg_catalog",
+        "name": "default",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "C",
+        "schema": "pg_catalog",
+        "name": "C",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "POSIX",
+        "schema": "pg_catalog",
+        "name": "POSIX",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:fixture-observed:pg_catalog:de-x-icu:all-encodings",
+        "schema": "pg_catalog",
+        "name": "de-x-icu",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:fixture-observed:pg_catalog:en-x-icu:all-encodings",
+        "schema": "pg_catalog",
+        "name": "en-x-icu",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:fixture-observed:pg_catalog:en_US:UTF8",
+        "schema": "pg_catalog",
+        "name": "en_US",
+        "encoding": "UTF8",
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:fixture-observed:pg_catalog:sv-x-icu:all-encodings",
+        "schema": "pg_catalog",
+        "name": "sv-x-icu",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:fixture-observed:pg_catalog:sv_SE:UTF8",
+        "schema": "pg_catalog",
+        "name": "sv_SE",
+        "encoding": "UTF8",
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:fixture-observed:pg_catalog:tr-x-icu:all-encodings",
+        "schema": "pg_catalog",
+        "name": "tr-x-icu",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:fixture-observed:pg_catalog:tr_TR:UTF8",
+        "schema": "pg_catalog",
+        "name": "tr_TR",
+        "encoding": "UTF8",
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:fixture-observed:pg_catalog:ucs_basic:UTF8",
+        "schema": "pg_catalog",
+        "name": "ucs_basic",
+        "encoding": "UTF8",
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:fixture-observed:pg_catalog:und-x-icu:all-encodings",
+        "schema": "pg_catalog",
+        "name": "und-x-icu",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:fixture-observed:pg_catalog:unicode:all-encodings",
+        "schema": "pg_catalog",
+        "name": "unicode",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-206",
+        "schema": "collate_tests",
+        "name": "testcoll_ignore_accents",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-210",
+        "schema": "collate_tests",
+        "name": "testcoll_backwards",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-213",
+        "schema": "collate_tests",
+        "name": "testcoll_lower_first",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-214",
+        "schema": "collate_tests",
+        "name": "testcoll_upper_first",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-216",
+        "schema": "collate_tests",
+        "name": "testcoll_shifted",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-219",
+        "schema": "collate_tests",
+        "name": "testcoll_numeric",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-223",
+        "schema": "collate_tests",
+        "name": "testcoll_de_phonebook",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-225",
+        "schema": "collate_tests",
+        "name": "testcoll_rules1",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-232",
+        "schema": "collate_tests",
+        "name": "ctest_det",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-233",
+        "schema": "collate_tests",
+        "name": "ctest_nondet",
+        "encoding": null,
+        "deterministic": false,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246",
+        "schema": "collate_tests",
+        "name": "case_sensitive",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-247",
+        "schema": "collate_tests",
+        "name": "case_insensitive",
+        "encoding": null,
+        "deterministic": false,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-250",
+        "schema": "collate_tests",
+        "name": "lt_insensitive",
+        "encoding": null,
+        "deterministic": false,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-252",
+        "schema": "collate_tests",
+        "name": "lt_upperfirst",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      }
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -34,7 +34,7 @@ private def existenceField (id : String) (record : Lean.Json) (name : String) : 
 private def existenceCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) : IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "JSONB existence SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "JSONB existence identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -79,7 +79,7 @@ private def existenceInventoryTests : IO Nat := do
       (← existenceField spelling record "function")) s!"{spelling}: exact native function"
     let query : Advanced.Query := {body := .select {items := [
       .expression (.jsonExistence op (.cast .null leftType) (.cast .null rightType)) (some "v")]}}
-    SQLean.Tests.assert ((← existenceCertificate query) == [⟨"v", ⟨.bool, true⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← existenceCertificate query) [{name := "v", type := ⟨.bool, true⟩}])
       "existence inventory independent full certificate"
     observed := op :: observed
   SQLean.Tests.assert (decide observed.Nodup && SelectContract.jsonExistenceOperators.all observed.contains)
@@ -118,10 +118,10 @@ def jsonExistenceContractTests : IO Nat := do
         let expr := Advanced.Expr.jsonExistence op (← expression left) (← expression right)
         let query : Advanced.Query := {body := .select {items := [.expression expr (some "v")]}}
         if expected then
-          SQLean.Tests.assert ((← existenceCertificate query) == [⟨"v", ⟨.bool, true⟩⟩])
+          SQLean.Tests.assert (sameOutputTypes (← existenceCertificate query) [{name := "v", type := ⟨.bool, true⟩}])
             s!"existence matrix exact output: {reprStr op}/{left}/{right}"
         else
-          match SelectContract.checkQuery .basicV31 [] [] query with
+          match SelectContract.checkQuery .basicV32 [] [] query with
           | .error (.invalid diagnostic) =>
               SQLean.Tests.assert (diagnostic.code == "json_existence_signature") "closed unsupported overload must be Invalid"
           | _ => throw (IO.userError s!"existence matrix expected Invalid: {reprStr op}/{left}/{right}")
@@ -133,8 +133,7 @@ def jsonExistenceContractTests : IO Nat := do
       for rightNullable in [false, true] do
         let parameters := (if leftNullable then "JSONB?" else "JSONB") ++ "," ++
           rightType ++ (if rightNullable then "?" else "")
-        SQLean.Tests.assert ((← existenceOutput s!"SELECT $1 {spelling} $2 AS v" parameters) ==
-          [⟨"v", ⟨.bool, leftNullable || rightNullable⟩⟩]) "existence outer nullability"
+        SQLean.Tests.assert (sameOutputTypes (← existenceOutput s!"SELECT $1 {spelling} $2 AS v" parameters) [{name := "v", type := ⟨.bool, leftNullable || rightNullable⟩}]) "existence outer nullability"
         count := count + 1
   let examples : List (String × String × SelectContract.ScalarType × Bool) := [
     ("SELECT '{\"a\":1}' ? 'a' AS v", "v", .bool, false),
@@ -168,7 +167,7 @@ def jsonExistenceContractTests : IO Nat := do
     ("SELECT q.data ? 'a' AS v FROM (SELECT '{}'::JSONB AS data) q", "v", .bool, false),
     ("SELECT 1 AS v WHERE '{}'::JSONB ? 'a'", "v", .int32, false)]
   for (sql, name, type, nullable) in examples do
-    SQLean.Tests.assert ((← existenceOutput sql) == [⟨name, ⟨type, nullable⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← existenceOutput sql) [{name := name, type := ⟨type, nullable⟩}])
       s!"existence composition/output: {sql}"
     count := count + 1
   for sql in [
@@ -177,7 +176,7 @@ def jsonExistenceContractTests : IO Nat := do
       "SELECT '{}'::JSONB ?| 'a'::TEXT", "SELECT '{}'::JSONB ? 1",
       "SELECT '{}'::JSONB ?& ARRAY[1]", "SELECT '{}'::JSONB ? ARRAY['a']"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected invalid existence signature: {sql}")
     count := count + 1
@@ -185,7 +184,7 @@ def jsonExistenceContractTests : IO Nat := do
       "SELECT (SELECT '{}'::JSONB) ? 'a'", "SELECT '{}'::JSONB ? (SELECT 'a')",
       "SELECT unknown_function() ?& ARRAY['a']", "SELECT ROW(1,2) ? 'a'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"unsupported existence child must remain unsupported: {sql}")
     count := count + 1
@@ -197,7 +196,7 @@ def jsonExistenceContractTests : IO Nat := do
       ("SELECT (CASE WHEN ? THEN ? ELSE ? END) ? ? AS v", "BOOLEAN,JSONB,JSONB,TEXT", false),
       ("SELECT ? ? q.key_name AS v FROM (SELECT ? AS key_name) q", "JSONB,TEXT", false),
       ("SELECT (? ? ?) AND (? ? ?) AS v", "JSONB,TEXT,JSONB,TEXT", false)] do
-    SQLean.Tests.assert ((← existenceOutput sql parameters) == [⟨"v", ⟨.bool, nullable⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes (← existenceOutput sql parameters) [{name := "v", type := ⟨.bool, nullable⟩}])
       s!"existence lexical placeholder order: {sql}"
     count := count + 1
   for (expr, parameterTypes) in [
@@ -205,7 +204,7 @@ def jsonExistenceContractTests : IO Nat := do
       (.jsonExistence .key (.parameter (.anonymous 2)) (.parameter (.anonymous 1)), "TEXT,JSONB")] do
     let parameters ← expectOk "existence bindings" (Assurance.parseContractParameterTypes parameterTypes)
     let query : Advanced.Query := {body := .select {items := [.expression expr]}}
-    match SelectContract.checkQuery .basicV31 [] parameters query with
+    match SelectContract.checkQuery .basicV32 [] parameters query with
     | .error (.invalid diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == "parameter_notation")
           "well-typed existence operands must fail specifically on parameter notation"
@@ -213,7 +212,7 @@ def jsonExistenceContractTests : IO Nat := do
     count := count + 1
   let query : Advanced.Query := {body := .select {items := [
     .expression (.jsonExistence .key (.cast .null ⟨.jsonb, []⟩) (.literal (.text "a")))]}}
-  match SelectContract.checkQuery .basicV31 [] [] query 1 with
+  match SelectContract.checkQuery .basicV32 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "existence resource exhaustion must be Inconclusive")
   pure (count + 1)
@@ -307,8 +306,8 @@ def jsonExistenceConcreteContractTests : IO Nat := do
     if certifiedIds.contains id then
       let width := if doubleOutputIds.contains id then 2 else 1
       let expected : List SelectContract.OutputColumn :=
-        List.replicate width ⟨"?column?", ⟨.bool, nullableIds.contains id⟩⟩
-      SQLean.Tests.assert ((← existenceCertificate query) == expected)
+        List.replicate width {name := "?column?", type := ⟨.bool, nullableIds.contains id⟩}
+      SQLean.Tests.assert (sameOutputTypes (← existenceCertificate query) expected)
         s!"{id}: complete source certificate exact output"
       certified := certified + 1
       positions := positions + width

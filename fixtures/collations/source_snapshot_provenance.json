@@ -1,0 +1,312 @@
+{
+  "format_version": 1,
+  "interpretation": "conditional caller-asserted catalog snapshots derived from written source declarations; not observations of installed catalogs",
+  "source_execution": "not-performed",
+  "native_source_analysis": "not-performed",
+  "source_declaration_context_sha256": "20c57b8317d9127fe1c086ddaedaca83ff8a9b2f64e2c9af604bd568a53d58b2",
+  "basis_sources": [
+    {
+      "source_url": "https://raw.githubusercontent.com/postgres/postgres/f0595c3d839debdb140903621c1b44a4f4d86256/src/backend/commands/collationcmds.c",
+      "source_file": "src/backend/commands/collationcmds.c",
+      "local_path": "fixtures/collations/provenance/postgres/src/backend/commands/collationcmds.c",
+      "sha256": "9c0eaf054ead14e45388202fc6a297bee68d80e9c3f1958360e997210fb5e2ef",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt"
+    },
+    {
+      "source_url": "https://raw.githubusercontent.com/postgres/postgres/f0595c3d839debdb140903621c1b44a4f4d86256/src/include/catalog/pg_collation.dat",
+      "source_file": "src/include/catalog/pg_collation.dat",
+      "local_path": "fixtures/collations/provenance/postgres/src/include/catalog/pg_collation.dat",
+      "sha256": "a52b39beebcda801d25fa70e586a7ffb86476f83dffc460f047870bafe9ef34b",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt"
+    }
+  ],
+  "assumptions": [
+    "UTF8 connection",
+    "successful stated source declarations with required provider support and locale data",
+    "source schema and search_path visible without shadowing",
+    "all custom identity tokens denote distinct objects, never native OIDs",
+    "database-default identity is supplied by the caller; its locale is not inferred"
+  ],
+  "builtin_basis": "CollationEnv.builtin with distinct default/C/POSIX identities; no imported names inferred",
+  "custom_collation_bindings": [
+    {
+      "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-213",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-213",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L479",
+      "sql_sha256": "02dc0eec5a1366cc03859751b0254e44883dd97a36e2a36784d770796ea6ac15",
+      "written_options": [
+        {
+          "name": "provider",
+          "value": "icu"
+        },
+        {
+          "name": "locale",
+          "value": "@colCaseFirst=lower"
+        }
+      ],
+      "deterministic_basis": "PostgreSQL-16-CREATE-COLLATION-default-true",
+      "encoding_basis": "PostgreSQL-16-ICU-CREATE-collencoding-minus-one",
+      "namespace_and_visibility_basis": "caller-asserted successful declarations in source schema/search_path; no shadowing",
+      "identity_basis": "distinct symbolic reference to source CREATE declaration; not an OID"
+    },
+    {
+      "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-214",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-214",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L480",
+      "sql_sha256": "b79299282d9d637457ea2e65017d57638b7c0c23a06591e802da655b49e4f5bc",
+      "written_options": [
+        {
+          "name": "provider",
+          "value": "icu"
+        },
+        {
+          "name": "locale",
+          "value": "@colCaseFirst=upper"
+        }
+      ],
+      "deterministic_basis": "PostgreSQL-16-CREATE-COLLATION-default-true",
+      "encoding_basis": "PostgreSQL-16-ICU-CREATE-collencoding-minus-one",
+      "namespace_and_visibility_basis": "caller-asserted successful declarations in source schema/search_path; no shadowing",
+      "identity_basis": "distinct symbolic reference to source CREATE declaration; not an OID"
+    },
+    {
+      "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-225",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-225",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L501",
+      "sql_sha256": "38beda8389c53288b5e0f5f739cf41613541ab7ac38f453e7f95e83c3df21e7b",
+      "written_options": [
+        {
+          "name": "provider",
+          "value": "icu"
+        },
+        {
+          "name": "locale",
+          "value": ""
+        },
+        {
+          "name": "rules",
+          "value": "&a < g"
+        }
+      ],
+      "deterministic_basis": "PostgreSQL-16-CREATE-COLLATION-default-true",
+      "encoding_basis": "PostgreSQL-16-ICU-CREATE-collencoding-minus-one",
+      "namespace_and_visibility_basis": "caller-asserted successful declarations in source schema/search_path; no shadowing",
+      "identity_basis": "distinct symbolic reference to source CREATE declaration; not an OID"
+    },
+    {
+      "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-232",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-232",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L514",
+      "sql_sha256": "cf97491e76dec6c7a06e9473e52bfd65017e21b963c5851eec72347a3b6df8a0",
+      "written_options": [
+        {
+          "name": "provider",
+          "value": "icu"
+        },
+        {
+          "name": "locale",
+          "value": ""
+        },
+        {
+          "name": "deterministic",
+          "value": "true"
+        }
+      ],
+      "deterministic_basis": "explicit-source-option",
+      "encoding_basis": "PostgreSQL-16-ICU-CREATE-collencoding-minus-one",
+      "namespace_and_visibility_basis": "caller-asserted successful declarations in source schema/search_path; no shadowing",
+      "identity_basis": "distinct symbolic reference to source CREATE declaration; not an OID"
+    },
+    {
+      "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-233",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-233",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L515",
+      "sql_sha256": "455949b0bc729594797a4c0d704e679753012f7eacff8105fef26fd655144e8e",
+      "written_options": [
+        {
+          "name": "provider",
+          "value": "icu"
+        },
+        {
+          "name": "locale",
+          "value": ""
+        },
+        {
+          "name": "deterministic",
+          "value": "false"
+        }
+      ],
+      "deterministic_basis": "explicit-source-option",
+      "encoding_basis": "PostgreSQL-16-ICU-CREATE-collencoding-minus-one",
+      "namespace_and_visibility_basis": "caller-asserted successful declarations in source schema/search_path; no shadowing",
+      "identity_basis": "distinct symbolic reference to source CREATE declaration; not an OID"
+    },
+    {
+      "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L533",
+      "sql_sha256": "112fca28c8555326fb096ba34baaa5c581d6fe57bf6dd862be320ddde2578d0d",
+      "written_options": [
+        {
+          "name": "provider",
+          "value": "icu"
+        },
+        {
+          "name": "locale",
+          "value": ""
+        }
+      ],
+      "deterministic_basis": "PostgreSQL-16-CREATE-COLLATION-default-true",
+      "encoding_basis": "PostgreSQL-16-ICU-CREATE-collencoding-minus-one",
+      "namespace_and_visibility_basis": "caller-asserted successful declarations in source schema/search_path; no shadowing",
+      "identity_basis": "distinct symbolic reference to source CREATE declaration; not an OID"
+    },
+    {
+      "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-247",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-247",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L534",
+      "sql_sha256": "e5a6c71fbeb29b85dd956aa42f8823335e5b39c0251767d887b73cd360a8c986",
+      "written_options": [
+        {
+          "name": "provider",
+          "value": "icu"
+        },
+        {
+          "name": "locale",
+          "value": "@colStrength=secondary"
+        },
+        {
+          "name": "deterministic",
+          "value": "false"
+        }
+      ],
+      "deterministic_basis": "explicit-source-option",
+      "encoding_basis": "PostgreSQL-16-ICU-CREATE-collencoding-minus-one",
+      "namespace_and_visibility_basis": "caller-asserted successful declarations in source schema/search_path; no shadowing",
+      "identity_basis": "distinct symbolic reference to source CREATE declaration; not an OID"
+    },
+    {
+      "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-250",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-250",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L540",
+      "sql_sha256": "c80992af9811f72bc50a92595ee52282834b9362c184c54ec766a5fd225d9bdb",
+      "written_options": [
+        {
+          "name": "provider",
+          "value": "icu"
+        },
+        {
+          "name": "locale",
+          "value": "en-u-ks-level1"
+        },
+        {
+          "name": "deterministic",
+          "value": "false"
+        }
+      ],
+      "deterministic_basis": "explicit-source-option",
+      "encoding_basis": "PostgreSQL-16-ICU-CREATE-collencoding-minus-one",
+      "namespace_and_visibility_basis": "caller-asserted successful declarations in source schema/search_path; no shadowing",
+      "identity_basis": "distinct symbolic reference to source CREATE declaration; not an OID"
+    },
+    {
+      "id": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-252",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-252",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L542",
+      "sql_sha256": "bba99c130352baf9470937d9e037bac7069c27be2de976c8b74e3e8b13867596",
+      "written_options": [
+        {
+          "name": "provider",
+          "value": "icu"
+        },
+        {
+          "name": "locale",
+          "value": "und-u-kf-upper"
+        }
+      ],
+      "deterministic_basis": "PostgreSQL-16-CREATE-COLLATION-default-true",
+      "encoding_basis": "PostgreSQL-16-ICU-CREATE-collencoding-minus-one",
+      "namespace_and_visibility_basis": "caller-asserted successful declarations in source schema/search_path; no shadowing",
+      "identity_basis": "distinct symbolic reference to source CREATE declaration; not an OID"
+    }
+  ],
+  "table_bindings": [
+    {
+      "schema": "collate_tests",
+      "name": "test7",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-226",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L502",
+      "sql_sha256": "fe915acdd87195730e58314ad2a576f942f8fbe02a10de9535126e92ea997eaf",
+      "declaration_basis": "caller-asserted successful CREATE TABLE with exact written column types/NOT NULL/COLLATE",
+      "omitted_field_collation_basis": "native type-default collation; integer none and text/text[] database default",
+      "namespace_and_visibility_basis": "caller-asserted source schema/search_path; no shadowing"
+    },
+    {
+      "schema": "collate_tests",
+      "name": "test6",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-234",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L517",
+      "sql_sha256": "6b6768cc0056d9eae8eae27f719e1ce38c26f1d459a3c94af439640f824eb232",
+      "declaration_basis": "caller-asserted successful CREATE TABLE with exact written column types/NOT NULL/COLLATE",
+      "omitted_field_collation_basis": "native type-default collation; integer none and text/text[] database default",
+      "namespace_and_visibility_basis": "caller-asserted source schema/search_path; no shadowing"
+    },
+    {
+      "schema": "collate_tests",
+      "name": "test6a",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-240",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L526",
+      "sql_sha256": "0744feb97ced2ee23d5020e41d78e805f7c3a2ce895fa3f0c11c1825e78ef3b4",
+      "declaration_basis": "caller-asserted successful CREATE TABLE with exact written column types/NOT NULL/COLLATE",
+      "omitted_field_collation_basis": "native type-default collation; integer none and text/text[] database default",
+      "namespace_and_visibility_basis": "caller-asserted source schema/search_path; no shadowing"
+    },
+    {
+      "schema": "collate_tests",
+      "name": "test1cs",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-254",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L545",
+      "sql_sha256": "179bcc5c407a65ccd5127c300790592b12a474a31dd08f98226e69841a6c6d12",
+      "declaration_basis": "caller-asserted successful CREATE TABLE with exact written column types/NOT NULL/COLLATE",
+      "omitted_field_collation_basis": "native type-default collation; integer none and text/text[] database default",
+      "namespace_and_visibility_basis": "caller-asserted source schema/search_path; no shadowing"
+    },
+    {
+      "schema": "collate_tests",
+      "name": "test3cs",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-256",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L547",
+      "sql_sha256": "ce551763f8b1f6dd92514266d9cd30766d5924ca644eebe8344063c158eee691",
+      "declaration_basis": "caller-asserted successful CREATE TABLE with exact written column types/NOT NULL/COLLATE",
+      "omitted_field_collation_basis": "native type-default collation; integer none and text/text[] database default",
+      "namespace_and_visibility_basis": "caller-asserted source schema/search_path; no shadowing"
+    },
+    {
+      "schema": "collate_tests",
+      "name": "collate_test1",
+      "declaration_id": "collations:postgres:src/test/regress/sql/collate.sql:context-statement-2",
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.sql#L16",
+      "sql_sha256": "3f1c5db40a4d9cf4bd2f86930b74c7a045b6adb257eff56c0b243d9d2f93c68b",
+      "declaration_basis": "caller-asserted successful CREATE TABLE with exact written column types/NOT NULL/COLLATE",
+      "omitted_field_collation_basis": "native type-default collation; integer none and text/text[] database default",
+      "namespace_and_visibility_basis": "caller-asserted source schema/search_path; no shadowing"
+    }
+  ],
+  "catalog_files": [
+    {
+      "path": "fixtures/collations/source_builtin.json",
+      "sha256": "d8e09591a3a5801f27ece22414478da8ba5317a43cf2ef7ba16d0d798ab29032"
+    },
+    {
+      "path": "fixtures/collations/source_icu_declarations.json",
+      "sha256": "5019a4f26a4ad0bbc8145c1a703fbfa1c5d13b796d7e19c811232f6f6e7b9872"
+    },
+    {
+      "path": "fixtures/collations/source_portable_declarations.json",
+      "sha256": "dbb95a22f9d3347e750a3c6d1a68f5e01f78aecd4d7b56f23b7eb3516201d2fa"
+    }
+  ],
+  "source_contracts_sha256": "fb40de936a6bfcc187d3fba5c2c77cebb062d91472fe2dc7606694c5c02ff84a"
+}

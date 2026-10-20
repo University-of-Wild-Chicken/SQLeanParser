@@ -89,6 +89,9 @@ import Tests.SetOperationsContract
 import Tests.SetOperationsRendering
 import Tests.RecursiveContract
 import Tests.RecursiveContractRendering
+import Tests.CollationContract
+import Tests.CollationCorpus
+import Tests.CollationRendering
 import Tests.NullPredicatesContract
 import Tests.NullPredicatesRendering
 
@@ -353,6 +356,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {recursiveConcrete} unchanged recursive CTE certificates (all 50 rendered)"
   let recursiveRendering ← recursiveContractRenderingTests
   IO.println s!"PASS: {recursiveRendering} recursive CTE parsing and rendering checks"
+  let collationContract ← collationContractTests
+  IO.println s!"PASS: {collationContract} independent collation environment and derivation checks"
+  let collationCorpus ← collationCorpusTests
+  IO.println s!"PASS: {collationCorpus} authored collation full-query certificates"
+  let collationConcrete ← collationConcreteContractTests
+  IO.println s!"PASS: {collationConcrete} unchanged collation certificates under declared snapshots"
+  let collationRendering ← collationRenderingTests
+  IO.println s!"PASS: {collationRendering} COLLATE parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

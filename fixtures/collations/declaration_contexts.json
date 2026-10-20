@@ -1,0 +1,893 @@
+{
+  "declarations": [
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-1",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 15,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L15",
+      "statement_index": 1,
+      "source_start": 344,
+      "source_end": 372,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE SCHEMA collate_tests;",
+      "sql_sha256": "826b7e5711ccdd55b1996fb25c0355841925d3fe2e07d70ae48c1e099422c623",
+      "observed_declaration": {
+        "kind": "schema",
+        "name": "collate_tests"
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-2",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 16,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L16",
+      "statement_index": 2,
+      "source_start": 373,
+      "source_end": 405,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "SET search_path = collate_tests;",
+      "sql_sha256": "a601446f3d8408b042c6c80ac202620c44d655c175bd136167a4967a0eaba725",
+      "observed_declaration": {
+        "kind": "search_path",
+        "written_value": "collate_tests"
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-3",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 19,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L19",
+      "statement_index": 3,
+      "source_start": 408,
+      "source_end": 489,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE TABLE collate_test1 (\n    a int,\n    b text COLLATE \"en-x-icu\" NOT NULL\n);",
+      "sql_sha256": "c2931bdc8afc3d6c265831167830ebac74278525c9aa79aba4e7f8ca62dc4d3e",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "collate_test1"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "pg_catalog",
+              "int4"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          },
+          {
+            "name": "b",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": true,
+            "written_collation": [
+              "en-x-icu"
+            ]
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-8",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 47,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L47",
+      "statement_index": 8,
+      "source_start": 835,
+      "source_end": 907,
+      "container_start": 813,
+      "source_prefix": "\\d collate_test_like\n\n",
+      "extraction": "unchanged CREATE TABLE following retained psql describe command",
+      "sql": "CREATE TABLE collate_test2 (\n    a int,\n    b text COLLATE \"sv-x-icu\"\n);",
+      "sql_sha256": "c16ca32e5f03d87238e367452bdb025bcbdff03536259c2a4c3682a87b166de2",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "collate_test2"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "pg_catalog",
+              "int4"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          },
+          {
+            "name": "b",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": [
+              "sv-x-icu"
+            ]
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-206",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 470,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L470",
+      "statement_index": 206,
+      "source_start": 15621,
+      "source_end": 15729,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION testcoll_ignore_accents (provider = icu, locale = '@colStrength=primary;colCaseLevel=yes');",
+      "sql_sha256": "925abe946de43ac851e658c5a8234690b28f3297d8877ac9e0d389f53bddfa2d",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_ignore_accents"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colStrength=primary;colCaseLevel=yes"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-210",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 475,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L475",
+      "statement_index": 210,
+      "source_start": 15880,
+      "source_end": 15963,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION testcoll_backwards (provider = icu, locale = '@colBackwards=yes');",
+      "sql_sha256": "9c25932f04572de3813b070ec62b30723b986ecf015a9f2ba6c4d755340584c5",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_backwards"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colBackwards=yes"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-213",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 479,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L479",
+      "statement_index": 213,
+      "source_start": 16080,
+      "source_end": 16167,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION testcoll_lower_first (provider = icu, locale = '@colCaseFirst=lower');",
+      "sql_sha256": "02dc0eec5a1366cc03859751b0254e44883dd97a36e2a36784d770796ea6ac15",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_lower_first"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colCaseFirst=lower"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-214",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 480,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L480",
+      "statement_index": 214,
+      "source_start": 16168,
+      "source_end": 16255,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION testcoll_upper_first (provider = icu, locale = '@colCaseFirst=upper');",
+      "sql_sha256": "b79299282d9d637457ea2e65017d57638b7c0c23a06591e802da655b49e4f5bc",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_upper_first"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colCaseFirst=upper"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-216",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 483,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L483",
+      "statement_index": 216,
+      "source_start": 16352,
+      "source_end": 16437,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION testcoll_shifted (provider = icu, locale = '@colAlternate=shifted');",
+      "sql_sha256": "685d16580507c9d9902990836ad837dde0b23e01b6bff17a039c5ff9363dd939",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_shifted"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colAlternate=shifted"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-219",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 487,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L487",
+      "statement_index": 219,
+      "source_start": 16568,
+      "source_end": 16647,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION testcoll_numeric (provider = icu, locale = '@colNumeric=yes');",
+      "sql_sha256": "7d0199ee27e9f92f7bb68ffe2031889fd97e7fb06ff6ac082fc308bee7a01a73",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_numeric"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colNumeric=yes"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-223",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 495,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L495",
+      "statement_index": 223,
+      "source_start": 16963,
+      "source_end": 17054,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION testcoll_de_phonebook (provider = icu, locale = 'de@collation=phonebook');",
+      "sql_sha256": "7295813f5afd42348ce5dc00ba32c2c0e429d270a2e11ed972851336be426e1b",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_de_phonebook"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "de@collation=phonebook"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-225",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 501,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L501",
+      "statement_index": 225,
+      "source_start": 17165,
+      "source_end": 17246,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION testcoll_rules1 (provider = icu, locale = '', rules = '&a < g');",
+      "sql_sha256": "38beda8389c53288b5e0f5f739cf41613541ab7ac38f453e7f95e83c3df21e7b",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_rules1"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": ""
+          },
+          {
+            "name": "rules",
+            "value": "&a < g"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-226",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 502,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L502",
+      "statement_index": 226,
+      "source_start": 17247,
+      "source_end": 17275,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE TABLE test7 (a text);",
+      "sql_sha256": "fe915acdd87195730e58314ad2a576f942f8fbe02a10de9535126e92ea997eaf",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "test7"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-232",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 514,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L514",
+      "statement_index": 232,
+      "source_start": 17709,
+      "source_end": 17788,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION ctest_det (provider = icu, locale = '', deterministic = true);",
+      "sql_sha256": "cf97491e76dec6c7a06e9473e52bfd65017e21b963c5851eec72347a3b6df8a0",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "ctest_det"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": ""
+          },
+          {
+            "name": "deterministic",
+            "value": "true"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-233",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 515,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L515",
+      "statement_index": 233,
+      "source_start": 17789,
+      "source_end": 17872,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION ctest_nondet (provider = icu, locale = '', deterministic = false);",
+      "sql_sha256": "455949b0bc729594797a4c0d704e679753012f7eacff8105fef26fd655144e8e",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "ctest_nondet"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": ""
+          },
+          {
+            "name": "deterministic",
+            "value": "false"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-234",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 517,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L517",
+      "statement_index": 234,
+      "source_start": 17874,
+      "source_end": 17909,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE TABLE test6 (a int, b text);",
+      "sql_sha256": "6b6768cc0056d9eae8eae27f719e1ce38c26f1d459a3c94af439640f824eb232",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "test6"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "pg_catalog",
+              "int4"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          },
+          {
+            "name": "b",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-240",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 526,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L526",
+      "statement_index": 240,
+      "source_start": 18197,
+      "source_end": 18235,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE TABLE test6a (a int, b text[]);",
+      "sql_sha256": "0744feb97ced2ee23d5020e41d78e805f7c3a2ce895fa3f0c11c1825e78ef3b4",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "test6a"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "pg_catalog",
+              "int4"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          },
+          {
+            "name": "b",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [
+              -1
+            ],
+            "written_not_null": false,
+            "written_collation": null
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 533,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L533",
+      "statement_index": 246,
+      "source_start": 18495,
+      "source_end": 18557,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION case_sensitive (provider = icu, locale = '');",
+      "sql_sha256": "112fca28c8555326fb096ba34baaa5c581d6fe57bf6dd862be320ddde2578d0d",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "case_sensitive"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": ""
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-247",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 534,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L534",
+      "statement_index": 247,
+      "source_start": 18558,
+      "source_end": 18667,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION case_insensitive (provider = icu, locale = '@colStrength=secondary', deterministic = false);",
+      "sql_sha256": "e5a6c71fbeb29b85dd956aa42f8823335e5b39c0251767d887b73cd360a8c986",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "case_insensitive"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colStrength=secondary"
+          },
+          {
+            "name": "deterministic",
+            "value": "false"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-250",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 540,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L540",
+      "statement_index": 250,
+      "source_start": 18866,
+      "source_end": 18965,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION lt_insensitive (provider = icu, locale = 'en-u-ks-level1', deterministic = false);",
+      "sql_sha256": "c80992af9811f72bc50a92595ee52282834b9362c184c54ec766a5fd225d9bdb",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "lt_insensitive"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "en-u-ks-level1"
+          },
+          {
+            "name": "deterministic",
+            "value": "false"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-252",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 542,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L542",
+      "statement_index": 252,
+      "source_start": 19036,
+      "source_end": 19111,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE COLLATION lt_upperfirst (provider = icu, locale = 'und-u-kf-upper');",
+      "sql_sha256": "bba99c130352baf9470937d9e037bac7069c27be2de976c8b74e3e8b13867596",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "lt_upperfirst"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "und-u-kf-upper"
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-254",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 545,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L545",
+      "statement_index": 254,
+      "source_start": 19175,
+      "source_end": 19228,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE TABLE test1cs (x text COLLATE case_sensitive);",
+      "sql_sha256": "179bcc5c407a65ccd5127c300790592b12a474a31dd08f98226e69841a6c6d12",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "test1cs"
+        ],
+        "columns": [
+          {
+            "name": "x",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": [
+              "case_sensitive"
+            ]
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-256",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "line": 547,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.icu.utf8.sql#L547",
+      "statement_index": 256,
+      "source_start": 19283,
+      "source_end": 19336,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE TABLE test3cs (x text COLLATE case_sensitive);",
+      "sql_sha256": "ce551763f8b1f6dd92514266d9cd30766d5924ca644eebe8344063c158eee691",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "test3cs"
+        ],
+        "columns": [
+          {
+            "name": "x",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": [
+              "case_sensitive"
+            ]
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:context-statement-1",
+      "source_file": "src/test/regress/sql/collate.linux.utf8.sql",
+      "line": 17,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.linux.utf8.sql#L17",
+      "statement_index": 1,
+      "source_start": 534,
+      "source_end": 562,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE SCHEMA collate_tests;",
+      "sql_sha256": "826b7e5711ccdd55b1996fb25c0355841925d3fe2e07d70ae48c1e099422c623",
+      "observed_declaration": {
+        "kind": "schema",
+        "name": "collate_tests"
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:context-statement-2",
+      "source_file": "src/test/regress/sql/collate.linux.utf8.sql",
+      "line": 18,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.linux.utf8.sql#L18",
+      "statement_index": 2,
+      "source_start": 563,
+      "source_end": 595,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "SET search_path = collate_tests;",
+      "sql_sha256": "a601446f3d8408b042c6c80ac202620c44d655c175bd136167a4967a0eaba725",
+      "observed_declaration": {
+        "kind": "search_path",
+        "written_value": "collate_tests"
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.sql:context-statement-0",
+      "source_file": "src/test/regress/sql/collate.sql",
+      "line": 13,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.sql#L13",
+      "statement_index": 0,
+      "source_start": 654,
+      "source_end": 682,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE SCHEMA collate_tests;",
+      "sql_sha256": "826b7e5711ccdd55b1996fb25c0355841925d3fe2e07d70ae48c1e099422c623",
+      "observed_declaration": {
+        "kind": "schema",
+        "name": "collate_tests"
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.sql:context-statement-1",
+      "source_file": "src/test/regress/sql/collate.sql",
+      "line": 14,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.sql#L14",
+      "statement_index": 1,
+      "source_start": 683,
+      "source_end": 715,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "SET search_path = collate_tests;",
+      "sql_sha256": "a601446f3d8408b042c6c80ac202620c44d655c175bd136167a4967a0eaba725",
+      "observed_declaration": {
+        "kind": "search_path",
+        "written_value": "collate_tests"
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.sql:context-statement-2",
+      "source_file": "src/test/regress/sql/collate.sql",
+      "line": 16,
+      "source_url": "https://github.com/postgres/postgres/blob/f0595c3d839debdb140903621c1b44a4f4d86256/src/test/regress/sql/collate.sql#L16",
+      "statement_index": 2,
+      "source_start": 717,
+      "source_end": 791,
+      "extraction": "unchanged complete SQL statement substring",
+      "sql": "CREATE TABLE collate_test1 (\n    a int,\n    b text COLLATE \"C\" NOT NULL\n);",
+      "sql_sha256": "3f1c5db40a4d9cf4bd2f86930b74c7a045b6adb257eff56c0b243d9d2f93c68b",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "collate_test1"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "pg_catalog",
+              "int4"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          },
+          {
+            "name": "b",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": true,
+            "written_collation": [
+              "C"
+            ]
+          }
+        ]
+      },
+      "execution": "not-performed",
+      "runtime_catalog_resolution": "not-performed"
+    }
+  ],
+  "preambles": [
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:preamble",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "start": 0,
+      "end": 344,
+      "text": "/*\n * This test is for ICU collations.\n */\n\n/* skip test if not UTF8 server encoding or no ICU collations installed */\nSELECT getdatabaseencoding() <> 'UTF8' OR\n       (SELECT count(*) FROM pg_collation WHERE collprovider = 'i' AND collname <> 'unicode') = 0\n       AS skip_test \\gset\n\\if :skip_test\n\\quit\n\\endif\n\nSET client_encoding TO UTF8;\n\n",
+      "sha256": "5b0f5a81333f3c4e9907424153ad6958e9c83739fd57b67121871fd63b2c88c9",
+      "execution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:preamble",
+      "source_file": "src/test/regress/sql/collate.linux.utf8.sql",
+      "start": 0,
+      "end": 534,
+      "text": "/*\n * This test is for Linux/glibc systems and assumes that a full set of\n * locales is installed.  It must be run in a database with UTF-8 encoding,\n * because other encodings don't support all the characters used.\n */\n\nSELECT getdatabaseencoding() <> 'UTF8' OR\n       (SELECT count(*) FROM pg_collation WHERE collname IN ('de_DE', 'en_US', 'sv_SE', 'tr_TR') AND collencoding = pg_char_to_encoding('UTF8')) <> 4 OR\n       version() !~ '-linux[-,]'\n       AS skip_test \\gset\n\\if :skip_test\n\\quit\n\\endif\n\nSET client_encoding TO UTF8;\n\n",
+      "sha256": "07945d02e8152e8cf1d2bc46e8701e299f5aab2f02dcd20c1d65b26ac32e8dcb",
+      "execution": "not-performed"
+    },
+    {
+      "id": "collations:postgres:src/test/regress/sql/collate.sql:preamble",
+      "source_file": "src/test/regress/sql/collate.sql",
+      "start": 0,
+      "end": 654,
+      "text": "/*\n * This test is intended to pass on all platforms supported by Postgres.\n * We can therefore only assume that the default, C, and POSIX collations\n * are available --- and since the regression tests are often run in a\n * C-locale database, these may well all have the same behavior.  But\n * fortunately, the system doesn't know that and will treat them as\n * incompatible collations.  It is therefore at least possible to test\n * parser behaviors such as collation conflict resolution.  This test will,\n * however, be more revealing when run in a database with non-C locale,\n * since any departure from C sorting behavior will show as a failure.\n */\n\n",
+      "sha256": "8f19b43b8786eef43248a25fd7cbe324c993c86c9a2fb8f3c7ea2c07ae856934",
+      "execution": "not-performed"
+    }
+  ]
+}

@@ -153,7 +153,7 @@ def observe_sql(source, mode="postgres"):
     assert mode in ("postgres", "identity", "sqlite"), "unknown SQL observation mode"
     tokens = []
     depth, ordinal = 0, 0
-    operand, after_dot = True, False
+    operand, after_dot, collation_name = True, False, False
     groups, select_prefix = [], {}
     for kind, value, start, end in _lex(source, mode):
         if kind == "punct":
@@ -175,7 +175,13 @@ def observe_sql(source, mode="postgres"):
             after_dot = value == "."
             continue
         if kind == "word":
-            if after_dot:
+            if after_dot or collation_name:
+                operand = False
+                collation_name = False
+            elif value == "COLLATE":
+                # The following ColId may itself be a clause-looking keyword
+                # (e.g. BETWEEN). It names a collation, not a new operand.
+                collation_name = True
                 operand = False
             elif value == "SELECT":
                 select_prefix[depth] = "select"
@@ -204,6 +210,7 @@ def observe_sql(source, mode="postgres"):
             operand = False
         elif kind == "atom":
             operand = False
+            collation_name = False
             select_prefix.pop(depth, None)
         elif kind == "op":
             raw, cursor = value, start

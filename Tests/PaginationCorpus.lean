@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 /-! The synthetic population has a declared catalog and exact parameter types,
@@ -51,15 +51,15 @@ private def checkSyntheticPagination (record : Lean.Json) : IO (String × String
   SQLean.Tests.assert (query.limit.isSome || query.offset.isSome)
     s!"{label}: no outer pagination clause"
   let certificate ← expectOk s!"{label}: complete SELECT validity"
-    ((SelectContract.checkQuery .basicV31 paginationCatalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 paginationCatalog params query).mapError reprStr)
   have _completeDerivation :
-      SelectContract.SelectValid .basicV31 paginationCatalog params query certificate.output :=
+      SelectContract.SelectValid .basicV32 paginationCatalog params query certificate.output :=
     certificate.valid
   have _translatedDerivation :
-      SelectContract.SelectValid .basicV31 paginationCatalog params
+      SelectContract.SelectValid .basicV32 paginationCatalog params
         (RenderContract.translateParameters query) certificate.output :=
     RenderContract.translateParameters_valid certificate.valid
-  SQLean.Tests.assert (certificate.output == [⟨"id", ⟨.int32, false⟩⟩])
+  SQLean.Tests.assert (sameOutputTypes certificate.output [{name := "id", type := ⟨.int32, false⟩}])
     s!"{label}: unexpected ordered output schema"
   SQLean.Tests.assert (certificate.outputCatalog == paginationCatalog)
     s!"{label}: SELECT changed the catalog"
@@ -88,12 +88,12 @@ private def checkConcretePagination (record : Lean.Json) : IO (String × String)
   let assumedParams : SelectContract.ParameterEnv :=
     indices.map (fun index => ⟨index, ⟨.int, []⟩, false⟩)
   let certificate ← expectOk s!"{label}: pagination-only validity under test INT32 assumptions"
-    ((SelectContract.checkPaginationBounds .basicV31 assumedParams query).mapError reprStr)
+    ((SelectContract.checkPaginationBounds .basicV32 assumedParams query).mapError reprStr)
   have _boundsDerivation :
-      SelectContract.PaginationBoundsValid .basicV31 assumedParams query
+      SelectContract.PaginationBoundsValid .basicV32 assumedParams query
         certificate.limitUses certificate.offsetUses := certificate.valid
   have _translatedBounds :
-      SelectContract.PaginationBoundsValid .basicV31 assumedParams
+      SelectContract.PaginationBoundsValid .basicV32 assumedParams
         (RenderContract.translateParameters query)
         (certificate.limitUses.map RenderContract.translateParameter)
         (certificate.offsetUses.map RenderContract.translateParameter) :=

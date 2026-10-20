@@ -45,7 +45,8 @@
       {
         "name": "x",
         "type": "text",
-        "nullable": true
+        "nullable": true,
+        "collation": "default"
       }
     ]
   },
@@ -69,7 +70,8 @@
       {
         "name": "x",
         "type": "numeric(8,2)",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -119,7 +121,8 @@
       {
         "name": "x",
         "type": "numeric",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -143,7 +146,8 @@
       {
         "name": "x",
         "type": "varchar(5)",
-        "nullable": true
+        "nullable": true,
+        "collation": "default"
       }
     ]
   },
@@ -180,7 +184,8 @@
       {
         "name": "x",
         "type": "varchar",
-        "nullable": true
+        "nullable": true,
+        "collation": "default"
       }
     ]
   },
@@ -204,7 +209,8 @@
       {
         "name": "x",
         "type": "interval year",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -241,7 +247,8 @@
       {
         "name": "x",
         "type": "interval",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -265,7 +272,8 @@
       {
         "name": "x",
         "type": "numeric(8,2)[]",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -315,7 +323,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -339,7 +348,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -415,7 +425,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -439,7 +450,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -463,7 +475,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -487,7 +500,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": false
+        "nullable": false,
+        "collation": null
       }
     ]
   },
@@ -511,7 +525,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -561,7 +576,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -598,7 +614,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -674,7 +691,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -698,7 +716,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -740,7 +759,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -777,7 +797,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -801,7 +822,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -838,7 +860,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -923,12 +946,14 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       },
       {
         "name": "b",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -956,12 +981,14 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       },
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -1037,7 +1064,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -1061,7 +1089,8 @@
       {
         "name": "x",
         "type": "int32",
-        "nullable": true
+        "nullable": true,
+        "collation": null
       }
     ]
   },
@@ -1101,12 +1130,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT ('b'::NAME)::TEXT FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1124,12 +1153,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   },
@@ -1138,8 +1168,8 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT ('a'::NAME)::TEXT UNION ALL SELECT 'b'::TEXT FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
-    "diagnostic": "recursive_collation",
+    "expected_status": "valid",
+    "diagnostic": null,
     "postgres_sqlstate": "00000",
     "postgres_columns": [
       [
@@ -1148,8 +1178,15 @@
       ]
     ],
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
-    "output_columns": null
+    "collation_class": "name-derived",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true,
+        "collation": "C"
+      }
+    ]
   },
   {
     "id": "recursive-collation-name-text-text-ordinary",
@@ -1166,12 +1203,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   },
@@ -1180,12 +1218,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT 'a' UNION ALL SELECT ('b'::NAME)::TEXT FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1203,12 +1241,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   },
@@ -1217,12 +1256,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT NULL UNION ALL SELECT ('b'::NAME)::TEXT FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1240,12 +1279,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text",
-        "nullable": true
+        "nullable": true,
+        "collation": "C"
       }
     ]
   },
@@ -1254,8 +1294,8 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::NAME UNION ALL SELECT 'b'::TEXT FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
-    "diagnostic": "recursive_collation",
+    "expected_status": "valid",
+    "diagnostic": null,
     "postgres_sqlstate": "00000",
     "postgres_columns": [
       [
@@ -1264,8 +1304,15 @@
       ]
     ],
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
-    "output_columns": null
+    "collation_class": "name-derived",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "name",
+        "nullable": true,
+        "collation": "C"
+      }
+    ]
   },
   {
     "id": "recursive-collation-name-text-ordinary",
@@ -1282,12 +1329,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "name",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   },
@@ -1296,12 +1344,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT 'b'::NAME FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1319,12 +1367,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   },
@@ -1333,12 +1382,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT ('a'::TEXT)::NAME UNION ALL SELECT 'b'::NAME FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1356,12 +1405,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "name",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   },
@@ -1370,12 +1420,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT (('b'::NAME)::VARCHAR)::TEXT FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1393,12 +1443,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   },
@@ -1407,12 +1458,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT CURRENT_SCHEMA::TEXT FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1430,12 +1481,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text",
-        "nullable": true
+        "nullable": true,
+        "collation": "C"
       }
     ]
   },
@@ -1444,12 +1496,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT CURRENT_CATALOG::TEXT FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1467,12 +1519,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   },
@@ -1481,12 +1534,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT CURRENT_USER || '' FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1504,12 +1557,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   },
@@ -1518,12 +1572,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT LOWER(CURRENT_USER) FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1541,12 +1595,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   },
@@ -1555,12 +1610,12 @@
     "source_kind": "synthetic",
     "group": "collation-provenance",
     "sql": "WITH RECURSIVE t(x) AS(SELECT ARRAY['a'::TEXT] UNION ALL SELECT ARRAY[('b'::NAME)::TEXT] FROM t WHERE FALSE) SELECT x FROM t",
-    "expected_status": "unsupported",
+    "expected_status": "invalid",
     "diagnostic": "recursive_collation",
     "postgres_sqlstate": "42P21",
     "postgres_columns": null,
     "actual_recursion": true,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": null
   },
   {
@@ -1578,12 +1633,13 @@
       ]
     ],
     "actual_recursion": false,
-    "collation_class": "name-derived-unresolved",
+    "collation_class": "name-derived",
     "output_columns": [
       {
         "name": "x",
         "type": "text[]",
-        "nullable": false
+        "nullable": false,
+        "collation": "C"
       }
     ]
   }

@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 /-! Exact array declaration/cast/parameter checks. These certify static types,
@@ -15,7 +15,7 @@ private def arrayCertificate (query : Advanced.Query)
     (catalog : Advanced.Catalog := []) (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "array SELECT certificate"
-    ((SelectContract.checkQuery .basicV31 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 catalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "array identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -63,14 +63,14 @@ def arrayTypeContractTests : IO Nat := do
         body := .select { items := [.all], source := some (.table "arrays") }
       }
       let actual ← arrayCertificate query catalog
-      SQLean.Tests.assert (actual == [⟨"v", ⟨scalar.asArray, false⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨scalar.asArray, false⟩}])
         s!"array catalog loses exact element/modifier or retains declared rank: {reprStr declaration}"
       let params : SelectContract.ParameterEnv := [⟨1, declaration, true⟩]
       let actual ← arrayCertificate (arrayProjection (.parameter (.anonymous 1))) [] params
-      SQLean.Tests.assert (actual == [⟨"v", ⟨scalar.unmodified.asArray, true⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨scalar.unmodified.asArray, true⟩}])
         s!"array parameter must discard typmods: {reprStr declaration}"
       let actual ← arrayCertificate (arrayProjection (.cast .null declaration))
-      SQLean.Tests.assert (actual == [⟨"v", ⟨scalar.asArray, true⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨scalar.asArray, true⟩}])
         s!"array cast loses element modifiers: {reprStr declaration}"
       count := count + 3
   let exact : List (String × SelectContract.ExactType) := [
@@ -101,7 +101,7 @@ def arrayTypeContractTests : IO Nat := do
     ("SELECT '{1}'::JSONB[] AS v ORDER BY 1", ⟨.array .jsonb, false⟩)]
   for (sql, expected) in exact do
     let actual ← arraySqlOutput sql
-    SQLean.Tests.assert (actual == [⟨"v", expected⟩]) s!"array exact output: {sql}: {reprStr actual}"
+    SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := expected}]) s!"array exact output: {sql}: {reprStr actual}"
     count := count + 1
   let invalid := [
     "SELECT '{1}'::INTEGER[] = '{1}'::BIGINT[]",
@@ -122,7 +122,7 @@ def arrayTypeContractTests : IO Nat := do
     "SELECT * FROM (SELECT '{1}'::INTEGER[] AS id) l JOIN (SELECT '{1}'::BIGINT[] AS id) r USING (id)"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid array type use: {sql}")
     count := count + 1
@@ -143,7 +143,7 @@ def arrayTypeContractTests : IO Nat := do
     "SELECT array_length('{1}'::INTEGER[], 1)"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported array boundary: {sql}")
     count := count + 1
@@ -152,7 +152,7 @@ def arrayTypeContractTests : IO Nat := do
       ⟨.array .timestamp, [7]⟩, ⟨.array .jsonb, [1]⟩]
   for malformed in malformedTypes do
     let query := arrayProjection (.cast .null malformed)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"array element modifiers must be checked: {reprStr malformed}")
     count := count + 1

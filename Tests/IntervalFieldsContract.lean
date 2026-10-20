@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -32,7 +32,7 @@ private def intervalCertificate (query : Advanced.Query)
     (catalog : Advanced.Catalog := []) (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "interval fields SELECT"
-    ((SelectContract.checkQuery .basicV31 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 catalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "interval fields identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -81,33 +81,28 @@ def intervalFieldsContractTests : IO Nat := do
           let arg : Advanced.Expr := if nullable then .null else
             .literal (.text (if rank == 0 then "1 year 2 mons 3 days 04:05:06.789"
               else "{1 day 04:05:06.789,NULL}"))
-          SQLean.Tests.assert ((← intervalCertificate (intervalProjection (.cast arg target))) ==
-              [⟨"v", ⟨exact, nullable⟩⟩])
+          SQLean.Tests.assert (sameOutputTypes (← intervalCertificate (intervalProjection (.cast arg target))) [{name := "v", type := ⟨exact, nullable⟩}])
             s!"exact cast interval typmod: {reprStr target}"
           let catalog : Advanced.Catalog := [{
             name := "durations", columns := [{name := "v", type := target, nullable := some nullable}]
           }]
           let fromTable : Advanced.Query :=
             {body := .select {items := [.all], source := some (.table "durations")}}
-          SQLean.Tests.assert ((← intervalCertificate fromTable catalog) ==
-              [⟨"v", ⟨exact, nullable⟩⟩]) "interval catalog preserves exact range and precision"
+          SQLean.Tests.assert (sameOutputTypes (← intervalCertificate fromTable catalog) [{name := "v", type := ⟨exact, nullable⟩}]) "interval catalog preserves exact range and precision"
           let params : SelectContract.ParameterEnv := [⟨1, target, nullable⟩]
-          SQLean.Tests.assert ((← intervalCertificate
-              (intervalProjection (.parameter (.anonymous 1))) [] params) ==
-              [⟨"v", ⟨erased, nullable⟩⟩]) "interval parameter must erase all typmods"
-          SQLean.Tests.assert ((← intervalCertificate
-              (intervalProjection (.cast (.parameter (.anonymous 1)) target)) [] params) ==
-              [⟨"v", ⟨exact, nullable⟩⟩]) "explicit cast restores interval parameter typmods"
+          SQLean.Tests.assert (sameOutputTypes (← intervalCertificate
+              (intervalProjection (.parameter (.anonymous 1))) [] params) [{name := "v", type := ⟨erased, nullable⟩}]) "interval parameter must erase all typmods"
+          SQLean.Tests.assert (sameOutputTypes (← intervalCertificate
+              (intervalProjection (.cast (.parameter (.anonymous 1)) target)) [] params) [{name := "v", type := ⟨exact, nullable⟩}]) "explicit cast restores interval parameter typmods"
           count := count + 4
       for expr in [
           s!"INTERVAL '1 year 2 mons 3 days 04:05:06.789' {spelling}" ++
             (if modifiers.isEmpty then "" else "(" ++ toString (modifiers.headD 0) ++ ")"),
           s!"CAST('1 year 2 mons 3 days 04:05:06.789' AS {sqlType})"] do
-        SQLean.Tests.assert ((← intervalOutput ("SELECT " ++ expr)) ==
-            [⟨"interval", ⟨scalar, false⟩⟩]) "typed literal and CAST retain interval label and exact typmod"
+        SQLean.Tests.assert (sameOutputTypes (← intervalOutput ("SELECT " ++ expr)) [{name := "interval", type := ⟨scalar, false⟩}]) "typed literal and CAST retain interval label and exact typmod"
         count := count + 1
-      SQLean.Tests.assert ((← intervalOutput s!"SELECT EXTRACT(second FROM CAST($1 AS {sqlType})) AS v"
-          "INTERVAL") == [⟨"v", ⟨.numeric [], false⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes (← intervalOutput s!"SELECT EXTRACT(second FROM CAST($1 AS {sqlType})) AS v"
+          "INTERVAL") [{name := "v", type := ⟨.numeric [], false⟩}])
         "qualified interval uses the existing exact EXTRACT declaration"
       count := count + 1
     for modifiers in [[7], [1,2]] ++ (if fields.allowsPrecision then [] else [[0], [2], [6]]) do
@@ -115,7 +110,7 @@ def intervalFieldsContractTests : IO Nat := do
       SQLean.Tests.assert (!(decide (SelectContract.DataTypeWellFormed target)))
         "noncanonical interval metadata must fail well-formedness"
       let precisionGap := fields.allowsPrecision && modifiers == [7]
-      match SelectContract.checkQuery .basicV31 [] [] (intervalProjection (.cast .null target)) with
+      match SelectContract.checkQuery .basicV32 [] [] (intervalProjection (.cast .null target)) with
       | .error (.unsupported diagnostic) =>
           SQLean.Tests.assert (precisionGap && diagnostic.code == "interval_precision")
             "native precision clamping is an unsupported canonical boundary"
@@ -124,7 +119,7 @@ def intervalFieldsContractTests : IO Nat := do
             "interval cast metadata diagnosis"
       | _ => throw (IO.userError "invalid interval cast metadata acquired a certificate")
       let params : SelectContract.ParameterEnv := [⟨1, target, false⟩]
-      match SelectContract.checkQuery .basicV31 [] params
+      match SelectContract.checkQuery .basicV32 [] params
           (intervalProjection (.parameter (.numbered 1))) with
       | .error (.unsupported diagnostic) =>
           SQLean.Tests.assert (precisionGap && diagnostic.code == "interval_precision")
@@ -139,10 +134,8 @@ def intervalFieldsContractTests : IO Nat := do
       let right := s!"CAST(NULL AS INTERVAL {rightSpelling})"
       let common := if leftFields == rightFields then
         SelectContract.ScalarType.intervalRange leftFields [] else .interval []
-      SQLean.Tests.assert ((← intervalOutput s!"SELECT COALESCE({left}, {right}) AS v") ==
-          [⟨"v", ⟨common, false⟩⟩]) "interval conditional common typmods"
-      SQLean.Tests.assert ((← intervalOutput s!"SELECT ARRAY[{left}, {right}] AS v") ==
-          [⟨"v", ⟨common.asArray, false⟩⟩]) "interval array element common typmods"
+      SQLean.Tests.assert (sameOutputTypes (← intervalOutput s!"SELECT COALESCE({left}, {right}) AS v") [{name := "v", type := ⟨common, false⟩}]) "interval conditional common typmods"
+      SQLean.Tests.assert (sameOutputTypes (← intervalOutput s!"SELECT ARRAY[{left}, {right}] AS v") [{name := "v", type := ⟨common.asArray, false⟩}]) "interval array element common typmods"
       count := count + 2
     let typed := s!"CAST('1 year 2 mons 3 days 04:05:06.789' AS INTERVAL {leftSpelling})"
     for (expr, expected) in [
@@ -154,7 +147,7 @@ def intervalFieldsContractTests : IO Nat := do
         (s!"ARRAY[{typed}] || ARRAY[INTERVAL '0']", ⟨.array (.interval []), false⟩),
         (s!"ARRAY[{typed}] @> ARRAY[INTERVAL '0']", ⟨.bool, false⟩),
         (s!"(ARRAY[{typed}])[1]", ⟨.intervalRange leftFields [], true⟩)] do
-      SQLean.Tests.assert ((← intervalOutput s!"SELECT {expr} AS v") == [⟨"v", expected⟩])
+      SQLean.Tests.assert (sameOutputTypes (← intervalOutput s!"SELECT {expr} AS v") [{name := "v", type := expected}])
         s!"interval expression modifier behavior: {expr}"
       count := count + 1
   for fields in [.second, .dayToSecond, .hourToSecond, .minuteToSecond] do
@@ -163,12 +156,11 @@ def intervalFieldsContractTests : IO Nat := do
       let right : Advanced.Expr := .cast .null ⟨.intervalRange fields, [rightPrecision]⟩
       let common := if leftPrecision == rightPrecision then
         SelectContract.ScalarType.intervalRange fields [leftPrecision] else .interval []
-      SQLean.Tests.assert ((← intervalCertificate (intervalProjection (.coalesce [left, right]))) ==
-          [⟨"v", ⟨common, false⟩⟩]) "interval precision participates in common typmod identity"
+      SQLean.Tests.assert (sameOutputTypes (← intervalCertificate (intervalProjection (.coalesce [left, right]))) [{name := "v", type := ⟨common, false⟩}]) "interval precision participates in common typmod identity"
       count := count + 1
   let query ← expectOk "qualified interval fuel"
     (Advanced.parseQuery "SELECT INTERVAL '1' YEAR")
-  match SelectContract.checkQuery .basicV31 [] [] query 0 with
+  match SelectContract.checkQuery .basicV32 [] [] query 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "qualified interval fuel exhaustion must be Inconclusive")
   count := count + 1
@@ -177,13 +169,13 @@ def intervalFieldsContractTests : IO Nat := do
     let catalog : Advanced.Catalog := [{
       name := "durations", columns := [{name := "v", type := ⟨typeName, [7]⟩}]
     }]
-    match SelectContract.checkQuery .basicV31 catalog [] query with
+    match SelectContract.checkQuery .basicV32 catalog [] query with
     | .error (.unsupported diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == "interval_precision")
           "catalog precision clamping is outside canonical coverage"
     | _ => throw (IO.userError "excess catalog precision must be Unsupported")
     count := count + 1
-  match SelectContract.checkPaginationBounds .basicV31 [⟨1, unsupportedType, false⟩] query with
+  match SelectContract.checkPaginationBounds .basicV32 [⟨1, unsupportedType, false⟩] query with
   | .error (.unsupported diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "interval_precision")
         "bounds-only certificates retain the same exact metadata coverage"
@@ -191,7 +183,7 @@ def intervalFieldsContractTests : IO Nat := do
   count := count + 1
   let duplicateParams : SelectContract.ParameterEnv :=
     [⟨1, unsupportedType, false⟩, ⟨1, ⟨.interval, []⟩, false⟩]
-  match SelectContract.checkQuery .basicV31 [] duplicateParams query with
+  match SelectContract.checkQuery .basicV32 [] duplicateParams query with
   | .error (.invalid diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "invalid_environment")
         "unrelated invalid metadata must not be hidden by an unsupported precision"
@@ -201,7 +193,7 @@ def intervalFieldsContractTests : IO Nat := do
     name := "durations", columns := [
       {name := "v", type := unsupportedType}, {name := "v", type := ⟨.interval, []⟩}]
   }]
-  match SelectContract.checkQuery .basicV31 badCatalog [] query with
+  match SelectContract.checkQuery .basicV32 badCatalog [] query with
   | .error (.invalid diagnostic) =>
       SQLean.Tests.assert (diagnostic.code == "invalid_environment")
         "precision coverage must retain unrelated catalog invalidity"
@@ -292,8 +284,7 @@ def intervalFieldsConcreteContractTests : IO Nat := do
         | _ => throw (IO.userError s!"{id}: registered interval literal expression changed")
     | _ => throw (IO.userError s!"{id}: registered SELECT structure changed")
     let scalar : SelectContract.ScalarType := .intervalRange registered.2.1 registered.2.2
-    SQLean.Tests.assert ((← intervalCertificate query) ==
-        [⟨"interval", ⟨scalar, false⟩⟩]) s!"{id}: exact concrete interval output"
+    SQLean.Tests.assert (sameOutputTypes (← intervalCertificate query) [{name := "interval", type := ⟨scalar, false⟩}]) s!"{id}: exact concrete interval output"
     observed := id :: observed
     statements := sql :: statements
   SQLean.Tests.assert (decide observed.Nodup && decide statements.Nodup &&

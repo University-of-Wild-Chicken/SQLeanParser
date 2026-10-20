@@ -176,6 +176,9 @@ mutual
     | extract (field : String) (arg : Expr)
     | substring (form : SubstringForm) (args : List Expr)
     | cast (arg : Expr) (target : DataType)
+    /-- Explicit collation annotation. Names are decoded identifier components,
+    not raw SQL; lookup and collation provenance are independent obligations. -/
+    | collate (arg : Expr) (name : List Name)
     /-- PostgreSQL ARRAY[...] constructor. Nested bracket shorthand normalizes
     to nested constructors; declared dimensions remain runtime properties. -/
     | array (elements : List Expr)

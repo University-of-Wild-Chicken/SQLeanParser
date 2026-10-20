@@ -10,7 +10,7 @@ private def defaultExpression : Nat → Expr → Bool
   | _ + 1, .literal _ | _ + 1, .null | _ + 1, .contextValue _ | _ + 1, .decimal _ => true
   | n + 1, .distinctFrom left right _ | n + 1, .overlap left right | n + 1, .containment left right _ | n + 1, .jsonExistence _ left right | n + 1, .jsonAccess _ left right | n + 1, .regex left right _ _ | n + 1, .concat left right | n + 1, .quantifiedComparison _ _ left right | n + 1, .binary _ left right | n + 1, .pattern left right _ | n + 1, .nullIf left right =>
       defaultExpression n left && defaultExpression n right
-  | n + 1, .extract _ arg | n + 1, .unary _ arg | n + 1, .cast arg _ | n + 1, .isNull arg _ => defaultExpression n arg
+  | n + 1, .extract _ arg | n + 1, .unary _ arg | n + 1, .cast arg _ | n + 1, .collate arg _ | n + 1, .isNull arg _ => defaultExpression n arg
   | n + 1, .subscript base indices =>
       defaultExpression n base && (indices.flatMap Subscript.expressions).all (defaultExpression n)
   | n + 1, .array args | n + 1, .row args | n + 1, .substring _ args | n + 1, .call _ args | n + 1, .coalesce args | n + 1, .greatest args | n + 1, .least args =>

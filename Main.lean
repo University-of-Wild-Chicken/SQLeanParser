@@ -186,9 +186,10 @@ private def expandedColumnJson (column : ColumnDef) : Lean.Json :=
 
 private def report (level : Assurance.Level) (status : String)
     (columns : Option (List Lean.Json) := none) (diagnostic : Option SelectContract.Diagnostic := none)
-    (catalogUnchanged : Bool := false) : IO UInt32 := do
+    (catalogUnchanged : Bool := false)
+    (collations : Option (List (Option String)) := none) : IO UInt32 := do
   let profile := match level with
-    | .declarative => SelectContract.Profile.basicV31.name
+    | .declarative => SelectContract.Profile.basicV32.name
     | .executable => "sqlean-expanded-v0"
     | .syntax => "sqlean-syntax-v0"
   let evidence := match status with
@@ -199,6 +200,8 @@ private def report (level : Assurance.Level) (status : String)
   if let some columns := columns then
     fields := fields ++ [("outputColumns", .arr columns.toArray),
       ("typePrecision", toJson (if level == .declarative then "exact" else "family"))]
+  if let some collations := collations then
+    fields := fields ++ [("outputCollations", toJson collations)]
   if let some diagnostic := diagnostic then fields := fields ++ [("diagnostic", diagnosticJson diagnostic)]
   if catalogUnchanged then fields := fields ++ [("catalogUnchanged", toJson true)]
   IO.println (Lean.Json.mkObj fields).compress
@@ -221,13 +224,19 @@ private def runAssurance (options : Options) (level : Assurance.Level) (source :
         (some ⟨"environment.decode", error⟩)
   let fuel := options.maxDepth.getD 1024
   if level == .declarative then
+    let collations ← match Advanced.decodeCollationEnvJson schemaSource with
+      | .ok collations => pure collations
+      | .error error => return ← report level "invalid" none (some ⟨"environment.collations.decode", error⟩)
+    let profile := SelectContract.Profile.basicV32.withCollations collations
     let params ← match Assurance.parseContractParameterTypes (options.parameterTypes.getD "") with
       | .ok params => pure params
       | .error error => return ← report level "invalid" none (some ⟨"environment.parameters", error⟩)
     match statement with
     | .query query =>
-      match Assurance.checkContract .basicV31 catalog params query fuel with
-      | .valid certificate => report level "valid" (some (certificate.output.map contractColumnJson)) none true
+      match Assurance.checkContract profile catalog params query fuel with
+      | .valid certificate =>
+        report level "valid" (some (certificate.output.map contractColumnJson)) none true
+          (some (certificate.output.map (fun column => column.collation.map CollationId.label)))
       | .invalid diagnostic => report level "invalid" none (some diagnostic)
       | .unsupported diagnostic => report level "unsupported" none (some diagnostic)
       | .inconclusive diagnostic => report level "inconclusive" none (some diagnostic)

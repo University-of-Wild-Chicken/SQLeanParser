@@ -2,7 +2,7 @@ import SQLean.Assurance
 import SQLean.SchemaJson
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -32,7 +32,7 @@ private def mergedOutput (sql : String) (params : SelectContract.ParameterEnv :=
     IO (List SelectContract.OutputColumn) := do
   let query ← expectOk sql (Advanced.parseQuery sql)
   let certificate ← expectOk sql
-    ((SelectContract.checkQuery .basicV31 mergedCatalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 mergedCatalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let _ ← expectOk sql ((RenderContract.check .identityV01 query).mapError reprStr)
   let _ ← expectOk sql ((RenderContract.check .postgres16V01 query).mapError reprStr)
@@ -41,11 +41,11 @@ private def mergedOutput (sql : String) (params : SelectContract.ParameterEnv :=
 def mergedJoinContractTests : IO Nat := do
   let mut count := 0
   let leftOriginal : List SelectContract.OutputColumn := [
-    ⟨"a", ⟨.text, false⟩⟩, ⟨"k", ⟨.int32, false⟩⟩, ⟨"b", ⟨.bool, true⟩⟩,
-    ⟨"z", ⟨.int32, true⟩⟩, ⟨"s", ⟨.varchar [5], false⟩⟩ ]
+    {name := "a", type := ⟨.text, false⟩}, {name := "k", type := ⟨.int32, false⟩}, {name := "b", type := ⟨.bool, true⟩},
+    {name := "z", type := ⟨.int32, true⟩}, {name := "s", type := ⟨.varchar [5], false⟩} ]
   let rightOriginal : List SelectContract.OutputColumn := [
-    ⟨"x", ⟨.int32, false⟩⟩, ⟨"k", ⟨.int64, true⟩⟩, ⟨"y", ⟨.text, false⟩⟩,
-    ⟨"z", ⟨.int32, false⟩⟩, ⟨"s", ⟨.varchar [5], false⟩⟩ ]
+    {name := "x", type := ⟨.int32, false⟩}, {name := "k", type := ⟨.int64, true⟩}, {name := "y", type := ⟨.text, false⟩},
+    {name := "z", type := ⟨.int32, false⟩}, {name := "s", type := ⟨.varchar [5], false⟩} ]
   for (kind, mergedNullable, leftNullable, rightNullable) in [
       ("INNER", true, false, false), ("LEFT", false, false, true),
       ("RIGHT", true, true, false), ("FULL", true, true, true) ] do
@@ -53,18 +53,18 @@ def mergedJoinContractTests : IO Nat := do
       let sourceSql := if suffix == "NATURAL" then s!"l NATURAL {kind} JOIN r"
         else s!"l {kind} JOIN r {suffix}"
       let actual ← mergedOutput s!"SELECT k, l.k, r.k FROM {sourceSql}"
-      SQLean.Tests.assert (actual == [
-          ⟨"k", ⟨.int64, mergedNullable⟩⟩,
-          ⟨"k", ⟨.int32, leftNullable⟩⟩, ⟨"k", ⟨.int64, true⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes actual [
+          {name := "k", type := ⟨.int64, mergedNullable⟩},
+          {name := "k", type := ⟨.int32, leftNullable⟩}, {name := "k", type := ⟨.int64, true⟩}])
         s!"merged or qualified key type/nullability changed: {sourceSql}"
       count := count + 1
       let expectedLeft := if leftNullable then leftOriginal.map SelectContract.nullableColumn else leftOriginal
       let actual ← mergedOutput s!"SELECT l.* FROM {sourceSql}"
-      SQLean.Tests.assert (actual == expectedLeft) s!"left wildcard reordered or coerced: {sourceSql}"
+      SQLean.Tests.assert (sameOutputTypes actual expectedLeft) s!"left wildcard reordered or coerced: {sourceSql}"
       count := count + 1
       let expectedRight := if rightNullable then rightOriginal.map SelectContract.nullableColumn else rightOriginal
       let actual ← mergedOutput s!"SELECT r.* FROM {sourceSql}"
-      SQLean.Tests.assert (actual == expectedRight) s!"right wildcard reordered or coerced: {sourceSql}"
+      SQLean.Tests.assert (sameOutputTypes actual expectedRight) s!"right wildcard reordered or coerced: {sourceSql}"
       count := count + 1
   let orderedCases : List (String × List Name) := [
     ("SELECT * FROM l JOIN r USING (k)", ["k", "a", "b", "z", "s", "x", "y", "z", "s"]),
@@ -117,7 +117,7 @@ def mergedJoinContractTests : IO Nat := do
     "SELECT k FROM l NATURAL FULL JOIN r FOR UPDATE" ]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 mergedCatalog [] query with
+    match SelectContract.checkQuery .basicV32 mergedCatalog [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid merged join: {sql}")
     count := count + 1
@@ -133,7 +133,7 @@ def mergedJoinContractTests : IO Nat := do
       Advanced.From.join .cross (.table "l") (.table "r") (.using ["k"]),
       Advanced.From.join .cross (.table "l") (.table "r") .natural ] do
     let query : Advanced.Query := { body := .select { items := [.all], source := some source } }
-    match SelectContract.checkQuery .basicV31 mergedCatalog [] query with
+    match SelectContract.checkQuery .basicV32 mergedCatalog [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "malformed handbuilt merged-join condition must be Invalid")
     count := count + 1
@@ -141,7 +141,7 @@ def mergedJoinContractTests : IO Nat := do
     body := .select {
       items := [.expression (.column (some "") "k")]
       source := some (.join .inner (.table "l") (.table "r") (.using ["k"])) } }
-  match SelectContract.checkQuery .basicV31 mergedCatalog [] emptyQualifier with
+  match SelectContract.checkQuery .basicV32 mergedCatalog [] emptyQualifier with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "merged key must not create an empty qualified namespace")
   count := count + 1
@@ -150,18 +150,18 @@ def mergedJoinContractTests : IO Nat := do
     let sql := s!"SELECT ? AS projected, k FROM {source} WHERE ? OFFSET ? LIMIT ?"
     let query ← expectOk sql (Advanced.parseQuery sql)
     let certificate ← expectOk sql
-      ((SelectContract.checkQuery .basicV31 mergedCatalog params query).mapError reprStr)
+      ((SelectContract.checkQuery .basicV32 mergedCatalog params query).mapError reprStr)
     have _preserved := RenderContract.translateParameters_valid certificate.valid
     SQLean.Tests.assert (Advanced.queryParameters 1024 query ==
         (List.range 5).map (fun n => Advanced.Parameter.anonymous (n + 1)))
       "merged join changed SELECT/FROM/WHERE/pagination parameter order"
     let _ ← expectOk sql ((RenderContract.check .postgres16V01 query).mapError reprStr)
     count := count + 1
-    match SelectContract.checkQuery .basicV31 mergedCatalog params { query with offsetFirst := false } with
+    match SelectContract.checkQuery .basicV32 mergedCatalog params { query with offsetFirst := false } with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "merged join accepted reordered anonymous pagination")
     count := count + 1
-    match SelectContract.checkQuery .basicV31 mergedCatalog params query 1 with
+    match SelectContract.checkQuery .basicV32 mergedCatalog params query 1 with
     | .error (.inconclusive _) => pure ()
     | _ => throw (IO.userError "merged join exhaustion must be Inconclusive")
     count := count + 1
@@ -197,11 +197,11 @@ private def mergedFixtureTests (factor : String) : IO Nat := do
         | "text" => pure .text
         | "bool" => pure .bool
         | _ => throw (IO.userError s!"{id}: unexpected output type {type}")
-      pure (SelectContract.OutputColumn.mk name ⟨base, nullable⟩)
+      pure (({name := name, type := ⟨base, nullable⟩} : SelectContract.OutputColumn))
     let query ← expectOk id (Advanced.parseQuery sql)
     let certificate ← expectOk id
-      ((SelectContract.checkQuery .basicV31 catalog params query).mapError reprStr)
-    SQLean.Tests.assert (certificate.output == expected) s!"{id}: exact output mismatch"
+      ((SelectContract.checkQuery .basicV32 catalog params query).mapError reprStr)
+    SQLean.Tests.assert (sameOutputTypes certificate.output expected) s!"{id}: exact output mismatch"
     have _preserved := RenderContract.translateParameters_valid certificate.valid
     let identity ← expectOk id ((RenderContract.check .identityV01 query).mapError reprStr)
     let postgres ← expectOk id ((RenderContract.check .postgres16V01 query).mapError reprStr)

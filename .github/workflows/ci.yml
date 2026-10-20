@@ -94,6 +94,8 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor cte_contract --check
           python3 scripts/extract_set_operation_corpus.py --check
           python3 scripts/extract_recursive_contract_corpus.py --check
+          python3 scripts/extract_collation_corpus.py --check
+          python3 scripts/generate_collation_examples.py --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -251,6 +253,10 @@ jobs:
         run: python3 scripts/check_recursive_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
       - name: Verify recursive CTE static and PostgreSQL analysis boundaries
         run: python3 scripts/check_recursive_boundaries.py --local-bin /usr/lib/postgresql/16/bin
+      - name: Verify collation contracts and native catalog observations
+        run: python3 scripts/check_collations_cli.py --local-bin /usr/lib/postgresql/16/bin
+      - name: Verify collation static, analysis, and metadata boundaries
+        run: python3 scripts/check_collation_boundaries_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

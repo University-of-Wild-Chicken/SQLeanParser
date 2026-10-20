@@ -149,6 +149,12 @@ mutual
     | .cast arg type =>
         checkDataType type
         combine [inspectExpr arg, .ok {depth := arrayTypeDepth type.name}]
+    | .collate arg name =>
+        if name.isEmpty then
+          invalid "representation.collation-name" "collation names require a nonempty component list"
+        else
+          checkNames name
+          combine [inspectExpr arg]
     | .subscript base subscripts =>
         if subscripts.isEmpty then
           invalid "representation.empty-subscripts" "subscripting requires a nonempty bracket group"

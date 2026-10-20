@@ -47,6 +47,7 @@ mutual
         simp only [translateExpr, exprSql, exprSql_translated pg left, exprSql_translated pg right]
     | extract field arg => simp only [translateExpr, exprSql, exprSql_translated pg arg]
     | cast arg target => simp only [translateExpr, exprSql, exprSql_translated pg arg]
+    | collate arg name => simp only [translateExpr, exprSql, exprSql_translated pg arg]
     | subscript base subscripts =>
         have mapped : subscripts.map (fun subscript => subscriptSql pg (translateSubscript subscript)) =
             subscripts.map (subscriptSql true) :=

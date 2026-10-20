@@ -1,362 +1,10 @@
+import SQLean.RenderContract.ExpressionCollationPreservation
 import SQLean.RenderContract.RecursionPreservation
 import SQLean.SelectContract.Spec
 
-/-! Parameter translation preserves the independent basic SELECT judgment.
-
-The derivations below do not import the parser, renderer, executable checker,
-or render certificate. They preserve the exact output labels, concrete types,
-nullability, and index-keyed parameter environment for every valid basic SELECT.
-This is a static preservation theorem, not an interpretation of database
-execution or a claim that every advanced construct has basic-tier validity.
--/
 namespace SQLean.RenderContract
 open Advanced SelectContract
 set_option maxHeartbeats 1000000
-
-@[simp] theorem translateExpr_case (operand : Option Advanced.Expr)
-    (branches : List (Advanced.Expr × Advanced.Expr)) (otherwise : Option Advanced.Expr) :
-    translateExpr (.caseExpr operand branches otherwise) =
-      .caseExpr (operand.map translateExpr)
-        (branches.map fun pair => (translateExpr pair.1, translateExpr pair.2))
-        (otherwise.map translateExpr) := by
-  rw [translateExpr.eq_def]
-  simp only [List.attach_map_val (f := fun pair : Advanced.Expr × Advanced.Expr =>
-    (translateExpr pair.1, translateExpr pair.2))]
-  cases operand <;> cases otherwise <;> rfl
-
-@[simp] theorem translateParameter_index (parameter : Parameter) :
-    parameterIndex (translateParameter parameter) = parameterIndex parameter := by
-  cases parameter <;> rfl
-
-@[simp] theorem ordinary_unary_translated (op : UnOp) (expr : Advanced.Expr) :
-    OrdinaryUnary op (translateExpr expr) ↔ OrdinaryUnary op expr := by
-  cases op <;> cases expr <;> simp [OrdinaryUnary, translateExpr]
-
-@[simp] theorem ordinary_cast_translated (expr : Advanced.Expr) (target : DataType) :
-    OrdinaryCast (translateExpr expr) target ↔ OrdinaryCast expr target := by
-  cases expr <;> simp only [OrdinaryCast, translateExpr, translateExpr_case]
-
-@[simp] theorem ordinary_array_element_translated (expr : Advanced.Expr) :
-    OrdinaryArrayElement (translateExpr expr) ↔ OrdinaryArrayElement expr := by
-  cases expr <;> simp only [OrdinaryArrayElement, translateExpr, translateExpr_case]
-
-@[simp] theorem ordinary_distinct_operand_translated (expr : Advanced.Expr) :
-    OrdinaryDistinctOperand (translateExpr expr) ↔ OrdinaryDistinctOperand expr := by
-  cases expr <;> simp only [OrdinaryDistinctOperand, translateExpr, translateExpr_case]
-
-@[simp] theorem scalar_input_translated (expr : Advanced.Expr) (type : ExprType) :
-    scalarInput (translateExpr expr) type = scalarInput expr type := by
-  cases expr <;> simp [translateExpr, scalarInput]
-
-@[simp] theorem scalar_inputs_translated (exprs : List Advanced.Expr) (types : List ExprType) :
-    scalarInputs (exprs.map translateExpr) types = scalarInputs exprs types := by
-  induction exprs generalizing types with
-  | nil => cases types <;> rfl
-  | cons expr exprs ih =>
-    cases types with
-    | nil => rfl
-    | cons type types =>
-      simpa only [scalarInputs, List.zip_cons_cons, List.map_cons, scalar_input_translated] using
-        congrArg (scalarInput expr type :: ·) (ih types)
-
-@[simp] theorem translateSubscript_slice (lower upper : Option Advanced.Expr) :
-    translateSubscript (.slice lower upper) =
-      .slice (lower.map translateExpr) (upper.map translateExpr) := by
-  rw [translateSubscript.eq_def]
-  cases lower <;> cases upper <;> rfl
-
-@[simp] theorem subscript_isSlice_translated (subscript : Advanced.Subscript) :
-    (translateSubscript subscript).isSlice = subscript.isSlice := by
-  cases subscript <;> simp only [translateSubscript_slice, translateSubscript,
-    Advanced.Subscript.isSlice]
-
-@[simp] theorem subscripts_any_slice_translated (subscripts : List Advanced.Subscript) :
-    (subscripts.map translateSubscript).any Advanced.Subscript.isSlice =
-      subscripts.any Advanced.Subscript.isSlice := by
-  simp only [List.any_map, Function.comp_def, subscript_isSlice_translated]
-
-@[simp] theorem optional_subscript_bound_translated (expr : Option Advanced.Expr) (type : ExprType) :
-    optionalSubscriptBoundSignature (expr.map translateExpr) type =
-      optionalSubscriptBoundSignature expr type := by
-  cases expr <;> simp only [Option.map, optionalSubscriptBoundSignature, scalar_input_translated]
-
-private theorem call_arguments_size (args : List CallArgument) :
-    sizeOf (args.map CallArgument.expression) ≤ sizeOf args := by
-  induction args with
-  | nil => simp
-  | cons arg args ih => cases arg <;> simp_all [CallArgument.expression] <;> omega
-
-mutual
-  /-- Each scalar typing derivation survives the explicit parameter translation,
-  with parameter occurrences translated in their original order. -/
-  theorem expr_valid_translated
-      (valid : ExprValid params scope expr type uses) :
-      ExprValid params scope (translateExpr expr) type (uses.map translateParameter) := by
-    cases valid with
-    | int range => simpa only [translateExpr, List.map_nil] using ExprValid.int range
-    | bigInt large range => simpa only [translateExpr, List.map_nil] using ExprValid.bigInt large range
-    | numericInt large => simpa only [translateExpr, List.map_nil] using ExprValid.numericInt large
-    | decimal lexical => simpa only [translateExpr, List.map_nil] using ExprValid.decimal lexical
-    | minInt32 => simpa only [translateExpr, List.map_nil] using ExprValid.minInt32
-    | minInt64 => simpa only [translateExpr, List.map_nil] using ExprValid.minInt64
-    | text => simpa only [translateExpr, List.map_nil] using ExprValid.text
-    | bool => simpa only [translateExpr, List.map_nil] using ExprValid.bool
-    | null => simpa only [translateExpr, List.map_nil] using ExprValid.null
-    | contextValue => simpa only [translateExpr, List.map_nil] using ExprValid.contextValue
-    | parameter present identity supported =>
-        simpa only [translateExpr, List.map_cons, List.map_nil] using
-          ExprValid.parameter present
-            (identity.trans (translateParameter_index _).symm) supported
-    | column resolved =>
-        simpa only [translateExpr, List.map_nil] using ExprValid.column resolved
-    | binary left right signature =>
-        simpa only [translateExpr, List.map_append] using
-          ExprValid.binary (expr_valid_translated left) (expr_valid_translated right) signature
-    | concat left right signature =>
-        simpa only [translateExpr, List.map_append, scalar_input_translated] using
-          ExprValid.concat (expr_valid_translated left) (expr_valid_translated right)
-            (by simpa only [scalar_input_translated] using signature)
-    | arrayConcat left right signature =>
-        simpa only [translateExpr, List.map_append, scalar_input_translated] using
-          ExprValid.arrayConcat (expr_valid_translated left) (expr_valid_translated right)
-            (by simpa only [scalar_input_translated] using signature)
-    | rowComparison left right signature =>
-        simpa only [translateExpr, List.attach_map_val, List.map_append] using
-          ExprValid.rowComparison (expr_list_valid_translated left) (expr_list_valid_translated right)
-            (by simpa only [scalar_inputs_translated] using signature)
-    | distinctScalar left right ordinaryLeft ordinaryRight signature =>
-        simpa only [translateExpr, List.map_append] using
-          ExprValid.distinctScalar (expr_valid_translated left) (expr_valid_translated right)
-            ((ordinary_distinct_operand_translated _).mpr ordinaryLeft)
-            ((ordinary_distinct_operand_translated _).mpr ordinaryRight)
-            (by simpa only [scalar_input_translated] using signature)
-    | distinctNullLeft arg =>
-        simpa only [translateExpr] using ExprValid.distinctNullLeft (expr_valid_translated arg)
-    | distinctNullRight arg =>
-        simpa only [translateExpr] using ExprValid.distinctNullRight (expr_valid_translated arg)
-    | distinctRows left right signature =>
-        simpa only [translateExpr, List.attach_map_val, List.map_append] using
-          ExprValid.distinctRows (expr_list_valid_translated left) (expr_list_valid_translated right)
-            (by simpa only [scalar_inputs_translated] using signature)
-    | distinctRowNullLeft args =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.distinctRowNullLeft (expr_list_valid_translated args)
-    | distinctRowNullRight args =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.distinctRowNullRight (expr_list_valid_translated args)
-    | quantifiedComparison left right signature =>
-        simpa only [translateExpr, List.map_append] using
-          ExprValid.quantifiedComparison (expr_valid_translated left) (expr_valid_translated right)
-            (by simpa only [scalar_input_translated] using signature)
-    | subscript base bounds nonempty dimensions =>
-        simpa only [translateExpr, List.attach_map_val, List.map_append,
-          subscripts_any_slice_translated] using
-          ExprValid.subscript (expr_valid_translated base) (subscripts_valid_translated bounds)
-            (by simpa using nonempty) (by simpa using dimensions)
-    | unary arg signature ordinary =>
-        simpa only [translateExpr] using ExprValid.unary (expr_valid_translated arg) signature
-          ((ordinary_unary_translated _ _).mpr ordinary)
-    | isNull arg =>
-        simpa only [translateExpr] using ExprValid.isNull (expr_valid_translated arg)
-    | isNullRow args =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.isNullRow (expr_list_valid_translated args)
-    | pattern arg pattern signature =>
-        simpa only [translateExpr, List.map_append] using
-          ExprValid.pattern (expr_valid_translated arg) (expr_valid_translated pattern) signature
-    | ilike arg pattern signature =>
-        simpa only [translateExpr, List.map_append, scalar_input_translated] using
-          ExprValid.ilike (expr_valid_translated arg) (expr_valid_translated pattern)
-            (by simpa only [scalar_input_translated] using signature)
-    | regex arg pattern signature =>
-        simpa only [translateExpr, List.map_append, scalar_input_translated] using
-          ExprValid.regex (expr_valid_translated arg) (expr_valid_translated pattern)
-            (by simpa only [scalar_input_translated] using signature)
-    | jsonAccess arg key signature =>
-        simpa only [translateExpr, List.map_append] using
-          ExprValid.jsonAccess (expr_valid_translated arg) (expr_valid_translated key)
-            (by simpa only [scalar_input_translated] using signature)
-    | jsonExistence arg key signature =>
-        simpa only [translateExpr, List.map_append, scalar_input_translated] using
-          ExprValid.jsonExistence (expr_valid_translated arg) (expr_valid_translated key)
-            (by simpa only [scalar_input_translated] using signature)
-    | containment left right signature =>
-        simpa only [translateExpr, List.map_append, scalar_input_translated] using
-          ExprValid.containment (expr_valid_translated left) (expr_valid_translated right)
-            (by simpa only [scalar_input_translated] using signature)
-    | arrayContainment left right signature =>
-        simpa only [translateExpr, List.map_append, scalar_input_translated] using
-          ExprValid.arrayContainment (expr_valid_translated left) (expr_valid_translated right)
-            (by simpa only [scalar_input_translated] using signature)
-    | overlap left right signature =>
-        simpa only [translateExpr, List.map_append, scalar_input_translated] using
-          ExprValid.overlap (expr_valid_translated left) (expr_valid_translated right)
-            (by simpa only [scalar_input_translated] using signature)
-    | extract arg signature =>
-        simpa only [translateExpr, scalar_input_translated] using
-          ExprValid.extract (expr_valid_translated arg)
-            (by simpa only [scalar_input_translated] using signature)
-    | cast arg supported declaration allowed ordinary =>
-        simpa only [translateExpr] using ExprValid.cast (expr_valid_translated arg)
-          supported declaration allowed ((ordinary_cast_translated _ _).mpr ordinary)
-    | array args signature =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.array (expr_list_valid_translated args) (by simpa using signature)
-    | castArray args supported declaration =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.castArray (array_valid_translated args) supported declaration
-    | defaultCall args callee binding signature =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.defaultCall (expr_list_valid_translated args) callee
-            (by simpa only [List.map_map, Function.comp_def, scalar_inputs_translated] using binding)
-            signature
-    | @namedCall ts uses name callInputs result arguments args callee binding signature =>
-        have sizeBound := call_arguments_size arguments
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.namedCall
-            (by simpa only [translated_call_expressions] using expr_list_valid_translated args)
-            callee
-            (by simpa only [translated_call_names, translated_call_expressions,
-              scalar_inputs_translated] using binding) signature
-    | call args signature =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.call (expr_list_valid_translated args) (by simpa using signature)
-    | substring args arguments signature =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.substring (expr_list_valid_translated args)
-            (by simpa only [scalar_inputs_translated] using arguments) signature
-    | coalesce args signature =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.coalesce (expr_list_valid_translated args) (by simpa using signature)
-    | greatest args signature =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.greatest (expr_list_valid_translated args) (by simpa using signature)
-    | least args signature =>
-        simpa only [translateExpr, List.attach_map_val] using
-          ExprValid.least (expr_list_valid_translated args) (by simpa using signature)
-    | nullIf left right signature =>
-        simpa only [translateExpr, List.map_append] using
-          ExprValid.nullIf (expr_valid_translated left) (expr_valid_translated right)
-            (by simpa using signature)
-    | @caseExpr operand ta ua branches conditions results ub otherwise te ue result
-        operandValid branchesValid otherwiseValid signature =>
-        have transformedSignature :
-            caseSignature ((operand.map translateExpr).map fun expr => scalarInput expr ta)
-              (scalarInputs ((branches.map fun pair => (translateExpr pair.1, translateExpr pair.2)).map Prod.fst) conditions)
-              (scalarInputs ((branches.map fun pair => (translateExpr pair.1, translateExpr pair.2)).map Prod.snd) results)
-              (((otherwise.map translateExpr).map fun expr => scalarInput expr te).getD (.unknown true)) =
-              some result := by
-          have fstMap :
-              (branches.map (fun pair => (translateExpr pair.1, translateExpr pair.2))).map Prod.fst =
-                (branches.map Prod.fst).map translateExpr := by simp only [List.map_map, Function.comp_def]
-          have sndMap :
-              (branches.map (fun pair => (translateExpr pair.1, translateExpr pair.2))).map Prod.snd =
-                (branches.map Prod.snd).map translateExpr := by simp only [List.map_map, Function.comp_def]
-          simpa only [fstMap, sndMap, scalar_inputs_translated, Option.map_map, Function.comp_def,
-            scalar_input_translated] using signature
-        have resultValid := ExprValid.caseExpr
-          (optional_expr_valid_translated operandValid) (branches_valid_translated branchesValid)
-          (optional_expr_valid_translated otherwiseValid) transformedSignature
-        simpa only [translateExpr_case, List.map_append] using resultValid
-    | inList arg values nonempty signature =>
-        simpa only [translateExpr, List.attach_map_val, List.map_append] using
-          ExprValid.inList (expr_valid_translated arg) (expr_list_valid_translated values)
-            (by simpa using nonempty) signature
-    | between arg lower upper signature =>
-        simpa only [translateExpr, List.map_append] using
-          ExprValid.between (expr_valid_translated arg) (expr_valid_translated lower)
-            (expr_valid_translated upper) signature
-  termination_by sizeOf expr
-  decreasing_by all_goals (simp <;> omega)
-
-  theorem expr_list_valid_translated
-      (valid : ExprListValid params scope exprs types uses) :
-      ExprListValid params scope (exprs.map translateExpr) types
-        (uses.map translateParameter) := by
-    cases valid with
-    | nil => exact ExprListValid.nil
-    | cons head tail =>
-        simpa only [List.map_cons, List.map_append] using
-          ExprListValid.cons (expr_valid_translated head) (expr_list_valid_translated tail)
-  termination_by sizeOf exprs
-  decreasing_by all_goals (simp <;> omega)
-
-  /-- Target-directed array elaboration preserves the exact target declaration
-  and original occurrence sequence, including nested empty constructors. -/
-  theorem array_valid_translated
-      (valid : ArrayValid params scope target exprs uses) :
-      ArrayValid params scope target (exprs.map translateExpr)
-        (uses.map translateParameter) := by
-    cases valid with
-    | targeted args signature =>
-        exact ArrayValid.targeted (array_elements_valid_translated args)
-          (by simpa only [scalar_inputs_translated] using signature)
-  termination_by sizeOf exprs + 1
-  decreasing_by subst_vars; omega
-
-  theorem array_elements_valid_translated
-      (valid : ArrayElementsValid params scope target exprs types uses) :
-      ArrayElementsValid params scope target (exprs.map translateExpr) types
-        (uses.map translateParameter) := by
-    cases valid with
-    | nil => exact ArrayElementsValid.nil
-    | ordinary category head tail =>
-        simpa only [List.map_cons, List.map_append] using
-          ArrayElementsValid.ordinary ((ordinary_array_element_translated _).mpr category)
-            (expr_valid_translated head) (array_elements_valid_translated tail)
-    | nested head tail =>
-        simpa only [List.map_cons, List.map_append, translateExpr, List.attach_map_val] using
-          ArrayElementsValid.nested (array_valid_translated head)
-            (array_elements_valid_translated tail)
-  termination_by sizeOf exprs
-  decreasing_by all_goals (simp <;> omega)
-
-  theorem optional_expr_valid_translated
-      (valid : OptionalExprValid params scope expr type uses) :
-      OptionalExprValid params scope (expr.map translateExpr) type (uses.map translateParameter) := by
-    cases valid with
-    | absent => exact OptionalExprValid.absent
-    | present typed => exact OptionalExprValid.present (expr_valid_translated typed)
-  termination_by sizeOf expr
-  decreasing_by all_goals (simp <;> omega)
-
-  /-- Group boundaries, omitted endpoints and lower-before-upper occurrence
-  order survive the parameter-only transformation. -/
-  theorem subscripts_valid_translated
-      (valid : SubscriptsValid params scope subscripts uses) :
-      SubscriptsValid params scope (subscripts.map translateSubscript)
-        (uses.map translateParameter) := by
-    cases valid with
-    | nil => exact SubscriptsValid.nil
-    | index bound signature tail =>
-        simpa only [List.map_cons, translateSubscript, List.map_append] using
-          SubscriptsValid.index (expr_valid_translated bound)
-            (by simpa only [scalar_input_translated] using signature)
-            (subscripts_valid_translated tail)
-    | slice lower upper lowerSignature upperSignature tail =>
-        simpa only [List.map_cons, translateSubscript_slice, List.map_append] using
-          SubscriptsValid.slice (optional_expr_valid_translated lower)
-            (optional_expr_valid_translated upper)
-            (by simpa only [optional_subscript_bound_translated] using lowerSignature)
-            (by simpa only [optional_subscript_bound_translated] using upperSignature)
-            (subscripts_valid_translated tail)
-  termination_by sizeOf subscripts
-  decreasing_by all_goals (simp <;> omega)
-
-  theorem branches_valid_translated
-      (valid : BranchesValid params scope branches conditions results uses) :
-      BranchesValid params scope
-        (branches.map fun branch => (translateExpr branch.1, translateExpr branch.2))
-        conditions results (uses.map translateParameter) := by
-    cases valid with
-    | nil => exact BranchesValid.nil
-    | cons conditionTyped resultTyped tail =>
-      simpa only [List.map_cons, List.map_append] using
-        BranchesValid.cons (expr_valid_translated conditionTyped) (expr_valid_translated resultTyped)
-          (branches_valid_translated tail)
-  termination_by sizeOf branches
-  decreasing_by all_goals (simp <;> omega)
-end
 
 @[simp] theorem array_origin_translated (expr : Advanced.Expr) :
     arrayOrigin (translateExpr expr) = arrayOrigin expr := by
@@ -371,6 +19,8 @@ decreasing_by all_goals (simp_all <;> omega)
     outputLabel (translateExpr expr) = outputLabel expr := by
   cases expr with
   | cast arg target =>
+      simp only [translateExpr, outputLabel, output_label_translated arg]
+  | collate arg name =>
       simp only [translateExpr, outputLabel, output_label_translated arg]
   | subscript arg indices =>
       simp only [translateExpr, outputLabel, output_label_translated arg]
@@ -389,26 +39,27 @@ decreasing_by all_goals (simp_all <;> omega)
     outputName (translateExpr expr) alias = outputName expr alias := by
   simp only [outputName, output_label_translated]
 
-theorem items_valid_translated (valid : ItemsValid params scope items output uses) :
-    ItemsValid params scope (items.map translateSelectItem) output
+theorem items_valid_translated (valid : ItemsValid profile params scope items output uses) :
+    ItemsValid profile params scope (items.map translateSelectItem) output
       (uses.map translateParameter) := by
   induction valid with
   | nil => exact ItemsValid.nil
-  | expression typed aliasValid tail ih =>
-      simpa only [List.map_cons, translateSelectItem, List.map_append, translated_output_name] using
-        ItemsValid.expression (expr_valid_translated typed) aliasValid ih
+  | expression typed collation aliasValid tail ih =>
+      simpa only [List.map_cons, translateSelectItem, List.map_append, translated_output_name, projected_collation_translated] using
+        ItemsValid.expression (expr_valid_translated typed) (expr_collation_valid_translated collation) aliasValid ih
   | all bindings nonempty tail ih =>
       simpa only [List.map_cons, translateSelectItem] using ItemsValid.all bindings nonempty ih
 
-theorem items_input_valid_translated (valid : ItemsInputValid params scope items output uses) :
-    ItemsInputValid params scope (items.map translateSelectItem) output
+theorem items_input_valid_translated (valid : ItemsInputValid profile params scope items output uses) :
+    ItemsInputValid profile params scope (items.map translateSelectItem) output
       (uses.map translateParameter) := by
   induction valid with
   | nil => exact .nil
-  | expression typed aliasValid tail ih =>
+  | expression typed collation aliasValid tail ih =>
       simpa only [List.map_cons, translateSelectItem, List.map_append,
-        translated_output_name, scalar_input_translated] using
-        ItemsInputValid.expression (expr_valid_translated typed) aliasValid ih
+        translated_output_name, scalar_input_translated, pending_origin_translated,
+        unknown_collation_sort_key_translated] using
+        ItemsInputValid.expression (expr_valid_translated typed) (expr_collation_valid_translated collation) aliasValid ih
   | all bindings nonempty tail ih =>
       simpa only [List.map_cons, translateSelectItem] using ItemsInputValid.all bindings nonempty ih
 
@@ -427,8 +78,8 @@ theorem items_input_valid_translated (valid : ItemsInputValid params scope items
   | cons item items ih =>
     cases item <;> simp_all [pureProjection, translateSelectItem]
 
-theorem same_output_expressions_translated (same : SameOutputExpressions items name) :
-    SameOutputExpressions (items.map translateSelectItem) name := by
+theorem same_output_expressions_translated (same : SameOutputExpressions profile items name) :
+    SameOutputExpressions profile (items.map translateSelectItem) name := by
   obtain ⟨pure, same⟩ := same
   refine ⟨by simpa using pure, ?_⟩
   rw [projection_expressions_translated]
@@ -439,15 +90,17 @@ theorem same_output_expressions_translated (same : SameOutputExpressions items n
     simp only [List.map_cons]
     intro expr member
     obtain ⟨original, present, rfl⟩ := List.mem_map.mp member
-    rw [same original present]
+    rcases same original present with identical | normalized
+    · exact Or.inl (congrArg translateExpr identical)
+    · exact Or.inr (by simpa only [unknown_collation_sort_key_translated] using normalized)
 
-theorem predicate_valid_translated (valid : PredicateValid params scope predicate uses) :
-    PredicateValid params scope (predicate.map translateExpr)
+theorem predicate_valid_translated (valid : PredicateValid profile params scope predicate uses) :
+    PredicateValid profile params scope (predicate.map translateExpr)
       (uses.map translateParameter) := by
   cases valid with
   | absent => exact PredicateValid.absent
-  | present typed boolean =>
-      exact PredicateValid.present (expr_valid_translated typed) boolean
+  | present typed collation boolean =>
+      exact PredicateValid.present (expr_valid_translated typed) (expr_collation_valid_translated collation) boolean
 
 /-- Relation identity and NULL-extension ancestry do not depend on parameter
 notation, including for sources outside the independent validity fragment. -/
@@ -497,8 +150,8 @@ termination_by sizeOf expr
   cases expr <;> simp only [translateExpr, translateExpr_case]
 
 
-theorem sort_valid_translated (valid : SortValid params scope projection output distinct expr uses) :
-    SortValid params scope (projection.map translateSelectItem) output distinct (translateExpr expr)
+theorem sort_valid_translated (valid : SortValid profile params scope projection output distinct expr uses) :
+    SortValid profile params scope (projection.map translateSelectItem) output distinct (translateExpr expr)
       (uses.map translateParameter) := by
   cases valid with
   | ordinal constant positive inRange orderable =>
@@ -517,41 +170,81 @@ theorem sort_valid_translated (valid : SortValid params scope projection output 
       exact SortValid.expression ordinary (expr_valid_translated typed)
         ((translated_sort_expression _).mpr category) orderable
 
-@[simp] theorem unknown_sort_key_translated (expr : Advanced.Expr) :
-    unknownSortKey (translateExpr expr) = unknownSortKey expr := by
-  cases expr <;> simp only [unknownSortKey, translateExpr, translateExpr_case]
+theorem sort_collation_valid_translated
+    (valid : SortCollationValid profile params scope pending expr) :
+    SortCollationValid profile params scope pending (translateExpr expr) := by
+  cases valid with
+  | ordinal constant resolved determinate =>
+      exact .ordinal (by simpa only [sort_syntax_translated] using constant) resolved determinate
+  | outputName resolved determinate =>
+      simpa only [translateExpr] using SortCollationValid.outputName resolved determinate
+  | inputName noOutput collation determinate =>
+      simpa only [translateExpr] using SortCollationValid.inputName noOutput
+        (by simpa only [translateExpr] using expr_collation_valid_translated collation) determinate
+  | expression category collation determinate =>
+      exact .expression ((translated_sort_expression _).mpr category)
+        (expr_collation_valid_translated collation) determinate
 
-@[simp] theorem projection_sort_keys_translated (items : List Advanced.SelectItem) :
-    projectionSortKeys (items.map translateSelectItem) = projectionSortKeys items := by
+theorem orders_collation_valid_translated
+    (valid : OrdersCollationValid profile params scope pending orders) :
+    OrdersCollationValid profile params scope pending (orders.map translateOrderBy) := by
+  induction valid with
+  | nil => exact .nil
+  | cons head tail ih =>
+      simpa only [List.map_cons, translateOrderBy] using
+        OrdersCollationValid.cons (sort_collation_valid_translated head) ih
+
+@[simp] theorem unknown_sort_key_translated (profile : Profile) (expr : Advanced.Expr) :
+    unknownSortKey profile (translateExpr expr) = unknownSortKey profile expr := by
+  exact unknown_collation_sort_key_translated profile expr
+
+@[simp] theorem projection_sort_keys_translated (profile : Profile) (items : List Advanced.SelectItem) :
+    projectionSortKeys profile (items.map translateSelectItem) = projectionSortKeys profile items := by
   induction items with
   | nil => rfl
   | cons item items ih =>
     cases item <;> simp only [projectionSortKeys, List.map_cons, translateSelectItem,
       translated_output_name, unknown_sort_key_translated] at ih ⊢ <;> rw [ih]
 
-@[simp] theorem sort_target_index_translated (keys : List (Name × Option (Option String)))
-    (expr : Advanced.Expr) : sortTargetIndex keys (translateExpr expr) = sortTargetIndex keys expr := by
+@[simp] theorem sort_target_index_translated (profile : Profile)
+    (keys : List (Name × Option UnknownSortValue)) (resolved : List Nat)
+    (expr : Advanced.Expr) :
+    sortTargetIndex profile keys resolved (translateExpr expr) =
+      sortTargetIndex profile keys resolved expr := by
   unfold sortTargetIndex
   rw [sort_syntax_translated]
   cases sortSyntax expr <;> try rfl
-  all_goals cases expr <;> simp only [translateExpr, translateExpr_case]
+  all_goals cases expr <;> simp only [translateExpr, translateExpr_case,
+    unknownSortKey, unknownCollationSortKey, unknown_collation_sort_key_translated]
 
-@[simp] theorem order_sequence_safe_translated (keys : List (Name × Option (Option String)))
-    (resolved : List Nat) (orders : List Advanced.OrderBy) :
-    orderSequenceSafe keys resolved (orders.map translateOrderBy) = orderSequenceSafe keys resolved orders := by
+@[simp] theorem order_sequence_safe_translated (profile : Profile)
+    (keys : List (Name × Option UnknownSortValue)) (resolved : List Nat)
+    (orders : List Advanced.OrderBy) :
+    orderSequenceSafe profile keys resolved (orders.map translateOrderBy) =
+      orderSequenceSafe profile keys resolved orders := by
   induction orders generalizing resolved with
   | nil => rfl
   | cons order orders ih =>
     simp only [List.map_cons, orderSequenceSafe, translateOrderBy, sort_target_index_translated, ih]
     cases order.expr <;> simp only [translateExpr, translateExpr_case]
 
-theorem order_sequence_valid_translated (safe : OrderSequenceSafe projection orders) :
-    OrderSequenceSafe (projection.map translateSelectItem) (orders.map translateOrderBy) := by
+@[simp] theorem order_resolved_indices_translated (profile : Profile)
+    (keys : List (Name × Option UnknownSortValue)) (resolved : List Nat)
+    (orders : List Advanced.OrderBy) :
+    orderResolvedIndices profile keys resolved (orders.map translateOrderBy) =
+      orderResolvedIndices profile keys resolved orders := by
+  induction orders generalizing resolved with
+  | nil => rfl
+  | cons order orders ih =>
+    simp only [List.map_cons, orderResolvedIndices, translateOrderBy, sort_target_index_translated, ih]
+
+theorem order_sequence_valid_translated (safe : OrderSequenceSafe profile projection orders) :
+    OrderSequenceSafe profile (projection.map translateSelectItem) (orders.map translateOrderBy) := by
   simpa only [OrderSequenceSafe, pure_projection_translated, projection_sort_keys_translated,
     order_sequence_safe_translated] using safe
 
-theorem sort_list_valid_translated (valid : SortListValid params scope projection output distinct orders uses) :
-    SortListValid params scope (projection.map translateSelectItem) output distinct (orders.map translateOrderBy)
+theorem sort_list_valid_translated (valid : SortListValid profile params scope projection output distinct orders uses) :
+    SortListValid profile params scope (projection.map translateSelectItem) output distinct (orders.map translateOrderBy)
       (uses.map translateParameter) := by
   induction valid with
   | nil => exact .nil
@@ -559,34 +252,19 @@ theorem sort_list_valid_translated (valid : SortListValid params scope projectio
       simpa only [List.map_cons, List.map_append, translateOrderBy] using
         SortListValid.cons (sort_valid_translated head) ih
 
-theorem orders_valid_translated (valid : OrdersValid params scope projection output distinct orders uses) :
-    OrdersValid params scope (projection.map translateSelectItem) output distinct (orders.map translateOrderBy)
+theorem orders_valid_translated (valid : OrdersValid profile params scope projection output distinct orders uses) :
+    OrdersValid profile params scope (projection.map translateSelectItem) output distinct (orders.map translateOrderBy)
       (uses.map translateParameter) := by
   cases valid with
   | nil => exact .nil
   | checked items sequence =>
     exact .checked (sort_list_valid_translated items) (order_sequence_valid_translated sequence)
 
-@[simp] theorem order_resolves_input_translated (expr : Advanced.Expr) (index : Nat) (column : PendingColumn) :
-    orderResolvesInput (translateExpr expr) index column = orderResolvesInput expr index column := by
-  unfold orderResolvesInput
-  rw [sort_syntax_translated]
-  cases sortSyntax expr <;> try rfl
-  all_goals cases expr <;> simp only [translateExpr, translateExpr_case]
-
-@[simp] theorem order_resolves_column_translated (expr : Advanced.Expr) (index : Nat)
-    (column : PendingColumn) (columns : List PendingColumn) :
-    orderResolvesColumn (translateExpr expr) index column columns =
-      orderResolvesColumn expr index column columns := by
-  unfold orderResolvesColumn
-  rw [order_resolves_input_translated]
-  cases expr <;> simp only [translateExpr, translateExpr_case]
-
-@[simp] theorem resolve_leaf_inputs_translated (distinct : Bool) (orders : List Advanced.OrderBy)
-    (columns : List PendingColumn) :
-    resolveLeafInputs distinct (orders.map translateOrderBy) columns = resolveLeafInputs distinct orders columns := by
-  simp only [resolveLeafInputs, List.any_map, Function.comp_def, translateOrderBy,
-    order_resolves_column_translated]
+@[simp] theorem resolve_leaf_inputs_translated (profile : Profile) (distinct : Bool)
+    (orders : List Advanced.OrderBy) (columns : List PendingColumn) :
+    resolveLeafInputs profile distinct (orders.map translateOrderBy) columns =
+      resolveLeafInputs profile distinct orders columns := by
+  simp only [resolveLeafInputs, order_resolved_indices_translated]
 
 theorem set_sort_valid_translated (valid : SetSortValid output expr) :
     SetSortValid output (translateExpr expr) := by
@@ -619,12 +297,12 @@ theorem parameter_order_translated (ordered : ParameterOrder uses) :
     omega
 
 /-- Translation preserves closed pagination typing and its contextual widening. -/
-theorem pagination_valid_translated (valid : PaginationValid params bound uses) :
-    PaginationValid params (bound.map translateExpr) (uses.map translateParameter) := by
+theorem pagination_valid_translated (valid : PaginationValid profile params bound uses) :
+    PaginationValid profile params (bound.map translateExpr) (uses.map translateParameter) := by
   cases valid with
   | absent => exact .absent
-  | present typed coercion =>
-      exact .present (expr_valid_translated typed) coercion
+  | present typed collation coercion =>
+      exact .present (expr_valid_translated typed) (expr_collation_valid_translated collation) coercion
 
 /-- The local pagination certificate remains useful independently of coverage
 for the query body, while parameter identities and occurrence order survive. -/
@@ -633,8 +311,8 @@ theorem pagination_bounds_valid_translated
     PaginationBoundsValid profile params (translateParameters query)
       (limitUses.map translateParameter) (offsetUses.map translateParameter) := by
   cases valid with
-  | bounds environment limitValid offsetValid =>
-      apply PaginationBoundsValid.bounds environment
+  | bounds environment collations limitValid offsetValid =>
+      apply PaginationBoundsValid.bounds environment collations
       · have translated := pagination_valid_translated limitValid
         simp only [translateParameters]
         split <;> simp_all
@@ -736,26 +414,29 @@ mutual
       QueryValid profile catalog params env (translateParameters query) output
         (uses.map translateParameter) := by
     cases valid with
-    | @basic ctes env visible cteUses scope sourceUses output selectUses whereUses orderBy orderUses limit limitUses
-        offset offsetUses locking offsetFirst select names definitions source items nonempty distinctComparable
-        predicate orders limitValid offsetValid lockingValid noGrouping noHaving noDistinctOn =>
+    | @basic ctes env visible cteUses scope sourceUses output selectUses pending whereUses orderBy orderUses limit limitUses
+        offset offsetUses locking offsetFirst select names definitions source items inputs nonempty distinctComparable distinctCollations
+        predicate orders orderCollations limitValid offsetValid lockingValid noGrouping noHaving noDistinctOn =>
       cases offsetFirst <;>
         simp only [translateParameters, translateQueryBody, List.attach_map_val,
           Bool.false_eq_true, ↓reduceIte, List.map_append]
       all_goals
-        apply QueryValid.basic
+        apply QueryValid.basic (pending := pending)
         · simpa [CTENamesValid, List.map_map, Function.comp_def, translateCTE] using names
         · simpa only [List.attach_map_val] using ctes_valid_translated definitions
         · have translated := source_valid_translated source
           simp only [translateSelect]
           cases relation : select.source <;> simpa [relation] using translated
         · simpa only [translateSelect, List.attach_map_val] using items_valid_translated items
+        · simpa only [translateSelect, List.attach_map_val] using items_input_valid_translated inputs
         · exact nonempty
         · simpa only [translateSelect] using distinctComparable
+        · simpa only [translateSelect] using distinctCollations
         · have translated := predicate_valid_translated predicate
           simp only [translateSelect]
           cases condition : select.whereClause <;> simpa [condition] using translated
         · simpa only [translateSelect, List.attach_map_val] using orders_valid_translated orders
+        · exact orders_collation_valid_translated orderCollations
         · have translated := pagination_valid_translated limitValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
         · have translated := pagination_valid_translated offsetValid
@@ -811,13 +492,13 @@ mutual
         (uses.map translateParameter) := by
     cases valid with
     | @basic ctes env visible cteUses scope sourceUses output selectUses pending whereUses orderBy orderUses limit limitUses
-        offset offsetUses locking offsetFirst select names definitions source items inputs nonempty distinctComparable
-        predicate orders limitValid offsetValid lockingValid noGrouping noHaving noDistinctOn =>
+        offset offsetUses locking offsetFirst select names definitions source items inputs nonempty distinctComparable distinctCollations
+        predicate orders orderCollations limitValid offsetValid lockingValid noGrouping noHaving noDistinctOn =>
       cases offsetFirst <;>
         simp only [translateParameters, translateQueryBody, List.attach_map_val,
           Bool.false_eq_true, ↓reduceIte, List.map_append]
       all_goals
-        rw [← resolve_leaf_inputs_translated select.distinct orderBy pending]
+        rw [← resolve_leaf_inputs_translated profile select.distinct orderBy pending]
         simp only [translateSelect]
         apply SetOperandValid.basic (pending := pending) (output := output)
         · simpa [CTENamesValid, List.map_map, Function.comp_def, translateCTE] using names
@@ -828,9 +509,11 @@ mutual
         · simpa only [translateSelect, List.attach_map_val] using items_input_valid_translated inputs
         · exact nonempty
         · simpa only [translateSelect] using distinctComparable
+        · simpa only [translateSelect] using distinctCollations
         · have translated := predicate_valid_translated predicate
           cases condition : select.whereClause <;> simpa [condition] using translated
         · simpa only [translateSelect, List.attach_map_val] using orders_valid_translated orders
+        · exact orders_collation_valid_translated orderCollations
         · have translated := pagination_valid_translated limitValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
         · have translated := pagination_valid_translated offsetValid
@@ -905,9 +588,7 @@ mutual
       · simpa only [translateParameters] using rightUnlocked
       · exact merged
       · exact sameTypes
-      · have translated := recursive_collation_safe_translated collation
-        rw [translateParameters, translateQueryBody] at translated
-        simpa only [List.attach_map_val, List.map_nil] using translated
+      · exact collation
   termination_by 2 * sizeOf cte
   decreasing_by all_goals simp <;> omega
 
@@ -944,8 +625,8 @@ theorem translateParameters_valid
     (valid : SelectValid profile catalog params query output) :
     SelectValid profile catalog params (translateParameters query) output := by
   cases valid with
-  | certified environment supported queryValid parameterOrder =>
-      exact .certified environment supported (query_valid_translated queryValid)
+  | certified environment collations supported queryValid parameterOrder =>
+      exact .certified environment collations supported (query_valid_translated queryValid)
         (parameter_order_translated parameterOrder)
 
 end SQLean.RenderContract

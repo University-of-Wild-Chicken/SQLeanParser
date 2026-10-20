@@ -1,0 +1,3370 @@
+{
+  "format_version": 1,
+  "scope": "Authored analysis-only PostgreSQL 16 boundaries; no source queries execute. Static certificates and PREPARE/CREATE VIEW outcomes are separate evidence.",
+  "environments": {
+    "standard": {
+      "tables": [
+        {
+          "name": "inputs",
+          "schema": "collation_probe",
+          "exposeUnqualified": true,
+          "columns": [
+            {
+              "name": "c",
+              "type": "text",
+              "nullable": false
+            },
+            {
+              "name": "p",
+              "type": "text",
+              "nullable": false
+            },
+            {
+              "name": "d",
+              "type": "text",
+              "nullable": false
+            }
+          ],
+          "columnCollations": [
+            {
+              "column": "c",
+              "collation": "C"
+            },
+            {
+              "column": "p",
+              "collation": "POSIX"
+            }
+          ]
+        }
+      ],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:probe_choice",
+            "schema": "collation_probe",
+            "name": "choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:alt_choice",
+            "schema": "collation_alt",
+            "name": "choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": false
+          },
+          {
+            "id": "custom:utf8",
+            "schema": "collation_probe",
+            "name": "utf8_only",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:dotted",
+            "schema": "collation_probe",
+            "name": "a.b",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:encoded_fallback",
+            "schema": "collation_probe",
+            "name": "encoded_choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:encoded_current",
+            "schema": "collation_alt",
+            "name": "encoded_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": false
+          }
+        ]
+      }
+    },
+    "shadow": {
+      "tables": [
+        {
+          "name": "inputs",
+          "schema": "collation_probe",
+          "exposeUnqualified": true,
+          "columns": [
+            {
+              "name": "c",
+              "type": "text",
+              "nullable": false
+            },
+            {
+              "name": "p",
+              "type": "text",
+              "nullable": false
+            },
+            {
+              "name": "d",
+              "type": "text",
+              "nullable": false
+            }
+          ],
+          "columnCollations": [
+            {
+              "column": "c",
+              "collation": "C"
+            },
+            {
+              "column": "p",
+              "collation": "POSIX"
+            }
+          ]
+        }
+      ],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:probe_choice",
+            "schema": "collation_probe",
+            "name": "choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": false
+          },
+          {
+            "id": "custom:alt_choice",
+            "schema": "collation_alt",
+            "name": "choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:utf8",
+            "schema": "collation_probe",
+            "name": "utf8_only",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:dotted",
+            "schema": "collation_probe",
+            "name": "a.b",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:encoded_fallback",
+            "schema": "collation_probe",
+            "name": "encoded_choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": false
+          },
+          {
+            "id": "custom:encoded_current",
+            "schema": "collation_alt",
+            "name": "encoded_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          }
+        ]
+      }
+    },
+    "current-after-fallback": {
+      "tables": [],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:fallback",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:current",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          }
+        ]
+      }
+    },
+    "current-before-fallback": {
+      "tables": [],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:current",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:fallback",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          }
+        ]
+      }
+    },
+    "fallback-after-foreign": {
+      "tables": [],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:foreign",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "LATIN1",
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:fallback",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          }
+        ]
+      }
+    },
+    "qualified-hidden": {
+      "tables": [],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:fallback",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": false
+          },
+          {
+            "id": "custom:current",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": false
+          }
+        ]
+      }
+    },
+    "foreign-only": {
+      "tables": [],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:foreign",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "LATIN1",
+            "deterministic": true,
+            "exposeUnqualified": true
+          }
+        ]
+      }
+    },
+    "duplicate-visible": {
+      "tables": [],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:current",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:other",
+            "schema": "other_schema",
+            "name": "encoding_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          }
+        ]
+      }
+    },
+    "duplicate-id": {
+      "tables": [],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:current",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:current",
+            "schema": "other_schema",
+            "name": "other_name",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          }
+        ]
+      }
+    },
+    "duplicate-qualified": {
+      "tables": [],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:current",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:other",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": false
+          }
+        ]
+      }
+    },
+    "hidden-foreign-with-current": {
+      "tables": [],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:foreign",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "LATIN1",
+            "deterministic": true,
+            "exposeUnqualified": false
+          },
+          {
+            "id": "custom:fallback",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:current",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "UTF8",
+            "deterministic": true,
+            "exposeUnqualified": true
+          }
+        ]
+      }
+    },
+    "qualified-foreign-only": {
+      "tables": [],
+      "collations": {
+        "encoding": "UTF8",
+        "entries": [
+          {
+            "id": "default",
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "C",
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "POSIX",
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null,
+            "deterministic": true,
+            "exposeUnqualified": true
+          },
+          {
+            "id": "custom:foreign",
+            "schema": "encoding_probe",
+            "name": "encoding_choice",
+            "encoding": "LATIN1",
+            "deterministic": true,
+            "exposeUnqualified": true
+          }
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "collation-boundary-annotate-unknown",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-annotate-null",
+      "source_kind": "synthetic",
+      "sql": "SELECT NULL COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": true,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-annotate-text",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a'::TEXT COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-annotate-varchar",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a'::VARCHAR(3) COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "varchar(3)",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "character varying(3)",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-annotate-char",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a'::CHAR(3) COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "char(3)",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "character(3)",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-annotate-name",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a'::NAME COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "name",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "name",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-annotate-text-array",
+      "source_kind": "synthetic",
+      "sql": "SELECT ARRAY['a'] COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text[]",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-annotate-name-array",
+      "source_kind": "synthetic",
+      "sql": "SELECT ARRAY['a'::NAME] COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "name[]",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-noncollatable-int",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1 COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-noncollatable-bool",
+      "source_kind": "synthetic",
+      "sql": "SELECT TRUE COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-noncollatable-numeric",
+      "source_kind": "synthetic",
+      "sql": "SELECT 1.0 COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-noncollatable-json",
+      "source_kind": "synthetic",
+      "sql": "SELECT '{}'::JSON COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-noncollatable-jsonb",
+      "source_kind": "synthetic",
+      "sql": "SELECT '{}'::JSONB COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-noncollatable-bytea",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a'::BYTEA COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-noncollatable-int-array",
+      "source_kind": "synthetic",
+      "sql": "SELECT ARRAY[1] COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-noncollatable-row",
+      "source_kind": "synthetic",
+      "sql": "SELECT ROW(1) COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "unsupported",
+      "diagnostic": "record_value",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-explicit-same",
+      "source_kind": "synthetic",
+      "sql": "SELECT ('a' COLLATE \"C\")||('b' COLLATE \"C\") AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-explicit-conflict",
+      "source_kind": "synthetic",
+      "sql": "SELECT ('a' COLLATE \"C\")||('b' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-explicit-comparison",
+      "source_kind": "synthetic",
+      "sql": "SELECT ('a' COLLATE \"C\")=('b' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-explicit-coalesce",
+      "source_kind": "synthetic",
+      "sql": "SELECT COALESCE('a' COLLATE \"C\",'b' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-explicit-case",
+      "source_kind": "synthetic",
+      "sql": "SELECT CASE WHEN TRUE THEN 'a' COLLATE \"C\" ELSE 'b' COLLATE \"POSIX\" END AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-explicit-nullif",
+      "source_kind": "synthetic",
+      "sql": "SELECT NULLIF('a' COLLATE \"C\",'b' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-explicit-array",
+      "source_kind": "synthetic",
+      "sql": "SELECT ARRAY['a' COLLATE \"C\",'b' COLLATE \"POSIX\"] AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-nested-overrides",
+      "source_kind": "synthetic",
+      "sql": "SELECT ('a' COLLATE \"C\") COLLATE \"POSIX\" AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "POSIX"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-outer-cannot-repair-child",
+      "source_kind": "synthetic",
+      "sql": "SELECT (('a' COLLATE \"C\")||('b' COLLATE \"POSIX\")) COLLATE \"C\" AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-cast-clears",
+      "source_kind": "synthetic",
+      "sql": "SELECT (('1' COLLATE \"C\")::INTEGER)::TEXT AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "default"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-cast-keeps",
+      "source_kind": "synthetic",
+      "sql": "SELECT ('a'::NAME)::TEXT AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-raw-null-wrapper",
+      "source_kind": "synthetic",
+      "sql": "SELECT NULL COLLATE \"C\" IS DISTINCT FROM '{}'::JSON AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "distinct_signature",
+      "output_columns": null,
+      "postgres_prepare": "42883",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-raw-null-control",
+      "source_kind": "synthetic",
+      "sql": "SELECT NULL IS DISTINCT FROM '{}'::JSON AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-implicit-conflict",
+      "source_kind": "synthetic",
+      "sql": "SELECT c||p AS v FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42P22",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-implicit-sort",
+      "source_kind": "synthetic",
+      "sql": "SELECT c||p AS v FROM collation_probe.inputs ORDER BY v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-implicit-compare",
+      "source_kind": "synthetic",
+      "sql": "SELECT c=p AS v FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-implicit-default",
+      "source_kind": "synthetic",
+      "sql": "SELECT c||d AS v FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-explicit-dominates",
+      "source_kind": "synthetic",
+      "sql": "SELECT c||(p COLLATE \"C\") AS v FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-outer-repairs-implicit",
+      "source_kind": "synthetic",
+      "sql": "SELECT (c||p) COLLATE \"C\" AS v FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-implicit-array",
+      "source_kind": "synthetic",
+      "sql": "SELECT ARRAY[c,p] AS v FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42P22",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-implicit-array-sort",
+      "source_kind": "synthetic",
+      "sql": "SELECT ARRAY[c,p] AS v FROM collation_probe.inputs ORDER BY v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-scope-explicit-erasure",
+      "source_kind": "synthetic",
+      "sql": "SELECT a||b AS v FROM (SELECT 'a' COLLATE \"C\" AS a,'b' COLLATE \"POSIX\" AS b) d",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42P22",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-scope-explicit-sort",
+      "source_kind": "synthetic",
+      "sql": "SELECT a||b AS v FROM (SELECT 'a' COLLATE \"C\" AS a,'b' COLLATE \"POSIX\" AS b) d ORDER BY v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-scope-conflict-erasure",
+      "source_kind": "synthetic",
+      "sql": "SELECT v FROM (SELECT c||p AS v FROM collation_probe.inputs) d ORDER BY v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42P22",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-cte-explicit-erasure",
+      "source_kind": "synthetic",
+      "sql": "WITH d AS (SELECT 'a' COLLATE \"C\" AS a,'b' COLLATE \"POSIX\" AS b) SELECT a||b AS v FROM d",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42P22",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-cte-conflict-erasure",
+      "source_kind": "synthetic",
+      "sql": "WITH d AS (SELECT c||p AS v FROM collation_probe.inputs) SELECT v FROM d ORDER BY v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42P22",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-set-all-implicit",
+      "source_kind": "synthetic",
+      "sql": "SELECT c AS v FROM collation_probe.inputs UNION ALL SELECT p FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42P22",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-set-distinct-implicit",
+      "source_kind": "synthetic",
+      "sql": "SELECT c AS v FROM collation_probe.inputs UNION SELECT p FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-set-all-explicit",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE \"C\" AS v UNION ALL SELECT 'b' COLLATE \"POSIX\"",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-set-unknown-noncollatable",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1' COLLATE \"C\" AS v UNION ALL SELECT 1",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "int32",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42804",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-recursive-same",
+      "source_kind": "synthetic",
+      "sql": "WITH RECURSIVE r(v) AS (SELECT 'a'::TEXT COLLATE \"C\" UNION ALL SELECT v FROM r WHERE FALSE) SELECT v FROM r",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": true,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-recursive-override",
+      "source_kind": "synthetic",
+      "sql": "WITH RECURSIVE r(v) AS (SELECT 'a'::TEXT COLLATE \"C\" UNION ALL SELECT v COLLATE \"POSIX\" FROM r WHERE FALSE) SELECT v FROM r",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-recursive-default-to-c",
+      "source_kind": "synthetic",
+      "sql": "WITH RECURSIVE r(v) AS (SELECT 'a'::TEXT UNION ALL SELECT CURRENT_USER::TEXT FROM r WHERE FALSE) SELECT v FROM r",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "recursive_collation",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-recursive-c-to-default",
+      "source_kind": "synthetic",
+      "sql": "WITH RECURSIVE r(v) AS (SELECT CURRENT_USER::TEXT UNION ALL SELECT 'a'::TEXT FROM r WHERE FALSE) SELECT v FROM r",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": true,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-recursive-unknown",
+      "source_kind": "synthetic",
+      "sql": "WITH RECURSIVE r(v) AS (SELECT 'a' COLLATE \"C\" UNION ALL SELECT v FROM r WHERE FALSE) SELECT v FROM r",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": true,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-recursive-array",
+      "source_kind": "synthetic",
+      "sql": "WITH RECURSIVE r(v) AS (SELECT ARRAY['a'] COLLATE \"C\" UNION ALL SELECT v FROM r WHERE FALSE) SELECT v FROM r",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text[]",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-recursive-array-mismatch",
+      "source_kind": "synthetic",
+      "sql": "WITH RECURSIVE r(v) AS (SELECT ARRAY['a'] UNION ALL SELECT v COLLATE \"C\" FROM r WHERE FALSE) SELECT v FROM r",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "recursive_collation",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-lookup-qualified",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE collation_probe.choice AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:probe_choice"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "collation_probe",
+            "name": "choice",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-lookup-unqualified",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE choice AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:probe_choice"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "collation_probe",
+            "name": "choice",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-lookup-hidden-qualified",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE collation_alt.choice AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:alt_choice"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "collation_alt",
+            "name": "choice",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-lookup-utf8",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE collation_probe.utf8_only AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:utf8"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "collation_probe",
+            "name": "utf8_only",
+            "encoding": "UTF8"
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-lookup-dotted",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE collation_probe.\"a.b\" AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:dotted"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "collation_probe",
+            "name": "a.b",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-lookup-unquoted-case",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE C AS v",
+      "environment": "standard",
+      "expected_status": "unsupported",
+      "diagnostic": "collation_environment",
+      "output_columns": null,
+      "postgres_prepare": "42704",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-lookup-missing",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE missing_collation AS v",
+      "environment": "standard",
+      "expected_status": "unsupported",
+      "diagnostic": "collation_environment",
+      "output_columns": null,
+      "postgres_prepare": "42704",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-lookup-current-db",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE postgres.pg_catalog.\"C\" AS v",
+      "environment": "standard",
+      "expected_status": "unsupported",
+      "diagnostic": "collation_database",
+      "output_columns": null,
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-lookup-other-db",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE another_database.pg_catalog.\"C\" AS v",
+      "environment": "standard",
+      "expected_status": "unsupported",
+      "diagnostic": "collation_database",
+      "output_columns": null,
+      "postgres_prepare": "0A000",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-lookup-too-many",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE a.b.c.d AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_name",
+      "output_columns": null,
+      "postgres_prepare": "42601",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-lookup-shadow",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE choice AS v",
+      "environment": "shadow",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:alt_choice"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "collation_alt",
+            "name": "choice",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-lookup-encoding-fallback",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoded_choice AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:encoded_fallback"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "collation_probe",
+            "name": "encoded_choice",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-lookup-encoding-current",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoded_choice AS v",
+      "environment": "shadow",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:encoded_current"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "collation_alt",
+            "name": "encoded_choice",
+            "encoding": "UTF8"
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-set-wrapper-text",
+      "source_kind": "synthetic",
+      "sql": "SELECT v::TEXT AS v FROM (SELECT '1' COLLATE \"C\" AS v UNION ALL SELECT 1) q",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-set-wrapper-identity-cast",
+      "source_kind": "synthetic",
+      "sql": "SELECT v::INTEGER::TEXT AS v FROM (SELECT '1' COLLATE \"C\" AS v UNION ALL SELECT 1) q",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-set-wrapper-changing-cast",
+      "source_kind": "synthetic",
+      "sql": "SELECT v::BIGINT::TEXT AS v FROM (SELECT '1' COLLATE \"C\" AS v UNION ALL SELECT 1) q",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "default"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-plain-current-user",
+      "source_kind": "synthetic",
+      "sql": "SELECT CURRENT_USER AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "name",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "name",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-plain-current-schema",
+      "source_kind": "synthetic",
+      "sql": "SELECT CURRENT_SCHEMA AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "name",
+          "nullable": true,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "name",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-plain-system-user",
+      "source_kind": "synthetic",
+      "sql": "SELECT SYSTEM_USER AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": true,
+          "collation": "default"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-plain-name-array-cast",
+      "source_kind": "synthetic",
+      "sql": "SELECT ARRAY['a'::NAME]::TEXT[] AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text[]",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-plain-text",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a'::TEXT AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "default"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-plain-unknown",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "default"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-plain-numeric-erasure",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1'::NAME::TEXT::INTEGER::TEXT AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "default"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-unknown-arithmetic-one",
+      "source_kind": "synthetic",
+      "sql": "SELECT ('1' COLLATE \"C\")+1 AS v",
+      "environment": "standard",
+      "expected_status": "unsupported",
+      "diagnostic": "unknown_string_context",
+      "output_columns": null,
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "integer",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-unknown-arithmetic-both",
+      "source_kind": "synthetic",
+      "sql": "SELECT ('1' COLLATE \"C\")+('2' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "binary_signature",
+      "output_columns": null,
+      "postgres_prepare": "42725",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-unknown-boolean",
+      "source_kind": "synthetic",
+      "sql": "SELECT ('true' COLLATE \"C\") AND TRUE AS v",
+      "environment": "standard",
+      "expected_status": "unsupported",
+      "diagnostic": "unknown_string_context",
+      "output_columns": null,
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-case-condition-only",
+      "source_kind": "synthetic",
+      "sql": "SELECT CASE 'a' COLLATE \"C\" WHEN 'a' COLLATE \"C\" THEN 'b' ELSE 'c' END AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "default"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-case-condition-distinct-result",
+      "source_kind": "synthetic",
+      "sql": "SELECT CASE 'a' COLLATE \"C\" WHEN 'a' COLLATE \"C\" THEN 'b' COLLATE \"POSIX\" ELSE 'c' COLLATE \"POSIX\" END AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "POSIX"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-case-condition-conflict",
+      "source_kind": "synthetic",
+      "sql": "SELECT CASE 'a' COLLATE \"C\" WHEN 'a' COLLATE \"POSIX\" THEN 'b' ELSE 'c' END AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "default"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "default",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-case-boolean-test-only",
+      "source_kind": "synthetic",
+      "sql": "SELECT CASE WHEN ('a' COLLATE \"C\")=('b' COLLATE \"C\") THEN 'b' COLLATE \"POSIX\" ELSE 'c' END AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "POSIX"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "POSIX",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-row-pairwise",
+      "source_kind": "synthetic",
+      "sql": "SELECT ROW('a' COLLATE \"C\",'b' COLLATE \"POSIX\")=ROW('a' COLLATE \"C\",'b' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-row-pairwise-distinct",
+      "source_kind": "synthetic",
+      "sql": "SELECT ROW('a' COLLATE \"C\",'b' COLLATE \"POSIX\") IS DISTINCT FROM ROW('a' COLLATE \"C\",'b' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-row-pair-conflict",
+      "source_kind": "synthetic",
+      "sql": "SELECT ROW('a' COLLATE \"C\",'b' COLLATE \"POSIX\")=ROW('a' COLLATE \"POSIX\",'b' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-row-null-separate",
+      "source_kind": "synthetic",
+      "sql": "SELECT ROW('a' COLLATE \"C\",'b' COLLATE \"POSIX\") IS NULL AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-between-pairwise",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'b' BETWEEN ('a' COLLATE \"C\") AND ('c' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-between-pair-conflict",
+      "source_kind": "synthetic",
+      "sql": "SELECT ('b' COLLATE \"C\") BETWEEN 'a' AND ('c' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-in-array-conflict",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' IN ('a' COLLATE \"C\",'b' COLLATE \"POSIX\") AS v",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-in-single",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' IN ('a' COLLATE \"C\") AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-array-context-erases",
+      "source_kind": "synthetic",
+      "sql": "SELECT ARRAY['1' COLLATE \"C\",'2' COLLATE \"POSIX\"]::INTEGER[] AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "integer[]",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "integer[]",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-subscript-bound-erases",
+      "source_kind": "synthetic",
+      "sql": "SELECT (ARRAY['a'] COLLATE \"C\")[('1' COLLATE \"POSIX\")] AS v",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": true,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "collation": {
+            "schema": "pg_catalog",
+            "name": "C",
+            "encoding": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-in-vars-pairwise",
+      "source_kind": "synthetic",
+      "sql": "SELECT d IN (c COLLATE \"C\",p COLLATE \"POSIX\") AS v FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-in-mixed-pairwise",
+      "source_kind": "synthetic",
+      "sql": "SELECT d IN ('a' COLLATE \"C\",p COLLATE \"POSIX\") AS v FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-in-mixed-array-conflict",
+      "source_kind": "synthetic",
+      "sql": "SELECT d IN ('a' COLLATE \"C\",'b' COLLATE \"POSIX\",p) AS v FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "collation_conflict",
+      "output_columns": null,
+      "postgres_prepare": "42P21",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-between-vars-pairwise",
+      "source_kind": "synthetic",
+      "sql": "SELECT d BETWEEN (c COLLATE \"C\") AND (p COLLATE \"POSIX\") AS v FROM collation_probe.inputs",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "v",
+          "type": "boolean",
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "collation-boundary-sort-wrapper-distinct",
+      "source_kind": "synthetic",
+      "sql": "(SELECT DISTINCT '1' COLLATE \"C\" AS v) UNION ALL SELECT 1",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "set_common_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-wrapper-ordinal",
+      "source_kind": "synthetic",
+      "sql": "(SELECT '1' COLLATE \"C\" AS v ORDER BY 1) UNION ALL SELECT 1",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "set_common_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-wrapper-name",
+      "source_kind": "synthetic",
+      "sql": "(SELECT '1' COLLATE \"C\" AS v ORDER BY v) UNION ALL SELECT 1",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "set_common_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-wrapper-expression",
+      "source_kind": "synthetic",
+      "sql": "(SELECT '1' COLLATE \"C\" AS v ORDER BY ('1' COLLATE \"C\")) UNION ALL SELECT 1",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "set_common_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-null-wrapper-expression",
+      "source_kind": "synthetic",
+      "sql": "(SELECT NULL COLLATE \"C\" AS v ORDER BY (NULL COLLATE \"C\")) UNION ALL SELECT 1",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "set_common_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-wrapper-different-literal",
+      "source_kind": "synthetic",
+      "sql": "(SELECT '1' COLLATE \"C\" AS v ORDER BY ('2' COLLATE \"C\")) UNION ALL SELECT 1",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "int32",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42804",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-wrapper-different-identity",
+      "source_kind": "synthetic",
+      "sql": "(SELECT '1' COLLATE \"C\" AS v ORDER BY ('1' COLLATE \"POSIX\")) UNION ALL SELECT 1",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "int32",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42804",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-wrapper-qualified-equivalence",
+      "source_kind": "synthetic",
+      "sql": "(SELECT '1' COLLATE \"C\" AS v ORDER BY ('1' COLLATE pg_catalog.\"C\")) UNION ALL SELECT 1",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "set_common_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-duplicate-expression-name",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS x ORDER BY ('1' COLLATE \"C\"),x",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "ambiguous_output",
+      "output_columns": null,
+      "postgres_prepare": "42702",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-duplicate-name",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS x ORDER BY x",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        },
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42701",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-duplicate-name-twice",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS x ORDER BY x,x",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "ambiguous_output",
+      "output_columns": null,
+      "postgres_prepare": "42702",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-duplicate-name-position-name",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS x ORDER BY x,2,x",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        },
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42701",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-null-duplicate-position-name",
+      "source_kind": "synthetic",
+      "sql": "SELECT NULL COLLATE \"C\" AS x,NULL COLLATE \"C\" AS x ORDER BY 1,x",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "ambiguous_output",
+      "output_columns": null,
+      "postgres_prepare": "42702",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-null-duplicate-both-positions",
+      "source_kind": "synthetic",
+      "sql": "SELECT NULL COLLATE \"C\" AS x,NULL COLLATE \"C\" AS x ORDER BY 1,2,x",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": true,
+          "collation": "C"
+        },
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": true,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42701",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-distinct-duplicate-name-twice",
+      "source_kind": "synthetic",
+      "sql": "SELECT DISTINCT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS x ORDER BY x,x",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "ambiguous_output",
+      "output_columns": null,
+      "postgres_prepare": "42702",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-duplicate-qualified-equivalence",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1' COLLATE \"C\" AS x,'1' COLLATE pg_catalog.\"C\" AS x ORDER BY x",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        },
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42701",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-sequential-expression-twice",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS x ORDER BY ('1' COLLATE \"C\"),('1' COLLATE \"C\"),x",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        },
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42701",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-sequential-position-expression",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS x ORDER BY 1,('1' COLLATE \"C\"),x",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        },
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42701",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-sequential-name-expression",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS x ORDER BY x,('1' COLLATE \"C\"),x",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        },
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42701",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-sequential-expression-position",
+      "source_kind": "synthetic",
+      "sql": "SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS x ORDER BY ('1' COLLATE \"C\"),1,x",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "ambiguous_output",
+      "output_columns": null,
+      "postgres_prepare": "42702",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-set-sequential-expression-twice",
+      "source_kind": "synthetic",
+      "sql": "(SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS y ORDER BY ('1' COLLATE \"C\"),('1' COLLATE \"C\")) UNION ALL SELECT 'a'::TEXT,1",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "set_common_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-set-sequential-position-expression",
+      "source_kind": "synthetic",
+      "sql": "(SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS y ORDER BY 1,('1' COLLATE \"C\")) UNION ALL SELECT 'a'::TEXT,1",
+      "environment": "standard",
+      "expected_status": "invalid",
+      "diagnostic": "set_common_type",
+      "output_columns": null,
+      "postgres_prepare": "42804",
+      "postgres_view": null,
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-set-single-expression-control",
+      "source_kind": "synthetic",
+      "sql": "(SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS y ORDER BY ('1' COLLATE \"C\")) UNION ALL SELECT 'a'::TEXT,1",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        },
+        {
+          "name": "y",
+          "type": "int32",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "42804",
+      "postgres_columns": null
+    },
+    {
+      "id": "collation-boundary-sort-set-sequential-text-control",
+      "source_kind": "synthetic",
+      "sql": "(SELECT '1' COLLATE \"C\" AS x,'1' COLLATE \"C\" AS y ORDER BY ('1' COLLATE \"C\"),('1' COLLATE \"C\")) UNION ALL SELECT 'a'::TEXT,'b'::TEXT",
+      "environment": "standard",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        },
+        {
+          "name": "y",
+          "type": "text",
+          "nullable": false,
+          "collation": "C"
+        }
+      ],
+      "postgres_prepare": "00000",
+      "postgres_view": "00000",
+      "postgres_columns": [
+        {
+          "name": "x",
+          "type": "text",
+          "collation": {
+            "name": "C",
+            "schema": "pg_catalog",
+            "encoding": null
+          }
+        },
+        {
+          "name": "y",
+          "type": "text",
+          "collation": {
+            "name": "C",
+            "schema": "pg_catalog",
+            "encoding": null
+          }
+        }
+      ]
+    }
+  ],
+  "snapshot_cases": [
+    {
+      "id": "collation-snapshot-current-after-fallback",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoding_choice AS v",
+      "environment": "current-after-fallback",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:current"
+        }
+      ]
+    },
+    {
+      "id": "collation-snapshot-current-before-fallback",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoding_choice AS v",
+      "environment": "current-before-fallback",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:current"
+        }
+      ]
+    },
+    {
+      "id": "collation-snapshot-fallback-after-foreign",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoding_choice AS v",
+      "environment": "fallback-after-foreign",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:fallback"
+        }
+      ]
+    },
+    {
+      "id": "collation-snapshot-qualified-hidden",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoding_probe.encoding_choice AS v",
+      "environment": "qualified-hidden",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:current"
+        }
+      ]
+    },
+    {
+      "id": "collation-snapshot-foreign-only",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoding_choice AS v",
+      "environment": "foreign-only",
+      "expected_status": "unsupported",
+      "diagnostic": "collation_environment",
+      "output_columns": null
+    },
+    {
+      "id": "collation-snapshot-duplicate-visible",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoding_choice AS v",
+      "environment": "duplicate-visible",
+      "expected_status": "invalid",
+      "diagnostic": "invalid_collation_environment",
+      "output_columns": null
+    },
+    {
+      "id": "collation-snapshot-duplicate-id",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoding_choice AS v",
+      "environment": "duplicate-id",
+      "expected_status": "invalid",
+      "diagnostic": "invalid_collation_environment",
+      "output_columns": null
+    },
+    {
+      "id": "collation-snapshot-duplicate-qualified",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoding_choice AS v",
+      "environment": "duplicate-qualified",
+      "expected_status": "invalid",
+      "diagnostic": "invalid_collation_environment",
+      "output_columns": null
+    },
+    {
+      "id": "collation-snapshot-hidden-foreign-with-current",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoding_choice AS v",
+      "environment": "hidden-foreign-with-current",
+      "expected_status": "valid",
+      "diagnostic": null,
+      "output_columns": [
+        {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "collation": "custom:current"
+        }
+      ]
+    },
+    {
+      "id": "collation-snapshot-qualified-foreign-only",
+      "source_kind": "synthetic",
+      "sql": "SELECT 'a' COLLATE encoding_probe.encoding_choice AS v",
+      "environment": "qualified-foreign-only",
+      "expected_status": "unsupported",
+      "diagnostic": "collation_environment",
+      "output_columns": null
+    }
+  ]
+}

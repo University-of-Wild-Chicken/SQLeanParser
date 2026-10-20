@@ -8,12 +8,6 @@ claim that a concrete scalar type determines an expression's collation. -/
 namespace SQLean.SelectContract
 open Advanced
 
-/-- PostgreSQL arrays inherit their element type's collatability. -/
-def ScalarType.collatable : ScalarType → Bool
-  | .text | .name | .varchar _ | .char _ => true
-  | .array element => element.collatable
-  | _ => false
-
 def recursiveOutput (columns : List OutputColumn) : List OutputColumn :=
   columns.map fun column => {column with type := {column.type with nullable := true}}
 
@@ -86,6 +80,7 @@ mutual
     match expr with
     | .literal _ | .null | .decimal _ | .parameter _ | .column .. => true
     | .contextValue value => value == .systemUser
+    | .collate .. => false
     | .cast arg target => target.name.scalarBase != .name && uniformDefaultExpr arg
     | .binary _ left right | .concat left right | .distinctFrom left right _
     | .pattern left right _ | .regex left right _ _ | .jsonAccess _ left right

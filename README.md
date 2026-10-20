@@ -27,13 +27,24 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.32 collation increment](docs/collation-contract-v0.32.md) adds explicit
+`COLLATE` syntax and independent collation provenance through scalar expressions,
+joins, derived tables, CTEs and set operations. Exact recursive output collation
+agreement replaces the earlier uniform-default restriction. A caller-declared
+catalog snapshot keeps object identity separate from locale behavior.
+Fifty authored and fifty unchanged PostgreSQL queries have preregistered
+static expectations; source contexts distinguish written declarations from an
+observed isolated test catalog. SQLite COLLATE rendering retains an explicit
+coverage boundary.
+
 The [v0.31 recursive CTE increment](docs/recursive-cte-contract-v0.31.md) adds
 independent anchor/step typing, exact result modifiers, scoped self-reference
 rules and lexical parameter preservation. It includes fifty authored and fifty
 unchanged source queries; 21 sources have preregistered complete static schemas.
-Collatable recursion requires independent uniform-default evidence. Full
-collation provenance, forward dependencies and other PostgreSQL contracts
-remain release obligations; static validity does not establish termination.
+That checkpoint required independent uniform-default evidence for collatable
+recursion; v0.32 supplies explicit provenance. Forward dependencies and other
+PostgreSQL contracts remain release obligations; static validity does not
+establish termination.
 
 The [v0.30 set-operation increment](docs/set-operations-contract-v0.30.md) adds
 independent `UNION`, `INTERSECT` and `EXCEPT` validity, including `ALL`, contextual
@@ -499,7 +510,8 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.31` profile.
+- `--assurance contract` uses `sqlean-basic-select-v0.32` with its declared
+  collation snapshot.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.
@@ -514,7 +526,9 @@ keep their behavior. Choose one tier before checking:
 Assurance mode emits exactly one JSON report, without canonical SQL. The
 `assurance` field identifies the requested tier; `evidence` is `none` on every
 failure. Successful SELECT reports include ordered `outputColumns` with names,
-types, and nullability. A contract report uses `typePrecision: "exact"`; the
+types, and nullability. A contract report also includes ordered
+`outputCollations`, containing exact declared identity labels or `null`.
+A contract report uses `typePrecision: "exact"`; the
 expanded tier uses `"family"`. The JSON is a report, not a serialized Lean proof.
 Contract certificates are indexed by the exact profile, catalog, parameter
 environment, and advanced query AST, and expose a catalog-preservation theorem.
@@ -628,10 +642,10 @@ unambiguous result labels and ordinals; direct set/operand locks are invalid.
 
 Recursive SELECT CTEs require a self-reference-free anchor, one permitted
 recursive reference and exact agreement between anchor and complete UNION
-result types and modifiers. Recursive bindings conservatively expose nullable
+result types, modifiers and stored collation identities. Recursive bindings conservatively expose nullable
 columns. Definitions without actual recursion retain ordinary type resolution.
-Collatable outputs require independent uniform-default evidence; unresolved
-collation provenance and forward dependencies remain Unsupported.
+Collation derivations retain native coercions and query-boundary behavior.
+Forward dependencies remain Unsupported.
 
 Independent rules for grouping/aggregates, correlation, LATERAL and expression
 subqueries remain future milestones.
@@ -655,7 +669,7 @@ open SQLean
 def contractQuery : Advanced.Query := {
   body := .select { items := [.expression (.literal (.int 1)) (some "one")] } }
 
-#eval (SelectContract.checkQuery .basicV31 [] [] contractQuery).map
+#eval (SelectContract.checkQuery .basicV32 [] [] contractQuery).map
   (fun certificate => certificate.output)
 
 example (certificate : SelectContract.Certificate profile catalog params query) :

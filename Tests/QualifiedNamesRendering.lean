@@ -70,21 +70,21 @@ open SelectContract
 private def baseTable : CatalogTable := {
   name := "t", schema := some "s", exposeUnqualified := false,
   columns := [{name := "id", type := ⟨.int, []⟩, nullable := some false}] }
-private def row : List OutputColumn := [⟨"id", ⟨.int32, false⟩⟩]
+private def row : List OutputColumn := [{name := "id", type := ⟨.int32, false⟩, collation := none}]
 private def baseScope : SelectContract.Scope := .ofTable baseTable.identity none row
 private def source : Advanced.From := .table "t" none [] (some "s")
 
 private theorem source_valid :
-    SourceValid .basicV31 [baseTable] [] [] (some source) baseScope [] :=
+    SourceValid .basicV32 [baseTable] [] [] (some source) baseScope [] :=
   .table (table := baseTable) (Or.inr rfl) (by simp) rfl (by simp) (.cons rfl .nil)
 
-example : SourceValid .basicV31 [baseTable] [] [] (some (translateSource source)) baseScope [] :=
+example : SourceValid .basicV32 [baseTable] [] [] (some (translateSource source)) baseScope [] :=
   source_valid_translated source_valid
 
 private theorem column_valid :
     ExprValid [] baseScope (.column (some "t") "id" (some "s"))
       (some ⟨.int32, false⟩) [] :=
-  .column (column := ⟨"id", ⟨.int32, false⟩⟩) (by decide)
+  .column (column := {name := "id", type := ⟨.int32, false⟩, collation := none}) (by decide)
 
 example : ExprValid [] baseScope
     (translateExpr (.column (some "t") "id" (some "s"))) (some ⟨.int32, false⟩) [] :=
@@ -92,17 +92,17 @@ example : ExprValid [] baseScope
 
 /-- An explicit alias hides the schema path even if it repeats the basename. -/
 example : ¬ Resolves (SelectContract.Scope.ofTable baseTable.identity (some "t") row)
-    (some "t") "id" ⟨"id", ⟨.int32, false⟩⟩ (some "s") := by decide
+    (some "t") "id" {name := "id", type := ⟨.int32, false⟩, collation := none} (some "s") := by decide
 
 /-- Lookup selects a namespace before a column, so disjoint column lists do
 not make a repeated unqualified relation name unambiguous. -/
 private def otherScope : SelectContract.Scope :=
-  .ofTable ⟨some "other", "t"⟩ none [⟨"different", ⟨.text, false⟩⟩]
+  .ofTable ⟨some "other", "t"⟩ none [{name := "different", type := ⟨.text, false⟩, collation := some .databaseDefault}]
 example : JoinAliasesDistinct baseScope otherScope := by decide
 example : ¬ Resolves (baseScope ++ otherScope) (some "t") "id"
-    ⟨"id", ⟨.int32, false⟩⟩ := by decide
+    {name := "id", type := ⟨.int32, false⟩, collation := none} := by decide
 example : Resolves (baseScope ++ otherScope) (some "t") "id"
-    ⟨"id", ⟨.int32, false⟩⟩ (some "s") := by decide
+    {name := "id", type := ⟨.int32, false⟩, collation := none} (some "s") := by decide
 end StaticTransport
 
 private def rejected (profile : RenderContract.Profile) (query : Advanced.Query)

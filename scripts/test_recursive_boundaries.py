@@ -23,7 +23,7 @@ class RecursiveBoundaryTests(unittest.TestCase):
     def test_fixed_85_authored_cases_keep_analysis_and_profile_classifications_separate(self):
         self.assertEqual(len(self.rows), 85)
         self.assertEqual(Counter(r["expected_status"] for r in self.rows),
-                         {"valid": 40, "invalid": 24, "unsupported": 21})
+                         {"valid": 42, "invalid": 35, "unsupported": 8})
         for row in self.rows:
             self.assertEqual(row["source_kind"], "synthetic")
             self.assertEqual(row["postgres_columns"] is not None, row["postgres_sqlstate"] == "00000")
@@ -31,7 +31,7 @@ class RecursiveBoundaryTests(unittest.TestCase):
             if row["output_columns"] and row["actual_recursion"]:
                 self.assertTrue(all(c["nullable"] is True for c in row["output_columns"]))
         self.assertEqual(sum(r["expected_status"] == "unsupported" and
-                             r["postgres_sqlstate"] == "00000" for r in self.rows), 5)
+                             r["postgres_sqlstate"] == "00000" for r in self.rows), 3)
         self.assertEqual(sum(r["postgres_columns"] is not None for r in self.rows), 45)
 
     def test_anchor_modifiers_scope_and_collation_have_independent_exact_anchors(self):
@@ -50,20 +50,20 @@ class RecursiveBoundaryTests(unittest.TestCase):
             "recursive-boundary-step-order": ("valid", "00000", None),
             "recursive-wrapper-1": ("invalid", "0A000", "recursive_modifiers"),
             "recursive-collation-text-name-text-recursive":
-                ("unsupported", "42P21", "recursive_collation"),
+                ("invalid", "42P21", "recursive_collation"),
             "recursive-collation-name-text-text-recursive":
-                ("unsupported", "00000", "recursive_collation"),
+                ("valid", "00000", None),
             "recursive-collation-text-name-text-ordinary": ("valid", "00000", None),
         }
         for id_, expected in anchors.items():
             self.assertEqual(tuple(self.by_id[id_][k] for k in
                              ("expected_status", "postgres_sqlstate", "diagnostic")), expected)
         self.assertEqual(self.by_id["recursive-boundary-numeric-equal"]["output_columns"],
-                         [{"name": "x", "type": "numeric(8,2)", "nullable": True}])
+                         [{"name": "x", "type": "numeric(8,2)", "nullable": True, "collation": None}])
         self.assertEqual(self.by_id["recursive-boundary-numeric-unmod-left"]["output_columns"],
-                         [{"name": "x", "type": "numeric", "nullable": True}])
+                         [{"name": "x", "type": "numeric", "nullable": True, "collation": None}])
         self.assertEqual(self.by_id["recursive-boundary-inner-shadow"]["output_columns"],
-                         [{"name": "x", "type": "int32", "nullable": False}])
+                         [{"name": "x", "type": "int32", "nullable": False, "collation": None}])
         self.assertEqual([c["name"] for c in self.by_id["recursive-boundary-prefix-alias"]["output_columns"]],
                          ["x", "b"])
         self.assertEqual([c["name"] for c in self.by_id["recursive-boundary-duplicate-output"]["output_columns"]],
@@ -73,10 +73,10 @@ class RecursiveBoundaryTests(unittest.TestCase):
         self.assertFalse(self.by_id["recursive-collation-text-current-schema-ordinary"]["actual_recursion"])
         self.assertEqual(
             self.by_id["recursive-collation-text-current-schema-ordinary"]["output_columns"],
-            [{"name": "x", "type": "text", "nullable": True}])
+            [{"name": "x", "type": "text", "nullable": True, "collation": "C"}])
         self.assertEqual(
             self.by_id["recursive-collation-text-current-catalog-ordinary"]["output_columns"],
-            [{"name": "x", "type": "text", "nullable": False}])
+            [{"name": "x", "type": "text", "nullable": False, "collation": "C"}])
 
     def test_registry_rejects_missing_reordered_and_reclassified_inputs(self):
         for mutation in ("missing", "order", "duplicate", "sql", "source_kind", "expected_status",
@@ -108,11 +108,13 @@ class RecursiveBoundaryTests(unittest.TestCase):
                     "evidence": "declarative-derivation" if valid else "none"}
             if valid:
                 good.update(catalogUnchanged=True, typePrecision="exact",
-                            outputColumns=deepcopy(row["output_columns"]))
+                            outputColumns=[{k: c[k] for k in ("name", "type", "nullable")}
+                                           for c in row["output_columns"]],
+                            outputCollations=[c["collation"] for c in row["output_columns"]])
             else:
                 good["diagnostic"] = {"code": row["diagnostic"], "message": "explicit boundary"}
             mutations = [None, "exit", "status", "profile", "evidence"]
-            mutations += ["name", "type", "nullable", "arity", "precision"] if valid else ["diagnostic", "output"]
+            mutations += ["name", "type", "nullable", "arity", "precision", "collation"] if valid else ["diagnostic", "output"]
             for mutation in mutations:
                 report = deepcopy(good)
                 code = assurance.EXIT_CODES[row["expected_status"]]
@@ -128,6 +130,8 @@ class RecursiveBoundaryTests(unittest.TestCase):
                     report["outputColumns"].pop()
                 elif mutation == "precision":
                     report["typePrecision"] = "family"
+                elif mutation == "collation":
+                    report["outputCollations"] = ["POSIX"]
                 elif mutation == "diagnostic":
                     report["diagnostic"]["code"] = "wrong"
                 elif mutation == "output":

@@ -44,13 +44,13 @@ open SelectContract RenderContract
 
 private def params : SelectContract.ParameterEnv :=
   [⟨1, ⟨.numeric, [6, 2]⟩, false⟩, ⟨2, ⟨.int, []⟩, false⟩]
-private def scope : Scope := .ofOutput "q" [⟨"a", ⟨.array (.varchar [5]), false⟩⟩]
+private def scope : Scope := .ofOutput "q" [{name := "a", type := ⟨.array (.varchar [5]), false⟩, collation := some .databaseDefault}]
 private def base : Advanced.Expr := .column (some "q") "a"
 private def bounds : List Subscript := [.slice none (some (anon 1)), .index (anon 2)]
 
 private theorem base_valid :
     ExprValid params scope base (some ⟨.array (.varchar [5]), false⟩) [] :=
-  .column (column := ⟨"a", ⟨.array (.varchar [5]), false⟩⟩) (by decide)
+  .column (column := {name := "a", type := ⟨.array (.varchar [5]), false⟩, collation := some .databaseDefault}) (by decide)
 
 private theorem bounds_valid :
     SubscriptsValid params scope bounds [.anonymous 1, .anonymous 2] :=

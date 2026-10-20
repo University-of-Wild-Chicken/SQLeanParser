@@ -1,0 +1,2669 @@
+{
+  "format_version": 1,
+  "factor": "collations",
+  "expected_count": 50,
+  "expected_files": {
+    "src/test/regress/sql/collate.icu.utf8.sql": 37,
+    "src/test/regress/sql/collate.linux.utf8.sql": 10,
+    "src/test/regress/sql/collate.sql": 3
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/collate.icu.utf8.sql",
+          "sha256": "8f673ffd31191f10db96cfc2cc540079c1566c956326813d2de15221de122c9d",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/collate.icu.utf8.sql"
+        },
+        {
+          "path": "src/test/regress/sql/collate.linux.utf8.sql",
+          "sha256": "27306ba18136ad08bd45266e1d99501487733f5c892d811a88b80fc595d88e01",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/collate.linux.utf8.sql"
+        },
+        {
+          "path": "src/test/regress/sql/collate.sql",
+          "sha256": "c20c9868d2e539295294150de52f0008b454ac8358924df80f4227e4ab2095d0",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/collate.sql"
+        }
+      ]
+    }
+  },
+  "preambles": [
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "start": 0,
+      "end": 344,
+      "sha256": "5b0f5a81333f3c4e9907424153ad6958e9c83739fd57b67121871fd63b2c88c9"
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "start": 0,
+      "end": 534,
+      "sha256": "07945d02e8152e8cf1d2bc46e8701e299f5aab2f02dcd20c1d65b26ac32e8dcb"
+    },
+    {
+      "path": "src/test/regress/sql/collate.sql",
+      "start": 0,
+      "end": 654,
+      "sha256": "8f19b43b8786eef43248a25fd7cbe324c993c86c9a2fb8f3c7ea2c07ae856934"
+    }
+  ],
+  "declaration_contexts": [
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 344,
+        "end": 372,
+        "statement_index": 1
+      },
+      "sql_sha256": "826b7e5711ccdd55b1996fb25c0355841925d3fe2e07d70ae48c1e099422c623",
+      "observed_declaration": {
+        "kind": "schema",
+        "name": "collate_tests"
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 373,
+        "end": 405,
+        "statement_index": 2
+      },
+      "sql_sha256": "a601446f3d8408b042c6c80ac202620c44d655c175bd136167a4967a0eaba725",
+      "observed_declaration": {
+        "kind": "search_path",
+        "written_value": "collate_tests"
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 408,
+        "end": 489,
+        "statement_index": 3
+      },
+      "sql_sha256": "c2931bdc8afc3d6c265831167830ebac74278525c9aa79aba4e7f8ca62dc4d3e",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "collate_test1"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "pg_catalog",
+              "int4"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          },
+          {
+            "name": "b",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": true,
+            "written_collation": [
+              "en-x-icu"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "psql_describe_then_declaration",
+        "container_start": 813,
+        "start": 835,
+        "end": 907,
+        "statement_index": 8
+      },
+      "sql_sha256": "c16ca32e5f03d87238e367452bdb025bcbdff03536259c2a4c3682a87b166de2",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "collate_test2"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "pg_catalog",
+              "int4"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          },
+          {
+            "name": "b",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": [
+              "sv-x-icu"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 15621,
+        "end": 15729,
+        "statement_index": 206
+      },
+      "sql_sha256": "925abe946de43ac851e658c5a8234690b28f3297d8877ac9e0d389f53bddfa2d",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_ignore_accents"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colStrength=primary;colCaseLevel=yes"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 15880,
+        "end": 15963,
+        "statement_index": 210
+      },
+      "sql_sha256": "9c25932f04572de3813b070ec62b30723b986ecf015a9f2ba6c4d755340584c5",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_backwards"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colBackwards=yes"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 16080,
+        "end": 16167,
+        "statement_index": 213
+      },
+      "sql_sha256": "02dc0eec5a1366cc03859751b0254e44883dd97a36e2a36784d770796ea6ac15",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_lower_first"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colCaseFirst=lower"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 16168,
+        "end": 16255,
+        "statement_index": 214
+      },
+      "sql_sha256": "b79299282d9d637457ea2e65017d57638b7c0c23a06591e802da655b49e4f5bc",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_upper_first"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colCaseFirst=upper"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 16352,
+        "end": 16437,
+        "statement_index": 216
+      },
+      "sql_sha256": "685d16580507c9d9902990836ad837dde0b23e01b6bff17a039c5ff9363dd939",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_shifted"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colAlternate=shifted"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 16568,
+        "end": 16647,
+        "statement_index": 219
+      },
+      "sql_sha256": "7d0199ee27e9f92f7bb68ffe2031889fd97e7fb06ff6ac082fc308bee7a01a73",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_numeric"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colNumeric=yes"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 16963,
+        "end": 17054,
+        "statement_index": 223
+      },
+      "sql_sha256": "7295813f5afd42348ce5dc00ba32c2c0e429d270a2e11ed972851336be426e1b",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_de_phonebook"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "de@collation=phonebook"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17165,
+        "end": 17246,
+        "statement_index": 225
+      },
+      "sql_sha256": "38beda8389c53288b5e0f5f739cf41613541ab7ac38f453e7f95e83c3df21e7b",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "testcoll_rules1"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": ""
+          },
+          {
+            "name": "rules",
+            "value": "&a < g"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17247,
+        "end": 17275,
+        "statement_index": 226
+      },
+      "sql_sha256": "fe915acdd87195730e58314ad2a576f942f8fbe02a10de9535126e92ea997eaf",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "test7"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17709,
+        "end": 17788,
+        "statement_index": 232
+      },
+      "sql_sha256": "cf97491e76dec6c7a06e9473e52bfd65017e21b963c5851eec72347a3b6df8a0",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "ctest_det"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": ""
+          },
+          {
+            "name": "deterministic",
+            "value": "true"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17789,
+        "end": 17872,
+        "statement_index": 233
+      },
+      "sql_sha256": "455949b0bc729594797a4c0d704e679753012f7eacff8105fef26fd655144e8e",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "ctest_nondet"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": ""
+          },
+          {
+            "name": "deterministic",
+            "value": "false"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17874,
+        "end": 17909,
+        "statement_index": 234
+      },
+      "sql_sha256": "6b6768cc0056d9eae8eae27f719e1ce38c26f1d459a3c94af439640f824eb232",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "test6"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "pg_catalog",
+              "int4"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          },
+          {
+            "name": "b",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18197,
+        "end": 18235,
+        "statement_index": 240
+      },
+      "sql_sha256": "0744feb97ced2ee23d5020e41d78e805f7c3a2ce895fa3f0c11c1825e78ef3b4",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "test6a"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "pg_catalog",
+              "int4"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          },
+          {
+            "name": "b",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [
+              -1
+            ],
+            "written_not_null": false,
+            "written_collation": null
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18495,
+        "end": 18557,
+        "statement_index": 246
+      },
+      "sql_sha256": "112fca28c8555326fb096ba34baaa5c581d6fe57bf6dd862be320ddde2578d0d",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "case_sensitive"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": ""
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18558,
+        "end": 18667,
+        "statement_index": 247
+      },
+      "sql_sha256": "e5a6c71fbeb29b85dd956aa42f8823335e5b39c0251767d887b73cd360a8c986",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "case_insensitive"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "@colStrength=secondary"
+          },
+          {
+            "name": "deterministic",
+            "value": "false"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18866,
+        "end": 18965,
+        "statement_index": 250
+      },
+      "sql_sha256": "c80992af9811f72bc50a92595ee52282834b9362c184c54ec766a5fd225d9bdb",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "lt_insensitive"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "en-u-ks-level1"
+          },
+          {
+            "name": "deterministic",
+            "value": "false"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19036,
+        "end": 19111,
+        "statement_index": 252
+      },
+      "sql_sha256": "bba99c130352baf9470937d9e037bac7069c27be2de976c8b74e3e8b13867596",
+      "observed_declaration": {
+        "kind": "collation",
+        "name": [
+          "lt_upperfirst"
+        ],
+        "written_options": [
+          {
+            "name": "provider",
+            "value": "icu"
+          },
+          {
+            "name": "locale",
+            "value": "und-u-kf-upper"
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19175,
+        "end": 19228,
+        "statement_index": 254
+      },
+      "sql_sha256": "179bcc5c407a65ccd5127c300790592b12a474a31dd08f98226e69841a6c6d12",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "test1cs"
+        ],
+        "columns": [
+          {
+            "name": "x",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": [
+              "case_sensitive"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19283,
+        "end": 19336,
+        "statement_index": 256
+      },
+      "sql_sha256": "ce551763f8b1f6dd92514266d9cd30766d5924ca644eebe8344063c158eee691",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "test3cs"
+        ],
+        "columns": [
+          {
+            "name": "x",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": [
+              "case_sensitive"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 534,
+        "end": 562,
+        "statement_index": 1
+      },
+      "sql_sha256": "826b7e5711ccdd55b1996fb25c0355841925d3fe2e07d70ae48c1e099422c623",
+      "observed_declaration": {
+        "kind": "schema",
+        "name": "collate_tests"
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 563,
+        "end": 595,
+        "statement_index": 2
+      },
+      "sql_sha256": "a601446f3d8408b042c6c80ac202620c44d655c175bd136167a4967a0eaba725",
+      "observed_declaration": {
+        "kind": "search_path",
+        "written_value": "collate_tests"
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 654,
+        "end": 682,
+        "statement_index": 0
+      },
+      "sql_sha256": "826b7e5711ccdd55b1996fb25c0355841925d3fe2e07d70ae48c1e099422c623",
+      "observed_declaration": {
+        "kind": "schema",
+        "name": "collate_tests"
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 683,
+        "end": 715,
+        "statement_index": 1
+      },
+      "sql_sha256": "a601446f3d8408b042c6c80ac202620c44d655c175bd136167a4967a0eaba725",
+      "observed_declaration": {
+        "kind": "search_path",
+        "written_value": "collate_tests"
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 717,
+        "end": 791,
+        "statement_index": 2
+      },
+      "sql_sha256": "3f1c5db40a4d9cf4bd2f86930b74c7a045b6adb257eff56c0b243d9d2f93c68b",
+      "observed_declaration": {
+        "kind": "table",
+        "name": [
+          "collate_test1"
+        ],
+        "columns": [
+          {
+            "name": "a",
+            "raw_type_name": [
+              "pg_catalog",
+              "int4"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": false,
+            "written_collation": null
+          },
+          {
+            "name": "b",
+            "raw_type_name": [
+              "text"
+            ],
+            "written_array_bounds": [],
+            "written_not_null": true,
+            "written_collation": [
+              "C"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "selections": [
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2437,
+        "end": 2506,
+        "statement_index": 36
+      },
+      "sql_sha256": "318a6306de356c4d2cab0275a0a057ce2d3d4bd43adaac94eafef0c14d33c2f0",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en-x-icu\"",
+            "byte_location": 13,
+            "name_byte_location": 21,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "en-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en-x-icu\"",
+            "byte_location": 41,
+            "name_byte_location": 49,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2507,
+        "end": 2577,
+        "statement_index": 37
+      },
+      "sql_sha256": "e8000c7495e36fb84e46c0308cedcf62460b2ba92d484e11f46c9a72b07e3463",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "sv-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"sv-x-icu\"",
+            "byte_location": 13,
+            "name_byte_location": 21,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "sv-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"sv-x-icu\"",
+            "byte_location": 41,
+            "name_byte_location": 49,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3312,
+        "end": 3371,
+        "statement_index": 49
+      },
+      "sql_sha256": "517ef644e108df3d405411f0538a3c4238e6badd3d91081a0138435f8a65f50b",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en-x-icu\"",
+            "byte_location": 18,
+            "name_byte_location": 26,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3372,
+        "end": 3432,
+        "statement_index": 50
+      },
+      "sql_sha256": "7e16a2ecf7184c0adafe26f1f379368ee32c052312d0b4406c1d8dfb848d84ce",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "tr-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"tr-x-icu\"",
+            "byte_location": 18,
+            "name_byte_location": 26,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3434,
+        "end": 3489,
+        "statement_index": 51
+      },
+      "sql_sha256": "86b84bfae44b488566c5f5f6c95b425c7b6459a24b0d014e2f5cfc57774a2552",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en-x-icu\"",
+            "byte_location": 26,
+            "name_byte_location": 34,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3490,
+        "end": 3544,
+        "statement_index": 52
+      },
+      "sql_sha256": "1aa7d470e7ebfa001df6fa2452cf5544d379975737c7840d51084796948e8272",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "tr-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"tr-x-icu\"",
+            "byte_location": 26,
+            "name_byte_location": 34,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4672,
+        "end": 4726,
+        "statement_index": 63
+      },
+      "sql_sha256": "e8dbb0c45084997b0ce0502162b68658b872b7da80ea256e5a8c40d05baf6c95",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en-x-icu\"",
+            "byte_location": 18,
+            "name_byte_location": 26,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4727,
+        "end": 4781,
+        "statement_index": 64
+      },
+      "sql_sha256": "796c48c0ad6c18f277097efad5a406fbe1dd15127d1e3ca8d1e9143364d9ccfb",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "tr-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"tr-x-icu\"",
+            "byte_location": 18,
+            "name_byte_location": 26,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4801,
+        "end": 4853,
+        "statement_index": 65
+      },
+      "sql_sha256": "137490a1816a37697ee3cc882e445d88f021031c65173decaa63cbdc96a75380",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en-x-icu\"",
+            "byte_location": 23,
+            "name_byte_location": 31,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4854,
+        "end": 4906,
+        "statement_index": 66
+      },
+      "sql_sha256": "a189d3a57487f8fcc2801fcaf897fe87fbf087919bdf5f4056a053bc757eb27c",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "tr-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"tr-x-icu\"",
+            "byte_location": 23,
+            "name_byte_location": 31,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 15757,
+        "end": 15845,
+        "statement_index": 208
+      },
+      "sql_sha256": "9a60ea134810775f5e801f45d2fe48896808974bc17360699e7b875a67caaa08",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "und-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"und-x-icu\"",
+            "byte_location": 22,
+            "name_byte_location": 30,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "testcoll_ignore_accents"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "testcoll_ignore_accents",
+            "byte_location": 58,
+            "name_byte_location": 66,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 15991,
+        "end": 16078,
+        "statement_index": 212
+      },
+      "sql_sha256": "9cb3d45364841423314e6e2488a86a098c9f1ac4bd1d6ed07080fafd04761c98",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "und-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"und-x-icu\"",
+            "byte_location": 25,
+            "name_byte_location": 33,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "testcoll_backwards"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "testcoll_backwards",
+            "byte_location": 64,
+            "name_byte_location": 72,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 16256,
+        "end": 16350,
+        "statement_index": 215
+      },
+      "sql_sha256": "4223e6da99cd81f9670510d34bf647d9ae58c63de5705ebf3a04d31b85bb7c5b",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "testcoll_lower_first"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "testcoll_lower_first",
+            "byte_location": 21,
+            "name_byte_location": 29,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "testcoll_upper_first"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "testcoll_upper_first",
+            "byte_location": 65,
+            "name_byte_location": 73,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 16438,
+        "end": 16533,
+        "statement_index": 217
+      },
+      "sql_sha256": "71cf8b2d8db17a987a60e43c2cff080f2109f7d8874a666fde7c3c6925b040ff",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "und-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"und-x-icu\"",
+            "byte_location": 28,
+            "name_byte_location": 36,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "testcoll_shifted"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "testcoll_shifted",
+            "byte_location": 70,
+            "name_byte_location": 78,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 16675,
+        "end": 16762,
+        "statement_index": 221
+      },
+      "sql_sha256": "a09e0f52506e720ebde715a557b3534e8d9eb3a52bcd6a7411cc23e2c9d084c5",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "und-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"und-x-icu\"",
+            "byte_location": 24,
+            "name_byte_location": 32,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "testcoll_numeric"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "testcoll_numeric",
+            "byte_location": 62,
+            "name_byte_location": 70,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17055,
+        "end": 17152,
+        "statement_index": 224
+      },
+      "sql_sha256": "4e527864f409f65053e008552485dee310780102892c50586dfcb71da667517d",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "de-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"de-x-icu\"",
+            "byte_location": 28,
+            "name_byte_location": 36,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "testcoll_de_phonebook"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "testcoll_de_phonebook",
+            "byte_location": 69,
+            "name_byte_location": 77,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18669,
+        "end": 18753,
+        "statement_index": 248
+      },
+      "sql_sha256": "3a0c92e761dc50cac18a82c42c9d1a3dba674e6d458db3c8e4f2b80f0d775f3f",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "case_sensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "case_sensitive",
+            "byte_location": 22,
+            "name_byte_location": 30,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "case_sensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "case_sensitive",
+            "byte_location": 61,
+            "name_byte_location": 69,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18754,
+        "end": 18842,
+        "statement_index": 249
+      },
+      "sql_sha256": "ba3b72273efdda2c9b58318779fde0ea428bc5e547c9d1ef193328f7d4db5ece",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "case_insensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "case_insensitive",
+            "byte_location": 22,
+            "name_byte_location": 30,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "case_insensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "case_insensitive",
+            "byte_location": 63,
+            "name_byte_location": 71,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18966,
+        "end": 19035,
+        "statement_index": 251
+      },
+      "sql_sha256": "623281b506367d2dd1f7da1b80389d3ca443abc36e89b75e314dcf3258bc081f",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "lt_insensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "lt_insensitive",
+            "byte_location": 14,
+            "name_byte_location": 22,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "lt_insensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "lt_insensitive",
+            "byte_location": 46,
+            "name_byte_location": 54,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19112,
+        "end": 19173,
+        "statement_index": 253
+      },
+      "sql_sha256": "5288b6dd129b2e01811227602fbc6bd4143d237f01e9dd6ee002114cfdef3c23",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "lt_upperfirst"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "lt_upperfirst",
+            "byte_location": 11,
+            "name_byte_location": 19,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "lt_upperfirst"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "lt_upperfirst",
+            "byte_location": 39,
+            "name_byte_location": 47,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 28532,
+        "end": 28586,
+        "statement_index": 377
+      },
+      "sql_sha256": "adddc09505567a6d908f961a71320c5b4e5490b75b2fc9abae02895552a0292b",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "case_sensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "case_sensitive",
+            "byte_location": 49,
+            "name_byte_location": 57,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 28587,
+        "end": 28643,
+        "statement_index": 378
+      },
+      "sql_sha256": "fc1ba12d21551da7fa1f241c82c5c8604e585e2906bc6e7e7564401d71ae0c94",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "case_insensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "case_insensitive",
+            "byte_location": 49,
+            "name_byte_location": 57,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2594,
+        "end": 2657,
+        "statement_index": 36
+      },
+      "sql_sha256": "3275642f3499762654591b4f41382ee33e1d3e62bfdf1b8f8eed07a524c0df06",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en_US"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en_US\"",
+            "byte_location": 13,
+            "name_byte_location": 21,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "en_US"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en_US\"",
+            "byte_location": 38,
+            "name_byte_location": 46,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2658,
+        "end": 2722,
+        "statement_index": 37
+      },
+      "sql_sha256": "f7f12202a83789d18c0742173182fd35630bc2e388d30b6fb7840f144eaf44f7",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "sv_SE"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"sv_SE\"",
+            "byte_location": 13,
+            "name_byte_location": 21,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "sv_SE"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"sv_SE\"",
+            "byte_location": 38,
+            "name_byte_location": 46,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3451,
+        "end": 3507,
+        "statement_index": 49
+      },
+      "sql_sha256": "5943ae623b411e9c0843a01b3118b8f3912f461762bc66f078b853f4e99b325d",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en_US"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en_US\"",
+            "byte_location": 18,
+            "name_byte_location": 26,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3508,
+        "end": 3565,
+        "statement_index": 50
+      },
+      "sql_sha256": "67563a42207d0d3c5f7560a05939952ce4867c5f35c52524c52c08a3263fe1d3",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "tr_TR"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"tr_TR\"",
+            "byte_location": 18,
+            "name_byte_location": 26,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3567,
+        "end": 3619,
+        "statement_index": 51
+      },
+      "sql_sha256": "c330444cc403e6f138f01b31185f127ef072bf8d7bcd1261aebccf43d2135c28",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en_US"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en_US\"",
+            "byte_location": 26,
+            "name_byte_location": 34,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3620,
+        "end": 3671,
+        "statement_index": 52
+      },
+      "sql_sha256": "841ad7e988c468ea293b0a58c1948f9593e3bb0b16eaffe813e67d1dda1c6387",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "tr_TR"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"tr_TR\"",
+            "byte_location": 26,
+            "name_byte_location": 34,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4796,
+        "end": 4847,
+        "statement_index": 63
+      },
+      "sql_sha256": "cd4129ffc8717caec4547fcc06397883b10e115b4cfdd6fdbca2055eb8942d04",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en_US"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en_US\"",
+            "byte_location": 18,
+            "name_byte_location": 26,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4848,
+        "end": 4900,
+        "statement_index": 64
+      },
+      "sql_sha256": "1974a5dacde9d3c6acd07c2f4e825fb0238e58c4abd0cd5a40062336f3122ea2",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "tr_TR"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"tr_TR\"",
+            "byte_location": 18,
+            "name_byte_location": 26,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4902,
+        "end": 4951,
+        "statement_index": 65
+      },
+      "sql_sha256": "7c0c2d1cf94e7c6544854c24073ee773ef0855f86c18353b379caf9c3f69bc94",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en_US"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en_US\"",
+            "byte_location": 23,
+            "name_byte_location": 31,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.linux.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4952,
+        "end": 5000,
+        "statement_index": 66
+      },
+      "sql_sha256": "6c9da76b94347587d2ae5bd2105d4c944a76cea8289c81af09a5ab143e4c5cd5",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "tr_TR"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"tr_TR\"",
+            "byte_location": 23,
+            "name_byte_location": 31,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2160,
+        "end": 2215,
+        "statement_index": 25
+      },
+      "sql_sha256": "46daa0ea3305d645730f13ee19460002111c6a7e3fe5d1c5a32d121e27688671",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "C"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"C\"",
+            "byte_location": 13,
+            "name_byte_location": 21,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "C"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"C\"",
+            "byte_location": 33,
+            "name_byte_location": 41,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2216,
+        "end": 2280,
+        "statement_index": 26
+      },
+      "sql_sha256": "f00e349f1c3cecf35bd33fc3e8e140285f892842c512d18d68a898bd61b0e8a2",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "POSIX"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"POSIX\"",
+            "byte_location": 13,
+            "name_byte_location": 21,
+            "argument_kind": "A_Const"
+          },
+          {
+            "parts": [
+              "POSIX"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"POSIX\"",
+            "byte_location": 37,
+            "name_byte_location": 45,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [],
+        "parameter_slots": [],
+        "source_free": true
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1353,
+        "end": 1410,
+        "statement_index": 17
+      },
+      "sql_sha256": "6011d6dcbf449306cbd13d5fef0d34b1085b7809faaf133176726d97154c97c7",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "C"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"C\"",
+            "byte_location": 36,
+            "name_byte_location": 44,
+            "argument_kind": "ColumnRef"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test1"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "collate_test1",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1411,
+        "end": 1468,
+        "statement_index": 18
+      },
+      "sql_sha256": "4df6524ec14220c496c0a92374adc32e1a6d98801ab9cf4f75edefd0d9452bb1",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "C"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"C\"",
+            "byte_location": 45,
+            "name_byte_location": 53,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test1"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "collate_test1",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1469,
+        "end": 1538,
+        "statement_index": 19
+      },
+      "sql_sha256": "43c2d6473a04383eafb03306b101ebe277045629e18474bdcb5a3f7341ebdc6b",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "C"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"C\"",
+            "byte_location": 36,
+            "name_byte_location": 44,
+            "argument_kind": "ColumnRef"
+          },
+          {
+            "parts": [
+              "C"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"C\"",
+            "byte_location": 57,
+            "name_byte_location": 65,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test1"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "collate_test1",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2211,
+        "end": 2265,
+        "statement_index": 32
+      },
+      "sql_sha256": "665a6c04914625a5ba49fd841b93ed49ed176dae847d8e8f7812df99f026a054",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "C"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"C\"",
+            "byte_location": 42,
+            "name_byte_location": 50,
+            "argument_kind": "ColumnRef"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test1"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "collate_test1",
+            "byte_location": 17
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 15369,
+        "end": 15426,
+        "statement_index": 203
+      },
+      "sql_sha256": "0c81f986d2541212438166ecee19c7f32910e56b2b06ccafe6fd7be540eb647e",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "ucs_basic"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "UCS_BASIC",
+            "byte_location": 39,
+            "name_byte_location": 47,
+            "argument_kind": "ColumnRef"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test2"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "collate_test2",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 15427,
+        "end": 15482,
+        "statement_index": 204
+      },
+      "sql_sha256": "e3262547837303f0c65f65594696bcb25253884975c72eb81c7bafe193c2c64d",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "unicode"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "UNICODE",
+            "byte_location": 39,
+            "name_byte_location": 47,
+            "argument_kind": "ColumnRef"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test2"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "collate_test2",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17464,
+        "end": 17514,
+        "statement_index": 228
+      },
+      "sql_sha256": "2e7140165b213c0fa58c103dab67a0ed4f90f01c8a73a0e75bfa31b0faabe55c",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "en-x-icu"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"en-x-icu\"",
+            "byte_location": 31,
+            "name_byte_location": 39,
+            "argument_kind": "ColumnRef"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test7"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test7",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17515,
+        "end": 17570,
+        "statement_index": 229
+      },
+      "sql_sha256": "133d2b72f3e0c06d82c100a761efde2d924b7ebdb5dde5141de198004ec94068",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "testcoll_rules1"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "testcoll_rules1",
+            "byte_location": 31,
+            "name_byte_location": 39,
+            "argument_kind": "ColumnRef"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test7"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test7",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18063,
+        "end": 18117,
+        "statement_index": 238
+      },
+      "sql_sha256": "304a000ee16e01c5c05986ba6b4d608363e4db7d76baae2519bdbc224439cdc5",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "ctest_det"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "ctest_det",
+            "byte_location": 37,
+            "name_byte_location": 45,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test6"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test6",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18118,
+        "end": 18175,
+        "statement_index": 239
+      },
+      "sql_sha256": "f1f1a94d99419b524af09283bdaea873e1f88acf0ce40ff658b7ded8135871e6",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "ctest_nondet"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "ctest_nondet",
+            "byte_location": 37,
+            "name_byte_location": 45,
+            "argument_kind": "A_Const"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test6"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test6",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18365,
+        "end": 18427,
+        "statement_index": 244
+      },
+      "sql_sha256": "760c191eaba41f46e8b1d7db45e9b80dfe6f5240b9a3d1cac0cb25dc56392259",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "ctest_det"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "ctest_det",
+            "byte_location": 45,
+            "name_byte_location": 53,
+            "argument_kind": "A_ArrayExpr"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test6a"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test6a",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 18428,
+        "end": 18493,
+        "statement_index": 245
+      },
+      "sql_sha256": "e2adf5920233a6023fa558863371e15cdd46f6e09bed9cd903cd7d43361c09d7",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "ctest_nondet"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "ctest_nondet",
+            "byte_location": 45,
+            "name_byte_location": 53,
+            "argument_kind": "A_ArrayExpr"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test6a"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test6a",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20922,
+        "end": 21016,
+        "statement_index": 282
+      },
+      "sql_sha256": "983dc3e078cb8ecf3a7ca033c7713953654c673cdff9f32b9b05a65f046d0b30",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "case_insensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "case_insensitive",
+            "byte_location": 55,
+            "name_byte_location": 63,
+            "argument_kind": "ColumnRef"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test1cs"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test1cs",
+            "byte_location": 14
+          },
+          {
+            "parts": [
+              "test3cs"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test3cs",
+            "byte_location": 26
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 21187,
+        "end": 21294,
+        "statement_index": 284
+      },
+      "sql_sha256": "88146f237350ae2891c5b839ac54e94471910feab1a9d4421d84d851681442e6",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "case_insensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "case_insensitive",
+            "byte_location": 71,
+            "name_byte_location": 79,
+            "argument_kind": "ColumnRef"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test3cs"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test3cs",
+            "byte_location": 17
+          },
+          {
+            "parts": [
+              "test3cs"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test3cs",
+            "byte_location": 45
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 21452,
+        "end": 21546,
+        "statement_index": 286
+      },
+      "sql_sha256": "b14d75d2ce3e19774656c8ed7e9bdc8155023912e1e1a5b512c1aba497d55813",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "case_insensitive"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "case_insensitive",
+            "byte_location": 55,
+            "name_byte_location": 63,
+            "argument_kind": "ColumnRef"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "test3cs"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test3cs",
+            "byte_location": 14
+          },
+          {
+            "parts": [
+              "test3cs"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "test3cs",
+            "byte_location": 26
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    },
+    {
+      "path": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1172,
+        "end": 1229,
+        "statement_index": 8
+      },
+      "sql_sha256": "8902c38a8971102aa8bd849f0d5d3c79a35dfe3368a8f569707a65b650fa6178",
+      "observed_syntax": {
+        "collations": [
+          {
+            "parts": [
+              "C"
+            ],
+            "quoted": [
+              true
+            ],
+            "spelling": "\"C\"",
+            "byte_location": 36,
+            "name_byte_location": 44,
+            "argument_kind": "ColumnRef"
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "collate_test1"
+            ],
+            "quoted": [
+              false
+            ],
+            "spelling": "collate_test1",
+            "byte_location": 14
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false
+      }
+    }
+  ]
+}

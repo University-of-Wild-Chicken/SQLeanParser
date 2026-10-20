@@ -2,27 +2,30 @@ import SQLean.Assurance
 import SQLean.SchemaJson
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
 open SelectContract
 
-private def cteColumns : List OutputColumn := [⟨"x", ⟨.int32, false⟩⟩]
+private def cteColumns : List OutputColumn := [{name := "x", type := ⟨.int32, false⟩}]
 private def cteBody : Advanced.Query :=
   {body := .select {items := [.expression (.literal (.int 1)) (some "x")]}}
 
 /-- A body derivation, without invoking the executable checker. -/
 private theorem cteBody_valid :
-    QueryValid .basicV31 [] [] [] cteBody cteColumns [] := by
+    QueryValid .basicV32 [] [] [] cteBody cteColumns [] := by
   apply QueryValid.basic (cteUses := []) (visible := []) (by decide) .nil
     (scope := .empty) (sourceUses := []) (selectUses := []) (whereUses := [])
     (orderUses := []) (limitUses := []) (offsetUses := [])
   · exact .empty
-  · exact .expression (.int (by decide)) (by decide) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by decide) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by decide) .nil
   · decide
   · decide
+  · exact Or.inl rfl
   · exact .absent
+  · exact .nil
   · exact .nil
   · exact .absent
   · exact .absent
@@ -39,15 +42,16 @@ private def cteQuery : Advanced.Query := {
   body := .select {items := [.all], source := some (.table "c")} }
 
 private theorem cteDefinitions_valid :
-    CTEsValid .basicV31 [] [] [] [cteDefinition] cteEnvironment [] :=
+    CTEsValid .basicV32 [] [] [] [cteDefinition] cteEnvironment [] :=
   .cons (head := cteDefinition) (output := cteColumns) cteBody_valid (by decide) .nil
 
 private theorem cteReference_valid :
-    SourceValid .basicV31 [] [] cteEnvironment (some (.table "c")) cteScope [] :=
+    SourceValid .basicV32 [] [] cteEnvironment (some (.table "c")) cteScope [] :=
   .cte (binding := ⟨"c", cteColumns⟩) (alias := none) rfl (by simp) (by decide) (Or.inl rfl)
 
-private theorem cteQuery_valid : SelectValid .basicV31 [] [] cteQuery cteColumns := by
+private theorem cteQuery_valid : SelectValid .basicV32 [] [] cteQuery cteColumns := by
   apply SelectValid.certified (uses := [])
+  · decide
   · decide
   · decide
   · apply QueryValid.basic (cteUses := []) (visible := cteEnvironment)
@@ -56,9 +60,12 @@ private theorem cteQuery_valid : SelectValid .basicV31 [] [] cteQuery cteColumns
       (orderUses := []) (limitUses := []) (offsetUses := [])
     · exact cteReference_valid
     · exact .all (qualifier := none) rfl (by decide) .nil
+    · exact .all (qualifier := none) rfl (by decide) .nil
     · decide
     · decide
+    · exact Or.inl rfl
     · exact .absent
+    · exact .nil
     · exact .nil
     · exact .absent
     · exact .absent
@@ -68,7 +75,7 @@ private theorem cteQuery_valid : SelectValid .basicV31 [] [] cteQuery cteColumns
     · rfl
   · decide
 
-example : SelectValid .basicV31 [] [] (RenderContract.translateParameters cteQuery) cteColumns :=
+example : SelectValid .basicV32 [] [] (RenderContract.translateParameters cteQuery) cteColumns :=
   RenderContract.translateParameters_valid cteQuery_valid
 
 example : (Certificate.mk cteColumns cteQuery_valid).outputCatalog = [] := rfl
@@ -95,12 +102,12 @@ private def cteExpected (record : Lean.Json) : IO (List OutputColumn) := do
           match concreteType declaration with
           | some base => pure base
           | none => throw (IO.userError s!"unsupported fixture output declaration {other}")
-    pure (OutputColumn.mk name ⟨base, nullable⟩)
+    pure (({name := name, type := ⟨base, nullable⟩} : SelectContract.OutputColumn))
 
 private def cteCertificate (query : Advanced.Query) (catalog : Advanced.Catalog := [])
     (params : ParameterEnv := []) : IO (List OutputColumn) := do
   let certificate ← expectOk "CTE complete query"
-    ((SelectContract.checkQuery .basicV31 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 catalog params query).mapError reprStr)
   have _catalog : certificate.outputCatalog = catalog := certificate.catalog_unchanged
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "CTE identity" ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -121,19 +128,19 @@ def cteContractTests : IO Nat := do
   let valid : List (String × List OutputColumn) := [
     ("WITH RECURSIVE c AS (SELECT 1 AS x) SELECT x FROM c", cteColumns),
     ("WITH c AS (SELECT 1 AS x UNION SELECT 2) SELECT x FROM c", cteColumns),
-    ("WITH c AS (SELECT NULL AS x) SELECT x FROM c", [⟨"x", ⟨.text, true⟩⟩]),
+    ("WITH c AS (SELECT NULL AS x) SELECT x FROM c", [{name := "x", type := ⟨.text, true⟩}]),
     ("WITH c AS (SELECT 1 AS x) SELECT * FROM (WITH c AS (SELECT x+1 AS x FROM c) SELECT x FROM c) d",
       cteColumns),
     ("WITH a AS (SELECT 1 AS x), b AS (SELECT x AS y FROM a) SELECT y FROM b",
-      [⟨"y", ⟨.int32, false⟩⟩]),
+      [{name := "y", type := ⟨.int32, false⟩}]),
     ("WITH c(x,x) AS (SELECT 1,2) SELECT c.* FROM c", cteColumns ++ cteColumns),
     ("WITH c AS (SELECT 1 AS a, 2 AS b) SELECT d.x,d.b FROM c d(x)",
-      [⟨"x", ⟨.int32, false⟩⟩, ⟨"b", ⟨.int32, false⟩⟩]),
-    ("WITH c AS (SELECT 1 AS ctid) SELECT ctid FROM c", [⟨"ctid", ⟨.int32, false⟩⟩]),
+      [{name := "x", type := ⟨.int32, false⟩}, {name := "b", type := ⟨.int32, false⟩}]),
+    ("WITH c AS (SELECT 1 AS ctid) SELECT ctid FROM c", [{name := "ctid", type := ⟨.int32, false⟩}]),
     ("WITH c AS (SELECT 1 AS x) SELECT x FROM c FOR UPDATE", cteColumns),
     ("WITH c AS (SELECT DISTINCT 1 AS x) SELECT x FROM c FOR SHARE", cteColumns)]
   for (sql, expected) in valid do
-    SQLean.Tests.assert ((← cteOutput sql catalog) == expected) s!"exact CTE metadata: {sql}"
+    SQLean.Tests.assert (sameOutputTypes (← cteOutput sql catalog) expected) s!"exact CTE metadata: {sql}"
   let invalid := [
     "WITH c AS (SELECT 1), c AS (SELECT 2) SELECT 1",
     "WITH c AS (SELECT x FROM c) SELECT 1",
@@ -152,7 +159,7 @@ def cteContractTests : IO Nat := do
     "WITH unused AS (SELECT id FROM items FOR UPDATE OF absent) SELECT 1"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 catalog [] query with
+    match SelectContract.checkQuery .basicV32 catalog [] query with
     | .error (.invalid _) => pure ()
     | result => throw (IO.userError s!"CTE Invalid expected: {sql}: {reprStr (result.map (fun _ => ()))}")
   let unsupported := [
@@ -167,7 +174,7 @@ def cteContractTests : IO Nat := do
     "WITH used AS (SELECT i.id FROM items i LEFT JOIN labels l ON FALSE FOR UPDATE OF l) SELECT * FROM used"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 catalog [] query with
+    match SelectContract.checkQuery .basicV32 catalog [] query with
     | .error (.unsupported _) => pure ()
     | result => throw (IO.userError s!"CTE Unsupported expected: {sql}: {reprStr (result.map (fun _ => ()))}")
   let parameterCases := [
@@ -188,7 +195,7 @@ def cteContractTests : IO Nat := do
     lexical.ctes.map (fun definition => {definition with name := "other"})
   let missingFirst := lexical.ctes.map (fun definition => {definition with query := cteBody})
   for changed in [{lexical with ctes := duplicateDefinitions}, {lexical with ctes := missingFirst}] do
-    match SelectContract.checkQuery .basicV31 [] params changed with
+    match SelectContract.checkQuery .basicV32 [] params changed with
     | .error (.invalid diagnostic) =>
         SQLean.Tests.assert (diagnostic.code == "parameter_notation")
           "definition insertion/removal cannot silently restart anonymous numbering"
@@ -196,13 +203,13 @@ def cteContractTests : IO Nat := do
   for changed in [
       {cteQuery with ctes := [{cteDefinition with name := ""}]},
       {cteQuery with ctes := [{cteDefinition with columns := [""]}]}] do
-    match SelectContract.checkQuery .basicV31 [] [] changed with
+    match SelectContract.checkQuery .basicV32 [] [] changed with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "malformed unused definition metadata was certified")
   let incomplete ← expectOk "resource test" (Advanced.parseQuery
     "WITH a AS (SELECT 1 AS x), b AS (SELECT x FROM a) SELECT * FROM b")
   for fuel in [0,1,2] do
-    match SelectContract.checkQuery .basicV31 catalog [] incomplete fuel with
+    match SelectContract.checkQuery .basicV32 catalog [] incomplete fuel with
     | .error (.inconclusive _) => pure ()
     | _ => throw (IO.userError "CTE resource exhaustion must remain Inconclusive")
   pure (valid.length + invalid.length + unsupported.length + parameterCases.length + 7)
@@ -225,7 +232,7 @@ def cteCorpusTests : IO Nat := do
     let query ← expectOk id (Advanced.parseQuery sql)
     SQLean.Tests.assert (!query.ctes.isEmpty && !query.recursive) s!"{id}: nonrecursive WITH required"
     let output ← cteCertificate query catalog params
-    SQLean.Tests.assert (output == (← cteExpected record)) s!"{id}: exact ordered CTE output"
+    SQLean.Tests.assert (sameOutputTypes output (← cteExpected record)) s!"{id}: exact ordered CTE output"
     ids := id :: ids
     sqls := sql :: sqls
   SQLean.Tests.assert (decide ids.Nodup && decide sqls.Nodup) "duplicate authored CTE IDs/SQL"
@@ -235,19 +242,19 @@ private def cteSourceRegistry : List (String × List OutputColumn) :=
   let pg := "cte_contract:postgres:src/test/regress/sql/with.sql:statement-"
   let sqlc := "cte_contract:sqlc:internal/endtoend/testdata/"
   let mz := "cte_contract:materialize:test/sqllogictest/"
-  let ints := fun names => names.map (fun name => OutputColumn.mk name ⟨.int32, false⟩)
+  let ints := fun names => names.map (fun name => ({name := name, type := ⟨.int32, false⟩} : SelectContract.OutputColumn))
   [(pg ++ "0", ints ["x","y","x","y"]),
    (pg ++ "148", ints ["foo"]), (pg ++ "297", ints ["x"]),
    (sqlc ++ "cte_join_self/postgresql/pgx/query.sql:statement-0",
-     [⟨"id1", ⟨.text, false⟩⟩, ⟨"id2", ⟨.text, false⟩⟩]),
+     [{name := "id1", type := ⟨.text, false⟩}, {name := "id2", type := ⟨.text, false⟩}]),
    (sqlc ++ "cte_select_one/postgresql/pgx/query.sql:statement-0", ints ["foo"]),
    (mz ++ "cte.slt:sqllogic-query-260", ints ["v"]),
    (mz ++ "cte.slt:sqllogic-query-273", ints ["v","v"]),
    (mz ++ "cte.slt:sqllogic-query-287", ints ["?column?"]),
    (mz ++ "cockroach/with.slt:sqllogic-query-80",
-     [⟨"a", ⟨.bool, false⟩⟩, ⟨"b", ⟨.bool, false⟩⟩]),
+     [{name := "a", type := ⟨.bool, false⟩}, {name := "b", type := ⟨.bool, false⟩}]),
    (mz ++ "cockroach/with.slt:sqllogic-query-86",
-     [⟨"a", ⟨.bool, false⟩⟩, ⟨"b", ⟨.bool, false⟩⟩]),
+     [{name := "a", type := ⟨.bool, false⟩}, {name := "b", type := ⟨.bool, false⟩}]),
    (mz ++ "cockroach/with.slt:sqllogic-query-109", ints ["?column?"]),
    (mz ++ "cockroach/with.slt:sqllogic-query-200", ints ["?column?"]),
    ("cte_contract:duckdb:test/sql/cte/test_cte.test:sqllogic-query-61", ints ["zzz","y"])]
@@ -284,7 +291,7 @@ def cteConcreteContractTests : IO Nat := do
     | some expected =>
         SQLean.Tests.assert ((Advanced.queryParameters 1024 query).isEmpty)
           s!"{id}: no fabricated parameter assumptions"
-        SQLean.Tests.assert ((← cteCertificate query) == expected) s!"{id}: closed exact source output"
+        SQLean.Tests.assert (sameOutputTypes (← cteCertificate query) expected) s!"{id}: closed exact source output"
         certified := certified + 1
     ids := id :: ids
     sqls := sql :: sqls

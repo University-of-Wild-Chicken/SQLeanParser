@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -36,7 +36,7 @@ private def constructorOutput (sql : String) (parameterTypes : String := "") :
   let query ← expectOk sql (Advanced.parseQuery sql)
   let params ← expectOk sql (Assurance.parseContractParameterTypes parameterTypes)
   let certificate ← expectOk sql
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _valid := certificate.valid
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk sql ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -88,7 +88,7 @@ def arrayConstructorContractTests : IO Nat := do
   let mut count := 0
   for (expr, base) in exact do
     let actual ← constructorOutput s!"SELECT {expr}"
-    SQLean.Tests.assert (actual == [⟨"array", ⟨base, false⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes actual [{name := "array", type := ⟨base, false⟩}])
       s!"constructor exact type/default label: {expr}: {reprStr actual}"
     count := count + 1
   -- These have valid static typing; PostgreSQL can reject their runtime shape.
@@ -96,7 +96,7 @@ def arrayConstructorContractTests : IO Nat := do
       "ARRAY[[1],[2,3]]", "ARRAY[ARRAY[1],NULL]",
       "ARRAY[ARRAY[],ARRAY[1]]::INTEGER[]"] do
     let actual ← constructorOutput s!"SELECT {expr} AS v"
-    SQLean.Tests.assert (actual == [⟨"v", ⟨.array .int32, false⟩⟩])
+    SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨.array .int32, false⟩}])
       s!"runtime shape must not be confused with static type validity: {expr}"
     count := count + 1
   let invalid := [
@@ -121,7 +121,7 @@ def arrayConstructorContractTests : IO Nat := do
     "SELECT ARRAY[COUNT(*)] FOR UPDATE"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid constructor query: {sql}")
     count := count + 1
@@ -133,7 +133,7 @@ def arrayConstructorContractTests : IO Nat := do
     "SELECT ARRAY[COUNT(*)]"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported constructor boundary: {sql}")
     count := count + 1
@@ -145,13 +145,13 @@ def arrayConstructorContractTests : IO Nat := do
     ("SELECT ARRAY[$1,$2] AS v", "integer[],integer[]?", .array .int32)]
   for (sql, params, base) in paramsCases do
     let actual ← constructorOutput sql params
-    SQLean.Tests.assert (actual == [⟨"v", ⟨base, false⟩⟩]) s!"constructor parameters: {sql}"
+    SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨base, false⟩}]) s!"constructor parameters: {sql}"
     count := count + 1
   let sql := "SELECT ARRAY[[?,?],[?,?]] AS v, ? AS trailing_value"
   let query ← expectOk sql (Advanced.parseQuery sql)
   let params ← expectOk sql (Assurance.parseContractParameterTypes "int,int,int,int,text")
   let certificate ← expectOk sql
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   SQLean.Tests.assert (Advanced.queryParameters 1024 query ==
       (List.range 5).map (fun n => .anonymous (n + 1)))
@@ -159,11 +159,11 @@ def arrayConstructorContractTests : IO Nat := do
   count := count + 1
   let bad : Advanced.Query := { body := .select { items := [
     .expression (.array [.parameter (.anonymous 2), .parameter (.anonymous 1)])] } }
-  match SelectContract.checkQuery .basicV31 [] params bad with
+  match SelectContract.checkQuery .basicV32 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "manual reordered constructor parameters must be Invalid")
   count := count + 1
-  match SelectContract.checkQuery .basicV31 [] params query 2 with
+  match SelectContract.checkQuery .basicV32 [] params query 2 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "constructor budget exhaustion must be Inconclusive")
   count := count + 1

@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -34,7 +34,7 @@ private def quantifiedCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "quantified-array SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "quantified-array identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -112,14 +112,14 @@ def arrayQuantifiedContractTests : IO Nat := do
       let query : Advanced.Query := { body := .select {
         items := [.expression (.quantifiedComparison op .any left right) (some "v")] } }
       let actual ← quantifiedCertificate query
-      SQLean.Tests.assert (actual == [⟨"v", ⟨.bool, true⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨.bool, true⟩}])
         s!"quantified scalar signature {reprStr op}: {reprStr signature}"
       count := count + 1
   for quantifier in ["ANY", "SOME", "ALL"] do
     for op in ["=", "<>", "<", "<=", ">", ">="] do
       let sql := s!"SELECT 1 {op} {quantifier}(ARRAY[1,2,NULL])"
       let actual ← quantifiedOutput sql
-      SQLean.Tests.assert (actual == [⟨"?column?", ⟨.bool, true⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes actual [{name := "?column?", type := ⟨.bool, true⟩}])
         s!"quantifier/operator/default label: {sql}"
       count := count + 1
   let ordinary := [
@@ -142,7 +142,7 @@ def arrayQuantifiedContractTests : IO Nat := do
     "SELECT d.v FROM (SELECT 2 = ANY(ARRAY[1,2]) AS v) d"]
   for sql in ordinary do
     let actual ← quantifiedOutput sql
-    SQLean.Tests.assert (actual == [⟨"v", ⟨.bool, true⟩⟩]) s!"quantified output: {sql}"
+    SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨.bool, true⟩}]) s!"quantified output: {sql}"
     count := count + 1
   let invalid := [
     "SELECT 1 = ANY(1)",
@@ -157,7 +157,7 @@ def arrayQuantifiedContractTests : IO Nat := do
     "SELECT 1 = ANY(ARRAY[])"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid quantified-array query: {sql}")
     count := count + 1
@@ -166,7 +166,7 @@ def arrayQuantifiedContractTests : IO Nat := do
       "SELECT 1 = ANY(unknown_array_function())",
       "SELECT 1 = ANY(ARRAY[COUNT(*)])"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported quantified-array boundary: {sql}")
     count := count + 1
@@ -177,7 +177,7 @@ def arrayQuantifiedContractTests : IO Nat := do
     ("SELECT $2 = ANY($1) AS v", "integer[],bigint")]
   for (sql, types) in parameterCases do
     let actual ← quantifiedOutput sql types
-    SQLean.Tests.assert (actual == [⟨"v", ⟨.bool, true⟩⟩]) s!"quantified parameters: {sql}"
+    SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨.bool, true⟩}]) s!"quantified parameters: {sql}"
     count := count + 1
   let sql := "SELECT ? = SOME(ARRAY[?,?]) AS a, ? = ALL(?) AS b"
   let query ← expectOk sql (Advanced.parseQuery sql)
@@ -190,11 +190,11 @@ def arrayQuantifiedContractTests : IO Nat := do
   let bad : Advanced.Query := { body := .select { items := [
     .expression (.quantifiedComparison .eq .any
       (.parameter (.anonymous 2)) (.array [.parameter (.anonymous 1)]))] } }
-  match SelectContract.checkQuery .basicV31 [] params bad with
+  match SelectContract.checkQuery .basicV32 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "manual reordered quantified placeholders must be Invalid")
   count := count + 1
-  match SelectContract.checkQuery .basicV31 [] params query 1 with
+  match SelectContract.checkQuery .basicV32 [] params query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "quantified array exhaustion must be Inconclusive")
   count := count + 1

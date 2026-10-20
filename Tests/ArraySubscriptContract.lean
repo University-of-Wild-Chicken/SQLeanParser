@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -36,7 +36,7 @@ private def subscriptCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "array subscript SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "array subscript identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -111,7 +111,7 @@ def arraySubscriptContractTests : IO Nat := do
     for (suffix, expectedType) in [("[1]", base), ("[1:2]", base.asArray)] do
       let sql := s!"SELECT (NULL::{type}[]){suffix} AS v"
       let actual ← subscriptOutput sql
-      SQLean.Tests.assert (actual == [⟨"v", ⟨expectedType, true⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨expectedType, true⟩}])
         s!"subscript preserved exact element modifiers: {sql}: {reprStr actual}"
       count := count + 1
   let bounds := ["NULL", "'2'", "1::SMALLINT", "1::INTEGER", "1::BIGINT", "1.5::NUMERIC(6,2)",
@@ -119,7 +119,7 @@ def arraySubscriptContractTests : IO Nat := do
   for bound in bounds do
     let sql := s!"SELECT (ARRAY[11,22,33])[{bound}] AS v"
     let actual ← subscriptOutput sql
-    SQLean.Tests.assert (actual == [⟨"v", ⟨.int32, true⟩⟩]) s!"subscript bound conversion: {sql}"
+    SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨.int32, true⟩}]) s!"subscript bound conversion: {sql}"
     count := count + 1
   let shapes := [
     ("(ARRAY[1,2])[8]", false), ("(ARRAY[]::INTEGER[])[1]", false),
@@ -135,12 +135,12 @@ def arraySubscriptContractTests : IO Nat := do
   for (expression, slice) in shapes do
     let actual ← subscriptOutput s!"SELECT {expression} AS v"
     let type := if slice then SelectContract.ScalarType.array .int32 else .int32
-    SQLean.Tests.assert (actual == [⟨"v", ⟨type, true⟩⟩]) s!"grouped subscript type: {expression}"
+    SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨type, true⟩}]) s!"grouped subscript type: {expression}"
     count := count + 1
   for dimensions in [1, 2, 3, 4, 5, 6] do
     let sql := "SELECT (ARRAY[1])" ++ String.join (List.replicate dimensions "[1]") ++ " AS v"
     let actual ← subscriptOutput sql
-    SQLean.Tests.assert (actual == [⟨"v", ⟨.int32, true⟩⟩]) s!"admitted dimensions: {dimensions}"
+    SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨.int32, true⟩}]) s!"admitted dimensions: {dimensions}"
     count := count + 1
   let invalid := [
     "SELECT (NULL)[1]", "SELECT ('{1,2}')[1]", "SELECT (1)[1]", "SELECT ('a'::TEXT)[1]",
@@ -151,7 +151,7 @@ def arraySubscriptContractTests : IO Nat := do
     "SELECT (ARRAY[1])[ARRAY[1]]", "SELECT (ARRAY[1])[TRUE:2]", "SELECT (ARRAY[1])[1:FALSE]"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid subscript: {sql}")
     count := count + 1
@@ -159,7 +159,7 @@ def arraySubscriptContractTests : IO Nat := do
       "SELECT ((SELECT ARRAY[1]))[1]", "SELECT (unknown_array_function())[1]",
       "SELECT (ARRAY[1])[COUNT(*)]"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported subscript: {sql}")
     count := count + 1
@@ -171,7 +171,7 @@ def arraySubscriptContractTests : IO Nat := do
     ("SELECT (?)[?] AS v", "integer[],int", .int32)]
   for (sql, params, type) in parameterCases do
     let actual ← subscriptOutput sql params
-    SQLean.Tests.assert (actual == [⟨"v", ⟨type, true⟩⟩]) s!"subscript parameter modifiers: {sql}"
+    SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨type, true⟩}]) s!"subscript parameter modifiers: {sql}"
     count := count + 1
   let sql := "SELECT (ARRAY[?,?])[?:?][?] AS v, (?)[?] AS w"
   let params ← expectOk sql (Assurance.parseContractParameterTypes "int,int,int,int,int,integer[],int")
@@ -183,16 +183,16 @@ def arraySubscriptContractTests : IO Nat := do
   let bad : Advanced.Query := { body := .select { items := [
     .expression (.subscript (.array [.parameter (.anonymous 2)])
       [.index (.parameter (.anonymous 1))])] } }
-  match SelectContract.checkQuery .basicV31 [] params bad with
+  match SelectContract.checkQuery .basicV32 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "manual reordered subscript parameters must be Invalid")
   count := count + 1
   let empty : Advanced.Query := { body := .select { items := [.expression (.subscript .null [])] } }
-  match SelectContract.checkQuery .basicV31 [] [] empty with
+  match SelectContract.checkQuery .basicV32 [] [] empty with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "empty subscript group must be Invalid")
   count := count + 1
-  match SelectContract.checkQuery .basicV31 [] params query 1 with
+  match SelectContract.checkQuery .basicV32 [] params query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "subscript exhaustion must be Inconclusive")
   count := count + 1

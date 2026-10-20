@@ -43,6 +43,7 @@ mutual
     | .overlap left right => .overlap (translateExpr left) (translateExpr right)
     | .extract field arg => .extract field (translateExpr arg)
     | .cast arg target => .cast (translateExpr arg) target
+    | .collate arg name => .collate (translateExpr arg) name
     | .subscript base subscripts => .subscript (translateExpr base)
         (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>
           have : sizeOf subscript.val < sizeOf subscripts := List.sizeOf_lt_of_mem subscript.property

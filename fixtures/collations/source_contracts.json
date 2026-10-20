@@ -1,0 +1,736 @@
+[
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-36",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-37",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "sv-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-49",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-50",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "tr-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-51",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-52",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "tr-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-63",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-64",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "tr-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-65",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-66",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "tr-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-208",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "und-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-212",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "und-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-215",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-217",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "und-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-221",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "und-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-224",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "de-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-248",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-249",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-251",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-253",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-377",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-378",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:statement-36",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en_US"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:statement-37",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "sv_SE"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:statement-49",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en_US"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:statement-50",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "tr_TR"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:statement-51",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en_US"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:statement-52",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "tr_TR"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:statement-63",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en_US"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:statement-64",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "tr_TR"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:statement-65",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en_US"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.linux.utf8.sql:statement-66",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "tr_TR"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.sql:statement-25",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_builtin.json",
+    "output_columns": [
+      {
+        "name": "true",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.sql:statement-26",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_builtin.json",
+    "output_columns": [
+      {
+        "name": "false",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-17",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-18",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-19",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-32",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-203",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "sv-x-icu"
+      ],
+      [
+        "ucs_basic"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-204",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "sv-x-icu"
+      ],
+      [
+        "unicode"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-228",
+    "status": "deferred",
+    "eligibility": "catalog_prerequisite",
+    "catalogFile": null,
+    "output_columns": null,
+    "diagnostic": "source.collation_snapshot_unresolved",
+    "unresolved_collations": [
+      [
+        "en-x-icu"
+      ]
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-229",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "text",
+        "nullable": true,
+        "collation": "default"
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-238",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "b",
+        "type": "text",
+        "nullable": true,
+        "collation": "default"
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-239",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "b",
+        "type": "text",
+        "nullable": true,
+        "collation": "default"
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-244",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "b",
+        "type": "text[]",
+        "nullable": true,
+        "collation": "default"
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-245",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "b",
+        "type": "text[]",
+        "nullable": true,
+        "collation": "default"
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-282",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true,
+        "collation": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246"
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true,
+        "collation": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246"
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-284",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true,
+        "collation": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246"
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:statement-286",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_icu_declarations.json",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true,
+        "collation": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246"
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true,
+        "collation": "custom:collations:postgres:src/test/regress/sql/collate.icu.utf8.sql:context-statement-246"
+      }
+    ]
+  },
+  {
+    "id": "collations:postgres:src/test/regress/sql/collate.sql:statement-8",
+    "status": "valid",
+    "eligibility": "checker",
+    "catalogFile": "fixtures/collations/source_portable_declarations.json",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "b",
+        "type": "text",
+        "nullable": false,
+        "collation": "C"
+      }
+    ]
+  }
+]

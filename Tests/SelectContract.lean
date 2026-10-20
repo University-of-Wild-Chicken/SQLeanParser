@@ -1,5 +1,5 @@
 import SQLean.Assurance
-import Tests.Support
+import Tests.ContractSupport
 
 /-! Public assurance regressions, including ASTs that a parser normally rejects.
 The direct derivation below deliberately does not obtain its proof from a
@@ -32,19 +32,23 @@ private def literalQuery : Advanced.Query := {
 
 /-- A kernel-checked rule derivation independent of all checker execution. -/
 private theorem literalQuery_valid :
-    SelectContract.SelectValid .basicV31 [] [] literalQuery
-      [⟨"seven", ⟨.int32, false⟩⟩] := by
+    SelectContract.SelectValid .basicV32 [] [] literalQuery
+      [{name := "seven", type := ⟨.int32, false⟩}] := by
   apply SelectContract.SelectValid.certified (uses := [])
+  · decide
   · decide
   · decide
   · apply SelectContract.QueryValid.basic (cteUses := []) (visible := []) (by decide) .nil
       (scope := .empty) (selectUses := []) (sourceUses := []) (whereUses := []) (orderUses := [])
       (limitUses := []) (offsetUses := [])
     · exact .empty
-    · exact .expression (.int (by decide)) (by decide) .nil
+    · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by decide) .nil
+    · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by decide) .nil
     · decide
     · decide
+    · exact Or.inl rfl
     · exact .absent
+    · exact .nil
     · exact .nil
     · exact .absent
     · exact .absent
@@ -55,8 +59,8 @@ private theorem literalQuery_valid :
   · decide
 
 private def literalCertificate :
-    SelectContract.Certificate .basicV31 [] [] literalQuery :=
-  ⟨[⟨"seven", ⟨.int32, false⟩⟩], literalQuery_valid⟩
+    SelectContract.Certificate .basicV32 [] [] literalQuery :=
+  ⟨[{name := "seven", type := ⟨.int32, false⟩}], literalQuery_valid⟩
 
 /-- SQL UNKNOWN remains nullable when a Boolean context supplies its type. -/
 example : SelectContract.ExprValid [] .empty
@@ -69,16 +73,17 @@ example : SelectContract.binarySignature .add
     (some ⟨.text, false⟩) none = none := rfl
 
 /-- Closed pagination typing and runtime nonnegativity are separate facts. -/
-example : SelectContract.PaginationValid []
+example : SelectContract.PaginationValid .basicV32 []
     (some (.unary .neg (.literal (.int 1)))) [] :=
-  .present (.unary (.int (by decide)) rfl (by decide)) (.int32Widen false)
+  .present (.unary (.int (by decide)) rfl (by decide))
+    (.atom (.unary (.int (by decide)) rfl (by decide)) .signedInt) (.int32Widen false)
 
 example : ¬ SelectContract.PaginationValueAllowed (some (-1)) := by
   unfold SelectContract.PaginationValueAllowed
   decide
 
-example : SelectContract.PaginationValid [] (some .null) [] :=
-  .present .null .unknownNull
+example : SelectContract.PaginationValid .basicV32 [] (some .null) [] :=
+  .present .null (.atom .null .null) .unknownNull
 
 example : SelectContract.PaginationValueAllowed none := by
   unfold SelectContract.PaginationValueAllowed
@@ -105,20 +110,20 @@ private def checkContractCase (label : String) (expected : String)
     (catalog : Advanced.Catalog) (params : SelectContract.ParameterEnv)
     (query : Advanced.Query) (fuel : Nat := 1024)
     (columns : Option (List SelectContract.OutputColumn) := none) : IO Unit := do
-  let outcome := Assurance.checkContract .basicV31 catalog params query fuel
+  let outcome := Assurance.checkContract .basicV32 catalog params query fuel
   SQLean.Tests.assert (outcomeName outcome == expected)
     s!"{label}: expected {expected}, got {outcomeName outcome}"
   match outcome with
   | .valid certificate =>
       -- These terms cannot type check if the result is merely checker equality
       -- or if any catalog/parameter/query index was lost.
-      have _derivation : SelectContract.SelectValid .basicV31 catalog params query certificate.output :=
+      have _derivation : SelectContract.SelectValid .basicV32 catalog params query certificate.output :=
         certificate.valid
       have _unchanged : certificate.outputCatalog = catalog :=
         certificate.catalog_unchanged
       SQLean.Tests.assert (certificate.outputCatalog == catalog) s!"{label}: SELECT changed catalog"
       if let some expectedColumns := columns then
-        SQLean.Tests.assert (certificate.output == expectedColumns) s!"{label}: incorrect exact output schema"
+        SQLean.Tests.assert (sameOutputTypes certificate.output expectedColumns) s!"{label}: incorrect exact output schema"
   | _ => pure ()
 
 private def parameterQuery (parameters : List Advanced.Parameter) : Advanced.Query :=
@@ -169,13 +174,13 @@ private def scalarContractTests : IO Nat := do
       body := .select { items := [.all], source := some (.table "typed") }
     }
     checkContractCase s!"{label}: exact catalog projection" "valid" catalog [] table
-      (columns := some [⟨"v", ⟨exact, false⟩⟩])
+      (columns := some [{name := "v", type := ⟨exact, false⟩}])
     let params : SelectContract.ParameterEnv := [⟨1, declaration, true⟩]
     let parameter := Advanced.Expr.parameter (.numbered 1)
     checkContractCase s!"{label}: exact nullable parameter" "valid" [] params (scalarProjection parameter)
-      (columns := some [⟨"v", ⟨exact.unmodified, true⟩⟩])
+      (columns := some [{name := "v", type := ⟨exact.unmodified, true⟩}])
     checkContractCase s!"{label}: exact NULL cast" "valid" [] [] (scalarProjection (.cast .null declaration))
-      (columns := some [⟨"v", ⟨exact, true⟩⟩])
+      (columns := some [{name := "v", type := ⟨exact, true⟩}])
     let compared := scalarProjection (.binary .eq parameter parameter)
     let expected := if exact == .json then "invalid" else "valid"
     checkContractCase s!"{label}: equality availability" expected [] params compared
@@ -211,7 +216,7 @@ private def scalarContractTests : IO Nat := do
     { literalQuery with orderBy := [{ expr := .parameter (.numbered 1) }] }
   checkContractCase "JSONB scalar casts can yield SQL NULL" "valid" [] [⟨1, ⟨.jsonb, []⟩, false⟩]
     (scalarProjection (.cast (.parameter (.numbered 1)) ⟨.numeric, [8, 2]⟩))
-    (columns := some [⟨"v", ⟨.numeric [8, 2], true⟩⟩])
+    (columns := some [{name := "v", type := ⟨.numeric [8, 2], true⟩}])
   checkContractCase "unknown string temporal comparison remains explicit coverage gap" "unsupported" []
     [⟨1, ⟨.date, []⟩, false⟩]
     (scalarProjection (.binary .eq (.parameter (.numbered 1)) (.literal (.text "2024-01-01"))))
@@ -224,14 +229,14 @@ private def scalarContractTests : IO Nat := do
   checkContractCase "malformed manual decimal" "invalid" [] [] (scalarProjection (.decimal "1.2.3"))
   checkContractCase "unary plus unknown NULL chooses FLOAT8" "valid" [] []
     (scalarProjection (.unary .pos .null))
-    (columns := some [⟨"v", ⟨.doublePrecision, true⟩⟩])
+    (columns := some [{name := "v", type := ⟨.doublePrecision, true⟩}])
   let timeParams : SelectContract.ParameterEnv := [
     ⟨1, ⟨.time, []⟩, false⟩, ⟨2, ⟨.interval, []⟩, false⟩, ⟨3, ⟨.timeTZ, []⟩, false⟩
   ]
   checkContractCase "IN preserves pairwise temporal comparison alternatives" "valid" [] timeParams
     (scalarProjection (.inList (.parameter (.numbered 1))
       [.parameter (.numbered 2), .parameter (.numbered 3)]))
-    (columns := some [⟨"v", ⟨.bool, false⟩⟩])
+    (columns := some [{name := "v", type := ⟨.bool, false⟩}])
   pure (declarations.length * 6 + invalidCasts.length + malformed.length + 9)
 
 def selectContractTests : IO Nat := do
@@ -342,24 +347,24 @@ def selectContractTests : IO Nat := do
     checkContractCase test.label test.expected test.catalog test.params test.query test.fuel
 
   checkContractCase "independent literal example" "valid" [] [] literalQuery
-    (columns := some [⟨"seven", ⟨.int32, false⟩⟩])
+    (columns := some [{name := "seven", type := ⟨.int32, false⟩}])
   checkContractCase "wildcard preserves ordered nullable schema" "valid" contractCatalog [] (tableQuery)
-    (columns := some [⟨"id", ⟨.int32, false⟩⟩, ⟨"label", ⟨.text, true⟩⟩, ⟨"enabled", ⟨.bool, false⟩⟩])
+    (columns := some [{name := "id", type := ⟨.int32, false⟩}, {name := "label", type := ⟨.text, true⟩}, {name := "enabled", type := ⟨.bool, false⟩}])
   checkContractCase "manual repeated numbered identity" "valid" [] contractParams
     (parameterQuery [.numbered 2, .numbered 1, .numbered 2])
     (columns := some [
-      ⟨"?column?", ⟨.bool, true⟩⟩, ⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.bool, true⟩⟩])
+      {name := "?column?", type := ⟨.bool, true⟩}, {name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.bool, true⟩}])
   checkContractCase "manual anonymous identities in order" "valid" [] contractParams
     (parameterQuery [.anonymous 1, .anonymous 2])
-    (columns := some [⟨"?column?", ⟨.int32, false⟩⟩, ⟨"?column?", ⟨.bool, true⟩⟩])
+    (columns := some [{name := "?column?", type := ⟨.int32, false⟩}, {name := "?column?", type := ⟨.bool, true⟩}])
   checkContractCase "manual alias replaces relation" "valid" contractCatalog []
     (columnQuery (some "x") "id" (some "x"))
-    (columns := some [⟨"id", ⟨.int32, false⟩⟩])
+    (columns := some [{name := "id", type := ⟨.int32, false⟩}])
   let parsed ← expectOk "contract parsing API"
-    (Assurance.parseContract .basicV31 contractCatalog []
+    (Assurance.parseContract .basicV32 contractCatalog []
       "SELECT label FROM t WHERE label IS NOT NULL")
   checkContractCase "nullable filter does not refine output" "valid" contractCatalog [] parsed.query
-    (columns := some [⟨"label", ⟨.text, true⟩⟩])
+    (columns := some [{name := "label", type := ⟨.text, true⟩}])
   SQLean.Tests.assert (outcomeName parsed.outcome == "valid") "parseContract preserves outcome"
 
   let advanced ← expectOk "expanded syntax remains parseable"
@@ -384,16 +389,16 @@ def selectContractTests : IO Nat := do
     limit := some (.parameter (.anonymous 2))
     offset := some (.binary .add (.parameter (.anonymous 3)) 1) }
   let bounds ← expectOk "pagination-only certificate for an unsupported body"
-    ((SelectContract.checkPaginationBounds .basicV31 rowCountParams boundsQuery).mapError reprStr)
-  have _boundsDerivation : SelectContract.PaginationBoundsValid .basicV31 rowCountParams
+    ((SelectContract.checkPaginationBounds .basicV32 rowCountParams boundsQuery).mapError reprStr)
+  have _boundsDerivation : SelectContract.PaginationBoundsValid .basicV32 rowCountParams
       boundsQuery bounds.limitUses bounds.offsetUses := bounds.valid
   SQLean.Tests.assert (bounds.limitUses == [.anonymous 2] && bounds.offsetUses == [.anonymous 3])
     "pagination-only certificate preserves identities without claiming whole-query notation"
   checkContractCase "bounds evidence does not certify aggregate body" "unsupported" [] rowCountParams boundsQuery
-  match SelectContract.checkPaginationBounds .basicV31 rowCountParams boundsQuery 0 with
+  match SelectContract.checkPaginationBounds .basicV32 rowCountParams boundsQuery 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "pagination-only zero budget must be inconclusive")
-  match SelectContract.checkPaginationBounds .basicV31
+  match SelectContract.checkPaginationBounds .basicV32
       [{ index := 0, type := ⟨.int, []⟩ }] literalQuery with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "pagination-only certificate must validate parameter metadata")

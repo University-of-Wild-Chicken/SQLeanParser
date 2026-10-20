@@ -1,8 +1,11 @@
 """Independent row-model and harness regressions for derived SELECT sources."""
 import copy
 import json
+import subprocess
 import unittest
+from unittest.mock import patch
 
+import check_assurance_cli as assurance
 import check_derived_contract_cli as checker
 from generate_derived_contract_examples import all_cases, schema
 
@@ -92,6 +95,61 @@ class DerivedContractTests(unittest.TestCase):
         expected = {"capture": (1, [["1"], ["1"]])}
         with self.assertRaises(AssertionError):
             checker.validate_native({"capture": (1, [["1"]])}, expected)
+
+    def test_derived_union_boundary_uses_declared_catalog_and_exact_schema(self):
+        with patch.object(checker, "assert_report", return_value={"outputCollations": [None]}) as check:
+            self.assertEqual(checker.boundaries(), 18)
+        calls = check.call_args_list
+        self.assertEqual([sum(call.args[1] == status for call in calls)
+                          for status in ("invalid", "unsupported", "valid")], [8, 5, 5])
+        union = [call for call in calls if " UNION " in call.args[0][-1]]
+        self.assertEqual(len(union), 1)
+        self.assertEqual(union[0].args, (
+            ["--assurance", "contract", "--schema", str(checker.FIXTURES / "schema.json"),
+             "SELECT * FROM (SELECT id FROM items UNION SELECT id FROM labels) d"],
+            "valid", "contract", (("id", "int32", False),)))
+
+    def test_derived_union_rejects_wrong_schema_collation_or_evidence(self):
+        expected = {
+            "assurance": "declarative", "catalogUnchanged": True,
+            "evidence": "declarative-derivation", "outputCollations": [None],
+            "outputColumns": [{"name": "id", "nullable": False, "type": "int32"}],
+            "profile": assurance.PROFILES["contract"], "status": "valid", "typePrecision": "exact",
+        }
+
+        def check_only_union(args, *rest, **kwargs):
+            if " UNION " in args[-1]:
+                return assurance.assert_report(args, *rest, **kwargs)
+            return {}
+
+        def exercise(report, exit_code=0):
+            result = subprocess.CompletedProcess([], exit_code, json.dumps(report), "")
+            with patch.object(checker, "assert_report", side_effect=check_only_union), \
+                    patch.object(assurance, "invoke", return_value=result):
+                self.assertEqual(checker.boundaries(), 18)
+
+        exercise(expected)
+        mutations = []
+        for key, value in (("name", "wrong"), ("type", "text"), ("nullable", True), ("nullable", 0)):
+            report = copy.deepcopy(expected)
+            report["outputColumns"][0][key] = value
+            mutations.append(report)
+        for key, value in (("outputColumns", []), ("outputCollations", []),
+                           ("outputCollations", ["C"]), ("evidence", "checker-acceptance"),
+                           ("catalogUnchanged", False), ("typePrecision", "family"),
+                           ("status", "unsupported")):
+            report = copy.deepcopy(expected)
+            report[key] = value
+            mutations.append(report)
+        for key in ("outputColumns", "outputCollations", "evidence"):
+            report = copy.deepcopy(expected)
+            del report[key]
+            mutations.append(report)
+        for report in mutations:
+            with self.subTest(report=report), self.assertRaises(AssertionError):
+                exercise(report)
+        with self.assertRaises(AssertionError):
+            exercise(expected, exit_code=3)
 
 
 if __name__ == "__main__":

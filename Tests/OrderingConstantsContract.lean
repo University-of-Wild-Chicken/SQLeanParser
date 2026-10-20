@@ -16,15 +16,15 @@ example : ¬ SortExpression (.unary .neg (.literal (.int 1))) := by decide
 example : SortExpression (.unary .pos (.literal (.int 0))) := by decide
 
 private def orderingColumns : List OutputColumn :=
-  [⟨"a", ⟨.int32, false⟩⟩, ⟨"b", ⟨.int32, false⟩⟩]
+  [{name := "a", type := ⟨.int32, false⟩}, {name := "b", type := ⟨.int32, false⟩}]
 
 /-- A folded signed ordinal has an independent rule derivation, with no
 expression parameter occurrences or ordinary scalar-sort typing premise. -/
-private theorem signedOrdinal_valid : SortValid [] .empty [] orderingColumns false
+private theorem signedOrdinal_valid : SortValid .basicV32 [] .empty [] orderingColumns false
     (.unary .neg (.unary .neg (.literal (.int 2)))) [] :=
   .ordinal rfl (by decide) (by decide) (by decide)
 
-example : SortValid [] .empty [] orderingColumns false
+example : SortValid .basicV32 [] .empty [] orderingColumns false
     (RenderContract.translateExpr (.unary .neg (.unary .neg (.literal (.int 2))))) [] :=
   RenderContract.sort_valid_translated signedOrdinal_valid
 
@@ -84,7 +84,7 @@ private def orderingCases : List (String × String) := [
 def orderingConstantsContractTests : IO Nat := do
   for (sql, expected) in orderingCases do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .ok certificate =>
         SQLean.Tests.assert (expected == "valid" && certificate.output == orderingColumns)
           s!"unexpected ORDER BY constant certificate: {sql}"
@@ -100,7 +100,7 @@ def orderingConstantsContractTests : IO Nat := do
   let query ← expectOk "parameter ordering" (Advanced.parseQuery
     "SELECT ? AS a, ? AS b ORDER BY -? + ?")
   let params ← expectOk "parameter types" (Assurance.parseContractParameterTypes "int,int,int,int")
-  let certificate ← expectOk "parameter sort" ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+  let certificate ← expectOk "parameter sort" ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   SQLean.Tests.assert (Advanced.queryParameters 1024 query ==
     [.anonymous 1,.anonymous 2,.anonymous 3,.anonymous 4])

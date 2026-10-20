@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -35,7 +35,7 @@ private def arrayPredicateCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "array predicate SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "array predicate identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -125,9 +125,9 @@ def arrayPredicateContractTests : IO Nat := do
         let sql := s!"SELECT NULL::{leftName}[] {op.toSql} NULL::{rightName}[] AS v"
         let query ← expectOk sql (Advanced.parseQuery sql)
         if i == j && leftBase != .json then
-          SQLean.Tests.assert ((← arrayPredicateCertificate query) == [⟨"v", ⟨.bool, true⟩⟩])
+          SQLean.Tests.assert (sameOutputTypes (← arrayPredicateCertificate query) [{name := "v", type := ⟨.bool, true⟩}])
             s!"exact anyarray element identity: {sql}"
-        else match SelectContract.checkQuery .basicV31 [] [] query with
+        else match SelectContract.checkQuery .basicV32 [] [] query with
         | .error (.unsupported diagnostic) =>
             SQLean.Tests.assert (i == j && leftBase == .json &&
                 diagnostic.code == "array_element_equality") s!"array equality coverage: {sql}"
@@ -141,21 +141,19 @@ def arrayPredicateContractTests : IO Nat := do
           if leftBase == .json then
             let query ← expectOk sql (Advanced.parseQuery sql)
             let params ← expectOk sql (Assurance.parseContractParameterTypes (leftName ++ "[]"))
-            match SelectContract.checkQuery .basicV31 [] params query with
+            match SelectContract.checkQuery .basicV32 [] params query with
             | .error (.unsupported diagnostic) =>
                 SQLean.Tests.assert (diagnostic.code == "array_element_equality")
                   "unknown JSON[] context must retain equality boundary"
             | _ => throw (IO.userError "unknown JSON[] predicate must be Unsupported")
           else
-            SQLean.Tests.assert ((← arrayPredicateOutput sql (leftName ++ "[]")) ==
-              [⟨"v", ⟨.bool, nullable⟩⟩]) s!"unknown array predicate context: {sql}"
+            SQLean.Tests.assert (sameOutputTypes (← arrayPredicateOutput sql (leftName ++ "[]")) [{name := "v", type := ⟨.bool, nullable⟩}]) s!"unknown array predicate context: {sql}"
           count := count + 1
     for leftNullable in [false, true] do
       for rightNullable in [false, true] do
         let params := (if leftNullable then "INTEGER[]?" else "INTEGER[]") ++ "," ++
           (if rightNullable then "INTEGER[]?" else "INTEGER[]")
-        SQLean.Tests.assert ((← arrayPredicateOutput s!"SELECT $1 {op.toSql} $2 AS v" params) ==
-          [⟨"v", ⟨.bool, leftNullable || rightNullable⟩⟩]) "array predicate strict NULL propagation"
+        SQLean.Tests.assert (sameOutputTypes (← arrayPredicateOutput s!"SELECT $1 {op.toSql} $2 AS v" params) [{name := "v", type := ⟨.bool, leftNullable || rightNullable⟩}]) "array predicate strict NULL propagation"
         count := count + 1
     for (left, right) in [
         ("ARRAY[NULL::INTEGER]", "ARRAY[NULL::INTEGER]"),
@@ -170,14 +168,14 @@ def arrayPredicateContractTests : IO Nat := do
         ("ARRAY[TIMESTAMP(3) '2020-01-01']", "ARRAY[TIMESTAMP(6) '2020-01-01']"),
         ("ARRAY[1]", "'malformed array'")] do
       let sql := s!"SELECT {left} {op.toSql} {right} AS v"
-      SQLean.Tests.assert ((← arrayPredicateOutput sql) == [⟨"v", ⟨.bool, false⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes (← arrayPredicateOutput sql) [{name := "v", type := ⟨.bool, false⟩}])
         s!"array shape/modifier/null-element typing: {sql}"
       count := count + 1
     for left in ["NULL", "'{}'"] do
       for right in ["NULL", "'{}'"] do
         let sql := s!"SELECT {left} {op.toSql} {right}"
         let query ← expectOk sql (Advanced.parseQuery sql)
-        match SelectContract.checkQuery .basicV31 [] [] query with
+        match SelectContract.checkQuery .basicV32 [] [] query with
         | .error (.invalid _) => pure ()
         | _ => throw (IO.userError s!"ambiguous array predicate must be Invalid: {sql}")
         count := count + 1
@@ -186,26 +184,25 @@ def arrayPredicateContractTests : IO Nat := do
         ("ARRAY['1'::JSON]", "ARRAY['1'::JSONB]")] do
       let sql := s!"SELECT {left} {op.toSql} {right}"
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV31 [] [] query with
+      match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.invalid _) => pure ()
       | _ => throw (IO.userError s!"known nonmatching array signature must be Invalid: {sql}")
       count := count + 1
     for (left, right) in [("ARRAY[]::JSON[]", "ARRAY[]::JSON[]"),
         ("ARRAY['1'::JSON]", "ARRAY['1'::JSON]"), ("NULL::JSON[]", "'{}'")] do
       let query ← expectOk "JSON[] predicate" (Advanced.parseQuery s!"SELECT {left} {op.toSql} {right}")
-      match SelectContract.checkQuery .basicV31 [] [] query with
+      match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.unsupported diagnostic) =>
           SQLean.Tests.assert (diagnostic.code == "array_element_equality") "JSON[] equality gap"
       | _ => throw (IO.userError "JSON[] predicates must retain missing-equality coverage boundary")
       count := count + 1
-    SQLean.Tests.assert ((← arrayPredicateOutput s!"SELECT ARRAY[1] {op.toSql} ARRAY[1]") ==
-      [⟨"?column?", ⟨.bool, false⟩⟩]) "array predicate default label"
+    SQLean.Tests.assert (sameOutputTypes (← arrayPredicateOutput s!"SELECT ARRAY[1] {op.toSql} ARRAY[1]") [{name := "?column?", type := ⟨.bool, false⟩}]) "array predicate default label"
     count := count + 1
     for sql in [s!"SELECT ARRAY[1] {op.toSql} (SELECT ARRAY[1])",
         s!"SELECT unknown_function() {op.toSql} ARRAY[1]",
         s!"SELECT ROW(1,2) {op.toSql} ARRAY[1]"] do
       let query ← expectOk sql (Advanced.parseQuery sql)
-      match SelectContract.checkQuery .basicV31 [] [] query with
+      match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.unsupported _) => pure ()
       | _ => throw (IO.userError s!"array predicate child coverage: {sql}")
       count := count + 1
@@ -213,25 +210,25 @@ def arrayPredicateContractTests : IO Nat := do
         (s!"SELECT ? {op.toSql} ? AS v", "INTEGER[],INTEGER[]"),
         (s!"SELECT $2 {op.toSql} $1 AS v", "INTEGER[],INTEGER[]"),
         (s!"SELECT ? {op.toSql} d.a AS v FROM (SELECT ?::INTEGER[] AS a) d", "INTEGER[],INTEGER[]")] do
-      SQLean.Tests.assert ((← arrayPredicateOutput sql params) == [⟨"v", ⟨.bool, false⟩⟩])
+      SQLean.Tests.assert (sameOutputTypes (← arrayPredicateOutput sql params) [{name := "v", type := ⟨.bool, false⟩}])
         s!"array predicate lexical parameter order: {sql}"
       count := count + 1
     let params ← expectOk "predicate bindings" (Assurance.parseContractParameterTypes "INTEGER[],INTEGER[]")
     let bad : Advanced.Query := { body := .select { items := [.expression
       (arrayPredicateExpr op (.parameter (.anonymous 2)) (.parameter (.anonymous 1)))] } }
-    match SelectContract.checkQuery .basicV31 [] params bad with
+    match SelectContract.checkQuery .basicV32 [] params bad with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "swapped array predicate ordinals must be Invalid")
     count := count + 1
     let query ← expectOk "predicate exhaustion" (Advanced.parseQuery s!"SELECT ARRAY[1] {op.toSql} ARRAY[1]")
-    match SelectContract.checkQuery .basicV31 [] [] query 1 with
+    match SelectContract.checkQuery .basicV32 [] [] query 1 with
     | .error (.inconclusive _) => pure ()
     | _ => throw (IO.userError "array predicate exhaustion must be Inconclusive")
     count := count + 1
   for sql in ["SELECT '{}'::JSONB && '{}'::JSONB", "SELECT 1 && 1",
       "SELECT 'a'::TEXT && 'b'::TEXT"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"closed nonarray overlap must be Invalid: {sql}")
     count := count + 1
@@ -336,8 +333,7 @@ def arrayPredicateConcreteContractTests : IO Nat := do
         let slots ← expectOk id ((record.getObjVal? "observed_parameter_slots") >>= Lean.Json.getArr?)
         SQLean.Tests.assert (slots.isEmpty && Advanced.queryParameters 1024 query == [])
           s!"{id}: no parameter assumptions are authorized for the certified source population"
-        SQLean.Tests.assert ((← arrayPredicateCertificate query) ==
-          [⟨"?column?", ⟨.bool, origin == "rum"⟩⟩]) s!"{id}: exact concrete predicate output"
+        SQLean.Tests.assert (sameOutputTypes (← arrayPredicateCertificate query) [{name := "?column?", type := ⟨.bool, origin == "rum"⟩}]) s!"{id}: exact concrete predicate output"
         certified := certified + 1
       else
         match query.body with

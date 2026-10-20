@@ -215,12 +215,15 @@ def check_specification_independence(root: Path) -> None:
     initial = "SQLean.SelectContract.Spec"
     if root.joinpath(*initial.split(".")).with_suffix(".lean").is_file():
         # This normative judgment may use syntax, catalog data, and reviewed
-        # declarative type/recursion helpers. Executable inference and rendering
+        # declarative type/recursion/collation helpers. Executable inference and rendering
         # must never become premises through a helper's transitive imports.
         allowed = {
             initial, "SQLean.SelectContract.Profile",
             "SQLean.SelectContract.ScalarSignatures", "SQLean.SelectContract.Recursion",
-            "SQLean.CatalogSyntax", "SQLean.AdvancedSyntax", "SQLean.SyntaxBase", "Std",
+            "SQLean.SelectContract.ExpressionSpec", "SQLean.SelectContract.Collation",
+            "SQLean.SelectContract.CollationApplications", "SQLean.SelectContract.CollationRules",
+            "SQLean.CollationSyntax", "SQLean.CatalogSyntax",
+            "SQLean.AdvancedSyntax", "SQLean.SyntaxBase", "Std",
         }
         forbidden = sorted(local_import_closure(root, initial) - allowed)
         if forbidden:

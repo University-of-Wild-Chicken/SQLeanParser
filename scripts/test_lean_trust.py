@@ -159,7 +159,10 @@ class LeanTrustSourceTests(unittest.TestCase):
         self.assertEqual(local_import_closure(ROOT, "SQLean.SelectContract.Spec"), {
             "SQLean.SelectContract.Spec", "SQLean.SelectContract.Profile",
             "SQLean.SelectContract.ScalarSignatures", "SQLean.SelectContract.Recursion",
-            "SQLean.CatalogSyntax", "SQLean.AdvancedSyntax", "SQLean.SyntaxBase", "Std",
+            "SQLean.SelectContract.ExpressionSpec", "SQLean.SelectContract.Collation",
+            "SQLean.SelectContract.CollationApplications", "SQLean.SelectContract.CollationRules",
+            "SQLean.CollationSyntax", "SQLean.CatalogSyntax",
+            "SQLean.AdvancedSyntax", "SQLean.SyntaxBase", "Std",
         })
         check_specification_independence(ROOT)
 
@@ -194,6 +197,19 @@ class LeanTrustSourceTests(unittest.TestCase):
                 "import SQLean.SelectContract.FutureHelper\n", encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "SelectContract.Spec.*FutureHelper"):
                 check_specification_independence(root)
+
+    def test_collation_specification_helpers_cannot_depend_on_inference_or_rendering(self) -> None:
+        for helper in ("Collation", "CollationApplications", "CollationRules", "ExpressionSpec"):
+            for forbidden in ("SQLean.SelectContract.Checker", "SQLean.RenderContract.ValidityPreservation"):
+                with self.subTest(helper=helper, forbidden=forbidden), tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    (root / "SQLean/SelectContract").mkdir(parents=True)
+                    (root / "SQLean/SelectContract/Spec.lean").write_text(
+                        "import SQLean.SelectContract." + helper + "\n", encoding="utf-8")
+                    (root / f"SQLean/SelectContract/{helper}.lean").write_text(
+                        "import SQLean.CollationSyntax " + forbidden + "\n", encoding="utf-8")
+                    with self.assertRaisesRegex(ValueError, "SelectContract.Spec.*" + forbidden):
+                        check_specification_independence(root)
 
     def test_sqlite_domain_direct_checker_dependency_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

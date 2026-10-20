@@ -108,6 +108,7 @@ mutual
     | parameter parameter => simp only [translateExpr, uniformDefaultExpr]
     | column qualifier name schema => simp only [translateExpr, uniformDefaultExpr]
     | countAll => simp only [translateExpr, uniformDefaultExpr]
+    | collate arg name => simp only [translateExpr, uniformDefaultExpr]
     | inQuery arg query => simp only [translateExpr, uniformDefaultExpr]
     | «exists» query => simp only [translateExpr, uniformDefaultExpr]
     | scalarQuery query => simp only [translateExpr, uniformDefaultExpr]

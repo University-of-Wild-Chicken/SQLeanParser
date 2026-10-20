@@ -1,0 +1,2712 @@
+[
+  {
+    "id": "collation-001",
+    "source_kind": "synthetic",
+    "shape": "literal-c",
+    "sql": "SELECT 'a' COLLATE \"C\" AS v;",
+    "sqlite_sql": "SELECT 'a' COLLATE \"C\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-002",
+    "source_kind": "synthetic",
+    "shape": "literal-posix",
+    "sql": "SELECT 'a' COLLATE \"POSIX\" AS v;",
+    "sqlite_sql": "SELECT 'a' COLLATE \"POSIX\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "POSIX",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-003",
+    "source_kind": "synthetic",
+    "shape": "outer-posix-overrides",
+    "sql": "SELECT ('a' COLLATE \"C\") COLLATE \"POSIX\" AS v;",
+    "sqlite_sql": "SELECT ('a' COLLATE \"C\") COLLATE \"POSIX\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "POSIX",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-004",
+    "source_kind": "synthetic",
+    "shape": "outer-c-overrides",
+    "sql": "SELECT ('a' COLLATE \"POSIX\") COLLATE \"C\" AS v;",
+    "sqlite_sql": "SELECT ('a' COLLATE \"POSIX\") COLLATE \"C\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-005",
+    "source_kind": "synthetic",
+    "shape": "qualified-c",
+    "sql": "SELECT 'a' COLLATE pg_catalog.\"C\" AS v;",
+    "sqlite_sql": "SELECT 'a' COLLATE pg_catalog.\"C\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-006",
+    "source_kind": "synthetic",
+    "shape": "quoted-qualified-posix",
+    "sql": "SELECT 'a' COLLATE \"pg_catalog\".\"POSIX\" AS v;",
+    "sqlite_sql": "SELECT 'a' COLLATE \"pg_catalog\".\"POSIX\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "POSIX",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-007",
+    "source_kind": "synthetic",
+    "shape": "typed-text",
+    "sql": "SELECT CAST('a' AS TEXT) COLLATE \"C\" AS v;",
+    "sqlite_sql": "SELECT CAST('a' AS TEXT) COLLATE \"C\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-008",
+    "source_kind": "synthetic",
+    "shape": "varchar-modifier",
+    "sql": "SELECT CAST('a' AS VARCHAR(3)) COLLATE \"C\" AS v;",
+    "sqlite_sql": "SELECT CAST('a' AS VARCHAR(3)) COLLATE \"C\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(3)",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "VARCHAR(3)",
+        "postgres_display_type": "character varying(3)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-009",
+    "source_kind": "synthetic",
+    "shape": "char-modifier",
+    "sql": "SELECT CAST('a' AS CHAR(3)) COLLATE \"C\" AS v;",
+    "sqlite_sql": "SELECT CAST('a' AS CHAR(3)) COLLATE \"C\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(3)",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "CHAR(3)",
+        "postgres_display_type": "character(3)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a  "
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a  "
+        ]
+      ],
+      "words_only": [
+        [
+          "a  "
+        ]
+      ],
+      "labels_only": [
+        [
+          "a  "
+        ]
+      ],
+      "both": [
+        [
+          "a  "
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-010",
+    "source_kind": "synthetic",
+    "shape": "name-posix",
+    "sql": "SELECT CAST('a' AS NAME) COLLATE \"POSIX\" AS v;",
+    "sqlite_sql": "SELECT CAST('a' AS NAME) COLLATE \"POSIX\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": false,
+        "collation": "POSIX",
+        "postgres_type": "NAME",
+        "postgres_display_type": "name"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-011",
+    "source_kind": "synthetic",
+    "shape": "override-name-derived-text",
+    "sql": "SELECT CAST(CAST('a' AS NAME) AS TEXT) COLLATE \"default\" AS v;",
+    "sqlite_sql": "SELECT CAST(CAST('a' AS NAME) AS TEXT) COLLATE \"default\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-012",
+    "source_kind": "synthetic",
+    "shape": "unknown-to-integer",
+    "sql": "SELECT CAST('1' COLLATE \"C\" AS INTEGER) AS v;",
+    "sqlite_sql": "SELECT CAST('1' COLLATE \"C\" AS INTEGER) AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "words_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-013",
+    "source_kind": "synthetic",
+    "shape": "known-text-to-integer",
+    "sql": "SELECT CAST(CAST(CAST('1' AS NAME) AS TEXT) COLLATE \"C\" AS INTEGER) AS v;",
+    "sqlite_sql": "SELECT CAST(CAST(CAST('1' AS NAME) AS TEXT) COLLATE \"C\" AS INTEGER) AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "words_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-014",
+    "source_kind": "synthetic",
+    "shape": "unknown-to-numeric-modifier",
+    "sql": "SELECT CAST('1.25' COLLATE \"C\" AS NUMERIC(6,2)) AS v;",
+    "sqlite_sql": "SELECT CAST('1.25' COLLATE \"C\" AS NUMERIC(6,2)) AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric(6,2)",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "NUMERIC(6,2)",
+        "postgres_display_type": "numeric(6,2)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "1.25"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "1.25"
+        ]
+      ],
+      "words_only": [
+        [
+          "1.25"
+        ]
+      ],
+      "labels_only": [
+        [
+          "1.25"
+        ]
+      ],
+      "both": [
+        [
+          "1.25"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-015",
+    "source_kind": "synthetic",
+    "shape": "unknown-to-float",
+    "sql": "SELECT CAST('1.5' COLLATE \"C\" AS DOUBLE PRECISION) AS v;",
+    "sqlite_sql": "SELECT CAST('1.5' COLLATE \"C\" AS DOUBLE PRECISION) AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "double precision",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "DOUBLE PRECISION",
+        "postgres_display_type": "double precision"
+      }
+    ],
+    "expected_rows": [
+      [
+        "1.5"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "1.5"
+        ]
+      ],
+      "words_only": [
+        [
+          "1.5"
+        ]
+      ],
+      "labels_only": [
+        [
+          "1.5"
+        ]
+      ],
+      "both": [
+        [
+          "1.5"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-016",
+    "source_kind": "synthetic",
+    "shape": "unknown-null",
+    "sql": "SELECT NULL COLLATE \"C\" AS v;",
+    "sqlite_sql": "SELECT NULL COLLATE \"C\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "words_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-017",
+    "source_kind": "synthetic",
+    "shape": "typed-null",
+    "sql": "SELECT CAST(NULL AS TEXT) COLLATE \"POSIX\" AS v;",
+    "sqlite_sql": "SELECT CAST(NULL AS TEXT) COLLATE \"POSIX\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "POSIX",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "words_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-018",
+    "source_kind": "synthetic",
+    "shape": "case-one-explicit-result",
+    "sql": "SELECT CASE WHEN TRUE THEN 'x' COLLATE \"C\" ELSE 'y' END AS v;",
+    "sqlite_sql": "SELECT CASE WHEN TRUE THEN 'x' COLLATE \"C\" ELSE 'y' END AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "x"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "x"
+        ]
+      ],
+      "words_only": [
+        [
+          "x"
+        ]
+      ],
+      "labels_only": [
+        [
+          "x"
+        ]
+      ],
+      "both": [
+        [
+          "x"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-019",
+    "source_kind": "synthetic",
+    "shape": "case-condition-separate",
+    "sql": "SELECT CASE WHEN 'a' COLLATE \"POSIX\"='a' THEN 'x' COLLATE \"C\" ELSE 'y' END AS v;",
+    "sqlite_sql": "SELECT CASE WHEN 'a' COLLATE \"POSIX\"='a' THEN 'x' COLLATE \"C\" ELSE 'y' END AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "x"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "x"
+        ]
+      ],
+      "words_only": [
+        [
+          "x"
+        ]
+      ],
+      "labels_only": [
+        [
+          "x"
+        ]
+      ],
+      "both": [
+        [
+          "x"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-020",
+    "source_kind": "synthetic",
+    "shape": "coalesce-explicit-null",
+    "sql": "SELECT COALESCE(NULL COLLATE \"C\",'a') AS v;",
+    "sqlite_sql": "SELECT COALESCE(NULL COLLATE \"C\",'a') AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-021",
+    "source_kind": "synthetic",
+    "shape": "nullif",
+    "sql": "SELECT NULLIF('a' COLLATE \"C\",'b') AS v;",
+    "sqlite_sql": "SELECT NULLIF('a' COLLATE \"C\",'b') AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-022",
+    "source_kind": "synthetic",
+    "shape": "greatest",
+    "sql": "SELECT GREATEST('a' COLLATE \"C\",'b') AS v;",
+    "sqlite_sql": "SELECT GREATEST('a' COLLATE \"C\",'b') AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "b"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.scalar-function-signatures",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "b"
+        ]
+      ],
+      "words_only": [
+        [
+          "b"
+        ]
+      ],
+      "labels_only": [
+        [
+          "b"
+        ]
+      ],
+      "both": [
+        [
+          "b"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-023",
+    "source_kind": "synthetic",
+    "shape": "least",
+    "sql": "SELECT LEAST('a' COLLATE \"C\",'b') AS v;",
+    "sqlite_sql": "SELECT LEAST('a' COLLATE \"C\",'b') AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.scalar-function-signatures",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-024",
+    "source_kind": "synthetic",
+    "shape": "function-input",
+    "sql": "SELECT LOWER('X' COLLATE \"C\") AS v;",
+    "sqlite_sql": "SELECT LOWER('X' COLLATE \"C\") AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "x"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.scalar-function-signatures",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "x"
+        ]
+      ],
+      "words_only": [
+        [
+          "x"
+        ]
+      ],
+      "labels_only": [
+        [
+          "x"
+        ]
+      ],
+      "both": [
+        [
+          "x"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-025",
+    "source_kind": "synthetic",
+    "shape": "variadic-function",
+    "sql": "SELECT CONCAT('a' COLLATE \"C\",'b') AS v;",
+    "sqlite_sql": "SELECT CONCAT('a' COLLATE \"C\",'b') AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "ab"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.scalar-function-signatures",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "ab"
+        ]
+      ],
+      "words_only": [
+        [
+          "ab"
+        ]
+      ],
+      "labels_only": [
+        [
+          "ab"
+        ]
+      ],
+      "both": [
+        [
+          "ab"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-026",
+    "source_kind": "synthetic",
+    "shape": "substring",
+    "sql": "SELECT SUBSTRING('abc' COLLATE \"C\" FROM 2 FOR 1) AS v;",
+    "sqlite_sql": "SELECT SUBSTRING('abc' COLLATE \"C\" FROM 2 FOR 1) AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "b"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "parse_invalid",
+    "sqlite_diagnostic": "input.parse",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "b"
+        ]
+      ],
+      "words_only": [
+        [
+          "b"
+        ]
+      ],
+      "labels_only": [
+        [
+          "b"
+        ]
+      ],
+      "both": [
+        [
+          "b"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-027",
+    "source_kind": "synthetic",
+    "shape": "left",
+    "sql": "SELECT LEFT('abc' COLLATE \"C\",2) AS v;",
+    "sqlite_sql": "SELECT LEFT('abc' COLLATE \"C\",2) AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "ab"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "parse_invalid",
+    "sqlite_diagnostic": "input.parse",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "ab"
+        ]
+      ],
+      "words_only": [
+        [
+          "ab"
+        ]
+      ],
+      "labels_only": [
+        [
+          "ab"
+        ]
+      ],
+      "both": [
+        [
+          "ab"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-028",
+    "source_kind": "synthetic",
+    "shape": "concatenation",
+    "sql": "SELECT 'a' COLLATE \"C\" || 'b' AS v;",
+    "sqlite_sql": "SELECT 'a' COLLATE \"C\" || 'b' AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "ab"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "ab"
+        ]
+      ],
+      "words_only": [
+        [
+          "ab"
+        ]
+      ],
+      "labels_only": [
+        [
+          "ab"
+        ]
+      ],
+      "both": [
+        [
+          "ab"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-029",
+    "source_kind": "synthetic",
+    "shape": "array-element",
+    "sql": "SELECT ARRAY['a' COLLATE \"C\",'b'] AS v;",
+    "sqlite_sql": "SELECT ARRAY['a' COLLATE \"C\",'b'] AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT[]",
+        "postgres_display_type": "text[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{a,b}"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "parse_invalid",
+    "sqlite_diagnostic": "input.parse",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{a,b}"
+        ]
+      ],
+      "words_only": [
+        [
+          "{a,b}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{a,b}"
+        ]
+      ],
+      "both": [
+        [
+          "{a,b}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-030",
+    "source_kind": "synthetic",
+    "shape": "array-result",
+    "sql": "SELECT ARRAY['a','b'] COLLATE \"POSIX\" AS v;",
+    "sqlite_sql": "SELECT ARRAY['a','b'] COLLATE \"POSIX\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "collation": "POSIX",
+        "postgres_type": "TEXT[]",
+        "postgres_display_type": "text[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{a,b}"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "parse_invalid",
+    "sqlite_diagnostic": "input.parse",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{a,b}"
+        ]
+      ],
+      "words_only": [
+        [
+          "{a,b}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{a,b}"
+        ]
+      ],
+      "both": [
+        [
+          "{a,b}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-031",
+    "source_kind": "synthetic",
+    "shape": "array-index",
+    "sql": "SELECT (ARRAY['a' COLLATE \"C\",'b'])[1] AS v;",
+    "sqlite_sql": "SELECT (ARRAY['a' COLLATE \"C\",'b'])[1] AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "parse_invalid",
+    "sqlite_diagnostic": "input.parse",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-032",
+    "source_kind": "synthetic",
+    "shape": "array-slice",
+    "sql": "SELECT (ARRAY['a' COLLATE \"C\",'b'])[1:1] AS v;",
+    "sqlite_sql": "SELECT (ARRAY['a' COLLATE \"C\",'b'])[1:1] AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "collation": "C",
+        "postgres_type": "TEXT[]",
+        "postgres_display_type": "text[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{a}"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "parse_invalid",
+    "sqlite_diagnostic": "input.parse",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{a}"
+        ]
+      ],
+      "words_only": [
+        [
+          "{a}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{a}"
+        ]
+      ],
+      "both": [
+        [
+          "{a}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-033",
+    "source_kind": "synthetic",
+    "shape": "derived-boundary",
+    "sql": "SELECT v FROM (SELECT 'a' COLLATE \"C\" AS v) d;",
+    "sqlite_sql": "SELECT v FROM (SELECT 'a' COLLATE \"C\" AS v) d;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-034",
+    "source_kind": "synthetic",
+    "shape": "cte-boundary",
+    "sql": "WITH c(v) AS (SELECT 'a' COLLATE \"C\") SELECT v FROM c;",
+    "sqlite_sql": "WITH c(v) AS (SELECT 'a' COLLATE \"C\") SELECT v FROM c;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-035",
+    "source_kind": "synthetic",
+    "shape": "union-all",
+    "sql": "SELECT 'a' COLLATE \"C\" AS v UNION ALL SELECT 'b';",
+    "sqlite_sql": "SELECT 'a' COLLATE \"C\" AS v UNION ALL SELECT 'b';",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "b"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-036",
+    "source_kind": "synthetic",
+    "shape": "union-distinct",
+    "sql": "SELECT 'a' COLLATE \"C\" AS v UNION SELECT 'b';",
+    "sqlite_sql": "SELECT 'a' COLLATE \"C\" AS v UNION SELECT 'b';",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "b"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-037",
+    "source_kind": "synthetic",
+    "shape": "intersect",
+    "sql": "SELECT 'a' COLLATE \"C\" AS v INTERSECT SELECT 'a';",
+    "sqlite_sql": "SELECT 'a' COLLATE \"C\" AS v INTERSECT SELECT 'a';",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-038",
+    "source_kind": "synthetic",
+    "shape": "except",
+    "sql": "SELECT 'a' COLLATE \"C\" AS v EXCEPT SELECT 'b';",
+    "sqlite_sql": "SELECT 'a' COLLATE \"C\" AS v EXCEPT SELECT 'b';",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-039",
+    "source_kind": "synthetic",
+    "shape": "override-indeterminate-set-result",
+    "sql": "SELECT v COLLATE \"default\" AS v FROM (SELECT v FROM (SELECT 'a' COLLATE \"C\" AS v) a UNION ALL SELECT v FROM (SELECT 'b' COLLATE \"POSIX\" AS v) b) d;",
+    "sqlite_sql": "SELECT v COLLATE \"default\" AS v FROM (SELECT v FROM (SELECT 'a' COLLATE \"C\" AS v) a UNION ALL SELECT v FROM (SELECT 'b' COLLATE \"POSIX\" AS v) b) d;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "b"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-040",
+    "source_kind": "synthetic",
+    "shape": "ordering-does-not-change-output",
+    "sql": "SELECT v FROM (SELECT 'b' AS v UNION ALL SELECT 'A' UNION ALL SELECT 'a') d ORDER BY v COLLATE \"C\";",
+    "sqlite_sql": "SELECT v FROM (SELECT 'b' AS v UNION ALL SELECT 'A' UNION ALL SELECT 'a') d ORDER BY v COLLATE \"C\";",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "A"
+      ],
+      [
+        "a"
+      ],
+      [
+        "b"
+      ]
+    ],
+    "ordered": true,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "A"
+        ],
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "words_only": [
+        [
+          "A"
+        ],
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "labels_only": [
+        [
+          "A"
+        ],
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "both": [
+        [
+          "A"
+        ],
+        [
+          "a"
+        ],
+        [
+          "b"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-041",
+    "source_kind": "synthetic",
+    "shape": "typed-parameter",
+    "sql": "SELECT $1 COLLATE \"C\" AS v;",
+    "sqlite_sql": "SELECT ?1 COLLATE \"C\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "text",
+    "parameter_values": [
+      "z"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "z"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "z"
+        ]
+      ],
+      "words_only": [
+        [
+          "z"
+        ]
+      ],
+      "labels_only": [
+        [
+          "z"
+        ]
+      ],
+      "both": [
+        [
+          "z"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-042",
+    "source_kind": "synthetic",
+    "shape": "numbered-parameter-order",
+    "sql": "SELECT $2 COLLATE \"C\" || $1 COLLATE \"C\" AS v;",
+    "sqlite_sql": "SELECT ?2 COLLATE \"C\" || ?1 COLLATE \"C\" AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "b",
+      "a"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "ab"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "ab"
+        ]
+      ],
+      "words_only": [
+        [
+          "ab"
+        ]
+      ],
+      "labels_only": [
+        [
+          "ab"
+        ]
+      ],
+      "both": [
+        [
+          "ab"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-043",
+    "source_kind": "synthetic",
+    "shape": "nullable-anonymous-parameters",
+    "sql": "SELECT COALESCE(? COLLATE \"C\",? COLLATE \"C\") AS v;",
+    "sqlite_sql": "SELECT COALESCE(? COLLATE \"C\",? COLLATE \"C\") AS v;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "text?,text",
+    "parameter_values": [
+      null,
+      "x"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "x"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "x"
+        ]
+      ],
+      "words_only": [
+        [
+          "x"
+        ]
+      ],
+      "labels_only": [
+        [
+          "x"
+        ]
+      ],
+      "both": [
+        [
+          "x"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-044",
+    "source_kind": "synthetic",
+    "shape": "recursive-text",
+    "sql": "WITH RECURSIVE t(v) AS (SELECT 'a' COLLATE \"C\" UNION ALL SELECT v||'x' FROM t WHERE LENGTH(v)<3) SELECT v FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(v) AS (SELECT 'a' COLLATE \"C\" UNION ALL SELECT v||'x' FROM t WHERE LENGTH(v)<3) SELECT v FROM t;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "ax"
+      ],
+      [
+        "axx"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-045",
+    "source_kind": "synthetic",
+    "shape": "recursive-name",
+    "sql": "WITH RECURSIVE t(v) AS (SELECT CAST('a' AS NAME) UNION ALL SELECT CAST(v||'x' AS NAME) COLLATE \"C\" FROM t WHERE LENGTH(v)<3) SELECT v FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(v) AS (SELECT CAST('a' AS NAME) UNION ALL SELECT CAST(v||'x' AS NAME) COLLATE \"C\" FROM t WHERE LENGTH(v)<3) SELECT v FROM t;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true,
+        "collation": "C",
+        "postgres_type": "NAME",
+        "postgres_display_type": "name"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "ax"
+      ],
+      [
+        "axx"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.PostgreSQL-type",
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "words_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "labels_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-046",
+    "source_kind": "synthetic",
+    "shape": "base-override",
+    "sql": "SELECT value COLLATE \"POSIX\" AS v FROM words;",
+    "sqlite_sql": "SELECT value COLLATE \"POSIX\" AS v FROM words;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "POSIX",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "b"
+      ],
+      [
+        "q"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [],
+      "words_only": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ],
+        [
+          "q"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ],
+        [
+          "q"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-047",
+    "source_kind": "synthetic",
+    "shape": "qualified-custom-object",
+    "sql": "SELECT value COLLATE fixture.c_order AS v FROM words;",
+    "sqlite_sql": "SELECT value COLLATE fixture.c_order AS v FROM words;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "custom:c_order",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "b"
+      ],
+      [
+        "q"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [],
+      "words_only": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ],
+        [
+          "q"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ],
+        [
+          "q"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-048",
+    "source_kind": "synthetic",
+    "shape": "using-join",
+    "sql": "SELECT value COLLATE \"C\" AS v FROM words JOIN labels USING(value);",
+    "sqlite_sql": "SELECT value COLLATE \"C\" AS v FROM words JOIN labels USING(value);",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "b"
+      ],
+      [
+        "b"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [],
+      "words_only": [],
+      "labels_only": [],
+      "both": [
+        [
+          "b"
+        ],
+        [
+          "b"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-049",
+    "source_kind": "synthetic",
+    "shape": "nullable-side-custom-object",
+    "sql": "SELECT l.value COLLATE c_order AS v FROM words w LEFT JOIN labels l ON w.value=l.value;",
+    "sqlite_sql": "SELECT l.value COLLATE c_order AS v FROM words w LEFT JOIN labels l ON w.value=l.value;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "custom:c_order",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ],
+      [
+        "b"
+      ],
+      [
+        "b"
+      ],
+      [
+        null
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [],
+      "words_only": [
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          null
+        ],
+        [
+          "b"
+        ],
+        [
+          "b"
+        ],
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "collation-050",
+    "source_kind": "synthetic",
+    "shape": "recursive-base-collation",
+    "sql": "WITH RECURSIVE t(v) AS (SELECT value COLLATE \"C\" FROM words UNION ALL SELECT v||'x' FROM t WHERE LENGTH(v)<2) SELECT v FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(v) AS (SELECT value COLLATE \"C\" FROM words UNION ALL SELECT v||'x' FROM t WHERE LENGTH(v)<2) SELECT v FROM t;",
+    "catalogFile": "fixtures/collations/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "b"
+      ],
+      [
+        "q"
+      ],
+      [
+        "ax"
+      ],
+      [
+        "bx"
+      ],
+      [
+        "qx"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.collation",
+    "expected_rows_by_state": {
+      "empty": [],
+      "words_only": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ],
+        [
+          "q"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "bx"
+        ],
+        [
+          "qx"
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "b"
+        ],
+        [
+          "q"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "bx"
+        ],
+        [
+          "qx"
+        ]
+      ]
+    }
+  }
+]

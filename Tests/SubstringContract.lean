@@ -1,7 +1,7 @@
 import SQLean.Assurance
 import SQLean.RenderContract.Checker
 import SQLean.RenderContract.ValidityPreservation
-import Tests.Support
+import Tests.ContractSupport
 import Lean.Data.Json
 
 namespace SQLean.Tests
@@ -23,7 +23,7 @@ private def substringCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "SUBSTRING SELECT"
-    ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV32 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "SUBSTRING identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -107,9 +107,8 @@ def substringContractTests : IO Nat := do
           let query ← expectOk sql (Advanced.parseQuery sql)
           let params ← expectOk parameter (Assurance.parseContractParameterTypes parameter)
           if valid then
-            SQLean.Tests.assert ((← substringCertificate query params) ==
-                [⟨"v", ⟨.text, expectedNullable⟩⟩]) s!"SUBSTRING typed argument: {sql}; {parameter}"
-          else match SelectContract.checkQuery .basicV31 [] params query with
+            SQLean.Tests.assert (sameOutputTypes (← substringCertificate query params) [{name := "v", type := ⟨.text, expectedNullable⟩}]) s!"SUBSTRING typed argument: {sql}; {parameter}"
+          else match SelectContract.checkQuery .basicV32 [] params query with
           | .error (.invalid diagnostic) =>
               SQLean.Tests.assert (["substring_signature", "substring_length_cast"].contains diagnostic.code)
                 s!"SUBSTRING unsupported concrete signature diagnosis: {sql}; {parameter}"
@@ -123,9 +122,9 @@ def substringContractTests : IO Nat := do
       let params ← expectOk parameter (Assurance.parseContractParameterTypes parameter)
       if pattern || declaration == "BYTEA" then
         let result : SelectContract.ScalarType := if declaration == "BYTEA" then .bytea else .text
-        SQLean.Tests.assert ((← substringCertificate query params) == [⟨"v", ⟨result, nullable⟩⟩])
+        SQLean.Tests.assert (sameOutputTypes (← substringCertificate query params) [{name := "v", type := ⟨result, nullable⟩}])
           s!"SUBSTRING subject type and erased modifiers: {parameter}"
-      else match SelectContract.checkQuery .basicV31 [] params query with
+      else match SelectContract.checkQuery .basicV32 [] params query with
       | .error (.invalid diagnostic) =>
           SQLean.Tests.assert (diagnostic.code == "substring_signature") "invalid SUBSTRING subject"
       | _ => throw (IO.userError s!"SUBSTRING invalid subject accepted: {parameter}")
@@ -153,8 +152,7 @@ def substringContractTests : IO Nat := do
       ("SUBSTRING('abc', 'a', '#')", .text, true),
       ("SUBSTRING('abc'::BYTEA, 2, 1)", .bytea, false),
       ("SUBSTR('abc', 2)", .text, false)] do
-    SQLean.Tests.assert ((← substringOutput ("SELECT " ++ expression ++ " AS v")) ==
-        [⟨"v", ⟨result, nullable⟩⟩]) s!"SUBSTRING overload, unknown, or runtime boundary: {expression}"
+    SQLean.Tests.assert (sameOutputTypes (← substringOutput ("SELECT " ++ expression ++ " AS v")) [{name := "v", type := ⟨result, nullable⟩}]) s!"SUBSTRING overload, unknown, or runtime boundary: {expression}"
     count := count + 1
   for sql in [
       "SELECT SUBSTRING('abc' FROM 1::BIGINT)", "SELECT SUBSTRING('abc' FROM TRUE)",
@@ -162,7 +160,7 @@ def substringContractTests : IO Nat := do
       "SELECT SUBSTRING()", "SELECT SUBSTRING('abc')", "SELECT SUBSTRING('a', 1, 2, 3)",
       "SELECT SUBSTR('abc', 'a'::TEXT)"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"SUBSTRING invalid arity or type: {sql}")
     count := count + 1
@@ -170,7 +168,7 @@ def substringContractTests : IO Nat := do
       "SELECT SUBSTRING((SELECT 'abc') FROM 1)",
       "SELECT SUBSTRING(unregistered_subject() FOR 2)"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV31 [] [] query with
+    match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"SUBSTRING child coverage status: {sql}")
     count := count + 1
@@ -179,7 +177,7 @@ def substringContractTests : IO Nat := do
       if arity != form.arity then
         let expr : Advanced.Expr := .substring form (List.replicate arity (.literal (.int 1)))
         let query : Advanced.Query := {body := .select {items := [.expression expr none]}}
-        match SelectContract.checkQuery .basicV31 [] [] query with
+        match SelectContract.checkQuery .basicV32 [] [] query with
         | .error (.invalid diagnostic) =>
             SQLean.Tests.assert (diagnostic.code == "substring_arity") "manual special-form arity"
         | _ => throw (IO.userError "malformed hand-built SUBSTRING acquired a certificate")
@@ -202,12 +200,12 @@ def substringContractTests : IO Nat := do
   for uses in [[1,3,2], [1,2,4]] do
     let expr : Advanced.Expr := .substring .forFrom (uses.map fun n => .parameter (.anonymous n))
     let query : Advanced.Query := {body := .select {items := [.expression expr none]}}
-    match SelectContract.checkQuery .basicV31 [] params query with
+    match SelectContract.checkQuery .basicV32 [] params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "SUBSTRING semantic permutation must not bypass lexical parameter order")
     count := count + 1
   let query ← expectOk "SUBSTRING fuel" (Advanced.parseQuery "SELECT SUBSTRING('abc' FROM 1)")
-  match SelectContract.checkQuery .basicV31 [] [] query 0 with
+  match SelectContract.checkQuery .basicV32 [] [] query 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "SUBSTRING fuel exhaustion must be Inconclusive")
   pure (count + 1)
@@ -265,16 +263,16 @@ def substringConcreteContractTests : IO Nat := do
     (296, .bytea, false), (311, .bytea, false)]
   let expected : List (String × SelectContract.OutputColumn) :=
     pgStrings.map (fun (n, name, type, nullable) =>
-      (s!"substring:postgres:src/test/regress/sql/strings.sql:statement-{n}", ⟨name, ⟨type, nullable⟩⟩)) ++
+      (s!"substring:postgres:src/test/regress/sql/strings.sql:statement-{n}", {name := name, type := ⟨type, nullable⟩})) ++
     [12,13,14].map (fun (n : Nat) =>
       (s!"substring:postgres:src/test/regress/sql/regex.sql:statement-{n}",
-        ⟨"substring", ⟨.text, true⟩⟩)) ++
+        {name := "substring", type := ⟨.text, true⟩})) ++
     cockroach.map (fun (n, type, nullable) =>
       (s!"substring:cockroach:pkg/sql/logictest/testdata/logic_test/builtin_function:sqllogic-query-{n}",
-        ⟨"substring", ⟨type, nullable⟩⟩)) ++
+        {name := "substring", type := ⟨type, nullable⟩})) ++
     [415,420,425,430,435,440,456,461,466,471,476,489].map (fun (n : Nat) =>
       (s!"substring:materialize:test/sqllogictest/string.slt:sqllogic-query-{n}",
-        ⟨"substring", ⟨.text, false⟩⟩))
+        {name := "substring", type := ⟨.text, false⟩}))
   SQLean.Tests.assert (expected.length == 50 && decide (expected.map (·.1)).Nodup)
     "SUBSTRING authentic registry must contain fifty distinct identities"
   let source ← IO.FS.readFile "fixtures/substring/concrete.jsonl"
@@ -303,7 +301,7 @@ def substringConcreteContractTests : IO Nat := do
         SQLean.Tests.assert (select.source.isNone && select.items.length == 1)
           s!"{id}: registered single source-free projection"
     | _ => throw (IO.userError s!"{id}: registered SELECT structure changed")
-    SQLean.Tests.assert ((← substringCertificate query) == [registered])
+    SQLean.Tests.assert (sameOutputTypes (← substringCertificate query) [registered])
       s!"{id}: exact authentic SUBSTRING output"
     observed := id :: observed
     statements := sql :: statements
