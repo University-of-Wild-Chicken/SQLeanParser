@@ -26,6 +26,10 @@ def checkSQLiteDataType (type : DataType) : Except Failure Unit :=
   | .uuid | .json | .jsonb | .bytea | .name => unsupported "PostgreSQL-type"
   | _ => pure ()
 
+private def sqliteRowOperand : Advanced.Expr → Bool
+  | .row _ => true
+  | _ => false
+
 mutual
   def checkSQLiteExpr (expr : Advanced.Expr) : Except Failure Unit := do
     match expr with
@@ -45,7 +49,13 @@ mutual
     | .pattern left right insensitive =>
         if insensitive then unsupported "ILIKE"
         else checkSQLiteExpr left; checkSQLiteExpr right
-    | .unary _ arg | .aggregate _ arg _ | .isNull arg _ =>
+    | .distinctFrom left right _ =>
+        if sqliteRowOperand left || sqliteRowOperand right then unsupported "row-distinct"
+        else checkSQLiteExpr left; checkSQLiteExpr right
+    | .isNull arg _ =>
+        if sqliteRowOperand arg then unsupported "row-null-test"
+        else checkSQLiteExpr arg
+    | .unary _ arg | .aggregate _ arg _ =>
         checkSQLiteExpr arg
     | .cast arg type => checkSQLiteDataType type; checkSQLiteExpr arg
     | .array _ => unsupported "array-constructor"

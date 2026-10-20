@@ -1,0 +1,536 @@
+{
+  "distinct_from": [
+    {
+      "id": "distinct_from:postgres:src/test/regress/sql/select_distinct.sql:statement-61",
+      "output_columns": [
+        {
+          "name": "yes",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:postgres:src/test/regress/sql/select_distinct.sql:statement-62",
+      "output_columns": [
+        {
+          "name": "no",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:postgres:src/test/regress/sql/select_distinct.sql:statement-63",
+      "output_columns": [
+        {
+          "name": "yes",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:postgres:src/test/regress/sql/select_distinct.sql:statement-64",
+      "output_columns": [
+        {
+          "name": "no",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:postgres:src/test/regress/sql/select_distinct.sql:statement-65",
+      "output_columns": [
+        {
+          "name": "no",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:postgres:src/test/regress/sql/select_distinct.sql:statement-66",
+      "output_columns": [
+        {
+          "name": "yes",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:postgres:src/test/regress/sql/select_distinct.sql:statement-67",
+      "output_columns": [
+        {
+          "name": "no",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:postgres:src/test/regress/sql/select_distinct.sql:statement-68",
+      "output_columns": [
+        {
+          "name": "yes",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-12",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-17",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-22",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-27",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-32",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-37",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-42",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-47",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-52",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-57",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-63",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-68",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-73",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-78",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-83",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:materialize:test/sqllogictest/distinct_from.slt:sqllogic-query-169",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "distinct_from:duckdb:test/sql/types/null/test_boolean_null.test:sqllogic-query-33",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    }
+  ],
+  "null_predicates": [
+    {
+      "id": "null_predicates:materialize:test/sqllogictest/comparison.slt:sqllogic-query-17",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:materialize:test/sqllogictest/comparison.slt:sqllogic-query-27",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:materialize:test/sqllogictest/cockroach/tuple.slt:sqllogic-query-1015",
+      "output_columns": [
+        {
+          "name": "r",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:duckdb:test/sql/peg_parser/transformer/is_predicate_operators.test:sqllogic-query-15",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:duckdb:test/sql/peg_parser/transformer/is_predicate_operators.test:sqllogic-query-20",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:duckdb:test/sql/parser/is_not_null_cast.test:sqllogic-query-15",
+      "output_columns": [
+        {
+          "name": "varchar",
+          "type": "varchar",
+          "nullable": false
+        },
+        {
+          "name": "varchar",
+          "type": "varchar",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-562",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-600",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-643",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-686",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-732",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-768",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-808",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-847",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-890",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-923",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-959",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:h2:h2/src/test/org/h2/test/scripts/predicates/null.sql:embedded-sql-995",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:postgres:src/test/regress/sql/rowtypes.sql:statement-88",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:turso:sqlite/conformance/sqlite-sqltests/null/default.sqltest:embedded-sql-34",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:turso:sqlite/conformance/sqlite-sqltests/null/default.sqltest:embedded-sql-184",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        },
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "id": "null_predicates:sqlparser-rs:tests/sqlparser_common.rs:embedded-sql-657110",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false
+        }
+      ]
+    }
+  ]
+}

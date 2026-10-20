@@ -1,0 +1,1226 @@
+[
+  {
+    "id": "null-predicates-01-isnull-raw-null",
+    "source_kind": "synthetic",
+    "shape": "isnull-raw-null",
+    "sql": "SELECT NULL ISNULL AS v;",
+    "postgres_input": "SELECT NULL ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT NULL ISNULL AS v;",
+    "sqlite_sql": "SELECT NULL ISNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-02-isnull-integer",
+    "source_kind": "synthetic",
+    "shape": "isnull-integer",
+    "sql": "SELECT 1 ISNULL AS v;",
+    "postgres_input": "SELECT 1 ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 ISNULL AS v;",
+    "sqlite_sql": "SELECT 1 ISNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-03-isnull-empty-text",
+    "source_kind": "synthetic",
+    "shape": "isnull-empty-text",
+    "sql": "SELECT '' ISNULL AS v;",
+    "postgres_input": "SELECT '' ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT '' ISNULL AS v;",
+    "sqlite_sql": "SELECT '' ISNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-04-isnull-null-spelling-text",
+    "source_kind": "synthetic",
+    "shape": "isnull-null-spelling-text",
+    "sql": "SELECT 'null' ISNULL AS v;",
+    "postgres_input": "SELECT 'null' ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'null' ISNULL AS v;",
+    "sqlite_sql": "SELECT 'null' ISNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-05-isnull-boolean-false",
+    "source_kind": "synthetic",
+    "shape": "isnull-boolean-false",
+    "sql": "SELECT FALSE ISNULL AS v;",
+    "postgres_input": "SELECT FALSE ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT FALSE ISNULL AS v;",
+    "sqlite_sql": "SELECT FALSE ISNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-06-isnull-nullable-parameter",
+    "source_kind": "synthetic",
+    "shape": "isnull-nullable-parameter",
+    "sql": "SELECT $1 ISNULL AS v;",
+    "postgres_input": "SELECT $1 ISNULL AS v;",
+    "parameter_types": "integer?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?1 ISNULL AS v;",
+    "sqlite_sql": "SELECT ?1 ISNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-07-isnull-nullable-nonnull-parameter",
+    "source_kind": "synthetic",
+    "shape": "isnull-nullable-nonnull-parameter",
+    "sql": "SELECT $1 + 0 ISNULL AS v;",
+    "postgres_input": "SELECT $1 + 0 ISNULL AS v;",
+    "parameter_types": "integer?",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?1 + 0 ISNULL AS v;",
+    "sqlite_sql": "SELECT ?1 + 0 ISNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-08-isnull-anonymous-parameter",
+    "source_kind": "synthetic",
+    "shape": "isnull-anonymous-parameter",
+    "sql": "SELECT ? ISNULL AS v;",
+    "postgres_input": "SELECT $1 ISNULL AS v;",
+    "parameter_types": "text?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ? ISNULL AS v;",
+    "sqlite_sql": "SELECT ? ISNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-09-isnull-reversed-parameters",
+    "source_kind": "synthetic",
+    "shape": "isnull-reversed-parameters",
+    "sql": "SELECT COALESCE($2,$1) ISNULL AS v;",
+    "postgres_input": "SELECT COALESCE($2,$1) ISNULL AS v;",
+    "parameter_types": "text?,text?",
+    "parameter_values": [
+      null,
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT COALESCE(?2,?1) ISNULL AS v;",
+    "sqlite_sql": "SELECT COALESCE(?2,?1) ISNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-10-isnull-json-typed-null",
+    "source_kind": "synthetic",
+    "shape": "isnull-json-typed-null",
+    "sql": "SELECT CAST(NULL AS JSON) ISNULL AS v;",
+    "postgres_input": "SELECT CAST(NULL AS JSON) ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(NULL AS JSON) ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-11-isnull-json-value",
+    "source_kind": "synthetic",
+    "shape": "isnull-json-value",
+    "sql": "SELECT '{}'::JSON ISNULL AS v;",
+    "postgres_input": "SELECT '{}'::JSON ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{}'::JSON ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-12-isnull-jsonb-typed-null",
+    "source_kind": "synthetic",
+    "shape": "isnull-jsonb-typed-null",
+    "sql": "SELECT CAST(NULL AS JSONB) ISNULL AS v;",
+    "postgres_input": "SELECT CAST(NULL AS JSONB) ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(NULL AS JSONB) ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-13-isnull-array-null-elements",
+    "source_kind": "synthetic",
+    "shape": "isnull-array-null-elements",
+    "sql": "SELECT ARRAY[NULL,NULL] ISNULL AS v;",
+    "postgres_input": "SELECT ARRAY[NULL,NULL] ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ARRAY[NULL,NULL] ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-14-isnull-array-typed-null",
+    "source_kind": "synthetic",
+    "shape": "isnull-array-typed-null",
+    "sql": "SELECT CAST(NULL AS INTEGER[]) ISNULL AS v;",
+    "postgres_input": "SELECT CAST(NULL AS INTEGER[]) ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(NULL AS INTEGER[]) ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-15-isnull-empty-row",
+    "source_kind": "synthetic",
+    "shape": "isnull-empty-row",
+    "sql": "SELECT ROW() ISNULL AS v;",
+    "postgres_input": "SELECT ROW() ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW() ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-16-isnull-all-null-row",
+    "source_kind": "synthetic",
+    "shape": "isnull-all-null-row",
+    "sql": "SELECT ROW(NULL,NULL) ISNULL AS v;",
+    "postgres_input": "SELECT ROW(NULL,NULL) ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(NULL,NULL) ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-17-isnull-mixed-row",
+    "source_kind": "synthetic",
+    "shape": "isnull-mixed-row",
+    "sql": "SELECT ROW(1,NULL) ISNULL AS v;",
+    "postgres_input": "SELECT ROW(1,NULL) ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(1,NULL) ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-18-isnull-nonnull-row",
+    "source_kind": "synthetic",
+    "shape": "isnull-nonnull-row",
+    "sql": "SELECT ROW(1,'x') ISNULL AS v;",
+    "postgres_input": "SELECT ROW(1,'x') ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(1,'x') ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-19-isnull-json-null-row",
+    "source_kind": "synthetic",
+    "shape": "isnull-json-null-row",
+    "sql": "SELECT ROW(NULL::JSON,NULL::JSON) ISNULL AS v;",
+    "postgres_input": "SELECT ROW(NULL::JSON,NULL::JSON) ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(NULL::JSON,NULL::JSON) ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-20-isnull-array-mixed-row",
+    "source_kind": "synthetic",
+    "shape": "isnull-array-mixed-row",
+    "sql": "SELECT ROW(ARRAY[NULL]::INTEGER[],NULL) ISNULL AS v;",
+    "postgres_input": "SELECT ROW(ARRAY[NULL]::INTEGER[],NULL) ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(ARRAY[NULL]::INTEGER[],NULL) ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-21-isnull-row-reversed-parameters",
+    "source_kind": "synthetic",
+    "shape": "isnull-row-reversed-parameters",
+    "sql": "SELECT ROW($2,$1) ISNULL AS v;",
+    "postgres_input": "SELECT ROW($2,$1) ISNULL AS v;",
+    "parameter_types": "integer?,integer",
+    "parameter_values": [
+      null,
+      4
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(?2,?1) ISNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-22-isnull-comparison-precedence",
+    "source_kind": "synthetic",
+    "shape": "isnull-comparison-precedence",
+    "sql": "SELECT 1 = NULL ISNULL AS v;",
+    "postgres_input": "SELECT 1 = NULL ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 = NULL ISNULL AS v;",
+    "sqlite_sql": "SELECT 1 = NULL ISNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-23-isnull-postfix-chain",
+    "source_kind": "synthetic",
+    "shape": "isnull-postfix-chain",
+    "sql": "SELECT TRUE ISNULL ISNULL AS v;",
+    "postgres_input": "SELECT TRUE ISNULL ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT TRUE ISNULL ISNULL AS v;",
+    "sqlite_sql": "SELECT TRUE ISNULL ISNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-24-isnull-null-arithmetic",
+    "source_kind": "synthetic",
+    "shape": "isnull-null-arithmetic",
+    "sql": "SELECT 1 + NULL ISNULL AS v;",
+    "postgres_input": "SELECT 1 + NULL ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 + NULL ISNULL AS v;",
+    "sqlite_sql": "SELECT 1 + NULL ISNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-25-isnull-case-null",
+    "source_kind": "synthetic",
+    "shape": "isnull-case-null",
+    "sql": "SELECT CASE WHEN TRUE THEN NULL ELSE TRUE END ISNULL AS v;",
+    "postgres_input": "SELECT CASE WHEN TRUE THEN NULL ELSE TRUE END ISNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT CASE WHEN TRUE THEN NULL ELSE TRUE END ISNULL AS v;",
+    "sqlite_sql": "SELECT CASE WHEN TRUE THEN NULL ELSE TRUE END ISNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-26-notnull-raw-null",
+    "source_kind": "synthetic",
+    "shape": "notnull-raw-null",
+    "sql": "SELECT NULL NOTNULL AS v;",
+    "postgres_input": "SELECT NULL NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT NULL NOTNULL AS v;",
+    "sqlite_sql": "SELECT NULL NOTNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-27-notnull-integer",
+    "source_kind": "synthetic",
+    "shape": "notnull-integer",
+    "sql": "SELECT 1 NOTNULL AS v;",
+    "postgres_input": "SELECT 1 NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 NOTNULL AS v;",
+    "sqlite_sql": "SELECT 1 NOTNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-28-notnull-empty-text",
+    "source_kind": "synthetic",
+    "shape": "notnull-empty-text",
+    "sql": "SELECT '' NOTNULL AS v;",
+    "postgres_input": "SELECT '' NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT '' NOTNULL AS v;",
+    "sqlite_sql": "SELECT '' NOTNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-29-notnull-null-spelling-text",
+    "source_kind": "synthetic",
+    "shape": "notnull-null-spelling-text",
+    "sql": "SELECT 'null' NOTNULL AS v;",
+    "postgres_input": "SELECT 'null' NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'null' NOTNULL AS v;",
+    "sqlite_sql": "SELECT 'null' NOTNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-30-notnull-boolean-false",
+    "source_kind": "synthetic",
+    "shape": "notnull-boolean-false",
+    "sql": "SELECT FALSE NOTNULL AS v;",
+    "postgres_input": "SELECT FALSE NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT FALSE NOTNULL AS v;",
+    "sqlite_sql": "SELECT FALSE NOTNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-31-notnull-nullable-parameter",
+    "source_kind": "synthetic",
+    "shape": "notnull-nullable-parameter",
+    "sql": "SELECT $1 NOTNULL AS v;",
+    "postgres_input": "SELECT $1 NOTNULL AS v;",
+    "parameter_types": "integer?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?1 NOTNULL AS v;",
+    "sqlite_sql": "SELECT ?1 NOTNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-32-notnull-nullable-nonnull-parameter",
+    "source_kind": "synthetic",
+    "shape": "notnull-nullable-nonnull-parameter",
+    "sql": "SELECT $1 + 0 NOTNULL AS v;",
+    "postgres_input": "SELECT $1 + 0 NOTNULL AS v;",
+    "parameter_types": "integer?",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?1 + 0 NOTNULL AS v;",
+    "sqlite_sql": "SELECT ?1 + 0 NOTNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-33-notnull-anonymous-parameter",
+    "source_kind": "synthetic",
+    "shape": "notnull-anonymous-parameter",
+    "sql": "SELECT ? NOTNULL AS v;",
+    "postgres_input": "SELECT $1 NOTNULL AS v;",
+    "parameter_types": "text?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ? NOTNULL AS v;",
+    "sqlite_sql": "SELECT ? NOTNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-34-notnull-reversed-parameters",
+    "source_kind": "synthetic",
+    "shape": "notnull-reversed-parameters",
+    "sql": "SELECT COALESCE($2,$1) NOTNULL AS v;",
+    "postgres_input": "SELECT COALESCE($2,$1) NOTNULL AS v;",
+    "parameter_types": "text?,text?",
+    "parameter_values": [
+      null,
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT COALESCE(?2,?1) NOTNULL AS v;",
+    "sqlite_sql": "SELECT COALESCE(?2,?1) NOTNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-35-notnull-json-typed-null",
+    "source_kind": "synthetic",
+    "shape": "notnull-json-typed-null",
+    "sql": "SELECT CAST(NULL AS JSON) NOTNULL AS v;",
+    "postgres_input": "SELECT CAST(NULL AS JSON) NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(NULL AS JSON) NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-36-notnull-json-value",
+    "source_kind": "synthetic",
+    "shape": "notnull-json-value",
+    "sql": "SELECT '{}'::JSON NOTNULL AS v;",
+    "postgres_input": "SELECT '{}'::JSON NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{}'::JSON NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-37-notnull-jsonb-typed-null",
+    "source_kind": "synthetic",
+    "shape": "notnull-jsonb-typed-null",
+    "sql": "SELECT CAST(NULL AS JSONB) NOTNULL AS v;",
+    "postgres_input": "SELECT CAST(NULL AS JSONB) NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(NULL AS JSONB) NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-38-notnull-array-null-elements",
+    "source_kind": "synthetic",
+    "shape": "notnull-array-null-elements",
+    "sql": "SELECT ARRAY[NULL,NULL] NOTNULL AS v;",
+    "postgres_input": "SELECT ARRAY[NULL,NULL] NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ARRAY[NULL,NULL] NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-39-notnull-array-typed-null",
+    "source_kind": "synthetic",
+    "shape": "notnull-array-typed-null",
+    "sql": "SELECT CAST(NULL AS INTEGER[]) NOTNULL AS v;",
+    "postgres_input": "SELECT CAST(NULL AS INTEGER[]) NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(NULL AS INTEGER[]) NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-40-notnull-empty-row",
+    "source_kind": "synthetic",
+    "shape": "notnull-empty-row",
+    "sql": "SELECT ROW() NOTNULL AS v;",
+    "postgres_input": "SELECT ROW() NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW() NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-41-notnull-all-null-row",
+    "source_kind": "synthetic",
+    "shape": "notnull-all-null-row",
+    "sql": "SELECT ROW(NULL,NULL) NOTNULL AS v;",
+    "postgres_input": "SELECT ROW(NULL,NULL) NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(NULL,NULL) NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-42-notnull-mixed-row",
+    "source_kind": "synthetic",
+    "shape": "notnull-mixed-row",
+    "sql": "SELECT ROW(1,NULL) NOTNULL AS v;",
+    "postgres_input": "SELECT ROW(1,NULL) NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(1,NULL) NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-43-notnull-nonnull-row",
+    "source_kind": "synthetic",
+    "shape": "notnull-nonnull-row",
+    "sql": "SELECT ROW(1,'x') NOTNULL AS v;",
+    "postgres_input": "SELECT ROW(1,'x') NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(1,'x') NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-44-notnull-json-null-row",
+    "source_kind": "synthetic",
+    "shape": "notnull-json-null-row",
+    "sql": "SELECT ROW(NULL::JSON,NULL::JSON) NOTNULL AS v;",
+    "postgres_input": "SELECT ROW(NULL::JSON,NULL::JSON) NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(NULL::JSON,NULL::JSON) NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-45-notnull-array-mixed-row",
+    "source_kind": "synthetic",
+    "shape": "notnull-array-mixed-row",
+    "sql": "SELECT ROW(ARRAY[NULL]::INTEGER[],NULL) NOTNULL AS v;",
+    "postgres_input": "SELECT ROW(ARRAY[NULL]::INTEGER[],NULL) NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(ARRAY[NULL]::INTEGER[],NULL) NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-46-notnull-row-reversed-parameters",
+    "source_kind": "synthetic",
+    "shape": "notnull-row-reversed-parameters",
+    "sql": "SELECT ROW($2,$1) NOTNULL AS v;",
+    "postgres_input": "SELECT ROW($2,$1) NOTNULL AS v;",
+    "parameter_types": "integer?,integer",
+    "parameter_values": [
+      null,
+      4
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(?2,?1) NOTNULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "null-predicates-47-notnull-comparison-precedence",
+    "source_kind": "synthetic",
+    "shape": "notnull-comparison-precedence",
+    "sql": "SELECT 1 = NULL NOTNULL AS v;",
+    "postgres_input": "SELECT 1 = NULL NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 = NULL NOTNULL AS v;",
+    "sqlite_sql": "SELECT 1 = NULL NOTNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-48-notnull-postfix-chain",
+    "source_kind": "synthetic",
+    "shape": "notnull-postfix-chain",
+    "sql": "SELECT TRUE ISNULL NOTNULL AS v;",
+    "postgres_input": "SELECT TRUE ISNULL NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT TRUE ISNULL NOTNULL AS v;",
+    "sqlite_sql": "SELECT TRUE ISNULL NOTNULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "null-predicates-49-notnull-null-arithmetic",
+    "source_kind": "synthetic",
+    "shape": "notnull-null-arithmetic",
+    "sql": "SELECT 1 + NULL NOTNULL AS v;",
+    "postgres_input": "SELECT 1 + NULL NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 + NULL NOTNULL AS v;",
+    "sqlite_sql": "SELECT 1 + NULL NOTNULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "null-predicates-50-notnull-case-null",
+    "source_kind": "synthetic",
+    "shape": "notnull-case-null",
+    "sql": "SELECT CASE WHEN TRUE THEN NULL ELSE TRUE END NOTNULL AS v;",
+    "postgres_input": "SELECT CASE WHEN TRUE THEN NULL ELSE TRUE END NOTNULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT CASE WHEN TRUE THEN NULL ELSE TRUE END NOTNULL AS v;",
+    "sqlite_sql": "SELECT CASE WHEN TRUE THEN NULL ELSE TRUE END NOTNULL AS v;",
+    "sqlite_expected_value": 0
+  }
+]

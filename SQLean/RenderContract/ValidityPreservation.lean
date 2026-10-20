@@ -40,6 +40,10 @@ set_option maxHeartbeats 1000000
     OrdinaryArrayElement (translateExpr expr) ↔ OrdinaryArrayElement expr := by
   cases expr <;> simp only [OrdinaryArrayElement, translateExpr, translateExpr_case]
 
+@[simp] theorem ordinary_distinct_operand_translated (expr : Advanced.Expr) :
+    OrdinaryDistinctOperand (translateExpr expr) ↔ OrdinaryDistinctOperand expr := by
+  cases expr <;> simp only [OrdinaryDistinctOperand, translateExpr, translateExpr_case]
+
 @[simp] theorem scalar_input_translated (expr : Advanced.Expr) (type : ExprType) :
     scalarInput (translateExpr expr) type = scalarInput expr type := by
   cases expr <;> simp [translateExpr, scalarInput]
@@ -120,6 +124,26 @@ mutual
         simpa only [translateExpr, List.attach_map_val, List.map_append] using
           ExprValid.rowComparison (expr_list_valid_translated left) (expr_list_valid_translated right)
             (by simpa only [scalar_inputs_translated] using signature)
+    | distinctScalar left right ordinaryLeft ordinaryRight signature =>
+        simpa only [translateExpr, List.map_append] using
+          ExprValid.distinctScalar (expr_valid_translated left) (expr_valid_translated right)
+            ((ordinary_distinct_operand_translated _).mpr ordinaryLeft)
+            ((ordinary_distinct_operand_translated _).mpr ordinaryRight)
+            (by simpa only [scalar_input_translated] using signature)
+    | distinctNullLeft arg =>
+        simpa only [translateExpr] using ExprValid.distinctNullLeft (expr_valid_translated arg)
+    | distinctNullRight arg =>
+        simpa only [translateExpr] using ExprValid.distinctNullRight (expr_valid_translated arg)
+    | distinctRows left right signature =>
+        simpa only [translateExpr, List.attach_map_val, List.map_append] using
+          ExprValid.distinctRows (expr_list_valid_translated left) (expr_list_valid_translated right)
+            (by simpa only [scalar_inputs_translated] using signature)
+    | distinctRowNullLeft args =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.distinctRowNullLeft (expr_list_valid_translated args)
+    | distinctRowNullRight args =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.distinctRowNullRight (expr_list_valid_translated args)
     | quantifiedComparison left right signature =>
         simpa only [translateExpr, List.map_append] using
           ExprValid.quantifiedComparison (expr_valid_translated left) (expr_valid_translated right)
@@ -134,6 +158,9 @@ mutual
           ((ordinary_unary_translated _ _).mpr ordinary)
     | isNull arg =>
         simpa only [translateExpr] using ExprValid.isNull (expr_valid_translated arg)
+    | isNullRow args =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.isNullRow (expr_list_valid_translated args)
     | pattern arg pattern signature =>
         simpa only [translateExpr, List.map_append] using
           ExprValid.pattern (expr_valid_translated arg) (expr_valid_translated pattern) signature

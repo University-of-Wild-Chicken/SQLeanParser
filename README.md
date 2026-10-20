@@ -27,6 +27,19 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.28 null-predicate increment](docs/null-predicates-contract-v0.28.md)
+adds `IS [NOT] DISTINCT FROM`, postfix `ISNULL`/`NOTNULL`, and flat-row
+null tests. Independent rules distinguish raw NULL shortcuts, exact scalar
+equality, pairwise row equality and field-sensitive row null tests; every
+admitted predicate returns nonnullable BOOL. Each of the two factors has
+fifty authored and fifty unchanged source queries. The fixed authentic
+population has 47 complete certificates with 59 ordered output positions;
+other source queries receive rendering evidence with their dependencies stated.
+SQLite scalar rendering has separate precedence and value expectations,
+including documented string/numeric and CHAR-padding differences. The
+[industrial replay](docs/corpus/null-predicates-v0.28/README.md) remains at
+257 of 276 accepted statements.
+
 The [v0.27 keyword-function increment](docs/keyword-functions-contract-v0.27.md)
 admits PostgreSQL keyword names in ordinary function calls, including `LEFT`
 and `RIGHT`, while retaining their restrictions as bare identifiers.
@@ -329,6 +342,7 @@ python3 scripts/check_json_existence_cli.py --local-bin /usr/lib/postgresql/16/b
 python3 scripts/check_context_values_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_named_arguments_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_keyword_functions_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_null_predicates_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -458,7 +472,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.27` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.28` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

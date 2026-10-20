@@ -584,13 +584,13 @@ mutual
     | 0, _ => fail "expression nesting bound exceeded"
     | fuel + 1, minPrec => do
       let left ← atom fuel
-      tailExpr fuel minPrec left false
+      tailExpr fuel minPrec left 0
 
   private def atom : Nat → Parser Expr
     | 0 => fail "expression nesting bound exceeded"
     | fuel + 1 => do
       preparePrimaryOperator
-      if ← eat "not" then return .unary .not (← expression fuel 4)
+      if ← eat "not" then return .unary .not (← expression fuel 3)
       if ← eat "+" then return .unary .pos (← expression fuel 9)
       if ← eat "-" then return .unary .neg (← expression fuel 9)
       if ← eat "null" then return .null
@@ -873,13 +873,44 @@ mutual
       if ← isAt "when" then return (condition, value) :: (← caseBranches fuel)
       pure [(condition, value)]
 
-  private def tailExpr : Nat → Nat → Expr → Bool → Parser Expr
+  /-- The final argument records a preceding non-associative comparison level.
+  PostgreSQL IS predicates bind below ordinary comparisons; postfix null tests
+  may repeat and restart comparison parsing. SQLite DISTINCT is left-associative
+  at the shared equality/predicate precedence, as are its postfix null aliases. -/
+  private def tailExpr : Nat → Nat → Expr → Nat → Parser Expr
     | 0, _, _, _ => fail "expression input bound exceeded"
     | fuel + 1, minPrec, left, compared => do
       prepareInfixOperator
+      let sqlite ← read
       if minPrec <= 10 && (← eat "::") then
         let type ← dataType fuel
         return ← tailExpr fuel minPrec (.cast left type) compared
+      let isPredicate ← isAt "is"
+      let postfixNull := (← isAt "isnull") || (← isAt "notnull")
+      let nullPrec := if sqlite then 4 else 3
+      if (isPredicate || postfixNull) && minPrec <= nullPrec then
+        if !sqlite && compared == 3 then fail "parenthesize chained IS comparisons"
+        if postfixNull then
+          let negated ← eat "notnull"
+          unless negated do expect "isnull"
+          return ← tailExpr fuel minPrec (.isNull left negated) 0
+        expect "is"
+        let negated ← eat "not"
+        if ← eat "distinct" then
+          expect "from"
+          let right ← expression fuel (nullPrec + 1)
+          return ← tailExpr fuel minPrec (.distinctFrom left right negated) (if sqlite then 0 else 3)
+        if sqlite then
+          -- SQLite IS is an equality-precedence binary operator. A higher
+          -- precedence tail belongs to its right operand, even after NULL.
+          -- Its documented DISTINCT aliases also preserve TRUE/FALSE handling.
+          let right ← expression fuel 5
+          let result := match right with
+            | .null => .isNull left negated
+            | _ => .distinctFrom left right (!negated)
+          return ← tailExpr fuel minPrec result 0
+        expect "null"
+        return ← tailExpr fuel minPrec (.isNull left negated) 0
       let notPredicate := match (← get).tokens with
         | first :: next :: _ =>
           first.kind.keyword == .word "not" &&
@@ -887,17 +918,12 @@ mutual
             | .word "in" | .word "between" | .word "like" | .word "ilike" => true
             | _ => false
         | _ => false
-      let predStart := (← isAt "is") || (← isAt "in") || (← isAt "between") ||
+      let predStart := (← isAt "in") || (← isAt "between") ||
         (← isAt "like") || (← isAt "ilike") || notPredicate
       if minPrec <= 4 && predStart then
-        if compared then fail "parenthesize chained comparisons"
+        if !sqlite && compared == 4 then fail "parenthesize chained comparisons"
         let negated ← eat "not"
-        let result ← if ← eat "is" then do
-          if negated then fail "expected IN, BETWEEN, LIKE or ILIKE after NOT"
-          let notNull ← eat "not"
-          expect "null"
-          pure (.isNull left notNull)
-          else if ← eat "in" then do
+        let result ← if ← eat "in" then do
             expect "("
             let valueList : Parser Expr := do
               let values ← separated (expression fuel 0) fuel
@@ -920,7 +946,7 @@ mutual
             unless insensitive do expect "like"
             let result := Expr.pattern left (← expression fuel 5) insensitive
             pure (if negated then .unary .not result else result)
-        tailExpr fuel minPrec result true
+        tailExpr fuel minPrec result 4
       else
         let existenceOperator := match (← peek).kind with
           | .symbol "?" => some JsonExistenceOp.key
@@ -931,20 +957,20 @@ mutual
           if minPrec > 5 then return left
           let _ ← pop
           let right ← expression fuel 6
-          return ← tailExpr fuel minPrec (.jsonExistence op left right) false
+          return ← tailExpr fuel minPrec (.jsonExistence op left right) 0
         if ← isAt "&&" then
           if minPrec > 5 then return left
           if ← read then fail "PostgreSQL overlap is not supported by the SQLite profile"
           let _ ← pop
           let right ← expression fuel 6
-          return ← tailExpr fuel minPrec (.overlap left right) false
+          return ← tailExpr fuel minPrec (.overlap left right) 0
         if (← isAt "@>") || (← isAt "<@") then
           if minPrec > 5 then return left
           if ← read then fail "PostgreSQL containment is not supported by the SQLite profile"
           let containedBy ← isAt "<@"
           let _ ← pop
           let right ← expression fuel 6
-          return ← tailExpr fuel minPrec (.containment left right containedBy) false
+          return ← tailExpr fuel minPrec (.containment left right containedBy) 0
         let jsonOperator := match (← peek).kind with
           | .symbol "->" => some JsonAccessOp.field
           | .symbol "->>" => some JsonAccessOp.fieldText
@@ -956,7 +982,7 @@ mutual
           if ← read then fail "PostgreSQL JSON extraction is not supported by the SQLite profile"
           let _ ← pop
           let right ← expression fuel 6
-          return ← tailExpr fuel minPrec (.jsonAccess op left right) false
+          return ← tailExpr fuel minPrec (.jsonAccess op left right) 0
         let regexFlags := match (← peek).kind with
           | .symbol "~" => some (false, false)
           | .symbol "~*" => some (true, false)
@@ -968,7 +994,7 @@ mutual
           if ← read then fail "PostgreSQL regular-expression operators are not supported by the SQLite profile"
           let _ ← pop
           let right ← expression fuel 6
-          return ← tailExpr fuel minPrec (.regex left right insensitive negated) false
+          return ← tailExpr fuel minPrec (.regex left right insensitive negated) 0
         if ← isAt "||" then
           -- PostgreSQL places general operators below arithmetic, whereas
           -- SQLite concatenation binds more tightly than multiplication.
@@ -976,13 +1002,17 @@ mutual
           if prec < minPrec then return left
           let _ ← pop
           let right ← expression fuel (prec + 1)
-          return ← tailExpr fuel minPrec (.concat left right) false
+          return ← tailExpr fuel minPrec (.concat left right) 0
         match binInfo (← peek).kind with
-        | some (op, prec) =>
+        | some (op, ordinaryPrec) =>
+          -- Native SQLite inequalities bind above equality/IS/DISTINCT;
+          -- its equality, LIKE, BETWEEN and IN family shares one level.
+          -- PostgreSQL keeps all six comparisons at the same level.
+          let prec := if sqlite && [.lt, .le, .gt, .ge].contains op then 5 else ordinaryPrec
           if prec < minPrec then return left
-          if prec == 4 && compared then fail "parenthesize chained comparisons"
+          if !sqlite && prec == 4 && compared == 4 then fail "parenthesize chained comparisons"
           let _ ← pop
-          if prec == 4 && ((← isAt "any") || (← isAt "some") || (← isAt "all")) then
+          if ordinaryPrec == 4 && ((← isAt "any") || (← isAt "some") || (← isAt "all")) then
             if ← read then fail "quantified array comparisons are not supported by the SQLite profile"
             let comparison ← match op with
               | .eq => pure ComparisonOp.eq | .ne => pure ComparisonOp.ne
@@ -999,9 +1029,9 @@ mutual
             -- expression in PostgreSQL. A cast or other wrapper does.
             if let .scalarQuery _ := right then
               fail "quantified subquery comparison is outside the array-expression profile"
-            return ← tailExpr fuel minPrec (.quantifiedComparison comparison quantifier left right) true
+            return ← tailExpr fuel minPrec (.quantifiedComparison comparison quantifier left right) 4
           let right ← expression fuel (prec + 1)
-          tailExpr fuel minPrec (.binary op left right) (prec == 4)
+          tailExpr fuel minPrec (.binary op left right) (if prec == 4 then 4 else 0)
         | none => pure left
 
   private def selectItem : Nat → Parser SelectItem

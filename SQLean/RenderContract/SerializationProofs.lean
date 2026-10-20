@@ -39,6 +39,8 @@ mutual
         simp only [translateExpr, exprSql, exprSql_translated pg arg, exprSql_translated pg key]
     | jsonExistence op arg key =>
         simp only [translateExpr, exprSql, exprSql_translated pg arg, exprSql_translated pg key]
+    | distinctFrom left right negated =>
+        simp only [translateExpr, exprSql, exprSql_translated pg left, exprSql_translated pg right]
     | containment left right containedBy =>
         simp only [translateExpr, exprSql, exprSql_translated pg left, exprSql_translated pg right]
     | overlap left right =>

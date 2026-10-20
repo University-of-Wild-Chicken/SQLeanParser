@@ -61,6 +61,8 @@ mutual
     | .jsonExistence op arg key => paren (exprSql arg ++ " " ++ op.toSql ++ " " ++ exprSql key)
     -- This spelling supports structural laws only; the checked SQLite profile
     -- excludes PostgreSQL containment operators.
+    | .distinctFrom left right negated =>
+        paren (exprSql left ++ (if negated then " IS NOT DISTINCT FROM " else " IS DISTINCT FROM ") ++ exprSql right)
     | .containment left right containedBy =>
         paren (exprSql left ++ (if containedBy then " <@ " else " @> ") ++ exprSql right)
     | .overlap left right => paren (exprSql left ++ " && " ++ exprSql right)

@@ -768,6 +768,20 @@ def rowComparisonSignature (op : Advanced.ComparisonOp)
     if selected.output != .bool then none
     else if left.length == 1 || rowBtreeCompatible selected then some selected else none
 
+/-- IS DISTINCT FROM uses an exact Boolean equality operator. Raw top-level
+NULL is handled separately by the independent AST judgment, before resolution. -/
+def distinctSignature (left right : ScalarInput) : Option FunctionOverload := do
+  let selected ← equalityOverload left right
+  if selected.output == .bool then some selected else none
+
+/-- Direct row constructors compare corresponding already-transformed fields.
+No field-level raw-NULL shortcut or B-tree strategy is involved. Empty equal
+rows are admitted; unequal arities cannot acquire a derivation. -/
+def rowDistinctSignature (left right : List ScalarInput) :
+    Option (List FunctionOverload) := do
+  if left.length != right.length then none
+  else (left.zip right).mapM fun (a, b) => distinctSignature a b
+
 def nullIfSignature (left right : ScalarInput) : Option ExactType := do
   let signature ← equalityOverload left right
   let first ← signature.inputs.head?

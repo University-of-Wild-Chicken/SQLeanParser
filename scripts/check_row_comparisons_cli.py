@@ -144,14 +144,15 @@ def boundaries():
     unsupported = [
         "SELECT ROW(1,2)", "SELECT (ROW(1,NULL),2) = (ROW(1,NULL),2)",
         "SELECT (NULL::JSON[],1) = (NULL::JSON[],1)",
-        "SELECT ROW(1,2) IS NULL", "SELECT ROW(1,2) IN (ROW(1,2))",
+        "SELECT ROW(1,2) IN (ROW(1,2))",
         "SELECT ROW(1,2) = NULL",
     ]
     syntax = [
         "SELECT ()", "SELECT (1,)", "SELECT ROW(1,)",
         "SELECT (1,2)[1]", "SELECT ROW(1,2)[1]",
     ]
-    for status, queries in (("invalid", invalid), ("unsupported", unsupported)):
+    valid = ["SELECT ROW(1,2) IS NULL"]
+    for status, queries in (("invalid", invalid), ("unsupported", unsupported), ("valid", valid)):
         for sql in queries:
             assert_report(["--assurance", "contract", sql], status, "contract")
     for sql in syntax:
@@ -160,7 +161,7 @@ def boundaries():
         assert result.returncode == 1 and report["status"] == "invalid", report
         assert report["diagnostic"]["code"] == "input.parse", report
     assert_report(["--assurance", "checked", "SELECT (1,2) < (1,3)"], "rejected", "checked")
-    return len(invalid) + len(unsupported) + len(syntax) + 1
+    return len(invalid) + len(unsupported) + len(valid) + len(syntax) + 1
 
 
 def main():

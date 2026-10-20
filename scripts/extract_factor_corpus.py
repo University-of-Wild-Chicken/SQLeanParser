@@ -33,6 +33,8 @@ from observe_named_argument_source import (
 )
 from observe_keyword_function_source import observe_keyword_functions, validate_keyword_functions
 from extract_go_query_literal import selected_go_query, selected_whole_sql
+from extract_null_predicate_input import selected_null_input
+from observe_null_predicate_source import FACTORS as NULL_FACTORS, observe_null_predicates, validate_null_predicates
 
 ROOT = Path(__file__).resolve().parents[1]
 POPULATIONS = {
@@ -66,6 +68,10 @@ POPULATIONS = {
                        "duckdb": 4, "risingwave": 1},
     "named_arguments": {"postgres": 42, "sqlc": 8},
     "keyword_functions": {"postgres": 1, "river": 1, "materialize": 14, "doltgresql": 34},
+    "distinct_from": {"postgres": 18, "materialize": 20, "duckdb": 12},
+    "null_predicates": {"h2": 22, "sqlite": 10, "materialize": 3, "duckdb": 3,
+                        "postgres": 2, "turso": 2, "sqlglot": 5, "sqlparser-rs": 1,
+                        "jsqlparser": 1, "calcite": 1},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -1231,6 +1237,8 @@ def observe_oracle(sql: str, factor: str) -> dict:
     observer.locks = []
     observer(tree)
     allowed = {"general-function-call", "comma-from", "expression-limit-offset", "extended-type"}
+    if factor in NULL_FACTORS:
+        allowed.update(("extended-operator", "row-constructor"))
     if factor == "qualified_names":
         allowed.update(("schema-qualified-relation", "multi-part-column",
                         "conditional-expression", "extended-operator"))
@@ -1365,6 +1373,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "keyword_functions":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation.update(observe_keyword_functions(parsed, sql))
+    if factor in NULL_FACTORS:
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation.update(observe_null_predicates(parsed, sql, factor))
     return observation
 
 
@@ -1475,6 +1486,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.update(("named_calls", "source_free"))
         if factor == "keyword_functions":
             expected_keys.update(("keyword_functions", "source_free"))
+        if factor in NULL_FACTORS:
+            expected_keys.update((factor, "source_free"))
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -1656,6 +1669,8 @@ def validate_population(records: list[dict], factor: str) -> None:
                 named_functions.update([call["function"]])
                 named_notations.update(arg["notation"] for arg in call["named_arguments"])
                 named_mixed += None in call["argument_names"]
+        if factor in NULL_FACTORS:
+            validate_null_predicates(observation, factor, row["sql"])
         if factor == "keyword_functions":
             validate_keyword_functions(observation, row["sql"])
             keyword_scopes.update([observation["source_free"]])
@@ -1797,6 +1812,11 @@ def validate_population(records: list[dict], factor: str) -> None:
             or named_notations != {":=": 36, "=>": 51}
             or not set(INTERFACE_CASES) <= {row["id"] for row in records}):
         raise ValueError("named-call population must retain its fixed routines, order and source scopes")
+    if factor in NULL_FACTORS:
+        scopes = Counter(row["observed_syntax"]["source_free"] for row in records)
+        expected = {True: 25, False: 25} if factor == "distinct_from" else {True: 23, False: 27}
+        if scopes != expected:
+            raise ValueError("NULL-source scope population changed")
     if factor == "keyword_functions" and (
             keyword_heads != {"left": 26, "right": 25}
             or keyword_scopes != {True: 49, False: 1} or keyword_nulls != 4
@@ -1829,7 +1849,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names", "context_values", "named_arguments", "keyword_functions"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names", "context_values", "named_arguments", "keyword_functions"} | NULL_FACTORS | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -1839,7 +1859,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             raise ValueError("selection has no pinned source input")
         used.add(key)
         if selection["selector"]["kind"] == "tcl_sql_statement":
-            if factor not in {*MERGED_FACTORS, "row_comparisons"} or name != "sqlite":
+            if factor not in {*MERGED_FACTORS, "row_comparisons", "null_predicates"} or name != "sqlite":
                 raise ValueError("Tcl SQL selection is outside its explicit source factors")
             sql, line, detail = selected_tcl_sql(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "sqllogic_query":
@@ -1848,7 +1868,8 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                     ("array_concatenation", "risingwave"),
                     ("array_containment", "risingwave"), ("array_overlap", "risingwave"),
                     ("array_overlap", "readyset"), ("interval_fields", "duckdb"),
-                    ("context_values", "duckdb"), ("context_values", "risingwave")}):
+                    ("context_values", "duckdb"), ("context_values", "risingwave"),
+                    ("distinct_from", "duckdb"), ("null_predicates", "duckdb")}):
                 raise ValueError("SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_sqllogic_sql(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "rust_string":
@@ -1856,10 +1877,17 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                 raise ValueError("Rust query selection is outside its explicit source factor")
             sql, line, detail = selected_rust_sql(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "cockroach_sqllogic_query":
-            if factor not in {"substring", "json_existence", "context_values", "keyword_functions"} or name not in {"cockroach", "materialize"}:
+            if factor not in {"substring", "json_existence", "context_values", "keyword_functions"} | NULL_FACTORS or name not in {"cockroach", "materialize"}:
                 raise ValueError("Cockroach SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_cockroach_sql(
-                files[key], selection["selector"], boolean_queries=factor == "json_existence")
+                files[key], selection["selector"], boolean_queries=factor == "json_existence",
+                null_predicates=factor in NULL_FACTORS)
+        elif selection["selector"]["kind"] == "embedded_null_input":
+            expected = {"h2": "h2", "turso": "turso", "sqlglot": "python",
+                        "sqlparser-rs": "rust", "jsqlparser": "java", "calcite": "calcite"}
+            if factor != "null_predicates" or expected.get(name) != selection["selector"].get("context"):
+                raise ValueError("embedded input is outside its registered source factor")
+            sql, line, detail = selected_null_input(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "go_string_literal":
             if ((factor, name) not in {("context_values", "pgweb"), ("context_values", "river"),
                                       ("keyword_functions", "doltgresql")} or not path.endswith(".go")):
@@ -1870,7 +1898,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if factor != "context_values" or name != "pgweb" or not path.endswith(".sql"):
                 raise ValueError("whole SQL file selection is outside its explicit source factor")
             sql, line, detail = selected_whole_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names", "context_values", "named_arguments", "keyword_functions"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names", "context_values", "named_arguments", "keyword_functions"} | NULL_FACTORS | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])
@@ -1885,6 +1913,8 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                   if detail.get("extraction") == "rust_string"
                   else f"go-string-{detail['source_start']}"
                   if detail.get("extraction") == "go_string_literal"
+                  else f"embedded-sql-{detail['source_start']}"
+                  if detail.get("extraction") == "embedded_null_input"
                   else "whole-file"
                   if detail.get("extraction") == "whole_sql_file"
                   else detail.get("symbol", f"statement-{detail.get('statement_index')}"))

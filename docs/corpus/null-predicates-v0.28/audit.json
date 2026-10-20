@@ -1,0 +1,133 @@
+{
+  "format_version": 1,
+  "scope": "single-statement syntax acceptance only",
+  "sql_executed": false,
+  "git_head": "4c66110ac19e4b1be919f8beee7a3396e5a47777",
+  "tracked_worktree_changes": ".github/workflows/ci.yml\nMain.lean\nREADME.md\nSQLean/AdvancedDDL.lean\nSQLean/AdvancedEquality.lean\nSQLean/AdvancedParser.lean\nSQLean/AdvancedPretty.lean\nSQLean/AdvancedQueryValidation.lean\nSQLean/AdvancedSyntax.lean\nSQLean/RenderContract/Admissibility.lean\nSQLean/RenderContract/SQLiteAdmissibility.lean\nSQLean/RenderContract/SQLiteSerializationProofs.lean\nSQLean/RenderContract/SerializationProofs.lean\nSQLean/RenderContract/Translation.lean\nSQLean/RenderContract/TranslationProofs.lean\nSQLean/RenderContract/ValidityPreservation.lean\nSQLean/SQLitePretty.lean\nSQLean/SelectContract/Checker.lean\nSQLean/SelectContract/Profile.lean\nSQLean/SelectContract/ScalarSignatures.lean\nSQLean/SelectContract/Spec.lean\nTests.lean\nTests/ArrayConcatenationContract.lean\nTests/ArrayConstructorContract.lean\nTests/ArrayPredicateContract.lean\nTests/ArrayQuantifiedContract.lean\nTests/ArraySubscriptContract.lean\nTests/ArrayTypeContract.lean\nTests/ConcatenationContract.lean\nTests/ContextValuesContract.lean\nTests/DerivedContract.lean\nTests/DerivedPreservation.lean\nTests/ExtendedTypeCorpus.lean\nTests/ExtractContract.lean\nTests/IntervalFieldsContract.lean\nTests/JoinContract.lean\nTests/JoinPreservation.lean\nTests/JsonContainmentContract.lean\nTests/JsonExistenceContract.lean\nTests/JsonExtractionContract.lean\nTests/KeywordFunctionsContract.lean\nTests/KeywordFunctionsRendering.lean\nTests/LockingContract.lean\nTests/MergedJoinContract.lean\nTests/MergedJoinPreservation.lean\nTests/NamedArgumentsContract.lean\nTests/PaginationCorpus.lean\nTests/ParserDispatch.lean\nTests/PatternMatchingContract.lean\nTests/QualifiedNamesContract.lean\nTests/QualifiedNamesRendering.lean\nTests/RelationalParsing.lean\nTests/RowComparisonContract.lean\nTests/RowComparisonRendering.lean\nTests/ScalarFormCorpus.lean\nTests/SelectContract.lean\nTests/SubstringContract.lean\ndocs/releases/0.0.1-alpha.md\nscripts/check_assurance_cli.py\nscripts/check_postgresql_grammar_cli.py\nscripts/check_row_comparisons_cli.py\nscripts/extract_cockroach_sqllogic_sql.py\nscripts/extract_factor_corpus.py\nscripts/test_row_comparisons_cli.py",
+  "python": "3.10.11",
+  "pglast": "v7.21",
+  "postgres_parser_version": [
+    17,
+    7
+  ],
+  "binary_sha256": "7097fb0b3e1b31f0f8e264d45ec57c4ff7ef95471ea616155851bf0071c6d570",
+  "inputs": {
+    "fixtures/external_postgresql/benchbase.jsonl": "2d096ede54dac15d6db0088a1f7db48a977f322887a9d9ad865951a58f643986",
+    "fixtures/external_postgresql/river.jsonl": "438c403a35442f136996ed93bd3e188f9def9dbb6a79c6f509f2a64f8a9fe50a",
+    "fixtures/external_postgresql/temporal.jsonl": "4ac828ce17e3a59fbf398f27e065676a594b33367a6c6ef3b85a05b0d5ca654a"
+  },
+  "runner_sha256": "f715187f50a063e9190a2a023dcc790b33968d3af9bd41356d70baa0cb68604e",
+  "lean_sources_sha256": "b2f07850184f540c52f6790f6f08bfa84989e2d83ee096dbb34c1cc11c1f95ae",
+  "timeout_seconds": 5,
+  "summary": {
+    "records": 276,
+    "unique_sql": 260,
+    "sqlean_on_unique_postgres_accepted": {
+      "accepted": 241,
+      "rejected": 19
+    },
+    "postgres_accepted": 276,
+    "postgres_rejected": 0,
+    "extraction_errors": 0,
+    "sqlean_on_postgres_accepted": {
+      "accepted": 257,
+      "rejected": 19
+    },
+    "sqlean_on_oracle_excluded": {},
+    "candidate_features_in_rejected_queries": {
+      "extended-type": 14,
+      "conditional-expression": 13,
+      "general-function-call": 11,
+      "array-or-subscripting": 9,
+      "row-locking": 8,
+      "update-from": 7,
+      "data-modifying-cte": 6,
+      "with-before-dml": 5,
+      "extended-operator": 4,
+      "expression-limit-offset": 3,
+      "values-query": 2,
+      "delete-using": 2,
+      "quantified-comparison": 2,
+      "statement:ViewStmt": 1,
+      "non-table-ddl": 1,
+      "default-expression": 1,
+      "window-function": 1,
+      "quantified-or-array-subquery": 1
+    },
+    "untagged_rejections": 0,
+    "accepted_interpretation_watchlist": [
+      "river:riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go:columnExists"
+    ],
+    "sources": {
+      "benchbase:smallbank": {
+        "records": 21,
+        "postgres_accepted": 21,
+        "sqlean_on_postgres_accepted": {
+          "accepted": 21
+        },
+        "oracle_excluded": 0
+      },
+      "benchbase:tatp": {
+        "records": 12,
+        "postgres_accepted": 12,
+        "sqlean_on_postgres_accepted": {
+          "accepted": 12
+        },
+        "oracle_excluded": 0
+      },
+      "benchbase:tpcc": {
+        "records": 33,
+        "postgres_accepted": 33,
+        "sqlean_on_postgres_accepted": {
+          "accepted": 33
+        },
+        "oracle_excluded": 0
+      },
+      "benchbase:tpch": {
+        "records": 24,
+        "postgres_accepted": 24,
+        "sqlean_on_postgres_accepted": {
+          "accepted": 22,
+          "rejected": 2
+        },
+        "oracle_excluded": 0
+      },
+      "benchbase:twitter": {
+        "records": 7,
+        "postgres_accepted": 7,
+        "sqlean_on_postgres_accepted": {
+          "accepted": 6,
+          "rejected": 1
+        },
+        "oracle_excluded": 0
+      },
+      "benchbase:ycsb": {
+        "records": 7,
+        "postgres_accepted": 7,
+        "sqlean_on_postgres_accepted": {
+          "accepted": 7
+        },
+        "oracle_excluded": 0
+      },
+      "river": {
+        "records": 56,
+        "postgres_accepted": 56,
+        "sqlean_on_postgres_accepted": {
+          "accepted": 41,
+          "rejected": 15
+        },
+        "oracle_excluded": 0
+      },
+      "temporal": {
+        "records": 116,
+        "postgres_accepted": 116,
+        "sqlean_on_postgres_accepted": {
+          "accepted": 115,
+          "rejected": 1
+        },
+        "oracle_excluded": 0
+      }
+    }
+  },
+  "results_sha256": "75ab686289d80b42117bfa0a3506d55f9361854a9e05419fa3aa9b1df3da8eb2"
+}

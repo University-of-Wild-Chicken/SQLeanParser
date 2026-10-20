@@ -120,9 +120,12 @@ def rowComparisonRenderingTests : IO Nat := do
       (.binary .ge (.row [.coalesce [anon 1, .null], anon 2])
         (.row [anon 3, .caseExpr none [(.literal (.bool true), anon 4)] (some .null)]),
         [.anonymous 1, .anonymous 2, .anonymous 3, .anonymous 4]),
-      (.binary .eq (.row [.row [1, 2], .row [3, 4]]) (.row [.row [1, 2], .row [3, 4]]), []),
-      (.isNull (.row [anon 1, anon 2]), [.anonymous 1, .anonymous 2])] do
+      (.binary .eq (.row [.row [1, 2], .row [3, 4]]) (.row [.row [1, 2], .row [3, 4]]), [])] do
     count := count + (← checkQuery (queryOf expr) parameters)
+  let rowNull := queryOf (.isNull (.row [anon 1, anon 2]))
+  count := count + (← checkQuery rowNull [.anonymous 1, .anonymous 2] false)
+  rejected .sqliteV01 rowNull "unsupported" "coverage.sqlite.row-null-test"
+  count := count + 1
   -- PostgreSQL can represent empty/single-field rows and standalone composites;
   -- their presence alone is not a basic-contract typing certificate.
   for elements in [([] : List Advanced.Expr), [1], [1, 2], [.row []]] do

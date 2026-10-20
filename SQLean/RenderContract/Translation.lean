@@ -36,6 +36,8 @@ mutual
         .regex (translateExpr arg) (translateExpr pattern) insensitive negated
     | .jsonAccess op arg key => .jsonAccess op (translateExpr arg) (translateExpr key)
     | .jsonExistence op arg key => .jsonExistence op (translateExpr arg) (translateExpr key)
+    | .distinctFrom left right negated =>
+        .distinctFrom (translateExpr left) (translateExpr right) negated
     | .containment left right containedBy =>
         .containment (translateExpr left) (translateExpr right) containedBy
     | .overlap left right => .overlap (translateExpr left) (translateExpr right)

@@ -23,8 +23,13 @@ def parserDispatchTests : IO Nat := do
     | _ => throw (IO.userError "context value lost its advanced AST")
     let _ ← expectOk s!"quoted {name}" (parseStatement s!"SELECT \"{name}\" FROM users")
     let _ ← expectOk s!"literal {name}" (parseStatement s!"SELECT '{name}' FROM users")
-  let predicates := ["SELECT id ISNULL FROM users", "SELECT id NOTNULL FROM users",
-    "SELECT * FROM ONLY users", "UPDATE ONLY users SET age = 1", "DELETE FROM ONLY users"]
+  for (spelling, negated) in [("ISNULL", false), ("NOTNULL", true)] do
+    match ← expectOk spelling (parseStatement s!"SELECT id {spelling} FROM users") with
+    | .extended (.query {body := .select select, ..}) =>
+        SQLean.Tests.assert (select.items == [.expression (.isNull (.column none "id") negated)])
+          "postfix null-test spelling was interpreted as a compatibility alias"
+    | _ => throw (IO.userError "postfix null test lost its advanced AST")
+  let predicates := ["SELECT * FROM ONLY users", "UPDATE ONLY users SET age = 1", "DELETE FROM ONLY users"]
   for sql in predicates do
     expectError sql (parseStatement sql)
   let quoted := ["SELECT id AS \"ISNULL\" FROM users", "SELECT id AS \"NOTNULL\" FROM users",
@@ -40,6 +45,6 @@ def parserDispatchTests : IO Nat := do
   match ← expectOk "ordinary row column" (parseStatement "SELECT row FROM users") with
   | .select _ => pure ()
   | _ => throw (IO.userError "ROW lookahead changed an ordinary compatibility column")
-  pure (3 * (special.length + contextValues.length) + predicates.length + quoted.length + rows.length + 1)
+  pure (3 * (special.length + contextValues.length) + predicates.length + quoted.length + rows.length + 3)
 
 end SQLean.Tests

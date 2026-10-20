@@ -1,0 +1,1666 @@
+{
+  "format_version": 1,
+  "factor": "null_predicates",
+  "expected_count": 50,
+  "expected_sources": {
+    "h2": 22,
+    "sqlite": 10,
+    "materialize": 3,
+    "duckdb": 3,
+    "postgres": 2,
+    "turso": 2,
+    "sqlglot": 5,
+    "sqlparser-rs": 1,
+    "jsqlparser": 1,
+    "calcite": 1
+  },
+  "sources": {
+    "h2": {
+      "repository": "https://github.com/h2database/h2database",
+      "commit": "03bdf4d8b68d4de13a163830821f66ab11acfc1f",
+      "license": "MPL-2.0 OR EPL-1.0",
+      "license_file": "fixtures/factor_sources/licenses/h2-LICENSE.txt",
+      "license_sha256": "827b84bb8f84dbd60d1a8955cefab142d65cc17d267e32996db400138a1e0fcf",
+      "license_source_url": "https://raw.githubusercontent.com/h2database/h2database/03bdf4d8b68d4de13a163830821f66ab11acfc1f/LICENSE.txt",
+      "source_kind": "engine-regression",
+      "source_dialect": "h2",
+      "files": [
+        {
+          "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+          "local_path": "fixtures/factor_sources/sources/h2/h2/src/test/org/h2/test/scripts/predicates/null.sql",
+          "sha256": "3afd160740606d6cd68621457406d3478b6dfb1f5e627dc85da65302702c13a4"
+        }
+      ]
+    },
+    "sqlite": {
+      "repository": "https://github.com/sqlite/sqlite",
+      "commit": "5484850c7a2cd90f2a06b8d4f3453b259aefc1e1",
+      "ref": "master",
+      "license": "Public Domain",
+      "license_file": "fixtures/factor_sources/licenses/sqlite-LICENSE.md",
+      "license_sha256": "c9053892d578840a196d588ff68baa9bc0f5240eb215fb9cf91cd6b0b3209305",
+      "source_kind": "engine-regression",
+      "source_dialect": "sqlite",
+      "files": [
+        {
+          "path": "test/join.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/join.test",
+          "sha256": "1628296fe67e3c5beb5172ead40983908c80f506497cc517db52f7ae1224e621"
+        },
+        {
+          "path": "test/join8.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/join8.test",
+          "sha256": "8e662f0ad075b5b6d1c71b71c915461d35858fef6144761c50d763e81c9d0f21"
+        },
+        {
+          "path": "test/joinH.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/joinH.test",
+          "sha256": "8ba879923e875a894e7c920adefd98e89c78fea45438dad54048d918d6ab0ae4"
+        },
+        {
+          "path": "test/types.test",
+          "local_path": "fixtures/factor_sources/sources/sqlite/test/types.test",
+          "sha256": "7799586015a5d644cec0fe6d5ea0c808646f821748e205e70527649a9b180314"
+        }
+      ]
+    },
+    "materialize": {
+      "repository": "https://github.com/MaterializeInc/materialize",
+      "commit": "726570dba1d2e4d839c707a84a986fb3b3acc5c3",
+      "ref": "pinned main snapshot",
+      "license": "BSL-1.1 (change date 2030-10-20; change license Apache-2.0)",
+      "source_kind": "engine-regression",
+      "source_dialect": "materialize",
+      "license_file": "fixtures/factor_sources/licenses/materialize-20261020-LICENSE",
+      "license_sha256": "5d4ca070f541414a03ad8b84021e4ba3deeca4025e4b4274053abaa2e93ec032",
+      "files": [
+        {
+          "path": "test/sqllogictest/cockroach/tuple.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/cockroach/tuple.slt",
+          "sha256": "0f8e405c5aae74ed81c3b0fdf9138701681e154dfd079348245f9262fe7e17c4"
+        },
+        {
+          "path": "test/sqllogictest/comparison.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/comparison.slt",
+          "sha256": "730bbe5a134a1f68ec19446462d214d1ba6268cf2300b572c3adcffa04ad5b79"
+        }
+      ]
+    },
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "source_kind": "engine-regression",
+      "source_dialect": "duckdb",
+      "files": [
+        {
+          "path": "test/sql/parser/is_not_null_cast.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/parser/is_not_null_cast.test",
+          "sha256": "a0c66bdab0edf63e657fa6bfa78c69013f722b9e6469c0ba468ee9eecb4ea2df"
+        },
+        {
+          "path": "test/sql/peg_parser/transformer/is_predicate_operators.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/peg_parser/transformer/is_predicate_operators.test",
+          "sha256": "22550dd3577fb615934c8419d8e922f05f873baa19d7a6566d634c6d515ee81e"
+        }
+      ]
+    },
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/rowtypes.sql",
+          "sha256": "b2ab6529278b567f30c06a9a73672a1749249ada2d624b920c8768b7198161ea",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/rowtypes.sql"
+        },
+        {
+          "path": "src/test/regress/sql/rules.sql",
+          "sha256": "22ac67103455ff1771c832ec9de649fa9ecaed1987d0087135e05dc454d543f8",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/rules.sql"
+        }
+      ]
+    },
+    "turso": {
+      "repository": "https://github.com/tursodatabase/turso",
+      "commit": "9a80037f68973871b16fc228f66b92679f9bc9ac",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/turso-LICENSE.md",
+      "license_sha256": "b646f9ee8bcaf87e8de75153b9df7a2861c7ac445c87e741768b3c2bccf47bc5",
+      "license_source_url": "https://raw.githubusercontent.com/tursodatabase/turso/9a80037f68973871b16fc228f66b92679f9bc9ac/LICENSE.md",
+      "source_kind": "engine-regression",
+      "source_dialect": "turso",
+      "additional_notices": [
+        {
+          "path": "NOTICE.md",
+          "local_path": "fixtures/factor_sources/licenses/turso-NOTICE.md",
+          "sha256": "2c07a6ef73f036712c31f372fd53be63c5522da1986fbeb91da9c83353a0946b",
+          "source_url": "https://raw.githubusercontent.com/tursodatabase/turso/9a80037f68973871b16fc228f66b92679f9bc9ac/NOTICE.md"
+        }
+      ],
+      "files": [
+        {
+          "path": "sqlite/conformance/sqlite-sqltests/null/default.sqltest",
+          "local_path": "fixtures/factor_sources/sources/turso/sqlite/conformance/sqlite-sqltests/null/default.sqltest",
+          "sha256": "91f3c369262849907424b5d0918dfa9038ed23944c2703f03cbcf206891119a5"
+        }
+      ]
+    },
+    "sqlglot": {
+      "repository": "https://github.com/tobymao/sqlglot",
+      "commit": "68cd4a2d8f766132e338721df8676e0b42d6b7ca",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/sqlglot-LICENSE",
+      "license_sha256": "b0bf909b472ddf9bd4eab30f6e6fd8b33bf3997ce038b882fe0663f291958d2d",
+      "license_source_url": "https://raw.githubusercontent.com/tobymao/sqlglot/68cd4a2d8f766132e338721df8676e0b42d6b7ca/LICENSE",
+      "source_kind": "parser-regression",
+      "source_dialect": "sqlglot",
+      "files": [
+        {
+          "path": "tests/dialects/test_postgres.py",
+          "local_path": "fixtures/factor_sources/sources/sqlglot/tests/dialects/test_postgres.py",
+          "sha256": "2e181e79573e6f2cc4c4be3efd0e645123cc13999db96d06da1c9d4df56f635d"
+        }
+      ]
+    },
+    "sqlparser-rs": {
+      "repository": "https://github.com/apache/datafusion-sqlparser-rs",
+      "commit": "3330dc9e7ca73930a32d069d4c0338dea470b40f",
+      "license": "Apache-2.0",
+      "license_file": "fixtures/factor_sources/licenses/sqlparser-rs-LICENSE.TXT",
+      "license_sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+      "license_source_url": "https://raw.githubusercontent.com/apache/datafusion-sqlparser-rs/3330dc9e7ca73930a32d069d4c0338dea470b40f/LICENSE.TXT",
+      "source_kind": "parser-regression",
+      "source_dialect": "sqlparser-rs",
+      "additional_notices": [
+        {
+          "path": "NOTICE.TXT",
+          "local_path": "fixtures/factor_sources/licenses/sqlparser-rs-NOTICE.TXT",
+          "sha256": "bb3ca1682483387eb1f4e538b226f83856212488f11ebad1bd71bb928a44f5e9",
+          "source_url": "https://raw.githubusercontent.com/apache/datafusion-sqlparser-rs/3330dc9e7ca73930a32d069d4c0338dea470b40f/NOTICE.TXT"
+        }
+      ],
+      "files": [
+        {
+          "path": "tests/sqlparser_common.rs",
+          "local_path": "fixtures/factor_sources/sources/sqlparser-rs/tests/sqlparser_common.rs",
+          "sha256": "5ea55227c53b97f9ae0253396d5ac20b935970f09f489b2c4047633c9d64a01e"
+        }
+      ]
+    },
+    "jsqlparser": {
+      "repository": "https://github.com/JSQLParser/JSqlParser",
+      "commit": "f6ac2571e6e9777d6a5ee942a4ea53cd91153e4d",
+      "license": "Apache-2.0 OR LGPL-2.1",
+      "license_file": "fixtures/factor_sources/licenses/jsqlparser-LICENSE_APACHEV2",
+      "license_sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+      "license_source_url": "https://raw.githubusercontent.com/JSQLParser/JSqlParser/f6ac2571e6e9777d6a5ee942a4ea53cd91153e4d/LICENSE_APACHEV2",
+      "source_kind": "parser-regression",
+      "source_dialect": "jsqlparser",
+      "additional_notices": [
+        {
+          "path": "LICENSE_LGPLV21",
+          "local_path": "fixtures/factor_sources/licenses/jsqlparser-LICENSE_LGPLV21",
+          "sha256": "9b872a8a070b8ad329c4bd380fb1bf0000f564c75023ec8e1e6803f15364b9e9",
+          "source_url": "https://raw.githubusercontent.com/JSQLParser/JSqlParser/f6ac2571e6e9777d6a5ee942a4ea53cd91153e4d/LICENSE_LGPLV21"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/test/java/net/sf/jsqlparser/expression/operators/relational/IsNullExpressionTest.java",
+          "local_path": "fixtures/factor_sources/sources/jsqlparser/src/test/java/net/sf/jsqlparser/expression/operators/relational/IsNullExpressionTest.java",
+          "sha256": "1b88f233aef3cee209aa09b4cb8f25c6200092759c4c626d5047fbd272e41023"
+        }
+      ]
+    },
+    "calcite": {
+      "repository": "https://github.com/apache/calcite",
+      "commit": "83a36ba09be41ce447773feb231716b2b4e71198",
+      "license": "Apache-2.0",
+      "license_file": "fixtures/factor_sources/licenses/calcite-LICENSE",
+      "license_sha256": "530c12df4df6cbfd34cb3cf42a3bb900185942f3c4c08b4d64984818940af5e1",
+      "license_source_url": "https://raw.githubusercontent.com/apache/calcite/83a36ba09be41ce447773feb231716b2b4e71198/LICENSE",
+      "source_kind": "engine-regression",
+      "source_dialect": "calcite",
+      "additional_notices": [
+        {
+          "path": "NOTICE",
+          "local_path": "fixtures/factor_sources/licenses/calcite-NOTICE",
+          "sha256": "7d04aa2cc4bb1991ac646e2dfce23880d4e5c8f1c42a9746866bce4066015db1",
+          "source_url": "https://raw.githubusercontent.com/apache/calcite/83a36ba09be41ce447773feb231716b2b4e71198/NOTICE"
+        }
+      ],
+      "files": [
+        {
+          "path": "core/src/test/resources/sql/struct.iq",
+          "local_path": "fixtures/factor_sources/sources/calcite/core/src/test/resources/sql/struct.iq",
+          "sha256": "3e147862a5ec5998f81b88670554d265adb70203b30d21ad599c00987bf86434"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/comparison.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 17,
+        "start": 438,
+        "end": 454
+      },
+      "sql_sha256": "31efcac19f6e1795197e21a66baec7ab15837f15bba34cbf54bfe3689934d918",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 9,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/comparison.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 27,
+        "start": 513,
+        "end": 532
+      },
+      "sql_sha256": "c0cf92220b3e19b2d67c2dea28c509a8672ede8a8cb77635e4b918f61adc3f79",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 12,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/cockroach/tuple.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 1015,
+        "start": 18891,
+        "end": 18921
+      },
+      "sql_sha256": "056f5af7a3dae9b5c780d0c6623bd3f338193c872254393323fc685f5060c3f0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 17,
+            "argument_form": "RowExpr",
+            "row_arity": 3,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/peg_parser/transformer/is_predicate_operators.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 15,
+        "start": 273,
+        "end": 300
+      },
+      "sql_sha256": "6253c6383d31d6f51a32fed31a135ff63a8d3afe661f8108b4ec4e1a26222765",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 12,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/peg_parser/transformer/is_predicate_operators.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 20,
+        "start": 319,
+        "end": 348
+      },
+      "sql_sha256": "1045e9f606a441abe721c08b9af7343ffccce395763b4c3aa7a95b2f95ad1006",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "notnull",
+            "byte_location": 12,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/parser/is_not_null_cast.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 15,
+        "start": 297,
+        "end": 345
+      },
+      "sql_sha256": "31048fb2716d4dbadf5f9856aa81760826126b9d4f5344358a86f0b206e4a0af",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "notnull",
+            "byte_location": 10,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          },
+          {
+            "form": "isnull",
+            "byte_location": 31,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 562,
+        "end": 590,
+        "container_start": 562,
+        "container_end": 590
+      },
+      "sql_sha256": "1401b577d2ac4435d640f4d1889f12c58251ef2b66aebc04e26e954754d64e70",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 20,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 600,
+        "end": 632,
+        "container_start": 600,
+        "container_end": 632
+      },
+      "sql_sha256": "873e02ef49fbc0fbb5593d7687469ac3740b6241fa4e7d281110efa8f82f7d85",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is not null",
+            "byte_location": 20,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 643,
+        "end": 675,
+        "container_start": 643,
+        "container_end": 675
+      },
+      "sql_sha256": "709bbe488bae9e1011b23d63a36f01de04198704e6d09336903898abace592d3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 24,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 686,
+        "end": 722,
+        "container_start": 686,
+        "container_end": 722
+      },
+      "sql_sha256": "b251774d126caae20802946df7dd04253ee74bd0646d405d9cf3422e576ba930",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is not null",
+            "byte_location": 24,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 732,
+        "end": 757,
+        "container_start": 732,
+        "container_end": 757
+      },
+      "sql_sha256": "c3f2224abba398aaa9c0c6ac59dba2e8aacd9bcd6b9d3d71373eeabb1125e61d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 17,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 768,
+        "end": 797,
+        "container_start": 768,
+        "container_end": 797
+      },
+      "sql_sha256": "457ec88df550eda44e002a1c678a216e9bb0794f2caf7c5018dafded047273a7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is not null",
+            "byte_location": 17,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 808,
+        "end": 837,
+        "container_start": 808,
+        "container_end": 837
+      },
+      "sql_sha256": "c4300d41ebb20f4d5437d03be73730c7d6a2c57e95a8531fdea11f4418df89f6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 21,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 847,
+        "end": 880,
+        "container_start": 847,
+        "container_end": 880
+      },
+      "sql_sha256": "f06a3f85057543b366bf7f23d96697d07822bacc117b5f0a8fa470d33d21e3b2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is not null",
+            "byte_location": 21,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 890,
+        "end": 912,
+        "container_start": 890,
+        "container_end": 912
+      },
+      "sql_sha256": "b751f364284afa90ae9f70f5ea5c611551f90e7e899b9c1aeb28a744973211e2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 14,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 923,
+        "end": 949,
+        "container_start": 923,
+        "container_end": 949
+      },
+      "sql_sha256": "32d562843a813736541b354d2dcab01f9b21e7e2618d69d883081e26cca165cd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is not null",
+            "byte_location": 14,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 959,
+        "end": 985,
+        "container_start": 959,
+        "container_end": 985
+      },
+      "sql_sha256": "686a4688bf734472e6a4badc06358cb3c32e0661279bc35ed42d976689a8ce5e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 18,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 995,
+        "end": 1025,
+        "container_start": 995,
+        "container_end": 1025
+      },
+      "sql_sha256": "f18c37c36378ae978bd5952768dcb9c0c10cefc4e0fb5ed1bfeeea537b1f2f9d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is not null",
+            "byte_location": 18,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 3152,
+        "end": 3245,
+        "container_start": 3152,
+        "container_end": 3245
+      },
+      "sql_sha256": "510243a2c73457cd6c6ac950858123e5a0b5ee623ab010fcd33963c4059f12f5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 85,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 3730,
+        "end": 3828,
+        "container_start": 3730,
+        "container_end": 3828
+      },
+      "sql_sha256": "67ed67c5c624402059e09118af3d1cfa098b817be9265e27759801c6b841c77a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 90,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 4336,
+        "end": 4433,
+        "container_start": 4336,
+        "container_end": 4433
+      },
+      "sql_sha256": "2738223aaf8bede9d692379099bf57576ec8b0b3918cd29ea6eb61548d3d7bca",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "is not null",
+            "byte_location": 85,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 4874,
+        "end": 4976,
+        "container_start": 4874,
+        "container_end": 4976
+      },
+      "sql_sha256": "e30573a11e7957237a9ee4c8dd6c4ade64d9cb68a362e9e3f7fba00684eeeedd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "is not null",
+            "byte_location": 90,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 26467,
+        "block_start": 26494,
+        "block_end": 26543,
+        "start": 26497,
+        "end": 26541,
+        "statement_index": 0
+      },
+      "sql_sha256": "546386b42f60082af654c6c0fcb87b75c9c5febcd82aaa790821eff1b739ec2d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "notnull",
+            "byte_location": 36,
+            "argument_form": "NullTest",
+            "row_arity": null,
+            "nested_row": false
+          },
+          {
+            "form": "notnull",
+            "byte_location": 28,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 28275,
+        "block_start": 28303,
+        "block_end": 28911,
+        "start": 28559,
+        "end": 28606,
+        "statement_index": 8
+      },
+      "sql_sha256": "4cc576cef1dcd02d529dd79ae069f553f7cc2e4f8ed60294a2a84a2144dfac1c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 40,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 28275,
+        "block_start": 28303,
+        "block_end": 28911,
+        "start": 28609,
+        "end": 28657,
+        "statement_index": 9
+      },
+      "sql_sha256": "7d3609c798f41cca85d6eaeba33081b0ffcb9bc32837f7a68fc82498ae508d90",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 41,
+            "argument_form": "A_Expr",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 28275,
+        "block_start": 28303,
+        "block_end": 28911,
+        "start": 28812,
+        "end": 28859,
+        "statement_index": 13
+      },
+      "sql_sha256": "78d6a9fc5e172090f594cd19436f09bfee745666d3e7590c82c3f45d9b530bd3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 40,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 28275,
+        "block_start": 28303,
+        "block_end": 28911,
+        "start": 28862,
+        "end": 28910,
+        "statement_index": 14
+      },
+      "sql_sha256": "83ce2bc0d7587d7df276cec1931bf3d00c5f962c81969da22102c71fae8e908c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 41,
+            "argument_form": "A_Expr",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join8.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 14420,
+        "block_start": 14449,
+        "block_end": 14748,
+        "start": 14663,
+        "end": 14747,
+        "statement_index": 5
+      },
+      "sql_sha256": "ee5639db9008537d6f9780018733ac5a5b7cdae269f7482c6f6febccd081738b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 77,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/join8.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 25203,
+        "block_start": 25232,
+        "block_end": 25576,
+        "start": 25468,
+        "end": 25575,
+        "statement_index": 5
+      },
+      "sql_sha256": "9bca25670321966c4f3b338e7a914818c93e1b5bbe54e0f652894c7d8dba1e8d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 100,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinH.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 632,
+        "block_start": 653,
+        "block_end": 721,
+        "start": 656,
+        "end": 720,
+        "statement_index": 0
+      },
+      "sql_sha256": "20da46adc8f9b26fc6119e67f7a52318b82c27291f43c84102068fc07a9c51e3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 56,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/joinH.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 802,
+        "block_start": 823,
+        "block_end": 882,
+        "start": 826,
+        "end": 881,
+        "statement_index": 0
+      },
+      "sql_sha256": "7d7f23698464f98c4183a82ae55a94372c3b01274dbf31ca7de79e674360a950",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 47,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlite",
+      "path": "test/types.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 6966,
+        "block_start": 6977,
+        "block_end": 7009,
+        "start": 6982,
+        "end": 7006,
+        "statement_index": 0
+      },
+      "sql_sha256": "f05340f49eff5b03f3fc0cbd9fcc6be55444d2386cf6e5f05db39faaca656b77",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 9,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/rowtypes.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6212,
+        "end": 6233,
+        "statement_index": 88
+      },
+      "sql_sha256": "8e015eb4df599df21bf2d7b710cefb51924d20412be02b7359dbb3ddaf497f53",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 13,
+            "argument_form": "RowExpr",
+            "row_arity": 0,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/rules.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6610,
+        "end": 6648,
+        "statement_index": 81
+      },
+      "sql_sha256": "5c1a155d7b3a37a2513112b75c95898d0044126c9c235ed3620338b503707345",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 31,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 5423,
+        "end": 5469,
+        "container_start": 5415,
+        "container_end": 5469
+      },
+      "sql_sha256": "bf7872b2fe3342beedf6adbf5267d86b22831961719843fdde14007ade6a501d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 38,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 5574,
+        "end": 5624,
+        "container_start": 5566,
+        "container_end": 5624
+      },
+      "sql_sha256": "eed53451948e3d46dd36649d640cbb61b7c7d1b9781ba4aecfdf770d4afb3715",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "is not null",
+            "byte_location": 38,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 5721,
+        "end": 5771,
+        "container_start": 5713,
+        "container_end": 5771
+      },
+      "sql_sha256": "7b61b40c0d0f5c594305db34237a8b213e8b0f69fa75023946ee6a5f7431a64a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 42,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 5869,
+        "end": 5923,
+        "container_start": 5861,
+        "container_end": 5923
+      },
+      "sql_sha256": "6678d8d12cb6a523f7e239698d40647c5e0118b91dbb4da932015ea9805fffa8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "is not null",
+            "byte_location": 42,
+            "argument_form": "RowExpr",
+            "row_arity": 2,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 5999,
+        "end": 6048,
+        "container_start": 5991,
+        "container_end": 6048
+      },
+      "sql_sha256": "d2f66a0313da54fad6240b42540af1c22cdd5bcd447796038ddca9dafbf1878d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 41,
+            "argument_form": "RowExpr",
+            "row_arity": 3,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "h2",
+      "path": "h2/src/test/org/h2/test/scripts/predicates/null.sql",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "h2",
+        "start": 6178,
+        "end": 6233,
+        "container_start": 6170,
+        "container_end": 6233
+      },
+      "sql_sha256": "c8777f7ab917e9d1c3a072cc945a2c94683b5dd067b16af77b26460a9ca4ac63",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 47,
+            "argument_form": "RowExpr",
+            "row_arity": 4,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "turso",
+      "path": "sqlite/conformance/sqlite-sqltests/null/default.sqltest",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "turso",
+        "start": 34,
+        "end": 71,
+        "container_start": 20,
+        "container_end": 72
+      },
+      "sql_sha256": "0112f7027b1ff5fdc333a40a6460283acae822152038d8c43c7321e87bcd3d25",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 16,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          },
+          {
+            "form": "isnull",
+            "byte_location": 29,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "turso",
+      "path": "sqlite/conformance/sqlite-sqltests/null/default.sqltest",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "turso",
+        "start": 184,
+        "end": 223,
+        "container_start": 169,
+        "container_end": 224
+      },
+      "sql_sha256": "be2bbe8d900df213bc7c2c8d1e3aba7827f7f6959f1ee904103be5934c567ff0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "notnull",
+            "byte_location": 16,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          },
+          {
+            "form": "notnull",
+            "byte_location": 30,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlglot",
+      "path": "tests/dialects/test_postgres.py",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "python",
+        "start": 2650,
+        "end": 2677,
+        "container_start": 2649,
+        "container_end": 2678
+      },
+      "sql_sha256": "4255f08335a9dbaaa07a53752ac08d3d96c7293cf3d1d5be37e7398fe1455062",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "notnull",
+            "byte_location": 13,
+            "argument_form": "A_Expr",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlglot",
+      "path": "tests/dialects/test_postgres.py",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "python",
+        "start": 23802,
+        "end": 23874,
+        "container_start": 23801,
+        "container_end": 23875
+      },
+      "sql_sha256": "e73961eadbf610ec0a0189ecc730bd60ed480e1967d500ae1bf5c531808d6421",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "notnull",
+            "byte_location": 65,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlglot",
+      "path": "tests/dialects/test_postgres.py",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "python",
+        "start": 24024,
+        "end": 24099,
+        "container_start": 24023,
+        "container_end": 24100
+      },
+      "sql_sha256": "21e47364bc5d4d63db6df0c87013800b93f16e211d353b3a74f8acda3645fee3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 69,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlglot",
+      "path": "tests/dialects/test_postgres.py",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "python",
+        "start": 115713,
+        "end": 115736,
+        "container_start": 115712,
+        "container_end": 115737
+      },
+      "sql_sha256": "47f86282f162a884f35602d57b70a3f8372cdc1c4a6d2fd76a02014d3640f87d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "notnull",
+            "byte_location": 9,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlglot",
+      "path": "tests/dialects/test_postgres.py",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "python",
+        "start": 115802,
+        "end": 115824,
+        "container_start": 115801,
+        "container_end": 115825
+      },
+      "sql_sha256": "8c7e3971b6e142491f93a630a67daddca0e865fc2e6ad0058bb3583569c1860a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "isnull",
+            "byte_location": 9,
+            "argument_form": "ColumnRef",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "sqlparser-rs",
+      "path": "tests/sqlparser_common.rs",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "rust",
+        "start": 657110,
+        "end": 657129,
+        "container_start": 657109,
+        "container_end": 657130
+      },
+      "sql_sha256": "0ff306ad02505a28527136372bade51b8578ae7cfbacbd1c467fa07fee269ff0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "notnull",
+            "byte_location": 12,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "jsqlparser",
+      "path": "src/test/java/net/sf/jsqlparser/expression/operators/relational/IsNullExpressionTest.java",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "java",
+        "start": 464,
+        "end": 501,
+        "container_start": 463,
+        "container_end": 502
+      },
+      "sql_sha256": "b944677761e17e1418cb293881338eb831751affee4b23be744268fe1b3ab5ff",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "null_predicates": [
+          {
+            "form": "notnull",
+            "byte_location": 30,
+            "argument_form": "A_Const",
+            "row_arity": null,
+            "nested_row": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "calcite",
+      "path": "core/src/test/resources/sql/struct.iq",
+      "selector": {
+        "kind": "embedded_null_input",
+        "context": "calcite",
+        "start": 3099,
+        "end": 3590,
+        "container_start": 3099,
+        "container_end": 3590
+      },
+      "sql_sha256": "c8c32978c5945adc0e6add7abff0e11a2d51462b2e758a6b2ea48fca6f6a454c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "null_predicates": [
+          {
+            "form": "is null",
+            "byte_location": 31,
+            "argument_form": "RowExpr",
+            "row_arity": 3,
+            "nested_row": false
+          },
+          {
+            "form": "is not null",
+            "byte_location": 84,
+            "argument_form": "RowExpr",
+            "row_arity": 3,
+            "nested_row": false
+          },
+          {
+            "form": "is null",
+            "byte_location": 142,
+            "argument_form": "RowExpr",
+            "row_arity": 3,
+            "nested_row": false
+          },
+          {
+            "form": "is not null",
+            "byte_location": 203,
+            "argument_form": "RowExpr",
+            "row_arity": 3,
+            "nested_row": false
+          },
+          {
+            "form": "is null",
+            "byte_location": 276,
+            "argument_form": "RowExpr",
+            "row_arity": 3,
+            "nested_row": false
+          },
+          {
+            "form": "is null",
+            "byte_location": 363,
+            "argument_form": "RowExpr",
+            "row_arity": 3,
+            "nested_row": true
+          },
+          {
+            "form": "is null",
+            "byte_location": 445,
+            "argument_form": "RowExpr",
+            "row_arity": 3,
+            "nested_row": true
+          }
+        ]
+      }
+    }
+  ]
+}

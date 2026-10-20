@@ -32,7 +32,7 @@ private def containmentCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "JSONB containment SELECT"
-    ((SelectContract.checkQuery .basicV27 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV28 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "JSONB containment identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -113,7 +113,7 @@ def jsonContainmentContractTests : IO Nat := do
       for right in ["NULL", "'{}'", "'null'"] do
         let sql := s!"SELECT {left} {spelling} {right}"
         let query ← expectOk sql (Advanced.parseQuery sql)
-        match SelectContract.checkQuery .basicV27 [] [] query with
+        match SelectContract.checkQuery .basicV28 [] [] query with
         | .error (.invalid diagnostic) =>
             SQLean.Tests.assert (diagnostic.code == "json_containment_signature")
               "unknown containment must retain the signature diagnostic"
@@ -128,7 +128,7 @@ def jsonContainmentContractTests : IO Nat := do
           (s!"NULL::{declaration}", "NULL"), ("NULL", s!"NULL::{declaration}")] do
         let sql := s!"SELECT {left} {spelling} {right}"
         let query ← expectOk sql (Advanced.parseQuery sql)
-        match SelectContract.checkQuery .basicV27 [] [] query with
+        match SelectContract.checkQuery .basicV28 [] [] query with
         | .error (.invalid _) => pure ()
         | _ => throw (IO.userError s!"unavailable non-JSONB containment signature: {sql}")
         count := count + 1
@@ -145,7 +145,7 @@ def jsonContainmentContractTests : IO Nat := do
       if expected == "valid" then
         SQLean.Tests.assert ((← containmentCertificate query) == [⟨"?column?", ⟨.bool, nullable⟩⟩])
           s!"promoted array containment output: {sql}"
-      else match SelectContract.checkQuery .basicV27 [] [] query with
+      else match SelectContract.checkQuery .basicV28 [] [] query with
       | .error (.unsupported diagnostic) =>
           SQLean.Tests.assert (expected == "unsupported" && diagnostic.code == "array_element_equality")
             "array element equality boundary"
@@ -186,7 +186,7 @@ def jsonContainmentContractTests : IO Nat := do
       "SELECT unknown_function() @> '{}'",
       "SELECT ROW(1,2) <@ '{}'::JSONB"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV27 [] [] query with
+    match SelectContract.checkQuery .basicV28 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"containment child coverage must stay Unsupported: {sql}")
     count := count + 1
@@ -203,12 +203,12 @@ def jsonContainmentContractTests : IO Nat := do
       Advanced.Expr.containment (.parameter (.numbered 1)) (.parameter (.anonymous 2)),
       .containment (.parameter (.anonymous 2)) (.parameter (.anonymous 1)) true] do
     let query : Advanced.Query := { body := .select { items := [.expression expr] } }
-    match SelectContract.checkQuery .basicV27 [] params query with
+    match SelectContract.checkQuery .basicV28 [] params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "mixed or reordered containment parameters must be Invalid")
     count := count + 1
   let query ← expectOk "containment exhaustion" (Advanced.parseQuery "SELECT '{}'::JSONB @> '{}'")
-  match SelectContract.checkQuery .basicV27 [] [] query 1 with
+  match SelectContract.checkQuery .basicV28 [] [] query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "containment exhaustion must be Inconclusive")
   pure (count + 1)

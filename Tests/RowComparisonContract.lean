@@ -30,7 +30,7 @@ private def rowCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "row-comparison SELECT"
-    ((SelectContract.checkQuery .basicV27 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV28 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "row-comparison identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -135,7 +135,7 @@ def rowComparisonContractTests : IO Nat := do
   for op in ["=", "<>", "<", "<=", ">", ">="] do
     let sql := s!"SELECT ROW() {op} ROW()"
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV27 [] [] query with
+    match SelectContract.checkQuery .basicV28 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"empty row comparison must be Invalid: {sql}")
     count := count + 1
@@ -148,24 +148,27 @@ def rowComparisonContractTests : IO Nat := do
     "SELECT ROW(1) + ROW(2)", "SELECT ROW(TRUE) AND ROW(FALSE)"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV27 [] [] query with
+    match SelectContract.checkQuery .basicV28 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid row query: {sql}")
     count := count + 1
   let unsupported := [
     "SELECT ROW()", "SELECT ROW(1)", "SELECT ROW(1,2)", "SELECT (1,2)",
     "SELECT ROW(ROW(1,NULL::INTEGER),1) = ROW(ROW(1,NULL::INTEGER),1)",
-    "SELECT ROW(1,2) = NULL", "SELECT ROW(1,2) IS NULL",
+    "SELECT ROW(1,2) = NULL",
     "SELECT ROW(ARRAY['1'::JSON],1) = ROW(ARRAY['1'::JSON],1)",
     "SELECT ROW(unknown_function(),1) = ROW(1,1)",
     "SELECT ROW((SELECT 1),1) = ROW(1,1)",
     "SELECT ROW(COUNT(*),1) = ROW(1,1)"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV27 [] [] query with
+    match SelectContract.checkQuery .basicV28 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported row query: {sql}")
     count := count + 1
+  SQLean.Tests.assert ((← rowOutput "SELECT ROW(1,2) IS NULL AS v") ==
+    [⟨"v", ⟨.bool, false⟩⟩]) "flat-row null tests have nonnullable Boolean output"
+  count := count + 1
   for (sql, params) in [
       ("SELECT ROW($1,$2) < ROW($3,$4) AS v", "integer,text,bigint,varchar"),
       ("SELECT (?,?) = (?,?) AS v", "integer,integer[],integer,integer[]"),
@@ -184,11 +187,11 @@ def rowComparisonContractTests : IO Nat := do
   let bad : Advanced.Query := { body := .select { items := [.expression (.binary .eq
     (.row [.parameter (.anonymous 1), .parameter (.anonymous 3)])
     (.row [.parameter (.anonymous 2), .parameter (.anonymous 4)]))] } }
-  match SelectContract.checkQuery .basicV27 [] params bad with
+  match SelectContract.checkQuery .basicV28 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "pairwise-interleaved row placeholders must be Invalid")
   count := count + 1
-  match SelectContract.checkQuery .basicV27 [] params query 1 with
+  match SelectContract.checkQuery .basicV28 [] params query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "row comparison exhaustion must be Inconclusive")
   count := count + 1

@@ -89,6 +89,8 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor context_values --check
           python3 scripts/extract_factor_corpus.py --factor named_arguments --check
           python3 scripts/extract_factor_corpus.py --factor keyword_functions --check
+          python3 scripts/extract_factor_corpus.py --factor distinct_from --check
+          python3 scripts/extract_factor_corpus.py --factor null_predicates --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -228,6 +230,10 @@ jobs:
         run: python3 scripts/check_named_arguments_cli.py --local-bin /usr/lib/postgresql/16/bin
       - name: Verify keyword function calls against PostgreSQL
         run: python3 scripts/check_keyword_functions_cli.py --local-bin /usr/lib/postgresql/16/bin
+      - name: Verify null-safe comparisons and row null predicates
+        run: python3 scripts/check_null_predicates_cli.py --local-bin /usr/lib/postgresql/16/bin
+      - name: Verify native SQLite null-predicate precedence
+        run: python3 scripts/check_null_predicate_precedence.py
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

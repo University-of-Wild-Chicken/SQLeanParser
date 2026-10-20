@@ -125,6 +125,8 @@ mutual
         paren (exprSql pg arg ++ " " ++ regexOperatorSql insensitive negated ++ " " ++ exprSql pg pattern)
     | .jsonAccess op arg key => paren (exprSql pg arg ++ " " ++ op.toSql ++ " " ++ exprSql pg key)
     | .jsonExistence op arg key => paren (exprSql pg arg ++ " " ++ op.toSql ++ " " ++ exprSql pg key)
+    | .distinctFrom left right negated =>
+        paren (exprSql pg left ++ (if negated then " IS NOT DISTINCT FROM " else " IS DISTINCT FROM ") ++ exprSql pg right)
     | .containment left right containedBy =>
         paren (exprSql pg left ++ (if containedBy then " <@ " else " @> ") ++ exprSql pg right)
     | .overlap left right => paren (exprSql pg left ++ " && " ++ exprSql pg right)

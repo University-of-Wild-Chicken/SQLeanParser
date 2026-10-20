@@ -11,11 +11,11 @@ formalization of PostgreSQL's general overload-resolution algorithm. -/
 namespace SQLean.SelectContract
 
 inductive Profile where
-  | basicV27
+  | basicV28
   deriving Repr, BEq, DecidableEq, Inhabited
 
 def Profile.name : Profile → String
-  | .basicV27 => "sqlean-basic-select-v0.27"
+  | .basicV28 => "sqlean-basic-select-v0.28"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes
@@ -310,6 +310,16 @@ def OrdinaryUnary : UnOp → Advanced.Expr → Prop
 
 instance (op : UnOp) (arg : Advanced.Expr) : Decidable (OrdinaryUnary op arg) := by
   unfold OrdinaryUnary
+  split <;> infer_instance
+
+/-- Raw NULL and direct row constructors use distinct native analysis paths.
+This guard prevents an ordinary equality derivation from hiding either path. -/
+def OrdinaryDistinctOperand : Advanced.Expr → Prop
+  | .null | .row _ => False
+  | _ => True
+
+instance (expr : Advanced.Expr) : Decidable (OrdinaryDistinctOperand expr) := by
+  unfold OrdinaryDistinctOperand
   split <;> infer_instance
 
 /-- Explicit casts from pg_cast.dat, plus PostgreSQL's documented CoerceViaIO

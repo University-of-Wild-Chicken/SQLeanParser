@@ -82,6 +82,11 @@ mutual
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       letI : Decidable (a1 = b1) := exactExprDecEq a1 b1
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.concat.injEq])
+    case distinctFrom.distinctFrom a0 a1 a2 b0 b1 b2 =>
+      letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
+      letI : Decidable (a1 = b1) := exactExprDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2)
+        (by simp only [Expr.distinctFrom.injEq])
     case containment.containment a0 a1 a2 b0 b1 b2 =>
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       letI : Decidable (a1 = b1) := exactExprDecEq a1 b1

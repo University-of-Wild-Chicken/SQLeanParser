@@ -251,11 +251,34 @@ mutual
         (signature : rowComparisonSignature op (scalarInputs a ta) (scalarInputs b tb) = some selected) :
         ExprValid params scope (.binary op.toBinOp (.row a) (.row b))
           (some ⟨.bool, true⟩) (ua ++ ub)
+    | distinctScalar (left : ExprValid params scope a ta ua)
+        (right : ExprValid params scope b tb ub)
+        (ordinaryLeft : OrdinaryDistinctOperand a) (ordinaryRight : OrdinaryDistinctOperand b)
+        (signature : distinctSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
+        ExprValid params scope (.distinctFrom a b negated) (some ⟨.bool, false⟩) (ua ++ ub)
+    | distinctNullLeft (arg : ExprValid params scope a ta uses) :
+        ExprValid params scope (.distinctFrom .null a negated) (some ⟨.bool, false⟩) uses
+    | distinctNullRight (arg : ExprValid params scope a ta uses) :
+        ExprValid params scope (.distinctFrom a .null negated) (some ⟨.bool, false⟩) uses
+    | distinctRows (left : ExprListValid params scope a ta ua)
+        (right : ExprListValid params scope b tb ub)
+        (signature : rowDistinctSignature (scalarInputs a ta) (scalarInputs b tb) = some selected) :
+        ExprValid params scope (.distinctFrom (.row a) (.row b) negated)
+          (some ⟨.bool, false⟩) (ua ++ ub)
+    /-- The native raw-NULL rewrite tests the whole constructed row, not its fields. -/
+    | distinctRowNullLeft (args : ExprListValid params scope es ts uses) :
+        ExprValid params scope (.distinctFrom .null (.row es) negated) (some ⟨.bool, false⟩) uses
+    | distinctRowNullRight (args : ExprListValid params scope es ts uses) :
+        ExprValid params scope (.distinctFrom (.row es) .null negated) (some ⟨.bool, false⟩) uses
     | unary (arg : ExprValid params scope a ta uses) (signature : unarySignature op ta = some result)
         (ordinary : OrdinaryUnary op a) :
         ExprValid params scope (.unary op a) result uses
     | isNull (arg : ExprValid params scope a ta uses) :
         ExprValid params scope (.isNull a negated) (some ⟨.bool, false⟩) uses
+    /-- Field-sensitive row null tests. The negated form is native IS NOT NULL,
+    not Boolean negation of IS NULL when fields mix NULL and non-NULL values. -/
+    | isNullRow (args : ExprListValid params scope es ts uses) :
+        ExprValid params scope (.isNull (.row es) negated) (some ⟨.bool, false⟩) uses
     | pattern (arg : ExprValid params scope a ta ua) (pattern : ExprValid params scope b tb ub)
         (signature : patternSignature ta tb = some result) :
         ExprValid params scope (.pattern a b false) result (ua ++ ub)

@@ -1,0 +1,1333 @@
+{
+  "format_version": 1,
+  "factor": "distinct_from",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 18,
+    "materialize": 20,
+    "duckdb": 12
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/create_index_spgist.sql",
+          "sha256": "6ffef4ecc7cd0924cebf4db8f62e4d1fec3008bd2847c22cca8799735c085cdd",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/create_index_spgist.sql"
+        },
+        {
+          "path": "src/test/regress/sql/select_distinct.sql",
+          "sha256": "36a1663b5c569b37da3882c29daa6de2d0369f572cd9b44bfdd7da1490bf772d",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/select_distinct.sql"
+        }
+      ]
+    },
+    "materialize": {
+      "repository": "https://github.com/MaterializeInc/materialize",
+      "commit": "726570dba1d2e4d839c707a84a986fb3b3acc5c3",
+      "ref": "pinned main snapshot",
+      "license": "BSL-1.1 (change date 2030-10-20; change license Apache-2.0)",
+      "source_kind": "engine-regression",
+      "source_dialect": "materialize",
+      "license_file": "fixtures/factor_sources/licenses/materialize-20261020-LICENSE",
+      "license_sha256": "5d4ca070f541414a03ad8b84021e4ba3deeca4025e4b4274053abaa2e93ec032",
+      "files": [
+        {
+          "path": "test/sqllogictest/distinct_from.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/distinct_from.slt",
+          "sha256": "aea20fe261448c71a5fbc23af323dc9fc15dfc2bcfcbf94d257d7f578f4ac4d7"
+        }
+      ]
+    },
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "source_kind": "engine-regression",
+      "source_dialect": "duckdb",
+      "files": [
+        {
+          "path": "test/sql/join/inner/test_join_is_distinct.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/join/inner/test_join_is_distinct.test",
+          "sha256": "8f4e306c1194afae08f9b6b912a315a761963718bf8eaec4dfb5456c6c35d16b"
+        },
+        {
+          "path": "test/sql/join/inner/test_join_is_not_distinct.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/join/inner/test_join_is_not_distinct.test",
+          "sha256": "7eaa7f97ef103193beab889b452776d8326569cdea05dc9eea5ca8d9a1645062"
+        },
+        {
+          "path": "test/sql/types/null/test_boolean_null.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/types/null/test_boolean_null.test",
+          "sha256": "d3c707c8559af5bbcdefdb5acec32ae2951e55bc37316a061244a500aeabba50"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5117,
+        "end": 5154,
+        "statement_index": 61
+      },
+      "sql_sha256": "b016416bd887edab2903f353b00e39806b386b56be95452871dd17125ba0d847",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5155,
+        "end": 5191,
+        "statement_index": 62
+      },
+      "sql_sha256": "779f605db7cd9b98e5d48313e00b6e6495a0da668953517b707358db31eb9597",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5192,
+        "end": 5232,
+        "statement_index": 63
+      },
+      "sql_sha256": "8afdda2836ccfc76adbe2464498dd66fc8a0ee07fce2887c8079cb7d362ba846",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5233,
+        "end": 5275,
+        "statement_index": 64
+      },
+      "sql_sha256": "da1c9cb6276a1404d3f0dbcd318e73d0fd679c48daf49b724cf563dfa0d245b9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 12,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5293,
+        "end": 5333,
+        "statement_index": 65
+      },
+      "sql_sha256": "5d854c4a00f143322252954a9734b0193f103ce7c54af4d156431a6cb67d63db",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5334,
+        "end": 5375,
+        "statement_index": 66
+      },
+      "sql_sha256": "c1fb7102d92d4e9182ec03d8b687bd2802b5f580463a5ee15c7cc2b312d17de7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5376,
+        "end": 5419,
+        "statement_index": 67
+      },
+      "sql_sha256": "fc16d48f6645a3b1d40df297e1b3cf8c4a1f88ffcc2bd85f2697169d4d20cbcd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5420,
+        "end": 5467,
+        "statement_index": 68
+      },
+      "sql_sha256": "0f398670a7ca1be15d7496ddd01e0a85788e7a5c857709fb11490422545e7fb9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 12,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_index_spgist.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4997,
+        "end": 5135,
+        "statement_index": 66
+      },
+      "sql_sha256": "91213d07ac768658c00766fae7507db892cc208e994622cd5d0aab83b847504e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 112,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_index_spgist.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5460,
+        "end": 5598,
+        "statement_index": 69
+      },
+      "sql_sha256": "dc34bc715bb8c6d6c5828189bfe60cb86e69b1038279c9e7dba1a9116ca49818",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 112,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_index_spgist.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5905,
+        "end": 6043,
+        "statement_index": 72
+      },
+      "sql_sha256": "2c1b242e66afd51e46655c0fb496d7be8da9fe86ed703ae902321b5edc303ef2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 112,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_index_spgist.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7335,
+        "end": 7471,
+        "statement_index": 89
+      },
+      "sql_sha256": "cadf9c6b7583e5b4580e49cc13c302f78be3322b900e547303b0be9b2306734c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 110,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_index_spgist.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7790,
+        "end": 7926,
+        "statement_index": 92
+      },
+      "sql_sha256": "8d32f42b595c69c35c477f56feec08c1963e36c8869b5a6c201ae3e8a7caa407",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 110,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/create_index_spgist.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8227,
+        "end": 8363,
+        "statement_index": 95
+      },
+      "sql_sha256": "ec74719e03d207b6e62028d18e673635279eb9e26f26b41a1f8e7f00be1765a6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 110,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4812,
+        "end": 4871,
+        "statement_index": 57
+      },
+      "sql_sha256": "e13906c28efb319f598b3f3088a24e3a896dd471da47aa63cf0828d4448b16e8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 14,
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4872,
+        "end": 4937,
+        "statement_index": 58
+      },
+      "sql_sha256": "616e468e8ad908331ad1076c20f1dca9b2f196fbaeaeb2a3374f299b626f4994",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 14,
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4938,
+        "end": 4998,
+        "statement_index": 59
+      },
+      "sql_sha256": "5cdaff7b2dabbdb9bf752c749f2fd79abc2aff73ac05769c36cfd364ef95fb38",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 14,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/select_distinct.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4999,
+        "end": 5064,
+        "statement_index": 60
+      },
+      "sql_sha256": "e47ebfe08e2845802774dad55ecb8b69890e2e79f516b0537916699c616bbf84",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 14,
+            "left_form": "ColumnRef",
+            "right_form": "A_Expr"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 12,
+        "start": 401,
+        "end": 429
+      },
+      "sql_sha256": "2b1a540c919ae4e97ad5471493129103938b5840d3b4b203b201f8cb3a9379b9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 17,
+        "start": 449,
+        "end": 477
+      },
+      "sql_sha256": "382381c1d4cc009499898daec8c987d126d82277655f23676e82cdef3add5f91",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 22,
+        "start": 496,
+        "end": 527
+      },
+      "sql_sha256": "653805940e27562735b1a9abebb6063ef8e96934d6333862eaea83b3270690a1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 27,
+        "start": 546,
+        "end": 577
+      },
+      "sql_sha256": "5b445a0fc9c7af61d9da9bc5bdfb291af5e7c246a7116f571528f3a6855e63db",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 12,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 32,
+        "start": 596,
+        "end": 630
+      },
+      "sql_sha256": "1553554ceafd482df9f1cdd2f3f7442cb69261d91b7a5770bf68189ed100c7f9",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 12,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 37,
+        "start": 650,
+        "end": 682
+      },
+      "sql_sha256": "72f6fd674f54b920934973c11ba83606f85362c62cba1bd7112f7982d66730ad",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 42,
+        "start": 701,
+        "end": 733
+      },
+      "sql_sha256": "13fb3d230d1584cf4d7829416d938d71d11b2a5d78e18e5230370017161be7a8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 47,
+        "start": 753,
+        "end": 788
+      },
+      "sql_sha256": "efe5d3fe70f4b8ee5445585bbd370167645f398c0b852f9179b7658e871e7f1a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 52,
+        "start": 808,
+        "end": 843
+      },
+      "sql_sha256": "f45cbbb2bc0fa7ca6963bc35dcf457fdda1943c3ab17bde372d8c8c0bd5a5b9b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 12,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 57,
+        "start": 863,
+        "end": 901
+      },
+      "sql_sha256": "04ccf8865da061f34cf1cf1c85e657c04e1665a83dd1d10afb73839918c2c419",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 12,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 63,
+        "start": 962,
+        "end": 1002
+      },
+      "sql_sha256": "83ee20b6d775c0233fa5f26e6673fe12c6f099625adb08e202ca8492959207c4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 15,
+            "left_form": "TypeCast",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 68,
+        "start": 1021,
+        "end": 1061
+      },
+      "sql_sha256": "2dbce803c81c641bd69d6ea837a9963fd141e3b7dfafa51ac100864b32428b59",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 15,
+            "left_form": "TypeCast",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 73,
+        "start": 1081,
+        "end": 1125
+      },
+      "sql_sha256": "df6cea58cc1ca78cbf84fe8695a1856543774843b7fd35c4e182a25b3f967c00",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 15,
+            "left_form": "TypeCast",
+            "right_form": "TypeCast"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 78,
+        "start": 1144,
+        "end": 1174
+      },
+      "sql_sha256": "aa86e5a11218d3cb2eece35632993636601608a292a70642884a707c7f496b2c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 83,
+        "start": 1194,
+        "end": 1228
+      },
+      "sql_sha256": "0a76182591868ad8a196ff89731bd5607f4cdfe423e439022b246bfc2af0f329",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 169,
+        "start": 4153,
+        "end": 4185
+      },
+      "sql_sha256": "037a533c8a48fd03007ac9b19fc3d7de05f1f96d8503ce9c7121e888c6533462",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 9,
+            "left_form": "A_Const",
+            "right_form": "A_Expr"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 138,
+        "start": 3295,
+        "end": 3380
+      },
+      "sql_sha256": "e0c75ed5c45b7ccc075cf6d352f7b16b50d193ca80da6845d0cc1058bd808465",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 44,
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 146,
+        "start": 3532,
+        "end": 3617
+      },
+      "sql_sha256": "230773cc255b281b7f9283d88e31825e07fb96a474203fa460694bafd8ecd98e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 44,
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 154,
+        "start": 3753,
+        "end": 3842
+      },
+      "sql_sha256": "3072d7b6014f5d761bf6266652ab4fe847312ff2b404b46de16ffb667cf4bafd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 45,
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/distinct_from.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 160,
+        "start": 3887,
+        "end": 3976
+      },
+      "sql_sha256": "2857772e4d5c4ebf53cbfb442a0ce1fddd6dd4b1e0f431d9a7822e7774f8aace",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 45,
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/null/test_boolean_null.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 33,
+        "start": 688,
+        "end": 1010
+      },
+      "sql_sha256": "530fe61cd52b9fa0f744e38937896e4cea142b17ee55618deb42ac283b3aa677",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 16,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          },
+          {
+            "form": "is not distinct from",
+            "byte_location": 48,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          },
+          {
+            "form": "is distinct from",
+            "byte_location": 84,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          },
+          {
+            "form": "is not distinct from",
+            "byte_location": 114,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          },
+          {
+            "form": "is distinct from",
+            "byte_location": 146,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          },
+          {
+            "form": "is not distinct from",
+            "byte_location": 176,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          },
+          {
+            "form": "is distinct from",
+            "byte_location": 210,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          },
+          {
+            "form": "is not distinct from",
+            "byte_location": 238,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          },
+          {
+            "form": "is distinct from",
+            "byte_location": 270,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          },
+          {
+            "form": "is not distinct from",
+            "byte_location": 298,
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_not_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 13,
+        "start": 297,
+        "end": 418
+      },
+      "sql_sha256": "ffa09ad759f59673c6b6effc19f737daaa17d7b924d5fec8d04cb3336db27474",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 75,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_not_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 67,
+        "start": 1114,
+        "end": 1239
+      },
+      "sql_sha256": "94c664cd668323d4283c54941d094f8785140f7ae706a116488897efc0ee022e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 79,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_not_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 121,
+        "start": 2219,
+        "end": 2344
+      },
+      "sql_sha256": "250b21a63405f981b5cc8a47a2e7e994775834f94f02b882eb73b672e55bfe76",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 79,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_not_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 196,
+        "start": 3522,
+        "end": 3661
+      },
+      "sql_sha256": "7dc6cf2616a695f45955f4a364c9595791f2606173a87a5e918025911f9f8bf6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 85,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_not_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 214,
+        "start": 3837,
+        "end": 3968
+      },
+      "sql_sha256": "50a078c28374a5893e69cf5a17cd3a2ca52e4fc99a24c8feac5183b4893e6362",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 85,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_not_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 239,
+        "start": 4376,
+        "end": 4530
+      },
+      "sql_sha256": "5b1d936a061c1176e66523309513808c50186549dd13097376761753b0d20b0d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is not distinct from",
+            "byte_location": 89,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 13,
+        "start": 286,
+        "end": 403
+      },
+      "sql_sha256": "efba908ce4f29f10bfd7ec587f431ac65542871ccceb90979c5bd422e7b537fa",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 75,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 67,
+        "start": 1097,
+        "end": 1218
+      },
+      "sql_sha256": "eb8afb6c4dd685513de3b50dff6a1b304baff810bf70eccf9d4c5f60e12ee813",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 79,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 121,
+        "start": 2196,
+        "end": 2317
+      },
+      "sql_sha256": "ae61a26a9596493de3490b74ea3fc2fd2e18a8ce76a5520d5b5c655a99a71aa0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 79,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 196,
+        "start": 3489,
+        "end": 3624
+      },
+      "sql_sha256": "ffb8c93cd5d76a8bc3382e13c57e2e901050f09edf408ad7c9c28781b9d88f86",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 85,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/join/inner/test_join_is_distinct.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 241,
+        "start": 4348,
+        "end": 4498
+      },
+      "sql_sha256": "064de7c424a35c0dce03bf1c95b983abfd09eeff1b4f9b5a28f2aec7dac4ca9a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "distinct_from": [
+          {
+            "form": "is distinct from",
+            "byte_location": 89,
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    }
+  ]
+}

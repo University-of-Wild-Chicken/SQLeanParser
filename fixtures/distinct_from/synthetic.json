@@ -1,0 +1,1226 @@
+[
+  {
+    "id": "distinct-from-01-equal-integers",
+    "source_kind": "synthetic",
+    "shape": "equal-integers",
+    "sql": "SELECT 1 IS DISTINCT FROM 1 AS v;",
+    "postgres_input": "SELECT 1 IS DISTINCT FROM 1 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 IS DISTINCT FROM 1 AS v;",
+    "sqlite_sql": "SELECT 1 IS DISTINCT FROM 1 AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-02-unequal-integers",
+    "source_kind": "synthetic",
+    "shape": "unequal-integers",
+    "sql": "SELECT 1 IS DISTINCT FROM 2 AS v;",
+    "postgres_input": "SELECT 1 IS DISTINCT FROM 2 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 IS DISTINCT FROM 2 AS v;",
+    "sqlite_sql": "SELECT 1 IS DISTINCT FROM 2 AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-03-raw-null-left",
+    "source_kind": "synthetic",
+    "shape": "raw-null-left",
+    "sql": "SELECT NULL IS DISTINCT FROM 1 AS v;",
+    "postgres_input": "SELECT NULL IS DISTINCT FROM 1 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT NULL IS DISTINCT FROM 1 AS v;",
+    "sqlite_sql": "SELECT NULL IS DISTINCT FROM 1 AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-04-raw-null-right",
+    "source_kind": "synthetic",
+    "shape": "raw-null-right",
+    "sql": "SELECT 1 IS DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT 1 IS DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 IS DISTINCT FROM NULL AS v;",
+    "sqlite_sql": "SELECT 1 IS DISTINCT FROM NULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-05-both-raw-null",
+    "source_kind": "synthetic",
+    "shape": "both-raw-null",
+    "sql": "SELECT NULL IS DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT NULL IS DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT NULL IS DISTINCT FROM NULL AS v;",
+    "sqlite_sql": "SELECT NULL IS DISTINCT FROM NULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-06-nullable-parameter",
+    "source_kind": "synthetic",
+    "shape": "nullable-parameter",
+    "sql": "SELECT $1 IS DISTINCT FROM $2 AS v;",
+    "postgres_input": "SELECT $1 IS DISTINCT FROM $2 AS v;",
+    "parameter_types": "integer?,integer",
+    "parameter_values": [
+      null,
+      3
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?1 IS DISTINCT FROM ?2 AS v;",
+    "sqlite_sql": "SELECT ?1 IS DISTINCT FROM ?2 AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-07-reversed-parameters",
+    "source_kind": "synthetic",
+    "shape": "reversed-parameters",
+    "sql": "SELECT $2 IS DISTINCT FROM $1 AS v;",
+    "postgres_input": "SELECT $2 IS DISTINCT FROM $1 AS v;",
+    "parameter_types": "integer?,integer",
+    "parameter_values": [
+      null,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?2 IS DISTINCT FROM ?1 AS v;",
+    "sqlite_sql": "SELECT ?2 IS DISTINCT FROM ?1 AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-08-anonymous-parameters",
+    "source_kind": "synthetic",
+    "shape": "anonymous-parameters",
+    "sql": "SELECT ? IS DISTINCT FROM ? AS v;",
+    "postgres_input": "SELECT $1 IS DISTINCT FROM $2 AS v;",
+    "parameter_types": "integer?,integer?",
+    "parameter_values": [
+      null,
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ? IS DISTINCT FROM ? AS v;",
+    "sqlite_sql": "SELECT ? IS DISTINCT FROM ? AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-09-unknown-strings",
+    "source_kind": "synthetic",
+    "shape": "unknown-strings",
+    "sql": "SELECT 'a' IS DISTINCT FROM 'a' AS v;",
+    "postgres_input": "SELECT 'a' IS DISTINCT FROM 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'a' IS DISTINCT FROM 'a' AS v;",
+    "sqlite_sql": "SELECT 'a' IS DISTINCT FROM 'a' AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-10-unknown-integer",
+    "source_kind": "synthetic",
+    "shape": "unknown-integer",
+    "sql": "SELECT '2' IS DISTINCT FROM 2 AS v;",
+    "postgres_input": "SELECT '2' IS DISTINCT FROM 2 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT '2' IS DISTINCT FROM 2 AS v;",
+    "sqlite_sql": "SELECT '2' IS DISTINCT FROM 2 AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-11-typed-null",
+    "source_kind": "synthetic",
+    "shape": "typed-null",
+    "sql": "SELECT CAST(NULL AS TEXT) IS DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT CAST(NULL AS TEXT) IS DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT CAST(NULL AS TEXT) IS DISTINCT FROM NULL AS v;",
+    "sqlite_sql": "SELECT CAST(NULL AS TEXT) IS DISTINCT FROM NULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-12-json-raw-null",
+    "source_kind": "synthetic",
+    "shape": "json-raw-null",
+    "sql": "SELECT '{}'::JSON IS DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT '{}'::JSON IS DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{}'::JSON IS DISTINCT FROM NULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-13-json-array-raw-null",
+    "source_kind": "synthetic",
+    "shape": "json-array-raw-null",
+    "sql": "SELECT ARRAY['{}'::JSON] IS DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT ARRAY['{}'::JSON] IS DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ARRAY['{}'::JSON] IS DISTINCT FROM NULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-14-numeric-widths",
+    "source_kind": "synthetic",
+    "shape": "numeric-widths",
+    "sql": "SELECT 1::SMALLINT IS DISTINCT FROM 1::BIGINT AS v;",
+    "postgres_input": "SELECT 1::SMALLINT IS DISTINCT FROM 1::BIGINT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1::SMALLINT IS DISTINCT FROM 1::BIGINT AS v;",
+    "sqlite_sql": "SELECT CAST(1 AS SMALLINT) IS DISTINCT FROM CAST(1 AS BIGINT) AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-15-float-nan",
+    "source_kind": "synthetic",
+    "shape": "float-nan",
+    "sql": "SELECT 'NaN'::DOUBLE PRECISION IS DISTINCT FROM 'NaN'::DOUBLE PRECISION AS v;",
+    "postgres_input": "SELECT 'NaN'::DOUBLE PRECISION IS DISTINCT FROM 'NaN'::DOUBLE PRECISION AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'NaN'::DOUBLE PRECISION IS DISTINCT FROM 'NaN'::DOUBLE PRECISION AS v;",
+    "sqlite_sql": "SELECT CAST('NaN' AS DOUBLE PRECISION) IS DISTINCT FROM CAST('NaN' AS DOUBLE PRECISION) AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-16-name-text",
+    "source_kind": "synthetic",
+    "shape": "name-text",
+    "sql": "SELECT 'alpha'::NAME IS DISTINCT FROM 'alpha'::TEXT AS v;",
+    "postgres_input": "SELECT 'alpha'::NAME IS DISTINCT FROM 'alpha'::TEXT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT 'alpha'::NAME IS DISTINCT FROM 'alpha'::TEXT AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-17-char-padding",
+    "source_kind": "synthetic",
+    "shape": "char-padding",
+    "sql": "SELECT 'abc '::CHAR(4) IS DISTINCT FROM 'abc'::TEXT AS v;",
+    "postgres_input": "SELECT 'abc '::CHAR(4) IS DISTINCT FROM 'abc'::TEXT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'abc '::CHAR(4) IS DISTINCT FROM 'abc'::TEXT AS v;",
+    "sqlite_sql": "SELECT CAST('abc ' AS CHAR(4)) IS DISTINCT FROM CAST('abc' AS TEXT) AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-18-date-timestamp",
+    "source_kind": "synthetic",
+    "shape": "date-timestamp",
+    "sql": "SELECT DATE '2024-01-01' IS DISTINCT FROM TIMESTAMP '2024-01-01 00:00:00' AS v;",
+    "postgres_input": "SELECT DATE '2024-01-01' IS DISTINCT FROM TIMESTAMP '2024-01-01 00:00:00' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT DATE '2024-01-01' IS DISTINCT FROM TIMESTAMP '2024-01-01 00:00:00' AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-19-jsonb-key-order",
+    "source_kind": "synthetic",
+    "shape": "jsonb-key-order",
+    "sql": "SELECT '{\"a\":1,\"b\":2}'::JSONB IS DISTINCT FROM '{\"b\":2,\"a\":1}'::JSONB AS v;",
+    "postgres_input": "SELECT '{\"a\":1,\"b\":2}'::JSONB IS DISTINCT FROM '{\"b\":2,\"a\":1}'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{\"a\":1,\"b\":2}'::JSONB IS DISTINCT FROM '{\"b\":2,\"a\":1}'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-20-array-equality",
+    "source_kind": "synthetic",
+    "shape": "array-equality",
+    "sql": "SELECT ARRAY[1,NULL,3] IS DISTINCT FROM ARRAY[1,NULL,3] AS v;",
+    "postgres_input": "SELECT ARRAY[1,NULL,3] IS DISTINCT FROM ARRAY[1,NULL,3] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ARRAY[1,NULL,3] IS DISTINCT FROM ARRAY[1,NULL,3] AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-21-row-null-equality",
+    "source_kind": "synthetic",
+    "shape": "row-null-equality",
+    "sql": "SELECT ROW(1,NULL) IS DISTINCT FROM ROW(1,NULL) AS v;",
+    "postgres_input": "SELECT ROW(1,NULL) IS DISTINCT FROM ROW(1,NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(1,NULL) IS DISTINCT FROM ROW(1,NULL) AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-22-row-null-difference",
+    "source_kind": "synthetic",
+    "shape": "row-null-difference",
+    "sql": "SELECT ROW(1,NULL) IS DISTINCT FROM ROW(1,2) AS v;",
+    "postgres_input": "SELECT ROW(1,NULL) IS DISTINCT FROM ROW(1,2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(1,NULL) IS DISTINCT FROM ROW(1,2) AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-23-empty-rows",
+    "source_kind": "synthetic",
+    "shape": "empty-rows",
+    "sql": "SELECT ROW() IS DISTINCT FROM ROW() AS v;",
+    "postgres_input": "SELECT ROW() IS DISTINCT FROM ROW() AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW() IS DISTINCT FROM ROW() AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-24-row-vs-raw-null",
+    "source_kind": "synthetic",
+    "shape": "row-vs-raw-null",
+    "sql": "SELECT ROW(NULL,NULL) IS DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT ROW(NULL,NULL) IS DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(NULL,NULL) IS DISTINCT FROM NULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-25-row-reversed-parameters",
+    "source_kind": "synthetic",
+    "shape": "row-reversed-parameters",
+    "sql": "SELECT ROW($2,$1) IS DISTINCT FROM ROW($1,$2) AS v;",
+    "postgres_input": "SELECT ROW($2,$1) IS DISTINCT FROM ROW($1,$2) AS v;",
+    "parameter_types": "integer,integer",
+    "parameter_values": [
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(?2,?1) IS DISTINCT FROM ROW(?1,?2) AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-26-not-equal-integers",
+    "source_kind": "synthetic",
+    "shape": "not-equal-integers",
+    "sql": "SELECT 1 IS NOT DISTINCT FROM 1 AS v;",
+    "postgres_input": "SELECT 1 IS NOT DISTINCT FROM 1 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 IS NOT DISTINCT FROM 1 AS v;",
+    "sqlite_sql": "SELECT 1 IS NOT DISTINCT FROM 1 AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-27-not-unequal-integers",
+    "source_kind": "synthetic",
+    "shape": "not-unequal-integers",
+    "sql": "SELECT 1 IS NOT DISTINCT FROM 2 AS v;",
+    "postgres_input": "SELECT 1 IS NOT DISTINCT FROM 2 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 IS NOT DISTINCT FROM 2 AS v;",
+    "sqlite_sql": "SELECT 1 IS NOT DISTINCT FROM 2 AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-28-not-raw-null-left",
+    "source_kind": "synthetic",
+    "shape": "not-raw-null-left",
+    "sql": "SELECT NULL IS NOT DISTINCT FROM 1 AS v;",
+    "postgres_input": "SELECT NULL IS NOT DISTINCT FROM 1 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT NULL IS NOT DISTINCT FROM 1 AS v;",
+    "sqlite_sql": "SELECT NULL IS NOT DISTINCT FROM 1 AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-29-not-raw-null-right",
+    "source_kind": "synthetic",
+    "shape": "not-raw-null-right",
+    "sql": "SELECT 1 IS NOT DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT 1 IS NOT DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1 IS NOT DISTINCT FROM NULL AS v;",
+    "sqlite_sql": "SELECT 1 IS NOT DISTINCT FROM NULL AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-30-not-both-raw-null",
+    "source_kind": "synthetic",
+    "shape": "not-both-raw-null",
+    "sql": "SELECT NULL IS NOT DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT NULL IS NOT DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT NULL IS NOT DISTINCT FROM NULL AS v;",
+    "sqlite_sql": "SELECT NULL IS NOT DISTINCT FROM NULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-31-not-nullable-parameter",
+    "source_kind": "synthetic",
+    "shape": "not-nullable-parameter",
+    "sql": "SELECT $1 IS NOT DISTINCT FROM $2 AS v;",
+    "postgres_input": "SELECT $1 IS NOT DISTINCT FROM $2 AS v;",
+    "parameter_types": "integer?,integer",
+    "parameter_values": [
+      null,
+      3
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?1 IS NOT DISTINCT FROM ?2 AS v;",
+    "sqlite_sql": "SELECT ?1 IS NOT DISTINCT FROM ?2 AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-32-not-reversed-parameters",
+    "source_kind": "synthetic",
+    "shape": "not-reversed-parameters",
+    "sql": "SELECT $2 IS NOT DISTINCT FROM $1 AS v;",
+    "postgres_input": "SELECT $2 IS NOT DISTINCT FROM $1 AS v;",
+    "parameter_types": "integer?,integer",
+    "parameter_values": [
+      null,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ?2 IS NOT DISTINCT FROM ?1 AS v;",
+    "sqlite_sql": "SELECT ?2 IS NOT DISTINCT FROM ?1 AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-33-not-anonymous-parameters",
+    "source_kind": "synthetic",
+    "shape": "not-anonymous-parameters",
+    "sql": "SELECT ? IS NOT DISTINCT FROM ? AS v;",
+    "postgres_input": "SELECT $1 IS NOT DISTINCT FROM $2 AS v;",
+    "parameter_types": "integer?,integer?",
+    "parameter_values": [
+      null,
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT ? IS NOT DISTINCT FROM ? AS v;",
+    "sqlite_sql": "SELECT ? IS NOT DISTINCT FROM ? AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-34-not-unknown-strings",
+    "source_kind": "synthetic",
+    "shape": "not-unknown-strings",
+    "sql": "SELECT 'a' IS NOT DISTINCT FROM 'a' AS v;",
+    "postgres_input": "SELECT 'a' IS NOT DISTINCT FROM 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'a' IS NOT DISTINCT FROM 'a' AS v;",
+    "sqlite_sql": "SELECT 'a' IS NOT DISTINCT FROM 'a' AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-35-not-unknown-integer",
+    "source_kind": "synthetic",
+    "shape": "not-unknown-integer",
+    "sql": "SELECT '2' IS NOT DISTINCT FROM 2 AS v;",
+    "postgres_input": "SELECT '2' IS NOT DISTINCT FROM 2 AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT '2' IS NOT DISTINCT FROM 2 AS v;",
+    "sqlite_sql": "SELECT '2' IS NOT DISTINCT FROM 2 AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-36-not-typed-null",
+    "source_kind": "synthetic",
+    "shape": "not-typed-null",
+    "sql": "SELECT CAST(NULL AS TEXT) IS NOT DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT CAST(NULL AS TEXT) IS NOT DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT CAST(NULL AS TEXT) IS NOT DISTINCT FROM NULL AS v;",
+    "sqlite_sql": "SELECT CAST(NULL AS TEXT) IS NOT DISTINCT FROM NULL AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-37-not-json-raw-null",
+    "source_kind": "synthetic",
+    "shape": "not-json-raw-null",
+    "sql": "SELECT '{}'::JSON IS NOT DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT '{}'::JSON IS NOT DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{}'::JSON IS NOT DISTINCT FROM NULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-38-not-json-array-raw-null",
+    "source_kind": "synthetic",
+    "shape": "not-json-array-raw-null",
+    "sql": "SELECT ARRAY['{}'::JSON] IS NOT DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT ARRAY['{}'::JSON] IS NOT DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ARRAY['{}'::JSON] IS NOT DISTINCT FROM NULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-39-not-numeric-widths",
+    "source_kind": "synthetic",
+    "shape": "not-numeric-widths",
+    "sql": "SELECT 1::SMALLINT IS NOT DISTINCT FROM 1::BIGINT AS v;",
+    "postgres_input": "SELECT 1::SMALLINT IS NOT DISTINCT FROM 1::BIGINT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 1::SMALLINT IS NOT DISTINCT FROM 1::BIGINT AS v;",
+    "sqlite_sql": "SELECT CAST(1 AS SMALLINT) IS NOT DISTINCT FROM CAST(1 AS BIGINT) AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-40-not-float-nan",
+    "source_kind": "synthetic",
+    "shape": "not-float-nan",
+    "sql": "SELECT 'NaN'::DOUBLE PRECISION IS NOT DISTINCT FROM 'NaN'::DOUBLE PRECISION AS v;",
+    "postgres_input": "SELECT 'NaN'::DOUBLE PRECISION IS NOT DISTINCT FROM 'NaN'::DOUBLE PRECISION AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'NaN'::DOUBLE PRECISION IS NOT DISTINCT FROM 'NaN'::DOUBLE PRECISION AS v;",
+    "sqlite_sql": "SELECT CAST('NaN' AS DOUBLE PRECISION) IS NOT DISTINCT FROM CAST('NaN' AS DOUBLE PRECISION) AS v;",
+    "sqlite_expected_value": 1
+  },
+  {
+    "id": "distinct-from-41-not-name-text",
+    "source_kind": "synthetic",
+    "shape": "not-name-text",
+    "sql": "SELECT 'alpha'::NAME IS NOT DISTINCT FROM 'alpha'::TEXT AS v;",
+    "postgres_input": "SELECT 'alpha'::NAME IS NOT DISTINCT FROM 'alpha'::TEXT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT 'alpha'::NAME IS NOT DISTINCT FROM 'alpha'::TEXT AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-42-not-char-padding",
+    "source_kind": "synthetic",
+    "shape": "not-char-padding",
+    "sql": "SELECT 'abc '::CHAR(4) IS NOT DISTINCT FROM 'abc'::TEXT AS v;",
+    "postgres_input": "SELECT 'abc '::CHAR(4) IS NOT DISTINCT FROM 'abc'::TEXT AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": true,
+    "sqlite_input": "SELECT 'abc '::CHAR(4) IS NOT DISTINCT FROM 'abc'::TEXT AS v;",
+    "sqlite_sql": "SELECT CAST('abc ' AS CHAR(4)) IS NOT DISTINCT FROM CAST('abc' AS TEXT) AS v;",
+    "sqlite_expected_value": 0
+  },
+  {
+    "id": "distinct-from-43-not-date-timestamp",
+    "source_kind": "synthetic",
+    "shape": "not-date-timestamp",
+    "sql": "SELECT DATE '2024-01-01' IS NOT DISTINCT FROM TIMESTAMP '2024-01-01 00:00:00' AS v;",
+    "postgres_input": "SELECT DATE '2024-01-01' IS NOT DISTINCT FROM TIMESTAMP '2024-01-01 00:00:00' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT DATE '2024-01-01' IS NOT DISTINCT FROM TIMESTAMP '2024-01-01 00:00:00' AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-44-not-jsonb-key-order",
+    "source_kind": "synthetic",
+    "shape": "not-jsonb-key-order",
+    "sql": "SELECT '{\"a\":1,\"b\":2}'::JSONB IS NOT DISTINCT FROM '{\"b\":2,\"a\":1}'::JSONB AS v;",
+    "postgres_input": "SELECT '{\"a\":1,\"b\":2}'::JSONB IS NOT DISTINCT FROM '{\"b\":2,\"a\":1}'::JSONB AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT '{\"a\":1,\"b\":2}'::JSONB IS NOT DISTINCT FROM '{\"b\":2,\"a\":1}'::JSONB AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-45-not-array-equality",
+    "source_kind": "synthetic",
+    "shape": "not-array-equality",
+    "sql": "SELECT ARRAY[1,NULL,3] IS NOT DISTINCT FROM ARRAY[1,NULL,3] AS v;",
+    "postgres_input": "SELECT ARRAY[1,NULL,3] IS NOT DISTINCT FROM ARRAY[1,NULL,3] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ARRAY[1,NULL,3] IS NOT DISTINCT FROM ARRAY[1,NULL,3] AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-46-not-row-null-equality",
+    "source_kind": "synthetic",
+    "shape": "not-row-null-equality",
+    "sql": "SELECT ROW(1,NULL) IS NOT DISTINCT FROM ROW(1,NULL) AS v;",
+    "postgres_input": "SELECT ROW(1,NULL) IS NOT DISTINCT FROM ROW(1,NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(1,NULL) IS NOT DISTINCT FROM ROW(1,NULL) AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-47-not-row-null-difference",
+    "source_kind": "synthetic",
+    "shape": "not-row-null-difference",
+    "sql": "SELECT ROW(1,NULL) IS NOT DISTINCT FROM ROW(1,2) AS v;",
+    "postgres_input": "SELECT ROW(1,NULL) IS NOT DISTINCT FROM ROW(1,2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(1,NULL) IS NOT DISTINCT FROM ROW(1,2) AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-48-not-empty-rows",
+    "source_kind": "synthetic",
+    "shape": "not-empty-rows",
+    "sql": "SELECT ROW() IS NOT DISTINCT FROM ROW() AS v;",
+    "postgres_input": "SELECT ROW() IS NOT DISTINCT FROM ROW() AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW() IS NOT DISTINCT FROM ROW() AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-49-not-row-vs-raw-null",
+    "source_kind": "synthetic",
+    "shape": "not-row-vs-raw-null",
+    "sql": "SELECT ROW(NULL,NULL) IS NOT DISTINCT FROM NULL AS v;",
+    "postgres_input": "SELECT ROW(NULL,NULL) IS NOT DISTINCT FROM NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(NULL,NULL) IS NOT DISTINCT FROM NULL AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  },
+  {
+    "id": "distinct-from-50-not-row-reversed-parameters",
+    "source_kind": "synthetic",
+    "shape": "not-row-reversed-parameters",
+    "sql": "SELECT ROW($2,$1) IS NOT DISTINCT FROM ROW($1,$2) AS v;",
+    "postgres_input": "SELECT ROW($2,$1) IS NOT DISTINCT FROM ROW($1,$2) AS v;",
+    "parameter_types": "integer,integer",
+    "parameter_values": [
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ROW(?2,?1) IS NOT DISTINCT FROM ROW(?1,?2) AS v;",
+    "sqlite_sql": null,
+    "sqlite_expected_value": null
+  }
+]

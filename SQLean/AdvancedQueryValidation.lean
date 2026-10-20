@@ -210,7 +210,7 @@ private def hasAggregate : Nat → Expr → Bool
   | 0, _ => true
   | fuel + 1, expr => match expr with
     | .countAll | .aggregate .. | .filteredAggregate .. => true
-    | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => hasAggregate fuel left || hasAggregate fuel right
+    | .distinctFrom left right _ | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => hasAggregate fuel left || hasAggregate fuel right
     | .extract _ arg | .unary _ arg | .isNull arg _ | .cast arg _ => hasAggregate fuel arg
     | .subscript base indices => hasAggregate fuel base || (indices.flatMap Subscript.expressions).any (hasAggregate fuel)
     | .array args | .row args | .substring _ args | .call _ args | .coalesce args | .greatest args | .least args => args.any (hasAggregate fuel)
@@ -236,6 +236,8 @@ private def canonical : Nat → List Scope → Expr → Expr
       | .ok (column, _) => .column column.qualifier column.name
       | .error _ => expr
     | .binary op left right => .binary op (canonical fuel scopes left) (canonical fuel scopes right)
+    | .distinctFrom left right negated =>
+        .distinctFrom (canonical fuel scopes left) (canonical fuel scopes right) negated
     | .containment left right containedBy =>
         .containment (canonical fuel scopes left) (canonical fuel scopes right) containedBy
     | .overlap left right =>
@@ -345,7 +347,7 @@ mutual
   private def exprTables : Nat → Expr → List Name
     | 0, _ => []
     | fuel + 1, expr => match expr with
-      | .overlap l r | .containment l r _ | .jsonExistence _ l r | .jsonAccess _ l r | .regex l r _ _ | .concat l r | .quantifiedComparison _ _ l r | .binary _ l r | .pattern l r _ | .filteredAggregate l r | .nullIf l r => exprTables fuel l ++ exprTables fuel r
+      | .distinctFrom l r _ | .overlap l r | .containment l r _ | .jsonExistence _ l r | .jsonAccess _ l r | .regex l r _ _ | .concat l r | .quantifiedComparison _ _ l r | .binary _ l r | .pattern l r _ | .filteredAggregate l r | .nullIf l r => exprTables fuel l ++ exprTables fuel r
       | .extract _ e | .unary _ e | .isNull e _ | .cast e _ | .aggregate _ e _ => exprTables fuel e
       | .subscript base indices => exprTables fuel base ++ (indices.flatMap Subscript.expressions).flatMap (exprTables fuel)
       | .namedCall _ args => args.flatMap (fun arg => exprTables fuel arg.expression)
@@ -379,7 +381,7 @@ private def simpleRecursiveExpr : Nat → Expr → Bool
   | 0, _ => false
   | fuel + 1, expr => match expr with
     | .exists _ | .scalarQuery _ | .inQuery .. | .countAll | .aggregate .. | .filteredAggregate .. => false
-    | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => simpleRecursiveExpr fuel left && simpleRecursiveExpr fuel right
+    | .distinctFrom left right _ | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => simpleRecursiveExpr fuel left && simpleRecursiveExpr fuel right
     | .extract _ e | .unary _ e | .cast e _ | .isNull e _ => simpleRecursiveExpr fuel e
     | .subscript base indices => simpleRecursiveExpr fuel base && (indices.flatMap Subscript.expressions).all (simpleRecursiveExpr fuel)
     | .namedCall _ args => args.all (fun arg => simpleRecursiveExpr fuel arg.expression)
@@ -449,7 +451,7 @@ mutual
       | .exists query | .scalarQuery query => checkCTELockQuery fuel names query
       | _ =>
         let children : List Expr := match expr with
-          | .overlap a b | .containment a b _ | .jsonExistence _ a b | .jsonAccess _ a b | .regex a b _ _ | .concat a b | .quantifiedComparison _ _ a b | .binary _ a b | .pattern a b _ | .nullIf a b | .filteredAggregate a b => [a, b]
+          | .distinctFrom a b _ | .overlap a b | .containment a b _ | .jsonExistence _ a b | .jsonAccess _ a b | .regex a b _ _ | .concat a b | .quantifiedComparison _ _ a b | .binary _ a b | .pattern a b _ | .nullIf a b | .filteredAggregate a b => [a, b]
           | .extract _ a | .unary _ a | .cast a _ | .isNull a _ | .aggregate _ a _ => [a]
           | .subscript base indices => base :: indices.flatMap Subscript.expressions
           | .namedCall _ args => args.map CallArgument.expression
@@ -577,6 +579,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
           pure (some (if nullable then type.asNullable else type))
       | .subscript .. =>
         invalid "array subscripts require exact element types and bound coercions; use the independent contract tier"
+      | .distinctFrom .. =>
+        invalid "distinctness requires exact equality and raw NULL/row rules; use the independent contract tier"
       | .containment .. =>
         invalid "containment requires exact operator-family resolution; use the independent contract tier"
       | .extract .. =>
@@ -755,7 +759,7 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         ensure sourceSchema.isNone "schema-qualified columns require the independent SELECT contract"
         let (_, depth) ← resolveColumn scopes qualifier name
         ensure (depth > 0) s!"ungrouped column '{name}'"
-      | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right =>
+      | .distinctFrom left right _ | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right =>
         checkGrouped fuel schema params scopes groups left
         checkGrouped fuel schema params scopes groups right
       | .extract _ arg | .unary _ arg | .isNull arg _ | .cast arg _ => checkGrouped fuel schema params scopes groups arg
@@ -925,7 +929,7 @@ mutual
     | 0, _ => []
     | fuel + 1, expr => match expr with
       | .parameter parameter => [parameter]
-      | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .filteredAggregate left right | .nullIf left right =>
+      | .distinctFrom left right _ | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .filteredAggregate left right | .nullIf left right =>
         expressionParameters fuel left ++ expressionParameters fuel right
       | .extract _ arg | .unary _ arg | .cast arg _ | .isNull arg _ | .aggregate _ arg _ => expressionParameters fuel arg
       | .subscript base indices => expressionParameters fuel base ++ (indices.flatMap Subscript.expressions).flatMap (expressionParameters fuel)

@@ -69,7 +69,9 @@ private def extendedAccepted : List String := [
   "SELECT NULL FROM users",
   "SELECT u.id FROM users u OFFSET 1",
   "SELECT u.id FROM users u LIMIT 1.5",
-  "SELECT q.id FROM ((SELECT id FROM users)) q"
+  "SELECT q.id FROM ((SELECT id FROM users)) q",
+  "SELECT id IS NULL IS NULL FROM users", "SELECT id = 1 IS NULL FROM users",
+  "SELECT id IS NULL = TRUE FROM users"
 ]
 
 private def rejected : List String := [
@@ -94,8 +96,7 @@ private def rejected : List String := [
   "SELECT AVG(*) FROM users", "SELECT COUNT(ALL id) FROM users",
   "SELECT COUNT(DISTINCT) FROM users",
   "SELECT id IS TRUE FROM users", "SELECT id IS NOT FALSE FROM users",
-  "SELECT id IS FROM users", "SELECT id IS NULL IS NULL FROM users",
-  "SELECT id = 1 IS NULL FROM users", "SELECT id IS NULL = TRUE FROM users",
+  "SELECT id IS FROM users", "SELECT id IS DISTINCT FROM 1 IS NULL FROM users",
   "SELECT id < age < 100 FROM users",
   "SELECT * FROM users;;", "SELECT * FROM users; SELECT * FROM orders",
   "SELECT id FROM (SELECT id FROM users)",
@@ -131,6 +132,20 @@ def relationalParsingTests : IO Nat := do
   for source in rejected do
     expectError source (parseRelQuery source)
     expectError source (parseStatement source)
+
+  -- The advanced parser follows PostgreSQL's postfix-null-test reductions;
+  -- the older relational API retains its narrower grammar.
+  for (sql, expected) in [
+      ("SELECT id IS NULL IS NULL FROM users",
+        Advanced.Expr.isNull (.isNull (.column none "id"))),
+      ("SELECT id = 1 IS NULL FROM users", .isNull (.binary .eq (.column none "id") 1)),
+      ("SELECT id IS NULL = TRUE FROM users",
+        .binary .eq (.isNull (.column none "id")) (.literal (.bool true)))] do
+    match ← expectOk sql (parseStatement sql) with
+    | .extended (.query {body := .select select, ..}) =>
+        SQLean.Tests.assert (select.items == [.expression expected])
+          "PostgreSQL comparison/null-test precedence changed"
+    | _ => throw (IO.userError "extended null-test chain lost the advanced AST")
 
   -- PostgreSQL ColLabel permits every keyword after AS. This permission is
   -- separate from the narrower ColId rule for FROM relation aliases.
@@ -240,6 +255,6 @@ def relationalParsingTests : IO Nat := do
   let cteDefs := String.intercalate ", " ((List.range 100).map fun n => s!"t{n} AS (SELECT id FROM t)")
   let manyCtes ← expectOk "100 CTE definitions" (parseRelQuery s!"WITH {cteDefs} SELECT id FROM t99")
   SQLean.Tests.assert (manyCtes.ctes.length == 100) "lost CTE definitions"
-  pure (3 * accepted.length + 2 * (rejected.length + extendedAccepted.length) + 19)
+  pure (3 * accepted.length + 2 * (rejected.length + extendedAccepted.length) + 22)
 
 end SQLean.Tests

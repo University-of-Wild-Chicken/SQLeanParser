@@ -270,6 +270,52 @@ mutual
           match signature : binarySignature op left.type right.type with
           | none => .error (binaryFailure op a b left.type right.type)
           | some type => .ok ⟨type, left.uses ++ right.uses, .binary left.valid right.valid signature⟩
+      | .distinctFrom (.row args) .null negated => do
+          let typed ← checkExprList fuel params scope args
+          .ok ⟨some ⟨.bool, false⟩, typed.uses, .distinctRowNullRight (negated := negated) typed.valid⟩
+      | .distinctFrom .null (.row args) negated => do
+          let typed ← checkExprList fuel params scope args
+          .ok ⟨some ⟨.bool, false⟩, typed.uses, .distinctRowNullLeft (negated := negated) typed.valid⟩
+      | .distinctFrom .null arg negated => do
+          let typed ← checkExpr fuel params scope arg
+          .ok ⟨some ⟨.bool, false⟩, typed.uses, .distinctNullLeft (negated := negated) typed.valid⟩
+      | .distinctFrom arg .null negated => do
+          let typed ← checkExpr fuel params scope arg
+          .ok ⟨some ⟨.bool, false⟩, typed.uses, .distinctNullRight (negated := negated) typed.valid⟩
+      | .distinctFrom (.row left) (.row right) negated => do
+          if left.length != right.length then
+            .error (invalid "distinct_row_arity" "DISTINCT row constructors require equal field counts")
+          else
+            let leftTyped ← checkExprList fuel params scope left
+            let rightTyped ← checkExprList fuel params scope right
+            let leftInputs := scalarInputs left leftTyped.types
+            let rightInputs := scalarInputs right rightTyped.types
+            match signature : rowDistinctSignature leftInputs rightInputs with
+            | some _selected => .ok ⟨some ⟨.bool, false⟩, leftTyped.uses ++ rightTyped.uses,
+                .distinctRows (negated := negated) leftTyped.valid rightTyped.valid signature⟩
+            | none => .error (if (leftInputs.zip rightInputs).any
+                  (fun pair => arrayPredicateMissingEquality pair.1 pair.2) then
+                unsupported "array_element_operator"
+                  "Array field equality requires a certified element operator"
+              else invalid "distinct_signature" "Row fields have no admitted exact Boolean equality operator")
+      | .distinctFrom left right negated => do
+          if ordinaryLeft : OrdinaryDistinctOperand left then
+            if ordinaryRight : OrdinaryDistinctOperand right then
+              let leftTyped ← checkExpr fuel params scope left
+              let rightTyped ← checkExpr fuel params scope right
+              match signature : distinctSignature
+                  (scalarInput left leftTyped.type) (scalarInput right rightTyped.type) with
+              | some _selected => .ok ⟨some ⟨.bool, false⟩, leftTyped.uses ++ rightTyped.uses,
+                  .distinctScalar (negated := negated) leftTyped.valid rightTyped.valid ordinaryLeft ordinaryRight signature⟩
+              | none => .error (if arrayPredicateMissingEquality
+                    (scalarInput left leftTyped.type) (scalarInput right rightTyped.type) then
+                  unsupported "array_element_operator"
+                    "Array equality requires a certified element operator"
+                else invalid "distinct_signature" "Operands have no admitted exact Boolean equality operator")
+            else .error (unsupported "distinct_composite"
+              "Composite values outside direct flat-row pairs require a separate record type contract")
+          else .error (unsupported "distinct_composite"
+            "Composite values outside direct flat-row pairs require a separate record type contract")
       | .concat a b => do
           let left ← checkExpr fuel params scope a
           let right ← checkExpr fuel params scope b
@@ -296,6 +342,9 @@ mutual
                 "operator_signature" "Unary overload resolution is outside the explicit profile signatures")
             | some type => .ok ⟨type, arg.uses, .unary arg.valid signature ordinary⟩
           else .error (unsupported "signed_integer_boundary" "Signed integer boundary requires literal folding")
+      | .isNull (.row args) negated => do
+          let typed ← checkExprList fuel params scope args
+          .ok ⟨some ⟨.bool, false⟩, typed.uses, .isNullRow (negated := negated) typed.valid⟩
       | .isNull a negated => do
           let arg ← checkExpr fuel params scope a
           .ok ⟨some ⟨.bool, false⟩, arg.uses, .isNull (negated := negated) arg.valid⟩
@@ -869,7 +918,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
       let children : List Advanced.Expr := match expr with
         | .binary _ a b | .pattern a b _ | .nullIf a b
         | .quantifiedComparison _ _ a b | .concat a b | .regex a b .. | .jsonAccess _ a b | .jsonExistence _ a b
-        | .containment a b _ | .overlap a b => [a, b]
+        | .containment a b _ | .overlap a b | .distinctFrom a b _ => [a, b]
         | .unary _ a | .cast a _ | .extract _ a | .isNull a _ | .inQuery a _ => [a]
         | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
         | .namedCall _ args => args.map CallArgument.expression

@@ -82,6 +82,8 @@ import Tests.NamedArgumentsContract
 import Tests.NamedArgumentsRendering
 import Tests.KeywordFunctionsContract
 import Tests.KeywordFunctionsRendering
+import Tests.NullPredicatesContract
+import Tests.NullPredicatesRendering
 
 namespace SQLean.Tests
 
@@ -310,6 +312,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {keywordFunctionsConcrete} unchanged keyword function certificates (all 50 rendered)"
   let keywordFunctionsRendering ← keywordFunctionsRenderingTests
   IO.println s!"PASS: {keywordFunctionsRendering} keyword function parsing and rendering checks"
+  let nullPredicatesContract ← nullPredicatesContractTests
+  IO.println s!"PASS: {nullPredicatesContract} NULL-aware scalar/row predicate checks"
+  let nullPredicatesCorpus ← nullPredicatesCorpusTests
+  IO.println s!"PASS: {nullPredicatesCorpus} NULL predicate full-query certificates"
+  let nullPredicatesConcrete ← nullPredicatesConcreteContractTests
+  IO.println s!"PASS: {nullPredicatesConcrete} unchanged NULL predicate certificates (all 100 rendered)"
+  let nullPredicatesRendering ← nullPredicatesRenderingTests
+  IO.println s!"PASS: {nullPredicatesRendering} NULL predicate parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

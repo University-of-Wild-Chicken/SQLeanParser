@@ -156,6 +156,9 @@ mutual
     | countAll
     | aggregate (fn : AggregateFn) (arg : Expr) (distinct : Bool := false)
     | isNull (arg : Expr) (negated : Bool := false)
+    /-- Preserve the raw operands: PostgreSQL's undecorated-NULL shortcut
+    differs from ordinary row IS NULL and does not require equality lookup. -/
+    | distinctFrom (left right : Expr) (negated : Bool := false)
     | pattern (arg pattern : Expr) (insensitive : Bool := false)
     /-- PostgreSQL's four regular-expression match operators. Negation remains
     part of the selected operator rather than being rewritten into NOT. -/

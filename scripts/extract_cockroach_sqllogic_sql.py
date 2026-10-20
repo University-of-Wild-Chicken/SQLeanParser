@@ -3,8 +3,10 @@
 The pinned SUBSTRING and JSONB-existence inputs use Cockroach-style headers.
 This reader recognizes the prefix through the selected record, never executes
 directives, and leaves result sections opaque. Unknown directives before that
-record fail. The default selection remains query T; only the existence factor
-opts into query B/BB. The stricter reader for other populations is unchanged.
+record fail. The default selection remains query T; two closed factor opt-ins
+permit their recorded Boolean headers. The null factor also recognizes the
+literal ``onlyif cockroach`` prefix on unselected records. It never evaluates
+that condition or selects a conditional record.
 """
 from __future__ import annotations
 
@@ -17,7 +19,8 @@ KEYS = {"kind", "start", "end", "header_line"}
 
 
 def selected_cockroach_sql(source: str, selector: dict, *,
-                          boolean_queries: bool = False) -> tuple[str, int, dict]:
+                          boolean_queries: bool = False,
+                          null_predicates: bool = False) -> tuple[str, int, dict]:
     if (set(selector) != KEYS or selector["kind"] != "cockroach_sqllogic_query"
             or any(type(selector[key]) is not int for key in KEYS - {"kind"})
             or selector["header_line"] < 1):
@@ -28,7 +31,7 @@ def selected_cockroach_sql(source: str, selector: dict, *,
         offsets.append(position)
         position += len(line)
     offsets.append(position)
-    index, records, mode = 0, 0, False
+    index, records, mode, conditional = 0, 0, False, False
     while index < len(lines) and index + 1 <= selector["header_line"]:
         header = lines[index].rstrip("\r\n")
         if not header.strip() or header.startswith("#"):
@@ -38,12 +41,22 @@ def selected_cockroach_sql(source: str, selector: dict, *,
             mode = True
             index += 1
             continue
+        if null_predicates and header == "onlyif cockroach" and not conditional:
+            conditional = True
+            index += 1
+            continue
+        if (null_predicates and not conditional
+                and re.fullmatch(r"subtest [A-Za-z_0-9]+", header)):
+            # A literal record label, not SQL and not a control action.
+            index += 1
+            continue
         if re.fullmatch(r"(?:statement (?:ok|error(?: .*)?)|query error(?: .*)?)", header):
             # These complete unselected records do not supply SQL or expectations.
             records += 1
             index += 1
             while index < len(lines) and lines[index].strip():
                 index += 1
+            conditional = False
             continue
         if HEADER.fullmatch(header) is None:
             raise ValueError("unsupported directive before selected SQLLogicTest query")
@@ -60,8 +73,10 @@ def selected_cockroach_sql(source: str, selector: dict, *,
         if start == end:
             raise ValueError("empty SQLLogicTest query")
         if header_line == selector["header_line"]:
-            allowed_headers = {"query B", "query BB"} if boolean_queries else {"query T"}
-            if header not in allowed_headers or (start, end) != (selector["start"], selector["end"]):
+            allowed_headers = ({"query T", "query B", "query BB rowsort"} if null_predicates
+                               else {"query B", "query BB"} if boolean_queries else {"query T"})
+            if (conditional or header not in allowed_headers
+                    or (start, end) != (selector["start"], selector["end"])):
                 raise ValueError("selection is not the complete pinned literal query")
             sql = source[start:end]
             code = sql_code(sql).strip()
@@ -76,4 +91,5 @@ def selected_cockroach_sql(source: str, selector: dict, *,
         index += 1
         while index < len(lines) and lines[index].strip():
             index += 1
+        conditional = False
     raise ValueError("selection is not a recognized SQLLogicTest query header")

@@ -38,6 +38,8 @@ mutual
         simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, exprSql_translated key]
     | jsonExistence op arg key =>
         simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, exprSql_translated key]
+    | distinctFrom left right negated =>
+        simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated left, exprSql_translated right]
     | containment left right containedBy =>
         simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated left, exprSql_translated right]
     | overlap left right =>
