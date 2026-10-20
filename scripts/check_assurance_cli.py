@@ -26,7 +26,7 @@ EXIT_CODES = {
 }
 ASSURANCE = {"contract": "declarative", "checked": "executable", "syntax": "syntax"}
 PROFILES = {
-    "contract": "sqlean-basic-select-v0.14",
+    "contract": "sqlean-basic-select-v0.15",
     "checked": "sqlean-expanded-v0",
     "syntax": "sqlean-syntax-v0",
 }
@@ -112,8 +112,9 @@ CASES = [
          "SELECT id FROM users UNION SELECT id FROM flags", "unsupported"),
     Case("DISTINCT ON is a dialect extension",
          "SELECT DISTINCT ON (city) id FROM users ORDER BY city, id", "unsupported"),
-    Case("ILIKE is a dialect extension",
-         "SELECT id FROM users WHERE name ILIKE 'a%'", "unsupported"),
+    Case("ILIKE has independent scalar validity",
+         "SELECT id FROM users WHERE name ILIKE 'a%'",
+         columns=(("id", "int32", False),)),
     Case("decimal has exact NUMERIC type", "SELECT 1.25 AS n",
          columns=(("n", "numeric", False),), schema=None),
     Case("bigint cast is not collapsed to int32", "SELECT 1::BIGINT AS n",

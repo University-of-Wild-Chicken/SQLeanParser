@@ -27,6 +27,15 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.15 pattern-matching increment](docs/pattern-matching-contract-v0.15.md)
+adds independent ILIKE and regex (`~`, `~*`, `!~`, `!~*`) contracts, retaining
+CHAR-subject overloads and nullable results. Each factor has 50 synthetic
+certificates and 50 unchanged source examples. Native PostgreSQL checks cover
+200 value/type observations, 216 descriptors, 12 expected errors and 12
+operator declarations. SQLite explicitly excludes these PostgreSQL operations.
+The PostgreSQL lexer also rejects unsupported maximal operator tokens such as
+`||-`, preserving native token boundaries instead of silently splitting them.
+
 The [v0.14 concatenation increment](docs/concatenation-contract-v0.14.md)
 adds exact scalar `||` signatures for text conversion, JSONB and BYTEA.
 It preserves operator selection, nullable metadata and dialect-specific
@@ -182,6 +191,7 @@ python3 scripts/check_array_quantified_cli.py --local-bin /usr/lib/postgresql/16
 python3 scripts/check_array_subscripts_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_row_comparisons_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_concatenation_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_pattern_matching_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -311,7 +321,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.14` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.15` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

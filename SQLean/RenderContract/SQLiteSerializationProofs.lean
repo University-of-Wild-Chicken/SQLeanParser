@@ -31,6 +31,8 @@ mutual
     | aggregate fn arg distinct => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
     | isNull arg negated => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
     | pattern arg pattern insensitive => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, exprSql_translated pattern]
+    | regex arg pattern insensitive negated =>
+        simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, exprSql_translated pattern]
     | cast arg target => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg]
     | subscript base subscripts =>
         have mapped : subscripts.map (fun subscript => Advanced.SQLite.subscriptSql (translateSubscript subscript)) =

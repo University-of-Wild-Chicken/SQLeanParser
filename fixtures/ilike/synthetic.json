@@ -1,0 +1,1025 @@
+[
+  {
+    "id": "ilike-01-case-fold",
+    "source_kind": "synthetic",
+    "shape": "case-fold",
+    "sql": "SELECT 'AbC' ILIKE 'abc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC' ILIKE 'abc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-02-case-fold-miss",
+    "source_kind": "synthetic",
+    "shape": "case-fold-miss",
+    "sql": "SELECT 'AbC' ILIKE 'abd' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'AbC' ILIKE 'abd' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-03-prefix",
+    "source_kind": "synthetic",
+    "shape": "prefix",
+    "sql": "SELECT 'AbCd' ILIKE 'a%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbCd' ILIKE 'a%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-04-suffix",
+    "source_kind": "synthetic",
+    "shape": "suffix",
+    "sql": "SELECT 'AbCd' ILIKE '%D' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbCd' ILIKE '%D' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-05-substring",
+    "source_kind": "synthetic",
+    "shape": "substring",
+    "sql": "SELECT 'AbCd' ILIKE '%BC%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbCd' ILIKE '%BC%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-06-one-character",
+    "source_kind": "synthetic",
+    "shape": "one-character",
+    "sql": "SELECT 'AbC' ILIKE '_B_' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC' ILIKE '_B_' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-07-one-character-miss",
+    "source_kind": "synthetic",
+    "shape": "one-character-miss",
+    "sql": "SELECT 'AbCd' ILIKE '_B_' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'AbCd' ILIKE '_B_' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-08-empty",
+    "source_kind": "synthetic",
+    "shape": "empty",
+    "sql": "SELECT '' ILIKE '' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT '' ILIKE '' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-09-empty-wildcard",
+    "source_kind": "synthetic",
+    "shape": "empty-wildcard",
+    "sql": "SELECT '' ILIKE '%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT '' ILIKE '%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-10-empty-single",
+    "source_kind": "synthetic",
+    "shape": "empty-single",
+    "sql": "SELECT '' ILIKE '_' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT '' ILIKE '_' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-11-full-string",
+    "source_kind": "synthetic",
+    "shape": "full-string",
+    "sql": "SELECT 'AbCd' ILIKE 'bc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'AbCd' ILIKE 'bc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-12-not-match",
+    "source_kind": "synthetic",
+    "shape": "not-match",
+    "sql": "SELECT 'AbC' NOT ILIKE 'a%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'AbC' NOT ILIKE 'a%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-13-not-miss",
+    "source_kind": "synthetic",
+    "shape": "not-miss",
+    "sql": "SELECT 'AbC' NOT ILIKE 'z%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC' NOT ILIKE 'z%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-14-explicit-not",
+    "source_kind": "synthetic",
+    "shape": "explicit-not",
+    "sql": "SELECT NOT ('AbC' ILIKE 'a%') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT NOT ('AbC' ILIKE 'a%') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-15-escaped-percent",
+    "source_kind": "synthetic",
+    "shape": "escaped-percent",
+    "sql": "SELECT 'A%B' ILIKE 'a\\%b' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'A%B' ILIKE 'a\\%b' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-16-escaped-underscore",
+    "source_kind": "synthetic",
+    "shape": "escaped-underscore",
+    "sql": "SELECT 'A_B' ILIKE 'a\\_b' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'A_B' ILIKE 'a\\_b' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-17-escaped-backslash",
+    "source_kind": "synthetic",
+    "shape": "escaped-backslash",
+    "sql": "SELECT 'A\\B' ILIKE 'a\\\\b' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'A\\B' ILIKE 'a\\\\b' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-18-quote",
+    "source_kind": "synthetic",
+    "shape": "quote",
+    "sql": "SELECT 'O''Brien' ILIKE 'o''b%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'O''Brien' ILIKE 'o''b%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-19-subject-null",
+    "source_kind": "synthetic",
+    "shape": "subject-null",
+    "sql": "SELECT NULL ILIKE 'a%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL ILIKE 'a%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-20-pattern-null",
+    "source_kind": "synthetic",
+    "shape": "pattern-null",
+    "sql": "SELECT 'abc' ILIKE NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT 'abc' ILIKE NULL AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-21-both-null",
+    "source_kind": "synthetic",
+    "shape": "both-null",
+    "sql": "SELECT NULL ILIKE NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL ILIKE NULL AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-22-not-null",
+    "source_kind": "synthetic",
+    "shape": "not-null",
+    "sql": "SELECT NULL NOT ILIKE 'a%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL NOT ILIKE 'a%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-23-typed-null",
+    "source_kind": "synthetic",
+    "shape": "typed-null",
+    "sql": "SELECT NULL::TEXT ILIKE 'a%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL::TEXT ILIKE 'a%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-24-varchar-subject",
+    "source_kind": "synthetic",
+    "shape": "varchar-subject",
+    "sql": "SELECT 'AbCd'::VARCHAR(3) ILIKE 'abc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbCd'::VARCHAR(3) ILIKE 'abc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-25-varchar-pattern",
+    "source_kind": "synthetic",
+    "shape": "varchar-pattern",
+    "sql": "SELECT 'AbC' ILIKE 'abcdef'::VARCHAR(3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC' ILIKE 'abcdef'::VARCHAR(3) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-26-char-subject-padding",
+    "source_kind": "synthetic",
+    "shape": "char-subject-padding",
+    "sql": "SELECT 'AbC'::CHAR(5) ILIKE 'abc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'AbC'::CHAR(5) ILIKE 'abc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-27-char-subject-wildcard",
+    "source_kind": "synthetic",
+    "shape": "char-subject-wildcard",
+    "sql": "SELECT 'AbC'::CHAR(5) ILIKE 'abc%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC'::CHAR(5) ILIKE 'abc%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-28-char-subject-spaces",
+    "source_kind": "synthetic",
+    "shape": "char-subject-spaces",
+    "sql": "SELECT 'AbC'::CHAR(5) ILIKE 'abc  ' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC'::CHAR(5) ILIKE 'abc  ' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-29-char-pattern-trim",
+    "source_kind": "synthetic",
+    "shape": "char-pattern-trim",
+    "sql": "SELECT 'AbC' ILIKE 'abc'::CHAR(5) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC' ILIKE 'abc'::CHAR(5) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-30-char-both",
+    "source_kind": "synthetic",
+    "shape": "char-both",
+    "sql": "SELECT 'AbC'::CHAR(5) ILIKE 'abc'::CHAR(5) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'AbC'::CHAR(5) ILIKE 'abc'::CHAR(5) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-31-explicit-char-text",
+    "source_kind": "synthetic",
+    "shape": "explicit-char-text",
+    "sql": "SELECT ('AbC'::CHAR(5))::TEXT ILIKE 'abc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('AbC'::CHAR(5))::TEXT ILIKE 'abc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-32-char-null",
+    "source_kind": "synthetic",
+    "shape": "char-null",
+    "sql": "SELECT NULL::CHAR(5) ILIKE 'abc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL::CHAR(5) ILIKE 'abc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-33-pattern-concatenation",
+    "source_kind": "synthetic",
+    "shape": "pattern-concatenation",
+    "sql": "SELECT 'AbC' ILIKE 'a' || 'bc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC' ILIKE 'a' || 'bc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-34-subject-concatenation",
+    "source_kind": "synthetic",
+    "shape": "subject-concatenation",
+    "sql": "SELECT 'A' || 'bC' ILIKE 'abc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'A' || 'bC' ILIKE 'abc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-35-coalesce-subject",
+    "source_kind": "synthetic",
+    "shape": "coalesce-subject",
+    "sql": "SELECT COALESCE(NULL,'AbC') ILIKE 'abc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT COALESCE(NULL,'AbC') ILIKE 'abc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-36-case-pattern",
+    "source_kind": "synthetic",
+    "shape": "case-pattern",
+    "sql": "SELECT 'AbC' ILIKE CASE WHEN TRUE THEN 'a%' ELSE 'z%' END AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC' ILIKE CASE WHEN TRUE THEN 'a%' ELSE 'z%' END AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-37-coalesce-result",
+    "source_kind": "synthetic",
+    "shape": "coalesce-result",
+    "sql": "SELECT COALESCE(NULL ILIKE 'a%',FALSE) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT COALESCE(NULL ILIKE 'a%',FALSE) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-38-boolean-and",
+    "source_kind": "synthetic",
+    "shape": "boolean-and",
+    "sql": "SELECT 'AbC' ILIKE 'a%' AND TRUE AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC' ILIKE 'a%' AND TRUE AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-39-boolean-or",
+    "source_kind": "synthetic",
+    "shape": "boolean-or",
+    "sql": "SELECT 'AbC' ILIKE 'z%' OR TRUE AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC' ILIKE 'z%' OR TRUE AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-40-anonymous",
+    "source_kind": "synthetic",
+    "shape": "anonymous",
+    "sql": "SELECT ? ILIKE ? AS v;",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "AbC",
+      "abc"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ? ILIKE ? AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-41-reordered",
+    "source_kind": "synthetic",
+    "shape": "reordered",
+    "sql": "SELECT $2 ILIKE $1 AS v;",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "a%",
+      "AbC"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ?2 ILIKE ?1 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-42-repeated",
+    "source_kind": "synthetic",
+    "shape": "repeated",
+    "sql": "SELECT $1 ILIKE $1 AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "AbC"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ?1 ILIKE ?1 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-43-nullable-subject",
+    "source_kind": "synthetic",
+    "shape": "nullable-subject",
+    "sql": "SELECT $1 ILIKE 'a%' AS v;",
+    "parameter_types": "text?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT ?1 ILIKE 'a%' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-44-nullable-pattern",
+    "source_kind": "synthetic",
+    "shape": "nullable-pattern",
+    "sql": "SELECT 'AbC' ILIKE $1 AS v;",
+    "parameter_types": "text?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT 'AbC' ILIKE ?1 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-45-bound-char-subject",
+    "source_kind": "synthetic",
+    "shape": "bound-char-subject",
+    "sql": "SELECT CAST($1 AS CHAR(5)) ILIKE $2 AS v;",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "AbC",
+      "abc"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT CAST(?1 AS CHAR(5)) ILIKE ?2 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-46-bound-char-pattern",
+    "source_kind": "synthetic",
+    "shape": "bound-char-pattern",
+    "sql": "SELECT $1 ILIKE CAST($2 AS CHAR(5)) AS v;",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "AbC",
+      "abc"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ?1 ILIKE CAST(?2 AS CHAR(5)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-47-bound-not",
+    "source_kind": "synthetic",
+    "shape": "bound-not",
+    "sql": "SELECT $1 NOT ILIKE $2 AS v;",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "AbC",
+      "z%"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ?1 NOT ILIKE ?2 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-48-derived",
+    "source_kind": "synthetic",
+    "shape": "derived",
+    "sql": "SELECT d.s ILIKE d.p AS v FROM (SELECT 'AbC' AS s, 'abc' AS p) AS d;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT d.s ILIKE d.p AS v FROM (SELECT 'AbC' AS s, 'abc' AS p) AS d;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-49-ordered",
+    "source_kind": "synthetic",
+    "shape": "ordered",
+    "sql": "SELECT 'AbC' ILIKE 'a%' AS v ORDER BY v DESC NULLS LAST;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC' ILIKE 'a%' AS v ORDER BY v DESC NULLS LAST;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "ilike-50-null-bad-pattern",
+    "source_kind": "synthetic",
+    "shape": "null-bad-pattern",
+    "sql": "SELECT NULL::TEXT ILIKE $1 AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "\\"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL::TEXT ILIKE ?1 AS v;",
+    "sqlite_supported": false
+  }
+]

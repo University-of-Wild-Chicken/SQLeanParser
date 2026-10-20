@@ -33,6 +33,8 @@ mutual
     | aggregate fn arg distinct => simp only [translateExpr, translateExpr_idempotent arg]
     | isNull arg negated => simp only [translateExpr, translateExpr_idempotent arg]
     | pattern arg pattern insensitive => simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent pattern]
+    | regex arg pattern insensitive negated =>
+        simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent pattern]
     | cast arg target => simp only [translateExpr, translateExpr_idempotent arg]
     | subscript base subscripts =>
         simp only [translateExpr, List.attach_map_val, translateExpr_idempotent base]

@@ -84,6 +84,32 @@ private def readNumeric (input : List Char) (p : SourcePos) :
   | [] => pure ()
   pure (raw, rest, p')
 
+/-- PostgreSQL scans a maximal operator token before considering the finite
+supported operator vocabulary. `?` remains the explicitly supported anonymous
+placeholder extension, including conventional `column=?` spelling. -/
+private def pgOperatorChar (c : Char) : Bool := "~!@#^&|`+-*/%<>=".contains c
+
+private def pgOperatorPrefix : List Char → List Char
+  | [] => []
+  | c :: cs =>
+    if (c == '/' && cs.head? == some '*') || (c == '-' && cs.head? == some '-') then []
+    else if pgOperatorChar c then c :: pgOperatorPrefix cs
+    else []
+
+private def readPgOperator (input : List Char) (p : SourcePos) :
+    Except ParseError (String × List Char × SourcePos) := do
+  let raw := pgOperatorPrefix input
+  -- scan.l strips trailing +/− only from SQL-style operator runs. The
+  -- nonstandard characters in `||-`, `~-`, `!=+`, etc. prevent stripping.
+  let stripped := if raw.any (fun c => "~!@#^&|`%".contains c) then raw
+    else (raw.reverse.dropWhile (fun c => c == '+' || c == '-')).reverse
+  let chars := if stripped.isEmpty then raw.take 1 else stripped
+  let operator := String.ofList chars
+  if !(["+", "-", "*", "/", "=", "<", ">", "<=", ">=", "<>", "!=",
+      "||", "~", "~*", "!~", "!~*"] : List String).contains operator then
+    throw {position := p, message := s!"unsupported PostgreSQL operator '{operator}'"}
+  pure (operator, input.drop chars.length, chars.foldl advance p)
+
 private def lexLoop (sqlite : Bool) : Nat → List Char → SourcePos → Nat → Bool → List LexToken → Except ParseError (List LexToken)
   | 0, _, p, _, _, _ => .error { position := p, message := "lexer input bound exceeded" }
   | fuel + 1, input, p, anonymous, numbered, acc => do
@@ -135,15 +161,28 @@ private def lexLoop (sqlite : Bool) : Nat → List Char → SourcePos → Nat �
           else if c == '/' && d == '*' then
             let (rest, next) ← skipBlock (!sqlite) (input.length + 1) 1 ds (advance (advance p c) d)
             lexLoop sqlite fuel rest next anonymous numbered acc
+          else if !sqlite && pgOperatorChar c then
+            let (operator, rest, next) ← readPgOperator input p
+            lexLoop sqlite fuel rest next anonymous numbered
+              ({kind := .symbol operator, position := p} :: acc)
+          else if c == '!' && d == '~' then
+            match ds with
+            | '*' :: rest =>
+              lexLoop sqlite fuel rest (advance (advance (advance p c) d) '*') anonymous numbered
+                ({kind := .symbol "!~*", position := p} :: acc)
+            | _ =>
+              lexLoop sqlite fuel ds (advance (advance p c) d) anonymous numbered
+                ({kind := .symbol "!~", position := p} :: acc)
           else if (c == '<' && (d == '>' || d == '=')) || (c == '>' && d == '=') ||
-              (c == '!' && d == '=') || (c == ':' && d == ':') || (c == '|' && d == '|') then
+              (c == '!' && d == '=') || (c == ':' && d == ':') || (c == '|' && d == '|') ||
+              (c == '~' && d == '*') then
             lexLoop sqlite fuel ds (advance (advance p c) d) anonymous numbered
               ({kind := .symbol (String.ofList [c,d]), position := p} :: acc)
-          else if "(),;*./+-=<>[]:".contains c then
+          else if "(),;*./+-=<>[]:~".contains c then
             lexLoop sqlite fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
           else throw {position := p, message := s!"unsupported character '{c}'"}
         | [] =>
-          if "(),;*./+-=<>[]:".contains c then
+          if "(),;*./+-=<>[]:~".contains c then
             lexLoop sqlite fuel cs (advance p c) anonymous numbered ({kind := .symbol (String.singleton c), position := p} :: acc)
           else throw {position := p, message := s!"unsupported character '{c}'"}
 
@@ -582,6 +621,18 @@ mutual
             pure (if negated then .unary .not result else result)
         tailExpr fuel minPrec result true
       else
+        let regexFlags := match (← peek).kind with
+          | .symbol "~" => some (false, false)
+          | .symbol "~*" => some (true, false)
+          | .symbol "!~" => some (false, true)
+          | .symbol "!~*" => some (true, true)
+          | _ => none
+        if let some (insensitive, negated) := regexFlags then
+          if minPrec > 5 then return left
+          if ← read then fail "PostgreSQL regular-expression operators are not supported by the SQLite profile"
+          let _ ← pop
+          let right ← expression fuel 6
+          return ← tailExpr fuel minPrec (.regex left right insensitive negated) false
         if ← isAt "||" then
           -- PostgreSQL places general operators below arithmetic, whereas
           -- SQLite concatenation binds more tightly than multiplication.

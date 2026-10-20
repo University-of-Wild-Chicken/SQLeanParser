@@ -1,0 +1,1200 @@
+{
+  "format_version": 1,
+  "factor": "ilike",
+  "expected_count": 50,
+  "expected_sources": {
+    "hatchet": 1,
+    "river": 2,
+    "postgres": 7,
+    "duckdb": 40
+  },
+  "sources": {
+    "hatchet": {
+      "repository": "https://github.com/hatchet-dev/hatchet",
+      "commit": "392e7c472221cdab235cca674640e98f904e1ea0",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/hatchet-LICENSE.txt",
+      "license_sha256": "7388b34bd1ad4b9db3c72dcb73f434ea27c88e5ca8f02a24d4f970c906d79be3",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "pkg/repository/sqlcv1/workflows.sql.go",
+          "sha256": "0dd7b734ad4688e380ad82330b391c8cb8a7b1fe7e8d0eba9566728b1e561ed0",
+          "local_path": "fixtures/extended_types/sources/hatchet/pkg/repository/sqlcv1/workflows.sql.go"
+        }
+      ]
+    },
+    "river": {
+      "repository": "https://github.com/riverqueue/river",
+      "commit": "1354a059d7cbe5790acc7a755a2ab7ac6d2f1ed8",
+      "license": "MPL-2.0",
+      "license_file": "fixtures/external_postgresql/licenses/river-LICENSE.txt",
+      "license_sha256": "393eaf2b92b3d49bea139e39b6fd205b6e99c499999986aec5554586a830dfdd",
+      "files": [
+        {
+          "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+          "sha256": "b99dbdd330354a11c984acbeb4de8234343d387d17f2aff2b49ef3ae3ca05650",
+          "local_path": "fixtures/external_postgresql/sources/river/riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go"
+        },
+        {
+          "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+          "sha256": "b86e3fa0032236c912832b5222a070f82efa8519fb92027e4ebca2fdb17f5306",
+          "local_path": "fixtures/external_postgresql/sources/river/riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go"
+        }
+      ],
+      "expected_included": 56,
+      "expected_candidates": 57,
+      "source_kind": "application-constant"
+    },
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "contrib/pg_trgm/sql/pg_trgm.sql",
+          "sha256": "b123655b258093a3935b7e1edf5de3526df6eccf25affa1d44cf25c174dacfb6",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/pg_trgm/sql/pg_trgm.sql"
+        },
+        {
+          "path": "src/test/regress/sql/btree_index.sql",
+          "sha256": "21238402012e9ae1332f7e8d5f509ed209750183f348e658d21a9a2ee977d1ab",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/btree_index.sql"
+        },
+        {
+          "path": "src/test/regress/sql/strings.sql",
+          "sha256": "a7828ef7fed9179d3de172fba7a81b75268606b7d43acda8943bce17c72480db",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/strings.sql"
+        }
+      ]
+    },
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "source_kind": "engine-regression",
+      "source_dialect": "duckdb",
+      "files": [
+        {
+          "path": "test/sql/function/string/test_ilike.test",
+          "sha256": "f42671a847041e8209a5cc99430e99b48b5203fc16e636d91170bb66fc8d1177",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/function/string/test_ilike.test"
+        },
+        {
+          "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+          "sha256": "59cdaeb10259054a055f17503cce333f77f64fc8fc8f63d7fb71b3bccb6e18f2",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/function/string/test_ilike_constant_pattern.test"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/workflows.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listWorkflows"
+      },
+      "sql_sha256": "18ac1ce380aa8f62bda2214393a3429c1fe730c81e47cc8fca0ac297ef7d96ac",
+      "observed_syntax": {
+        "function_names": [
+          "concat"
+        ],
+        "conditional_forms": [
+          "coalesce",
+          "searched-case"
+        ],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "FuncCall"
+          }
+        ]
+      }
+    },
+    {
+      "source": "river",
+      "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_job.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "jobKindList"
+      },
+      "sql_sha256": "9957fe12533c3e4a791e03b42647781ccf52bda9c773b56797f8bc293cdabfda",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Expr"
+          }
+        ]
+      }
+    },
+    {
+      "source": "river",
+      "path": "riverdriver/riverpgxv5/internal/dbsqlc/river_queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "queueNameList"
+      },
+      "sql_sha256": "7ae03dffa1ade72b535fcf4f67d96832e91fc275ce8e2eaa3f1a82c59c5017c5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Expr"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19870,
+        "end": 19908,
+        "statement_index": 280
+      },
+      "sql_sha256": "3abe6fe848d6e716bd5318c3fdb6ce748fc411f4fdb772af7512ed779164cbc0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19909,
+        "end": 19952,
+        "statement_index": 281
+      },
+      "sql_sha256": "6a8543fb171495c9a7920b033d2fc1c4ce7a446665d252779e302521334e296a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "NOT ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20038,
+        "end": 20079,
+        "statement_index": 284
+      },
+      "sql_sha256": "eeaebd545a2f9a1dcc7a34b6b95400a12280f091ecc39a1bba9a9b3c80c7a5e8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/strings.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20080,
+        "end": 20126,
+        "statement_index": 285
+      },
+      "sql_sha256": "76c168f301d778c1ed6b4122f16ab05f705f8498faa08ed3ac465c589f6a0172",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "NOT ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_trgm/sql/pg_trgm.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6098,
+        "end": 6140,
+        "statement_index": 90
+      },
+      "sql_sha256": "77a5a7b53b5044cd029f9e66bd952919a2d2cb0c12a450bd82afdc05d0735360",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pg_trgm/sql/pg_trgm.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6141,
+        "end": 6182,
+        "statement_index": 91
+      },
+      "sql_sha256": "c8b79e473b41e5b9c87e1457e136d096054de3966118b51feeadc093de42e583",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/btree_index.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2613,
+        "end": 2681,
+        "statement_index": 34
+      },
+      "sql_sha256": "73554079ae249e31f953c448d0a15b19697dec6a2dd6da1013c7f4b075d9e163",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 126,
+        "end": 151,
+        "header_line": 6
+      },
+      "sql_sha256": "bde1679e4c67c5dab24b13d55df3aeb0824f56b8cd1045f6f417d9eecff4fe76",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 167,
+        "end": 192,
+        "header_line": 11
+      },
+      "sql_sha256": "2649d85105c8d61f8642acd287e27d2bb9c4799ddf1b2d0d0989464d76be8105",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 208,
+        "end": 231,
+        "header_line": 16
+      },
+      "sql_sha256": "c12facbdf1b3488e9155a06eb1db3490b9651d3b4c6efb98a467e60a6f3573e2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 247,
+        "end": 271,
+        "header_line": 21
+      },
+      "sql_sha256": "9eb00272d88749c89afa29970154b0f7f71ef571263260259852df57727d66f4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 287,
+        "end": 311,
+        "header_line": 26
+      },
+      "sql_sha256": "1157bab07c4e19966daf5e7604bda1d31528f7594acaca4d2027b1cd11eecfb4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 327,
+        "end": 351,
+        "header_line": 31
+      },
+      "sql_sha256": "f7a1ab37c13b04e93a7dfa10e109ee1f2e211af708e447e19abf65e4a44c1750",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 367,
+        "end": 391,
+        "header_line": 36
+      },
+      "sql_sha256": "7c244847f1281b1323fc29b42143e73f50184cb3ecfdcb13d9281f573b0eeeed",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 407,
+        "end": 432,
+        "header_line": 41
+      },
+      "sql_sha256": "39233165dced8a6cf85742dad240dc44f10fdde4f6619aea37b7d00e7dbf5c78",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 448,
+        "end": 472,
+        "header_line": 46
+      },
+      "sql_sha256": "183a078e3022e283b0e3c1154f4078ffb0415f91d1ca654faf8b07449b616d44",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 488,
+        "end": 513,
+        "header_line": 51
+      },
+      "sql_sha256": "7d44af97abf5fe17646e3effca4232a1b62afd49451189b5cb9c5b221f91fb7f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 529,
+        "end": 556,
+        "header_line": 56
+      },
+      "sql_sha256": "bf61949765f9f60f0ea7fdc645642486eb4acea0e477a5f26dca3d6109007fd1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 572,
+        "end": 602,
+        "header_line": 61
+      },
+      "sql_sha256": "7168abbf7e5d74ad153cd709ef1a4d6e63d085e6757af155beadd58032d707cc",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 618,
+        "end": 650,
+        "header_line": 66
+      },
+      "sql_sha256": "33dc51778f987d7e49a88fce1b65a4b418d49db8d57ca1672563bdc6099d6cc8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 666,
+        "end": 700,
+        "header_line": 71
+      },
+      "sql_sha256": "4102c00c46d5d3de79fa92fd0bf1bbd7dd380711ed6ab40683341922bf8e3958",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 716,
+        "end": 764,
+        "header_line": 76
+      },
+      "sql_sha256": "c032e43c057629c474e34a6862cb0b81fd64711962aedfdf5c4eb4b3c09549b5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 780,
+        "end": 828,
+        "header_line": 81
+      },
+      "sql_sha256": "795996bf98179236c6a47d812f5f8ef758d36c5bab239d3c4cfe661ab73b64a2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 844,
+        "end": 878,
+        "header_line": 86
+      },
+      "sql_sha256": "c655380576c489d0ac9a300ff98edfa51907602b5803b8804105876a45a3e5d2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "NOT ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1119,
+        "end": 1163,
+        "header_line": 103
+      },
+      "sql_sha256": "0ffa9335e95cc7a79b23a6e1a5f16410c0be9904c0bb80443c8c86f33fa535df",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1190,
+        "end": 1238,
+        "header_line": 110
+      },
+      "sql_sha256": "594a79304554eac546cc94c2415c1e5091084c0ac91bc58f14e48cc5a50bd890",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "NOT ILIKE",
+            "left_form": "A_Const",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1252,
+        "end": 1292,
+        "header_line": 114
+      },
+      "sql_sha256": "d4d073ac3bcba7f8ae35adf122937f08d9c2b9fe94051dcc502f35baa47df95c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1315,
+        "end": 1359,
+        "header_line": 120
+      },
+      "sql_sha256": "5b2565309ae415afb6204ab6dbb57dda6386aece1ae7c1c11a6ed211da09afe1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "NOT ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1387,
+        "end": 1424,
+        "header_line": 126
+      },
+      "sql_sha256": "c41401a367399175470f98252ee272a6d169b5bf6be53965a2d10af42bcb319f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "A_Const",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1603,
+        "end": 1651,
+        "header_line": 138
+      },
+      "sql_sha256": "d11b5a7d472bba3dabe0723ec321175f6fe6e118f58d9902cdca8cd7fd79ccd5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1673,
+        "end": 1725,
+        "header_line": 144
+      },
+      "sql_sha256": "909677b29935effc7064fde7dd27ec4f7b5fb48f2b5f18fce878f61d80ec7b71",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "NOT ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 783,
+        "end": 836,
+        "header_line": 23
+      },
+      "sql_sha256": "9af0f835f7faf6bfa5660205f683f7d1728d8c542ed81d71245b72b1a20875bf",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 852,
+        "end": 905,
+        "header_line": 28
+      },
+      "sql_sha256": "68ef92b0dde27bb16a8cd13b417d13f896ee7e690a8a9f0685ea853f4b89134c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 921,
+        "end": 978,
+        "header_line": 33
+      },
+      "sql_sha256": "5b7b945afb56503a2f7b16b8839f12fe11a9ca8d92c09d7eaf1fc969a0af7e41",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1177,
+        "end": 1230,
+        "header_line": 44
+      },
+      "sql_sha256": "3fe727e66b141ded600c6787547c5b9137bdba223d1aeeea1ca2dfb87fe1cc3a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1246,
+        "end": 1297,
+        "header_line": 49
+      },
+      "sql_sha256": "83848d404a81da6db602324584508b7431f9b8d405055d1232419b1ce4993816",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1368,
+        "end": 1433,
+        "header_line": 55
+      },
+      "sql_sha256": "cc12d8a8c20aef322fd9560007be356016b44c84b81baca092a4fac56c3ac9b4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1509,
+        "end": 1562,
+        "header_line": 61
+      },
+      "sql_sha256": "dc948ab7e76fd4a56ed54d12023a0d6b7dc24b2661fd60a14e18af8f0be06e98",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1578,
+        "end": 1630,
+        "header_line": 66
+      },
+      "sql_sha256": "0ac115a2b4015c2ced04887848bb03964ba8810529448f9bc04985741246d6cf",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1692,
+        "end": 1747,
+        "header_line": 72
+      },
+      "sql_sha256": "07aa63827e5e4824189e8d25c6338d615f03cff884de63b7c4597b33f22c0b67",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1761,
+        "end": 1815,
+        "header_line": 76
+      },
+      "sql_sha256": "d5d00bc5c7a56b8b17510ed060468f8acba47d4120d4b5f78feef09ff575a6a1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 1927,
+        "end": 1979,
+        "header_line": 82
+      },
+      "sql_sha256": "cc96aaf949a8106794a521105f15f0dfdaf6cd71fdecb3db5196f75da19d01a3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2050,
+        "end": 2111,
+        "header_line": 89
+      },
+      "sql_sha256": "750bad155bffa5e9dff64527b735371cea574e639a81f8f58b8bb16e3d4effed",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2233,
+        "end": 2286,
+        "header_line": 95
+      },
+      "sql_sha256": "668b8942900eb06551eae2342568341771d871d197b35d7616700f790b35aa40",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "NOT ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2423,
+        "end": 2469,
+        "header_line": 114
+      },
+      "sql_sha256": "a53e94e61c7bb512b04437c28b3d935213c9a070733df3af3fd1dbd601dab0d0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 2548,
+        "end": 2596,
+        "header_line": 120
+      },
+      "sql_sha256": "c646e9cb966a43796658abcf50bb169fa3f531572b47eaebec8d0b8f9dd769d0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "A_Const"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/function/string/test_ilike_constant_pattern.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 3166,
+        "end": 3216,
+        "header_line": 153
+      },
+      "sql_sha256": "c5f9be5bbec1f919aa6a319cc779eda882f7d96f6a4cb1b20efc343e27d13dae",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "pattern_matches": [
+          {
+            "operator": "ILIKE",
+            "left_form": "ColumnRef",
+            "right_form": "ColumnRef"
+          }
+        ]
+      }
+    }
+  ]
+}

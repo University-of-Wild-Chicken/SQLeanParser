@@ -160,15 +160,30 @@ mutual
       | .isNull a negated => do
           let arg ← checkExpr fuel params scope a
           .ok ⟨some ⟨.bool, false⟩, arg.uses, .isNull (negated := negated) arg.valid⟩
-      | .pattern a b insensitive =>
-          if h : insensitive = false then do
-            let arg ← checkExpr fuel params scope a
-            let pattern ← checkExpr fuel params scope b
-            match signature : patternSignature arg.type pattern.type with
-            | none => .error (missingSignature (uncontextualizedString a || uncontextualizedString b)
-                "pattern_signature" "LIKE requires compatible string or BYTEA operands")
-            | some type => .ok ⟨type, arg.uses ++ pattern.uses, h ▸ .pattern arg.valid pattern.valid signature⟩
-          else .error (unsupported "ilike" "ILIKE requires a separate dialect extension")
+      | .pattern a b false => do
+          let arg ← checkExpr fuel params scope a
+          let pattern ← checkExpr fuel params scope b
+          match signature : patternSignature arg.type pattern.type with
+          | none => .error (missingSignature (uncontextualizedString a || uncontextualizedString b)
+              "pattern_signature" "LIKE requires compatible string or BYTEA operands")
+          | some type => .ok ⟨type, arg.uses ++ pattern.uses, .pattern arg.valid pattern.valid signature⟩
+      | .pattern a b true => do
+          let arg ← checkExpr fuel params scope a
+          let pattern ← checkExpr fuel params scope b
+          match signature : stringMatchSignature (scalarInput a arg.type) (scalarInput b pattern.type) with
+          | none => .error (invalid "ilike_signature" "ILIKE requires string or contextually typed unknown operands")
+          | some _selected => .ok ⟨some ⟨.bool,
+                (scalarInput a arg.type).nullable || (scalarInput b pattern.type).nullable⟩,
+              arg.uses ++ pattern.uses, .ilike arg.valid pattern.valid signature⟩
+      | .regex a b insensitive negated => do
+          let arg ← checkExpr fuel params scope a
+          let pattern ← checkExpr fuel params scope b
+          match signature : stringMatchSignature (scalarInput a arg.type) (scalarInput b pattern.type) with
+          | none => .error (invalid "regex_signature" "Regex matching requires string or contextually typed unknown operands")
+          | some _selected => .ok ⟨some ⟨.bool,
+                (scalarInput a arg.type).nullable || (scalarInput b pattern.type).nullable⟩,
+              arg.uses ++ pattern.uses,
+              .regex (insensitive := insensitive) (negated := negated) arg.valid pattern.valid signature⟩
       | .cast a target => do
           if declaration : DataTypeWellFormed target then
             match supported : concreteType target with
@@ -620,7 +635,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
     | _ =>
       let children : List Advanced.Expr := match expr with
         | .binary _ a b | .pattern a b _ | .nullIf a b
-        | .quantifiedComparison _ _ a b | .concat a b => [a, b]
+        | .quantifiedComparison _ _ a b | .concat a b | .regex a b .. => [a, b]
         | .unary _ a | .cast a _ | .isNull a _ | .inQuery a _ => [a]
         | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
         | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args

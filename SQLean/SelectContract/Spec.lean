@@ -176,6 +176,14 @@ mutual
     | pattern (arg : ExprValid params scope a ta ua) (pattern : ExprValid params scope b tb ub)
         (signature : patternSignature ta tb = some result) :
         ExprValid params scope (.pattern a b false) result (ua ++ ub)
+    | ilike (arg : ExprValid params scope a ta ua) (pattern : ExprValid params scope b tb ub)
+        (signature : stringMatchSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
+        ExprValid params scope (.pattern a b true)
+          (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
+    | regex (arg : ExprValid params scope a ta ua) (pattern : ExprValid params scope b tb ub)
+        (signature : stringMatchSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
+        ExprValid params scope (.regex a b insensitive negated)
+          (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
     | cast (arg : ExprValid params scope a ta uses) (supported : concreteType target = some base)
         (declaration : DataTypeWellFormed target) (allowed : castAllowed ta base = true)
         (ordinary : OrdinaryCast a target) :

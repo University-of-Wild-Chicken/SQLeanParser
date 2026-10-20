@@ -50,6 +50,10 @@ mutual
     | .aggregate fn arg distinct => aggregateSql fn ++ paren ((if distinct then "DISTINCT " else "") ++ exprSql arg)
     | .isNull arg negated => paren (exprSql arg ++ if negated then " IS NOT NULL" else " IS NULL")
     | .pattern arg pattern insensitive => paren (exprSql arg ++ (if insensitive then " ILIKE " else " LIKE ") ++ exprSql pattern)
+    -- Kept total for structural serialization laws; checked SQLite rendering
+    -- excludes PostgreSQL regex operators before exposing this spelling.
+    | .regex arg pattern insensitive negated =>
+        paren (exprSql arg ++ " " ++ regexOperatorSql insensitive negated ++ " " ++ exprSql pattern)
     | .cast arg type => "CAST(" ++ exprSql arg ++ " AS " ++ type.toSql ++ ")"
     -- Excluded by SQLite admissibility; this total structural spelling is only
     -- used by serialization laws over arbitrary finite ASTs.

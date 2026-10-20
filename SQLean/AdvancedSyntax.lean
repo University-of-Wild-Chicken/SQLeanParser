@@ -103,6 +103,9 @@ mutual
     | aggregate (fn : AggregateFn) (arg : Expr) (distinct : Bool := false)
     | isNull (arg : Expr) (negated : Bool := false)
     | pattern (arg pattern : Expr) (insensitive : Bool := false)
+    /-- PostgreSQL's four regular-expression match operators. Negation remains
+    part of the selected operator rather than being rewritten into NOT. -/
+    | regex (arg pattern : Expr) (insensitive negated : Bool := false)
     | cast (arg : Expr) (target : DataType)
     /-- PostgreSQL ARRAY[...] constructor. Nested bracket shorthand normalizes
     to nested constructors; declared dimensions remain runtime properties. -/

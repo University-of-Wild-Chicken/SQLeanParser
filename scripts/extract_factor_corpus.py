@@ -37,6 +37,8 @@ POPULATIONS = {
     "array_subscripts": {"postgres": 24, "duckdb": 26},
     "row_comparisons": {"hatchet": 16, "postgres": 8, "temporal": 6, "sqlite": 20},
     "concatenation": {"hatchet": 1, "postgres": 49},
+    "ilike": {"hatchet": 1, "river": 2, "postgres": 7, "duckdb": 40},
+    "regex": {"postgres": 50},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -584,6 +586,81 @@ def observe_concatenations(parsed: dict) -> list[dict]:
     return result
 
 
+PATTERN_OPERATORS = {"ilike": {"ILIKE", "NOT ILIKE"}, "regex": {"~", "~*", "!~", "!~*"}}
+PATTERN_OPERAND_FORMS = {"A_Const", "ColumnRef", "TypeCast", "A_Expr", "FuncCall"}
+
+
+def validate_pattern_matches(entries: list[dict], factor: str) -> None:
+    if factor not in PATTERN_OPERATORS:
+        raise ValueError("unknown pattern source factor")
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("pattern source factor is absent")
+    for entry in entries:
+        if (not isinstance(entry, dict) or set(entry) != {"operator", "left_form", "right_form"}
+                or not isinstance(entry["operator"], str)
+                or entry["operator"] not in PATTERN_OPERATORS[factor]
+                or any(not isinstance(entry[side], str) or entry[side] not in PATTERN_OPERAND_FORMS
+                       for side in ("left_form", "right_form"))):
+            raise ValueError("invalid pattern source observation")
+
+
+def observe_pattern_matches(parsed: dict, factor: str) -> list[dict]:
+    """Observe literal operator syntax, not collation, type, or pattern validity."""
+    if factor not in PATTERN_OPERATORS:
+        raise ValueError("unknown pattern source factor")
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("pattern source must be a SELECT")
+    result = []
+    ilike_names = {"~~*": "ILIKE", "!~~*": "NOT ILIKE"}
+
+    def form(operand):
+        if not isinstance(operand, dict) or len(operand) != 1:
+            raise ValueError("pattern match requires two expression operands")
+        return next(iter(operand))
+
+    def walk(value):
+        if isinstance(value, list):
+            for child in value:
+                walk(child)
+        elif isinstance(value, dict):
+            for kind, node in value.items():
+                if not isinstance(node, dict):
+                    walk(node)
+                    continue
+                if kind in {"A_ArrayExpr", "A_Indices", "A_Indirection", "RowExpr"}:
+                    raise ValueError("array access/constructor or row is outside this pattern population")
+                if kind in {"TypeName", "typeName"} and node.get("arrayBounds") and factor != "ilike":
+                    raise ValueError("array types are outside this regex population")
+                if kind == "SubLink" and node.get("subLinkType") in {
+                        "ANY_SUBLINK", "ALL_SUBLINK", "ARRAY_SUBLINK", "ROWCOMPARE_SUBLINK"}:
+                    raise ValueError("array/quantified subquery is outside this pattern population")
+                if kind == "FuncCall" and [
+                        part.get("String", {}).get("sval") for part in node.get("funcname", [])
+                ] == ["pg_catalog", "like_escape"]:
+                    raise ValueError("explicit ESCAPE is outside this pattern population")
+                if kind == "A_Expr":
+                    names = [part.get("String", {}).get("sval") for part in node.get("name", [])]
+                    expr_kind = node.get("kind")
+                    operator = None
+                    if factor == "ilike" and expr_kind == "AEXPR_ILIKE":
+                        if len(names) != 1 or names[0] not in ilike_names:
+                            raise ValueError("unknown ILIKE source spelling")
+                        operator = ilike_names[names[0]]
+                    elif expr_kind == "AEXPR_OP":
+                        if factor == "regex" and len(names) == 1 and names[0] in PATTERN_OPERATORS[factor]:
+                            operator = names[0]
+                        elif len(names) != 1 or names[0] not in COMPARISON_OPERATORS | {"+", "-", "*", "/", "||"}:
+                            raise ValueError("another extended operator is outside this pattern population")
+                    if operator is not None:
+                        result.append({"operator": operator, "left_form": form(node.get("lexpr")),
+                                       "right_form": form(node.get("rexpr"))})
+                walk(node)
+
+    walk(parsed)
+    validate_pattern_matches(result, factor)
+    return result
+
+
 def observe_oracle(sql: str, factor: str) -> dict:
     import pglast
     from pglast import ast, enums, parse_sql, parser, visitors
@@ -599,7 +676,7 @@ def observe_oracle(sql: str, factor: str) -> dict:
             names = [part.sval for part in node.names or ()]
             if (not names or names[-1] not in NEW_FAMILIES | OLD_FAMILIES
                     or len(names) > 2 or (len(names) == 2 and names[0] != "pg_catalog")
-                    or (node.arrayBounds and factor not in ARRAY_FACTORS | {"row_comparisons"})):
+                    or (node.arrayBounds and factor not in ARRAY_FACTORS | {"row_comparisons", "ilike"})):
                 raise ValueError("array/user-defined type belongs to a later factor")
 
         def visit_FuncCall(self, ancestors, node):
@@ -645,17 +722,17 @@ def observe_oracle(sql: str, factor: str) -> dict:
     observer.locks = []
     observer(tree)
     allowed = {"general-function-call", "comma-from", "expression-limit-offset", "extended-type"}
-    if factor in {"conditional", "locking", "derived_contract", "array_types", "array_quantified", "row_comparisons", "concatenation"} | JOIN_FACTORS:
+    if factor in {"conditional", "locking", "derived_contract", "array_types", "array_quantified", "row_comparisons", "concatenation", "ilike", "regex"} | JOIN_FACTORS:
         allowed.add("conditional-expression")
     if factor in {"locking", "array_types", "row_comparisons"}:
         allowed.add("row-locking")
-    if factor in ARRAY_FACTORS | {"row_comparisons"}:
+    if factor in ARRAY_FACTORS | {"row_comparisons", "ilike"}:
         allowed.add("array-or-subscripting")
-    if factor in {"array_quantified", "row_comparisons"}:
+    if factor in {"array_quantified", "row_comparisons", "ilike"}:
         allowed.add("quantified-comparison")
     if factor == "row_comparisons":
         allowed.add("row-constructor")
-    if factor == "concatenation":
+    if factor in {"concatenation", "ilike", "regex"}:
         allowed.add("extended-operator")
     unexpected = set(features(json.loads(parser.parse_sql_json(sql)))) - allowed
     if unexpected:
@@ -730,6 +807,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "concatenation":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["concatenations"] = observe_concatenations(parsed)
+    if factor in PATTERN_OPERATORS:
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation["pattern_matches"] = observe_pattern_matches(parsed, factor)
     return observation
 
 
@@ -750,6 +830,7 @@ def validate_population(records: list[dict], factor: str) -> None:
     subscript_nested = 0
     row_operators, row_arities, row_forms = Counter(), Counter(), Counter()
     concat_left, concat_right, concat_casts = Counter(), Counter(), Counter()
+    pattern_operators, pattern_left, pattern_right = Counter(), Counter(), Counter()
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -779,6 +860,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("row_comparisons")
         if factor == "concatenation":
             expected_keys.add("concatenations")
+        if factor in PATTERN_OPERATORS:
+            expected_keys.add("pattern_matches")
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -854,6 +937,12 @@ def validate_population(records: list[dict], factor: str) -> None:
             concat_right.update(entry["right"]["form"] for entry in entries)
             concat_casts.update(entry[side]["declared_type"] for entry in entries for side in ("left", "right")
                                 if entry[side]["declared_type"] is not None)
+        if factor in PATTERN_OPERATORS:
+            entries = observation["pattern_matches"]
+            validate_pattern_matches(entries, factor)
+            pattern_operators.update(entry["operator"] for entry in entries)
+            pattern_left.update(entry["left_form"] for entry in entries)
+            pattern_right.update(entry["right_form"] for entry in entries)
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -895,6 +984,16 @@ def validate_population(records: list[dict], factor: str) -> None:
             or concat_casts != {"jsonb": 42, "text": 4, "pg_catalog.bpchar": 2,
                                 "pg_catalog.varchar": 1, "bytea": 1}):
         raise ValueError("concatenation population must retain its 86 nodes and declared casts")
+    if factor == "ilike" and (
+            pattern_operators != {"ILIKE": 43, "NOT ILIKE": 7}
+            or pattern_left != {"ColumnRef": 26, "A_Const": 24}
+            or pattern_right != {"A_Const": 40, "ColumnRef": 7, "A_Expr": 2, "FuncCall": 1}):
+        raise ValueError("ILIKE population must retain its 50 nodes and operand forms")
+    if factor == "regex" and (
+            pattern_operators != {"~": 42, "~*": 6, "!~": 1, "!~*": 1}
+            or pattern_left != {"A_Const": 27, "ColumnRef": 22, "TypeCast": 1}
+            or pattern_right != {"A_Const": 49, "ColumnRef": 1}):
+        raise ValueError("regex population must retain its 50 nodes and operand forms")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -913,7 +1012,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation"} | ARRAY_FACTORS | JOIN_FACTORS:
+            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -927,10 +1026,10 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                 raise ValueError("Tcl SQL selection is outside its explicit source factors")
             sql, line, detail = selected_tcl_sql(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "sqllogic_query":
-            if factor != "array_subscripts" or name != "duckdb":
+            if factor not in {"array_subscripts", "ilike"} or name != "duckdb":
                 raise ValueError("SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_sqllogic_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation"} | ARRAY_FACTORS | JOIN_FACTORS:
+        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])

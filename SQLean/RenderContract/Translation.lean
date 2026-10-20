@@ -31,6 +31,8 @@ mutual
     | .aggregate fn arg distinct => .aggregate fn (translateExpr arg) distinct
     | .isNull arg negated => .isNull (translateExpr arg) negated
     | .pattern arg pattern insensitive => .pattern (translateExpr arg) (translateExpr pattern) insensitive
+    | .regex arg pattern insensitive negated =>
+        .regex (translateExpr arg) (translateExpr pattern) insensitive negated
     | .cast arg target => .cast (translateExpr arg) target
     | .subscript base subscripts => .subscript (translateExpr base)
         (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>

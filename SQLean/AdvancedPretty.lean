@@ -49,6 +49,10 @@ def ComparisonOp.toSql : ComparisonOp → String
 
 def ArrayQuantifier.toSql : ArrayQuantifier → String
   | .any => "ANY" | .some => "SOME" | .all => "ALL"
+
+def regexOperatorSql (insensitive negated : Bool) : String :=
+  (if negated then "!~" else "~") ++ (if insensitive then "*" else "")
+
 private def aggregateSql : AggregateFn → String
   | .count => "COUNT" | .sum => "SUM" | .avg => "AVG" | .min => "MIN" | .max => "MAX"
 private def joinSql : JoinKind → String
@@ -83,6 +87,8 @@ mutual
     | .aggregate fn arg distinct => aggregateSql fn ++ paren ((if distinct then "DISTINCT " else "") ++ exprSql pg arg)
     | .isNull arg negated => paren (exprSql pg arg ++ if negated then " IS NOT NULL" else " IS NULL")
     | .pattern arg pattern insensitive => paren (exprSql pg arg ++ (if insensitive then " ILIKE " else " LIKE ") ++ exprSql pg pattern)
+    | .regex arg pattern insensitive negated =>
+        paren (exprSql pg arg ++ " " ++ regexOperatorSql insensitive negated ++ " " ++ exprSql pg pattern)
     | .cast arg type => "CAST(" ++ exprSql pg arg ++ " AS " ++ type.toSql ++ ")"
     | .subscript base subscripts => paren (exprSql pg base) ++ String.join
         (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>

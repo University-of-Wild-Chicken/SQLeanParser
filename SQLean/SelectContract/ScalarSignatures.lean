@@ -143,6 +143,53 @@ def concatSignature (left right : ScalarInput) : Option ConcatSignature :=
       else if a == .bytea && b == .bytea then bytea
       else none
 
+/-- PostgreSQL string-matching operators represented directly by this
+increment. NOT ILIKE uses the existing unary-NOT normalization instead. -/
+inductive StringMatchOperator where
+  | ilike
+  | regex (insensitive negated : Bool)
+  deriving Repr, BEq, DecidableEq
+
+def stringMatchOperators : List StringMatchOperator :=
+  [.ilike, .regex false false, .regex true false, .regex false true, .regex true true]
+
+def StringMatchOperator.toSql : StringMatchOperator → String
+  | .ilike => "~~*"
+  | .regex false false => "~"
+  | .regex true false => "~*"
+  | .regex false true => "!~"
+  | .regex true true => "!~*"
+
+def StringMatchOperator.functionName (operator : StringMatchOperator) (charLeft : Bool) : String :=
+  (if charLeft then "bpchar" else "text") ++
+    match operator with
+    | .ilike => "iclike"
+    | .regex false false => "regexeq"
+    | .regex true false => "icregexeq"
+    | .regex false true => "regexne"
+    | .regex true true => "icregexne"
+
+/-- All admitted ILIKE/regex operators have these two declared signatures.
+CHAR on the left retains its padding through the bpchar-specific operator.
+CHAR on the right is converted to TEXT, which strips its padding. -/
+def stringMatchOverloads : List FunctionOverload :=
+  [⟨[.text, .text], .bool⟩, ⟨[.char [], .text], .bool⟩]
+
+/-- Exact closed string operand selection. Unknown constants receive TEXT
+context; a known CHAR left operand selects the bpchar overload. Unlike
+concatenation, these operators do not accept arbitrary nonarray scalars.
+BYTEA is admitted only by the separate LIKE rule. -/
+def stringMatchSignature (left right : ScalarInput) : Option FunctionOverload :=
+  let accepts : ScalarInput → Bool
+    | .unknown _ => true
+    | .known type => type.base.isString
+  if accepts left && accepts right then
+    let first := match left.base with
+      | some (.char _) => ScalarType.char []
+      | _ => .text
+    some ⟨[first, .text], .bool⟩
+  else none
+
 private def keepBest (score : FunctionOverload → Nat) (candidates : List FunctionOverload) :
     List FunctionOverload :=
   let best := (candidates.map score).foldl max 0

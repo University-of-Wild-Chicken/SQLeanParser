@@ -1,0 +1,1014 @@
+[
+  {
+    "id": "regex-01-substring",
+    "source_kind": "synthetic",
+    "shape": "substring",
+    "sql": "SELECT 'abcd' ~ 'bc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abcd' ~ 'bc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-02-case-sensitive-miss",
+    "source_kind": "synthetic",
+    "shape": "case-sensitive-miss",
+    "sql": "SELECT 'AbCd' ~ 'bc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'AbCd' ~ 'bc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-03-insensitive",
+    "source_kind": "synthetic",
+    "shape": "insensitive",
+    "sql": "SELECT 'AbCd' ~* 'bc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbCd' ~* 'bc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-04-negated-sensitive",
+    "source_kind": "synthetic",
+    "shape": "negated-sensitive",
+    "sql": "SELECT 'AbCd' !~ 'bc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbCd' !~ 'bc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-05-negated-insensitive",
+    "source_kind": "synthetic",
+    "shape": "negated-insensitive",
+    "sql": "SELECT 'AbCd' !~* 'bc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'AbCd' !~* 'bc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-06-anchored",
+    "source_kind": "synthetic",
+    "shape": "anchored",
+    "sql": "SELECT 'abc' ~ '^abc$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc' ~ '^abc?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-07-anchored-miss",
+    "source_kind": "synthetic",
+    "shape": "anchored-miss",
+    "sql": "SELECT 'xabc' ~ '^abc$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'xabc' ~ '^abc?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-08-alternation",
+    "source_kind": "synthetic",
+    "shape": "alternation",
+    "sql": "SELECT 'abcd' ~ '(bc|xy)' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abcd' ~ '(bc|xy)' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-09-bracket",
+    "source_kind": "synthetic",
+    "shape": "bracket",
+    "sql": "SELECT 'abc3' ~ '[0-9]$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc3' ~ '[0-9]?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-10-dot",
+    "source_kind": "synthetic",
+    "shape": "dot",
+    "sql": "SELECT 'abc' ~ '^a.c$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc' ~ '^a.c?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-11-star",
+    "source_kind": "synthetic",
+    "shape": "star",
+    "sql": "SELECT 'ac' ~ '^ab*c$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'ac' ~ '^ab*c?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-12-plus",
+    "source_kind": "synthetic",
+    "shape": "plus",
+    "sql": "SELECT 'abbc' ~ '^ab+c$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abbc' ~ '^ab+c?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-13-optional",
+    "source_kind": "synthetic",
+    "shape": "optional",
+    "sql": "SELECT 'ac' ~ '^ab?c$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'ac' ~ '^ab?c?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-14-count",
+    "source_kind": "synthetic",
+    "shape": "count",
+    "sql": "SELECT 'abbc' ~ '^ab{2}c$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abbc' ~ '^ab{2}c?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-15-range",
+    "source_kind": "synthetic",
+    "shape": "range",
+    "sql": "SELECT 'abbbc' ~ '^ab{2,4}c$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abbbc' ~ '^ab{2,4}c?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-16-empty-pattern",
+    "source_kind": "synthetic",
+    "shape": "empty-pattern",
+    "sql": "SELECT 'abc' ~ '' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc' ~ '' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-17-empty-subject",
+    "source_kind": "synthetic",
+    "shape": "empty-subject",
+    "sql": "SELECT '' ~ '^$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT '' ~ '^?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-18-empty-miss",
+    "source_kind": "synthetic",
+    "shape": "empty-miss",
+    "sql": "SELECT '' ~ 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT '' ~ 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-19-escaped-dot",
+    "source_kind": "synthetic",
+    "shape": "escaped-dot",
+    "sql": "SELECT 'a.b' ~ '^a\\.b$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'a.b' ~ '^a\\.b?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-20-quote",
+    "source_kind": "synthetic",
+    "shape": "quote",
+    "sql": "SELECT 'O''Brien' ~ '^O''B' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'O''Brien' ~ '^O''B' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-21-subject-null",
+    "source_kind": "synthetic",
+    "shape": "subject-null",
+    "sql": "SELECT NULL ~ '^a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL ~ '^a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-22-pattern-null",
+    "source_kind": "synthetic",
+    "shape": "pattern-null",
+    "sql": "SELECT 'abc' ~ NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT 'abc' ~ NULL AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-23-both-null",
+    "source_kind": "synthetic",
+    "shape": "both-null",
+    "sql": "SELECT NULL ~ NULL AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL ~ NULL AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-24-negated-null",
+    "source_kind": "synthetic",
+    "shape": "negated-null",
+    "sql": "SELECT NULL !~* 'a' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL !~* 'a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-25-varchar-subject",
+    "source_kind": "synthetic",
+    "shape": "varchar-subject",
+    "sql": "SELECT 'abcd'::VARCHAR(3) ~ '^abc$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abcd'::VARCHAR(3) ~ '^abc?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-26-varchar-pattern",
+    "source_kind": "synthetic",
+    "shape": "varchar-pattern",
+    "sql": "SELECT 'abc' ~ '^abc$extra'::VARCHAR(5) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc' ~ '^abc?extra'::VARCHAR(5) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-27-char-subject-padding",
+    "source_kind": "synthetic",
+    "shape": "char-subject-padding",
+    "sql": "SELECT 'abc'::CHAR(5) ~ '^abc$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'abc'::CHAR(5) ~ '^abc?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-28-char-subject-spaces",
+    "source_kind": "synthetic",
+    "shape": "char-subject-spaces",
+    "sql": "SELECT 'abc'::CHAR(5) ~ '^abc  $' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc'::CHAR(5) ~ '^abc  ?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-29-char-pattern-trim",
+    "source_kind": "synthetic",
+    "shape": "char-pattern-trim",
+    "sql": "SELECT 'abc' ~ '^abc$'::CHAR(8) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc' ~ '^abc?'::CHAR(8) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-30-char-both",
+    "source_kind": "synthetic",
+    "shape": "char-both",
+    "sql": "SELECT 'abc'::CHAR(5) ~ '^abc$'::CHAR(8) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'abc'::CHAR(5) ~ '^abc?'::CHAR(8) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-31-explicit-char-text",
+    "source_kind": "synthetic",
+    "shape": "explicit-char-text",
+    "sql": "SELECT ('abc'::CHAR(5))::TEXT ~ '^abc$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('abc'::CHAR(5))::TEXT ~ '^abc?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-32-char-insensitive",
+    "source_kind": "synthetic",
+    "shape": "char-insensitive",
+    "sql": "SELECT 'AbC'::CHAR(5) ~* '^abc  $' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'AbC'::CHAR(5) ~* '^abc  ?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-33-char-negated",
+    "source_kind": "synthetic",
+    "shape": "char-negated",
+    "sql": "SELECT 'abc'::CHAR(5) !~ '^abc$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc'::CHAR(5) !~ '^abc?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-34-char-negated-insensitive",
+    "source_kind": "synthetic",
+    "shape": "char-negated-insensitive",
+    "sql": "SELECT 'AbC'::CHAR(5) !~* '^abc  $' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT 'AbC'::CHAR(5) !~* '^abc  ?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-35-char-null",
+    "source_kind": "synthetic",
+    "shape": "char-null",
+    "sql": "SELECT NULL::CHAR(5) ~ '^abc$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL::CHAR(5) ~ '^abc?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-36-concat-left",
+    "source_kind": "synthetic",
+    "shape": "concat-left",
+    "sql": "SELECT 'a' || 'bc' ~ '^abc$' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'a' || 'bc' ~ '^abc?' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-37-concat-right-parenthesized",
+    "source_kind": "synthetic",
+    "shape": "concat-right-parenthesized",
+    "sql": "SELECT 'abc' ~ ('^a' || 'bc$') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc' ~ ('^a' || 'bc?') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-38-generic-left-association",
+    "source_kind": "synthetic",
+    "shape": "generic-left-association",
+    "sql": "SELECT 'abc' ~ 'a' || 'bc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "truebc",
+    "sqlite_input": "SELECT 'abc' ~ 'a' || 'bc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-39-not-generic-left-association",
+    "source_kind": "synthetic",
+    "shape": "not-generic-left-association",
+    "sql": "SELECT 'abc' !~ 'a' || 'bc' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "falsebc",
+    "sqlite_input": "SELECT 'abc' !~ 'a' || 'bc' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-40-comparison-precedence",
+    "source_kind": "synthetic",
+    "shape": "comparison-precedence",
+    "sql": "SELECT 'abc' ~ '^a' = TRUE AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc' ~ '^a' = TRUE AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-41-boolean-precedence",
+    "source_kind": "synthetic",
+    "shape": "boolean-precedence",
+    "sql": "SELECT NOT 'abc' ~ 'z' AND TRUE AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT NOT 'abc' ~ 'z' AND TRUE AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-42-case",
+    "source_kind": "synthetic",
+    "shape": "case",
+    "sql": "SELECT CASE WHEN 'abc' ~ '^a' THEN TRUE ELSE FALSE END AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT CASE WHEN 'abc' ~ '^a' THEN TRUE ELSE FALSE END AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-43-coalesce",
+    "source_kind": "synthetic",
+    "shape": "coalesce",
+    "sql": "SELECT COALESCE(NULL ~ 'a',FALSE) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT COALESCE(NULL ~ 'a',FALSE) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-44-anonymous",
+    "source_kind": "synthetic",
+    "shape": "anonymous",
+    "sql": "SELECT ? ~* ? AS v;",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "AbC",
+      "^abc$"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ? ~* ? AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-45-reordered",
+    "source_kind": "synthetic",
+    "shape": "reordered",
+    "sql": "SELECT $2 !~ $1 AS v;",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "^z",
+      "abc"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ?2 !~ ?1 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-46-repeated",
+    "source_kind": "synthetic",
+    "shape": "repeated",
+    "sql": "SELECT $1 ~ $1 AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "abc"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ?1 ~ ?1 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-47-nullable-binding",
+    "source_kind": "synthetic",
+    "shape": "nullable-binding",
+    "sql": "SELECT $1 !~* '^a' AS v;",
+    "parameter_types": "text?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT ?1 !~* '^a' AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-48-null-bad-pattern",
+    "source_kind": "synthetic",
+    "shape": "null-bad-pattern",
+    "sql": "SELECT NULL::TEXT ~ $1 AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "["
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT NULL::TEXT ~ ?1 AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-49-derived",
+    "source_kind": "synthetic",
+    "shape": "derived",
+    "sql": "SELECT d.s ~* d.p AS v FROM (SELECT 'AbC' AS s, '^abc$' AS p) AS d;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT d.s ~* d.p AS v FROM (SELECT 'AbC' AS s, '^abc?' AS p) AS d;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "regex-50-where-order",
+    "source_kind": "synthetic",
+    "shape": "where-order",
+    "sql": "SELECT 'abc' !~* '^z' AS v WHERE 'abc' ~ '^a' ORDER BY v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT 'abc' !~* '^z' AS v WHERE 'abc' ~ '^a' ORDER BY v;",
+    "sqlite_supported": false
+  }
+]

@@ -188,7 +188,7 @@ private def report (level : Assurance.Level) (status : String)
     (columns : Option (List Lean.Json) := none) (diagnostic : Option SelectContract.Diagnostic := none)
     (catalogUnchanged : Bool := false) : IO UInt32 := do
   let profile := match level with
-    | .declarative => SelectContract.Profile.basicV14.name
+    | .declarative => SelectContract.Profile.basicV15.name
     | .executable => "sqlean-expanded-v0"
     | .syntax => "sqlean-syntax-v0"
   let evidence := match status with
@@ -226,7 +226,7 @@ private def runAssurance (options : Options) (level : Assurance.Level) (source :
       | .error error => return ← report level "invalid" none (some ⟨"environment.parameters", error⟩)
     match statement with
     | .query query =>
-      match Assurance.checkContract .basicV14 catalog params query fuel with
+      match Assurance.checkContract .basicV15 catalog params query fuel with
       | .valid certificate => report level "valid" (some (certificate.output.map contractColumnJson)) none true
       | .invalid diagnostic => report level "invalid" none (some diagnostic)
       | .unsupported diagnostic => report level "unsupported" none (some diagnostic)

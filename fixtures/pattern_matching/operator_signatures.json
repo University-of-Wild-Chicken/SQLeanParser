@@ -1,0 +1,72 @@
+[
+  {
+    "operator": "~~*",
+    "left": "text",
+    "right": "text",
+    "output": "boolean",
+    "function": "texticlike"
+  },
+  {
+    "operator": "~~*",
+    "left": "bpchar",
+    "right": "text",
+    "output": "boolean",
+    "function": "bpchariclike"
+  },
+  {
+    "operator": "~",
+    "left": "text",
+    "right": "text",
+    "output": "boolean",
+    "function": "textregexeq"
+  },
+  {
+    "operator": "~",
+    "left": "bpchar",
+    "right": "text",
+    "output": "boolean",
+    "function": "bpcharregexeq"
+  },
+  {
+    "operator": "~*",
+    "left": "text",
+    "right": "text",
+    "output": "boolean",
+    "function": "texticregexeq"
+  },
+  {
+    "operator": "~*",
+    "left": "bpchar",
+    "right": "text",
+    "output": "boolean",
+    "function": "bpcharicregexeq"
+  },
+  {
+    "operator": "!~",
+    "left": "text",
+    "right": "text",
+    "output": "boolean",
+    "function": "textregexne"
+  },
+  {
+    "operator": "!~",
+    "left": "bpchar",
+    "right": "text",
+    "output": "boolean",
+    "function": "bpcharregexne"
+  },
+  {
+    "operator": "!~*",
+    "left": "text",
+    "right": "text",
+    "output": "boolean",
+    "function": "texticregexne"
+  },
+  {
+    "operator": "!~*",
+    "left": "bpchar",
+    "right": "text",
+    "output": "boolean",
+    "function": "bpcharicregexne"
+  }
+]

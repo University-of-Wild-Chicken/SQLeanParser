@@ -208,7 +208,7 @@ private def hasAggregate : Nat → Expr → Bool
   | 0, _ => true
   | fuel + 1, expr => match expr with
     | .countAll | .aggregate .. | .filteredAggregate .. => true
-    | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => hasAggregate fuel left || hasAggregate fuel right
+    | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => hasAggregate fuel left || hasAggregate fuel right
     | .unary _ arg | .isNull arg _ | .cast arg _ => hasAggregate fuel arg
     | .subscript base indices => hasAggregate fuel base || (indices.flatMap Subscript.expressions).any (hasAggregate fuel)
     | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args.any (hasAggregate fuel)
@@ -233,6 +233,8 @@ private def canonical : Nat → List Scope → Expr → Expr
       | .ok (column, _) => .column column.qualifier column.name
       | .error _ => expr
     | .binary op left right => .binary op (canonical fuel scopes left) (canonical fuel scopes right)
+    | .regex arg pattern insensitive negated =>
+        .regex (canonical fuel scopes arg) (canonical fuel scopes pattern) insensitive negated
     | .concat left right => .concat (canonical fuel scopes left) (canonical fuel scopes right)
     | .quantifiedComparison op quantifier left right =>
       .quantifiedComparison op quantifier (canonical fuel scopes left) (canonical fuel scopes right)
@@ -327,7 +329,7 @@ mutual
   private def exprTables : Nat → Expr → List Name
     | 0, _ => []
     | fuel + 1, expr => match expr with
-      | .concat l r | .quantifiedComparison _ _ l r | .binary _ l r | .pattern l r _ | .filteredAggregate l r | .nullIf l r => exprTables fuel l ++ exprTables fuel r
+      | .regex l r _ _ | .concat l r | .quantifiedComparison _ _ l r | .binary _ l r | .pattern l r _ | .filteredAggregate l r | .nullIf l r => exprTables fuel l ++ exprTables fuel r
       | .unary _ e | .isNull e _ | .cast e _ | .aggregate _ e _ => exprTables fuel e
       | .subscript base indices => exprTables fuel base ++ (indices.flatMap Subscript.expressions).flatMap (exprTables fuel)
       | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args.flatMap (exprTables fuel)
@@ -360,7 +362,7 @@ private def simpleRecursiveExpr : Nat → Expr → Bool
   | 0, _ => false
   | fuel + 1, expr => match expr with
     | .exists _ | .scalarQuery _ | .inQuery .. | .countAll | .aggregate .. | .filteredAggregate .. => false
-    | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => simpleRecursiveExpr fuel left && simpleRecursiveExpr fuel right
+    | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => simpleRecursiveExpr fuel left && simpleRecursiveExpr fuel right
     | .unary _ e | .cast e _ | .isNull e _ => simpleRecursiveExpr fuel e
     | .subscript base indices => simpleRecursiveExpr fuel base && (indices.flatMap Subscript.expressions).all (simpleRecursiveExpr fuel)
     | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args.all (simpleRecursiveExpr fuel)
@@ -429,7 +431,7 @@ mutual
       | .exists query | .scalarQuery query => checkCTELockQuery fuel names query
       | _ =>
         let children : List Expr := match expr with
-          | .concat a b | .quantifiedComparison _ _ a b | .binary _ a b | .pattern a b _ | .nullIf a b | .filteredAggregate a b => [a, b]
+          | .regex a b _ _ | .concat a b | .quantifiedComparison _ _ a b | .binary _ a b | .pattern a b _ | .nullIf a b | .filteredAggregate a b => [a, b]
           | .unary _ a | .cast a _ | .isNull a _ | .aggregate _ a _ => [a]
           | .subscript base indices => base :: indices.flatMap Subscript.expressions
           | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args
@@ -553,6 +555,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
           pure (some (if nullable then type.asNullable else type))
       | .subscript .. =>
         invalid "array subscripts require exact element types and bound coercions; use the independent contract tier"
+      | .regex .. =>
+        invalid "regular-expression matching requires exact scalar overload resolution; use the independent contract tier"
       | .concat .. =>
         invalid "concatenation requires exact scalar overload resolution; use the independent contract tier"
       | .quantifiedComparison .. =>
@@ -713,7 +717,7 @@ an explicit validation error. Parameter declarations are supplied by the caller.
       | .column qualifier name =>
         let (_, depth) ← resolveColumn scopes qualifier name
         ensure (depth > 0) s!"ungrouped column '{name}'"
-      | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right =>
+      | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right =>
         checkGrouped fuel schema params scopes groups left
         checkGrouped fuel schema params scopes groups right
       | .unary _ arg | .isNull arg _ | .cast arg _ => checkGrouped fuel schema params scopes groups arg
@@ -880,7 +884,7 @@ mutual
     | 0, _ => []
     | fuel + 1, expr => match expr with
       | .parameter parameter => [parameter]
-      | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .filteredAggregate left right | .nullIf left right =>
+      | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .filteredAggregate left right | .nullIf left right =>
         expressionParameters fuel left ++ expressionParameters fuel right
       | .unary _ arg | .cast arg _ | .isNull arg _ | .aggregate _ arg _ => expressionParameters fuel arg
       | .subscript base indices => expressionParameters fuel base ++ (indices.flatMap Subscript.expressions).flatMap (expressionParameters fuel)

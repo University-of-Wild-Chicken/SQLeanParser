@@ -126,6 +126,14 @@ mutual
     | pattern arg pattern signature =>
         simpa only [translateExpr, List.map_append] using
           ExprValid.pattern (expr_valid_translated arg) (expr_valid_translated pattern) signature
+    | ilike arg pattern signature =>
+        simpa only [translateExpr, List.map_append, scalar_input_translated] using
+          ExprValid.ilike (expr_valid_translated arg) (expr_valid_translated pattern)
+            (by simpa only [scalar_input_translated] using signature)
+    | regex arg pattern signature =>
+        simpa only [translateExpr, List.map_append, scalar_input_translated] using
+          ExprValid.regex (expr_valid_translated arg) (expr_valid_translated pattern)
+            (by simpa only [scalar_input_translated] using signature)
     | cast arg supported declaration allowed ordinary =>
         simpa only [translateExpr] using ExprValid.cast (expr_valid_translated arg)
           supported declaration allowed ((ordinary_cast_translated _ _).mpr ordinary)

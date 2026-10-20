@@ -8,7 +8,7 @@ private def invalid (message : String) : Except ValidationError α := .error ⟨
 private def defaultExpression : Nat → Expr → Bool
   | 0, _ => false
   | _ + 1, .literal _ | _ + 1, .null | _ + 1, .decimal _ => true
-  | n + 1, .concat left right | n + 1, .quantifiedComparison _ _ left right | n + 1, .binary _ left right | n + 1, .pattern left right _ | n + 1, .nullIf left right =>
+  | n + 1, .regex left right _ _ | n + 1, .concat left right | n + 1, .quantifiedComparison _ _ left right | n + 1, .binary _ left right | n + 1, .pattern left right _ | n + 1, .nullIf left right =>
       defaultExpression n left && defaultExpression n right
   | n + 1, .unary _ arg | n + 1, .cast arg _ | n + 1, .isNull arg _ => defaultExpression n arg
   | n + 1, .subscript base indices =>

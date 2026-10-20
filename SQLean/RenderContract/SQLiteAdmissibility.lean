@@ -30,6 +30,7 @@ mutual
   def checkSQLiteExpr (expr : Advanced.Expr) : Except Failure Unit := do
     match expr with
     | .quantifiedComparison .. => unsupported "array-quantified-comparison"
+    | .regex .. => unsupported "regex"
     | .binary _ left right | .concat left right | .filteredAggregate left right =>
         checkSQLiteExpr left; checkSQLiteExpr right
     | .pattern left right insensitive =>
