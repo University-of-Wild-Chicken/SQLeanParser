@@ -1,0 +1,23 @@
+[
+  {
+    "operator": "@>",
+    "left": "anyarray",
+    "right": "anyarray",
+    "output": "boolean",
+    "function": "arraycontains"
+  },
+  {
+    "operator": "<@",
+    "left": "anyarray",
+    "right": "anyarray",
+    "output": "boolean",
+    "function": "arraycontained"
+  },
+  {
+    "operator": "&&",
+    "left": "anyarray",
+    "right": "anyarray",
+    "output": "boolean",
+    "function": "arrayoverlap"
+  }
+]

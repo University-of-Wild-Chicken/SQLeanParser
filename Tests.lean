@@ -64,6 +64,8 @@ import Tests.JsonContainmentContract
 import Tests.JsonContainmentRendering
 import Tests.ArrayConcatenationContract
 import Tests.ArrayConcatenationRendering
+import Tests.ArrayPredicateContract
+import Tests.ArrayPredicateRendering
 
 namespace SQLean.Tests
 
@@ -220,6 +222,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {arrayConcatenationConcrete} unchanged array concatenation source certificates"
   let arrayConcatenationRendering ← arrayConcatenationRenderingTests
   IO.println s!"PASS: {arrayConcatenationRendering} array concatenation rendering checks"
+  let arrayPredicateContract ← arrayPredicateContractTests
+  IO.println s!"PASS: {arrayPredicateContract} array predicate validity and operator checks"
+  let arrayPredicateCorpus ← arrayPredicateCorpusTests
+  IO.println s!"PASS: {arrayPredicateCorpus} array predicate full-query certificates"
+  let arrayPredicateConcrete ← arrayPredicateConcreteContractTests
+  IO.println s!"PASS: {arrayPredicateConcrete} unchanged array predicate source certificates"
+  let arrayPredicateRendering ← arrayPredicateRenderingTests
+  IO.println s!"PASS: {arrayPredicateRendering} array predicate parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

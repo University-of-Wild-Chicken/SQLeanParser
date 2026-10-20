@@ -36,6 +36,7 @@ mutual
     | .jsonAccess op arg key => .jsonAccess op (translateExpr arg) (translateExpr key)
     | .containment left right containedBy =>
         .containment (translateExpr left) (translateExpr right) containedBy
+    | .overlap left right => .overlap (translateExpr left) (translateExpr right)
     | .cast arg target => .cast (translateExpr arg) target
     | .subscript base subscripts => .subscript (translateExpr base)
         (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>

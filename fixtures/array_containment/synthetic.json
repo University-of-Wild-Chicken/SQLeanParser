@@ -1,0 +1,1022 @@
+[
+  {
+    "id": "array-containment-01-contains-empty",
+    "source_kind": "synthetic",
+    "shape": "contains-empty",
+    "sql": "SELECT (ARRAY[]::INTEGER[]) @> (ARRAY[]::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[]::INTEGER[]) @> (ARRAY[]::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-02-contains-empty-right",
+    "source_kind": "synthetic",
+    "shape": "contains-empty-right",
+    "sql": "SELECT (ARRAY[NULL,1]) @> (ARRAY[]::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[NULL,1]) @> (ARRAY[]::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-03-contains-empty-left",
+    "source_kind": "synthetic",
+    "shape": "contains-empty-left",
+    "sql": "SELECT (ARRAY[]::INTEGER[]) @> (ARRAY[1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[]::INTEGER[]) @> (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-04-contains-duplicates",
+    "source_kind": "synthetic",
+    "shape": "contains-duplicates",
+    "sql": "SELECT (ARRAY[1]) @> (ARRAY[1,1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1]) @> (ARRAY[1,1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-05-contains-missing",
+    "source_kind": "synthetic",
+    "shape": "contains-missing",
+    "sql": "SELECT (ARRAY[1,2]) @> (ARRAY[2,3]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[1,2]) @> (ARRAY[2,3]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-06-contains-null-right-member",
+    "source_kind": "synthetic",
+    "shape": "contains-null-right-member",
+    "sql": "SELECT (ARRAY[1,NULL]) @> (ARRAY[NULL,1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[1,NULL]) @> (ARRAY[NULL,1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-07-contains-null-left-member",
+    "source_kind": "synthetic",
+    "shape": "contains-null-left-member",
+    "sql": "SELECT (ARRAY[NULL,1]) @> (ARRAY[1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[NULL,1]) @> (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-08-contains-null-members",
+    "source_kind": "synthetic",
+    "shape": "contains-null-members",
+    "sql": "SELECT (ARRAY[NULL]::INTEGER[]) @> (ARRAY[NULL]::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[NULL]::INTEGER[]) @> (ARRAY[NULL]::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-09-contains-sql-null-left",
+    "source_kind": "synthetic",
+    "shape": "contains-sql-null-left",
+    "sql": "SELECT (NULL::INTEGER[]) @> (ARRAY[1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (NULL::INTEGER[]) @> (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-10-contains-sql-null-right",
+    "source_kind": "synthetic",
+    "shape": "contains-sql-null-right",
+    "sql": "SELECT (ARRAY[1]) @> (NULL::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (ARRAY[1]) @> (NULL::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-11-contains-dimensions",
+    "source_kind": "synthetic",
+    "shape": "contains-dimensions",
+    "sql": "SELECT (ARRAY[[1,2],[3,4]]) @> (ARRAY[4,1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[[1,2],[3,4]]) @> (ARRAY[4,1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-12-contains-lower-bounds",
+    "source_kind": "synthetic",
+    "shape": "contains-lower-bounds",
+    "sql": "SELECT ('[0:1]={1,2}'::INTEGER[]) @> ('[9:9]={2}'::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('[0:1]={1,2}'::INTEGER[]) @> ('[9:9]={2}'::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-13-contains-unknown-right",
+    "source_kind": "synthetic",
+    "shape": "contains-unknown-right",
+    "sql": "SELECT (ARRAY[1,2]) @> ('{2,1}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1,2]) @> ('{2,1}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-14-contains-unknown-left",
+    "source_kind": "synthetic",
+    "shape": "contains-unknown-left",
+    "sql": "SELECT ('{1,2}') @> (ARRAY[2]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{1,2}') @> (ARRAY[2]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-15-contains-numeric-modifiers",
+    "source_kind": "synthetic",
+    "shape": "contains-numeric-modifiers",
+    "sql": "SELECT (ARRAY[1.20::NUMERIC(8,2)]) @> (ARRAY[1.2::NUMERIC(5,1)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1.20::NUMERIC(8,2)]) @> (ARRAY[1.2::NUMERIC(5,1)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-16-contains-char-padding",
+    "source_kind": "synthetic",
+    "shape": "contains-char-padding",
+    "sql": "SELECT (ARRAY['a'::CHAR(3)]) @> (ARRAY['a'::CHAR(5)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['a'::CHAR(3)]) @> (ARRAY['a'::CHAR(5)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-17-contains-jsonb-not-containment",
+    "source_kind": "synthetic",
+    "shape": "contains-jsonb-not-containment",
+    "sql": "SELECT (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) @> (ARRAY['{\"a\":1}'::JSONB]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) @> (ARRAY['{\"a\":1}'::JSONB]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-18-contains-jsonb-equality",
+    "source_kind": "synthetic",
+    "shape": "contains-jsonb-equality",
+    "sql": "SELECT (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) @> (ARRAY['{\"b\":2,\"a\":1}'::JSONB]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) @> (ARRAY['{\"b\":2,\"a\":1}'::JSONB]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-19-contains-numeric-nan",
+    "source_kind": "synthetic",
+    "shape": "contains-numeric-nan",
+    "sql": "SELECT (ARRAY['NaN'::NUMERIC]) @> (ARRAY['NaN'::NUMERIC]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['NaN'::NUMERIC]) @> (ARRAY['NaN'::NUMERIC]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-20-contains-float-nan",
+    "source_kind": "synthetic",
+    "shape": "contains-float-nan",
+    "sql": "SELECT (ARRAY['NaN'::DOUBLE PRECISION]) @> (ARRAY['NaN'::DOUBLE PRECISION]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['NaN'::DOUBLE PRECISION]) @> (ARRAY['NaN'::DOUBLE PRECISION]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-21-contains-anonymous",
+    "source_kind": "synthetic",
+    "shape": "contains-anonymous",
+    "sql": "SELECT (CAST(? AS INTEGER[])) @> (CAST(? AS INTEGER[])) AS v;",
+    "parameter_types": "integer[],integer[]",
+    "parameter_values": [
+      "{1,2}",
+      "{2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (CAST(? AS INTEGER[])) @> (CAST(? AS INTEGER[])) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-22-contains-reordered",
+    "source_kind": "synthetic",
+    "shape": "contains-reordered",
+    "sql": "SELECT ($2) @> ($1) AS v;",
+    "parameter_types": "integer[],integer[]",
+    "parameter_values": [
+      "{2}",
+      "{1,2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (?2) @> (?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-23-contains-repeated",
+    "source_kind": "synthetic",
+    "shape": "contains-repeated",
+    "sql": "SELECT (CAST($1 AS INTEGER[])) @> ($1) AS v;",
+    "parameter_types": "integer[]",
+    "parameter_values": [
+      "{1,2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (CAST(?1 AS INTEGER[])) @> (?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-24-contains-nullable-binding",
+    "source_kind": "synthetic",
+    "shape": "contains-nullable-binding",
+    "sql": "SELECT ($1) @> (ARRAY[1]) AS v;",
+    "parameter_types": "integer[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (?1) @> (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-25-contains-concat-coalesce",
+    "source_kind": "synthetic",
+    "shape": "contains-concat-coalesce",
+    "sql": "SELECT (COALESCE(NULL::INTEGER[],ARRAY[1]) || 2) @> (ARRAY[2]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (COALESCE(NULL::INTEGER[],ARRAY[1]) || 2) @> (ARRAY[2]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-26-contained-empty",
+    "source_kind": "synthetic",
+    "shape": "contained-empty",
+    "sql": "SELECT (ARRAY[]::INTEGER[]) <@ (ARRAY[]::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[]::INTEGER[]) <@ (ARRAY[]::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-27-contained-empty-right",
+    "source_kind": "synthetic",
+    "shape": "contained-empty-right",
+    "sql": "SELECT (ARRAY[]::INTEGER[]) <@ (ARRAY[NULL,1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[]::INTEGER[]) <@ (ARRAY[NULL,1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-28-contained-empty-left",
+    "source_kind": "synthetic",
+    "shape": "contained-empty-left",
+    "sql": "SELECT (ARRAY[1]) <@ (ARRAY[]::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[1]) <@ (ARRAY[]::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-29-contained-duplicates",
+    "source_kind": "synthetic",
+    "shape": "contained-duplicates",
+    "sql": "SELECT (ARRAY[1,1]) <@ (ARRAY[1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1,1]) <@ (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-30-contained-missing",
+    "source_kind": "synthetic",
+    "shape": "contained-missing",
+    "sql": "SELECT (ARRAY[2,3]) <@ (ARRAY[1,2]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[2,3]) <@ (ARRAY[1,2]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-31-contained-null-right-member",
+    "source_kind": "synthetic",
+    "shape": "contained-null-right-member",
+    "sql": "SELECT (ARRAY[NULL,1]) <@ (ARRAY[1,NULL]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[NULL,1]) <@ (ARRAY[1,NULL]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-32-contained-null-left-member",
+    "source_kind": "synthetic",
+    "shape": "contained-null-left-member",
+    "sql": "SELECT (ARRAY[1]) <@ (ARRAY[NULL,1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1]) <@ (ARRAY[NULL,1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-33-contained-null-members",
+    "source_kind": "synthetic",
+    "shape": "contained-null-members",
+    "sql": "SELECT (ARRAY[NULL]::INTEGER[]) <@ (ARRAY[NULL]::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[NULL]::INTEGER[]) <@ (ARRAY[NULL]::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-34-contained-sql-null-left",
+    "source_kind": "synthetic",
+    "shape": "contained-sql-null-left",
+    "sql": "SELECT (ARRAY[1]) <@ (NULL::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (ARRAY[1]) <@ (NULL::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-35-contained-sql-null-right",
+    "source_kind": "synthetic",
+    "shape": "contained-sql-null-right",
+    "sql": "SELECT (NULL::INTEGER[]) <@ (ARRAY[1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (NULL::INTEGER[]) <@ (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-36-contained-dimensions",
+    "source_kind": "synthetic",
+    "shape": "contained-dimensions",
+    "sql": "SELECT (ARRAY[4,1]) <@ (ARRAY[[1,2],[3,4]]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[4,1]) <@ (ARRAY[[1,2],[3,4]]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-37-contained-lower-bounds",
+    "source_kind": "synthetic",
+    "shape": "contained-lower-bounds",
+    "sql": "SELECT ('[9:9]={2}'::INTEGER[]) <@ ('[0:1]={1,2}'::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('[9:9]={2}'::INTEGER[]) <@ ('[0:1]={1,2}'::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-38-contained-unknown-right",
+    "source_kind": "synthetic",
+    "shape": "contained-unknown-right",
+    "sql": "SELECT ('{2,1}') <@ (ARRAY[1,2]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{2,1}') <@ (ARRAY[1,2]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-39-contained-unknown-left",
+    "source_kind": "synthetic",
+    "shape": "contained-unknown-left",
+    "sql": "SELECT (ARRAY[2]) <@ ('{1,2}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[2]) <@ ('{1,2}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-40-contained-numeric-modifiers",
+    "source_kind": "synthetic",
+    "shape": "contained-numeric-modifiers",
+    "sql": "SELECT (ARRAY[1.2::NUMERIC(5,1)]) <@ (ARRAY[1.20::NUMERIC(8,2)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1.2::NUMERIC(5,1)]) <@ (ARRAY[1.20::NUMERIC(8,2)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-41-contained-char-padding",
+    "source_kind": "synthetic",
+    "shape": "contained-char-padding",
+    "sql": "SELECT (ARRAY['a'::CHAR(5)]) <@ (ARRAY['a'::CHAR(3)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['a'::CHAR(5)]) <@ (ARRAY['a'::CHAR(3)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-42-contained-jsonb-not-containment",
+    "source_kind": "synthetic",
+    "shape": "contained-jsonb-not-containment",
+    "sql": "SELECT (ARRAY['{\"a\":1}'::JSONB]) <@ (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY['{\"a\":1}'::JSONB]) <@ (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-43-contained-jsonb-equality",
+    "source_kind": "synthetic",
+    "shape": "contained-jsonb-equality",
+    "sql": "SELECT (ARRAY['{\"b\":2,\"a\":1}'::JSONB]) <@ (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['{\"b\":2,\"a\":1}'::JSONB]) <@ (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-44-contained-numeric-nan",
+    "source_kind": "synthetic",
+    "shape": "contained-numeric-nan",
+    "sql": "SELECT (ARRAY['NaN'::NUMERIC]) <@ (ARRAY['NaN'::NUMERIC]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['NaN'::NUMERIC]) <@ (ARRAY['NaN'::NUMERIC]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-45-contained-float-nan",
+    "source_kind": "synthetic",
+    "shape": "contained-float-nan",
+    "sql": "SELECT (ARRAY['NaN'::DOUBLE PRECISION]) <@ (ARRAY['NaN'::DOUBLE PRECISION]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['NaN'::DOUBLE PRECISION]) <@ (ARRAY['NaN'::DOUBLE PRECISION]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-46-contained-anonymous",
+    "source_kind": "synthetic",
+    "shape": "contained-anonymous",
+    "sql": "SELECT (CAST(? AS INTEGER[])) <@ (CAST(? AS INTEGER[])) AS v;",
+    "parameter_types": "integer[],integer[]",
+    "parameter_values": [
+      "{2}",
+      "{1,2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (CAST(? AS INTEGER[])) <@ (CAST(? AS INTEGER[])) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-47-contained-reordered",
+    "source_kind": "synthetic",
+    "shape": "contained-reordered",
+    "sql": "SELECT ($1) <@ ($2) AS v;",
+    "parameter_types": "integer[],integer[]",
+    "parameter_values": [
+      "{2}",
+      "{1,2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (?1) <@ (?2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-48-contained-repeated",
+    "source_kind": "synthetic",
+    "shape": "contained-repeated",
+    "sql": "SELECT ($1) <@ (CAST($1 AS INTEGER[])) AS v;",
+    "parameter_types": "integer[]",
+    "parameter_values": [
+      "{1,2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (?1) <@ (CAST(?1 AS INTEGER[])) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-49-contained-nullable-binding",
+    "source_kind": "synthetic",
+    "shape": "contained-nullable-binding",
+    "sql": "SELECT (ARRAY[1]) <@ ($1) AS v;",
+    "parameter_types": "integer[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (ARRAY[1]) <@ (?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-containment-50-contained-concat-coalesce",
+    "source_kind": "synthetic",
+    "shape": "contained-concat-coalesce",
+    "sql": "SELECT (ARRAY[2]) <@ (COALESCE(NULL::INTEGER[],ARRAY[1]) || 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[2]) <@ (COALESCE(NULL::INTEGER[],ARRAY[1]) || 2) AS v;",
+    "sqlite_supported": false
+  }
+]

@@ -146,6 +146,14 @@ mutual
         simpa only [translateExpr, List.map_append, scalar_input_translated] using
           ExprValid.containment (expr_valid_translated left) (expr_valid_translated right)
             (by simpa only [scalar_input_translated] using signature)
+    | arrayContainment left right signature =>
+        simpa only [translateExpr, List.map_append, scalar_input_translated] using
+          ExprValid.arrayContainment (expr_valid_translated left) (expr_valid_translated right)
+            (by simpa only [scalar_input_translated] using signature)
+    | overlap left right signature =>
+        simpa only [translateExpr, List.map_append, scalar_input_translated] using
+          ExprValid.overlap (expr_valid_translated left) (expr_valid_translated right)
+            (by simpa only [scalar_input_translated] using signature)
     | cast arg supported declaration allowed ordinary =>
         simpa only [translateExpr] using ExprValid.cast (expr_valid_translated arg)
           supported declaration allowed ((ordinary_cast_translated _ _).mpr ordinary)

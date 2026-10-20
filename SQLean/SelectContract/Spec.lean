@@ -197,6 +197,14 @@ mutual
         (signature : jsonContainmentSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
         ExprValid params scope (.containment a b containedBy)
           (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
+    | arrayContainment (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+        (signature : arrayPredicateSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
+        ExprValid params scope (.containment a b containedBy)
+          (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
+    | overlap (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+        (signature : arrayPredicateSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
+        ExprValid params scope (.overlap a b)
+          (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
     | cast (arg : ExprValid params scope a ta uses) (supported : concreteType target = some base)
         (declaration : DataTypeWellFormed target) (allowed : castAllowed ta base = true)
         (ordinary : OrdinaryCast a target) :

@@ -79,6 +79,8 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor json_extraction --check
           python3 scripts/extract_factor_corpus.py --factor json_containment --check
           python3 scripts/extract_factor_corpus.py --factor array_concatenation --check
+          python3 scripts/extract_factor_corpus.py --factor array_containment --check
+          python3 scripts/extract_factor_corpus.py --factor array_overlap --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -195,6 +197,9 @@ jobs:
 
       - name: Check array concatenation contracts and native polymorphic signatures
         run: python3 scripts/check_array_concatenation_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Check array containment and overlap contracts and native signatures
+        run: python3 scripts/check_array_predicates_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

@@ -317,6 +317,54 @@ def jsonContainmentSignature (left right : ScalarInput) : Option FunctionOverloa
   | none, some .jsonb => some ⟨[.jsonb, .jsonb], .bool⟩
   | _, _ => none
 
+/-- The three strict PostgreSQL anyarray predicates share element-equality
+requirements but retain separate native functions and operator spellings. -/
+inductive ArrayPredicateOperator where
+  | contains | containedBy | overlap
+  deriving Repr, BEq, DecidableEq
+
+def arrayPredicateOperators : List ArrayPredicateOperator := [.contains, .containedBy, .overlap]
+
+def ArrayPredicateOperator.toSql : ArrayPredicateOperator → String
+  | .contains => "@>" | .containedBy => "<@" | .overlap => "&&"
+
+def ArrayPredicateOperator.functionName : ArrayPredicateOperator → String
+  | .contains => "arraycontains" | .containedBy => "arraycontained" | .overlap => "arrayoverlap"
+
+def ArrayPredicateOperator.catalogInputs (_ : ArrayPredicateOperator) : List String :=
+  ["anyarray", "anyarray"]
+
+def ArrayPredicateOperator.catalogOutput (_ : ArrayPredicateOperator) : String := "boolean"
+
+/-- Closed element equality inventory. VARCHAR uses the TEXT equality
+implementation; CHAR uses bpchar equality. JSON has no admitted equality
+implementation, even though the generic anyarray operator can analyze. -/
+def arrayPredicateElementTypes : List ScalarType :=
+  [.smallInt, .int32, .int64, .numeric [], .real, .doublePrecision,
+   .text, .varchar [], .char [], .bool, .date, .time [], .timeTZ [],
+   .timestamp [], .timestampTZ [], .interval [], .uuid, .jsonb, .bytea]
+
+/-- anyarray requires identical element identities after typmod erasure.
+Unlike anycompatiblearray concatenation, no cross-element widening occurs.
+A single unknown input is contextually the known operand's array type. -/
+def arrayPredicateElement (left right : ScalarInput) : Option ScalarType :=
+  match left.base.map ScalarType.unmodified, right.base.map ScalarType.unmodified with
+  | some (.array a), some (.array b) => if a == b then some a else none
+  | some (.array a), none | none, some (.array a) => some a
+  | _, _ => none
+
+def arrayPredicateMissingEquality (left right : ScalarInput) : Bool :=
+  (arrayPredicateElement left right).any fun element => !arrayPredicateElementTypes.contains element
+
+/-- Admitted concrete anyarray instantiation. The equality inventory is a
+separate requirement from native generic-operator availability, so a matching
+JSON[] pair is a coverage gap rather than claimed native analysis rejection. -/
+def arrayPredicateSignature (left right : ScalarInput) : Option FunctionOverload := do
+  let element ← arrayPredicateElement left right
+  if arrayPredicateElementTypes.contains element then
+    some ⟨[element.asArray, element.asArray], .bool⟩
+  else none
+
 private def unaryOverloads (inputs : List ScalarType) (output : Option ScalarType := none) :
     List FunctionOverload :=
   inputs.map fun input => ⟨[input], output.getD input⟩

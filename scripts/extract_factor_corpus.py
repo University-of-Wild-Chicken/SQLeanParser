@@ -21,6 +21,7 @@ from extract_pagination_corpus import checked_file, comparison_key, sha256
 from extract_statement_corpus import selected_sql, statement_spans
 from extract_tcl_sql import selected_tcl_sql
 from extract_sqllogic_sql import selected_sqllogic_sql
+from extract_rust_query_sql import selected_rust_sql
 
 ROOT = Path(__file__).resolve().parents[1]
 POPULATIONS = {
@@ -42,6 +43,9 @@ POPULATIONS = {
     "json_extraction": {"postgres": 50},
     "json_containment": {"postgres": 50},
     "array_concatenation": {"postgres": 8, "risingwave": 42},
+    "array_containment": {"postgres": 26, "rum": 20, "risingwave": 4},
+    "array_overlap": {"postgres": 21, "rum": 12, "readyset": 11, "risingwave": 4,
+                      "sqlc": 1, "yugabyte": 1},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -52,7 +56,8 @@ MERGED_FACTORS = {"using_contract": "using", "natural_contract": "natural"}
 JOIN_FACTORS = {"join_contract", *MERGED_FACTORS}
 ARRAY_ELEMENT_FAMILIES = {"int4", "int8", "text", "float8", "interval", "timestamptz", "uuid"}
 ARRAY_FACTORS = {"array_types", "array_constructors", "array_quantified", "array_subscripts",
-                "array_concatenation"}
+                "array_concatenation", "array_containment", "array_overlap"}
+ARRAY_PREDICATE_FACTORS = {"array_containment", "array_overlap"}
 COMPARISON_OPERATORS = {"=", "<>", "<", "<=", ">", ">="}
 
 
@@ -674,6 +679,84 @@ def observe_array_concatenations(parsed: dict) -> dict:
     return {"source_free": True, "array_concatenations": entries}
 
 
+def validate_array_predicates(entries: list[dict], factor: str) -> None:
+    allowed = {"@>", "<@"} if factor == "array_containment" else {"@>", "<@", "&&"}
+    required = {"@>", "<@"} if factor == "array_containment" else {"&&"}
+    if not isinstance(entries, list) or not entries:
+        raise ValueError("array predicate factor is absent")
+    found = set()
+    for entry in entries:
+        if (not isinstance(entry, dict) or set(entry) != {"operator", "left", "right"}
+                or entry["operator"] not in allowed):
+            raise ValueError("invalid array predicate operator")
+        found.add(entry["operator"])
+        for side in ("left", "right"):
+            operand = entry[side]
+            if (not isinstance(operand, dict)
+                    or set(operand) != {"form", "declared_type", "array_rank"}
+                    or operand["form"] not in {"ColumnRef", "A_Const", "A_ArrayExpr", "TypeCast"}):
+                raise ValueError("invalid array predicate operand")
+            if operand["form"] == "TypeCast":
+                if (operand["declared_type"] not in {"pg_catalog.int4", "pg_catalog.varchar"}
+                        or type(operand["array_rank"]) is not int or operand["array_rank"] != 1):
+                    raise ValueError("array predicate cast is outside the selected syntax")
+            elif operand["declared_type"] is not None or operand["array_rank"] is not None:
+                raise ValueError("array predicate observation must not infer types")
+    if not found & required:
+        raise ValueError("required array predicate factor is absent")
+
+
+def observe_array_predicates(parsed: dict, factor: str) -> dict:
+    """Observe written expressions only; table/operator types require a catalog."""
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("array predicate source must be a SELECT")
+    query = parsed["SelectStmt"]
+    if any(query.get(key) for key in ("withClause", "larg", "rarg", "valuesLists")):
+        raise ValueError("array predicate population excludes CTE/set/value sources")
+    source_free = not bool(query.get("fromClause"))
+    entries = []
+
+    def operand(value):
+        if not isinstance(value, dict) or len(value) != 1:
+            raise ValueError("array predicate requires expression operands")
+        form, declared, rank = next(iter(value)), None, None
+        if form == "TypeCast":
+            typename = value[form].get("typeName", {})
+            declared = ".".join(part.get("String", {}).get("sval", "") for part in typename.get("names", []))
+            bounds = typename.get("arrayBounds", [])
+            if any(bound != {"Integer": {"ival": -1}} for bound in bounds):
+                raise ValueError("sized array declaration is outside this source population")
+            rank = len(bounds)
+        return {"form": form, "declared_type": declared, "array_rank": rank}
+
+    def walk(value):
+        if isinstance(value, list):
+            for child in value:
+                walk(child)
+        elif isinstance(value, dict):
+            for kind, node in value.items():
+                if not isinstance(node, dict):
+                    walk(node)
+                    continue
+                if kind in {"FuncCall", "SubLink", "RowExpr", "A_Indirection", "A_Indices", "RangeSubselect"}:
+                    raise ValueError("call/subquery/row/access dependency is outside this array predicate population")
+                if source_free and kind in {"ColumnRef", "ParamRef"}:
+                    raise ValueError("source-free array predicate has an external binding")
+                if kind == "A_Expr":
+                    names = [part.get("String", {}).get("sval") for part in node.get("name", [])]
+                    if (node.get("kind") != "AEXPR_OP" or len(names) != 1
+                            or names[0] not in COMPARISON_OPERATORS | {"@>", "<@", "&&"}):
+                        raise ValueError("another operator is outside this array predicate population")
+                    if names[0] in {"@>", "<@", "&&"}:
+                        entries.append({"operator": names[0], "left": operand(node.get("lexpr")),
+                                        "right": operand(node.get("rexpr"))})
+                walk(node)
+
+    walk(parsed)
+    validate_array_predicates(entries, factor)
+    return {"source_free": source_free, "array_predicates": entries}
+
+
 PATTERN_OPERATORS = {"ilike": {"ILIKE", "NOT ILIKE"}, "regex": {"~", "~*", "!~", "!~*"}}
 PATTERN_OPERAND_FORMS = {"A_Const", "ColumnRef", "TypeCast", "A_Expr", "FuncCall"}
 
@@ -1004,7 +1087,7 @@ def observe_oracle(sql: str, factor: str) -> dict:
         allowed.add("quantified-comparison")
     if factor == "row_comparisons":
         allowed.add("row-constructor")
-    if factor in {"concatenation", "array_concatenation", "ilike", "regex", "json_extraction", "json_containment"}:
+    if factor in {"concatenation", "array_concatenation", "ilike", "regex", "json_extraction", "json_containment"} | ARRAY_PREDICATE_FACTORS:
         allowed.add("extended-operator")
     unexpected = set(features(json.loads(parser.parse_sql_json(sql)))) - allowed
     if unexpected:
@@ -1082,6 +1165,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "array_concatenation":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation.update(observe_array_concatenations(parsed))
+    if factor in ARRAY_PREDICATE_FACTORS:
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation.update(observe_array_predicates(parsed, factor))
     if factor in PATTERN_OPERATORS:
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["pattern_matches"] = observe_pattern_matches(parsed, factor)
@@ -1146,6 +1232,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("concatenations")
         if factor == "array_concatenation":
             expected_keys.update(("array_concatenations", "source_free"))
+        if factor in ARRAY_PREDICATE_FACTORS:
+            expected_keys.update(("array_predicates", "source_free"))
         if factor in PATTERN_OPERATORS:
             expected_keys.add("pattern_matches")
         if factor == "json_extraction":
@@ -1237,6 +1325,15 @@ def validate_population(records: list[dict], factor: str) -> None:
             concat_casts.update((entry[side]["declared_type"], entry[side]["array_rank"])
                                 for entry in entries for side in ("left", "right")
                                 if entry[side]["declared_type"] is not None)
+        if factor in ARRAY_PREDICATE_FACTORS:
+            if type(observation["source_free"]) is not bool:
+                raise ValueError("array predicate source-free observation must be Boolean")
+            containment_scopes.update([observation["source_free"]])
+            entries = observation["array_predicates"]
+            validate_array_predicates(entries, factor)
+            json_operators.update(entry["operator"] for entry in entries)
+            if observation["function_names"] or observation["conditional_forms"]:
+                raise ValueError("array predicate source population has no calls or conditionals")
         if factor in PATTERN_OPERATORS:
             entries = observation["pattern_matches"]
             validate_pattern_matches(entries, factor)
@@ -1341,6 +1438,11 @@ def validate_population(records: list[dict], factor: str) -> None:
             or json_left_casts != {"jsonb": 42, None: 8}
             or json_right_casts != {"jsonb": 9, None: 41}):
         raise ValueError("JSON containment population must retain its 50 nodes and 42 literal sources")
+    if factor in ARRAY_PREDICATE_FACTORS:
+        expected_scopes = {True: 6, False: 44} if factor == "array_containment" else {True: 5, False: 45}
+        expected_ops = {"@>": 30, "<@": 20} if factor == "array_containment" else {"&&": 50, "@>": 2}
+        if containment_scopes != expected_scopes or json_operators != expected_ops:
+            raise ValueError("array predicate population must retain its fixed operators and source scopes")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -1354,6 +1456,10 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
         if not re.fullmatch(r"[0-9a-f]{40}", metadata["commit"]):
             raise ValueError("source revision is not a full commit pin")
         checked_file(root, metadata["license_file"], metadata["license_sha256"])
+        for notice in metadata.get("additional_notices", []):
+            checked_file(root, notice["local_path"], notice["sha256"])
+        for context in metadata.get("context_files", []):
+            checked_file(root, context["local_path"], context["sha256"])
         for entry in metadata["files"]:
             key = (name, entry["path"])
             if key in files:
@@ -1375,9 +1481,15 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
         elif selection["selector"]["kind"] == "sqllogic_query":
             if ((factor, name) not in {
                     ("array_subscripts", "duckdb"), ("ilike", "duckdb"),
-                    ("array_concatenation", "risingwave")}):
+                    ("array_concatenation", "risingwave"),
+                    ("array_containment", "risingwave"), ("array_overlap", "risingwave"),
+                    ("array_overlap", "readyset")}):
                 raise ValueError("SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_sqllogic_sql(files[key], selection["selector"])
+        elif selection["selector"]["kind"] == "rust_string":
+            if factor != "array_overlap" or name != "readyset" or not path.endswith(".rs"):
+                raise ValueError("Rust query selection is outside its explicit source factor")
+            sql, line, detail = selected_rust_sql(files[key], selection["selector"])
         elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
@@ -1389,6 +1501,8 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                   if detail.get("extraction") == "tcl_sql_statement"
                   else f"sqllogic-query-{detail['header_line']}"
                   if detail.get("extraction") == "sqllogic_query"
+                  else f"rust-string-{detail['source_start']}"
+                  if detail.get("extraction") == "rust_string"
                   else detail.get("symbol", f"statement-{detail.get('statement_index')}"))
         records.append({
             "id": f"{factor}:{name}:{path}:{suffix}", "factor": factor,

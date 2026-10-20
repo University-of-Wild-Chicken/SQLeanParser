@@ -61,6 +61,7 @@ mutual
     -- excludes PostgreSQL containment operators.
     | .containment left right containedBy =>
         paren (exprSql left ++ (if containedBy then " <@ " else " @> ") ++ exprSql right)
+    | .overlap left right => paren (exprSql left ++ " && " ++ exprSql right)
     | .cast arg type => "CAST(" ++ exprSql arg ++ " AS " ++ type.toSql ++ ")"
     -- Excluded by SQLite admissibility; this total structural spelling is only
     -- used by serialization laws over arbitrary finite ASTs.

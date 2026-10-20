@@ -19,7 +19,7 @@ private def derivedOutput (sql : String) (params : SelectContract.ParameterEnv :
     IO (List SelectContract.OutputColumn) := do
   let query ← expectOk sql (Advanced.parseQuery sql)
   let certificate ← expectOk sql
-    ((SelectContract.checkQuery .basicV18 derivedCatalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV19 derivedCatalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let _ ← expectOk sql ((RenderContract.check .identityV01 query).mapError reprStr)
   let _ ← expectOk sql ((RenderContract.check .postgres16V01 query).mapError reprStr)
@@ -84,7 +84,7 @@ def derivedContractTests : IO Nat := do
     "SELECT * FROM (SELECT id AS same_name, label AS same_name FROM t) q JOIN u USING (same_name)" ]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV18 derivedCatalog [] query with
+    match SelectContract.checkQuery .basicV19 derivedCatalog [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid derived query: {sql}")
     count := count + 1
@@ -102,7 +102,7 @@ def derivedContractTests : IO Nat := do
     "SELECT 1 IN (SELECT id FROM t)" ]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV18 derivedCatalog [] query with
+    match SelectContract.checkQuery .basicV19 derivedCatalog [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported derived boundary: {sql}")
     count := count + 1
@@ -112,7 +112,7 @@ def derivedContractTests : IO Nat := do
       Advanced.From.derived child "q" [""],
       Advanced.From.derived child "q" ["a", "b"] ] do
     let query : Advanced.Query := { body := .select { items := [.all], source := some source } }
-    match SelectContract.checkQuery .basicV18 derivedCatalog [] query with
+    match SelectContract.checkQuery .basicV19 derivedCatalog [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "malformed derived alias metadata must be Invalid")
     count := count + 1
@@ -121,7 +121,7 @@ def derivedContractTests : IO Nat := do
   let sql := "SELECT ? AS outer_value, q.* FROM (SELECT ? AS inner_value FROM (SELECT ? AS deep_value) d WHERE ? > 0 ORDER BY inner_value LIMIT ?) q WHERE ? > 0 LIMIT ?"
   let query ← expectOk sql (Advanced.parseQuery sql)
   let certificate ← expectOk sql
-    ((SelectContract.checkQuery .basicV18 derivedCatalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV19 derivedCatalog params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   SQLean.Tests.assert (Advanced.queryParameters 1024 query ==
       (List.range 7).map (fun n => Advanced.Parameter.anonymous (n + 1)))
@@ -136,25 +136,25 @@ def derivedContractTests : IO Nat := do
     let query : Advanced.Query := { body := .select {
       items := [.expression (.parameter outer)]
       source := some (.derived innerQuery "q") } }
-    match SelectContract.checkQuery .basicV18 derivedCatalog params query with
+    match SelectContract.checkQuery .basicV19 derivedCatalog params query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError "parameter styles must not mix across derived query boundaries")
     count := count + 1
   let repeated ← expectOk "numbered repeats across queries"
     (Advanced.parseQuery "SELECT $1 AS outside FROM (SELECT $1 AS inside_value) q")
   let _ ← expectOk "numbered repeats across queries"
-    ((SelectContract.checkQuery .basicV18 derivedCatalog params repeated).mapError reprStr)
+    ((SelectContract.checkQuery .basicV19 derivedCatalog params repeated).mapError reprStr)
   count := count + 1
   let repeatedChild : Advanced.Query := { body := .select {
     items := [.expression (.parameter (.anonymous 1)) (some "value")] } }
   let repeatedAnon : Advanced.Query := { body := .select {
     items := [.expression (.parameter (.anonymous 1))]
     source := some (.derived repeatedChild "q") } }
-  match SelectContract.checkQuery .basicV18 derivedCatalog params repeatedAnon with
+  match SelectContract.checkQuery .basicV19 derivedCatalog params repeatedAnon with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "derived queries must not restart anonymous ordinal numbering")
   count := count + 1
-  match SelectContract.checkQuery .basicV18 derivedCatalog params query 2 with
+  match SelectContract.checkQuery .basicV19 derivedCatalog params query 2 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "derived traversal exhaustion must be Inconclusive")
   count := count + 1
@@ -192,7 +192,7 @@ def derivedCorpusTests : IO Nat := do
       pure (SelectContract.OutputColumn.mk name ⟨base, nullable⟩)
     let query ← expectOk id (Advanced.parseQuery sql)
     let certificate ← expectOk id
-      ((SelectContract.checkQuery .basicV18 catalog params query).mapError reprStr)
+      ((SelectContract.checkQuery .basicV19 catalog params query).mapError reprStr)
     SQLean.Tests.assert (certificate.output == expected) s!"{id}: exact output mismatch"
     have _preserved := RenderContract.translateParameters_valid certificate.valid
     let identity ← expectOk id ((RenderContract.check .identityV01 query).mapError reprStr)

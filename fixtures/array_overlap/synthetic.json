@@ -1,0 +1,1012 @@
+[
+  {
+    "id": "array-overlap-01-empty-both",
+    "source_kind": "synthetic",
+    "shape": "empty-both",
+    "sql": "SELECT (ARRAY[]::INTEGER[]) && (ARRAY[]::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[]::INTEGER[]) && (ARRAY[]::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-02-empty-left",
+    "source_kind": "synthetic",
+    "shape": "empty-left",
+    "sql": "SELECT (ARRAY[]::INTEGER[]) && (ARRAY[1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[]::INTEGER[]) && (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-03-empty-right",
+    "source_kind": "synthetic",
+    "shape": "empty-right",
+    "sql": "SELECT (ARRAY[1]) && (ARRAY[]::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[1]) && (ARRAY[]::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-04-duplicates",
+    "source_kind": "synthetic",
+    "shape": "duplicates",
+    "sql": "SELECT (ARRAY[1,1]) && (ARRAY[1,1,1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1,1]) && (ARRAY[1,1,1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-05-disjoint",
+    "source_kind": "synthetic",
+    "shape": "disjoint",
+    "sql": "SELECT (ARRAY[1,2]) && (ARRAY[3,4]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[1,2]) && (ARRAY[3,4]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-06-sql-null-left",
+    "source_kind": "synthetic",
+    "shape": "sql-null-left",
+    "sql": "SELECT (NULL::INTEGER[]) && (ARRAY[1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (NULL::INTEGER[]) && (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-07-sql-null-right",
+    "source_kind": "synthetic",
+    "shape": "sql-null-right",
+    "sql": "SELECT (ARRAY[1]) && (NULL::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (ARRAY[1]) && (NULL::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-08-sql-null-both",
+    "source_kind": "synthetic",
+    "shape": "sql-null-both",
+    "sql": "SELECT (NULL::INTEGER[]) && (NULL::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (NULL::INTEGER[]) && (NULL::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-09-null-members",
+    "source_kind": "synthetic",
+    "shape": "null-members",
+    "sql": "SELECT (ARRAY[NULL]::INTEGER[]) && (ARRAY[NULL]::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[NULL]::INTEGER[]) && (ARRAY[NULL]::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-10-null-and-equal",
+    "source_kind": "synthetic",
+    "shape": "null-and-equal",
+    "sql": "SELECT (ARRAY[NULL,1]) && (ARRAY[1,NULL]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[NULL,1]) && (ARRAY[1,NULL]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-11-null-and-disjoint",
+    "source_kind": "synthetic",
+    "shape": "null-and-disjoint",
+    "sql": "SELECT (ARRAY[NULL,1]) && (ARRAY[2,NULL]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY[NULL,1]) && (ARRAY[2,NULL]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-12-multidimensional",
+    "source_kind": "synthetic",
+    "shape": "multidimensional",
+    "sql": "SELECT (ARRAY[[1,2],[3,4]]) && (ARRAY[[4,5]]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[[1,2],[3,4]]) && (ARRAY[[4,5]]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-13-rank-independent",
+    "source_kind": "synthetic",
+    "shape": "rank-independent",
+    "sql": "SELECT (ARRAY[[1,2]]) && (ARRAY[2]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[[1,2]]) && (ARRAY[2]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-14-lower-bounds",
+    "source_kind": "synthetic",
+    "shape": "lower-bounds",
+    "sql": "SELECT ('[-2:-1]={1,2}'::INTEGER[]) && ('[9:9]={2}'::INTEGER[]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('[-2:-1]={1,2}'::INTEGER[]) && ('[9:9]={2}'::INTEGER[]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-15-unknown-left",
+    "source_kind": "synthetic",
+    "shape": "unknown-left",
+    "sql": "SELECT ('{1,2}') && (ARRAY[2]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ('{1,2}') && (ARRAY[2]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-16-unknown-right",
+    "source_kind": "synthetic",
+    "shape": "unknown-right",
+    "sql": "SELECT (ARRAY[2]) && ('{1,2}') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[2]) && ('{1,2}') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-17-numeric-nan",
+    "source_kind": "synthetic",
+    "shape": "numeric-nan",
+    "sql": "SELECT (ARRAY['NaN'::NUMERIC]) && (ARRAY['NaN'::NUMERIC]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['NaN'::NUMERIC]) && (ARRAY['NaN'::NUMERIC]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-18-float-nan",
+    "source_kind": "synthetic",
+    "shape": "float-nan",
+    "sql": "SELECT (ARRAY['NaN'::REAL]) && (ARRAY['NaN'::REAL]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['NaN'::REAL]) && (ARRAY['NaN'::REAL]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-19-jsonb-equality",
+    "source_kind": "synthetic",
+    "shape": "jsonb-equality",
+    "sql": "SELECT (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) && (ARRAY['{\"b\":2,\"a\":1}'::JSONB]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) && (ARRAY['{\"b\":2,\"a\":1}'::JSONB]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-20-jsonb-not-containment",
+    "source_kind": "synthetic",
+    "shape": "jsonb-not-containment",
+    "sql": "SELECT (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) && (ARRAY['{\"a\":1}'::JSONB]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (ARRAY['{\"a\":1,\"b\":2}'::JSONB]) && (ARRAY['{\"a\":1}'::JSONB]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-21-char-padding",
+    "source_kind": "synthetic",
+    "shape": "char-padding",
+    "sql": "SELECT (ARRAY['a'::CHAR(3)]) && (ARRAY['a'::CHAR(5)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['a'::CHAR(3)]) && (ARRAY['a'::CHAR(5)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-22-anonymous",
+    "source_kind": "synthetic",
+    "shape": "anonymous",
+    "sql": "SELECT (CAST(? AS INTEGER[])) && (CAST(? AS INTEGER[])) AS v;",
+    "parameter_types": "integer[],integer[]",
+    "parameter_values": [
+      "{1,2}",
+      "{2,3}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (CAST(? AS INTEGER[])) && (CAST(? AS INTEGER[])) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-23-reordered",
+    "source_kind": "synthetic",
+    "shape": "reordered",
+    "sql": "SELECT ($2) && ($1) AS v;",
+    "parameter_types": "integer[],integer[]",
+    "parameter_values": [
+      "{3}",
+      "{1,2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "sqlite_input": "SELECT (?2) && (?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-24-repeated",
+    "source_kind": "synthetic",
+    "shape": "repeated",
+    "sql": "SELECT (CAST($1 AS INTEGER[])) && ($1) AS v;",
+    "parameter_types": "integer[]",
+    "parameter_values": [
+      "{1,2}"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (CAST(?1 AS INTEGER[])) && (?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-25-nullable-binding",
+    "source_kind": "synthetic",
+    "shape": "nullable-binding",
+    "sql": "SELECT ($1) && (ARRAY[1]) AS v;",
+    "parameter_types": "integer[]?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (?1) && (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-26-coalesce",
+    "source_kind": "synthetic",
+    "shape": "coalesce",
+    "sql": "SELECT (COALESCE(NULL::INTEGER[],ARRAY[1])) && (ARRAY[1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (COALESCE(NULL::INTEGER[],ARRAY[1])) && (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-27-concat",
+    "source_kind": "synthetic",
+    "shape": "concat",
+    "sql": "SELECT (ARRAY[1] || 2) && (ARRAY[2]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1] || 2) && (ARRAY[2]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-28-slice",
+    "source_kind": "synthetic",
+    "shape": "slice",
+    "sql": "SELECT ((ARRAY[1,2,3])[2:3]) && (ARRAY[3]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT ((ARRAY[1,2,3])[2:3]) && (ARRAY[3]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-29-negative",
+    "source_kind": "synthetic",
+    "shape": "negative",
+    "sql": "SELECT (ARRAY[-2,-1]) && (ARRAY[-1,0]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[-2,-1]) && (ARRAY[-1,0]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-30-unknown-null",
+    "source_kind": "synthetic",
+    "shape": "unknown-null",
+    "sql": "SELECT (ARRAY[1]) && (NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": null,
+    "sqlite_input": "SELECT (ARRAY[1]) && (NULL) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-31-case-array",
+    "source_kind": "synthetic",
+    "shape": "case-array",
+    "sql": "SELECT (CASE WHEN TRUE THEN ARRAY[1] ELSE NULL::INTEGER[] END) && (ARRAY[1]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (CASE WHEN TRUE THEN ARRAY[1] ELSE NULL::INTEGER[] END) && (ARRAY[1]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-32-element-smallint",
+    "source_kind": "synthetic",
+    "shape": "element-smallint",
+    "sql": "SELECT (ARRAY[2::SMALLINT]) && (ARRAY[NULL::SMALLINT,2::SMALLINT]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[2::SMALLINT]) && (ARRAY[NULL::SMALLINT,2::SMALLINT]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-33-element-integer",
+    "source_kind": "synthetic",
+    "shape": "element-integer",
+    "sql": "SELECT (ARRAY[2::INTEGER]) && (ARRAY[NULL::INTEGER,2::INTEGER]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[2::INTEGER]) && (ARRAY[NULL::INTEGER,2::INTEGER]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-34-element-bigint",
+    "source_kind": "synthetic",
+    "shape": "element-bigint",
+    "sql": "SELECT (ARRAY[2::BIGINT]) && (ARRAY[NULL::BIGINT,2::BIGINT]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[2::BIGINT]) && (ARRAY[NULL::BIGINT,2::BIGINT]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-35-element-numeric",
+    "source_kind": "synthetic",
+    "shape": "element-numeric",
+    "sql": "SELECT (ARRAY[1.25::NUMERIC(8,2)]) && (ARRAY[NULL::NUMERIC(8,2),1.25::NUMERIC(8,2)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1.25::NUMERIC(8,2)]) && (ARRAY[NULL::NUMERIC(8,2),1.25::NUMERIC(8,2)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-36-element-real",
+    "source_kind": "synthetic",
+    "shape": "element-real",
+    "sql": "SELECT (ARRAY[1.5::REAL]) && (ARRAY[NULL::REAL,1.5::REAL]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1.5::REAL]) && (ARRAY[NULL::REAL,1.5::REAL]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-37-element-double",
+    "source_kind": "synthetic",
+    "shape": "element-double",
+    "sql": "SELECT (ARRAY[1.5::DOUBLE PRECISION]) && (ARRAY[NULL::DOUBLE PRECISION,1.5::DOUBLE PRECISION]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[1.5::DOUBLE PRECISION]) && (ARRAY[NULL::DOUBLE PRECISION,1.5::DOUBLE PRECISION]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-38-element-text",
+    "source_kind": "synthetic",
+    "shape": "element-text",
+    "sql": "SELECT (ARRAY['x'::TEXT]) && (ARRAY[NULL::TEXT,'x'::TEXT]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['x'::TEXT]) && (ARRAY[NULL::TEXT,'x'::TEXT]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-39-element-varchar",
+    "source_kind": "synthetic",
+    "shape": "element-varchar",
+    "sql": "SELECT (ARRAY['x'::VARCHAR(3)]) && (ARRAY[NULL::VARCHAR(3),'x'::VARCHAR(3)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['x'::VARCHAR(3)]) && (ARRAY[NULL::VARCHAR(3),'x'::VARCHAR(3)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-40-element-char",
+    "source_kind": "synthetic",
+    "shape": "element-char",
+    "sql": "SELECT (ARRAY['x'::CHAR(3)]) && (ARRAY[NULL::CHAR(3),'x'::CHAR(3)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['x'::CHAR(3)]) && (ARRAY[NULL::CHAR(3),'x'::CHAR(3)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-41-element-boolean",
+    "source_kind": "synthetic",
+    "shape": "element-boolean",
+    "sql": "SELECT (ARRAY[TRUE::BOOLEAN]) && (ARRAY[NULL::BOOLEAN,TRUE::BOOLEAN]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY[TRUE::BOOLEAN]) && (ARRAY[NULL::BOOLEAN,TRUE::BOOLEAN]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-42-element-date",
+    "source_kind": "synthetic",
+    "shape": "element-date",
+    "sql": "SELECT (ARRAY['2025-01-02'::DATE]) && (ARRAY[NULL::DATE,'2025-01-02'::DATE]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['2025-01-02'::DATE]) && (ARRAY[NULL::DATE,'2025-01-02'::DATE]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-43-element-time",
+    "source_kind": "synthetic",
+    "shape": "element-time",
+    "sql": "SELECT (ARRAY['12:00:01.234'::TIME(3)]) && (ARRAY[NULL::TIME(3),'12:00:01.234'::TIME(3)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['12:00:01.234'::TIME(3)]) && (ARRAY[NULL::TIME(3),'12:00:01.234'::TIME(3)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-44-element-timetz",
+    "source_kind": "synthetic",
+    "shape": "element-timetz",
+    "sql": "SELECT (ARRAY['12:00:01.234+02'::TIME(3) WITH TIME ZONE]) && (ARRAY[NULL::TIME(3) WITH TIME ZONE,'12:00:01.234+02'::TIME(3) WITH TIME ZONE]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['12:00:01.234+02'::TIME(3) WITH TIME ZONE]) && (ARRAY[NULL::TIME(3) WITH TIME ZONE,'12:00:01.234+02'::TIME(3) WITH TIME ZONE]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-45-element-timestamp",
+    "source_kind": "synthetic",
+    "shape": "element-timestamp",
+    "sql": "SELECT (ARRAY['2025-01-02 12:00:01.234'::TIMESTAMP(3)]) && (ARRAY[NULL::TIMESTAMP(3),'2025-01-02 12:00:01.234'::TIMESTAMP(3)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['2025-01-02 12:00:01.234'::TIMESTAMP(3)]) && (ARRAY[NULL::TIMESTAMP(3),'2025-01-02 12:00:01.234'::TIMESTAMP(3)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-46-element-timestamptz",
+    "source_kind": "synthetic",
+    "shape": "element-timestamptz",
+    "sql": "SELECT (ARRAY['2025-01-02 12:00:01.234+02'::TIMESTAMP(3) WITH TIME ZONE]) && (ARRAY[NULL::TIMESTAMP(3) WITH TIME ZONE,'2025-01-02 12:00:01.234+02'::TIMESTAMP(3) WITH TIME ZONE]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['2025-01-02 12:00:01.234+02'::TIMESTAMP(3) WITH TIME ZONE]) && (ARRAY[NULL::TIMESTAMP(3) WITH TIME ZONE,'2025-01-02 12:00:01.234+02'::TIMESTAMP(3) WITH TIME ZONE]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-47-element-interval",
+    "source_kind": "synthetic",
+    "shape": "element-interval",
+    "sql": "SELECT (ARRAY['1 day'::INTERVAL(3)]) && (ARRAY[NULL::INTERVAL(3),'1 day'::INTERVAL(3)]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['1 day'::INTERVAL(3)]) && (ARRAY[NULL::INTERVAL(3),'1 day'::INTERVAL(3)]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-48-element-uuid",
+    "source_kind": "synthetic",
+    "shape": "element-uuid",
+    "sql": "SELECT (ARRAY['12345678-1234-1234-1234-123456789012'::UUID]) && (ARRAY[NULL::UUID,'12345678-1234-1234-1234-123456789012'::UUID]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['12345678-1234-1234-1234-123456789012'::UUID]) && (ARRAY[NULL::UUID,'12345678-1234-1234-1234-123456789012'::UUID]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-49-element-jsonb",
+    "source_kind": "synthetic",
+    "shape": "element-jsonb",
+    "sql": "SELECT (ARRAY['null'::JSONB]) && (ARRAY[NULL::JSONB,'null'::JSONB]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['null'::JSONB]) && (ARRAY[NULL::JSONB,'null'::JSONB]) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "array-overlap-50-element-bytea",
+    "source_kind": "synthetic",
+    "shape": "element-bytea",
+    "sql": "SELECT (ARRAY['\\x00ff'::BYTEA]) && (ARRAY[NULL::BYTEA,'\\x00ff'::BYTEA]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT (ARRAY['\\x00ff'::BYTEA]) && (ARRAY[NULL::BYTEA,'\\x00ff'::BYTEA]) AS v;",
+    "sqlite_supported": false
+  }
+]

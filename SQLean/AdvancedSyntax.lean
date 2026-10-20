@@ -116,6 +116,9 @@ mutual
     /-- `@>` or `<@`. The independent contract selects the operand-specific
     native family; broader array/range/geometric families may remain uncovered. -/
     | containment (left right : Expr) (containedBy : Bool := false)
+    /-- PostgreSQL `&&`; the independent typing profile selects supported
+    operand families separately from this structural syntax. -/
+    | overlap (left right : Expr)
     | cast (arg : Expr) (target : DataType)
     /-- PostgreSQL ARRAY[...] constructor. Nested bracket shorthand normalizes
     to nested constructors; declared dimensions remain runtime properties. -/

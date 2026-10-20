@@ -27,6 +27,18 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.19 array-predicate increment](docs/array-predicates-contract-v0.19.md)
+adds array containment (`@>`, `<@`) and overlap (`&&`) with matching element
+types and strict outer-NULL propagation. Separate inventories retain the three
+generic operators and nineteen supported element-equality mappings. Each
+factor has 50 synthetic queries with full static and rendering certificates,
+plus 50 unchanged source queries. Eleven of the source queries also receive
+full static certificates; 89 table-dependent queries retain rendering-only
+assurance. Native checks cover 200 value/type observations, 218 descriptors,
+and 18 expected errors.
+JSON arrays remain Unsupported because they lack element equality; JSONB
+arrays are covered. Ranges and geometric overloads remain separate work.
+
 The [v0.18 array-concatenation increment](docs/array-concatenation-contract-v0.18.md)
 adds array concatenation, append and prepend with exact common-element types
 and separate NULL rules for their three native declarations. All 50 synthetic
@@ -41,7 +53,8 @@ and strict NULL propagation. Fifty synthetic queries and 42 of the 50
 unchanged source queries receive full static certificates; all 50 sources
 receive rendering certificates. Native checks cover 100 value/type observations,
 112 result descriptors, two operator declarations and eight expected errors.
-Array, range and geometric containment remain separate typed-contract work.
+Array containment is covered by v0.19; range and geometric containment remain
+separate typed-contract work.
 
 The [v0.16 JSON extraction increment](docs/json-extraction-contract-v0.16.md)
 adds `->`, `->>`, `#>` and `#>>` with all twelve JSON/JSONB signatures.
@@ -348,7 +361,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.18` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.19` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

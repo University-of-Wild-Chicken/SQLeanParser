@@ -1,0 +1,154 @@
+[
+  {
+    "element": "boolean",
+    "operator": "=",
+    "left": "boolean",
+    "right": "boolean",
+    "output": "boolean",
+    "function": "booleq"
+  },
+  {
+    "element": "bytea",
+    "operator": "=",
+    "left": "bytea",
+    "right": "bytea",
+    "output": "boolean",
+    "function": "byteaeq"
+  },
+  {
+    "element": "bigint",
+    "operator": "=",
+    "left": "bigint",
+    "right": "bigint",
+    "output": "boolean",
+    "function": "int8eq"
+  },
+  {
+    "element": "smallint",
+    "operator": "=",
+    "left": "smallint",
+    "right": "smallint",
+    "output": "boolean",
+    "function": "int2eq"
+  },
+  {
+    "element": "integer",
+    "operator": "=",
+    "left": "integer",
+    "right": "integer",
+    "output": "boolean",
+    "function": "int4eq"
+  },
+  {
+    "element": "text",
+    "operator": "=",
+    "left": "text",
+    "right": "text",
+    "output": "boolean",
+    "function": "texteq"
+  },
+  {
+    "element": "real",
+    "operator": "=",
+    "left": "real",
+    "right": "real",
+    "output": "boolean",
+    "function": "float4eq"
+  },
+  {
+    "element": "double precision",
+    "operator": "=",
+    "left": "double precision",
+    "right": "double precision",
+    "output": "boolean",
+    "function": "float8eq"
+  },
+  {
+    "element": "bpchar",
+    "operator": "=",
+    "left": "bpchar",
+    "right": "bpchar",
+    "output": "boolean",
+    "function": "bpchareq"
+  },
+  {
+    "element": "date",
+    "operator": "=",
+    "left": "date",
+    "right": "date",
+    "output": "boolean",
+    "function": "date_eq"
+  },
+  {
+    "element": "time",
+    "operator": "=",
+    "left": "time",
+    "right": "time",
+    "output": "boolean",
+    "function": "time_eq"
+  },
+  {
+    "element": "timestamp",
+    "operator": "=",
+    "left": "timestamp",
+    "right": "timestamp",
+    "output": "boolean",
+    "function": "timestamp_eq"
+  },
+  {
+    "element": "timestamp with time zone",
+    "operator": "=",
+    "left": "timestamp with time zone",
+    "right": "timestamp with time zone",
+    "output": "boolean",
+    "function": "timestamptz_eq"
+  },
+  {
+    "element": "interval",
+    "operator": "=",
+    "left": "interval",
+    "right": "interval",
+    "output": "boolean",
+    "function": "interval_eq"
+  },
+  {
+    "element": "time with time zone",
+    "operator": "=",
+    "left": "time with time zone",
+    "right": "time with time zone",
+    "output": "boolean",
+    "function": "timetz_eq"
+  },
+  {
+    "element": "numeric",
+    "operator": "=",
+    "left": "numeric",
+    "right": "numeric",
+    "output": "boolean",
+    "function": "numeric_eq"
+  },
+  {
+    "element": "uuid",
+    "operator": "=",
+    "left": "uuid",
+    "right": "uuid",
+    "output": "boolean",
+    "function": "uuid_eq"
+  },
+  {
+    "element": "jsonb",
+    "operator": "=",
+    "left": "jsonb",
+    "right": "jsonb",
+    "output": "boolean",
+    "function": "jsonb_eq"
+  },
+  {
+    "element": "varchar",
+    "operator": "=",
+    "left": "text",
+    "right": "text",
+    "output": "boolean",
+    "function": "texteq"
+  }
+]
