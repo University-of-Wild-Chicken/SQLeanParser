@@ -159,10 +159,17 @@ private def runRenderAssurance (options : Options) (profile : RenderContract.Pro
 private def diagnosticJson (diagnostic : SelectContract.Diagnostic) : Lean.Json :=
   Lean.Json.mkObj [("code", toJson diagnostic.code), ("message", toJson diagnostic.message)]
 
+-- Unmodified bpchar is different from the declaration CHAR (which implies
+-- length one). Output metadata must preserve that distinction recursively.
+private def contractSqlTypeName : SelectContract.ScalarType → String
+  | .char [] => "bpchar"
+  | .array element => contractSqlTypeName element ++ "[]"
+  | type => type.dataType.toSql.toLower.replace ", " ","
+
 private def contractColumnJson (column : SelectContract.OutputColumn) : Lean.Json :=
   let name := match column.type.base with
     | .int32 => "int32" | .text => "text" | .bool => "bool"
-    | type => type.dataType.toSql.toLower.replace ", " ","
+    | type => contractSqlTypeName type
   Lean.Json.mkObj [("name", toJson column.name), ("type", toJson name),
     ("nullable", toJson column.type.nullable)]
 
@@ -181,7 +188,7 @@ private def report (level : Assurance.Level) (status : String)
     (columns : Option (List Lean.Json) := none) (diagnostic : Option SelectContract.Diagnostic := none)
     (catalogUnchanged : Bool := false) : IO UInt32 := do
   let profile := match level with
-    | .declarative => SelectContract.Profile.basicV09.name
+    | .declarative => SelectContract.Profile.basicV10.name
     | .executable => "sqlean-expanded-v0"
     | .syntax => "sqlean-syntax-v0"
   let evidence := match status with
@@ -219,7 +226,7 @@ private def runAssurance (options : Options) (level : Assurance.Level) (source :
       | .error error => return ← report level "invalid" none (some ⟨"environment.parameters", error⟩)
     match statement with
     | .query query =>
-      match Assurance.checkContract .basicV09 catalog params query fuel with
+      match Assurance.checkContract .basicV10 catalog params query fuel with
       | .valid certificate => report level "valid" (some (certificate.output.map contractColumnJson)) none true
       | .invalid diagnostic => report level "invalid" none (some diagnostic)
       | .unsupported diagnostic => report level "unsupported" none (some diagnostic)

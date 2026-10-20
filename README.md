@@ -27,6 +27,15 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.10 constructor increment](docs/array-constructors-contract-v0.10.md)
+adds `ARRAY[...]`, nested bracket shorthand, common element-type inference and
+contextual direct casts, including typed empty arrays. Independent judgments
+and parameter-translation proofs cover the new syntax. Fifty synthetic
+certificates and 50 unchanged source examples accompany 112 native value/type
+observations, 120 exact result descriptors and 14 expected runtime errors.
+SQLite explicitly rejects these constructors. Array subqueries, indexing and
+quantified comparisons remain separate increments.
+
 The [v0.9 array-type increment](docs/array-types-contract-v0.9.md)
 adds built-in array types, repeated unsized suffixes, casts, catalog columns and
 typed parameters. Exact element types remain distinct while declared dimension
@@ -34,8 +43,7 @@ counts normalize. It also corrects parameter modifier inference: PostgreSQL
 ignores modifiers on prepared parameter declarations, while explicit casts
 preserve them. Fifty synthetic certificates and 50 unchanged source examples
 are checked, with 126 native value/type observations and 126 exact prepared
-result descriptors. Array constructors and quantified comparisons follow
-as separate increments.
+result descriptors.
 
 The [v0.8 derived-source increment](docs/derived-contract-v0.8.md)
 adds recursively nested non-LATERAL SELECT sources and positional column
@@ -133,6 +141,7 @@ python3 scripts/check_join_contract_cli.py --local-bin /usr/lib/postgresql/16/bi
 python3 scripts/check_merged_join_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_derived_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_array_types_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_array_constructors_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -262,7 +271,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.9` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.10` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.
@@ -337,6 +346,11 @@ The current independent profile has the following explicit boundary:
   casts. A parameter expression has the unmodified OID type, for scalar and
   array declarations alike. Array NULL elements do not make the outer value
   nullable. SQLite rejects array types.
+- `ARRAY[...]` constructors infer a common element type and preserve lexical
+  parameter order through nested brackets. A direct array cast supplies
+  element coercions and permits empty constructors. This context reaches raw
+  nested constructors only. Constructors produce nonnullable arrays even when
+  elements are NULL; incompatible runtime dimensions remain execution errors.
 - Explicit PostgreSQL scalar tables govern arithmetic, casts, comparisons,
   LIKE, IN and BETWEEN. JSON lacks comparison operators while JSONB admits
   them. Successful conversion and evaluation of actual values remain runtime
@@ -367,8 +381,8 @@ The current independent profile has the following explicit boundary:
   The separate `checkPaginationBounds` API certifies only the outer bounds of
   a query and cannot establish full-query validity or parameter notation.
 
-Independent rules for USING/NATURAL joins, derived sources, grouping/aggregates,
-correlation, LATERAL, CTEs/recursion, set operations, and source column-renaming remain future
+Independent rules for grouping/aggregates, correlation, LATERAL,
+CTEs/recursion, set operations, and base-table column-renaming remain future
 milestones. DISTINCT ON and ILIKE require separate dialect rules. These forms
 remain supported by the expanded parser/checker. The contract draft remains the
 target for the general SELECT family; the first implementation does not claim

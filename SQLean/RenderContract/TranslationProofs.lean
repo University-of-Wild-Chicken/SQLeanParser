@@ -31,6 +31,12 @@ mutual
     | isNull arg negated => simp only [translateExpr, translateExpr_idempotent arg]
     | pattern arg pattern insensitive => simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent pattern]
     | cast arg target => simp only [translateExpr, translateExpr_idempotent arg]
+    | array elements =>
+        simp only [translateExpr, List.attach_map_val]
+        congr 1
+        exact map_twice translateExpr elements fun element member =>
+          have : sizeOf element < sizeOf elements := List.sizeOf_lt_of_mem member
+          translateExpr_idempotent element
     | call name args =>
         simp only [translateExpr, List.attach_map_val]
         congr 1

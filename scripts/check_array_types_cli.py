@@ -65,7 +65,7 @@ def describe_script(cases, canonical):
                 "\\gdesc",
                 "DEALLOCATE array_description;",
             ]
-            expected.append("v|" + case["postgres_display_type"])
+            expected.append(case["output_columns"][0]["name"] + "|" + case["postgres_display_type"])
     commands.append("ROLLBACK;")
     return "\n".join(commands), expected
 

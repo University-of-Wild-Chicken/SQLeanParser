@@ -61,6 +61,9 @@ mutual
     case coalesce.coalesce a0 b0 =>
       letI : Decidable (a0 = b0) := exactListExprDecEq a0 b0
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.coalesce.injEq])
+    case array.array a0 b0 =>
+      letI : Decidable (a0 = b0) := exactListExprDecEq a0 b0
+      exact decidable_of_iff (a0 = b0) (by simp only [Expr.array.injEq])
     case greatest.greatest a0 b0 =>
       letI : Decidable (a0 = b0) := exactListExprDecEq a0 b0
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.greatest.injEq])

@@ -29,6 +29,10 @@ mutual
     | .isNull arg negated => .isNull (translateExpr arg) negated
     | .pattern arg pattern insensitive => .pattern (translateExpr arg) (translateExpr pattern) insensitive
     | .cast arg target => .cast (translateExpr arg) target
+    | .array elements => .array
+        (elements.attach.map fun (element : {v : Advanced.Expr // v ∈ elements}) =>
+          have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
+          translateExpr element.val)
     | .call name args => .call name
         (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property

@@ -116,6 +116,10 @@ mutual
     | .cast arg type =>
         checkDataType type
         combine [inspectExpr arg, .ok {depth := arrayTypeDepth type.name}]
+    | .array elements =>
+        combine (elements.attach.map fun (element : {v : Advanced.Expr // v ∈ elements}) =>
+          have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
+          inspectExpr element.val)
     | .call name args =>
         if name.isEmpty || name.length > 3 then
           invalid "representation.function-name" "function names require one to three nonempty components"

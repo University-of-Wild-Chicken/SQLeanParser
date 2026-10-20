@@ -46,6 +46,12 @@ mutual
     | .isNull arg negated => paren (exprSql arg ++ if negated then " IS NOT NULL" else " IS NULL")
     | .pattern arg pattern insensitive => paren (exprSql arg ++ (if insensitive then " ILIKE " else " LIKE ") ++ exprSql pattern)
     | .cast arg type => "CAST(" ++ exprSql arg ++ " AS " ++ type.toSql ++ ")"
+    -- The checked SQLite boundary excludes this constructor. Keeping a total,
+    -- structural spelling here does not assert SQLite syntax support.
+    | .array elements => "ARRAY[" ++ comma
+        (elements.attach.map fun (element : {v : Expr // v ∈ elements}) =>
+          have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
+          exprSql element.val) ++ "]"
     | .call name args => String.intercalate "." (name.map quoteName) ++ paren (comma
         (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property

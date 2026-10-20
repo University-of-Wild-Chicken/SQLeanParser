@@ -219,6 +219,23 @@ def conditionalBase (args : List ScalarInput) : Option ScalarType := do
   else if args.all (fun arg => arg.base == some candidate) then some candidate
   else some candidate.unmodified
 
+/-- An inferred array constructor uses PostgreSQL common-type selection and
+retains common element modifiers. NULL elements do not make the array NULL. -/
+def arraySignature (args : List ScalarInput) : Option ExactType := do
+  if args.isEmpty then none
+  else some ⟨(← conditionalBase args).asArray, false⟩
+
+/-- A direct cast supplies its full concrete array target to constructor
+children. Once any child is array-valued, all children are explicitly coerced
+to the array type; otherwise they are coerced to its scalar element type.
+Shape compatibility and element-input conversion are runtime obligations. -/
+def arrayCastSignature (target : ScalarType) (args : List ScalarInput) : Bool :=
+  let multi := args.any (fun input => input.base.any ScalarType.isArray)
+  let elementTarget := if multi then target else target.arrayElement
+  target.isArray && args.all (fun input => match input with
+    | .unknown _ => true
+    | .known type => explicitCastAllowed type.base elementTarget)
+
 def coalesceSignature (args : List ScalarInput) : Option ExactType := do
   if args.isEmpty then none
   else some ⟨← conditionalBase args, args.all ScalarInput.nullable⟩

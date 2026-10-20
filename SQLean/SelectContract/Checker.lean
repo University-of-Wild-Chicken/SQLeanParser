@@ -68,6 +68,17 @@ structure BranchesCertificate (params : ParameterEnv) (scope : Scope)
   uses : List Parameter
   valid : BranchesValid params scope branches conditions results uses
 
+structure ArrayCertificate (params : ParameterEnv) (scope : Scope)
+    (target : ScalarType) (exprs : List Advanced.Expr) where
+  uses : List Parameter
+  valid : ArrayValid params scope target exprs uses
+
+structure ArrayElementsCertificate (params : ParameterEnv) (scope : Scope)
+    (target : ScalarType) (exprs : List Advanced.Expr) where
+  types : List ExprType
+  uses : List Parameter
+  valid : ArrayElementsValid params scope target exprs types uses
+
 mutual
   def checkExpr (fuel : Nat) (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) :
       Except Failure (ExprCertificate params scope expr) :=
@@ -135,11 +146,25 @@ mutual
             match supported : concreteType target with
             | none => .error (unsupported "cast_type" "Cast target is outside the concrete PostgreSQL scalar profile")
             | some base =>
-                let arg ← checkExpr fuel params scope a
-                if allowed : castAllowed arg.type base = true then
-                  .ok ⟨castSignature arg.type base, arg.uses, .cast arg.valid supported declaration allowed⟩
-                else .error (invalid "cast_signature" "PostgreSQL has no explicit cast between these concrete scalar types")
+                if ordinary : OrdinaryCast a target then
+                  let arg ← checkExpr fuel params scope a
+                  if allowed : castAllowed arg.type base = true then
+                    .ok ⟨castSignature arg.type base, arg.uses,
+                      .cast arg.valid supported declaration allowed ordinary⟩
+                  else .error (invalid "cast_signature" "PostgreSQL has no explicit cast between these concrete scalar types")
+                else match shape : a with
+                  | .array elements =>
+                    let args ← checkArray fuel params scope base elements
+                    .ok ⟨some ⟨base, false⟩, args.uses,
+                      by simpa only [shape] using ExprValid.castArray args.valid supported declaration⟩
+                  | _ => .error (invalid "cast_category" "Unclassified contextual cast")
           else .error (invalid "type_declaration" "Cast target has invalid type modifiers")
+      | .array elements => do
+          let args ← checkExprList fuel params scope elements
+          match signature : arraySignature (scalarInputs elements args.types) with
+          | none => .error (invalid "array_constructor_type"
+              "An inferred array requires nonempty elements with a common implicit type; empty arrays require a direct array cast")
+          | some result => .ok ⟨some result, args.uses, .array args.valid signature⟩
       | .call name args => do
           let argsTyped ← checkExprList fuel params scope args
           match signature : callSignature name (scalarInputs args argsTyped.types) with
@@ -222,6 +247,40 @@ mutual
           let head ← checkExpr fuel params scope expr
           let tail ← checkExprList fuel params scope exprs
           .ok ⟨head.type :: tail.types, head.uses ++ tail.uses, .cons head.valid tail.valid⟩
+
+  /-- Direct target-directed array construction; target context follows only
+  nested raw constructors. It never crosses a function/conditional/cast node. -/
+  def checkArray (fuel : Nat) (params : ParameterEnv) (scope : Scope)
+      (target : ScalarType) (exprs : List Advanced.Expr) :
+      Except Failure (ArrayCertificate params scope target exprs) :=
+    match fuel with
+    | 0 => .error exhausted
+    | fuel + 1 => do
+      let args ← checkArrayElements fuel params scope target exprs
+      if signature : arrayCastSignature target (scalarInputs exprs args.types) = true then
+        .ok ⟨args.uses, .targeted args.valid signature⟩
+      else .error (invalid "array_constructor_cast"
+        "Array constructor elements cannot be explicitly coerced to the direct cast target")
+
+  def checkArrayElements (fuel : Nat) (params : ParameterEnv) (scope : Scope)
+      (target : ScalarType) (exprs : List Advanced.Expr) :
+      Except Failure (ArrayElementsCertificate params scope target exprs) :=
+    match fuel with
+    | 0 => .error exhausted
+    | fuel + 1 => match exprs with
+      | [] => .ok ⟨[], [], .nil⟩
+      | .array elements :: rest => do
+          let head ← checkArray fuel params scope target elements
+          let tail ← checkArrayElements fuel params scope target rest
+          .ok ⟨some ⟨target, false⟩ :: tail.types, head.uses ++ tail.uses,
+            .nested head.valid tail.valid⟩
+      | expr :: exprs => do
+          if category : OrdinaryArrayElement expr then
+            let head ← checkExpr fuel params scope expr
+            let tail ← checkArrayElements fuel params scope target exprs
+            .ok ⟨head.type :: tail.types, head.uses ++ tail.uses,
+              .ordinary category head.valid tail.valid⟩
+          else .error (invalid "array_element_category" "Unclassified array constructor child")
 
   def checkOptionalExpr (fuel : Nat) (params : ParameterEnv) (scope : Scope) (expr : Option Advanced.Expr) :
       Except Failure (OptionalExprCertificate params scope expr) :=
@@ -463,7 +522,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
       let children : List Advanced.Expr := match expr with
         | .binary _ a b | .pattern a b _ | .nullIf a b => [a, b]
         | .unary _ a | .cast a _ | .isNull a _ | .inQuery a _ => [a]
-        | .call _ args | .coalesce args | .greatest args | .least args => args
+        | .array args | .call _ args | .coalesce args | .greatest args | .least args => args
         | .caseExpr operand branches otherwise =>
           operand.toList ++ branches.flatMap (fun (branch : Advanced.Expr × Advanced.Expr) =>
             [branch.1, branch.2]) ++ otherwise.toList

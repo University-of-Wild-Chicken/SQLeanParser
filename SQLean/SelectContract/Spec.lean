@@ -115,6 +115,25 @@ def Resolves (scope : Scope) (qualifier : Option Name) (name : Name) (column : O
 instance (scope : Scope) (qualifier : Option Name) (name : Name) (column : OutputColumn) :
     Decidable (Resolves scope qualifier name column) := inferInstanceAs (Decidable (_ = _))
 
+/-- Direct array-to-array casts must use target-directed element coercion.
+Allowing the ordinary inferred-array route would invent transitive casts. -/
+def OrdinaryCast : Advanced.Expr → DataType → Prop
+  | .array _, target => target.name.isArray = false
+  | _, _ => True
+
+instance (expr : Advanced.Expr) (target : DataType) : Decidable (OrdinaryCast expr target) := by
+  unfold OrdinaryCast
+  split <;> infer_instance
+
+/-- Cast context reaches raw nested constructors, not arbitrary expressions. -/
+def OrdinaryArrayElement : Advanced.Expr → Prop
+  | .array _ => False
+  | _ => True
+
+instance (expr : Advanced.Expr) : Decidable (OrdinaryArrayElement expr) := by
+  unfold OrdinaryArrayElement
+  split <;> infer_instance
+
 mutual
   inductive ExprValid (params : ParameterEnv) (scope : Scope) : Advanced.Expr → ExprType → List Parameter → Prop where
     | int (range : n ≤ 2147483647) : ExprValid params scope (.literal (.int n)) (some ⟨.int32, false⟩) []
@@ -148,8 +167,15 @@ mutual
         (signature : patternSignature ta tb = some result) :
         ExprValid params scope (.pattern a b false) result (ua ++ ub)
     | cast (arg : ExprValid params scope a ta uses) (supported : concreteType target = some base)
-        (declaration : DataTypeWellFormed target) (allowed : castAllowed ta base = true) :
+        (declaration : DataTypeWellFormed target) (allowed : castAllowed ta base = true)
+        (ordinary : OrdinaryCast a target) :
         ExprValid params scope (.cast a target) (castSignature ta base) uses
+    | array (args : ExprListValid params scope es ts uses)
+        (signature : arraySignature (scalarInputs es ts) = some result) :
+        ExprValid params scope (.array es) (some result) uses
+    | castArray (args : ArrayValid params scope base es uses)
+        (supported : concreteType target = some base) (declaration : DataTypeWellFormed target) :
+        ExprValid params scope (.cast (.array es) target) (some ⟨base, false⟩) uses
     | call (args : ExprListValid params scope es ts uses)
         (signature : callSignature name (scalarInputs es ts) = some result) :
         ExprValid params scope (.call name es) (some result) uses
@@ -185,6 +211,26 @@ mutual
     | cons (head : ExprValid params scope e t u) (tail : ExprListValid params scope es ts us) :
         ExprListValid params scope (e :: es) (t :: ts) (u ++ us)
 
+  /-- Target-directed constructor elaboration. The target is the complete
+  concrete array type, including its element modifiers. -/
+  inductive ArrayValid (params : ParameterEnv) (scope : Scope) :
+      ScalarType → List Advanced.Expr → List Parameter → Prop where
+    | targeted (args : ArrayElementsValid params scope target es ts uses)
+        (signature : arrayCastSignature target (scalarInputs es ts) = true) :
+        ArrayValid params scope target es uses
+
+  inductive ArrayElementsValid (params : ParameterEnv) (scope : Scope) :
+      ScalarType → List Advanced.Expr → List ExprType → List Parameter → Prop where
+    | nil : ArrayElementsValid params scope target [] [] []
+    | ordinary (category : OrdinaryArrayElement expr)
+        (head : ExprValid params scope expr type headUses)
+        (tail : ArrayElementsValid params scope target exprs types tailUses) :
+        ArrayElementsValid params scope target (expr :: exprs) (type :: types) (headUses ++ tailUses)
+    | nested (head : ArrayValid params scope target exprs headUses)
+        (tail : ArrayElementsValid params scope target rest types tailUses) :
+        ArrayElementsValid params scope target (.array exprs :: rest)
+          (some ⟨target, false⟩ :: types) (headUses ++ tailUses)
+
   inductive OptionalExprValid (params : ParameterEnv) (scope : Scope) :
       Option Advanced.Expr → ExprType → List Parameter → Prop where
     | absent : OptionalExprValid params scope none none []
@@ -202,10 +248,16 @@ mutual
           (tc :: conditions) (tr :: results) (uc ++ ur ++ uses)
 end
 
+/-- Constructor-derived labels survive explicit cast chains. -/
+def arrayOrigin : Advanced.Expr → Bool
+  | .array _ => true
+  | .cast arg _ => arrayOrigin arg
+  | _ => false
+
 /-- A label is independent of expression typing. Computed unnamed top-level
 outputs use ?column?; duplicate labels are retained, never deduplicated. -/
 def outputName (expr : Advanced.Expr) (alias : Option Name) : Name :=
-  alias.getD (match expr with
+  alias.getD (if arrayOrigin expr then "array" else match expr with
     | .column _ name => name
     | .call name _ => name.getLastD "?column?"
     | .caseExpr .. => "case"

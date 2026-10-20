@@ -166,7 +166,7 @@ private def reserved : List String :=
    "nulls", "distinct", "on", "as", "join", "inner", "left", "right", "full", "outer", "cross", "natural",
    "using", "lateral", "union", "intersect", "except", "with", "recursive", "all", "and", "or", "not",
    "is", "null", "true", "false", "in", "exists", "between", "like", "ilike", "filter", "cast",
-   "case", "when", "then", "else", "end", "coalesce", "nullif", "greatest", "least",
+   "case", "when", "then", "else", "end", "coalesce", "nullif", "greatest", "least", "array",
    "current_date", "current_time", "current_timestamp", "localtime", "localtimestamp",
    "current_user", "session_user", "system_user", "current_role", "current_catalog", "current_schema", "user",
    "isnull", "notnull", "only", "for",
@@ -359,6 +359,9 @@ mutual
       if ← eat "null" then return .null
       if ← eat "true" then return .literal (.bool true)
       if ← eat "false" then return .literal (.bool false)
+      if ← eat "array" then
+        if ← read then fail "array constructors are not supported by the SQLite profile"
+        return ← arrayBracket fuel
       if ← eat "case" then
         let operand ← if ← isAt "when" then pure none else do pure (some (← expression fuel 0))
         let branches ← caseBranches fuel
@@ -445,6 +448,18 @@ mutual
       | .quoted _ =>
         namedAtom fuel
       | _ => fail "expected expression"
+
+  private def arrayBracket : Nat → Parser Expr
+    | 0 => fail "array constructor nesting bound exceeded"
+    | fuel + 1 => do
+      expect "["
+      if ← eat "]" then return .array []
+      -- PostgreSQL's raw nested bracket list is a separate production from
+      -- its expression list. Bare brackets are never general expressions.
+      let elements ← if ← isAt "[" then separated (arrayBracket fuel) fuel
+        else separated (expression fuel 0) fuel
+      expect "]"
+      pure (.array elements)
 
   private def namedAtom : Nat → Parser Expr
     | 0 => fail "qualified expression input bound exceeded"

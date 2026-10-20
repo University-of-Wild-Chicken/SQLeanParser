@@ -88,6 +88,9 @@ mutual
     | isNull (arg : Expr) (negated : Bool := false)
     | pattern (arg pattern : Expr) (insensitive : Bool := false)
     | cast (arg : Expr) (target : DataType)
+    /-- PostgreSQL ARRAY[...] constructor. Nested bracket shorthand normalizes
+    to nested constructors; declared dimensions remain runtime properties. -/
+    | array (elements : List Expr)
     /-- Ordinary positional function call; name components retain quoting/case
     through the parser's ordinary identifier rules. -/
     | call (name : List Name) (args : List Expr)

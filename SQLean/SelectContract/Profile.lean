@@ -11,11 +11,11 @@ formalization of PostgreSQL's general overload-resolution algorithm. -/
 namespace SQLean.SelectContract
 
 inductive Profile where
-  | basicV09
+  | basicV10
   deriving Repr, BEq, DecidableEq, Inhabited
 
 def Profile.name : Profile → String
-  | .basicV09 => "sqlean-basic-select-v0.9"
+  | .basicV10 => "sqlean-basic-select-v0.10"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes
@@ -59,6 +59,9 @@ def ScalarType.isArray : ScalarType → Bool
     type.asArray.asArray = type.asArray := by
   simp [asArray, arrayElement]
 
+/-- Declaration-shaped view, not a universal inverse of `concreteType`.
+In particular, an unmodified `.char []` result is PostgreSQL `bpchar`, whereas
+the declaration `CHAR` implies length one. Result reports distinguish these. -/
 def ScalarType.dataType : ScalarType → Advanced.DataType
   | .smallInt => ⟨.smallInt, []⟩ | .int32 => ⟨.int, []⟩ | .int64 => ⟨.bigInt, []⟩
   | .text => ⟨.text, []⟩ | .bool => ⟨.bool, []⟩ | .real => ⟨.real, []⟩

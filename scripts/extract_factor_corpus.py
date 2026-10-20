@@ -31,6 +31,7 @@ POPULATIONS = {
     "natural_contract": {"postgres": 6, "sqlite": 44},
     "derived_contract": {"postgres": 47, "sqlc": 3},
     "array_types": {"postgres": 42, "hatchet": 7, "sqlc": 1},
+    "array_constructors": {"postgres": 49, "sqlc": 1},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -40,6 +41,7 @@ JOIN_KINDS = {"cross", "inner", "left", "right", "full"}
 MERGED_FACTORS = {"using_contract": "using", "natural_contract": "natural"}
 JOIN_FACTORS = {"join_contract", *MERGED_FACTORS}
 ARRAY_ELEMENT_FAMILIES = {"int4", "int8", "text", "float8", "interval", "timestamptz", "uuid"}
+ARRAY_FACTORS = {"array_types", "array_constructors"}
 
 
 def validate_join_tree(tree: dict, *, root: bool = True, allow_merged: bool = False) -> set[str]:
@@ -237,6 +239,66 @@ def observe_array_types(parsed: dict) -> list[dict]:
     return result
 
 
+def validate_array_constructors(constructors: list[dict]) -> None:
+    if not isinstance(constructors, list) or not constructors:
+        raise ValueError("array constructor factor is absent")
+    for entry in constructors:
+        if (not isinstance(entry, dict)
+                or set(entry) != {"depth", "length", "array_cast_context"}
+                or type(entry["depth"]) is not int or entry["depth"] < 1
+                or type(entry["length"]) is not int or entry["length"] < 0
+                or type(entry["array_cast_context"]) is not bool
+                or (entry["length"] == 0 and not entry["array_cast_context"])):
+            raise ValueError("invalid array constructor observation")
+
+
+def observe_array_constructors(parsed: dict) -> list[dict]:
+    """Observe the closed constructor population, retaining expression nesting.
+
+    Depth counts nested constructor expressions, not a PostgreSQL type rank.
+    Cast context is inherited only through constructors, never through calls.
+    No element type inference, shape equality, or function validity is claimed.
+    """
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("array constructor source must be a SELECT")
+    result = []
+
+    def walk(value, depth=0, array_cast=False):
+        if isinstance(value, list):
+            for child in value:
+                walk(child, depth, array_cast)
+        elif isinstance(value, dict):
+            for kind, node in value.items():
+                if not isinstance(node, dict):
+                    walk(node, depth)
+                    continue
+                if kind == "SelectStmt" and any(node.get(field) for field in (
+                        "fromClause", "withClause", "groupClause", "havingClause",
+                        "larg", "rarg", "valuesLists", "lockingClause")):
+                    raise ValueError("constructor population requires source-free SELECTs")
+                if kind in {"A_Indices", "A_Indirection", "RowExpr", "SubLink"}:
+                    raise ValueError("subscript/row/subquery belongs to a later constructor factor")
+                if kind == "A_Expr" and node.get("kind") in {"AEXPR_OP_ANY", "AEXPR_OP_ALL"}:
+                    raise ValueError("quantified comparison belongs to a later constructor factor")
+                if kind == "TypeCast":
+                    target = node.get("typeName", {})
+                    walk(node.get("arg"), depth, bool(target.get("arrayBounds")))
+                    walk(target, depth)
+                elif kind == "A_ArrayExpr":
+                    elements = node.get("elements", [])
+                    if not isinstance(elements, list):
+                        raise ValueError("array constructor elements must be a list")
+                    result.append({"depth": depth + 1, "length": len(elements),
+                                   "array_cast_context": array_cast})
+                    walk(elements, depth + 1, array_cast)
+                else:
+                    walk(node, depth)
+
+    walk(parsed)
+    validate_array_constructors(result)
+    return result
+
+
 def observe_oracle(sql: str, factor: str) -> dict:
     import pglast
     from pglast import ast, enums, parse_sql, parser, visitors
@@ -252,7 +314,7 @@ def observe_oracle(sql: str, factor: str) -> dict:
             names = [part.sval for part in node.names or ()]
             if (not names or names[-1] not in NEW_FAMILIES | OLD_FAMILIES
                     or len(names) > 2 or (len(names) == 2 and names[0] != "pg_catalog")
-                    or (node.arrayBounds and factor != "array_types")):
+                    or (node.arrayBounds and factor not in ARRAY_FACTORS)):
                 raise ValueError("array/user-defined type belongs to a later factor")
 
         def visit_FuncCall(self, ancestors, node):
@@ -302,7 +364,7 @@ def observe_oracle(sql: str, factor: str) -> dict:
         allowed.add("conditional-expression")
     if factor in {"locking", "array_types"}:
         allowed.add("row-locking")
-    if factor == "array_types":
+    if factor in ARRAY_FACTORS:
         allowed.add("array-or-subscripting")
     unexpected = set(features(json.loads(parser.parse_sql_json(sql)))) - allowed
     if unexpected:
@@ -362,6 +424,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "array_types":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["array_types"] = observe_array_types(parsed)
+    if factor == "array_constructors":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation["array_constructors"] = observe_array_constructors(parsed)
     return observation
 
 
@@ -376,6 +441,7 @@ def validate_population(records: list[dict], factor: str) -> None:
     forms, names, strengths, policies, join_kinds = set(), set(), set(), set(), set()
     derived_alias_cases, derived_max_depth = 0, 0
     array_elements = set()
+    constructor_count, constructor_empty, constructor_nested, constructor_depth = 0, 0, 0, 0
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -395,6 +461,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.add("derived_sources")
         if factor == "array_types":
             expected_keys.add("array_types")
+        if factor == "array_constructors":
+            expected_keys.add("array_constructors")
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -436,6 +504,13 @@ def validate_population(records: list[dict], factor: str) -> None:
         if factor == "array_types":
             validate_array_types(observation["array_types"])
             array_elements.update(entry["element_type"] for entry in observation["array_types"])
+        if factor == "array_constructors":
+            constructors = observation["array_constructors"]
+            validate_array_constructors(constructors)
+            constructor_count += len(constructors)
+            constructor_empty += sum(entry["length"] == 0 for entry in constructors)
+            constructor_nested += any(entry["depth"] > 1 for entry in constructors)
+            constructor_depth = max(constructor_depth, *(entry["depth"] for entry in constructors))
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -452,6 +527,10 @@ def validate_population(records: list[dict], factor: str) -> None:
         raise ValueError("derived population must retain column aliases and depth-three nesting")
     if factor == "array_types" and array_elements != ARRAY_ELEMENT_FAMILIES:
         raise ValueError("array type population must retain all seven pinned element families")
+    if factor == "array_constructors" and (
+            constructor_count != 94 or constructor_empty != 1
+            or constructor_nested != 12 or constructor_depth != 6):
+        raise ValueError("constructor population must retain its 94 nodes, typed empty, and nesting")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -470,7 +549,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "array_types"} | JOIN_FACTORS:
+            if factor in {"locking", "derived_contract"} | ARRAY_FACTORS | JOIN_FACTORS:
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -483,7 +562,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if factor not in MERGED_FACTORS or name != "sqlite":
                 raise ValueError("Tcl SQL selection is outside its explicit source factors")
             sql, line, detail = selected_tcl_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract", "array_types"} | JOIN_FACTORS:
+        elif factor in {"locking", "derived_contract"} | ARRAY_FACTORS | JOIN_FACTORS:
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])

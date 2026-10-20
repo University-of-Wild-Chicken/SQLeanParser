@@ -32,6 +32,14 @@ set_option maxHeartbeats 1000000
     OrdinaryUnary op (translateExpr expr) ↔ OrdinaryUnary op expr := by
   cases op <;> cases expr <;> simp [OrdinaryUnary, translateExpr]
 
+@[simp] theorem ordinary_cast_translated (expr : Advanced.Expr) (target : DataType) :
+    OrdinaryCast (translateExpr expr) target ↔ OrdinaryCast expr target := by
+  cases expr <;> simp only [OrdinaryCast, translateExpr, translateExpr_case]
+
+@[simp] theorem ordinary_array_element_translated (expr : Advanced.Expr) :
+    OrdinaryArrayElement (translateExpr expr) ↔ OrdinaryArrayElement expr := by
+  cases expr <;> simp only [OrdinaryArrayElement, translateExpr, translateExpr_case]
+
 @[simp] theorem scalar_input_translated (expr : Advanced.Expr) (type : ExprType) :
     scalarInput (translateExpr expr) type = scalarInput expr type := by
   cases expr <;> simp [translateExpr, scalarInput]
@@ -80,8 +88,15 @@ mutual
     | pattern arg pattern signature =>
         simpa only [translateExpr, List.map_append] using
           ExprValid.pattern (expr_valid_translated arg) (expr_valid_translated pattern) signature
-    | cast arg supported declaration allowed =>
-        simpa only [translateExpr] using ExprValid.cast (expr_valid_translated arg) supported declaration allowed
+    | cast arg supported declaration allowed ordinary =>
+        simpa only [translateExpr] using ExprValid.cast (expr_valid_translated arg)
+          supported declaration allowed ((ordinary_cast_translated _ _).mpr ordinary)
+    | array args signature =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.array (expr_list_valid_translated args) (by simpa using signature)
+    | castArray args supported declaration =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.castArray (array_valid_translated args) supported declaration
     | call args signature =>
         simpa only [translateExpr, List.attach_map_val] using
           ExprValid.call (expr_list_valid_translated args) (by simpa using signature)
@@ -127,7 +142,7 @@ mutual
           ExprValid.between (expr_valid_translated arg) (expr_valid_translated lower)
             (expr_valid_translated upper) signature
   termination_by sizeOf expr
-  decreasing_by all_goals (simp_all <;> omega)
+  decreasing_by all_goals (simp <;> omega)
 
   theorem expr_list_valid_translated
       (valid : ExprListValid params scope exprs types uses) :
@@ -139,7 +154,37 @@ mutual
         simpa only [List.map_cons, List.map_append] using
           ExprListValid.cons (expr_valid_translated head) (expr_list_valid_translated tail)
   termination_by sizeOf exprs
-  decreasing_by all_goals (simp_all <;> omega)
+  decreasing_by all_goals (simp <;> omega)
+
+  /-- Target-directed array elaboration preserves the exact target declaration
+  and original occurrence sequence, including nested empty constructors. -/
+  theorem array_valid_translated
+      (valid : ArrayValid params scope target exprs uses) :
+      ArrayValid params scope target (exprs.map translateExpr)
+        (uses.map translateParameter) := by
+    cases valid with
+    | targeted args signature =>
+        exact ArrayValid.targeted (array_elements_valid_translated args)
+          (by simpa only [scalar_inputs_translated] using signature)
+  termination_by sizeOf exprs + 1
+  decreasing_by subst_vars; omega
+
+  theorem array_elements_valid_translated
+      (valid : ArrayElementsValid params scope target exprs types uses) :
+      ArrayElementsValid params scope target (exprs.map translateExpr) types
+        (uses.map translateParameter) := by
+    cases valid with
+    | nil => exact ArrayElementsValid.nil
+    | ordinary category head tail =>
+        simpa only [List.map_cons, List.map_append] using
+          ArrayElementsValid.ordinary ((ordinary_array_element_translated _).mpr category)
+            (expr_valid_translated head) (array_elements_valid_translated tail)
+    | nested head tail =>
+        simpa only [List.map_cons, List.map_append, translateExpr, List.attach_map_val] using
+          ArrayElementsValid.nested (array_valid_translated head)
+            (array_elements_valid_translated tail)
+  termination_by sizeOf exprs
+  decreasing_by all_goals (simp <;> omega)
 
   theorem optional_expr_valid_translated
       (valid : OptionalExprValid params scope expr type uses) :
@@ -148,7 +193,7 @@ mutual
     | absent => exact OptionalExprValid.absent
     | present typed => exact OptionalExprValid.present (expr_valid_translated typed)
   termination_by sizeOf expr
-  decreasing_by all_goals (simp_all <;> omega)
+  decreasing_by all_goals (simp <;> omega)
 
   theorem branches_valid_translated
       (valid : BranchesValid params scope branches conditions results uses) :
@@ -162,12 +207,22 @@ mutual
         BranchesValid.cons (expr_valid_translated conditionTyped) (expr_valid_translated resultTyped)
           (branches_valid_translated tail)
   termination_by sizeOf branches
-  decreasing_by all_goals (simp_all <;> omega)
+  decreasing_by all_goals (simp <;> omega)
 end
+
+@[simp] theorem array_origin_translated (expr : Advanced.Expr) :
+    arrayOrigin (translateExpr expr) = arrayOrigin expr := by
+  cases expr with
+  | cast arg target =>
+      simp only [translateExpr, arrayOrigin, array_origin_translated arg]
+  | _ => simp only [translateExpr, translateExpr_case, arrayOrigin]
+termination_by sizeOf expr
+decreasing_by all_goals (simp_all <;> omega)
 
 @[simp] theorem translated_output_name (expr : Advanced.Expr) (alias : Option Name) :
     outputName (translateExpr expr) alias = outputName expr alias := by
-  cases expr <;> simp only [translateExpr, translateExpr_case, outputName]
+  simp only [outputName, array_origin_translated]
+  cases expr <;> simp only [translateExpr, translateExpr_case]
 
 theorem items_valid_translated (valid : ItemsValid params scope items output uses) :
     ItemsValid params scope (items.map translateSelectItem) output

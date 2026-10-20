@@ -37,6 +37,7 @@ mutual
     | .unary _ arg | .aggregate _ arg _ | .isNull arg _ =>
         checkSQLiteExpr arg
     | .cast arg type => checkSQLiteDataType type; checkSQLiteExpr arg
+    | .array _ => unsupported "array-constructor"
     | .call .. | .greatest .. | .least .. => unsupported "scalar-function-signatures"
     | .coalesce args =>
         if args.length < 2 then unsupported "single-argument-COALESCE"

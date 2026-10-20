@@ -1,0 +1,1462 @@
+{
+  "format_version": 1,
+  "factor": "array_constructors",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 49,
+    "sqlc": 1
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "contrib/hstore/sql/hstore.sql",
+          "sha256": "285dc77d28116fe57a690bb4418128b3723b4004e72ccb3bcbdd7f3d8325aaf8",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/hstore/sql/hstore.sql"
+        },
+        {
+          "path": "contrib/pgcrypto/sql/pgp-armor.sql",
+          "sha256": "46c337a741fee459fea8e80738b00c47d5962dde4eff652d35b66fcf7653f65e",
+          "local_path": "fixtures/factor_sources/sources/postgres/contrib/pgcrypto/sql/pgp-armor.sql"
+        },
+        {
+          "path": "src/test/regress/sql/arrays.sql",
+          "sha256": "9d4ce22f3dfe91ccc0426d2599149d66f8e1d09f5b2d42034d19136971cd9279",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/arrays.sql"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+          "sha256": "053b2e81b8ed10a5c416bb032d702c4c68cbd807fb93e6e8b38b48a724182c72",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/builtins/postgresql/query.sql"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/builtins/postgresql/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 981,
+        "end": 1064,
+        "statement_index": 23
+      },
+      "sql_sha256": "5bdc6617673bedb41a1b456d17b6a21e8edd21c931d2399840e898aa842087d8",
+      "observed_syntax": {
+        "function_names": [
+          "now",
+          "width_bucket"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": true
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/hstore/sql/hstore.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7622,
+        "end": 7670,
+        "statement_index": 145
+      },
+      "sql_sha256": "3d4a4e6c446fd1e354a5e88c97462637cd3869a40868f6c1aa0c7bc062aa368f",
+      "observed_syntax": {
+        "function_names": [
+          "hstore"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 6,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/hstore/sql/hstore.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7671,
+        "end": 7725,
+        "statement_index": 146
+      },
+      "sql_sha256": "7d2bdf893a18bb5b3f67103c90d9fe33696cc0d3e14da88b20def463c865719d",
+      "observed_syntax": {
+        "function_names": [
+          "hstore"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/hstore/sql/hstore.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7963,
+        "end": 8019,
+        "statement_index": 151
+      },
+      "sql_sha256": "fa88d7865c3d4c04f3c8e88422eaca950122426d21c8075866c8e6ebb522976c",
+      "observed_syntax": {
+        "function_names": [
+          "hstore"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/hstore/sql/hstore.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8020,
+        "end": 8077,
+        "statement_index": 152
+      },
+      "sql_sha256": "9fff16a84bc4f0c433a96b95adc6f3d78ef67bf05d06f82d371703b4226a620f",
+      "observed_syntax": {
+        "function_names": [
+          "hstore"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/hstore/sql/hstore.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8133,
+        "end": 8208,
+        "statement_index": 154
+      },
+      "sql_sha256": "c1ec4925b8aad7b94bbf98372a6b1fa54ec582096619789d893b3768c584fc15",
+      "observed_syntax": {
+        "function_names": [
+          "hstore"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 4,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 4,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pgcrypto/sql/pgp-armor.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3437,
+        "end": 3487,
+        "statement_index": 21
+      },
+      "sql_sha256": "c181cbb7f4d016f900ab968ddaa6a496c3bd9f3cffda780893102f58cfa9ad8d",
+      "observed_syntax": {
+        "function_names": [
+          "armor"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 1,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 1,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/pgcrypto/sql/pgp-armor.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3488,
+        "end": 3632,
+        "statement_index": 22
+      },
+      "sql_sha256": "8c328164aa1ab70f0b73dff3491228f274ce17268f085a684aacc00cf6328fe2",
+      "observed_syntax": {
+        "function_names": [
+          "armor"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8629,
+        "end": 8671,
+        "statement_index": 129
+      },
+      "sql_sha256": "b7e3ff6d08b839350643df089b8f4aefb5071f091f4347fc35248e5124451f6c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 1,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 1,
+            "array_cast_context": false
+          },
+          {
+            "depth": 3,
+            "length": 1,
+            "array_cast_context": false
+          },
+          {
+            "depth": 4,
+            "length": 1,
+            "array_cast_context": false
+          },
+          {
+            "depth": 5,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 6,
+            "length": 1,
+            "array_cast_context": false
+          },
+          {
+            "depth": 6,
+            "length": 1,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8672,
+        "end": 8716,
+        "statement_index": 130
+      },
+      "sql_sha256": "d66f43a1e1412df0e773c1d4051ce3bfe54563dab492cf49cc31ca6fc8af5225",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 1,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 1,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8823,
+        "end": 8846,
+        "statement_index": 133
+      },
+      "sql_sha256": "13451f8f010ed586ffaa4a1156f9bd2361c5a54152a6a27c6ea04b0de881c794",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8861,
+        "end": 8907,
+        "statement_index": 134
+      },
+      "sql_sha256": "dc1fac852ae75d904e50137a21098b1017fff00cebf605d131f0e218b2567c35",
+      "observed_syntax": {
+        "function_names": [
+          "array_append"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 1,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8908,
+        "end": 8955,
+        "statement_index": 135
+      },
+      "sql_sha256": "3ac1bd6172db296f8f26441dae9180b641edf0bcdc4920fe95342caca84a9e61",
+      "observed_syntax": {
+        "function_names": [
+          "array_prepend"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 1,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8956,
+        "end": 9012,
+        "statement_index": 136
+      },
+      "sql_sha256": "8fe725a73d78d070b95b7a62085e1b9284e6224547eba412a66acf0abd4b050c",
+      "observed_syntax": {
+        "function_names": [
+          "array_cat"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9013,
+        "end": 9087,
+        "statement_index": 137
+      },
+      "sql_sha256": "e5e61199b30a134696380a79d2ebbc780feb35ea33cd42422603a67f4439a2e8",
+      "observed_syntax": {
+        "function_names": [
+          "array_cat"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9088,
+        "end": 9162,
+        "statement_index": 138
+      },
+      "sql_sha256": "5e14a813f229746bd63f70115f3499b752c1c79fc7b6cff2a0c828e6c106bec6",
+      "observed_syntax": {
+        "function_names": [
+          "array_cat"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9164,
+        "end": 9207,
+        "statement_index": 139
+      },
+      "sql_sha256": "d116342275c68c94d67a153277a6b1c3f97a5cfa202ef14555613884359eaef6",
+      "observed_syntax": {
+        "function_names": [
+          "array_position"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 5,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9208,
+        "end": 9251,
+        "statement_index": 140
+      },
+      "sql_sha256": "0088e7ff438fe6b3eecb1456dbec04cbfa30e093d367f2f8339fbf51183f4632",
+      "observed_syntax": {
+        "function_names": [
+          "array_position"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 5,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9298,
+        "end": 9377,
+        "statement_index": 142
+      },
+      "sql_sha256": "f9bdc5122c533e1c7b0df701a37501b8df06bcc0a02812f86b1c5712990986ea",
+      "observed_syntax": {
+        "function_names": [
+          "array_position"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 7,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9378,
+        "end": 9457,
+        "statement_index": 143
+      },
+      "sql_sha256": "d88e78b2b623e973900adee327a31794c3da553eef760178fa6cf5425d213662",
+      "observed_syntax": {
+        "function_names": [
+          "array_position"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 7,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9458,
+        "end": 9536,
+        "statement_index": 144
+      },
+      "sql_sha256": "443f257c1879d83b3a35825af1cf322a6d0e05132a9c84cd52a9a78f6acac114",
+      "observed_syntax": {
+        "function_names": [
+          "array_position"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 7,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9537,
+        "end": 9620,
+        "statement_index": 145
+      },
+      "sql_sha256": "22c9a7ea529089633840e62c5bb052246616de1e800d3c1cd98701c8b26e94c9",
+      "observed_syntax": {
+        "function_names": [
+          "array_position"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 8,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9621,
+        "end": 9705,
+        "statement_index": 146
+      },
+      "sql_sha256": "f68549b0145bd1468ad80083d444f8d529a89716cfa2840e70e4d4ae5b9f64ee",
+      "observed_syntax": {
+        "function_names": [
+          "array_position"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 8,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9782,
+        "end": 9840,
+        "statement_index": 149
+      },
+      "sql_sha256": "abbf30c2599ee477a6a507104dedfdbb63236ef624da85ccc623ba95fe5e80cb",
+      "observed_syntax": {
+        "function_names": [
+          "array_positions"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 12,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9888,
+        "end": 9949,
+        "statement_index": 151
+      },
+      "sql_sha256": "60562f6a84c689d51e0aad0581996031775b0f90494038a289f2cedc7aaee770",
+      "observed_syntax": {
+        "function_names": [
+          "array_positions"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 12,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9950,
+        "end": 10017,
+        "statement_index": 152
+      },
+      "sql_sha256": "c6eadfd4454e9916690900f22488fbb85609b136429b1fdf25cc15f1f8bc919b",
+      "observed_syntax": {
+        "function_names": [
+          "array_positions"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 12,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13272,
+        "end": 13330,
+        "statement_index": 196
+      },
+      "sql_sha256": "89ca25cf834fa80ef888e64899924880ed0e83dd050a57eb72d73f2507b10510",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": true
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13331,
+        "end": 13411,
+        "statement_index": 197
+      },
+      "sql_sha256": "9753f5613b4291134742dfbb9502af494d1ba59470cb9e2a54cb5b8db203ac12",
+      "observed_syntax": {
+        "function_names": [
+          "pg_typeof"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": true
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13412,
+        "end": 13496,
+        "statement_index": 198
+      },
+      "sql_sha256": "770c55422ae833a9f60f2aaed23843e690a7d6379916ab10e5be369fd54cbc27",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": true
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": true
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": true
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13497,
+        "end": 13592,
+        "statement_index": 199
+      },
+      "sql_sha256": "c6222a01edf40332d6ef0a0ec8ff8c0c0ff9ee2c40225493c06292aff81c41ff",
+      "observed_syntax": {
+        "function_names": [
+          "pg_typeof"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": true
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": true
+          },
+          {
+            "depth": 2,
+            "length": 2,
+            "array_cast_context": true
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13593,
+        "end": 13674,
+        "statement_index": 200
+      },
+      "sql_sha256": "90e2eca2a6c0adaa1d2504a48911b93a73fafba4b07bed7456c550a20a445354",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 1,
+            "array_cast_context": true
+          },
+          {
+            "depth": 2,
+            "length": 1,
+            "array_cast_context": true
+          },
+          {
+            "depth": 3,
+            "length": 1,
+            "array_cast_context": true
+          },
+          {
+            "depth": 4,
+            "length": 1,
+            "array_cast_context": true
+          },
+          {
+            "depth": 5,
+            "length": 1,
+            "array_cast_context": true
+          },
+          {
+            "depth": 6,
+            "length": 3,
+            "array_cast_context": true
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 17531,
+        "end": 17554,
+        "statement_index": 266
+      },
+      "sql_sha256": "a8635526b8538c7597cadca3b8ee9606846166200dbc1cbfa583c404577543d7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 0,
+            "array_cast_context": true
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 19949,
+        "end": 20005,
+        "statement_index": 297
+      },
+      "sql_sha256": "deec77c64b2ad3074626782b7c0ecad6b0198bae489bccb295fba07fc131e8f9",
+      "observed_syntax": {
+        "function_names": [
+          "array_fill"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20006,
+        "end": 20051,
+        "statement_index": 298
+      },
+      "sql_sha256": "a0b4de3663883ea7395ca1d85291af3bd108188385d3b47620004be7e7dbcb16",
+      "observed_syntax": {
+        "function_names": [
+          "array_fill"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20052,
+        "end": 20105,
+        "statement_index": 299
+      },
+      "sql_sha256": "a9909235fc18faf450ff645ed10bc1d563f828569e2fb174fb6b5ba861af38fb",
+      "observed_syntax": {
+        "function_names": [
+          "array_fill"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20106,
+        "end": 20148,
+        "statement_index": 300
+      },
+      "sql_sha256": "fba25ee1b568cb295fad1937cd3fc85bf6e9964e5c86fd02706beaff1469b930",
+      "observed_syntax": {
+        "function_names": [
+          "array_fill"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20149,
+        "end": 20193,
+        "statement_index": 301
+      },
+      "sql_sha256": "701566156983e4e4355e957e3b2879e0a1cc9472e6449a390ebe4e71d64f4f72",
+      "observed_syntax": {
+        "function_names": [
+          "array_fill"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20194,
+        "end": 20227,
+        "statement_index": 302
+      },
+      "sql_sha256": "37a368f5c2b140099ae02e2bd4a812d7b8bcc893727b43fb48103528c09a0986",
+      "observed_syntax": {
+        "function_names": [
+          "array_fill"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20228,
+        "end": 20283,
+        "statement_index": 303
+      },
+      "sql_sha256": "7407642567f0a1fd870f856259fd8053418b53d7844649f73eb86bbc4fc9666a",
+      "observed_syntax": {
+        "function_names": [
+          "array_fill"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20284,
+        "end": 20328,
+        "statement_index": 304
+      },
+      "sql_sha256": "67bd1c3baf3aac2cf082a571be1dfb8808b6e6fdd01521d68be53f698a6afc9e",
+      "observed_syntax": {
+        "function_names": [
+          "array_fill"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22599,
+        "end": 22650,
+        "statement_index": 344
+      },
+      "sql_sha256": "b83deb2e1fb08a95557fb466974e8a5c1e8e66533a62b51adcc5b8c21c66e256",
+      "observed_syntax": {
+        "function_names": [
+          "array_to_string"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 6,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22651,
+        "end": 22707,
+        "statement_index": 345
+      },
+      "sql_sha256": "5cb228e2bdecf0d08b6a0164abbfae8fc2516c4d4173a7ecc95be1972b4a2a54",
+      "observed_syntax": {
+        "function_names": [
+          "array_to_string"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 6,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22708,
+        "end": 22760,
+        "statement_index": 346
+      },
+      "sql_sha256": "29521b2b2b5094892cfd1ed3b59034d6675b4b0630944c755447e72a915b814a",
+      "observed_syntax": {
+        "function_names": [
+          "array_to_string"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 6,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22761,
+        "end": 22818,
+        "statement_index": 347
+      },
+      "sql_sha256": "2bbcbe0e274e35d5094712a514f2884634d92374539c1ee4440d6b3cc742a815",
+      "observed_syntax": {
+        "function_names": [
+          "array_to_string"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 6,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22881,
+        "end": 22918,
+        "statement_index": 349
+      },
+      "sql_sha256": "81d6cccab4871cfbc9fbf48ce0795d8403936b542a14f32899ccffb3362ce6e3",
+      "observed_syntax": {
+        "function_names": [
+          "array_length"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22919,
+        "end": 22967,
+        "statement_index": 350
+      },
+      "sql_sha256": "3ce2235e492f90cadb96cb9b4563074d91b64d4d422b6603a55ccb472400cac4",
+      "observed_syntax": {
+        "function_names": [
+          "array_length"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 3,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 3,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22968,
+        "end": 23016,
+        "statement_index": 351
+      },
+      "sql_sha256": "6193278f17f89676e170d496c6a18b6785c07c4c956080765e16fba9af1b7c30",
+      "observed_syntax": {
+        "function_names": [
+          "array_length"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 3,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 3,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 23017,
+        "end": 23065,
+        "statement_index": 352
+      },
+      "sql_sha256": "5ced90cea5fb3c7f5ff414ea87b17477e51a0eb0504dc79f25f21b5714d9c53f",
+      "observed_syntax": {
+        "function_names": [
+          "array_length"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 3,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 3,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 23066,
+        "end": 23114,
+        "statement_index": 353
+      },
+      "sql_sha256": "ac1dd06fcf4edba53b85c8725477a699f23dd396feeca3bd7a66cfc5a49cd089",
+      "observed_syntax": {
+        "function_names": [
+          "array_length"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 2,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 3,
+            "array_cast_context": false
+          },
+          {
+            "depth": 2,
+            "length": 3,
+            "array_cast_context": false
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/arrays.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 23182,
+        "end": 23215,
+        "statement_index": 356
+      },
+      "sql_sha256": "49ea7591f5c0a72ece819f670d1120573f5e0b5c2198dac22a474093f14640ee",
+      "observed_syntax": {
+        "function_names": [
+          "cardinality"
+        ],
+        "conditional_forms": [],
+        "array_constructors": [
+          {
+            "depth": 1,
+            "length": 3,
+            "array_cast_context": false
+          }
+        ]
+      }
+    }
+  ]
+}
