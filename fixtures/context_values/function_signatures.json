@@ -1,0 +1,34 @@
+[
+  {
+    "name": "current_schema",
+    "inputs": [],
+    "output": "name"
+  },
+  {
+    "name": "current_database",
+    "inputs": [],
+    "output": "name"
+  },
+  {
+    "name": "current_schemas",
+    "inputs": [
+      "boolean"
+    ],
+    "output": "name[]"
+  },
+  {
+    "name": "current_user",
+    "inputs": [],
+    "output": "name"
+  },
+  {
+    "name": "session_user",
+    "inputs": [],
+    "output": "name"
+  },
+  {
+    "name": "system_user",
+    "inputs": [],
+    "output": "text"
+  }
+]

@@ -1,0 +1,1478 @@
+{
+  "format_version": 1,
+  "factor": "context_values",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 32,
+    "pgweb": 7,
+    "river": 4,
+    "materialize": 2,
+    "duckdb": 4,
+    "risingwave": 1
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "contrib/pg_stat_statements/sql/user_activity.sql",
+          "local_path": "fixtures/factor_sources/sources/postgres/contrib/pg_stat_statements/sql/user_activity.sql",
+          "sha256": "67f9a7c894ae3205be5c170457763f7a79a78c6cc4ba6b80752351b08d24c4f7"
+        },
+        {
+          "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+          "sha256": "7fe202a74edec6ed9ab7a225ae3ccf09bd55ce15c0bd69441d9606a70ee5f873",
+          "local_path": "fixtures/statement_families/sources/postgres/contrib/postgres_fdw/sql/postgres_fdw.sql"
+        },
+        {
+          "path": "src/test/regress/sql/expressions.sql",
+          "sha256": "74fe833c16e9f6faf297962bb8af947d00341c9d5a91b7c50dc3ad87ee8cd573",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/expressions.sql"
+        },
+        {
+          "path": "src/test/regress/sql/guc.sql",
+          "sha256": "2ff006eae20697fa80ee69ee0b9a8610ba52bd59220e4f4d40ad0c61d1dcbfce",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/guc.sql"
+        },
+        {
+          "path": "src/test/regress/sql/privileges.sql",
+          "sha256": "19bda1b46a8331a71f3f764a5caac58708584075af882c4eef27ed403f3da07c",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/privileges.sql"
+        },
+        {
+          "path": "src/test/regress/sql/rules.sql",
+          "sha256": "22ac67103455ff1771c832ec9de649fa9ecaed1987d0087135e05dc454d543f8",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/rules.sql"
+        },
+        {
+          "path": "src/test/regress/sql/temp.sql",
+          "sha256": "b0fdd182c4a135d96a8559f364a99006cf8d67f69ffa03778e4a14777b786daa",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/temp.sql"
+        }
+      ]
+    },
+    "pgweb": {
+      "repository": "https://github.com/sosedoff/pgweb",
+      "commit": "e4858a16d8e032730055289596ea9059a91bca64",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/pgweb-LICENSE",
+      "license_sha256": "8a7dc00e7429bef17f4bd30ceb4c9ba4766da5b29f5a396d14d87a8aefdf7360",
+      "source_kind": "application-query",
+      "source_dialect": "PostgreSQL, including explicitly versioned legacy activity branches",
+      "files": [
+        {
+          "path": "pkg/client/client.go",
+          "local_path": "fixtures/factor_sources/sources/pgweb/pkg/client/client.go",
+          "sha256": "05f7d0c201b15d00e12497779fd3c8d9a97e38b1d222238c443e0132928f9cbe"
+        },
+        {
+          "path": "pkg/statements/sql.go",
+          "local_path": "fixtures/factor_sources/sources/pgweb/pkg/statements/sql.go",
+          "sha256": "4d8bc438d0b1998c5176a22e240d54bf4a14249bde82f95a5db96fccaff68518"
+        },
+        {
+          "path": "pkg/statements/sql/info.sql",
+          "local_path": "fixtures/factor_sources/sources/pgweb/pkg/statements/sql/info.sql",
+          "sha256": "5d6cba693bd224eaed58781380fc408e7c8374fafaab104a58322efdc9d16921"
+        },
+        {
+          "path": "pkg/statements/sql/info_simple.sql",
+          "local_path": "fixtures/factor_sources/sources/pgweb/pkg/statements/sql/info_simple.sql",
+          "sha256": "de792040c65ad0f25b0f71e33eee74888d297d2e3897d671c9e77967f54b258f"
+        }
+      ]
+    },
+    "river": {
+      "repository": "https://github.com/riverqueue/river",
+      "commit": "1354a059d7cbe5790acc7a755a2ab7ac6d2f1ed8",
+      "license": "MPL-2.0",
+      "license_file": "fixtures/external_postgresql/licenses/river-LICENSE.txt",
+      "license_sha256": "393eaf2b92b3d49bea139e39b6fd205b6e99c499999986aec5554586a830dfdd",
+      "source_kind": "application-query",
+      "files": [
+        {
+          "path": "riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql.go",
+          "local_path": "fixtures/external_postgresql/sources/river/riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql.go",
+          "sha256": "383ef1be23a36e047022494128b8fb01b83541f56ab5442fc6ab661f8079e650"
+        },
+        {
+          "path": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+          "local_path": "fixtures/external_postgresql/sources/river/riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+          "sha256": "9060b668edeea083bead3865bf090925c629ecd3d01a8b856a307aca4e3aa80f"
+        },
+        {
+          "path": "riverdriver/riverpgxv5/river_pgx_v5_driver.go",
+          "local_path": "fixtures/external_postgresql/sources/river/riverdriver/riverpgxv5/river_pgx_v5_driver.go",
+          "sha256": "b5f34db3ef7a6cc2cd3df88e2823f6cc4b1c9ec02c4b4226df8fe06ec051c613"
+        }
+      ]
+    },
+    "materialize": {
+      "repository": "https://github.com/MaterializeInc/materialize",
+      "commit": "726570dba1d2e4d839c707a84a986fb3b3acc5c3",
+      "ref": "pinned main snapshot",
+      "license": "BSL-1.1 (change date 2030-10-20; change license Apache-2.0)",
+      "source_kind": "engine-regression",
+      "source_dialect": "materialize",
+      "license_file": "fixtures/factor_sources/licenses/materialize-20261020-LICENSE",
+      "license_sha256": "5d4ca070f541414a03ad8b84021e4ba3deeca4025e4b4274053abaa2e93ec032",
+      "files": [
+        {
+          "path": "test/sqllogictest/current_database.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/current_database.slt",
+          "sha256": "cfeb90c413dd07587444d770d3c1288966547ca58b03e11df05b42854a809cd7"
+        },
+        {
+          "path": "test/sqllogictest/schemas.slt",
+          "local_path": "fixtures/factor_sources/sources/materialize/test/sqllogictest/schemas.slt",
+          "sha256": "5c7e2f579c81818993b557a7395d71ed8136d59a2a924a80b277109210325c68"
+        }
+      ]
+    },
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "source_kind": "engine-regression",
+      "source_dialect": "duckdb",
+      "files": [
+        {
+          "path": "test/sql/pg_catalog/system_functions.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/pg_catalog/system_functions.test",
+          "sha256": "64f1fa9a02618e11cef4a780771b09cdf14c6c3fcb9fca0b047a0ae2da0494f7"
+        }
+      ]
+    },
+    "risingwave": {
+      "repository": "https://github.com/risingwavelabs/risingwave",
+      "commit": "7c5bb80f065b52e3eeaab0e0739684772d48aafc",
+      "ref": "pinned main snapshot",
+      "license": "Apache-2.0",
+      "license_file": "fixtures/factor_sources/licenses/risingwave-LICENSE",
+      "license_sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "source_kind": "engine-regression",
+      "source_dialect": "risingwave",
+      "files": [
+        {
+          "path": "e2e_test/batch/keyword/user.slt",
+          "local_path": "fixtures/factor_sources/sources/risingwave/e2e_test/batch/keyword/user.slt",
+          "sha256": "03b8bcd5cb9400fb4f4eb7e10fd7bf0b9c295037cf909ac8e86732b37becbb2c"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "postgres",
+      "path": "contrib/pg_stat_statements/sql/user_activity.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 726,
+        "end": 1011,
+        "statement_index": 15
+      },
+      "sql_sha256": "b1053795c41c2da26bed1d061fa7807865344dca0b3d8f29a191f8219b399da7",
+      "observed_syntax": {
+        "function_names": [
+          "current_database",
+          "pg_stat_statements_reset"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 162
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 167211,
+        "end": 167403,
+        "statement_index": 1828
+      },
+      "sql_sha256": "8fe79b74457ca18ca22a82b7c93b1f6eee481e41e056b0adb000771282be3661",
+      "observed_syntax": {
+        "function_names": [
+          "current_database",
+          "current_setting",
+          "pg_backend_pid"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 96
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "contrib/postgres_fdw/sql/postgres_fdw.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 167642,
+        "end": 167854,
+        "statement_index": 1831
+      },
+      "sql_sha256": "abc2e40af2f8ad60fba3a72045c18853e397aaa4902ed04d097288ca4e9ea758",
+      "observed_syntax": {
+        "function_names": [
+          "current_setting"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 141
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/expressions.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1023,
+        "end": 1067,
+        "statement_index": 12
+      },
+      "sql_sha256": "4d319f79036a319da90d613e0d02560d936aeebb4d62f5147aef692d73e8f2e4",
+      "observed_syntax": {
+        "function_names": [
+          "current_database"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_catalog",
+            "form": "keyword",
+            "byte_location": 7
+          },
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 25
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/expressions.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1087,
+        "end": 1109,
+        "statement_index": 13
+      },
+      "sql_sha256": "fa5dfad64ebbd25535f52dd67adce90a5f450df958ef840470e08e74fcd9be46",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_schema",
+            "form": "keyword",
+            "byte_location": 7
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/guc.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5525,
+        "end": 5566,
+        "statement_index": 156
+      },
+      "sql_sha256": "6edee37afdc79b44d37288d05ce5f9bc8e9371a27860995ddb078ca3918cd992",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 7
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5700,
+        "end": 5781,
+        "statement_index": 100
+      },
+      "sql_sha256": "049350a12c7ed0899c917c31c1a95a5081b297b913535da214fa930ec15dca17",
+      "observed_syntax": {
+        "function_names": [
+          "current_setting"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "session_user",
+            "form": "keyword",
+            "byte_location": 7
+          },
+          {
+            "name": "current_role",
+            "form": "keyword",
+            "byte_location": 21
+          },
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 35
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6523,
+        "end": 6640,
+        "statement_index": 116
+      },
+      "sql_sha256": "ef430f48c77f086642bb916b82ca8db0bbef44040bf202e489c647dc5780930d",
+      "observed_syntax": {
+        "function_names": [
+          "current_setting"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "session_user",
+            "form": "keyword",
+            "byte_location": 7
+          },
+          {
+            "name": "current_role",
+            "form": "keyword",
+            "byte_location": 22
+          },
+          {
+            "name": "session_user",
+            "form": "keyword",
+            "byte_location": 46
+          },
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 61
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8898,
+        "end": 8932,
+        "statement_index": 150
+      },
+      "sql_sha256": "0b35ed378958aa80a8aabcd9173713e9da98735e7040b672253c655629fda27b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "session_user",
+            "form": "keyword",
+            "byte_location": 7
+          },
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 21
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 41372,
+        "end": 41434,
+        "statement_index": 696
+      },
+      "sql_sha256": "c317b26ee6dfadeafc275130c81d28d65ed9ef76905343f222e2d9a86aa2a6e1",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 27
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 41436,
+        "end": 41559,
+        "statement_index": 697
+      },
+      "sql_sha256": "f7ef0b528a4863636fb47352e9e44c39301dfdef1a074bd85c4dfa38769b7c38",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 103
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 41560,
+        "end": 41683,
+        "statement_index": 698
+      },
+      "sql_sha256": "556bb09b0cae06b944f30a609aef02d617d1fcb3f78d6baba45b8ef3e9609135",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 103
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 41822,
+        "end": 41943,
+        "statement_index": 699
+      },
+      "sql_sha256": "1e278ee275cfd9712e81b862d0ea81ea1ca3f14d06a64758886171ae4436c833",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 27
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 41944,
+        "end": 42071,
+        "statement_index": 700
+      },
+      "sql_sha256": "169bc993b02acbf9e235c38bc992d26b4cf1b54a2202250e632bcbc5252a0463",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 27
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 42073,
+        "end": 42255,
+        "statement_index": 701
+      },
+      "sql_sha256": "748076e3f4040b991eb5f12f62c563ea387e8a956b60e86be15d3762126c8683",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 162
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 42256,
+        "end": 42438,
+        "statement_index": 702
+      },
+      "sql_sha256": "6083e3be895cd532b974ec732eba8a20cead586c84723254a838fb0ad0181f9c",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 162
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 42881,
+        "end": 42942,
+        "statement_index": 709
+      },
+      "sql_sha256": "1d7d0f88e0b0b7bbc0e1635e88ba01b9f2398fbbbeea182ffeb3232f312f296b",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 27
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 42943,
+        "end": 43004,
+        "statement_index": 710
+      },
+      "sql_sha256": "6d7e05f72ab279bf741c5d78822d47ab9b29379363e6b80788b688ac15708707",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 27
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 43006,
+        "end": 43128,
+        "statement_index": 711
+      },
+      "sql_sha256": "c72af48124339f96b65345a9d6a5442cefc402a94a9c85d635344dc2c384a0eb",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 102
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 43129,
+        "end": 43251,
+        "statement_index": 712
+      },
+      "sql_sha256": "82c1d86ab9c7292f7b4872c5f3e0f993341009aa56f935a7b3d0f1c269db20bc",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 102
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 43253,
+        "end": 43379,
+        "statement_index": 713
+      },
+      "sql_sha256": "88ce70339229a99c4ebab8bac7195f0a02cb5d9003a044e5040c7ca485691f26",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 27
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 43381,
+        "end": 43562,
+        "statement_index": 714
+      },
+      "sql_sha256": "0c7c835486fb88f5954c2fd1fb12caa343d479c38f8f3952ff48374296ba9cab",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 161
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 43563,
+        "end": 43744,
+        "statement_index": 715
+      },
+      "sql_sha256": "e5ca0cc16ddac11ea8f39bf2f64dc3c0d15ecd7329bd8782997083f3669f14eb",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 161
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 44118,
+        "end": 44177,
+        "statement_index": 721
+      },
+      "sql_sha256": "26db6c151ee54b7f2574a5b01354347238c5d6b37e5005e4bb4024880e4b4228",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 27
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 44178,
+        "end": 44237,
+        "statement_index": 722
+      },
+      "sql_sha256": "4e902e1e4b97674bdc6519759268d55753b9be05523cd9cc192fdf5bd4e72c58",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 27
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 44239,
+        "end": 44359,
+        "statement_index": 723
+      },
+      "sql_sha256": "bcaef8e6053e48434c1529898348fb036e19ae79d12abd7262e695049addcf3b",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 100
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 44360,
+        "end": 44480,
+        "statement_index": 724
+      },
+      "sql_sha256": "b743b07e60791ecd4ec8a36a03af6341dfe40e7a009ed9289c84ba3e68cdd813",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 100
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 44482,
+        "end": 44606,
+        "statement_index": 725
+      },
+      "sql_sha256": "bba15af7ad830e77a2b3a5541f3adfc46528a65dec594eb077e8575a62f4b149",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 27
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 44608,
+        "end": 44787,
+        "statement_index": 726
+      },
+      "sql_sha256": "67c533ad72a5dcc0cc2093fa7e95e89d96343692ba1d992b21ba7fabf877fdf1",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 159
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/privileges.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 44788,
+        "end": 44967,
+        "statement_index": 727
+      },
+      "sql_sha256": "94511dc21bf6039bc81d07540d6b8ba9c2feb8894d17fe25877cde9b5a33c953",
+      "observed_syntax": {
+        "function_names": [
+          "has_table_privilege"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 159
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/rules.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9273,
+        "end": 9397,
+        "statement_index": 128
+      },
+      "sql_sha256": "b7162378b3b9c56c86ee79415cf446b5141358ead73cd5f71819c6e2a8428370",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 20
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/temp.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8405,
+        "end": 8459,
+        "statement_index": 160
+      },
+      "sql_sha256": "b28660874ad736356c3c87898778c36393adbb045a8aa21701c3f6beb59c7fbb",
+      "observed_syntax": {
+        "function_names": [
+          "current_schema"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_schema",
+            "form": "call",
+            "byte_location": 7
+          }
+        ]
+      }
+    },
+    {
+      "source": "river",
+      "path": "riverdriver/riverpgxv5/internal/dbsqlc/pg_misc.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "pGNotifyMany"
+      },
+      "sql_sha256": "8ac5adbc8dee5a8ec0368edaa579956f4cc64ab125324a6d0a6d9b35eeb6e047",
+      "observed_syntax": {
+        "function_names": [
+          "concat",
+          "current_schema",
+          "pg_notify",
+          "unnest"
+        ],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_schema",
+            "form": "call",
+            "byte_location": 99
+          }
+        ]
+      }
+    },
+    {
+      "source": "river",
+      "path": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "columnExists"
+      },
+      "sql_sha256": "ddee811041e82f1d4f393ceeaa345779962987a6a3c0996f9188e099c94859aa",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_schema",
+            "form": "keyword",
+            "byte_location": 191
+          }
+        ]
+      }
+    },
+    {
+      "source": "river",
+      "path": "riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "indexExists"
+      },
+      "sql_sha256": "d923768e93659b22c4a101300ca698059a6f5d13d778a5e8fd809d0a1b717ca6",
+      "observed_syntax": {
+        "function_names": [
+          "current_schema"
+        ],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_schema",
+            "form": "call",
+            "byte_location": 257
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/current_database.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 12,
+        "start": 401,
+        "end": 427
+      },
+      "sql_sha256": "56d8f85c96b607442a37bae732abe9b5a5ffa89a6e06bf9c005afd248ff38cca",
+      "observed_syntax": {
+        "function_names": [
+          "current_database"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 7
+          }
+        ]
+      }
+    },
+    {
+      "source": "materialize",
+      "path": "test/sqllogictest/schemas.slt",
+      "selector": {
+        "kind": "cockroach_sqllogic_query",
+        "header_line": 41,
+        "start": 702,
+        "end": 726
+      },
+      "sql_sha256": "742e708fd422055106d3951c81ba937f6fc69ed450d91adc30673ee213e76241",
+      "observed_syntax": {
+        "function_names": [
+          "current_schema"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_schema",
+            "form": "call",
+            "byte_location": 7
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/pg_catalog/system_functions.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 6,
+        "start": 274,
+        "end": 294
+      },
+      "sql_sha256": "7c2a4c76a99d7dd9a3c2987d2742d669583617738a92ef41e606dcdff44fbb0f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 7
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/pg_catalog/system_functions.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 11,
+        "start": 315,
+        "end": 338
+      },
+      "sql_sha256": "d8c98d8d36167991da9f698c78e36e304a7614d1accb3bf50a2b9e309ecfc1d7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_catalog",
+            "form": "keyword",
+            "byte_location": 7
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/pg_catalog/system_functions.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 26,
+        "start": 464,
+        "end": 476
+      },
+      "sql_sha256": "694b84bb2f550a8a05e11c480a9788c958581feef21f8796bcc26138aa00d69f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "user",
+            "form": "keyword",
+            "byte_location": 7
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/pg_catalog/system_functions.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 31,
+        "start": 497,
+        "end": 517
+      },
+      "sql_sha256": "ea77fd5fbdc6bc46950d3b4c176bde772aa223fc451fdebc2b1ad808977f32bc",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "session_user",
+            "form": "keyword",
+            "byte_location": 7
+          }
+        ]
+      }
+    },
+    {
+      "source": "risingwave",
+      "path": "e2e_test/batch/keyword/user.slt",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 10,
+        "start": 153,
+        "end": 208
+      },
+      "sql_sha256": "3b3e112785695323e494e5897f680a4d3410ce201dac0cc1880d77e1b73bc3fd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "user",
+            "form": "keyword",
+            "byte_location": 27
+          },
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 34
+          }
+        ]
+      }
+    },
+    {
+      "source": "pgweb",
+      "path": "pkg/client/client.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 15103,
+        "end": 15144,
+        "token_index": 4041
+      },
+      "sql_sha256": "2c340d4f159af287ab23b3c9f10bd1371e04d43e18671bdd4ee741a85a60fc06",
+      "observed_syntax": {
+        "function_names": [
+          "current_database"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 7
+          },
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 21
+          }
+        ]
+      }
+    },
+    {
+      "source": "pgweb",
+      "path": "pkg/statements/sql.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 946,
+        "end": 1013,
+        "token_index": 103
+      },
+      "sql_sha256": "67cfafac647c913c0834c068b3ccafc2d2c48032994cdfdbe46cb5fbb12ff349",
+      "observed_syntax": {
+        "function_names": [
+          "current_database"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 47
+          }
+        ]
+      }
+    },
+    {
+      "source": "pgweb",
+      "path": "pkg/statements/sql.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 1028,
+        "end": 1192,
+        "token_index": 108
+      },
+      "sql_sha256": "aaa1360ab8d1cb1fc5c8ea6bfe96494eee8bac44495b367a3bc49124121659d1",
+      "observed_syntax": {
+        "function_names": [
+          "current_database"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 144
+          }
+        ]
+      }
+    },
+    {
+      "source": "pgweb",
+      "path": "pkg/statements/sql.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 1207,
+        "end": 1373,
+        "token_index": 113
+      },
+      "sql_sha256": "6bf5d9982c668f63944cbf20c058a28928277608db99c9591c58bb1921b75615",
+      "observed_syntax": {
+        "function_names": [
+          "current_database"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 146
+          }
+        ]
+      }
+    },
+    {
+      "source": "pgweb",
+      "path": "pkg/statements/sql.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 1931,
+        "end": 2117,
+        "token_index": 133
+      },
+      "sql_sha256": "4c177da896658166af2a2d3d864e639b9e3486437b3c353fd16eb0b7a18c574b",
+      "observed_syntax": {
+        "function_names": [
+          "current_database"
+        ],
+        "conditional_forms": [],
+        "source_free": false,
+        "context_values": [
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 166
+          }
+        ]
+      }
+    },
+    {
+      "source": "pgweb",
+      "path": "pkg/statements/sql/info.sql",
+      "selector": {
+        "kind": "whole_sql_file"
+      },
+      "sql_sha256": "5d6cba693bd224eaed58781380fc408e7c8374fafaab104a58322efdc9d16921",
+      "observed_syntax": {
+        "function_names": [
+          "current_database",
+          "current_schemas",
+          "inet_client_addr",
+          "inet_client_port",
+          "inet_server_addr",
+          "inet_server_port",
+          "version"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "session_user",
+            "form": "keyword",
+            "byte_location": 9
+          },
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 25
+          },
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 41
+          }
+        ]
+      }
+    },
+    {
+      "source": "pgweb",
+      "path": "pkg/statements/sql/info_simple.sql",
+      "selector": {
+        "kind": "whole_sql_file"
+      },
+      "sql_sha256": "de792040c65ad0f25b0f71e33eee74888d297d2e3897d671c9e77967f54b258f",
+      "observed_syntax": {
+        "function_names": [
+          "current_database",
+          "current_schemas",
+          "version"
+        ],
+        "conditional_forms": [],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "session_user",
+            "form": "keyword",
+            "byte_location": 9
+          },
+          {
+            "name": "current_user",
+            "form": "keyword",
+            "byte_location": 25
+          },
+          {
+            "name": "current_database",
+            "form": "call",
+            "byte_location": 41
+          }
+        ]
+      }
+    },
+    {
+      "source": "river",
+      "path": "riverdriver/riverpgxv5/river_pgx_v5_driver.go",
+      "selector": {
+        "kind": "go_string_literal",
+        "start": 44649,
+        "end": 44689,
+        "token_index": 10808
+      },
+      "sql_sha256": "eb24bc0e67c05e4e85a6e7ebfb950afaa0d09a5a5d48f008b66c8062edd708f9",
+      "observed_syntax": {
+        "function_names": [
+          "current_schema"
+        ],
+        "conditional_forms": [
+          "coalesce"
+        ],
+        "source_free": true,
+        "context_values": [
+          {
+            "name": "current_schema",
+            "form": "call",
+            "byte_location": 16
+          }
+        ]
+      }
+    }
+  ]
+}

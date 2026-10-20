@@ -42,7 +42,7 @@ def boundaries():
 def catalog_script():
     """Independently compare the Lean-linked finite table to PostgreSQL pg_proc."""
     signatures = json.loads((ROOT / "fixtures/functions/signatures.json").read_text())
-    assert len(signatures) == 84
+    assert len(signatures) == 91
     assert len({(c["name"], tuple(c["inputs"])) for c in signatures}) == len(signatures)
     statements = []
     for index, case in enumerate(signatures):
@@ -91,7 +91,7 @@ def main():
     print("PASS: 50 synthetic full SELECT certificates plus 50 unchanged source renderings per factor")
     print(f"PASS: {count} validity boundaries; PostgreSQL {version}: "
           f"{len(expected)} separately bound source/rendered value and native-type observations")
-    print("PASS: 84 exact argument/return signatures and strictness rules match PostgreSQL pg_proc")
+    print("PASS: 91 exact argument/return signatures and strictness rules match PostgreSQL pg_proc")
     print("Scope: fixed built-in function environment; downloaded source statements are never executed.")
 
 

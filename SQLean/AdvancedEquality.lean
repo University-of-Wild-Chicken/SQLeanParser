@@ -18,6 +18,8 @@ mutual
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.literal.injEq])
     case null.null =>
       exact isTrue rfl
+    case contextValue.contextValue a0 b0 =>
+      exact decidable_of_iff (a0 = b0) (by simp only [Expr.contextValue.injEq])
     case decimal.decimal a0 b0 =>
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.decimal.injEq])
     case parameter.parameter a0 b0 =>

@@ -36,7 +36,7 @@ private def subscriptCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :
     IO (List SelectContract.OutputColumn) := do
   let certificate ← expectOk "array subscript SELECT"
-    ((SelectContract.checkQuery .basicV24 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV25 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "array subscript identity renderer"
     ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -151,7 +151,7 @@ def arraySubscriptContractTests : IO Nat := do
     "SELECT (ARRAY[1])[ARRAY[1]]", "SELECT (ARRAY[1])[TRUE:2]", "SELECT (ARRAY[1])[1:FALSE]"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV24 [] [] query with
+    match SelectContract.checkQuery .basicV25 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected Invalid subscript: {sql}")
     count := count + 1
@@ -159,7 +159,7 @@ def arraySubscriptContractTests : IO Nat := do
       "SELECT ((SELECT ARRAY[1]))[1]", "SELECT (unknown_array_function())[1]",
       "SELECT (ARRAY[1])[COUNT(*)]"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV24 [] [] query with
+    match SelectContract.checkQuery .basicV25 [] [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expected Unsupported subscript: {sql}")
     count := count + 1
@@ -183,16 +183,16 @@ def arraySubscriptContractTests : IO Nat := do
   let bad : Advanced.Query := { body := .select { items := [
     .expression (.subscript (.array [.parameter (.anonymous 2)])
       [.index (.parameter (.anonymous 1))])] } }
-  match SelectContract.checkQuery .basicV24 [] params bad with
+  match SelectContract.checkQuery .basicV25 [] params bad with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "manual reordered subscript parameters must be Invalid")
   count := count + 1
   let empty : Advanced.Query := { body := .select { items := [.expression (.subscript .null [])] } }
-  match SelectContract.checkQuery .basicV24 [] [] empty with
+  match SelectContract.checkQuery .basicV25 [] [] empty with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "empty subscript group must be Invalid")
   count := count + 1
-  match SelectContract.checkQuery .basicV24 [] params query 1 with
+  match SelectContract.checkQuery .basicV25 [] params query 1 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "subscript exhaustion must be Inconclusive")
   count := count + 1

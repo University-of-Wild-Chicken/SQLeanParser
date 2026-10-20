@@ -1,0 +1,1166 @@
+[
+  {
+    "id": "context-values-01-schema-keyword",
+    "source_kind": "synthetic",
+    "shape": "schema-keyword",
+    "sql": "SELECT CURRENT_SCHEMA AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA AS v;"
+  },
+  {
+    "id": "context-values-02-schema-call",
+    "source_kind": "synthetic",
+    "shape": "schema-call",
+    "sql": "SELECT current_schema() AS v;",
+    "postgres_input": "SELECT current_schema() AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT current_schema() AS v;"
+  },
+  {
+    "id": "context-values-03-qualified-schema-call",
+    "source_kind": "synthetic",
+    "shape": "qualified-schema-call",
+    "sql": "SELECT pg_catalog.current_schema() AS v;",
+    "postgres_input": "SELECT pg_catalog.current_schema() AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT pg_catalog.current_schema() AS v;"
+  },
+  {
+    "id": "context-values-04-quoted-schema-call",
+    "source_kind": "synthetic",
+    "shape": "quoted-schema-call",
+    "sql": "SELECT \"current_schema\"() AS v;",
+    "postgres_input": "SELECT \"current_schema\"() AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT \"current_schema\"() AS v;"
+  },
+  {
+    "id": "context-values-05-catalog-spellings",
+    "source_kind": "synthetic",
+    "shape": "catalog-spellings",
+    "sql": "SELECT CURRENT_CATALOG = current_database() AS v;",
+    "postgres_input": "SELECT CURRENT_CATALOG = current_database() AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_CATALOG = current_database() AS v;"
+  },
+  {
+    "id": "context-values-06-current-user-spellings",
+    "source_kind": "synthetic",
+    "shape": "current-user-spellings",
+    "sql": "SELECT CURRENT_USER = \"current_user\"() AS v;",
+    "postgres_input": "SELECT CURRENT_USER = \"current_user\"() AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_USER = \"current_user\"() AS v;"
+  },
+  {
+    "id": "context-values-07-user-synonym",
+    "source_kind": "synthetic",
+    "shape": "user-synonym",
+    "sql": "SELECT USER = CURRENT_USER AS v;",
+    "postgres_input": "SELECT USER = CURRENT_USER AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT USER = CURRENT_USER AS v;"
+  },
+  {
+    "id": "context-values-08-role-synonym",
+    "source_kind": "synthetic",
+    "shape": "role-synonym",
+    "sql": "SELECT CURRENT_ROLE = CURRENT_USER AS v;",
+    "postgres_input": "SELECT CURRENT_ROLE = CURRENT_USER AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_ROLE = CURRENT_USER AS v;"
+  },
+  {
+    "id": "context-values-09-session-spellings",
+    "source_kind": "synthetic",
+    "shape": "session-spellings",
+    "sql": "SELECT SESSION_USER = \"session_user\"() AS v;",
+    "postgres_input": "SELECT SESSION_USER = \"session_user\"() AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT SESSION_USER = \"session_user\"() AS v;"
+  },
+  {
+    "id": "context-values-10-system-spellings",
+    "source_kind": "synthetic",
+    "shape": "system-spellings",
+    "sql": "SELECT COALESCE(SYSTEM_USER, '') = COALESCE(\"system_user\"(), '') AS v;",
+    "postgres_input": "SELECT COALESCE(SYSTEM_USER, '') = COALESCE(\"system_user\"(), '') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT COALESCE(SYSTEM_USER, '') = COALESCE(\"system_user\"(), '') AS v;"
+  },
+  {
+    "id": "context-values-11-explicit-search-path",
+    "source_kind": "synthetic",
+    "shape": "explicit-search-path",
+    "sql": "SELECT current_schemas(FALSE) AS v;",
+    "postgres_input": "SELECT current_schemas(FALSE) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "name[]",
+    "postgres_display_type": "name[]",
+    "expected_value": "{pg_catalog}",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT current_schemas(FALSE) AS v;"
+  },
+  {
+    "id": "context-values-12-implicit-search-path",
+    "source_kind": "synthetic",
+    "shape": "implicit-search-path",
+    "sql": "SELECT current_schemas(TRUE) @> ARRAY['pg_catalog'::NAME] AS v;",
+    "postgres_input": "SELECT current_schemas(TRUE) @> ARRAY['pg_catalog'::NAME] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT current_schemas(TRUE) @> ARRAY['pg_catalog'::NAME] AS v;"
+  },
+  {
+    "id": "context-values-13-null-schemas-argument",
+    "source_kind": "synthetic",
+    "shape": "null-schemas-argument",
+    "sql": "SELECT current_schemas(NULL) AS v;",
+    "postgres_input": "SELECT current_schemas(NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "name[]",
+    "postgres_display_type": "name[]",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT current_schemas(NULL) AS v;"
+  },
+  {
+    "id": "context-values-14-numbered-schemas",
+    "source_kind": "synthetic",
+    "shape": "numbered-schemas",
+    "sql": "SELECT current_schemas($1) AS v;",
+    "postgres_input": "SELECT current_schemas($1) AS v;",
+    "parameter_types": "bool",
+    "parameter_values": [
+      false
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "name[]",
+    "postgres_display_type": "name[]",
+    "expected_value": "{pg_catalog}",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT current_schemas(?1) AS v;"
+  },
+  {
+    "id": "context-values-15-anonymous-schemas",
+    "source_kind": "synthetic",
+    "shape": "anonymous-schemas",
+    "sql": "SELECT current_schemas(?) @> ARRAY['pg_catalog'::NAME] AS v;",
+    "postgres_input": "SELECT current_schemas($1) @> ARRAY['pg_catalog'::NAME] AS v;",
+    "parameter_types": "bool",
+    "parameter_values": [
+      true
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT current_schemas(?) @> ARRAY['pg_catalog'::NAME] AS v;"
+  },
+  {
+    "id": "context-values-16-nullable-schemas-binding",
+    "source_kind": "synthetic",
+    "shape": "nullable-schemas-binding",
+    "sql": "SELECT current_schemas(CAST($1 AS BOOLEAN)) AS v;",
+    "postgres_input": "SELECT current_schemas(CAST($1 AS BOOLEAN)) AS v;",
+    "parameter_types": "bool?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "name[]",
+    "postgres_display_type": "name[]",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT current_schemas(CAST(?1 AS BOOLEAN)) AS v;"
+  },
+  {
+    "id": "context-values-17-unknown-fallback",
+    "source_kind": "synthetic",
+    "shape": "unknown-fallback",
+    "sql": "SELECT COALESCE(CURRENT_SCHEMA, 'fallback') AS v;",
+    "postgres_input": "SELECT COALESCE(CURRENT_SCHEMA, 'fallback') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT COALESCE(CURRENT_SCHEMA, 'fallback') AS v;"
+  },
+  {
+    "id": "context-values-18-name-first-common-type",
+    "source_kind": "synthetic",
+    "shape": "name-first-common-type",
+    "sql": "SELECT COALESCE(CURRENT_SCHEMA, 'fallback'::TEXT) AS v;",
+    "postgres_input": "SELECT COALESCE(CURRENT_SCHEMA, 'fallback'::TEXT) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT COALESCE(CURRENT_SCHEMA, 'fallback'::TEXT) AS v;"
+  },
+  {
+    "id": "context-values-19-text-first-common-type",
+    "source_kind": "synthetic",
+    "shape": "text-first-common-type",
+    "sql": "SELECT COALESCE('fixed'::TEXT, CURRENT_SCHEMA) AS v;",
+    "postgres_input": "SELECT COALESCE('fixed'::TEXT, CURRENT_SCHEMA) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "fixed",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT COALESCE('fixed'::TEXT, CURRENT_SCHEMA) AS v;"
+  },
+  {
+    "id": "context-values-20-case-unknown-else",
+    "source_kind": "synthetic",
+    "shape": "case-unknown-else",
+    "sql": "SELECT CASE WHEN TRUE THEN CURRENT_SCHEMA ELSE 'fallback' END AS v;",
+    "postgres_input": "SELECT CASE WHEN TRUE THEN CURRENT_SCHEMA ELSE 'fallback' END AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CASE WHEN TRUE THEN CURRENT_SCHEMA ELSE 'fallback' END AS v;"
+  },
+  {
+    "id": "context-values-21-case-text-else",
+    "source_kind": "synthetic",
+    "shape": "case-text-else",
+    "sql": "SELECT CASE WHEN TRUE THEN CURRENT_SCHEMA ELSE 'fallback'::TEXT END AS v;",
+    "postgres_input": "SELECT CASE WHEN TRUE THEN CURRENT_SCHEMA ELSE 'fallback'::TEXT END AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CASE WHEN TRUE THEN CURRENT_SCHEMA ELSE 'fallback'::TEXT END AS v;"
+  },
+  {
+    "id": "context-values-22-explicit-text-cast",
+    "source_kind": "synthetic",
+    "shape": "explicit-text-cast",
+    "sql": "SELECT CAST(CURRENT_SCHEMA AS TEXT) AS v;",
+    "postgres_input": "SELECT CAST(CURRENT_SCHEMA AS TEXT) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "text",
+    "postgres_display_type": "text",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(CURRENT_SCHEMA AS TEXT) AS v;"
+  },
+  {
+    "id": "context-values-23-explicit-varchar-cast",
+    "source_kind": "synthetic",
+    "shape": "explicit-varchar-cast",
+    "sql": "SELECT CAST(CURRENT_SCHEMA AS VARCHAR(3)) AS v;",
+    "postgres_input": "SELECT CAST(CURRENT_SCHEMA AS VARCHAR(3)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(3)",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "character varying",
+    "postgres_display_type": "character varying(3)",
+    "expected_value": "pg_",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(CURRENT_SCHEMA AS VARCHAR(3)) AS v;"
+  },
+  {
+    "id": "context-values-24-explicit-char-cast",
+    "source_kind": "synthetic",
+    "shape": "explicit-char-cast",
+    "sql": "SELECT CAST(CURRENT_SCHEMA AS CHAR(12)) AS v;",
+    "postgres_input": "SELECT CAST(CURRENT_SCHEMA AS CHAR(12)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(12)",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "character",
+    "postgres_display_type": "character(12)",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(CURRENT_SCHEMA AS CHAR(12)) AS v;"
+  },
+  {
+    "id": "context-values-25-name-byte-limit",
+    "source_kind": "synthetic",
+    "shape": "name-byte-limit",
+    "sql": "SELECT COALESCE(NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA), $1::NAME) AS v;",
+    "postgres_input": "SELECT COALESCE(NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA), $1::NAME) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT COALESCE(NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA), ?1::NAME) AS v;"
+  },
+  {
+    "id": "context-values-26-name-unicode-byte-limit",
+    "source_kind": "synthetic",
+    "shape": "name-unicode-byte-limit",
+    "sql": "SELECT COALESCE(NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA), CAST($1 AS NAME)) AS v;",
+    "postgres_input": "SELECT COALESCE(NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA), CAST($1 AS NAME)) AS v;",
+    "parameter_types": "varchar",
+    "parameter_values": [
+      "éééééééééééééééééééééééééééééééééééééééé"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "ééééééééééééééééééééééééééééééé",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT COALESCE(NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA), CAST(?1 AS NAME)) AS v;"
+  },
+  {
+    "id": "context-values-27-exact-name-cast",
+    "source_kind": "synthetic",
+    "shape": "exact-name-cast",
+    "sql": "SELECT CAST(CURRENT_SCHEMA AS NAME) AS v;",
+    "postgres_input": "SELECT CAST(CURRENT_SCHEMA AS NAME) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(CURRENT_SCHEMA AS NAME) AS v;"
+  },
+  {
+    "id": "context-values-28-name-equal",
+    "source_kind": "synthetic",
+    "shape": "name-equal",
+    "sql": "SELECT CURRENT_SCHEMA = 'pg_catalog'::NAME AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA = 'pg_catalog'::NAME AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA = 'pg_catalog'::NAME AS v;"
+  },
+  {
+    "id": "context-values-29-name-not-equal",
+    "source_kind": "synthetic",
+    "shape": "name-not-equal",
+    "sql": "SELECT CURRENT_SCHEMA <> 'pg_catalog'::NAME AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA <> 'pg_catalog'::NAME AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA <> 'pg_catalog'::NAME AS v;"
+  },
+  {
+    "id": "context-values-30-name-less",
+    "source_kind": "synthetic",
+    "shape": "name-less",
+    "sql": "SELECT CURRENT_SCHEMA < 'pg_catalog'::NAME AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA < 'pg_catalog'::NAME AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA < 'pg_catalog'::NAME AS v;"
+  },
+  {
+    "id": "context-values-31-name-less-equal",
+    "source_kind": "synthetic",
+    "shape": "name-less-equal",
+    "sql": "SELECT CURRENT_SCHEMA <= 'pg_catalog'::NAME AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA <= 'pg_catalog'::NAME AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA <= 'pg_catalog'::NAME AS v;"
+  },
+  {
+    "id": "context-values-32-name-greater",
+    "source_kind": "synthetic",
+    "shape": "name-greater",
+    "sql": "SELECT CURRENT_SCHEMA > 'pg_catalog'::NAME AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA > 'pg_catalog'::NAME AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "false",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA > 'pg_catalog'::NAME AS v;"
+  },
+  {
+    "id": "context-values-33-name-greater-equal",
+    "source_kind": "synthetic",
+    "shape": "name-greater-equal",
+    "sql": "SELECT CURRENT_SCHEMA >= 'pg_catalog'::NAME AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA >= 'pg_catalog'::NAME AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA >= 'pg_catalog'::NAME AS v;"
+  },
+  {
+    "id": "context-values-34-name-text-comparison",
+    "source_kind": "synthetic",
+    "shape": "name-text-comparison",
+    "sql": "SELECT CURRENT_SCHEMA = $1 AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA = $1 AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "pg_catalog"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA = ?1 AS v;"
+  },
+  {
+    "id": "context-values-35-text-name-comparison",
+    "source_kind": "synthetic",
+    "shape": "text-name-comparison",
+    "sql": "SELECT $1 = CURRENT_SCHEMA AS v;",
+    "postgres_input": "SELECT $1 = CURRENT_SCHEMA AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "pg_catalog"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ?1 = CURRENT_SCHEMA AS v;"
+  },
+  {
+    "id": "context-values-36-char-name-comparison",
+    "source_kind": "synthetic",
+    "shape": "char-name-comparison",
+    "sql": "SELECT CURRENT_SCHEMA = 'pg_catalog'::CHAR(12) AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA = 'pg_catalog'::CHAR(12) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA = 'pg_catalog'::CHAR(12) AS v;"
+  },
+  {
+    "id": "context-values-37-like",
+    "source_kind": "synthetic",
+    "shape": "like",
+    "sql": "SELECT CURRENT_SCHEMA LIKE 'pg_%' AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA LIKE 'pg_%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA LIKE 'pg_%' AS v;"
+  },
+  {
+    "id": "context-values-38-not-like",
+    "source_kind": "synthetic",
+    "shape": "not-like",
+    "sql": "SELECT CURRENT_SCHEMA NOT LIKE 'x%' AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA NOT LIKE 'x%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA NOT LIKE 'x%' AS v;"
+  },
+  {
+    "id": "context-values-39-ilike",
+    "source_kind": "synthetic",
+    "shape": "ilike",
+    "sql": "SELECT CURRENT_SCHEMA ILIKE 'PG_%' AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA ILIKE 'PG_%' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA ILIKE 'PG_%' AS v;"
+  },
+  {
+    "id": "context-values-40-regex",
+    "source_kind": "synthetic",
+    "shape": "regex",
+    "sql": "SELECT CURRENT_SCHEMA ~ '^pg_' AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA ~ '^pg_' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA ~ '^pg_' AS v;"
+  },
+  {
+    "id": "context-values-41-negative-regex",
+    "source_kind": "synthetic",
+    "shape": "negative-regex",
+    "sql": "SELECT CURRENT_SCHEMA !~ '^no' AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA !~ '^no' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA !~ '^no' AS v;"
+  },
+  {
+    "id": "context-values-42-casefold-regex",
+    "source_kind": "synthetic",
+    "shape": "casefold-regex",
+    "sql": "SELECT CURRENT_SCHEMA ~* '^PG_' AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA ~* '^PG_' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA ~* '^PG_' AS v;"
+  },
+  {
+    "id": "context-values-43-negative-casefold-regex",
+    "source_kind": "synthetic",
+    "shape": "negative-casefold-regex",
+    "sql": "SELECT CURRENT_SCHEMA !~* '^NO' AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA !~* '^NO' AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA !~* '^NO' AS v;"
+  },
+  {
+    "id": "context-values-44-length-name",
+    "source_kind": "synthetic",
+    "shape": "length-name",
+    "sql": "SELECT length(CURRENT_SCHEMA) AS v;",
+    "postgres_input": "SELECT length(CURRENT_SCHEMA) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "integer",
+    "postgres_display_type": "integer",
+    "expected_value": "10",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT length(CURRENT_SCHEMA) AS v;"
+  },
+  {
+    "id": "context-values-45-bytea-encoding-name",
+    "source_kind": "synthetic",
+    "shape": "bytea-encoding-name",
+    "sql": "SELECT length('abc'::BYTEA, COALESCE(NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA), 'UTF8'::NAME)) AS v;",
+    "postgres_input": "SELECT length('abc'::BYTEA, COALESCE(NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA), 'UTF8'::NAME)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "integer",
+    "postgres_display_type": "integer",
+    "expected_value": "3",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT length('abc'::BYTEA, COALESCE(NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA), 'UTF8'::NAME)) AS v;"
+  },
+  {
+    "id": "context-values-46-name-array-constructor",
+    "source_kind": "synthetic",
+    "shape": "name-array-constructor",
+    "sql": "SELECT ARRAY[CURRENT_SCHEMA] AS v;",
+    "postgres_input": "SELECT ARRAY[CURRENT_SCHEMA] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "name[]",
+    "postgres_display_type": "name[]",
+    "expected_value": "{pg_catalog}",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ARRAY[CURRENT_SCHEMA] AS v;"
+  },
+  {
+    "id": "context-values-47-name-array-equality",
+    "source_kind": "synthetic",
+    "shape": "name-array-equality",
+    "sql": "SELECT ARRAY[CURRENT_SCHEMA] = ARRAY['pg_catalog'::NAME] AS v;",
+    "postgres_input": "SELECT ARRAY[CURRENT_SCHEMA] = ARRAY['pg_catalog'::NAME] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ARRAY[CURRENT_SCHEMA] = ARRAY['pg_catalog'::NAME] AS v;"
+  },
+  {
+    "id": "context-values-48-name-any",
+    "source_kind": "synthetic",
+    "shape": "name-any",
+    "sql": "SELECT CURRENT_SCHEMA = ANY(ARRAY['pg_catalog'::NAME]) AS v;",
+    "postgres_input": "SELECT CURRENT_SCHEMA = ANY(ARRAY['pg_catalog'::NAME]) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CURRENT_SCHEMA = ANY(ARRAY['pg_catalog'::NAME]) AS v;"
+  },
+  {
+    "id": "context-values-49-nullif-context",
+    "source_kind": "synthetic",
+    "shape": "nullif-context",
+    "sql": "SELECT NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA) AS v;",
+    "postgres_input": "SELECT NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT NULLIF(CURRENT_SCHEMA, CURRENT_SCHEMA) AS v;"
+  },
+  {
+    "id": "context-values-50-name-array-subscript",
+    "source_kind": "synthetic",
+    "shape": "name-array-subscript",
+    "sql": "SELECT (current_schemas(FALSE))[1] AS v;",
+    "postgres_input": "SELECT (current_schemas(FALSE))[1] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "name",
+    "postgres_display_type": "name",
+    "expected_value": "pg_catalog",
+    "expected_sql_null": false,
+    "search_path": "pg_catalog",
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT (current_schemas(FALSE))[1] AS v;"
+  }
+]

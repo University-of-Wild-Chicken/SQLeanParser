@@ -30,10 +30,16 @@ def SubstringForm.arity : SubstringForm → Nat
   | .from | .forOnly => 2
   | .fromFor | .forFrom | .similar => 3
 
+/-- Bare PostgreSQL context forms retain their spelling and default output
+label. Callable functions remain ordinary `Expr.call` nodes. -/
+inductive ContextValue where
+  | currentSchema | currentCatalog | currentUser | user | currentRole | sessionUser | systemUser
+  deriving Repr, BEq, DecidableEq, Inhabited
+
 inductive TypeName where
   | int | bigInt | text | varchar | bool | real | doublePrecision | numeric
   | smallInt | char | date | time | timeTZ | timestamp | timestampTZ
-  | interval | uuid | json | jsonb | bytea
+  | interval | uuid | json | jsonb | bytea | name
   | intervalRange (fields : IntervalFields)
   /-- Each wrapper retains one declared unsized array suffix. PostgreSQL does
   not use the declared dimension count as a distinct runtime type. -/
@@ -47,7 +53,7 @@ structure DataType where
 
 def TypeName.scalarBase : TypeName → TypeName
   | .array element => element.scalarBase
-  | name => name
+  | typeName => typeName
 
 def TypeName.isArray : TypeName → Bool
   | .array _ => true
@@ -68,6 +74,7 @@ def TypeName.sqlType : TypeName → SqlType
   | .json => .opaque .json
   | .jsonb => .opaque .jsonb
   | .bytea => .opaque .bytea
+  | .name => .opaque .pgName
   | .array element =>
       match element.sqlType with
       | .array base => .array base
@@ -130,6 +137,7 @@ mutual
   inductive Expr where
     | literal (value : Value)
     | null
+    | contextValue (value : ContextValue)
     | decimal (lexeme : String)
     | parameter (parameter : Parameter)
     /-- Schema qualification retains decoded identifier components. A schema

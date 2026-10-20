@@ -35,6 +35,7 @@ mutual
     | .literal (.text s) => quoteText s
     | .literal (.bool b) => if b then "TRUE" else "FALSE"
     | .null => "NULL"
+    | .contextValue value => value.toSql
     | .decimal raw => raw
     | .parameter (.numbered index) => "?" ++ toString index
     | .parameter (.anonymous index) => "?" ++ toString index

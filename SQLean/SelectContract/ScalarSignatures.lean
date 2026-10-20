@@ -60,7 +60,8 @@ def implicitCast (source target : ScalarType) : Bool :=
     (match a.numericRank, b.numericRank with
      | some i, some j => i ≤ j
      | _, _ => false) ||
-    (a.isString && b.isString) ||
+    (a.isString && b.isString &&
+      (a != .name || b == .name || b == .text)) ||
     (match a, b with
      | .date, .timestamp _ | .date, .timestampTZ _ | .timestamp _, .timestampTZ _
      | .time _, .timeTZ _ | .time _, .interval _ => true
@@ -169,11 +170,24 @@ def StringMatchOperator.functionName (operator : StringMatchOperator) (charLeft 
     | .regex false true => "regexne"
     | .regex true true => "icregexne"
 
-/-- All admitted ILIKE/regex operators have these two declared signatures.
+/-- Exact native implementation for the three admitted left input families. -/
+def StringMatchOperator.nativeFunctionName (operator : StringMatchOperator)
+    (left : ScalarType) : Option String := do
+  let functionPrefix ← match left.unmodified with
+    | .name => some "name" | .text => some "text" | .char _ => some "bpchar"
+    | _ => none
+  pure (functionPrefix ++ match operator with
+    | .ilike => "iclike"
+    | .regex false false => "regexeq"
+    | .regex true false => "icregexeq"
+    | .regex false true => "regexne"
+    | .regex true true => "icregexne")
+
+/-- All admitted ILIKE/regex operators have these three declared signatures.
 CHAR on the left retains its padding through the bpchar-specific operator.
 CHAR on the right is converted to TEXT, which strips its padding. -/
 def stringMatchOverloads : List FunctionOverload :=
-  [⟨[.text, .text], .bool⟩, ⟨[.char [], .text], .bool⟩]
+  [⟨[.text, .text], .bool⟩, ⟨[.char [], .text], .bool⟩, ⟨[.name, .text], .bool⟩]
 
 /-- Exact closed string operand selection. Unknown constants receive TEXT
 context; a known CHAR left operand selects the bpchar overload. Unlike
@@ -186,6 +200,7 @@ def stringMatchSignature (left right : ScalarInput) : Option FunctionOverload :=
   if accepts left && accepts right then
     let first := match left.base with
       | some (.char _) => ScalarType.char []
+      | some .name => .name
       | _ => .text
     some ⟨[first, .text], .bool⟩
   else none
@@ -400,7 +415,7 @@ implementation; CHAR uses bpchar equality. JSON has no admitted equality
 implementation, even though the generic anyarray operator can analyze. -/
 def arrayPredicateElementTypes : List ScalarType :=
   [.smallInt, .int32, .int64, .numeric [], .real, .doublePrecision,
-   .text, .varchar [], .char [], .bool, .date, .time [], .timeTZ [],
+   .text, .name, .varchar [], .char [], .bool, .date, .time [], .timeTZ [],
    .timestamp [], .timestampTZ [], .interval [], .uuid, .jsonb, .bytea]
 
 /-- anyarray requires identical element identities after typmod erasure.
@@ -431,6 +446,29 @@ private def unaryOverloads (inputs : List ScalarType) (output : Option ScalarTyp
 def numericTypes : List ScalarType :=
   [.smallInt, .int32, .int64, .numeric [], .real, .doublePrecision]
 
+/-- Context-dependent results are typed relative to the fixed PostgreSQL
+session-function environment. No database/user/schema value is inferred from
+relation visibility metadata. Empty search_path can make CURRENT_SCHEMA NULL;
+authentication methods without an external identity can make SYSTEM_USER NULL. -/
+def contextValueType : Advanced.ContextValue → ExactType
+  | .currentSchema => ⟨.name, true⟩
+  | .systemUser => ⟨.text, true⟩
+  | .currentCatalog | .currentUser | .user | .currentRole | .sessionUser => ⟨.name, false⟩
+
+def contextValueLabel : Advanced.ContextValue → Name
+  | .currentSchema => "current_schema" | .currentCatalog => "current_catalog"
+  | .currentUser => "current_user" | .user => "user" | .currentRole => "current_role"
+  | .sessionUser => "session_user" | .systemUser => "system_user"
+
+def contextFunctionNames : List Name :=
+  ["current_schema", "current_database", "current_schemas", "current_user", "session_user", "system_user"]
+
+def contextFunctionCatalog : Name → List FunctionOverload
+  | "current_schema" | "current_database" | "current_user" | "session_user" => [⟨[], .name⟩]
+  | "current_schemas" => [⟨[.bool], .array .name⟩]
+  | "system_user" => [⟨[], .text⟩]
+  | _ => []
+
 /-- Auditable supported-name inventory, including the four variadic-any rules. -/
 def functionNames : List Name :=
   ["abs", "sign", "ceil", "ceiling", "floor", "sqrt", "exp", "ln", "cbrt", "degrees", "radians",
@@ -438,7 +476,7 @@ def functionNames : List Name :=
    "character_length", "octet_length", "btrim", "ltrim", "rtrim", "replace", "substr", "substring",
    "to_date", "to_timestamp", "now", "transaction_timestamp", "statement_timestamp",
    "clock_timestamp", "pi", "random", "json_typeof", "jsonb_typeof", "json_array_length",
-   "jsonb_array_length", "concat", "concat_ws", "num_nulls", "num_nonnulls"]
+   "jsonb_array_length", "concat", "concat_ws", "num_nulls", "num_nonnulls"] ++ contextFunctionNames
 
 /-- Explicit supported built-in inventory. Overloads for SQL arrays, ranges,
 composite values and other absent scalar types are not implicitly admitted. -/
@@ -458,7 +496,8 @@ def functionCatalog (name : Name) : List FunctionOverload :=
   | "div" => [⟨[.numeric [], .numeric []], .numeric []⟩]
   | "mod" => [.smallInt, .int32, .int64, .numeric []].map fun type => ⟨[type, type], type⟩
   | "lower" | "upper" => [⟨[.text], .text⟩]
-  | "length" => unaryOverloads [.text, .char [], .bytea] (some .int32)
+  | "length" => unaryOverloads [.text, .char [], .bytea] (some .int32) ++
+      [⟨[.bytea, .name], .int32⟩]
   | "char_length" | "character_length" => unaryOverloads [.text, .char []] (some .int32)
   | "octet_length" => unaryOverloads [.text, .char [], .bytea] (some .int32)
   | "btrim" | "ltrim" | "rtrim" =>
@@ -476,7 +515,7 @@ def functionCatalog (name : Name) : List FunctionOverload :=
   | "jsonb_typeof" => [⟨[.jsonb], .text⟩]
   | "json_array_length" => [⟨[.json], .int32⟩]
   | "jsonb_array_length" => [⟨[.jsonb], .int32⟩]
-  | _ => []
+  | _ => contextFunctionCatalog name
 
 def builtinName : List Name → Option Name
   | [name] => some name
@@ -500,7 +539,7 @@ def callSignature (name : List Name) (args : List ScalarInput) : Option ExactTyp
   else
     let overload ← resolveOverload (functionCatalog name) args
     some ⟨overload.output, if name == "substring" then substringNullable overload args
-      else args.any ScalarInput.nullable⟩
+      else name == "current_schema" || name == "system_user" || args.any ScalarInput.nullable⟩
 
 /-- PostgreSQL common-type selection is directional and distinct from numeric
 operator overload selection. For example INT32/REAL resolves to REAL here. -/
@@ -606,7 +645,8 @@ def equalityCatalog : List FunctionOverload :=
   (floating.flatMap fun a => floating.map fun b => ⟨[a, b], .bool⟩) ++
   (dates.flatMap fun a => dates.map fun b => ⟨[a, b], .bool⟩) ++
   ([.numeric [], .text, .char [], .bool, .time [], .timeTZ [], .interval [],
-    .uuid, .jsonb, .bytea].map fun type => ⟨[type, type], .bool⟩)
+    .uuid, .jsonb, .bytea].map fun type => ⟨[type, type], .bool⟩) ++
+  [⟨[.name, .name], .bool⟩, ⟨[.name, .text], .bool⟩, ⟨[.text, .name], .bool⟩]
 
 /-- Binary operators first try an exact signature, assuming one unknown
 operand has its known partner's type, before ordinary overload resolution. -/
@@ -631,7 +671,7 @@ def equalityOverload (left right : ScalarInput) : Option FunctionOverload :=
     | none => resolveOverload equalityCatalog [left, right]
 
 /-- PostgreSQL 16 provides all six strict Boolean comparison operators for
-these 32 scalar input pairs. The selected arguments are retained explicitly;
+these 35 scalar input pairs. The selected arguments are retained explicitly;
 common-type selection is not an operator-resolution rule. -/
 def comparisonOverload : Advanced.ComparisonOp → ScalarInput → ScalarInput → Option FunctionOverload
   | .eq | .ne | .lt | .le | .gt | .ge => equalityOverload

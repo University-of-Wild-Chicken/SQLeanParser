@@ -178,6 +178,7 @@ private def mergeJoin (kind : JoinKind) (left right : Scope) (names : List Name)
 
 private def expressionName : Expr → Name
   | .column _ name _ => name
+  | .contextValue value => SelectContract.contextValueLabel value
   | .countAll | .aggregate .count _ _ => "count"
   | .aggregate .sum _ _ => "sum"
   | .aggregate .avg _ _ => "avg"
@@ -499,6 +500,7 @@ an explicit validation error. Parameter declarations are supplied by the caller.
       match expr with
       | .literal value => pure (some value.type)
       | .null => pure none
+      | .contextValue value => pure (familyResult (some (SelectContract.contextValueType value)))
       | .decimal lexeme =>
         ensure (isDecimalLexeme lexeme) "invalid decimal/exponent literal"
         pure (some .real)
@@ -739,7 +741,7 @@ an explicit validation error. Parameter declarations are supplied by the caller.
     | fuel + 1, schema, params, scopes, groups, expr => do
       if groups.any (fun key => canonical fuel scopes key == canonical fuel scopes expr) then pure ()
       else match expr with
-      | .literal _ | .null | .decimal _ | .parameter _ | .countAll | .aggregate .. | .filteredAggregate .. => pure ()
+      | .literal _ | .null | .contextValue _ | .decimal _ | .parameter _ | .countAll | .aggregate .. | .filteredAggregate .. => pure ()
       | .column qualifier name sourceSchema =>
         ensure sourceSchema.isNone "schema-qualified columns require the independent SELECT contract"
         let (_, depth) ← resolveColumn scopes qualifier name

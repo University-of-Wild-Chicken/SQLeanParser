@@ -11,10 +11,10 @@ private def castQuery (type : DataType) : Advanced.Query :=
 
 private def exactTypes : List DataType :=
   ([TypeName.smallInt, .char, .date, .time, .timeTZ, .timestamp, .timestampTZ,
-    .interval, .uuid, .json, .jsonb, .bytea].map fun name => ⟨name, []⟩) ++
+    .interval, .uuid, .json, .jsonb, .bytea].map fun typeName => ⟨typeName, []⟩) ++
   [⟨.char, [1]⟩, ⟨.char, [10485760]⟩] ++
-  ([TypeName.time, .timeTZ, .timestamp, .timestampTZ, .interval].flatMap fun name =>
-    [⟨name, [0]⟩, ⟨name, [3]⟩, ⟨name, [6]⟩])
+  ([TypeName.time, .timeTZ, .timestamp, .timestampTZ, .interval].flatMap fun typeName =>
+    [⟨typeName, [0]⟩, ⟨typeName, [3]⟩, ⟨typeName, [6]⟩])
 
 private def aliases : List (String × DataType) := [
   ("INT2", ⟨.smallInt, []⟩), ("INT4", ⟨.int, []⟩), ("INT8", ⟨.bigInt, []⟩),

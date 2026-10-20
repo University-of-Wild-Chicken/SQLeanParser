@@ -7,10 +7,20 @@ namespace SQLean.Tests
 expressions into ordinary names, even when the legacy parser accepts them. -/
 def parserDispatchTests : IO Nat := do
   let special := ["CURRENT_DATE", "CURRENT_TIME", "CURRENT_TIMESTAMP", "LOCALTIME",
-    "LOCALTIMESTAMP", "CURRENT_USER", "SESSION_USER", "SYSTEM_USER", "CURRENT_ROLE",
-    "CURRENT_CATALOG", "CURRENT_SCHEMA", "USER"]
+    "LOCALTIMESTAMP"]
   for name in special do
     expectError name (parseStatement s!"SELECT {name} FROM users")
+    let _ ← expectOk s!"quoted {name}" (parseStatement s!"SELECT \"{name}\" FROM users")
+    let _ ← expectOk s!"literal {name}" (parseStatement s!"SELECT '{name}' FROM users")
+  let contextValues := [("CURRENT_USER", Advanced.ContextValue.currentUser),
+    ("SESSION_USER", .sessionUser), ("SYSTEM_USER", .systemUser), ("CURRENT_ROLE", .currentRole),
+    ("CURRENT_CATALOG", .currentCatalog), ("CURRENT_SCHEMA", .currentSchema), ("USER", .user)]
+  for (name, value) in contextValues do
+    match ← expectOk name (parseStatement s!"SELECT {name} FROM users") with
+    | .extended (.query {body := .select select, ..}) =>
+        SQLean.Tests.assert (select.items == [.expression (.contextValue value)])
+          "context keyword was interpreted as a compatibility column"
+    | _ => throw (IO.userError "context value lost its advanced AST")
     let _ ← expectOk s!"quoted {name}" (parseStatement s!"SELECT \"{name}\" FROM users")
     let _ ← expectOk s!"literal {name}" (parseStatement s!"SELECT '{name}' FROM users")
   let predicates := ["SELECT id ISNULL FROM users", "SELECT id NOTNULL FROM users",
@@ -30,6 +40,6 @@ def parserDispatchTests : IO Nat := do
   match ← expectOk "ordinary row column" (parseStatement "SELECT row FROM users") with
   | .select _ => pure ()
   | _ => throw (IO.userError "ROW lookahead changed an ordinary compatibility column")
-  pure (3 * special.length + predicates.length + quoted.length + rows.length + 1)
+  pure (3 * (special.length + contextValues.length) + predicates.length + quoted.length + rows.length + 1)
 
 end SQLean.Tests

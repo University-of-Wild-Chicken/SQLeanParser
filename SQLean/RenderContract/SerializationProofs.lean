@@ -20,6 +20,7 @@ mutual
     cases expr with
     | literal value => cases value <;> simp only [translateExpr, exprSql]
     | null => simp only [translateExpr, exprSql]
+    | contextValue value => simp only [translateExpr, exprSql]
     | decimal raw => simp only [translateExpr, exprSql]
     | parameter parameter => cases parameter <;> simp only [translateExpr, translateParameter, exprSql, ite_true]
     | column qualifier name schema => simp only [translateExpr, exprSql]

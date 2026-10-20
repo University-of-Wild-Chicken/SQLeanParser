@@ -336,13 +336,15 @@ private def extractField : Parser String := do
       else fail "PostgreSQL keyword is not an EXTRACT field"
   | _ => fail "expected EXTRACT field identifier or string"
 private def alias? (columnLabel : Bool := false) : Parser (Option Name) := do
-  if ← eat "as" then return some (← identifier)
+  if ← eat "as" then
+    return some (← if columnLabel && !(← read) then attributeName else identifier)
   match (← peek).kind with
   | .quoted _ => return some (← identifier)
   | .word s =>
-      if columnLabel && !(← read) &&
-          (SQLean.PostgresGrammar.Generated.keyword s.toLower).any (fun keyword => !keyword.bareLabel) then
-        return none
+      if columnLabel && !(← read) then
+        if (SQLean.PostgresGrammar.Generated.keyword s.toLower).any (fun keyword => !keyword.bareLabel) then
+          return none
+        return some (← attributeName)
       if !reserved.contains s.toLower then return some (← identifier) else pure none
   | _ => pure none
 private def natural : Parser Nat := do
@@ -404,20 +406,21 @@ private def intervalQualifier : Parser (Option (IntervalFields × List Nat)) := 
 
 private def arraySuffixes : Nat → TypeName → Parser TypeName
   | 0, _ => fail "array type nesting exceeds parser budget"
-  | fuel + 1, name => do
+  | fuel + 1, typeName => do
       if ← eat "[" then
         if ← read then fail "array types are not supported by the SQLite profile"
         expect "]"
-        arraySuffixes fuel (.array name)
-      else pure name
+        arraySuffixes fuel (.array typeName)
+      else pure typeName
 
 private def dataType (fuel : Nat) : Parser DataType := do
   let token ← pop
-  let name ← match token.kind.keyword with
+  let typeName ← match token.kind.keyword with
     | .word "smallint" | .word "int2" => pure TypeName.smallInt
     | .word "int" | .word "integer" | .word "int4" => pure TypeName.int
     | .word "bigint" | .word "int8" => pure .bigInt
     | .word "text" => pure .text
+    | .word "name" => pure .name
     | .word "varchar" => pure .varchar
     | .word "character" | .word "char" =>
         do if ← eat "varying" then pure .varchar else pure .char
@@ -442,23 +445,23 @@ private def dataType (fuel : Nat) : Parser DataType := do
     expect ")"
     pure values
     else pure []
-  let (name, modifiers) ← if name == .interval && modifiers.isEmpty then do
+  let (typeName, modifiers) ← if typeName == .interval && modifiers.isEmpty then do
     match ← intervalQualifier with
     | some (fields, precision) => pure (TypeName.intervalRange fields, precision)
-    | none => pure (name, modifiers)
-    else pure (name, modifiers)
-  let name ← if name == .time || name == .timestamp then do
+    | none => pure (typeName, modifiers)
+    else pure (typeName, modifiers)
+  let typeName ← if typeName == .time || typeName == .timestamp then do
     if ← eat "with" then
       expect "time"
       expect "zone"
-      pure (if name == .time then .timeTZ else .timestampTZ)
+      pure (if typeName == .time then .timeTZ else .timestampTZ)
     else if ← eat "without" then
       expect "time"
       expect "zone"
-      pure name
-    else pure name
-    else pure name
-  match name, modifiers with
+      pure typeName
+    else pure typeName
+    else pure typeName
+  match typeName, modifiers with
   | _, [] => pure ()
   | .varchar, [n] => if n == 0 then fail "VARCHAR length must be positive"
   | .char, [n] =>
@@ -470,8 +473,8 @@ private def dataType (fuel : Nat) : Parser DataType := do
   | .intervalRange fields, [_] =>
       if !fields.allowsPrecision then fail "invalid interval field precision"
   | _, _ => fail "invalid type modifiers"
-  let name ← arraySuffixes fuel name
-  pure {name, modifiers}
+  let typeName ← arraySuffixes fuel typeName
+  pure {name := typeName, modifiers}
 
 private def binInfo (token : Lexeme) : Option (BinOp × Nat) := match token.keyword with
   | .word "or" => some (.or, 1) | .word "and" => some (.and, 2)
@@ -500,7 +503,7 @@ private def typeWord (word : String) : Bool :=
   ["smallint", "int2", "int", "integer", "int4", "bigint", "int8", "text", "varchar",
    "character", "char", "bool", "boolean", "real", "float4", "double", "float8",
    "numeric", "decimal", "date", "time", "timetz", "timestamp", "timestamptz",
-   "interval", "uuid", "json", "jsonb", "bytea"].contains word
+   "interval", "uuid", "json", "jsonb", "bytea", "name"].contains word
 
 /-- PostgreSQL typed string constants are represented by the same cast tree as
 CAST(string AS type). Bare CHARACTER constants are excluded: unlike a bare
@@ -582,6 +585,22 @@ mutual
       if ← eat "null" then return .null
       if ← eat "true" then return .literal (.bool true)
       if ← eat "false" then return .literal (.bool false)
+      -- SQL value functions are distinct from ordinary quoted/qualified calls.
+      -- CURRENT_SCHEMA is also a type/function keyword and may head a call.
+      if ← eat "current_schema" then
+        if ← eat "(" then
+          let args ← if ← eat ")" then pure [] else do
+            let args ← separated (expression fuel 0) fuel
+            expect ")"
+            pure args
+          return .call ["current_schema"] args
+        return .contextValue .currentSchema
+      if ← eat "current_catalog" then return .contextValue .currentCatalog
+      if ← eat "current_user" then return .contextValue .currentUser
+      if ← eat "user" then return .contextValue .user
+      if ← eat "current_role" then return .contextValue .currentRole
+      if ← eat "session_user" then return .contextValue .sessionUser
+      if ← eat "system_user" then return .contextValue .systemUser
       if ← eat "array" then
         if ← read then fail "array constructors are not supported by the SQLite profile"
         return ← arrayBracket fuel
@@ -1391,13 +1410,13 @@ def parseParameterDeclarations (source : String) : Except ParseError (List (Data
     if (← peek).kind == .eof then return []
     separated (do
       let type ← alternative (dataType fuel) (do
-        let name ← match (← pop).kind.keyword with
+        let typeName ← match (← pop).kind.keyword with
           | .word "int32" => pure TypeName.int
           | .word "int64" => pure .bigInt
           | .word "float32" => pure .real
           | .word "float64" | .word "double" => pure .doublePrecision
           | _ => fail "unsupported parameter type"
-        pure {name})
+        pure {name := typeName})
       let nullable ← match (← peek).kind with
         | .symbol "?" => do let _ ← pop; pure true
         | _ => pure false

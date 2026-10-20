@@ -92,6 +92,7 @@ mutual
     | text => simpa only [translateExpr, List.map_nil] using ExprValid.text
     | bool => simpa only [translateExpr, List.map_nil] using ExprValid.bool
     | null => simpa only [translateExpr, List.map_nil] using ExprValid.null
+    | contextValue => simpa only [translateExpr, List.map_nil] using ExprValid.contextValue
     | parameter present identity supported =>
         simpa only [translateExpr, List.map_cons, List.map_nil] using
           ExprValid.parameter present

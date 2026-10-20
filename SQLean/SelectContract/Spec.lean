@@ -184,6 +184,7 @@ mutual
     | text : ExprValid params scope (.literal (.text value)) (some ⟨.text, false⟩) []
     | bool : ExprValid params scope (.literal (.bool value)) (some ⟨.bool, false⟩) []
     | null : ExprValid params scope .null none []
+    | contextValue : ExprValid params scope (.contextValue value) (some (contextValueType value)) []
     | parameter (present : binding ∈ params) (identity : binding.index = parameterIndex parameter)
         (supported : concreteType binding.type = some base) :
         ExprValid params scope (.parameter parameter) (some ⟨base.unmodified, binding.nullable⟩) [parameter]
@@ -371,7 +372,7 @@ def arrayOrigin : Advanced.Expr → Bool
 are normalized. Array suffixes and modifiers do not change the label. -/
 def typeNameLabel : Advanced.TypeName → Name
   | .smallInt => "int2" | .int => "int4" | .bigInt => "int8"
-  | .text => "text" | .varchar => "varchar" | .char => "bpchar"
+  | .name => "name" | .text => "text" | .varchar => "varchar" | .char => "bpchar"
   | .bool => "bool" | .real => "float4" | .doublePrecision => "float8"
   | .numeric => "numeric" | .date => "date" | .time => "time"
   | .timeTZ => "timetz" | .timestamp => "timestamp" | .timestampTZ => "timestamptz"
@@ -385,6 +386,7 @@ A cast replaces a weak name but retains a column/function/constructor name. -/
 def outputLabel : Advanced.Expr → Nat × Name
   | .column _ name _ => (2, name)
   | .call name _ => (2, name.getLastD "?column?")
+  | .contextValue value => (2, contextValueLabel value)
   | .array _ => (2, "array")
   | .row _ => (2, "row")
   | .extract .. => (2, "extract")

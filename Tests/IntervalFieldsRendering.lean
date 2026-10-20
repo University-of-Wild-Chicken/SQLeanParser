@@ -101,9 +101,9 @@ def intervalFieldsRenderingTests : IO Nat := do
         "interval literal gained an unqualified intermediate cast"
       count := count + 1
     for rank in [1, 2] do
-      let name := if rank == 1 then TypeName.array type.name else .array (.array type.name)
+      let typeName := if rank == 1 then TypeName.array type.name else .array (.array type.name)
       let suffix := if rank == 1 then "[]" else "[][]"
-      count := count + (← checkType ⟨name, []⟩ (sql ++ suffix))
+      count := count + (← checkType ⟨typeName, []⟩ (sql ++ suffix))
     if fields.allowsPrecision then
       for precision in [0, 2, 6] do
         let type := declaration fields [precision]
@@ -200,7 +200,7 @@ def intervalFieldsRenderingTests : IO Nat := do
       .cast (anon 2) ⟨.array (.intervalRange .dayToSecond), [2]⟩] do
     rejected .identityV01 (queryOf expr) "invalid" "representation.parameters"
     count := count + 1
-  let deep := (List.range 12).foldl (fun name _ => TypeName.array name) (.intervalRange .second)
+  let deep := (List.range 12).foldl (fun typeName _ => TypeName.array typeName) (.intervalRange .second)
   rejected .postgres16V01 (queryOf (.cast (anon 1) ⟨deep, [2]⟩)) "inconclusive" "resource.depth" 8
   pure (count + 1)
 

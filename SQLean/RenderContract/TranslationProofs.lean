@@ -21,6 +21,7 @@ mutual
     cases expr with
     | literal value => simp only [translateExpr]
     | null => simp only [translateExpr]
+    | contextValue value => simp only [translateExpr]
     | decimal raw => simp only [translateExpr]
     | parameter parameter => simp only [translateExpr, translateParameter_idempotent]
     | column qualifier name schema => simp only [translateExpr]

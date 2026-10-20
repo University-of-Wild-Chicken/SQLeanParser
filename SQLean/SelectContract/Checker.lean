@@ -161,6 +161,7 @@ mutual
       | .literal (.text _) => .ok ⟨some ⟨.text, false⟩, [], .text⟩
       | .literal (.bool _) => .ok ⟨some ⟨.bool, false⟩, [], .bool⟩
       | .null => .ok ⟨none, [], .null⟩
+      | .contextValue value => .ok ⟨some (contextValueType value), [], .contextValue⟩
       | .decimal lexeme =>
           if lexical : decimalLexeme lexeme = true then
             .ok ⟨some ⟨.numeric [], false⟩, [], .decimal lexical⟩

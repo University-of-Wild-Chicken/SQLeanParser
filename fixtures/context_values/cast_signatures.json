@@ -1,0 +1,38 @@
+[
+  {
+    "source": "name",
+    "target": "text",
+    "context": "implicit",
+    "function": "text"
+  },
+  {
+    "source": "name",
+    "target": "character",
+    "context": "assignment",
+    "function": "bpchar"
+  },
+  {
+    "source": "name",
+    "target": "character varying",
+    "context": "assignment",
+    "function": "varchar"
+  },
+  {
+    "source": "text",
+    "target": "name",
+    "context": "implicit",
+    "function": "name"
+  },
+  {
+    "source": "character",
+    "target": "name",
+    "context": "implicit",
+    "function": "name"
+  },
+  {
+    "source": "character varying",
+    "target": "name",
+    "context": "implicit",
+    "function": "name"
+  }
+]

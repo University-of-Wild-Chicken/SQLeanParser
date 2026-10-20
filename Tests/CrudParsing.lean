@@ -73,7 +73,7 @@ private def rejected : List String := [
   "SELECT id FROM users LIMIT 1 LIMIT 2", "SELECT id FROM users LIMIT 1 ORDER BY id",
   "SELECT id FROM users LIMIT 1 OFFSET 2 OFFSET 3",
   "SELECT id FROM users WHERE id = 1 = 2", "SELECT id FROM users WHERE NOT id < 1 < 2",
-  "SELECT TRUE FALSE FROM users", "SELECT NOT FROM users", "SELECT + FROM users",
+  "SELECT TRUE FALSE TRUE FROM users", "SELECT NOT FROM users", "SELECT + FROM users",
   "SELECT order FROM users", "SELECT id FROM limit",
   "INSERT users VALUES (1)", "INSERT INTO VALUES (1)", "INSERT INTO users",
   "INSERT INTO users () VALUES (1)", "INSERT INTO users (id,) VALUES (1)",
@@ -115,6 +115,16 @@ def crudParsingTests : IO Nat := do
     | _ => throw (IO.userError s!"expression pagination lost its Advanced AST: {source}")
   for source in rejected do
     expectError source (parseStatement source)
+
+  -- FALSE is a reserved PostgreSQL keyword but an allowed bare output label
+  -- (kwlist.h BARE_LABEL); native PG16 returns TRUE under the label "false".
+  match ← expectOk "reserved bare output label" (parseStatement "SELECT TRUE FALSE FROM users") with
+  | .extended (.query query) =>
+      SQLean.Tests.assert (query.body == .select {
+        items := [.expression (.literal (.bool true)) (some "false")],
+        source := some (.table "users") })
+        "reserved bare output label changed the SELECT expression"
+  | _ => throw (IO.userError "reserved output label lost its advanced AST")
 
   let selected ← expectOk "SELECT AST" (parseStatement
     "SELECT DISTINCT id FROM users WHERE active ORDER BY age + 1 DESC, id ASC LIMIT 0 OFFSET 2")
@@ -215,6 +225,6 @@ def crudParsingTests : IO Nat := do
 
   let nested := (List.range 40).foldl (fun text _ => s!"NOT ({text})") "TRUE"
   let _ ← expectOk "nested NOT expression" (parseStatement s!"DELETE FROM t WHERE {nested}")
-  pure (accepted.length + extendedAccepted.length + paginationAccepted.length + rejected.length + 21)
+  pure (accepted.length + extendedAccepted.length + paginationAccepted.length + rejected.length + 22)
 
 end SQLean.Tests

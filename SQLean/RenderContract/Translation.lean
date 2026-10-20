@@ -19,6 +19,7 @@ mutual
     match expr with
     | .literal value => .literal value
     | .null => .null
+    | .contextValue value => .contextValue value
     | .decimal raw => .decimal raw
     | .parameter parameter => .parameter (translateParameter parameter)
     | .column qualifier name schema => .column qualifier name schema

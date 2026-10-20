@@ -1,0 +1,184 @@
+[
+  {
+    "operator": "=",
+    "left": "name",
+    "right": "name",
+    "output": "boolean",
+    "function": "nameeq"
+  },
+  {
+    "operator": "=",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "nameeqtext"
+  },
+  {
+    "operator": "=",
+    "left": "text",
+    "right": "name",
+    "output": "boolean",
+    "function": "texteqname"
+  },
+  {
+    "operator": "<>",
+    "left": "name",
+    "right": "name",
+    "output": "boolean",
+    "function": "namene"
+  },
+  {
+    "operator": "<>",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "namenetext"
+  },
+  {
+    "operator": "<>",
+    "left": "text",
+    "right": "name",
+    "output": "boolean",
+    "function": "textnename"
+  },
+  {
+    "operator": "<",
+    "left": "name",
+    "right": "name",
+    "output": "boolean",
+    "function": "namelt"
+  },
+  {
+    "operator": "<",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "namelttext"
+  },
+  {
+    "operator": "<",
+    "left": "text",
+    "right": "name",
+    "output": "boolean",
+    "function": "textltname"
+  },
+  {
+    "operator": "<=",
+    "left": "name",
+    "right": "name",
+    "output": "boolean",
+    "function": "namele"
+  },
+  {
+    "operator": "<=",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "nameletext"
+  },
+  {
+    "operator": "<=",
+    "left": "text",
+    "right": "name",
+    "output": "boolean",
+    "function": "textlename"
+  },
+  {
+    "operator": ">",
+    "left": "name",
+    "right": "name",
+    "output": "boolean",
+    "function": "namegt"
+  },
+  {
+    "operator": ">",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "namegttext"
+  },
+  {
+    "operator": ">",
+    "left": "text",
+    "right": "name",
+    "output": "boolean",
+    "function": "textgtname"
+  },
+  {
+    "operator": ">=",
+    "left": "name",
+    "right": "name",
+    "output": "boolean",
+    "function": "namege"
+  },
+  {
+    "operator": ">=",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "namegetext"
+  },
+  {
+    "operator": ">=",
+    "left": "text",
+    "right": "name",
+    "output": "boolean",
+    "function": "textgename"
+  },
+  {
+    "operator": "~~",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "namelike"
+  },
+  {
+    "operator": "!~~",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "namenlike"
+  },
+  {
+    "operator": "~~*",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "nameiclike"
+  },
+  {
+    "operator": "!~~*",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "nameicnlike"
+  },
+  {
+    "operator": "~",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "nameregexeq"
+  },
+  {
+    "operator": "!~",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "nameregexne"
+  },
+  {
+    "operator": "~*",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "nameicregexeq"
+  },
+  {
+    "operator": "!~*",
+    "left": "name",
+    "right": "text",
+    "output": "boolean",
+    "function": "nameicregexne"
+  }
+]

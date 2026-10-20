@@ -1,0 +1,174 @@
+# Copyright Materialize, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file at the root of this repository.
+#
+# As of the Change Date specified in that file, in accordance with
+# the Business Source License, use of this software will be governed
+# by the Apache License, Version 2.0.
+
+mode cockroach
+
+query T
+show search_path
+----
+public
+
+statement ok
+SET search_path = foo
+
+query T
+show search_path
+----
+foo
+
+statement ok
+SET search_path = 'foo'
+
+query T
+show search_path
+----
+foo
+
+statement ok
+SET search_path = 'ba r', foo, 'x, y', "a, b"
+
+query T
+show search_path
+----
+"ba r", foo, "x, y", "a, b"
+
+query T
+SELECT current_schema()
+----
+NULL
+
+query T
+SELECT current_schemas(false)
+----
+{}
+
+query T
+SELECT current_schemas(true)
+----
+{mz_catalog,pg_catalog}
+
+# Ensure both `current_schemas` and `current_schema` work when the specified
+# cluster is invalid.
+
+statement ok
+SET cluster = noexist
+
+query T
+SELECT current_schema()
+----
+NULL
+
+query T
+SELECT current_schemas(false)
+----
+{}
+
+query T
+SELECT current_schemas(true)
+----
+{mz_catalog,pg_catalog}
+
+statement ok
+SET cluster = quickstart
+
+statement error no valid schema selected
+CREATE TABLE t (i INT)
+
+statement error no valid schema selected
+SHOW SOURCES;
+
+statement error no valid schema selected
+SHOW SINKS;
+
+statement error no valid schema selected
+SHOW INDEXES;
+
+statement ok
+CREATE SCHEMA foo
+----
+
+query T
+SELECT current_schema()
+----
+foo
+
+query T
+SELECT current_schemas(false)
+----
+{foo}
+
+query T
+SELECT current_schemas(true)
+----
+{mz_catalog,pg_catalog,foo}
+
+statement ok
+CREATE TABLE t (i INT)
+
+query T
+SELECT count(*) from t
+----
+0
+
+statement ok
+SET search_path = pg_catalog
+
+query T
+show search_path
+----
+pg_catalog
+
+query T
+SELECT current_schema()
+----
+pg_catalog
+
+query T
+SELECT current_schemas(true)
+----
+{mz_catalog,pg_catalog}
+
+query T
+SELECT current_schemas(false)
+----
+{pg_catalog}
+
+query TT
+SELECT id, name FROM mz_schemas WHERE name = 'mz_catalog' OR name = 'pg_catalog' OR name = 'mz_internal' OR name = 'information_schema';
+----
+s1  mz_catalog
+s2  pg_catalog
+s4  mz_internal
+s5  information_schema
+
+# Temporary schema drop should fail with correct error message.
+# With lazy temporary schema creation, the temp schema may not exist yet,
+# but we still need to return the correct error (not "unknown schema").
+statement error cannot drop schema mz_temp because it is a temporary schema
+DROP SCHEMA mz_temp
+
+simple conn=mz_system,user=mz_system
+DROP SCHEMA mz_temp
+----
+db error: ERROR: cannot drop schema mz_temp because it is a temporary schema
+
+# Regression: DROP SCHEMA without CASCADE must be rejected when the schema
+# contains only a type. Types live in a separate map from items, which the
+# emptiness check used to ignore, so the drop silently succeeded.
+statement ok
+CREATE SCHEMA type_only
+
+statement ok
+CREATE TYPE type_only.lt AS LIST (ELEMENT TYPE = int4)
+
+statement error cannot be dropped without CASCADE while it contains objects
+DROP SCHEMA type_only
+
+statement ok
+DROP SCHEMA type_only CASCADE

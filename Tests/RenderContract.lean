@@ -185,7 +185,7 @@ private def positiveQueries : List (String × Advanced.Query) :=
   ([AggregateFn.count, .sum, .avg, .min, .max].flatMap fun fn =>
     [("aggregate", queryOf (.aggregate fn one)), ("DISTINCT aggregate", queryOf (.aggregate fn one true))]) ++
   ([TypeName.int, .bigInt, .text, .varchar, .bool, .real, .doublePrecision, .numeric].map
-    fun name => ("concrete cast target", queryOf (.cast one ⟨name, []⟩))) ++
+    fun typeName => ("concrete cast target", queryOf (.cast one ⟨typeName, []⟩))) ++
   ([("VARCHAR length", DataType.mk .varchar [17]),
     ("NUMERIC precision", DataType.mk .numeric [9]),
     ("NUMERIC precision scale", DataType.mk .numeric [12, 4])].map fun (name, type) =>

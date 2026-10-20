@@ -57,6 +57,7 @@ private def accepted : List String := [
 
 private def extendedAccepted : List String := [
   "SELECT a.b.c FROM users",
+  "SELECT id AS where FROM users",
   "SELECT unknown(id) FROM users",
   "SELECT \"COUNT\"(id) FROM users",
   "SELECT u.count(id) FROM users u",
@@ -75,7 +76,7 @@ private def rejected : List String := [
   "SELECT * AS all_users FROM users", "SELECT u.* alias FROM users u",
   "SELECT u.* + 1 FROM users u", "SELECT u. FROM users u",
   "SELECT u..id FROM users u", "SELECT db.a.b.c FROM users",
-  "SELECT .id FROM users", "SELECT id AS FROM users", "SELECT id AS where FROM users",
+  "SELECT .id FROM users", "SELECT id AS FROM users", "SELECT id AS where AS label FROM users",
   "SELECT id FROM users AS", "SELECT id FROM users AS where",
   "SELECT id FROM users JOIN orders", "SELECT id FROM users JOIN orders ON",
   "SELECT id FROM users INNER orders ON TRUE",
@@ -130,6 +131,17 @@ def relationalParsingTests : IO Nat := do
   for source in rejected do
     expectError source (parseRelQuery source)
     expectError source (parseStatement source)
+
+  -- PostgreSQL ColLabel permits every keyword after AS. This permission is
+  -- separate from the narrower ColId rule for FROM relation aliases.
+  match ← expectOk "reserved AS output label"
+      (parseStatement "SELECT id AS where FROM users") with
+  | .extended (.query query) =>
+      SQLean.Tests.assert (query.body == .select {
+        items := [.expression (.column none "id") (some "where")],
+        source := some (.table "users") })
+        "reserved AS output label changed the column reference or source"
+  | _ => throw (IO.userError "reserved AS label must retain the Advanced AST")
 
   match ← expectOk "schema-qualified column uses extended AST"
       (parseStatement "SELECT a.b.c FROM users") with
@@ -228,6 +240,6 @@ def relationalParsingTests : IO Nat := do
   let cteDefs := String.intercalate ", " ((List.range 100).map fun n => s!"t{n} AS (SELECT id FROM t)")
   let manyCtes ← expectOk "100 CTE definitions" (parseRelQuery s!"WITH {cteDefs} SELECT id FROM t99")
   SQLean.Tests.assert (manyCtes.ctes.length == 100) "lost CTE definitions"
-  pure (3 * accepted.length + 2 * (rejected.length + extendedAccepted.length) + 18)
+  pure (3 * accepted.length + 2 * (rejected.length + extendedAccepted.length) + 19)
 
 end SQLean.Tests

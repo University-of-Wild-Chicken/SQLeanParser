@@ -26,6 +26,8 @@ from extract_cockroach_sqllogic_sql import selected_cockroach_sql
 from observe_substring_source import observe_substrings, validate_substrings
 from observe_qualified_name_source import observe_qualified_names, validate_qualified_names
 from observe_json_existence_source import observe_json_existence, validate_json_existence
+from observe_context_value_source import observe_context_values, validate_context_values
+from extract_go_query_literal import selected_go_query, selected_whole_sql
 
 ROOT = Path(__file__).resolve().parents[1]
 POPULATIONS = {
@@ -55,6 +57,8 @@ POPULATIONS = {
     "substring": {"postgres": 27, "cockroach": 11, "materialize": 12},
     "qualified_names": {"postgres": 37, "sqlc": 12, "hatchet": 1},
     "json_existence": {"postgres": 27, "cockroach": 14, "materialize": 8, "river": 1},
+    "context_values": {"postgres": 32, "pgweb": 7, "river": 4, "materialize": 2,
+                       "duckdb": 4, "risingwave": 1},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -1164,7 +1168,7 @@ def observe_oracle(sql: str, factor: str) -> dict:
             names = [part.sval for part in node.names or ()]
             if (not names or names[-1] not in NEW_FAMILIES | OLD_FAMILIES
                     or len(names) > 2 or (len(names) == 2 and names[0] != "pg_catalog")
-                    or (node.arrayBounds and factor not in ARRAY_FACTORS | {"row_comparisons", "ilike", "json_existence"})):
+                    or (node.arrayBounds and factor not in ARRAY_FACTORS | {"row_comparisons", "ilike", "json_existence", "context_values"})):
                 raise ValueError("array/user-defined type belongs to a later factor")
 
         def visit_FuncCall(self, ancestors, node):
@@ -1172,9 +1176,12 @@ def observe_oracle(sql: str, factor: str) -> dict:
             if (factor == "extract" and names == ["pg_catalog", "extract"]
                     and node.funcformat == enums.CoercionForm.COERCE_SQL_SYNTAX):
                 return  # The closed source observer checks this special syntax below.
-            if (factor == "substring" and names == ["pg_catalog", "substring"]
+            if (factor in {"substring", "context_values"} and names == ["pg_catalog", "substring"]
                     and node.funcformat == enums.CoercionForm.COERCE_SQL_SYNTAX):
                 return  # Literal arguments and exact source form are checked below.
+            if (factor == "context_values" and names == ["pg_catalog", "system_user"]
+                    and node.funcformat == enums.CoercionForm.COERCE_SQL_SYNTAX):
+                return  # SYSTEM_USER is a SQL-syntax FuncCall in PostgreSQL 16.
             if (len(names) != 1 or node.func_variadic or node.over or node.agg_order
                     or node.agg_within_group
                     or any(isinstance(arg, ast.NamedArgExpr) for arg in node.args or ())):
@@ -1219,6 +1226,10 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "qualified_names":
         allowed.update(("schema-qualified-relation", "multi-part-column",
                         "conditional-expression", "extended-operator"))
+    if factor == "context_values":
+        allowed.update(("schema-qualified-relation", "multi-part-column",
+                        "conditional-expression", "extended-operator", "sql-value-keyword",
+                        "array-or-subscripting", "qualified-function"))
     if factor in {"conditional", "locking", "derived_contract", "array_types", "array_quantified", "row_comparisons", "concatenation", "ilike", "regex"} | JOIN_FACTORS:
         allowed.add("conditional-expression")
     if factor in {"locking", "array_types", "row_comparisons"}:
@@ -1334,6 +1345,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "json_existence":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation.update(observe_json_existence(parsed, sql))
+    if factor == "context_values":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation.update(observe_context_values(parsed, sql))
     return observation
 
 
@@ -1364,6 +1378,7 @@ def validate_population(records: list[dict], factor: str) -> None:
     qualified_relation_count, qualified_alias_cases, qualified_quoted_cases = 0, 0, 0
     qualified_column_arities = Counter()
     existence_null_literals = 0
+    context_forms, context_scopes = Counter(), Counter()
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -1413,6 +1428,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.update(("json_containments", "source_free"))
         if factor == "json_existence":
             expected_keys.update(("json_existence", "source_free"))
+        if factor == "context_values":
+            expected_keys.update(("context_values", "source_free"))
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -1582,6 +1599,11 @@ def validate_population(records: list[dict], factor: str) -> None:
             json_left_casts.update(entry["left_cast"] for entry in entries)
             json_right_casts.update(entry["right_cast"] for entry in entries)
             existence_null_literals += sum(entry["left_literal_null"] for entry in entries)
+        if factor == "context_values":
+            validate_context_values(observation, row["sql"])
+            context_forms.update((entry["name"], entry["form"])
+                                 for entry in observation["context_values"])
+            context_scopes.update([observation["source_free"]])
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -1698,6 +1720,14 @@ def validate_population(records: list[dict], factor: str) -> None:
             qualified_relation_count != 58 or qualified_alias_cases != 9
             or qualified_quoted_cases != 4 or qualified_column_arities != {2: 36, 3: 4}):
         raise ValueError("qualified relation/column component inventory changed")
+    if factor == "context_values" and (
+            context_scopes != {True: 22, False: 28}
+            or context_forms != {
+                ("current_user", "keyword"): 32, ("session_user", "keyword"): 7,
+                ("user", "keyword"): 2, ("current_catalog", "keyword"): 2,
+                ("current_schema", "keyword"): 2, ("current_role", "keyword"): 2,
+                ("current_database", "call"): 11, ("current_schema", "call"): 5}):
+        raise ValueError("context-name population must retain its fixed forms and source scopes")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -1720,7 +1750,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names", "context_values"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -1738,7 +1768,8 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                     ("array_subscripts", "duckdb"), ("ilike", "duckdb"),
                     ("array_concatenation", "risingwave"),
                     ("array_containment", "risingwave"), ("array_overlap", "risingwave"),
-                    ("array_overlap", "readyset"), ("interval_fields", "duckdb")}):
+                    ("array_overlap", "readyset"), ("interval_fields", "duckdb"),
+                    ("context_values", "duckdb"), ("context_values", "risingwave")}):
                 raise ValueError("SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_sqllogic_sql(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "rust_string":
@@ -1746,11 +1777,19 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                 raise ValueError("Rust query selection is outside its explicit source factor")
             sql, line, detail = selected_rust_sql(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "cockroach_sqllogic_query":
-            if factor not in {"substring", "json_existence"} or name not in {"cockroach", "materialize"}:
+            if factor not in {"substring", "json_existence", "context_values"} or name not in {"cockroach", "materialize"}:
                 raise ValueError("Cockroach SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_cockroach_sql(
                 files[key], selection["selector"], boolean_queries=factor == "json_existence")
-        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+        elif selection["selector"]["kind"] == "go_string_literal":
+            if factor != "context_values" or name not in {"pgweb", "river"} or not path.endswith(".go"):
+                raise ValueError("plain Go query selection is outside its explicit source factor")
+            sql, line, detail = selected_go_query(files[key], selection["selector"])
+        elif selection["selector"]["kind"] == "whole_sql_file":
+            if factor != "context_values" or name != "pgweb" or not path.endswith(".sql"):
+                raise ValueError("whole SQL file selection is outside its explicit source factor")
+            sql, line, detail = selected_whole_sql(files[key], selection["selector"])
+        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names", "context_values"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])
@@ -1763,6 +1802,10 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                   if detail.get("extraction") in {"sqllogic_query", "cockroach_sqllogic_query"}
                   else f"rust-string-{detail['source_start']}"
                   if detail.get("extraction") == "rust_string"
+                  else f"go-string-{detail['source_start']}"
+                  if detail.get("extraction") == "go_string_literal"
+                  else "whole-file"
+                  if detail.get("extraction") == "whole_sql_file"
                   else detail.get("symbol", f"statement-{detail.get('statement_index')}"))
         records.append({
             "id": f"{factor}:{name}:{path}:{suffix}", "factor": factor,

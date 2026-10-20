@@ -319,6 +319,14 @@
   },
   {
     "inputs": [
+      "bytea",
+      "name"
+    ],
+    "name": "length",
+    "output": "integer"
+  },
+  {
+    "inputs": [
       "text"
     ],
     "name": "char_length",
@@ -609,5 +617,37 @@
     ],
     "name": "jsonb_array_length",
     "output": "integer"
+  },
+  {
+    "inputs": [],
+    "name": "current_schema",
+    "output": "name"
+  },
+  {
+    "inputs": [],
+    "name": "current_database",
+    "output": "name"
+  },
+  {
+    "inputs": [
+      "boolean"
+    ],
+    "name": "current_schemas",
+    "output": "name[]"
+  },
+  {
+    "inputs": [],
+    "name": "current_user",
+    "output": "name"
+  },
+  {
+    "inputs": [],
+    "name": "session_user",
+    "output": "name"
+  },
+  {
+    "inputs": [],
+    "name": "system_user",
+    "output": "text"
   }
 ]

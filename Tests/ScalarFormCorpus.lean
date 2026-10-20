@@ -34,7 +34,7 @@ private def signatureFixtureTests : IO Unit := do
   let expected := SelectContract.functionNames.flatMap fun name =>
     (SelectContract.functionCatalog name).map fun signature =>
       (name, signature.inputs.map label, label signature.output)
-  SQLean.Tests.assert (actual.length == 84 && actual == expected)
+  SQLean.Tests.assert (actual.length == 91 && actual == expected)
     "native signature fixture differs from the normative function inventory"
 
 private def scalarFormCategoryTests (category : String) : IO Nat := do
@@ -57,10 +57,10 @@ private def scalarFormCategoryTests (category : String) : IO Nat := do
       (Assurance.parseContractParameterTypes parameterTypes)
     let query ← expectOk s!"{id}: parse" (Advanced.parseQuery sql)
     let certificate ← expectOk s!"{id}: complete SELECT certificate"
-      ((SelectContract.checkQuery .basicV24 [] params query).mapError reprStr)
-    have _valid : SelectContract.SelectValid .basicV24 [] params query certificate.output :=
+      ((SelectContract.checkQuery .basicV25 [] params query).mapError reprStr)
+    have _valid : SelectContract.SelectValid .basicV25 [] params query certificate.output :=
       certificate.valid
-    have _preserved : SelectContract.SelectValid .basicV24 [] params
+    have _preserved : SelectContract.SelectValid .basicV25 [] params
         (RenderContract.translateParameters query) certificate.output :=
       RenderContract.translateParameters_valid certificate.valid
     match certificate.output with
@@ -103,9 +103,7 @@ example : SelectContract.ExprValid [] .empty
 def scalarFormBoundaryTests : IO Nat := do
   let rejected := [
     "SELECT CURRENT_DATE", "SELECT CURRENT_TIME", "SELECT CURRENT_TIMESTAMP",
-    "SELECT LOCALTIME", "SELECT LOCALTIMESTAMP", "SELECT CURRENT_USER",
-    "SELECT SESSION_USER", "SELECT SYSTEM_USER", "SELECT CURRENT_ROLE",
-    "SELECT CURRENT_CATALOG", "SELECT CURRENT_SCHEMA", "SELECT USER",
+    "SELECT LOCALTIME", "SELECT LOCALTIMESTAMP",
     "SELECT 1 ISNULL", "SELECT 1 NOTNULL", "SELECT * FROM ONLY t",
     "UPDATE ONLY t SET x = 1", "DELETE FROM ONLY t",
     "SELECT CASE END", "SELECT CASE WHEN TRUE THEN END", "SELECT CASE WHEN TRUE THEN 1",
@@ -113,6 +111,19 @@ def scalarFormBoundaryTests : IO Nat := do
     "SELECT NULLIF(1, 2, 3)", "SELECT lower(,1)", "SELECT lower(1,)" ]
   for sql in rejected do
     expectError sql (Advanced.parse sql)
+  let contexts : List (String × Advanced.ContextValue × SelectContract.ScalarType × Bool) := [
+    ("CURRENT_USER", .currentUser, .name, false), ("SESSION_USER", .sessionUser, .name, false),
+    ("SYSTEM_USER", .systemUser, .text, true), ("CURRENT_ROLE", .currentRole, .name, false),
+    ("CURRENT_CATALOG", .currentCatalog, .name, false), ("CURRENT_SCHEMA", .currentSchema, .name, true),
+    ("USER", .user, .name, false)]
+  for (keyword, value, type, nullable) in contexts do
+    let query ← expectOk keyword (Advanced.parseQuery s!"SELECT {keyword}")
+    SQLean.Tests.assert (query.body == .select {items := [.expression (.contextValue value)]})
+      "context keyword was reinterpreted as an ordinary column"
+    let cert ← expectOk keyword
+      ((SelectContract.checkQuery .basicV25 [] [] query).mapError reprStr)
+    SQLean.Tests.assert (cert.output == [⟨keyword.toLower, ⟨type, nullable⟩⟩])
+      "context result label, NAME/TEXT identity or nullability changed"
   let quoted := [
     "SELECT \"CURRENT_DATE\"", "SELECT 1 AS \"ISNULL\"", "SELECT 1 AS \"NOTNULL\"",
     "SELECT * FROM \"ONLY\"", "SELECT \"APP\".\"MyFn\"(1)", "SELECT \"coalesce\"(1)" ]
@@ -134,7 +145,7 @@ def scalarFormBoundaryTests : IO Nat := do
   for (expression, base, nullable) in typed do
     let query ← expectOk expression (Advanced.parseQuery s!"SELECT {expression} AS v")
     let certificate ← expectOk expression
-      ((SelectContract.checkQuery .basicV24 [] [] query).mapError reprStr)
+      ((SelectContract.checkQuery .basicV25 [] [] query).mapError reprStr)
     SQLean.Tests.assert (certificate.output == [⟨"v", ⟨base, nullable⟩⟩])
       s!"wrong conditional exact result: {expression}: {reprStr certificate.output}"
   let invalid := [
@@ -144,20 +155,20 @@ def scalarFormBoundaryTests : IO Nat := do
     "SELECT lower(1)", "SELECT abs(TRUE)", "SELECT concat()", "SELECT concat_ws(',')" ]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV24 [] [] query with
+    match SelectContract.checkQuery .basicV25 [] [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected independently invalid scalar form: {sql}")
   let parameterSql := "SELECT CASE WHEN ? THEN ? WHEN ? THEN ? ELSE ? END AS v"
   let params ← expectOk "CASE parameter declarations" (Assurance.parseContractParameterTypes "bool,int,bool,int,int")
   let query ← expectOk "CASE parameter order" (Advanced.parseQuery parameterSql)
   let certificate ← expectOk "CASE full parameter certificate"
-    ((SelectContract.checkQuery .basicV24 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV25 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let rendered ← expectOk "CASE ordered parameter rendering"
     ((RenderContract.check .postgres16V01 query).mapError reprStr)
   SQLean.Tests.assert
     (rendered.sql == "SELECT (CASE WHEN $1 THEN $2 WHEN $3 THEN $4 ELSE $5 END) AS \"v\";")
     "CASE renderer reordered WHEN/THEN/ELSE parameter occurrences"
-  pure (rejected.length + quoted.length + typed.length + invalid.length + 1)
+  pure (rejected.length + contexts.length + quoted.length + typed.length + invalid.length + 1)
 
 end SQLean.Tests

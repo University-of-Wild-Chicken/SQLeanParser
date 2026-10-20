@@ -76,6 +76,8 @@ import Tests.QualifiedNamesContract
 import Tests.QualifiedNamesRendering
 import Tests.JsonExistenceContract
 import Tests.JsonExistenceRendering
+import Tests.ContextValuesContract
+import Tests.ContextValuesRendering
 
 namespace SQLean.Tests
 
@@ -280,6 +282,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {jsonExistenceConcrete} unchanged JSONB existence full-query certificates (all 50 rendered)"
   let jsonExistenceRendering ← jsonExistenceRenderingTests
   IO.println s!"PASS: {jsonExistenceRendering} JSONB existence parsing and rendering checks"
+  let contextValuesContract ← contextValuesContractTests
+  IO.println s!"PASS: {contextValuesContract} context values and NAME signature checks"
+  let contextValuesCorpus ← contextValuesCorpusTests
+  IO.println s!"PASS: {contextValuesCorpus} context-value full-query certificates"
+  let contextValuesConcrete ← contextValuesConcreteContractTests
+  IO.println s!"PASS: {contextValuesConcrete} unchanged context-value full-query certificates (all 50 rendered)"
+  let contextValuesRendering ← contextValuesRenderingTests
+  IO.println s!"PASS: {contextValuesRendering} context-value parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

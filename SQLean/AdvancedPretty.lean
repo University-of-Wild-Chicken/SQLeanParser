@@ -40,14 +40,20 @@ def substringSql (form : SubstringForm) (args : List String) : String :=
     | .similar, [subject, pattern, escape] => subject ++ " SIMILAR " ++ pattern ++ " ESCAPE " ++ escape
     | _, _ => comma args) ++ ")"
 
+def ContextValue.toSql : ContextValue → String
+  | .currentSchema => "CURRENT_SCHEMA" | .currentCatalog => "CURRENT_CATALOG"
+  | .currentUser => "CURRENT_USER" | .user => "USER" | .currentRole => "CURRENT_ROLE"
+  | .sessionUser => "SESSION_USER" | .systemUser => "SYSTEM_USER"
+
 /-- Modifiers belong to the scalar element declaration. Array brackets follow
 the complete declaration, including any time-zone qualifier. -/
-def TypeName.toSql (name : TypeName) (modifiers : List Nat) : String :=
+def TypeName.toSql (typeName : TypeName) (modifiers : List Nat) : String :=
   let suffix := if modifiers.isEmpty then "" else paren (comma (modifiers.map toString))
-  match name with
+  match typeName with
   | .array element => element.toSql modifiers ++ "[]"
   | .smallInt => "SMALLINT" ++ suffix | .int => "INTEGER" ++ suffix
   | .bigInt => "BIGINT" ++ suffix | .text => "TEXT" ++ suffix
+  | .name => "NAME" ++ suffix
   | .varchar => "VARCHAR" ++ suffix | .char => "CHAR" ++ suffix
   | .bool => "BOOLEAN" ++ suffix | .real => "REAL" ++ suffix
   | .doublePrecision => "DOUBLE PRECISION" ++ suffix | .numeric => "NUMERIC" ++ suffix
@@ -100,6 +106,7 @@ mutual
     | .literal (.text s) => quoteText s
     | .literal (.bool b) => if b then "TRUE" else "FALSE"
     | .null => "NULL"
+    | .contextValue value => value.toSql
     | .decimal raw => raw
     | .parameter (.numbered index) => "$" ++ toString index
     | .parameter (.anonymous index) => if pg then "$" ++ toString index else "?"

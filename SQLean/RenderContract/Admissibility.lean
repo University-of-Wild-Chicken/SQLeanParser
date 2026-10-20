@@ -56,8 +56,8 @@ def numericLexeme (raw : String) : Bool :=
       (!whole.isEmpty || !digits.isEmpty) && (suffix.isEmpty || exponent suffix)
   | _ => !whole.isEmpty && exponent rest
 
-def checkTypeName (name : TypeName) (modifiers : List Nat) : Except Failure Unit :=
-  match name, modifiers with
+def checkTypeName (typeName : TypeName) (modifiers : List Nat) : Except Failure Unit :=
+  match typeName, modifiers with
   | .array element, modifiers => checkTypeName element modifiers
   | _, [] => pure ()
   | .varchar, [n] | .char, [n] =>
@@ -122,7 +122,7 @@ mutual
     | .literal (.text value) =>
         if value.contains '\x00' then invalid "representation.text-nul" "text literal contains NUL"
         else leaf
-    | .literal _ | .null | .countAll => leaf
+    | .literal _ | .null | .contextValue _ | .countAll => leaf
     | .decimal raw =>
         if numericLexeme raw then leaf
         else invalid "representation.numeric-token" "decimal field is not a decimal/exponent token"

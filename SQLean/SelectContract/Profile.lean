@@ -11,17 +11,17 @@ formalization of PostgreSQL's general overload-resolution algorithm. -/
 namespace SQLean.SelectContract
 
 inductive Profile where
-  | basicV24
+  | basicV25
   deriving Repr, BEq, DecidableEq, Inhabited
 
 def Profile.name : Profile → String
-  | .basicV24 => "sqlean-basic-select-v0.24"
+  | .basicV25 => "sqlean-basic-select-v0.25"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes
 CHAR(1). The exact source spelling remains in the indexed catalog/query. -/
 inductive ScalarType where
-  | smallInt | int32 | int64 | text | bool | real | doublePrecision
+  | smallInt | int32 | int64 | text | name | bool | real | doublePrecision
   | numeric (modifiers : List Nat := [])
   | varchar (modifiers : List Nat := [])
   | char (modifiers : List Nat := [])
@@ -66,7 +66,7 @@ In particular, an unmodified `.char []` result is PostgreSQL `bpchar`, whereas
 the declaration `CHAR` implies length one. Result reports distinguish these. -/
 def ScalarType.dataType : ScalarType → Advanced.DataType
   | .smallInt => ⟨.smallInt, []⟩ | .int32 => ⟨.int, []⟩ | .int64 => ⟨.bigInt, []⟩
-  | .text => ⟨.text, []⟩ | .bool => ⟨.bool, []⟩ | .real => ⟨.real, []⟩
+  | .name => ⟨.name, []⟩ | .text => ⟨.text, []⟩ | .bool => ⟨.bool, []⟩ | .real => ⟨.real, []⟩
   | .doublePrecision => ⟨.doublePrecision, []⟩
   | .numeric m => ⟨.numeric, m⟩ | .varchar m => ⟨.varchar, m⟩ | .char m => ⟨.char, m⟩
   | .date => ⟨.date, []⟩ | .time m => ⟨.time, m⟩ | .timeTZ m => ⟨.timeTZ, m⟩
@@ -89,7 +89,7 @@ def ScalarType.numericRank : ScalarType → Option Nat
   | .numeric _ => some 3 | .real => some 4 | .doublePrecision => some 5 | _ => none
 
 def ScalarType.isString : ScalarType → Bool
-  | .text | .varchar _ | .char _ => true | _ => false
+  | .name | .text | .varchar _ | .char _ => true | _ => false
 
 def ScalarType.orderable : ScalarType → Bool
   | .json => false
@@ -180,6 +180,7 @@ def concreteTypeName : Advanced.TypeName → List Nat → Option ScalarType
   | .array element, modifiers => (concreteTypeName element modifiers).map ScalarType.asArray
   | .smallInt, [] => some .smallInt
   | .int, [] => some .int32 | .bigInt, [] => some .int64
+  | .name, [] => some .name
   | .text, [] => some .text | .bool, [] => some .bool
   | .real, [] => some .real | .doublePrecision, [] => some .doublePrecision
   | .numeric, m => some (.numeric m) | .varchar, m => some (.varchar m)

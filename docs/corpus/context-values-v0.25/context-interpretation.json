@@ -1,0 +1,113 @@
+{
+  "scope": "finite PostgreSQL raw-AST context-form observation, not an execution-equivalence proof",
+  "sql_executed": false,
+  "source_id": "context_values:river:riverdriver/riverpgxv5/internal/dbsqlc/schema.sql.go:columnExists",
+  "source_sha256": "ddee811041e82f1d4f393ceeaa345779962987a6a3c0996f9188e099c94859aa",
+  "source_sql": "-- name: ColumnExists :one\nSELECT EXISTS (\n    SELECT column_name\n    FROM information_schema.columns \n    WHERE table_name = $1::text\n        AND table_schema = /* TEMPLATE_BEGIN: schema */ CURRENT_SCHEMA /* TEMPLATE_END */\n        AND column_name = $2::text\n)\n",
+  "canonical_sql": "SELECT EXISTS (SELECT \"column_name\" FROM \"information_schema\".\"columns\" WHERE (((\"table_name\" = CAST($1 AS TEXT)) AND (\"table_schema\" = CURRENT_SCHEMA)) AND (\"column_name\" = CAST($2 AS TEXT))));",
+  "postgres_original": {
+    "status": "accepted",
+    "statement_count": 1,
+    "statement": "SelectStmt",
+    "node_kinds": {
+      "A_Expr": 3,
+      "BoolExpr": 1,
+      "ColumnRef": 4,
+      "ParamRef": 2,
+      "RangeVar": 1,
+      "ResTarget": 2,
+      "SQLValueFunction": 1,
+      "SelectStmt": 2,
+      "String": 9,
+      "SubLink": 1,
+      "TypeCast": 2
+    },
+    "sql_value_functions": [
+      "SVFOP_CURRENT_SCHEMA"
+    ],
+    "null_tests": [],
+    "relations": [
+      {
+        "schema": "information_schema",
+        "name": "columns",
+        "inherits": true,
+        "alias": null
+      }
+    ],
+    "explicit_target_aliases": [],
+    "column_references": [
+      [
+        "column_name"
+      ],
+      [
+        "table_name"
+      ],
+      [
+        "table_schema"
+      ],
+      [
+        "column_name"
+      ]
+    ]
+  },
+  "postgres_canonical": {
+    "status": "accepted",
+    "statement_count": 1,
+    "statement": "SelectStmt",
+    "node_kinds": {
+      "A_Expr": 3,
+      "BoolExpr": 1,
+      "ColumnRef": 4,
+      "ParamRef": 2,
+      "RangeVar": 1,
+      "ResTarget": 2,
+      "SQLValueFunction": 1,
+      "SelectStmt": 2,
+      "String": 9,
+      "SubLink": 1,
+      "TypeCast": 2
+    },
+    "sql_value_functions": [
+      "SVFOP_CURRENT_SCHEMA"
+    ],
+    "null_tests": [],
+    "relations": [
+      {
+        "schema": "information_schema",
+        "name": "columns",
+        "inherits": true,
+        "alias": null
+      }
+    ],
+    "explicit_target_aliases": [],
+    "column_references": [
+      [
+        "column_name"
+      ],
+      [
+        "table_name"
+      ],
+      [
+        "table_schema"
+      ],
+      [
+        "column_name"
+      ]
+    ]
+  },
+  "structural_flags": [],
+  "binary_sha256": "7f9dc721d5adcf112f950bc2d31b23f911bca7b45eefcb17d8f5aba6e735c786",
+  "postgres_parameter_uses": [
+    1,
+    2
+  ],
+  "canonical_parameter_uses": [
+    1,
+    2
+  ],
+  "postgres_parser_version": [
+    17,
+    7
+  ],
+  "pglast_version": "7.21"
+}

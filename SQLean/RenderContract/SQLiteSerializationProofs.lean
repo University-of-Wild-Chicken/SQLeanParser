@@ -19,6 +19,7 @@ mutual
     cases expr with
     | literal value => cases value <;> simp only [translateExpr, Advanced.SQLite.exprSql]
     | null => simp only [translateExpr, Advanced.SQLite.exprSql]
+    | contextValue value => simp only [translateExpr, Advanced.SQLite.exprSql]
     | decimal raw => simp only [translateExpr, Advanced.SQLite.exprSql]
     | parameter parameter => cases parameter <;> simp only [translateExpr, translateParameter, Advanced.SQLite.exprSql]
     | column qualifier name schema => simp only [translateExpr, Advanced.SQLite.exprSql]

@@ -25,7 +25,7 @@ def DataType.ofSqlType : SqlType → DataType
      | .date => .date | .time => .time | .timeTZ => .timeTZ
      | .timestamp => .timestamp | .timestampTZ => .timestampTZ
      | .interval => .interval | .uuid => .uuid | .json => .json
-     | .jsonb => .jsonb | .bytea => .bytea
+     | .jsonb => .jsonb | .bytea => .bytea | .pgName => .name
    | .int => .int | .text => .text | .bool => .bool | _ => .real, []⟩
 
 def Catalog.ofSchema (schema : Schema) : Catalog :=

@@ -23,12 +23,13 @@ def checkSQLiteDataType (type : DataType) : Except Failure Unit :=
   match type.name with
   | .array _ => unsupported "array-type"
   | .date | .time | .timeTZ | .timestamp | .timestampTZ | .interval | .intervalRange _
-  | .uuid | .json | .jsonb | .bytea => unsupported "PostgreSQL-type"
+  | .uuid | .json | .jsonb | .bytea | .name => unsupported "PostgreSQL-type"
   | _ => pure ()
 
 mutual
   def checkSQLiteExpr (expr : Advanced.Expr) : Except Failure Unit := do
     match expr with
+    | .contextValue _ => unsupported "context-value"
     | .column _ _ schema =>
         if schema.isSome then unsupported "schema-qualification" else pure ()
     | .quantifiedComparison .. => unsupported "array-quantified-comparison"

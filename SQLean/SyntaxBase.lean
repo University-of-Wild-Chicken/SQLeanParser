@@ -11,14 +11,14 @@ namespace SQLean
 abbrev Name := String
 
 inductive OpaqueType where
-  | date | time | timeTZ | timestamp | timestampTZ | interval | uuid | json | jsonb | bytea
+  | date | time | timeTZ | timestamp | timestampTZ | interval | uuid | json | jsonb | bytea | pgName
   deriving Repr, BEq, DecidableEq, Inhabited
 
 def OpaqueType.name : OpaqueType → String
   | .date => "date" | .time => "time" | .timeTZ => "timetz"
   | .timestamp => "timestamp" | .timestampTZ => "timestamptz"
   | .interval => "interval" | .uuid => "uuid" | .json => "json"
-  | .jsonb => "jsonb" | .bytea => "bytea"
+  | .jsonb => "jsonb" | .bytea => "bytea" | .pgName => "name"
 
 inductive SqlType where
   | int | text | bool | real

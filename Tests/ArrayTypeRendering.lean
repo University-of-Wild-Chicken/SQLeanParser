@@ -18,7 +18,7 @@ private def castQuery (type : DataType) : Advanced.Query :=
 private def scalarTypes : List DataType :=
   ([TypeName.smallInt, .int, .bigInt, .real, .doublePrecision, .numeric, .text, .varchar,
     .char, .bool, .date, .time, .timeTZ, .timestamp, .timestampTZ, .interval, .uuid,
-    .json, .jsonb, .bytea].map fun name => ⟨name, []⟩) ++
+    .json, .jsonb, .bytea].map fun typeName => ⟨typeName, []⟩) ++
   [⟨.varchar, [3]⟩, ⟨.char, [1]⟩, ⟨.numeric, [8, 2]⟩,
    ⟨.time, [0]⟩, ⟨.timeTZ, [3]⟩, ⟨.timestamp, [6]⟩, ⟨.timestampTZ, [2]⟩, ⟨.interval, [4]⟩]
 

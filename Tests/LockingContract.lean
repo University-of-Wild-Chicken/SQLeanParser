@@ -44,7 +44,7 @@ def lockingContractTests : IO Nat := do
   for sql in accepted do
     let query ← expectOk sql (Advanced.parseQuery sql)
     let certificate ← expectOk sql
-      ((SelectContract.checkQuery .basicV24 lockingCatalog [] query).mapError reprStr)
+      ((SelectContract.checkQuery .basicV25 lockingCatalog [] query).mapError reprStr)
     have _preserved := RenderContract.translateParameters_valid certificate.valid
     let rendered ← expectOk sql ((RenderContract.check .postgres16V01 query).mapError reprStr)
     let reparsed ← expectOk sql (Advanced.parseQuery rendered.sql)
@@ -65,7 +65,7 @@ def lockingContractTests : IO Nat := do
     "(SELECT id FROM t UNION SELECT id FROM u) FOR UPDATE" ]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV24 lockingCatalog [] query with
+    match SelectContract.checkQuery .basicV25 lockingCatalog [] query with
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected invalid locked query: {sql}")
   let expandedAccepted := [
@@ -76,7 +76,7 @@ def lockingContractTests : IO Nat := do
   for sql in expandedAccepted do
     let query ← expectOk sql (Advanced.parseQuery sql)
     let _ ← expectOk sql (Advanced.checkQuery lockingCatalog.toSchema [] query)
-    match SelectContract.checkQuery .basicV24 lockingCatalog [] query with
+    match SelectContract.checkQuery .basicV25 lockingCatalog [] query with
     | .error (.unsupported _) => pure ()
     | _ => throw (IO.userError s!"expanded locking query must retain its lower assurance tier: {sql}")
   let expandedRejected := [
@@ -98,7 +98,7 @@ def lockingContractTests : IO Nat := do
       query.limit == some (.parameter (.anonymous 3)))
     "offset-first source order or identities lost"
   let certificate ← expectOk "offset-first full certificate"
-    ((SelectContract.checkQuery .basicV24 [] params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV25 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let rendered ← expectOk "offset-first rendering"
     ((RenderContract.check .postgres16V01 query).mapError reprStr)
@@ -109,10 +109,10 @@ def lockingContractTests : IO Nat := do
       [.anonymous 1, .anonymous 2, .anonymous 3])
     "expanded parameter traversal ignored offset-first layout"
   let reordered := { query with offsetFirst := false }
-  match SelectContract.checkQuery .basicV24 [] params reordered with
+  match SelectContract.checkQuery .basicV25 [] params reordered with
   | .error (.invalid _) => pure ()
   | _ => throw (IO.userError "manual pagination order change must invalidate anonymous ordinals")
-  match SelectContract.checkQuery .basicV24 [] [] lockedQuery 0 with
+  match SelectContract.checkQuery .basicV25 [] [] lockedQuery 0 with
   | .error (.inconclusive _) => pure ()
   | _ => throw (IO.userError "locking resource exhaustion must be inconclusive")
   pure (accepted.length + invalid.length + expandedAccepted.length + expandedRejected.length + 4)
@@ -150,7 +150,7 @@ def lockingCorpusTests : IO Nat := do
       pure (SelectContract.OutputColumn.mk name ⟨base, nullable⟩)
     let query ← expectOk id (Advanced.parseQuery sql)
     let certificate ← expectOk id
-      ((SelectContract.checkQuery .basicV24 catalog params query).mapError reprStr)
+      ((SelectContract.checkQuery .basicV25 catalog params query).mapError reprStr)
     SQLean.Tests.assert (certificate.output == expected) s!"{id}: exact output mismatch"
     have _preserved := RenderContract.translateParameters_valid certificate.valid
     let identity ← expectOk id ((RenderContract.check .identityV01 query).mapError reprStr)
