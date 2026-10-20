@@ -27,9 +27,9 @@ class ScalarFormRunnerTests(unittest.TestCase):
 
     def test_catalog_checks_exact_types_and_strictness(self):
         sql, expected = runner.catalog_script()
-        self.assertEqual(len(expected), 91)
-        self.assertEqual(sql.count("SELECT unnest(proargtypes::oid[])"), 91)
-        self.assertEqual(sql.count("AND (proisstrict OR pronargs=0)"), 91)
+        self.assertEqual(len(expected), 92)
+        self.assertEqual(sql.count("SELECT unnest(proargtypes::oid[])"), 92)
+        self.assertEqual(sql.count("AND (proisstrict OR pronargs=0)"), 92)
         self.assertIn("pronamespace='pg_catalog'::regnamespace", sql)
         self.assertNotIn("CREATE", sql)
         self.assertNotIn("DROP", sql)

@@ -1,0 +1,33 @@
+[
+  {
+    "name": "make_interval",
+    "names": [
+      "years",
+      "months",
+      "weeks",
+      "days",
+      "hours",
+      "mins",
+      "secs"
+    ],
+    "inputs": [
+      "integer",
+      "integer",
+      "integer",
+      "integer",
+      "integer",
+      "integer",
+      "double precision"
+    ],
+    "defaults": [
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0.0"
+    ],
+    "output": "interval"
+  }
+]

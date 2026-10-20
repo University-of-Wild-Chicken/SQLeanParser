@@ -36,6 +36,11 @@ inductive ContextValue where
   | currentSchema | currentCatalog | currentUser | user | currentRole | sessionUser | systemUser
   deriving Repr, BEq, DecidableEq, Inhabited
 
+/-- Both PostgreSQL named-argument spellings are retained in source order. -/
+inductive NamedArgumentNotation where
+  | arrow | assignment
+  deriving Repr, BEq, DecidableEq, Inhabited
+
 inductive TypeName where
   | int | bigInt | text | varchar | bool | real | doublePrecision | numeric
   | smallInt | char | date | time | timeTZ | timestamp | timestampTZ
@@ -183,6 +188,9 @@ mutual
     /-- Ordinary positional function call; name components retain quoting/case
     through the parser's ordinary identifier rules. -/
     | call (name : List Name) (args : List Expr)
+    /-- At least one named argument is required by renderer admissibility.
+    Binding and omitted defaults are separate static-validity obligations. -/
+    | namedCall (name : List Name) (args : List CallArgument)
     | caseExpr (operand : Option Expr) (branches : List (Expr × Expr)) (otherwise : Option Expr)
     | coalesce (args : List Expr)
     | nullIf (left right : Expr)
@@ -194,6 +202,11 @@ mutual
     | inQuery (arg : Expr) (query : Query)
     | exists (query : Query)
     | scalarQuery (query : Query)
+    deriving Repr, BEq, Inhabited
+
+  inductive CallArgument where
+    | positional (value : Expr)
+    | named (name : Name) (value : Expr) (spelling : NamedArgumentNotation := .arrow)
     deriving Repr, BEq, Inhabited
 
   inductive Subscript where
@@ -261,6 +274,13 @@ mutual
     columns : List Name := []
     deriving Repr, BEq, Inhabited
 end
+
+def CallArgument.expression : CallArgument → Expr
+  | .positional value | .named _ value _ => value
+
+def CallArgument.name? : CallArgument → Option Name
+  | .positional _ => none
+  | .named name _ _ => some name
 
 def Subscript.isSlice : Subscript → Bool
   | .index _ => false

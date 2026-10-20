@@ -27,6 +27,10 @@ from observe_substring_source import observe_substrings, validate_substrings
 from observe_qualified_name_source import observe_qualified_names, validate_qualified_names
 from observe_json_existence_source import observe_json_existence, validate_json_existence
 from observe_context_value_source import observe_context_values, validate_context_values
+from observe_named_argument_source import (
+    INTERFACE_CASES, INTERFACE_PATH, interface_evidence,
+    observe_named_arguments, validate_named_arguments,
+)
 from extract_go_query_literal import selected_go_query, selected_whole_sql
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -59,6 +63,7 @@ POPULATIONS = {
     "json_existence": {"postgres": 27, "cockroach": 14, "materialize": 8, "river": 1},
     "context_values": {"postgres": 32, "pgweb": 7, "river": 4, "materialize": 2,
                        "duckdb": 4, "risingwave": 1},
+    "named_arguments": {"postgres": 42, "sqlc": 8},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -1184,7 +1189,8 @@ def observe_oracle(sql: str, factor: str) -> dict:
                 return  # SYSTEM_USER is a SQL-syntax FuncCall in PostgreSQL 16.
             if (len(names) != 1 or node.func_variadic or node.over or node.agg_order
                     or node.agg_within_group
-                    or any(isinstance(arg, ast.NamedArgExpr) for arg in node.args or ())):
+                    or (factor != "named_arguments"
+                        and any(isinstance(arg, ast.NamedArgExpr) for arg in node.args or ()))):
                 raise ValueError("qualified/named/variadic/window/ordered calls belong to later factors")
             if names[0] not in AGGREGATES:
                 if node.agg_distinct or node.agg_star:
@@ -1348,6 +1354,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "context_values":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation.update(observe_context_values(parsed, sql))
+    if factor == "named_arguments":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation.update(observe_named_arguments(parsed, sql))
     return observation
 
 
@@ -1379,6 +1388,8 @@ def validate_population(records: list[dict], factor: str) -> None:
     qualified_column_arities = Counter()
     existence_null_literals = 0
     context_forms, context_scopes = Counter(), Counter()
+    named_functions, named_notations, named_scopes = Counter(), Counter(), Counter()
+    named_mixed = 0
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -1386,8 +1397,28 @@ def validate_population(records: list[dict], factor: str) -> None:
             raise ValueError("concrete SQL text was changed")
         if row["observed_parameter_slots"] != parameter_slots(row["sql"]):
             raise ValueError("parameter-slot observation changed")
-        if row["parameter_types"] is not None or row["application_schema_validity"] != "not-claimed":
+        interface = INTERFACE_CASES.get(row["id"]) if factor == "named_arguments" else None
+        if (row["parameter_types"] != (interface[4] if interface else None)
+                or row["application_schema_validity"] != "not-claimed"):
             raise ValueError("concrete source must not invent application bindings")
+        if interface:
+            evidence = row.get("parameter_type_provenance", {})
+            if (set(evidence) != {"kind", "method", "parameter_name", "go_type", "postgres_type",
+                                 "source_file", "line", "source_url", "sha256"}
+                    or evidence["kind"] != "pinned-generated-sqlc-interface"
+                    or evidence["method"] != interface[0]
+                    or evidence["parameter_name"] != interface[2]
+                    or evidence["go_type"] != interface[3]
+                    or evidence["postgres_type"] != interface[4]
+                    or evidence["source_file"] != INTERFACE_PATH
+                    or type(evidence["line"]) is not int or evidence["line"] <= 0
+                    or not re.fullmatch(r"[0-9a-f]{64}", evidence["sha256"])
+                    or row["observed_parameter_slots"] != [1]
+                    or evidence["source_url"] !=
+                    f"https://github.com/sqlc-dev/sqlc/blob/{row['commit']}/{INTERFACE_PATH}#L{evidence['line']}"):
+                raise ValueError("registered generated input declaration changed")
+        elif "parameter_type_provenance" in row:
+            raise ValueError("unregistered input declaration")
         observation = row["observed_syntax"]
         expected_keys = {"function_names", "conditional_forms"}
         if factor == "locking":
@@ -1430,6 +1461,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.update(("json_existence", "source_free"))
         if factor == "context_values":
             expected_keys.update(("context_values", "source_free"))
+        if factor == "named_arguments":
+            expected_keys.update(("named_calls", "source_free"))
         if set(observation) != expected_keys:
             raise ValueError("unexpected factor observation")
         for key in ("function_names", "conditional_forms"):
@@ -1604,6 +1637,13 @@ def validate_population(records: list[dict], factor: str) -> None:
             context_forms.update((entry["name"], entry["form"])
                                  for entry in observation["context_values"])
             context_scopes.update([observation["source_free"]])
+        if factor == "named_arguments":
+            validate_named_arguments(observation, row["sql"])
+            named_scopes.update([observation["source_free"]])
+            for call in observation["named_calls"]:
+                named_functions.update([call["function"]])
+                named_notations.update(arg["notation"] for arg in call["named_arguments"])
+                named_mixed += None in call["argument_names"]
         names.update(observation["function_names"])
         forms.update(observation["conditional_forms"])
     if factor == "conditional" and forms != CONDITIONAL_FORMS:
@@ -1728,6 +1768,16 @@ def validate_population(records: list[dict], factor: str) -> None:
                 ("current_schema", "keyword"): 2, ("current_role", "keyword"): 2,
                 ("current_database", "call"): 11, ("current_schema", "call"): 5}):
         raise ValueError("context-name population must retain its fixed forms and source scopes")
+    if factor == "named_arguments" and (
+            named_scopes != {True: 46, False: 4} or named_mixed != 20
+            or named_functions != {
+                "dfunc": 22, "make_interval": 7, "concat_lower_or_upper": 4,
+                "jsonb_path_match": 4, "jsonb_set_lax": 3, "jsonb_path_query_first": 3,
+                "jsonb_path_query_array": 2, "jsonb_path_exists": 2,
+                "plus": 1, "table_args": 1, "parse_ident": 1}
+            or named_notations != {":=": 36, "=>": 51}
+            or not set(INTERFACE_CASES) <= {row["id"] for row in records}):
+        raise ValueError("named-call population must retain its fixed routines, order and source scopes")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -1736,7 +1786,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             or manifest.get("expected_sources") != POPULATIONS[factor]
             or set(manifest["sources"]) != set(POPULATIONS[factor])):
         raise ValueError("unexpected factor source manifest")
-    files, spans = {}, {}
+    files, spans, context_files = {}, {}, {}
     for name, metadata in manifest["sources"].items():
         if not re.fullmatch(r"[0-9a-f]{40}", metadata["commit"]):
             raise ValueError("source revision is not a full commit pin")
@@ -1744,13 +1794,18 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
         for notice in metadata.get("additional_notices", []):
             checked_file(root, notice["local_path"], notice["sha256"])
         for context in metadata.get("context_files", []):
-            checked_file(root, context["local_path"], context["sha256"])
+            content = checked_file(root, context["local_path"], context["sha256"])
+            if factor == "named_arguments":
+                context_key = (name, context["path"])
+                if context_key in context_files:
+                    raise ValueError("duplicate named-call interface evidence")
+                context_files[context_key] = content.decode("utf-8")
         for entry in metadata["files"]:
             key = (name, entry["path"])
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names", "context_values"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names", "context_values", "named_arguments"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -1789,7 +1844,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if factor != "context_values" or name != "pgweb" or not path.endswith(".sql"):
                 raise ValueError("whole SQL file selection is outside its explicit source factor")
             sql, line, detail = selected_whole_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names", "context_values"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "json_existence", "extract", "interval_fields", "substring", "qualified_names", "context_values", "named_arguments"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])
@@ -1820,8 +1875,19 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             "raw_sql": sql, "sql": sql, "sql_sha256": selection["sql_sha256"],
             "transformations": [],
         })
+        if factor == "named_arguments" and records[-1]["id"] in INTERFACE_CASES:
+            interface_source = context_files.get(("sqlc", INTERFACE_PATH))
+            if interface_source is None:
+                raise ValueError("registered sqlc input declaration is missing")
+            evidence = interface_evidence(
+                records[-1]["id"], sql, interface_source,
+                f"{metadata['repository']}/blob/{metadata['commit']}/{INTERFACE_PATH}")
+            records[-1]["parameter_types"] = evidence["postgres_type"]
+            records[-1]["parameter_type_provenance"] = evidence
     if used != set(files):
         raise ValueError("unused pinned source input")
+    if factor == "named_arguments" and set(context_files) != {("sqlc", INTERFACE_PATH)}:
+        raise ValueError("named-call corpus requires only its registered generated interface")
     validate_population(records, factor)
     return records
 

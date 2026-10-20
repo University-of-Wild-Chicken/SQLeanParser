@@ -55,6 +55,7 @@ mutual
           have : sizeOf element.val < sizeOf elements := List.sizeOf_lt_of_mem element.property
           checkSQLiteExpr element.val
     | .subscript .. => unsupported "array-subscripting"
+    | .namedCall .. => unsupported "named-function-arguments"
     | .call .. | .greatest .. | .least .. => unsupported "scalar-function-signatures"
     | .coalesce args =>
         if args.length < 2 then unsupported "single-argument-COALESCE"

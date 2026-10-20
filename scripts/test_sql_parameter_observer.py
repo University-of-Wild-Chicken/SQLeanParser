@@ -1,5 +1,6 @@
 """Independent authored binding spans for question/operator ambiguity."""
 import json
+import re
 from pathlib import Path
 import unittest
 
@@ -76,6 +77,44 @@ class SqlParameterObserverTests(unittest.TestCase):
                 self.assertEqual(question_parameters(source), translated)
                 self.assertEqual(parameters(source, "identity"), [t.value for t in actual])
                 self.assertEqual(parameters(translated, "postgres"), [("numbered", i + 1) for i in range(len(spans))])
+
+    def test_named_arguments_preserve_lexical_binding_spans(self):
+        cases = [
+            "SELECT make_interval(secs=>«?»,days:=«?»)",
+            "SELECT unknown_routine(by=>«?», escape=>«?», by:=«?»)",
+            "SELECT f(full=>«?», left=>«?», current_schema=>«?»)",
+            'SELECT "f"("BY"=>«?»,"ESCAPE":=«?»,"a.b"=>«?»)',
+            "SELECT f(by/*?*/=>/*?*/«?»,escape/*$1*/:=«?»)",
+            "SELECT f(by=>«?» ? «?»,escape:=«?»)",
+            "SELECT make_interval(«?», secs=>«?», mins:=«?»)",
+            'SELECT "f"("select"=>«?», current_schema:=«?»)',
+            "SELECT f(x=>«?»::jsonb ? «?», y:=«?»)",
+            "SELECT f(x=>CASE WHEN «?» THEN «?» ELSE «?» END, y=>«?»)",
+            "SELECT f(x=>SUBSTRING(«?» FOR «?» FROM «?»), y:=(«?»)[«?»:«?»])",
+            "SELECT f(x/*?*/=>/*?*/«?»,y:=f(z=>«?»))",
+            "WITH c AS (SELECT «?») SELECT f(x=>«?»,y:=«?») FROM c WHERE «?»",
+        ]
+        for authored in cases:
+            source, spans, translated = annotated(authored)
+            with self.subTest(source=source):
+                self.assertEqual([(t.start, t.end) for t in parameter_spans(source)], spans)
+                self.assertEqual(question_parameters(source), translated)
+                self.assertEqual(postgres_parameters(source), translated)
+        numbered = "SELECT make_interval(secs=>$2, days:=$1), '{}'::jsonb ? 'x'"
+        self.assertEqual([t.value for t in parameter_spans(numbered)], [("numbered", 2), ("numbered", 1)])
+
+    def test_pinned_parameter_name_keyword_categories(self):
+        source = (ROOT / "fixtures/postgresql_grammar/source/src/include/parser/kwlist.h").read_text()
+        names = re.findall(r'PG_KEYWORD\("([^"]+)",\s*\w+,\s*(?:UNRESERVED_KEYWORD|TYPE_FUNC_NAME_KEYWORD),', source)
+        self.assertEqual(len(names), 338)
+        for name in names:
+            for separator in ("=>", ":="):
+                sql = f"SELECT f({name}{separator}?,z:=?)"
+                with self.subTest(name=name, separator=separator):
+                    self.assertEqual([(t.start, t.end) for t in parameter_spans(sql)],
+                                     [(match.start(), match.end()) for match in re.finditer(r"\?", sql)])
+                    self.assertEqual([t.value for t in parameter_spans(sql)],
+                                     [("anonymous", 1), ("anonymous", 2)])
 
     def test_numbered_slots_and_question_operators_do_not_mix_styles(self):
         source = "SELECT $2::jsonb ? $1, $2 ?| $3::text[], $2 ?& ARRAY[$1], '$9?'"

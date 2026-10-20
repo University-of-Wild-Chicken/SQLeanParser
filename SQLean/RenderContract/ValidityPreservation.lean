@@ -76,6 +76,12 @@ set_option maxHeartbeats 1000000
       optionalSubscriptBoundSignature expr type := by
   cases expr <;> simp only [Option.map, optionalSubscriptBoundSignature, scalar_input_translated]
 
+private theorem call_arguments_size (args : List CallArgument) :
+    sizeOf (args.map CallArgument.expression) ≤ sizeOf args := by
+  induction args with
+  | nil => simp
+  | cons arg args ih => cases arg <;> simp_all [CallArgument.expression] <;> omega
+
 mutual
   /-- Each scalar typing derivation survives the explicit parameter translation,
   with parameter occurrences translated in their original order. -/
@@ -172,6 +178,19 @@ mutual
     | castArray args supported declaration =>
         simpa only [translateExpr, List.attach_map_val] using
           ExprValid.castArray (array_valid_translated args) supported declaration
+    | defaultCall args callee binding signature =>
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.defaultCall (expr_list_valid_translated args) callee
+            (by simpa only [List.map_map, Function.comp_def, scalar_inputs_translated] using binding)
+            signature
+    | @namedCall ts uses name callInputs result arguments args callee binding signature =>
+        have sizeBound := call_arguments_size arguments
+        simpa only [translateExpr, List.attach_map_val] using
+          ExprValid.namedCall
+            (by simpa only [translated_call_expressions] using expr_list_valid_translated args)
+            callee
+            (by simpa only [translated_call_names, translated_call_expressions,
+              scalar_inputs_translated] using binding) signature
     | call args signature =>
         simpa only [translateExpr, List.attach_map_val] using
           ExprValid.call (expr_list_valid_translated args) (by simpa using signature)

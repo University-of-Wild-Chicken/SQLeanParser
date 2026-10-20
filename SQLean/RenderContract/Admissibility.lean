@@ -168,6 +168,16 @@ mutual
           combine (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
             have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
             inspectExpr arg.val)
+    | .namedCall name args =>
+        if name.isEmpty || name.length > 3 then
+          invalid "representation.function-name" "function names require one to three nonempty components"
+        else if !(args.any fun arg => arg.name?.isSome) then
+          invalid "representation.named-call" "namedCall requires at least one named argument"
+        else
+          checkNames name
+          combine (args.attach.map fun (arg : {v : CallArgument // v ∈ args}) =>
+            have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+            inspectCallArgument arg.val)
     | .coalesce args | .greatest args | .least args =>
         if args.isEmpty then invalid "representation.conditional-args" "conditional expression requires arguments"
         else combine (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
@@ -201,6 +211,15 @@ mutual
     | .inQuery arg query => combine [inspectExpr arg, inspectQuery query]
     | .exists query | .scalarQuery query => combine [inspectQuery query]
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def inspectCallArgument (arg : CallArgument) : Except Failure Footprint := do
+    match arg with
+    | .positional value => inspectExpr value
+    | .named name value _ =>
+        checkName name
+        inspectExpr value
+  termination_by sizeOf arg
   decreasing_by all_goals (simp_all <;> omega)
 
   def inspectSubscript (subscript : Advanced.Subscript) : Except Failure Footprint :=

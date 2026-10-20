@@ -168,6 +168,48 @@ inductive SubstringArguments : Advanced.SubstringForm → List ScalarInput → L
       SubstringArguments .forOnly [subject, length]
         [subject, .known ⟨.int32, false⟩, .known target]
 
+/-- Lexical arguments select declared slots. The positional counter advances
+only across the initial positional prefix; once a named argument occurs no
+later positional constructor applies. Names are matched exactly. -/
+inductive ArgumentAssignments (parameters : List Name) :
+    Nat → Bool → List (Option Name) → List ScalarInput → List (Nat × ScalarInput) → Prop where
+  | nil : ArgumentAssignments parameters next namedSeen [] [] []
+  | positional (range : next < parameters.length)
+      (tail : ArgumentAssignments parameters (next + 1) false names inputs assignments) :
+      ArgumentAssignments parameters next false (none :: names) (input :: inputs)
+        ((next, input) :: assignments)
+  | named (identity : parameters[index]? = some name)
+      (tail : ArgumentAssignments parameters next true names inputs assignments) :
+      ArgumentAssignments parameters next namedSeen (some name :: names) (input :: inputs)
+        ((index, input) :: assignments)
+
+/-- A declared slot is either explicitly supplied or obtains its catalog
+constant default. Only absent slots may use defaults. -/
+inductive ArgumentSlot (assignments : List (Nat × ScalarInput)) (index : Nat)
+    (parameter : FunctionParameter) : ScalarInput → Prop where
+  | supplied (found : assignments.find? (fun entry => entry.1 == index) = some (index, input)) :
+      ArgumentSlot assignments index parameter input
+  | defaulted (absent : assignments.find? (fun entry => entry.1 == index) = none)
+      (defaultValue : parameter.defaultValue = some value) :
+      ArgumentSlot assignments index parameter value.input
+
+inductive ArgumentSlots (assignments : List (Nat × ScalarInput)) :
+    Nat → List FunctionParameter → List ScalarInput → Prop where
+  | nil : ArgumentSlots assignments next [] []
+  | cons (head : ArgumentSlot assignments next parameter input)
+      (tail : ArgumentSlots assignments (next + 1) parameters inputs) :
+      ArgumentSlots assignments next (parameter :: parameters) (input :: inputs)
+
+/-- Unique slot assignment rules out duplicate names and a named argument
+colliding with a positional prefix. Slot order never changes lexical uses. -/
+inductive ArgumentsBound (parameters : List FunctionParameter)
+    (names : List (Option Name)) (inputs : List ScalarInput) : List ScalarInput → Prop where
+  | intro (assignment : ArgumentAssignments (parameters.map FunctionParameter.name)
+        0 false names inputs assignments)
+      (unique : (assignments.map Prod.fst).Nodup)
+      (slots : ArgumentSlots assignments 0 parameters callInputs) :
+      ArgumentsBound parameters names inputs callInputs
+
 mutual
   inductive ExprValid (params : ParameterEnv) (scope : Scope) : Advanced.Expr → ExprType → List Parameter → Prop where
     | int (range : n ≤ 2147483647) : ExprValid params scope (.literal (.int n)) (some ⟨.int32, false⟩) []
@@ -263,6 +305,18 @@ mutual
         (signature : resolveOverload substringCatalog callInputs = some selected) :
         ExprValid params scope (.substring form es)
           (some ⟨selected.output, substringNullable selected callInputs⟩) uses
+    | defaultCall (args : ExprListValid params scope es ts uses)
+        (callee : builtinName name = some "make_interval")
+        (binding : ArgumentsBound makeIntervalParameters (es.map fun _ => none)
+          (scalarInputs es ts) callInputs)
+        (signature : makeIntervalSignature callInputs = some result) :
+        ExprValid params scope (.call name es) (some result) uses
+    | namedCall (args : ExprListValid params scope (arguments.map CallArgument.expression) ts uses)
+        (callee : builtinName name = some "make_interval")
+        (binding : ArgumentsBound makeIntervalParameters (arguments.map CallArgument.name?)
+          (scalarInputs (arguments.map CallArgument.expression) ts) callInputs)
+        (signature : makeIntervalSignature callInputs = some result) :
+        ExprValid params scope (.namedCall name arguments) (some result) uses
     | call (args : ExprListValid params scope es ts uses)
         (signature : callSignature name (scalarInputs es ts) = some result) :
         ExprValid params scope (.call name es) (some result) uses
@@ -385,7 +439,7 @@ expression forms: 0 is absent, 1 is a weak cast/CASE name, and 2 is inherited.
 A cast replaces a weak name but retains a column/function/constructor name. -/
 def outputLabel : Advanced.Expr → Nat × Name
   | .column _ name _ => (2, name)
-  | .call name _ => (2, name.getLastD "?column?")
+  | .call name _ | .namedCall name _ => (2, name.getLastD "?column?")
   | .contextValue value => (2, contextValueLabel value)
   | .array _ => (2, "array")
   | .row _ => (2, "row")

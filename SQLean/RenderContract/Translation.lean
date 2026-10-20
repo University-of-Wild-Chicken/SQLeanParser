@@ -61,6 +61,10 @@ mutual
         (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
           translateExpr arg.val)
+    | .namedCall name args => .namedCall name
+        (args.attach.map fun (arg : {v : CallArgument // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          translateCallArgument arg.val)
     | .coalesce args => .coalesce
         (args.attach.map fun (arg : {v : Advanced.Expr // v ∈ args}) =>
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
@@ -92,6 +96,13 @@ mutual
     | .exists query => .exists (translateParameters query)
     | .scalarQuery query => .scalarQuery (translateParameters query)
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def translateCallArgument (arg : CallArgument) : CallArgument :=
+    match arg with
+    | .positional value => .positional (translateExpr value)
+    | .named name value spelling => .named name (translateExpr value) spelling
+  termination_by sizeOf arg
   decreasing_by all_goals (simp_all <;> omega)
 
   def translateSubscript (subscript : Advanced.Subscript) : Advanced.Subscript :=
@@ -181,6 +192,23 @@ mutual
   termination_by sizeOf cte
   decreasing_by all_goals cases cte; simp_all; omega
 end
+
+@[simp] theorem translateCallArgument_expression (arg : CallArgument) :
+    (translateCallArgument arg).expression = translateExpr arg.expression := by
+  cases arg <;> simp only [translateCallArgument, CallArgument.expression]
+
+@[simp] theorem translateCallArgument_name (arg : CallArgument) :
+    (translateCallArgument arg).name? = arg.name? := by
+  cases arg <;> simp only [translateCallArgument, CallArgument.name?]
+
+@[simp] theorem translated_call_expressions (args : List CallArgument) :
+    (args.map translateCallArgument).map CallArgument.expression =
+      (args.map CallArgument.expression).map translateExpr := by
+  simp only [List.map_map, Function.comp_def, translateCallArgument_expression]
+
+@[simp] theorem translated_call_names (args : List CallArgument) :
+    (args.map translateCallArgument).map CallArgument.name? = args.map CallArgument.name? := by
+  simp only [List.map_map, Function.comp_def, translateCallArgument_name]
 
 @[simp] theorem translateParameter_numbered (index : Nat) :
     translateParameter (.numbered index) = .numbered index := rfl

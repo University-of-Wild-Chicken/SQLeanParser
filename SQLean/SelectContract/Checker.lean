@@ -146,6 +146,63 @@ private def checkSubstringArguments (form : Advanced.SubstringForm) (args : List
       else .error (invalid "substring_length_cast" "SUBSTRING FOR-only length has no explicit INT32 cast")
   | _, _ => .error (invalid "substring_arity" "SUBSTRING special syntax has the wrong number of arguments")
 
+private def findArgumentIndex (parameters : List Name) (name : Name) :
+    Option {index : Nat // parameters[index]? = some name} :=
+  match parameters with
+  | [] => none
+  | parameter :: parameters =>
+      if identity : parameter = name then some ⟨0, by simp [identity]⟩
+      else match findArgumentIndex parameters name with
+      | none => none
+      | some found => some ⟨found.val + 1, by simpa using found.property⟩
+
+private def checkArgumentAssignments (parameters : List Name) (next : Nat) (namedSeen : Bool)
+    (names : List (Option Name)) (inputs : List ScalarInput) :
+    Except Failure {assignments // ArgumentAssignments parameters next namedSeen names inputs assignments} :=
+  match names, inputs with
+  | [], [] => .ok ⟨[], .nil⟩
+  | none :: names, input :: inputs => do
+      if order : namedSeen = false then
+        if range : next < parameters.length then
+          let tail ← checkArgumentAssignments parameters (next + 1) false names inputs
+          .ok ⟨(next, input) :: tail.val, by subst namedSeen; exact .positional range tail.property⟩
+        else .error (invalid "function_arity" "Too many positional arguments for the declared function")
+      else .error (invalid "named_argument_order" "Positional arguments cannot follow named arguments")
+  | some name :: names, input :: inputs => do
+      match findArgumentIndex parameters name with
+      | none => .error (invalid "named_argument_name" "No declared function parameter has this exact name")
+      | some index =>
+          let tail ← checkArgumentAssignments parameters next true names inputs
+          .ok ⟨(index.val, input) :: tail.val, .named index.property tail.property⟩
+  | _, _ => .error (invalid "named_argument_shape" "Argument metadata and lexical inputs have different lengths")
+
+private def checkArgumentSlots (assignments : List (Nat × ScalarInput)) (next : Nat)
+    (parameters : List FunctionParameter) :
+    Except Failure {inputs // ArgumentSlots assignments next parameters inputs} :=
+  match parameters with
+  | [] => .ok ⟨[], .nil⟩
+  | parameter :: parameters => do
+      let tail ← checkArgumentSlots assignments (next + 1) parameters
+      match found : assignments.find? (fun entry => entry.1 == next) with
+      | some (index, input) =>
+          if identity : index = next then
+            .ok ⟨input :: tail.val, .cons (.supplied (by simpa [identity] using found)) tail.property⟩
+          else .error (invalid "argument_slot" "Argument assignment has an inconsistent slot index")
+      | none => match defaultValue : parameter.defaultValue with
+          | none => .error (invalid "missing_argument" "A required function argument is absent")
+          | some value =>
+              .ok ⟨value.input :: tail.val, .cons (.defaulted found defaultValue) tail.property⟩
+
+/-- Successful binding exposes independent evidence, not a bare acceptance bit. -/
+def checkArguments (parameters : List FunctionParameter)
+    (names : List (Option Name)) (inputs : List ScalarInput) :
+    Except Failure {callInputs // ArgumentsBound parameters names inputs callInputs} := do
+  let assignments ← checkArgumentAssignments (parameters.map FunctionParameter.name) 0 false names inputs
+  if unique : (assignments.val.map Prod.fst).Nodup then
+    let slots ← checkArgumentSlots assignments.val 0 parameters
+    pure ⟨slots.val, .intro assignments.property unique slots.property⟩
+  else .error (invalid "duplicate_argument" "A function parameter is supplied more than once")
+
 mutual
   def checkExpr (fuel : Nat) (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) :
       Except Failure (ExprCertificate params scope expr) :=
@@ -364,12 +421,33 @@ mutual
               argsTyped.uses, .substring argsTyped.valid arguments.property signature⟩
       | .call name args => do
           let argsTyped ← checkExprList fuel params scope args
-          match signature : callSignature name (scalarInputs args argsTyped.types) with
-          | none => .error (if knownFunction name then
-              invalid "function_signature" "Built-in function has no unique applicable overload for these arguments"
-            else unsupported "function_signature"
-              "User-defined functions and other built-ins require a separate signature profile")
-          | some result => .ok ⟨some result, argsTyped.uses, .call argsTyped.valid signature⟩
+          if callee : builtinName name = some "make_interval" then
+            let binding ← checkArguments makeIntervalParameters (args.map fun _ => none)
+              (scalarInputs args argsTyped.types)
+            match signature : makeIntervalSignature binding.val with
+            | none => .error (invalid "function_signature"
+                "make_interval arguments require implicit coercion to six INTEGER fields and DOUBLE PRECISION seconds")
+            | some result => .ok ⟨some result, argsTyped.uses,
+                .defaultCall argsTyped.valid callee binding.property signature⟩
+          else
+            match signature : callSignature name (scalarInputs args argsTyped.types) with
+            | none => .error (if knownFunction name then
+                invalid "function_signature" "Built-in function has no unique applicable overload for these arguments"
+              else unsupported "function_signature"
+                "User-defined functions and other built-ins require a separate signature profile")
+            | some result => .ok ⟨some result, argsTyped.uses, .call argsTyped.valid signature⟩
+      | .namedCall name args => do
+          if callee : builtinName name = some "make_interval" then
+            let argsTyped ← checkExprList fuel params scope (args.map CallArgument.expression)
+            let binding ← checkArguments makeIntervalParameters (args.map CallArgument.name?)
+              (scalarInputs (args.map CallArgument.expression) argsTyped.types)
+            match signature : makeIntervalSignature binding.val with
+            | none => .error (invalid "function_signature"
+                "make_interval arguments require implicit coercion to six INTEGER fields and DOUBLE PRECISION seconds")
+            | some result => .ok ⟨some result, argsTyped.uses,
+                .namedCall argsTyped.valid callee binding.property signature⟩
+          else .error (unsupported "named_function_signature"
+              "Named arguments require an explicit parameter-name and default-value declaration")
       | .coalesce args => do
           let argsTyped ← checkExprList fuel params scope args
           match signature : coalesceSignature (scalarInputs args argsTyped.types) with
@@ -794,6 +872,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
         | .containment a b _ | .overlap a b => [a, b]
         | .unary _ a | .cast a _ | .extract _ a | .isNull a _ | .inQuery a _ => [a]
         | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
+        | .namedCall _ args => args.map CallArgument.expression
         | .array args | .row args | .call _ args | .substring _ args
         | .coalesce args | .greatest args | .least args => args
         | .caseExpr operand branches otherwise =>

@@ -76,6 +76,12 @@ mutual
         exact map_twice translateExpr args fun arg member =>
           have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
           translateExpr_idempotent arg
+    | namedCall name args =>
+        simp only [translateExpr, List.attach_map_val]
+        congr 1
+        exact map_twice translateCallArgument args fun arg member =>
+          have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+          translateCallArgument_idempotent arg
     | coalesce args =>
         simp only [translateExpr, List.attach_map_val]
         congr 1
@@ -129,6 +135,14 @@ mutual
     | «exists» query => simp only [translateExpr, translateParameters_idempotent query]
     | scalarQuery query => simp only [translateExpr, translateParameters_idempotent query]
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  theorem translateCallArgument_idempotent (arg : CallArgument) :
+      translateCallArgument (translateCallArgument arg) = translateCallArgument arg := by
+    cases arg with
+    | positional value => simp only [translateCallArgument, translateExpr_idempotent value]
+    | named name value spelling => simp only [translateCallArgument, translateExpr_idempotent value]
+  termination_by sizeOf arg
   decreasing_by all_goals (simp_all <;> omega)
 
   theorem translateSubscript_idempotent (subscript : Advanced.Subscript) :

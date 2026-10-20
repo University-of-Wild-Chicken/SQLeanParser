@@ -15,6 +15,7 @@ private def defaultExpression : Nat → Expr → Bool
       defaultExpression n base && (indices.flatMap Subscript.expressions).all (defaultExpression n)
   | n + 1, .array args | n + 1, .row args | n + 1, .substring _ args | n + 1, .call _ args | n + 1, .coalesce args | n + 1, .greatest args | n + 1, .least args =>
       args.all (defaultExpression n)
+  | n + 1, .namedCall _ args => args.all (fun arg => defaultExpression n arg.expression)
   | n + 1, .caseExpr operand branches otherwise => operand.all (defaultExpression n) &&
       branches.all (fun branch => defaultExpression n branch.1 && defaultExpression n branch.2) &&
       otherwise.all (defaultExpression n)

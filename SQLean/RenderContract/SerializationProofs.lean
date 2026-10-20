@@ -9,7 +9,7 @@ namespace SQLean.RenderContract
 open Advanced
 
 set_option maxRecDepth 4096
-set_option maxHeartbeats 1000000
+set_option maxHeartbeats 2000000
 
 private theorem append_congr {a b c d : String} (left : a = b) (right : c = d) :
     a ++ c = b ++ d := by rw [left, right]
@@ -78,6 +78,13 @@ mutual
           List.map_congr_left fun arg member =>
             have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
             exprSql_translated pg arg
+        simp only [translateExpr, exprSql, List.attach_map_val, List.map_map, Function.comp_def, mapped]
+    | namedCall name args =>
+        have mapped : args.map (fun arg => callArgumentSql pg (translateCallArgument arg)) =
+            args.map (callArgumentSql true) :=
+          List.map_congr_left fun arg member =>
+            have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+            callArgumentSql_translated pg arg
         simp only [translateExpr, exprSql, List.attach_map_val, List.map_map, Function.comp_def, mapped]
     | coalesce args =>
         have mapped : args.map (fun arg => exprSql pg (translateExpr arg)) = args.map (exprSql true) :=
@@ -149,6 +156,14 @@ mutual
     | «exists» query => simp only [translateExpr, exprSql, querySql_translated pg query]
     | scalarQuery query => simp only [translateExpr, exprSql, querySql_translated pg query]
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  theorem callArgumentSql_translated (pg : Bool) (arg : CallArgument) :
+      callArgumentSql pg (translateCallArgument arg) = callArgumentSql true arg := by
+    cases arg with
+    | positional value => simp only [translateCallArgument, callArgumentSql, exprSql_translated pg value]
+    | named name value spelling => cases spelling <;> simp only [translateCallArgument, callArgumentSql, exprSql_translated pg value]
+  termination_by sizeOf arg
   decreasing_by all_goals (simp_all <;> omega)
 
   theorem subscriptSql_translated (pg : Bool) (subscript : Advanced.Subscript) :

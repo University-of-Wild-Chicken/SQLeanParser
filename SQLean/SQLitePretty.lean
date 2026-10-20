@@ -90,6 +90,10 @@ mutual
         (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
           exprSql arg.val))
+    | .namedCall name args => String.intercalate "." (name.map quoteName) ++ paren (comma
+        (args.attach.map fun (arg : {v : CallArgument // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          callArgumentSql arg.val))
     | .coalesce args => "COALESCE" ++ paren (comma
         (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
@@ -122,6 +126,14 @@ mutual
     | .exists query => "EXISTS " ++ paren (querySql query)
     | .scalarQuery query => paren (querySql query)
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def callArgumentSql (arg : CallArgument) : String :=
+    match arg with
+    | .positional value => exprSql value
+    | .named name value spelling => quoteName name ++
+        (match spelling with | .arrow => " => " | .assignment => " := ") ++ exprSql value
+  termination_by sizeOf arg
   decreasing_by all_goals (simp_all <;> omega)
 
   def subscriptSql (subscript : Subscript) : String :=

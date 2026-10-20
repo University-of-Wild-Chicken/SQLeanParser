@@ -54,6 +54,9 @@ mutual
     case call.call a0 a1 b0 b1 =>
       letI : Decidable (a1 = b1) := exactListExprDecEq a1 b1
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.call.injEq])
+    case namedCall.namedCall a0 a1 b0 b1 =>
+      letI : Decidable (a1 = b1) := exactListCallArgumentDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.namedCall.injEq])
     case substring.substring a0 a1 b0 b1 =>
       letI : Decidable (a1 = b1) := exactListExprDecEq a1 b1
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.substring.injEq])
@@ -141,6 +144,31 @@ mutual
     case scalarQuery.scalarQuery a0 b0 =>
       letI : Decidable (a0 = b0) := exactQueryDecEq a0 b0
       exact decidable_of_iff (a0 = b0) (by simp only [Expr.scalarQuery.injEq])
+  termination_by sizeOf a
+  decreasing_by all_goals (simp_all <;> omega)
+
+  private def exactCallArgumentDecEq (a b : CallArgument) : Decidable (a = b) := by
+    cases a <;> cases b
+    all_goals first | solve | apply isFalse; intro h; cases h
+                    | skip
+    case positional.positional a0 b0 =>
+      letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
+      exact decidable_of_iff (a0 = b0) (by simp only [CallArgument.positional.injEq])
+    case named.named a0 a1 a2 b0 b1 b2 =>
+      letI : Decidable (a1 = b1) := exactExprDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2) (by simp only [CallArgument.named.injEq])
+  termination_by sizeOf a
+  decreasing_by all_goals (simp_all <;> omega)
+
+  private def exactListCallArgumentDecEq (a b : List CallArgument) : Decidable (a = b) := by
+    cases a <;> cases b
+    all_goals first | solve | apply isFalse; intro h; cases h
+                    | skip
+    case nil.nil => exact isTrue rfl
+    case cons.cons a0 a1 b0 b1 =>
+      letI : Decidable (a0 = b0) := exactCallArgumentDecEq a0 b0
+      letI : Decidable (a1 = b1) := exactListCallArgumentDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [List.cons.injEq])
   termination_by sizeOf a
   decreasing_by all_goals (simp_all <;> omega)
 
@@ -376,6 +404,7 @@ mutual
 end
 
 instance : DecidableEq Expr := exactExprDecEq
+instance : DecidableEq CallArgument := exactCallArgumentDecEq
 instance : DecidableEq Subscript := exactSubscriptDecEq
 instance : DecidableEq SelectItem := exactSelectItemDecEq
 instance : DecidableEq OrderBy := exactOrderByDecEq

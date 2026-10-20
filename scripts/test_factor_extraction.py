@@ -194,11 +194,20 @@ class FactorExtractionTests(unittest.TestCase):
                 extract(manifest, "natural_contract")
 
     def test_queries_retain_original_bytes_and_no_invented_bindings(self):
+        from observe_named_argument_source import INTERFACE_CASES
+
         for rows in self.records.values():
             for row in rows:
                 self.assertEqual(row["sql"], row["raw_sql"])
                 self.assertEqual(row["transformations"], [])
-                self.assertIsNone(row["parameter_types"])
+                declaration = INTERFACE_CASES.get(row["id"])
+                if declaration:
+                    self.assertEqual(row["parameter_types"], declaration[4])
+                    self.assertEqual(row["parameter_type_provenance"]["go_type"], declaration[3])
+                    self.assertEqual(row["parameter_type_provenance"]["method"], declaration[0])
+                else:
+                    self.assertIsNone(row["parameter_types"])
+                    self.assertNotIn("parameter_type_provenance", row)
                 self.assertNotIn("parameter_values", row)
                 self.assertEqual(row["application_schema_validity"], "not-claimed")
                 self.assertIn(f'/blob/{row["commit"]}/{row["source_file"]}', row["source_url"])

@@ -26,7 +26,7 @@ class ObservedToken:
 
 _OP_CHARS = frozenset("~!@#^&|`?+-*/%<>=")
 _SPECIAL = frozenset("~!@#^&|`?%")
-_SUPPORTED = ("->>", "#>>", "!~*", "<=", ">=", "<>", "!=", "||", "&&", "~*", "!~",
+_SUPPORTED = ("->>", "#>>", "!~*", "=>", "<=", ">=", "<>", "!=", "||", "&&", "~*", "!~",
               "->", "#>", "@>", "<@", "?|", "?&", "+", "-", "*", "/", "=", "<", ">", "~", "?")
 _START_WORDS = frozenset("SELECT WHERE ON HAVING LIMIT OFFSET RETURNING WHEN THEN ELSE CASE "
                         "AND OR NOT IS IN BETWEEN LIKE ILIKE AS FROM FOR BY VALUES SET USING "
@@ -109,9 +109,9 @@ def _lex(source, mode):
             i = number.end()
             yield "atom", source[start:i], start, i
             continue
-        if source.startswith("::", i):
+        if source.startswith(("::", ":="), i):
             i += 2
-            yield "op", "::", start, i
+            yield "op", source[start:i], start, i
             continue
         if source[i] in _OP_CHARS:
             if mode == "sqlite":
@@ -208,7 +208,11 @@ def observe_sql(source, mode="postgres"):
         elif kind == "op":
             raw, cursor = value, start
             while raw:
-                if mode != "sqlite" and operand and raw.startswith("?") and (not raw.startswith("?|") or raw.startswith("?||")) and (not raw.startswith("?&") or raw.startswith("?&&")):
+                # A named separator starts its argument even when the decoded
+                # argument name (BY, ESCAPE, etc.) is also a clause keyword.
+                if mode != "sqlite" and raw.startswith("=>?"):
+                    operand, cursor, raw = True, cursor + 2, raw[2:]
+                elif mode != "sqlite" and operand and raw.startswith("?") and (not raw.startswith("?|") or raw.startswith("?||")) and (not raw.startswith("?&") or raw.startswith("?&&")):
                     assert cursor + 1 == len(source) or not source[cursor + 1].isdigit(), "unexpected numbered question marker"
                     ordinal += 1
                     tokens.append(ObservedToken("parameter", ("anonymous", ordinal), depth, cursor, cursor + 1))

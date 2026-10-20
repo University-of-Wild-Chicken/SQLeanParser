@@ -469,6 +469,38 @@ def contextFunctionCatalog : Name → List FunctionOverload
   | "system_user" => [⟨[], .text⟩]
   | _ => []
 
+/-- The only admitted default values in this increment. Their exact catalog
+values are zero; their independent static inputs are nonnullable concrete types. -/
+inductive FunctionDefault where
+  | intZero | floatZero
+  deriving Repr, BEq, DecidableEq
+
+def FunctionDefault.input : FunctionDefault → ScalarInput
+  | .intZero => .known ⟨.int32, false⟩
+  | .floatZero => .known ⟨.doublePrecision, false⟩
+
+structure FunctionParameter where
+  name : Name
+  type : ScalarType
+  defaultValue : Option FunctionDefault := none
+  deriving Repr, BEq, DecidableEq
+
+/-- PostgreSQL 16's complete make_interval argument declaration. Names are
+case-sensitive decoded identifiers, not flattened SQL fragments. -/
+def makeIntervalParameters : List FunctionParameter :=
+  (["years", "months", "weeks", "days", "hours", "mins"].map
+    fun name => ⟨name, .int32, some .intZero⟩) ++
+  [⟨"secs", .doublePrecision, some .floatZero⟩]
+
+def makeIntervalCatalog : List FunctionOverload :=
+  [⟨makeIntervalParameters.map FunctionParameter.type, .interval []⟩]
+
+/-- Applied only after independent slot binding/default expansion. Literal
+parsing, rounding and interval arithmetic remain runtime value obligations. -/
+def makeIntervalSignature (inputs : List ScalarInput) : Option ExactType := do
+  let selected ← resolveOverload makeIntervalCatalog inputs
+  some ⟨selected.output, inputs.any ScalarInput.nullable⟩
+
 /-- Auditable supported-name inventory, including the four variadic-any rules. -/
 def functionNames : List Name :=
   ["abs", "sign", "ceil", "ceiling", "floor", "sqrt", "exp", "ln", "cbrt", "degrees", "radians",
@@ -476,7 +508,7 @@ def functionNames : List Name :=
    "character_length", "octet_length", "btrim", "ltrim", "rtrim", "replace", "substr", "substring",
    "to_date", "to_timestamp", "now", "transaction_timestamp", "statement_timestamp",
    "clock_timestamp", "pi", "random", "json_typeof", "jsonb_typeof", "json_array_length",
-   "jsonb_array_length", "concat", "concat_ws", "num_nulls", "num_nonnulls"] ++ contextFunctionNames
+   "jsonb_array_length", "concat", "concat_ws", "num_nulls", "num_nonnulls"] ++ contextFunctionNames ++ ["make_interval"]
 
 /-- Explicit supported built-in inventory. Overloads for SQL arrays, ranges,
 composite values and other absent scalar types are not implicitly admitted. -/
@@ -515,6 +547,7 @@ def functionCatalog (name : Name) : List FunctionOverload :=
   | "jsonb_typeof" => [⟨[.jsonb], .text⟩]
   | "json_array_length" => [⟨[.json], .int32⟩]
   | "jsonb_array_length" => [⟨[.jsonb], .int32⟩]
+  | "make_interval" => makeIntervalCatalog
   | _ => contextFunctionCatalog name
 
 def builtinName : List Name → Option Name

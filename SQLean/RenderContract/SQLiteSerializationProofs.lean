@@ -78,6 +78,13 @@ mutual
             have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
             exprSql_translated arg
         simp only [translateExpr, Advanced.SQLite.exprSql, List.attach_map_val, List.map_map, Function.comp_def, mapped]
+    | namedCall name args =>
+        have mapped : args.map (fun arg => Advanced.SQLite.callArgumentSql (translateCallArgument arg)) =
+            args.map (Advanced.SQLite.callArgumentSql ) :=
+          List.map_congr_left fun arg member =>
+            have : sizeOf arg < sizeOf args := List.sizeOf_lt_of_mem member
+            callArgumentSql_translated arg
+        simp only [translateExpr, Advanced.SQLite.exprSql, List.attach_map_val, List.map_map, Function.comp_def, mapped]
     | coalesce args =>
         have mapped : args.map (fun arg => Advanced.SQLite.exprSql (translateExpr arg)) = args.map (Advanced.SQLite.exprSql) :=
           List.map_congr_left fun arg member =>
@@ -146,6 +153,14 @@ mutual
     | «exists» query => simp only [translateExpr, Advanced.SQLite.exprSql, querySql_translated query]
     | scalarQuery query => simp only [translateExpr, Advanced.SQLite.exprSql, querySql_translated query]
   termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  theorem callArgumentSql_translated (arg : CallArgument) :
+      Advanced.SQLite.callArgumentSql (translateCallArgument arg) = Advanced.SQLite.callArgumentSql arg := by
+    cases arg with
+    | positional value => simp only [translateCallArgument, Advanced.SQLite.callArgumentSql, exprSql_translated value]
+    | named name value spelling => cases spelling <;> simp only [translateCallArgument, Advanced.SQLite.callArgumentSql, exprSql_translated value]
+  termination_by sizeOf arg
   decreasing_by all_goals (simp_all <;> omega)
 
   theorem subscriptSql_translated (subscript : Advanced.Subscript) :

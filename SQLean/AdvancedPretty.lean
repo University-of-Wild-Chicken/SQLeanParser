@@ -150,6 +150,10 @@ mutual
         (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
           exprSql pg arg.val))
+    | .namedCall name args => String.intercalate "." (name.map quoteName) ++ paren (comma
+        (args.attach.map fun (arg : {v : CallArgument // v ∈ args}) =>
+          have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
+          callArgumentSql pg arg.val))
     | .coalesce args => "COALESCE" ++ paren (comma
         (args.attach.map fun (arg : {v : Expr // v ∈ args}) =>
           have : sizeOf arg.val < sizeOf args := List.sizeOf_lt_of_mem arg.property
@@ -186,6 +190,14 @@ mutual
 
   /-- One contiguous bracket group belongs to one expression node. Parentheses
   around the base keep nested nodes distinct from adjacent dimensions. -/
+  def callArgumentSql (pg : Bool) (arg : CallArgument) : String :=
+    match arg with
+    | .positional value => exprSql pg value
+    | .named name value spelling => quoteName name ++
+        (match spelling with | .arrow => " => " | .assignment => " := ") ++ exprSql pg value
+  termination_by sizeOf arg
+  decreasing_by all_goals (simp_all <;> omega)
+
   def subscriptSql (pg : Bool) (subscript : Subscript) : String :=
     match subscript with
     | .index expr => "[" ++ exprSql pg expr ++ "]"

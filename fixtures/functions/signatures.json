@@ -649,5 +649,18 @@
     "inputs": [],
     "name": "system_user",
     "output": "text"
+  },
+  {
+    "inputs": [
+      "integer",
+      "integer",
+      "integer",
+      "integer",
+      "integer",
+      "integer",
+      "double precision"
+    ],
+    "name": "make_interval",
+    "output": "interval"
   }
 ]

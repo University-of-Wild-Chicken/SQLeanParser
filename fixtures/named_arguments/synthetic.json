@@ -1,0 +1,1118 @@
+[
+  {
+    "id": "named-arguments-01-all-defaults",
+    "source_kind": "synthetic",
+    "shape": "all-defaults",
+    "sql": "SELECT make_interval() AS v;",
+    "postgres_input": "SELECT make_interval() AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:00:00",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval() AS v;"
+  },
+  {
+    "id": "named-arguments-02-positional-year",
+    "source_kind": "synthetic",
+    "shape": "positional-year",
+    "sql": "SELECT make_interval(1) AS v;",
+    "postgres_input": "SELECT make_interval(1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "1 year",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(1) AS v;"
+  },
+  {
+    "id": "named-arguments-03-positional-month",
+    "source_kind": "synthetic",
+    "shape": "positional-month",
+    "sql": "SELECT make_interval(1, 2) AS v;",
+    "postgres_input": "SELECT make_interval(1, 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "1 year 2 mons",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(1, 2) AS v;"
+  },
+  {
+    "id": "named-arguments-04-positional-weeks",
+    "source_kind": "synthetic",
+    "shape": "positional-weeks",
+    "sql": "SELECT make_interval(0, 0, 2) AS v;",
+    "postgres_input": "SELECT make_interval(0, 0, 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "14 days",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(0, 0, 2) AS v;"
+  },
+  {
+    "id": "named-arguments-05-positional-days",
+    "source_kind": "synthetic",
+    "shape": "positional-days",
+    "sql": "SELECT make_interval(0, 0, 0, 3) AS v;",
+    "postgres_input": "SELECT make_interval(0, 0, 0, 3) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "3 days",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(0, 0, 0, 3) AS v;"
+  },
+  {
+    "id": "named-arguments-06-positional-hours",
+    "source_kind": "synthetic",
+    "shape": "positional-hours",
+    "sql": "SELECT make_interval(0, 0, 0, 0, 4) AS v;",
+    "postgres_input": "SELECT make_interval(0, 0, 0, 0, 4) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "04:00:00",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(0, 0, 0, 0, 4) AS v;"
+  },
+  {
+    "id": "named-arguments-07-positional-mins",
+    "source_kind": "synthetic",
+    "shape": "positional-mins",
+    "sql": "SELECT make_interval(0, 0, 0, 0, 0, 5) AS v;",
+    "postgres_input": "SELECT make_interval(0, 0, 0, 0, 0, 5) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:05:00",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(0, 0, 0, 0, 0, 5) AS v;"
+  },
+  {
+    "id": "named-arguments-08-positional-all",
+    "source_kind": "synthetic",
+    "shape": "positional-all",
+    "sql": "SELECT make_interval(1, 2, 1, 3, 4, 5, 6.25) AS v;",
+    "postgres_input": "SELECT make_interval(1, 2, 1, 3, 4, 5, 6.25) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "1 year 2 mons 10 days 04:05:06.25",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(1, 2, 1, 3, 4, 5, 6.25) AS v;"
+  },
+  {
+    "id": "named-arguments-09-arrow-years",
+    "source_kind": "synthetic",
+    "shape": "arrow-years",
+    "sql": "SELECT make_interval(years => 2) AS v;",
+    "postgres_input": "SELECT make_interval(years => 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 years",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(years => 2) AS v;"
+  },
+  {
+    "id": "named-arguments-10-arrow-months",
+    "source_kind": "synthetic",
+    "shape": "arrow-months",
+    "sql": "SELECT make_interval(months => 2) AS v;",
+    "postgres_input": "SELECT make_interval(months => 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 mons",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(months => 2) AS v;"
+  },
+  {
+    "id": "named-arguments-11-arrow-weeks",
+    "source_kind": "synthetic",
+    "shape": "arrow-weeks",
+    "sql": "SELECT make_interval(weeks => 2) AS v;",
+    "postgres_input": "SELECT make_interval(weeks => 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "14 days",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(weeks => 2) AS v;"
+  },
+  {
+    "id": "named-arguments-12-arrow-days",
+    "source_kind": "synthetic",
+    "shape": "arrow-days",
+    "sql": "SELECT make_interval(days => 2) AS v;",
+    "postgres_input": "SELECT make_interval(days => 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 days",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(days => 2) AS v;"
+  },
+  {
+    "id": "named-arguments-13-arrow-hours",
+    "source_kind": "synthetic",
+    "shape": "arrow-hours",
+    "sql": "SELECT make_interval(hours => 2) AS v;",
+    "postgres_input": "SELECT make_interval(hours => 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "02:00:00",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(hours => 2) AS v;"
+  },
+  {
+    "id": "named-arguments-14-arrow-mins",
+    "source_kind": "synthetic",
+    "shape": "arrow-mins",
+    "sql": "SELECT make_interval(mins => 2) AS v;",
+    "postgres_input": "SELECT make_interval(mins => 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:02:00",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(mins => 2) AS v;"
+  },
+  {
+    "id": "named-arguments-15-arrow-secs",
+    "source_kind": "synthetic",
+    "shape": "arrow-secs",
+    "sql": "SELECT make_interval(secs => 2) AS v;",
+    "postgres_input": "SELECT make_interval(secs => 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:00:02",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs => 2) AS v;"
+  },
+  {
+    "id": "named-arguments-16-colon-years",
+    "source_kind": "synthetic",
+    "shape": "colon-years",
+    "sql": "SELECT make_interval(years := 1) AS v;",
+    "postgres_input": "SELECT make_interval(years := 1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "1 year",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(years := 1) AS v;"
+  },
+  {
+    "id": "named-arguments-17-colon-months",
+    "source_kind": "synthetic",
+    "shape": "colon-months",
+    "sql": "SELECT make_interval(months := 1) AS v;",
+    "postgres_input": "SELECT make_interval(months := 1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "1 mon",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(months := 1) AS v;"
+  },
+  {
+    "id": "named-arguments-18-colon-weeks",
+    "source_kind": "synthetic",
+    "shape": "colon-weeks",
+    "sql": "SELECT make_interval(weeks := 1) AS v;",
+    "postgres_input": "SELECT make_interval(weeks := 1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "7 days",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(weeks := 1) AS v;"
+  },
+  {
+    "id": "named-arguments-19-colon-days",
+    "source_kind": "synthetic",
+    "shape": "colon-days",
+    "sql": "SELECT make_interval(days := 1) AS v;",
+    "postgres_input": "SELECT make_interval(days := 1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "1 day",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(days := 1) AS v;"
+  },
+  {
+    "id": "named-arguments-20-colon-hours",
+    "source_kind": "synthetic",
+    "shape": "colon-hours",
+    "sql": "SELECT make_interval(hours := 1) AS v;",
+    "postgres_input": "SELECT make_interval(hours := 1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "01:00:00",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(hours := 1) AS v;"
+  },
+  {
+    "id": "named-arguments-21-colon-mins",
+    "source_kind": "synthetic",
+    "shape": "colon-mins",
+    "sql": "SELECT make_interval(mins := 1) AS v;",
+    "postgres_input": "SELECT make_interval(mins := 1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:01:00",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(mins := 1) AS v;"
+  },
+  {
+    "id": "named-arguments-22-colon-secs",
+    "source_kind": "synthetic",
+    "shape": "colon-secs",
+    "sql": "SELECT make_interval(secs := 1) AS v;",
+    "postgres_input": "SELECT make_interval(secs := 1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:00:01",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs := 1) AS v;"
+  },
+  {
+    "id": "named-arguments-23-reverse-all",
+    "source_kind": "synthetic",
+    "shape": "reverse-all",
+    "sql": "SELECT make_interval(secs => 7, mins => 6, hours => 5, days => 4, weeks => 3, months => 2, years => 1) AS v;",
+    "postgres_input": "SELECT make_interval(secs => 7, mins => 6, hours => 5, days => 4, weeks => 3, months => 2, years => 1) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "1 year 2 mons 25 days 05:06:07",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs => 7, mins => 6, hours => 5, days => 4, weeks => 3, months => 2, years => 1) AS v;"
+  },
+  {
+    "id": "named-arguments-24-mixed-prefix",
+    "source_kind": "synthetic",
+    "shape": "mixed-prefix",
+    "sql": "SELECT make_interval(2, months => 3, secs => 4) AS v;",
+    "postgres_input": "SELECT make_interval(2, months => 3, secs => 4) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 years 3 mons 00:00:04",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(2, months => 3, secs => 4) AS v;"
+  },
+  {
+    "id": "named-arguments-25-mixed-notations",
+    "source_kind": "synthetic",
+    "shape": "mixed-notations",
+    "sql": "SELECT make_interval(1, 2, days := 5, hours => 6) AS v;",
+    "postgres_input": "SELECT make_interval(1, 2, days := 5, hours => 6) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "1 year 2 mons 5 days 06:00:00",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(1, 2, days := 5, hours => 6) AS v;"
+  },
+  {
+    "id": "named-arguments-26-qualified-function",
+    "source_kind": "synthetic",
+    "shape": "qualified-function",
+    "sql": "SELECT pg_catalog.make_interval(days => 4) AS v;",
+    "postgres_input": "SELECT pg_catalog.make_interval(days => 4) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "4 days",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT pg_catalog.make_interval(days => 4) AS v;"
+  },
+  {
+    "id": "named-arguments-27-quoted-function-and-name",
+    "source_kind": "synthetic",
+    "shape": "quoted-function-and-name",
+    "sql": "SELECT \"make_interval\"(\"days\" => 5) AS v;",
+    "postgres_input": "SELECT \"make_interval\"(\"days\" => 5) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "5 days",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT \"make_interval\"(\"days\" => 5) AS v;"
+  },
+  {
+    "id": "named-arguments-28-folded-name",
+    "source_kind": "synthetic",
+    "shape": "folded-name",
+    "sql": "SELECT make_interval(YEARS => 2) AS v;",
+    "postgres_input": "SELECT make_interval(YEARS => 2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 years",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(YEARS => 2) AS v;"
+  },
+  {
+    "id": "named-arguments-29-comment-separated-colon",
+    "source_kind": "synthetic",
+    "shape": "comment-separated-colon",
+    "sql": "SELECT make_interval(mins/**/:=/**/8) AS v;",
+    "postgres_input": "SELECT make_interval(mins/**/:=/**/8) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:08:00",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(mins/**/:=/**/8) AS v;"
+  },
+  {
+    "id": "named-arguments-30-adjacent-negative",
+    "source_kind": "synthetic",
+    "shape": "adjacent-negative",
+    "sql": "SELECT make_interval(secs=>-1.5) AS v;",
+    "postgres_input": "SELECT make_interval(secs=>-1.5) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "-00:00:01.5",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs=>-1.5) AS v;"
+  },
+  {
+    "id": "named-arguments-31-unknown-slot-context",
+    "source_kind": "synthetic",
+    "shape": "unknown-slot-context",
+    "sql": "SELECT make_interval(days => '6') AS v;",
+    "postgres_input": "SELECT make_interval(days => '6') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "6 days",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(days => '6') AS v;"
+  },
+  {
+    "id": "named-arguments-32-smallint-integer-slot",
+    "source_kind": "synthetic",
+    "shape": "smallint-integer-slot",
+    "sql": "SELECT make_interval(days => 4::SMALLINT) AS v;",
+    "postgres_input": "SELECT make_interval(days => 4::SMALLINT) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "4 days",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(days => 4::SMALLINT) AS v;"
+  },
+  {
+    "id": "named-arguments-33-bigint-seconds",
+    "source_kind": "synthetic",
+    "shape": "bigint-seconds",
+    "sql": "SELECT make_interval(secs => 7::BIGINT) AS v;",
+    "postgres_input": "SELECT make_interval(secs => 7::BIGINT) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:00:07",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs => 7::BIGINT) AS v;"
+  },
+  {
+    "id": "named-arguments-34-numeric-seconds",
+    "source_kind": "synthetic",
+    "shape": "numeric-seconds",
+    "sql": "SELECT make_interval(secs => 1.125::NUMERIC(8,3)) AS v;",
+    "postgres_input": "SELECT make_interval(secs => 1.125::NUMERIC(8,3)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:00:01.125",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs => 1.125::NUMERIC(8,3)) AS v;"
+  },
+  {
+    "id": "named-arguments-35-real-seconds",
+    "source_kind": "synthetic",
+    "shape": "real-seconds",
+    "sql": "SELECT make_interval(secs => 1.5::REAL) AS v;",
+    "postgres_input": "SELECT make_interval(secs => 1.5::REAL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:00:01.5",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs => 1.5::REAL) AS v;"
+  },
+  {
+    "id": "named-arguments-36-float8-seconds",
+    "source_kind": "synthetic",
+    "shape": "float8-seconds",
+    "sql": "SELECT make_interval(secs => 2.5::DOUBLE PRECISION) AS v;",
+    "postgres_input": "SELECT make_interval(secs => 2.5::DOUBLE PRECISION) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:00:02.5",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs => 2.5::DOUBLE PRECISION) AS v;"
+  },
+  {
+    "id": "named-arguments-37-numbered-reversed-slots",
+    "source_kind": "synthetic",
+    "shape": "numbered-reversed-slots",
+    "sql": "SELECT make_interval(secs => $2, days => $1) AS v;",
+    "postgres_input": "SELECT make_interval(secs => $2, days => $1) AS v;",
+    "parameter_types": "integer,float8",
+    "parameter_values": [
+      3,
+      4.5
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "3 days 00:00:04.5",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs => ?2, days => ?1) AS v;"
+  },
+  {
+    "id": "named-arguments-38-anonymous-days-first",
+    "source_kind": "synthetic",
+    "shape": "anonymous-days-first",
+    "sql": "SELECT make_interval(days => ?, secs => ?) AS v;",
+    "postgres_input": "SELECT make_interval(days => $1, secs => $2) AS v;",
+    "parameter_types": "integer,float8",
+    "parameter_values": [
+      2,
+      3.25
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 days 00:00:03.25",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(days => ?, secs => ?) AS v;"
+  },
+  {
+    "id": "named-arguments-39-anonymous-seconds-first",
+    "source_kind": "synthetic",
+    "shape": "anonymous-seconds-first",
+    "sql": "SELECT make_interval(secs => ?, days => ?) AS v;",
+    "postgres_input": "SELECT make_interval(secs => $1, days => $2) AS v;",
+    "parameter_types": "float8,integer",
+    "parameter_values": [
+      4.5,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 days 00:00:04.5",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs => ?, days => ?) AS v;"
+  },
+  {
+    "id": "named-arguments-40-reused-slot",
+    "source_kind": "synthetic",
+    "shape": "reused-slot",
+    "sql": "SELECT make_interval(years => $1, months => $1) AS v;",
+    "postgres_input": "SELECT make_interval(years => $1, months => $1) AS v;",
+    "parameter_types": "integer",
+    "parameter_values": [
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 years 2 mons",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(years => ?1, months => ?1) AS v;"
+  },
+  {
+    "id": "named-arguments-41-numbered-lexical-order",
+    "source_kind": "synthetic",
+    "shape": "numbered-lexical-order",
+    "sql": "SELECT make_interval(days => $2, secs => $1) AS v;",
+    "postgres_input": "SELECT make_interval(days => $2, secs => $1) AS v;",
+    "parameter_types": "float8,integer",
+    "parameter_values": [
+      1.5,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 days 00:00:01.5",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(days => ?2, secs => ?1) AS v;"
+  },
+  {
+    "id": "named-arguments-42-unknown-null",
+    "source_kind": "synthetic",
+    "shape": "unknown-null",
+    "sql": "SELECT make_interval(days => NULL) AS v;",
+    "postgres_input": "SELECT make_interval(days => NULL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(days => NULL) AS v;"
+  },
+  {
+    "id": "named-arguments-43-nullable-declaration",
+    "source_kind": "synthetic",
+    "shape": "nullable-declaration",
+    "sql": "SELECT make_interval(secs => $1) AS v;",
+    "postgres_input": "SELECT make_interval(secs => $1) AS v;",
+    "parameter_types": "float8?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(secs => ?1) AS v;"
+  },
+  {
+    "id": "named-arguments-44-coalesce-default",
+    "source_kind": "synthetic",
+    "shape": "coalesce-default",
+    "sql": "SELECT COALESCE(make_interval(days => NULL), make_interval(hours => 1)) AS v;",
+    "postgres_input": "SELECT COALESCE(make_interval(days => NULL), make_interval(hours => 1)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "01:00:00",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT COALESCE(make_interval(days => NULL), make_interval(hours => 1)) AS v;"
+  },
+  {
+    "id": "named-arguments-45-case-result",
+    "source_kind": "synthetic",
+    "shape": "case-result",
+    "sql": "SELECT CASE WHEN TRUE THEN make_interval(days => 2) ELSE make_interval() END AS v;",
+    "postgres_input": "SELECT CASE WHEN TRUE THEN make_interval(days => 2) ELSE make_interval() END AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 days",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CASE WHEN TRUE THEN make_interval(days => 2) ELSE make_interval() END AS v;"
+  },
+  {
+    "id": "named-arguments-46-extract-result",
+    "source_kind": "synthetic",
+    "shape": "extract-result",
+    "sql": "SELECT EXTRACT(DAY FROM make_interval(weeks => 2)) AS v;",
+    "postgres_input": "SELECT EXTRACT(DAY FROM make_interval(weeks => 2)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "14",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT EXTRACT(DAY FROM make_interval(weeks => 2)) AS v;"
+  },
+  {
+    "id": "named-arguments-47-interval-modifier",
+    "source_kind": "synthetic",
+    "shape": "interval-modifier",
+    "sql": "SELECT CAST(make_interval(secs => 1.234) AS INTERVAL DAY TO SECOND(2)) AS v;",
+    "postgres_input": "SELECT CAST(make_interval(secs => 1.234) AS INTERVAL DAY TO SECOND(2)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day to second(2)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day to second(2)",
+    "expected_value": "00:00:01.23",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT CAST(make_interval(secs => 1.234) AS INTERVAL DAY TO SECOND(2)) AS v;"
+  },
+  {
+    "id": "named-arguments-48-array-equality",
+    "source_kind": "synthetic",
+    "shape": "array-equality",
+    "sql": "SELECT ARRAY[make_interval(secs => 1), make_interval(days => 2)] = ARRAY[INTERVAL '1 second', INTERVAL '2 days'] AS v;",
+    "postgres_input": "SELECT ARRAY[make_interval(secs => 1), make_interval(days => 2)] = ARRAY[INTERVAL '1 second', INTERVAL '2 days'] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT ARRAY[make_interval(secs => 1), make_interval(days => 2)] = ARRAY[INTERVAL '1 second', INTERVAL '2 days'] AS v;"
+  },
+  {
+    "id": "named-arguments-49-strict-null-suppresses-infinity",
+    "source_kind": "synthetic",
+    "shape": "strict-null-suppresses-infinity",
+    "sql": "SELECT make_interval(days => NULL, secs => 'Infinity'::FLOAT8) AS v;",
+    "postgres_input": "SELECT make_interval(days => NULL, secs => 'Infinity'::FLOAT8) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": null,
+    "expected_sql_null": true,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(days => NULL, secs => 'Infinity'::FLOAT8) AS v;"
+  },
+  {
+    "id": "named-arguments-50-month-year-equality",
+    "source_kind": "synthetic",
+    "shape": "month-year-equality",
+    "sql": "SELECT make_interval(1, 0) = make_interval(months => 12) AS v;",
+    "postgres_input": "SELECT make_interval(1, 0) = make_interval(months => 12) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "expected_sql_null": false,
+    "sqlite_supported": false,
+    "sqlite_input": "SELECT make_interval(1, 0) = make_interval(months => 12) AS v;"
+  }
+]

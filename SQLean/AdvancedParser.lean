@@ -98,7 +98,7 @@ private def pgOperatorPrefix : List Char → List Char
     else []
 
 private def supportedPgOperators : List String :=
-  ["->>", "#>>", "!~*", "<=", ">=", "<>", "!=", "||", "&&", "~*", "!~",
+  ["->>", "#>>", "!~*", "=>", "<=", ">=", "<>", "!=", "||", "&&", "~*", "!~",
    "->", "#>", "@>", "<@", "?|", "?&", "+", "-", "*", "/", "=", "<", ">", "~", "?"]
 
 private def readPgOperator (input : List Char) (p : SourcePos) :
@@ -182,7 +182,7 @@ private def lexLoop (sqlite : Bool) : Nat → List Char → SourcePos → List L
               lexLoop sqlite fuel ds (advance (advance p c) d)
                 ({kind := .symbol "!~", position := p} :: acc)
           else if (c == '<' && (d == '>' || d == '=')) || (c == '>' && d == '=') ||
-              (c == '!' && d == '=') || (c == ':' && d == ':') || (c == '|' && d == '|') ||
+              (c == '!' && d == '=') || (c == ':' && (d == ':' || d == '=')) || (c == '|' && d == '|') ||
               (c == '~' && d == '*') then
             lexLoop sqlite fuel ds (advance (advance p c) d)
               ({kind := .symbol (String.ofList [c,d]), position := p} :: acc)
@@ -309,6 +309,17 @@ private def columnIdentifier : Parser Name := do
       if invalidQualifiedHead token then fail s!"reserved column identifier {name}"
       else pure name
   | _ => fail "expected column identifier"
+
+/-- PostgreSQL param_name is type_function_name, not ColId or ColLabel. -/
+private def argumentName : Parser Name := do
+  match (← pop).kind with
+  | .quoted name => pure name
+  | .word name =>
+      let category := (SQLean.PostgresGrammar.Generated.keyword name.toLower).map (·.category)
+      if category == some "RESERVED_KEYWORD" || category == some "COL_NAME_KEYWORD" then
+        fail "invalid named-argument identifier"
+      else pure name
+  | _ => fail "expected named-argument identifier"
 
 private def nameTail : Nat → Parser (List Name)
   | 0 => fail "qualified name input bound exceeded"
@@ -589,11 +600,7 @@ mutual
       -- CURRENT_SCHEMA is also a type/function keyword and may head a call.
       if ← eat "current_schema" then
         if ← eat "(" then
-          let args ← if ← eat ")" then pure [] else do
-            let args ← separated (expression fuel 0) fuel
-            expect ")"
-            pure args
-          return .call ["current_schema"] args
+          return ← callBody fuel ["current_schema"]
         return .contextValue .currentSchema
       if ← eat "current_catalog" then return .contextValue .currentCatalog
       if ← eat "current_user" then return .contextValue .currentUser
@@ -625,31 +632,7 @@ mutual
       if (← isAt "substring") && ((← get).tokens.drop 1).head?.any (fun t => t.kind == .symbol "(") then
         let _ ← pop
         expect "("
-        if ← eat ")" then return .call ["substring"] []
-        let subject ← expression fuel 0
-        if ← eat ")" then return .call ["substring"] [subject]
-        if ← eat "," then
-          let args ← separated (expression fuel 0) fuel
-          expect ")"
-          return .call ["substring"] (subject :: args)
-        if ← read then fail "SQL-standard SUBSTRING syntax is not supported by the SQLite profile"
-        let (form, args) ← if ← eat "from" then do
-          let start ← expression fuel 0
-          if ← eat "for" then
-            pure (SubstringForm.fromFor, [subject, start, ← expression fuel 0])
-          else pure (.from, [subject, start])
-          else if ← eat "for" then do
-            let count ← expression fuel 0
-            if ← eat "from" then
-              pure (.forFrom, [subject, count, ← expression fuel 0])
-            else pure (.forOnly, [subject, count])
-          else do
-            expect "similar"
-            let pattern ← expression fuel 0
-            expect "escape"
-            pure (.similar, [subject, pattern, ← expression fuel 0])
-        expect ")"
-        return .substring form args
+        return ← alternative (callBody fuel ["substring"]) (substringBody fuel)
       if ← eat "case" then
         let operand ← if ← isAt "when" then pure none else do pure (some (← expression fuel 0))
         let branches ← caseBranches fuel
@@ -733,6 +716,14 @@ mutual
           let original ← get
           let _ ← pop
           if ← eat "(" then
+            -- Ordinary func_application also admits named notation for names
+            -- that otherwise take the aggregate path. Binding remains separate.
+            let named ← alternative (do
+              let value ← callBody fuel [word]
+              match value with
+              | .namedCall .. => pure (some value)
+              | _ => fail "ordinary aggregate call") (pure none)
+            if let some value := named then return value
             let distinct ← eat "distinct"
             let value ← if fn == .count && (← eat "*") then
               if distinct then fail "COUNT(DISTINCT *) is unsupported" else pure Expr.countAll
@@ -792,16 +783,55 @@ mutual
       let rest ← if ← isAt "[" then subscriptGroups fuel else pure []
       pure (bound :: rest)
 
+  private def callArgument : Nat → Parser CallArgument
+    | 0 => fail "function argument input bound exceeded"
+    | fuel + 1 => alternative (do
+        let name ← argumentName
+        prepareInfixOperator
+        let spelling ← if ← eat "=>" then pure NamedArgumentNotation.arrow
+          else do expect ":="; pure .assignment
+        if ← read then fail "named function arguments are outside the SQLite profile"
+        pure (.named name (← expression fuel 0) spelling))
+      (do pure (.positional (← expression fuel 0)))
+
+  private def callBody : Nat → List Name → Parser Expr
+    | 0, _ => fail "function argument input bound exceeded"
+    | fuel + 1, name => do
+        let args ← if ← eat ")" then pure [] else do
+          let args ← separated (callArgument fuel) fuel
+          expect ")"
+          pure args
+        if args.any (fun arg => arg.name?.isSome) then return .namedCall name args
+        return .call name (args.map CallArgument.expression)
+
+  private def substringBody : Nat → Parser Expr
+    | 0 => fail "SUBSTRING input bound exceeded"
+    | fuel + 1 => do
+      let subject ← expression fuel 0
+      if ← read then fail "SQL-standard SUBSTRING syntax is not supported by the SQLite profile"
+      let (form, args) ← if ← eat "from" then do
+        let start ← expression fuel 0
+        if ← eat "for" then
+          pure (SubstringForm.fromFor, [subject, start, ← expression fuel 0])
+        else pure (.from, [subject, start])
+        else if ← eat "for" then do
+          let count ← expression fuel 0
+          if ← eat "from" then
+            pure (.forFrom, [subject, count, ← expression fuel 0])
+          else pure (.forOnly, [subject, count])
+        else do
+          expect "similar"
+          let pattern ← expression fuel 0
+          expect "escape"
+          pure (.similar, [subject, pattern, ← expression fuel 0])
+      expect ")"
+      return .substring form args
+
   private def namedAtom : Nat → Parser Expr
     | 0 => fail "qualified expression input bound exceeded"
     | fuel + 1 => do
       let names ← qualifiedName fuel
-      if ← eat "(" then
-        let args ← if ← eat ")" then pure [] else do
-          let args ← separated (expression fuel 0) fuel
-          expect ")"
-          pure args
-        return .call names args
+      if ← eat "(" then return ← callBody fuel names
       namedColumn fuel names
 
   private def namedColumn : Nat → List Name → Parser Expr
