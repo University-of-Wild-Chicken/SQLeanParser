@@ -154,6 +154,10 @@ mutual
         simpa only [translateExpr, List.map_append, scalar_input_translated] using
           ExprValid.overlap (expr_valid_translated left) (expr_valid_translated right)
             (by simpa only [scalar_input_translated] using signature)
+    | extract arg signature =>
+        simpa only [translateExpr, scalar_input_translated] using
+          ExprValid.extract (expr_valid_translated arg)
+            (by simpa only [scalar_input_translated] using signature)
     | cast arg supported declaration allowed ordinary =>
         simpa only [translateExpr] using ExprValid.cast (expr_valid_translated arg)
           supported declaration allowed ((ordinary_cast_translated _ _).mpr ordinary)

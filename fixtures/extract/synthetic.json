@@ -1,0 +1,1015 @@
+[
+  {
+    "id": "extract-01-date-year",
+    "source_kind": "synthetic",
+    "shape": "date-year",
+    "sql": "SELECT EXTRACT(YEAR FROM CAST('2024-02-29' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2024",
+    "sqlite_input": "SELECT EXTRACT(YEAR FROM CAST('2024-02-29' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-02-iso-year",
+    "source_kind": "synthetic",
+    "shape": "iso-year",
+    "sql": "SELECT EXTRACT(ISOYEAR FROM CAST('2021-01-01' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2020",
+    "sqlite_input": "SELECT EXTRACT(ISOYEAR FROM CAST('2021-01-01' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-03-iso-week",
+    "source_kind": "synthetic",
+    "shape": "iso-week",
+    "sql": "SELECT EXTRACT(WEEK FROM CAST('2021-01-01' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "53",
+    "sqlite_input": "SELECT EXTRACT(WEEK FROM CAST('2021-01-01' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-04-quarter",
+    "source_kind": "synthetic",
+    "shape": "quarter",
+    "sql": "SELECT EXTRACT(QUARTER FROM CAST('2024-12-31' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "4",
+    "sqlite_input": "SELECT EXTRACT(QUARTER FROM CAST('2024-12-31' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-05-sunday",
+    "source_kind": "synthetic",
+    "shape": "sunday",
+    "sql": "SELECT EXTRACT(DOW FROM CAST('2024-01-07' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "0",
+    "sqlite_input": "SELECT EXTRACT(DOW FROM CAST('2024-01-07' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-06-iso-sunday",
+    "source_kind": "synthetic",
+    "shape": "iso-sunday",
+    "sql": "SELECT EXTRACT(ISODOW FROM CAST('2024-01-07' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "7",
+    "sqlite_input": "SELECT EXTRACT(ISODOW FROM CAST('2024-01-07' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-07-leap-year-day",
+    "source_kind": "synthetic",
+    "shape": "leap-year-day",
+    "sql": "SELECT EXTRACT(DOY FROM CAST('2024-12-31' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "366",
+    "sqlite_input": "SELECT EXTRACT(DOY FROM CAST('2024-12-31' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-08-leap-day",
+    "source_kind": "synthetic",
+    "shape": "leap-day",
+    "sql": "SELECT EXTRACT(DAY FROM CAST('2024-02-29' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "29",
+    "sqlite_input": "SELECT EXTRACT(DAY FROM CAST('2024-02-29' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-09-month",
+    "source_kind": "synthetic",
+    "shape": "month",
+    "sql": "SELECT EXTRACT(MONTH FROM CAST('2024-02-29' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2",
+    "sqlite_input": "SELECT EXTRACT(MONTH FROM CAST('2024-02-29' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-10-century",
+    "source_kind": "synthetic",
+    "shape": "century",
+    "sql": "SELECT EXTRACT(CENTURY FROM CAST('2001-01-01' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "21",
+    "sqlite_input": "SELECT EXTRACT(CENTURY FROM CAST('2001-01-01' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-11-millennium",
+    "source_kind": "synthetic",
+    "shape": "millennium",
+    "sql": "SELECT EXTRACT(MILLENNIUM FROM CAST('2001-01-01' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "3",
+    "sqlite_input": "SELECT EXTRACT(MILLENNIUM FROM CAST('2001-01-01' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-12-bc-year",
+    "source_kind": "synthetic",
+    "shape": "bc-year",
+    "sql": "SELECT EXTRACT(YEAR FROM CAST('0001-01-01 BC' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "-1",
+    "sqlite_input": "SELECT EXTRACT(YEAR FROM CAST('0001-01-01 BC' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-13-hour-24",
+    "source_kind": "synthetic",
+    "shape": "hour-24",
+    "sql": "SELECT EXTRACT(HOUR FROM CAST('24:00:00' AS TIME)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "24",
+    "sqlite_input": "SELECT EXTRACT(HOUR FROM CAST('24:00:00' AS TIME)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-14-minute",
+    "source_kind": "synthetic",
+    "shape": "minute",
+    "sql": "SELECT EXTRACT(MINUTE FROM CAST('12:34:56.789' AS TIME)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "34",
+    "sqlite_input": "SELECT EXTRACT(MINUTE FROM CAST('12:34:56.789' AS TIME)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-15-fractional-second",
+    "source_kind": "synthetic",
+    "shape": "fractional-second",
+    "sql": "SELECT EXTRACT(SECOND FROM CAST('12:34:56.789' AS TIME)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "56.789000",
+    "sqlite_input": "SELECT EXTRACT(SECOND FROM CAST('12:34:56.789' AS TIME)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-16-milliseconds",
+    "source_kind": "synthetic",
+    "shape": "milliseconds",
+    "sql": "SELECT EXTRACT(MILLISECONDS FROM CAST('12:34:56.789' AS TIME)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "56789.000",
+    "sqlite_input": "SELECT EXTRACT(MILLISECONDS FROM CAST('12:34:56.789' AS TIME)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-17-microseconds",
+    "source_kind": "synthetic",
+    "shape": "microseconds",
+    "sql": "SELECT EXTRACT(MICROSECONDS FROM CAST('12:34:56.789' AS TIME)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "56789000",
+    "sqlite_input": "SELECT EXTRACT(MICROSECONDS FROM CAST('12:34:56.789' AS TIME)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-18-time-epoch",
+    "source_kind": "synthetic",
+    "shape": "time-epoch",
+    "sql": "SELECT EXTRACT(EPOCH FROM CAST('01:02:03.5' AS TIME)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "3723.500000",
+    "sqlite_input": "SELECT EXTRACT(EPOCH FROM CAST('01:02:03.5' AS TIME)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-19-zone-seconds",
+    "source_kind": "synthetic",
+    "shape": "zone-seconds",
+    "sql": "SELECT EXTRACT(TIMEZONE FROM CAST('12:00:00+05:30' AS TIME WITH TIME ZONE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "19800",
+    "sqlite_input": "SELECT EXTRACT(TIMEZONE FROM CAST('12:00:00+05:30' AS TIME WITH TIME ZONE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-20-zone-hour",
+    "source_kind": "synthetic",
+    "shape": "zone-hour",
+    "sql": "SELECT EXTRACT(TIMEZONE_HOUR FROM CAST('12:00:00-03:30' AS TIME WITH TIME ZONE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "-3",
+    "sqlite_input": "SELECT EXTRACT(TIMEZONE_HOUR FROM CAST('12:00:00-03:30' AS TIME WITH TIME ZONE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-21-zone-minute",
+    "source_kind": "synthetic",
+    "shape": "zone-minute",
+    "sql": "SELECT EXTRACT(TIMEZONE_MINUTE FROM CAST('12:00:00-03:30' AS TIME WITH TIME ZONE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "-30",
+    "sqlite_input": "SELECT EXTRACT(TIMEZONE_MINUTE FROM CAST('12:00:00-03:30' AS TIME WITH TIME ZONE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-22-zoned-time-epoch",
+    "source_kind": "synthetic",
+    "shape": "zoned-time-epoch",
+    "sql": "SELECT EXTRACT(EPOCH FROM CAST('01:02:03+02' AS TIME WITH TIME ZONE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "-3477.000000",
+    "sqlite_input": "SELECT EXTRACT(EPOCH FROM CAST('01:02:03+02' AS TIME WITH TIME ZONE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-23-timestamp-year",
+    "source_kind": "synthetic",
+    "shape": "timestamp-year",
+    "sql": "SELECT EXTRACT(YEAR FROM CAST('2025-01-02 12:34:56.789' AS TIMESTAMP)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2025",
+    "sqlite_input": "SELECT EXTRACT(YEAR FROM CAST('2025-01-02 12:34:56.789' AS TIMESTAMP)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-24-unix-origin",
+    "source_kind": "synthetic",
+    "shape": "unix-origin",
+    "sql": "SELECT EXTRACT(EPOCH FROM CAST('1970-01-01 00:00:00+00' AS TIMESTAMP WITH TIME ZONE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "0.000000",
+    "sqlite_input": "SELECT EXTRACT(EPOCH FROM CAST('1970-01-01 00:00:00+00' AS TIMESTAMP WITH TIME ZONE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-25-julian-date",
+    "source_kind": "synthetic",
+    "shape": "julian-date",
+    "sql": "SELECT EXTRACT(JULIAN FROM CAST('2000-01-01' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2451545",
+    "sqlite_input": "SELECT EXTRACT(JULIAN FROM CAST('2000-01-01' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-26-interval-year",
+    "source_kind": "synthetic",
+    "shape": "interval-year",
+    "sql": "SELECT EXTRACT(YEAR FROM CAST('2 years 3 months' AS INTERVAL)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2",
+    "sqlite_input": "SELECT EXTRACT(YEAR FROM CAST('2 years 3 months' AS INTERVAL)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-27-interval-month",
+    "source_kind": "synthetic",
+    "shape": "interval-month",
+    "sql": "SELECT EXTRACT(MONTH FROM CAST('2 years 3 months' AS INTERVAL)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "3",
+    "sqlite_input": "SELECT EXTRACT(MONTH FROM CAST('2 years 3 months' AS INTERVAL)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-28-interval-quarter",
+    "source_kind": "synthetic",
+    "shape": "interval-quarter",
+    "sql": "SELECT EXTRACT(QUARTER FROM CAST('7 months' AS INTERVAL)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "3",
+    "sqlite_input": "SELECT EXTRACT(QUARTER FROM CAST('7 months' AS INTERVAL)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-29-interval-day",
+    "source_kind": "synthetic",
+    "shape": "interval-day",
+    "sql": "SELECT EXTRACT(DAY FROM CAST('2 days 3 hours' AS INTERVAL)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2",
+    "sqlite_input": "SELECT EXTRACT(DAY FROM CAST('2 days 3 hours' AS INTERVAL)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-30-interval-hours",
+    "source_kind": "synthetic",
+    "shape": "interval-hours",
+    "sql": "SELECT EXTRACT(HOUR FROM CAST('2 days 27 hours' AS INTERVAL)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "27",
+    "sqlite_input": "SELECT EXTRACT(HOUR FROM CAST('2 days 27 hours' AS INTERVAL)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-31-negative-minute",
+    "source_kind": "synthetic",
+    "shape": "negative-minute",
+    "sql": "SELECT EXTRACT(MINUTE FROM CAST('-1 day -02:03:04.5' AS INTERVAL)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "-3",
+    "sqlite_input": "SELECT EXTRACT(MINUTE FROM CAST('-1 day -02:03:04.5' AS INTERVAL)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-32-negative-second",
+    "source_kind": "synthetic",
+    "shape": "negative-second",
+    "sql": "SELECT EXTRACT(SECOND FROM CAST('-1 day -02:03:04.5' AS INTERVAL)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "-4.500000",
+    "sqlite_input": "SELECT EXTRACT(SECOND FROM CAST('-1 day -02:03:04.5' AS INTERVAL)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-33-interval-epoch",
+    "source_kind": "synthetic",
+    "shape": "interval-epoch",
+    "sql": "SELECT EXTRACT(EPOCH FROM CAST('1 day 2 hours' AS INTERVAL)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "93600.000000",
+    "sqlite_input": "SELECT EXTRACT(EPOCH FROM CAST('1 day 2 hours' AS INTERVAL)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-34-infinite-year",
+    "source_kind": "synthetic",
+    "shape": "infinite-year",
+    "sql": "SELECT EXTRACT(YEAR FROM CAST('infinity' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "Infinity",
+    "sqlite_input": "SELECT EXTRACT(YEAR FROM CAST('infinity' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-35-infinite-day",
+    "source_kind": "synthetic",
+    "shape": "infinite-day",
+    "sql": "SELECT EXTRACT(DAY FROM CAST('infinity' AS DATE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": null,
+    "sqlite_input": "SELECT EXTRACT(DAY FROM CAST('infinity' AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-36-negative-infinite-second",
+    "source_kind": "synthetic",
+    "shape": "negative-infinite-second",
+    "sql": "SELECT EXTRACT(SECOND FROM CAST('-infinity' AS TIMESTAMP)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": null,
+    "sqlite_input": "SELECT EXTRACT(SECOND FROM CAST('-infinity' AS TIMESTAMP)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-37-infinite-epoch",
+    "source_kind": "synthetic",
+    "shape": "infinite-epoch",
+    "sql": "SELECT EXTRACT(EPOCH FROM CAST('infinity' AS TIMESTAMP WITH TIME ZONE)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "Infinity",
+    "sqlite_input": "SELECT EXTRACT(EPOCH FROM CAST('infinity' AS TIMESTAMP WITH TIME ZONE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-38-null-date",
+    "source_kind": "synthetic",
+    "shape": "null-date",
+    "sql": "SELECT EXTRACT(YEAR FROM NULL::DATE) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": null,
+    "sqlite_input": "SELECT EXTRACT(YEAR FROM NULL::DATE) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-39-null-time",
+    "source_kind": "synthetic",
+    "shape": "null-time",
+    "sql": "SELECT EXTRACT(HOUR FROM NULL::TIME) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": null,
+    "sqlite_input": "SELECT EXTRACT(HOUR FROM NULL::TIME) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-40-null-interval",
+    "source_kind": "synthetic",
+    "shape": "null-interval",
+    "sql": "SELECT EXTRACT(SECOND FROM NULL::INTERVAL) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": null,
+    "sqlite_input": "SELECT EXTRACT(SECOND FROM NULL::INTERVAL) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-41-anonymous",
+    "source_kind": "synthetic",
+    "shape": "anonymous",
+    "sql": "SELECT EXTRACT(YEAR FROM CAST(? AS DATE)) AS v;",
+    "parameter_types": "date",
+    "parameter_values": [
+      "2024-02-29"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2024",
+    "sqlite_input": "SELECT EXTRACT(YEAR FROM CAST(? AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-42-reordered",
+    "source_kind": "synthetic",
+    "shape": "reordered",
+    "sql": "SELECT EXTRACT(YEAR FROM $2) + EXTRACT(MONTH FROM $1) AS v;",
+    "parameter_types": "date,date",
+    "parameter_values": [
+      "2024-02-29",
+      "2025-01-02"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2027",
+    "sqlite_input": "SELECT EXTRACT(YEAR FROM ?2) + EXTRACT(MONTH FROM ?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-43-repeated",
+    "source_kind": "synthetic",
+    "shape": "repeated",
+    "sql": "SELECT EXTRACT(HOUR FROM $1) + EXTRACT(MINUTE FROM $1) AS v;",
+    "parameter_types": "time",
+    "parameter_values": [
+      "12:34:56"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "46",
+    "sqlite_input": "SELECT EXTRACT(HOUR FROM ?1) + EXTRACT(MINUTE FROM ?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-44-nullable-binding",
+    "source_kind": "synthetic",
+    "shape": "nullable-binding",
+    "sql": "SELECT EXTRACT(HOUR FROM $1) AS v;",
+    "parameter_types": "time?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": null,
+    "sqlite_input": "SELECT EXTRACT(HOUR FROM ?1) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-45-explicit-time-rounding",
+    "source_kind": "synthetic",
+    "shape": "explicit-time-rounding",
+    "sql": "SELECT EXTRACT(SECOND FROM CAST($1 AS TIME(0))) AS v;",
+    "parameter_types": "time",
+    "parameter_values": [
+      "12:34:56.789"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "57.000000",
+    "sqlite_input": "SELECT EXTRACT(SECOND FROM CAST(?1 AS TIME(0))) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-46-bound-text-cast",
+    "source_kind": "synthetic",
+    "shape": "bound-text-cast",
+    "sql": "SELECT EXTRACT(YEAR FROM CAST($1 AS DATE)) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "2024-02-29"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2024",
+    "sqlite_input": "SELECT EXTRACT(YEAR FROM CAST(?1 AS DATE)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-47-case-interval",
+    "source_kind": "synthetic",
+    "shape": "case-interval",
+    "sql": "SELECT EXTRACT(SECOND FROM CASE WHEN TRUE THEN INTERVAL '1.25 seconds' ELSE NULL::INTERVAL END) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "1.250000",
+    "sqlite_input": "SELECT EXTRACT(SECOND FROM CASE WHEN TRUE THEN INTERVAL '1.25 seconds' ELSE NULL::INTERVAL END) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-48-coalesced-result",
+    "source_kind": "synthetic",
+    "shape": "coalesced-result",
+    "sql": "SELECT COALESCE(EXTRACT(HOUR FROM NULL::TIME),EXTRACT(HOUR FROM TIME '12:34:56')) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "12",
+    "sqlite_input": "SELECT COALESCE(EXTRACT(HOUR FROM NULL::TIME),EXTRACT(HOUR FROM TIME '12:34:56')) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-49-string-field",
+    "source_kind": "synthetic",
+    "shape": "string-field",
+    "sql": "SELECT EXTRACT('YeAr' FROM DATE '2024-02-29') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2024",
+    "sqlite_input": "SELECT EXTRACT('YeAr' FROM DATE '2024-02-29') AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "extract-50-quoted-field",
+    "source_kind": "synthetic",
+    "shape": "quoted-field",
+    "sql": "SELECT EXTRACT(\"day\" FROM DATE '2024-02-29') AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "29",
+    "sqlite_input": "SELECT EXTRACT(\"day\" FROM DATE '2024-02-29') AS v;",
+    "sqlite_supported": false
+  }
+]

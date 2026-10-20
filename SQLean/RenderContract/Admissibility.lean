@@ -125,6 +125,9 @@ mutual
             "a bare scalar-query right operand collides with quantified-subquery syntax"⟩)
         else combine [inspectExpr left, inspectExpr right]
     | .unary _ arg | .aggregate _ arg _ | .isNull arg _ => combine [inspectExpr arg]
+    | .extract field arg =>
+        if field.contains '\x00' then invalid "representation.extract-field-nul" "EXTRACT field contains NUL"
+        else combine [inspectExpr arg]
     | .cast arg type =>
         checkDataType type
         combine [inspectExpr arg, .ok {depth := arrayTypeDepth type.name}]

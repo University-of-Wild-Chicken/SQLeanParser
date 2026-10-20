@@ -41,6 +41,7 @@ mutual
         simp only [translateExpr, translateExpr_idempotent left, translateExpr_idempotent right]
     | overlap left right =>
         simp only [translateExpr, translateExpr_idempotent left, translateExpr_idempotent right]
+    | extract field arg => simp only [translateExpr, translateExpr_idempotent arg]
     | cast arg target => simp only [translateExpr, translateExpr_idempotent arg]
     | subscript base subscripts =>
         simp only [translateExpr, List.attach_map_val, translateExpr_idempotent base]

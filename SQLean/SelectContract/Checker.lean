@@ -187,6 +187,13 @@ mutual
                 (scalarInput a arg.type).nullable || (scalarInput b pattern.type).nullable⟩,
               arg.uses ++ pattern.uses,
               .regex (insensitive := insensitive) (negated := negated) arg.valid pattern.valid signature⟩
+      | .extract field a => do
+          let arg ← checkExpr fuel params scope a
+          match signature : extractSignature (scalarInput a arg.type) with
+          | none => .error (invalid "extract_signature"
+              "EXTRACT requires an unambiguous DATE, TIME, TIMETZ, TIMESTAMP, TIMESTAMPTZ or INTERVAL input")
+          | some selected => .ok ⟨some ⟨selected.output, extractNullable (scalarInput a arg.type)⟩,
+              arg.uses, .extract (field := field) arg.valid signature⟩
       | .jsonAccess op a b => do
           let arg ← checkExpr fuel params scope a
           let key ← checkExpr fuel params scope b
@@ -682,7 +689,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
         | .binary _ a b | .pattern a b _ | .nullIf a b
         | .quantifiedComparison _ _ a b | .concat a b | .regex a b .. | .jsonAccess _ a b
         | .containment a b _ | .overlap a b => [a, b]
-        | .unary _ a | .cast a _ | .isNull a _ | .inQuery a _ => [a]
+        | .unary _ a | .cast a _ | .extract _ a | .isNull a _ | .inQuery a _ => [a]
         | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
         | .array args | .row args | .call _ args | .coalesce args | .greatest args | .least args => args
         | .caseExpr operand branches otherwise =>

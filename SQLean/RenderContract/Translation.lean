@@ -37,6 +37,7 @@ mutual
     | .containment left right containedBy =>
         .containment (translateExpr left) (translateExpr right) containedBy
     | .overlap left right => .overlap (translateExpr left) (translateExpr right)
+    | .extract field arg => .extract field (translateExpr arg)
     | .cast arg target => .cast (translateExpr arg) target
     | .subscript base subscripts => .subscript (translateExpr base)
         (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>

@@ -43,6 +43,9 @@ mutual
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       letI : Decidable (a1 = b1) := exactExprDecEq a1 b1
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2) (by simp only [Expr.pattern.injEq])
+    case extract.extract a0 a1 b0 b1 =>
+      letI : Decidable (a1 = b1) := exactExprDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.extract.injEq])
     case cast.cast a0 a1 b0 b1 =>
       letI : Decidable (a0 = b0) := exactExprDecEq a0 b0
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [Expr.cast.injEq])

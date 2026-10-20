@@ -190,6 +190,10 @@ mutual
         (signature : stringMatchSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
         ExprValid params scope (.regex a b insensitive negated)
           (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
+    | extract (arg : ExprValid params scope a ta uses)
+        (signature : extractSignature (scalarInput a ta) = some selected) :
+        ExprValid params scope (.extract field a)
+          (some ⟨selected.output, extractNullable (scalarInput a ta)⟩) uses
     | jsonAccess (arg : ExprValid params scope a ta ua) (key : ExprValid params scope b tb ub)
         (signature : jsonAccessSignature op (scalarInput a ta) (scalarInput b tb) = some selected) :
         ExprValid params scope (.jsonAccess op a b) (some ⟨selected.output, true⟩) (ua ++ ub)
@@ -340,6 +344,7 @@ def outputLabel : Advanced.Expr → Nat × Name
   | .call name _ => (2, name.getLastD "?column?")
   | .array _ => (2, "array")
   | .row _ => (2, "row")
+  | .extract .. => (2, "extract")
   | .cast arg target =>
       let inherited := outputLabel arg
       if inherited.1 ≤ 1 then (1, typeNameLabel target.name) else inherited

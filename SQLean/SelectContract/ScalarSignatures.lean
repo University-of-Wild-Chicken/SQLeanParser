@@ -244,6 +244,27 @@ def resolveOverload (catalog : List FunctionOverload) (args : List ScalarInput) 
       | [candidate] => some candidate
       | _ => none
 
+/-- PostgreSQL 16's six SQL EXTRACT declarations. The syntactic field is
+passed as TEXT; temporal input modifiers do not select a different overload.
+Every declaration returns unmodified NUMERIC, unlike date_part's FLOAT8. -/
+def extractCatalog : List FunctionOverload :=
+  [.date, .time [], .timeTZ [], .timestamp [], .timestampTZ [], .interval []].map
+    fun temporal => ⟨[.text, temporal], .numeric []⟩
+
+/-- Unknown temporal operands remain ambiguous across the datetime/interval
+categories. Concrete TEXT is not implicitly parsed as a temporal value. -/
+def extractSignature (input : ScalarInput) : Option FunctionOverload :=
+  resolveOverload extractCatalog [.known ⟨.text, false⟩, input]
+
+/-- DATE and both timestamp families admit infinity: successful extraction
+of some fields then yields SQL NULL even with a non-NULL operand. Other
+admitted families only propagate their operand's SQL NULL. Field recognition,
+field/type compatibility and input conversion remain runtime obligations. -/
+def extractNullable (input : ScalarInput) : Bool :=
+  match input.base with
+  | some .date | some (.timestamp _) | some (.timestampTZ _) => true
+  | _ => input.nullable
+
 def jsonAccessOperators : List Advanced.JsonAccessOp :=
   [.field, .fieldText, .path, .pathText]
 

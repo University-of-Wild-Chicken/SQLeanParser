@@ -34,6 +34,7 @@ mutual
     | .jsonAccess .. => unsupported "json-extraction"
     | .containment .. => unsupported "containment"
     | .overlap .. => unsupported "overlap"
+    | .extract .. => unsupported "extract"
     | .binary _ left right | .concat left right | .filteredAggregate left right =>
         checkSQLiteExpr left; checkSQLiteExpr right
     | .pattern left right insensitive =>

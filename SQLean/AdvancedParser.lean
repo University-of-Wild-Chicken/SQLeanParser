@@ -1,4 +1,5 @@
 import SQLean.AdvancedSyntax
+import SQLean.PostgresGrammar.Generated.Symbols
 
 /-! A total, source-positioned recursive descent parser for the extended syntax.
 The fuel bound grows with source length; decimal literals remain exact strings. -/
@@ -217,6 +218,25 @@ private def identifier : Parser Name := do
   | .quoted s => pure s
   | .word s => if reserved.contains s.toLower then fail s!"reserved identifier {s}" else pure s
   | _ => fail "expected identifier"
+
+/-- `extract_arg` is IDENT, Sconst, or six specifically listed keywords.
+Other PostgreSQL keywords cannot be treated as identifiers in this position.
+Decoded fields always serialize as strings; identifier truncation is excluded. -/
+private def extractField : Parser String := do
+  match (← pop).kind with
+  | .text value => pure value
+  | .quoted value =>
+      if value.isEmpty || value.utf8ByteSize > 63 then
+        fail "EXTRACT identifier fields require 1 to 63 UTF-8 bytes"
+      else pure value
+  | .word value =>
+      if value.utf8ByteSize > 63 then
+        fail "EXTRACT identifier fields cannot exceed 63 UTF-8 bytes"
+      else if (["year", "month", "day", "hour", "minute", "second"] : List String).contains value ||
+          (SQLean.PostgresGrammar.Generated.keyword value).isNone then
+        pure value
+      else fail "PostgreSQL keyword is not an EXTRACT field"
+  | _ => fail "expected EXTRACT field identifier or string"
 private def alias? : Parser (Option Name) := do
   if ← eat "as" then return some (← identifier)
   match (← peek).kind with
@@ -410,6 +430,15 @@ mutual
           expect ")"
           pure fields
         return .row fields
+      if (← isAt "extract") && ((← get).drop 1).head?.any (fun t => t.kind == .symbol "(") then
+        let _ ← pop
+        if ← read then fail "EXTRACT is not supported by the SQLite profile"
+        expect "("
+        let field ← extractField
+        expect "from"
+        let arg ← expression fuel 0
+        expect ")"
+        return .extract field arg
       if ← eat "case" then
         let operand ← if ← isAt "when" then pure none else do pure (some (← expression fuel 0))
         let branches ← caseBranches fuel

@@ -46,6 +46,7 @@ POPULATIONS = {
     "array_containment": {"postgres": 26, "rum": 20, "risingwave": 4},
     "array_overlap": {"postgres": 21, "rum": 12, "readyset": 11, "risingwave": 4,
                       "sqlc": 1, "yugabyte": 1},
+    "extract": {"postgres": 50},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -757,6 +758,65 @@ def observe_array_predicates(parsed: dict, factor: str) -> dict:
     return {"source_free": source_free, "array_predicates": entries}
 
 
+EXTRACT_SOURCE_TYPES = {"date", "time", "timetz", "timestamp", "timestamptz", "interval"}
+EXTRACT_SOURCE_FIELDS = {
+    "century", "day", "decade", "dow", "doy", "epoch", "hour", "isodow", "isoyear",
+    "julian", "microsecond", "millennium", "millisecond", "minute", "month", "quarter",
+    "second", "timezone", "timezone_hour", "timezone_minute", "week", "year",
+}
+
+
+def validate_temporal_extractions(entries: list[dict]) -> None:
+    if not isinstance(entries, list) or len(entries) != 1:
+        raise ValueError("EXTRACT source must retain exactly one temporal extraction")
+    entry = entries[0]
+    if (not isinstance(entry, dict) or set(entry) != {"field", "declared_type", "literal"}
+            or not isinstance(entry["field"], str) or not isinstance(entry["declared_type"], str)
+            or entry["field"] not in EXTRACT_SOURCE_FIELDS
+            or entry["declared_type"] not in EXTRACT_SOURCE_TYPES
+            or not isinstance(entry["literal"], str) or not entry["literal"]):
+        raise ValueError("invalid explicit temporal EXTRACT observation")
+
+
+def observe_temporal_extractions(parsed: dict) -> dict:
+    """Observe one written temporal cast and unit; do not evaluate the literal."""
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("EXTRACT source must be a SELECT")
+    query = parsed["SelectStmt"]
+    if (set(query) - {"targetList", "op", "limitOption"}
+            or query.get("op") != "SETOP_NONE"
+            or query.get("limitOption") != "LIMIT_OPTION_DEFAULT"
+            or not isinstance(query.get("targetList"), list) or len(query["targetList"]) != 1):
+        raise ValueError("EXTRACT population requires one source-free projection")
+    target = query["targetList"][0].get("ResTarget", {})
+    if set(target) - {"val", "location"} or set(target.get("val", {})) != {"FuncCall"}:
+        raise ValueError("EXTRACT population requires an unaliased direct extraction")
+    call = target["val"]["FuncCall"]
+    if (set(call) - {"funcname", "args", "funcformat", "location"}
+            or call.get("funcname") != [{"String": {"sval": "pg_catalog"}}, {"String": {"sval": "extract"}}]
+            or call.get("funcformat") != "COERCE_SQL_SYNTAX"
+            or not isinstance(call.get("args"), list) or len(call["args"]) != 2):
+        raise ValueError("EXTRACT source must use EXTRACT(field FROM expression) syntax")
+    field_node, argument = call["args"]
+    try:
+        field = field_node["A_Const"]["sval"]["sval"]
+        if set(argument) != {"TypeCast"}:
+            raise ValueError("EXTRACT input is not an explicit temporal literal")
+        cast = argument["TypeCast"]
+        typename = cast["typeName"]
+        names = [part["String"]["sval"] for part in typename["names"]]
+        if (not names or len(names) > 2 or (len(names) == 2 and names[0] != "pg_catalog")
+                or typename.get("arrayBounds") or typename.get("typmods")
+                or set(cast["arg"]) != {"A_Const"}):
+            raise ValueError("EXTRACT source excludes array/user types and temporal field qualifiers")
+        literal = cast["arg"]["A_Const"]["sval"]["sval"]
+    except (KeyError, TypeError) as error:
+        raise ValueError("EXTRACT source requires a field and explicit string temporal literal") from error
+    entries = [{"field": field, "declared_type": names[-1], "literal": literal}]
+    validate_temporal_extractions(entries)
+    return {"source_free": True, "temporal_extractions": entries}
+
+
 PATTERN_OPERATORS = {"ilike": {"ILIKE", "NOT ILIKE"}, "regex": {"~", "~*", "!~", "!~*"}}
 PATTERN_OPERAND_FORMS = {"A_Const", "ColumnRef", "TypeCast", "A_Expr", "FuncCall"}
 
@@ -1036,6 +1096,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
 
         def visit_FuncCall(self, ancestors, node):
             names = [part.sval for part in node.funcname]
+            if (factor == "extract" and names == ["pg_catalog", "extract"]
+                    and node.funcformat == enums.CoercionForm.COERCE_SQL_SYNTAX):
+                return  # The closed source observer checks this special syntax below.
             if (len(names) != 1 or node.func_variadic or node.over or node.agg_order
                     or node.agg_within_group
                     or any(isinstance(arg, ast.NamedArgExpr) for arg in node.args or ())):
@@ -1168,6 +1231,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor in ARRAY_PREDICATE_FACTORS:
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation.update(observe_array_predicates(parsed, factor))
+    if factor == "extract":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation.update(observe_temporal_extractions(parsed))
     if factor in PATTERN_OPERATORS:
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["pattern_matches"] = observe_pattern_matches(parsed, factor)
@@ -1201,6 +1267,7 @@ def validate_population(records: list[dict], factor: str) -> None:
     json_operators, json_left, json_right, json_left_casts, json_right_casts = (
         Counter(), Counter(), Counter(), Counter(), Counter())
     containment_scopes = Counter()
+    temporal_types, temporal_fields, temporal_infinities = Counter(), Counter(), Counter()
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -1234,6 +1301,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.update(("array_concatenations", "source_free"))
         if factor in ARRAY_PREDICATE_FACTORS:
             expected_keys.update(("array_predicates", "source_free"))
+        if factor == "extract":
+            expected_keys.update(("temporal_extractions", "source_free"))
         if factor in PATTERN_OPERATORS:
             expected_keys.add("pattern_matches")
         if factor == "json_extraction":
@@ -1334,6 +1403,16 @@ def validate_population(records: list[dict], factor: str) -> None:
             json_operators.update(entry["operator"] for entry in entries)
             if observation["function_names"] or observation["conditional_forms"]:
                 raise ValueError("array predicate source population has no calls or conditionals")
+        if factor == "extract":
+            if (observation["source_free"] is not True
+                    or observation["function_names"] or observation["conditional_forms"]):
+                raise ValueError("EXTRACT population must remain source-free special syntax")
+            entries = observation["temporal_extractions"]
+            validate_temporal_extractions(entries)
+            temporal_types.update(entry["declared_type"] for entry in entries)
+            temporal_fields.update(entry["field"] for entry in entries)
+            temporal_infinities.update((entry["declared_type"], entry["field"], entry["literal"])
+                                      for entry in entries if "infinity" in entry["literal"])
         if factor in PATTERN_OPERATORS:
             entries = observation["pattern_matches"]
             validate_pattern_matches(entries, factor)
@@ -1443,6 +1522,17 @@ def validate_population(records: list[dict], factor: str) -> None:
         expected_ops = {"@>": 30, "<@": 20} if factor == "array_containment" else {"&&": 50, "@>": 2}
         if containment_scopes != expected_scopes or json_operators != expected_ops:
             raise ValueError("array predicate population must retain its fixed operators and source scopes")
+    if factor == "extract" and (
+            temporal_types != {"date": 22, "time": 6, "timetz": 9, "interval": 9,
+                               "timestamp": 2, "timestamptz": 2}
+            or temporal_fields != {
+                "century": 11, "epoch": 9, "decade": 5, "day": 2, "microsecond": 2,
+                "millisecond": 2, "second": 2, "minute": 2, "hour": 2, "millennium": 1,
+                "month": 1, "year": 1, "isoyear": 1, "quarter": 1, "week": 1, "dow": 1,
+                "isodow": 1, "doy": 1, "julian": 1, "timezone": 1, "timezone_hour": 1,
+                "timezone_minute": 1}
+            or temporal_infinities != {("date", "day", "infinity"): 1, ("date", "epoch", "infinity"): 1}):
+        raise ValueError("EXTRACT population must retain six temporal types, 22 units and two infinity cases")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -1465,7 +1555,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -1490,7 +1580,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if factor != "array_overlap" or name != "readyset" or not path.endswith(".rs"):
                 raise ValueError("Rust query selection is outside its explicit source factor")
             sql, line, detail = selected_rust_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])

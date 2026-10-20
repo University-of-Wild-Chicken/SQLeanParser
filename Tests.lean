@@ -66,6 +66,8 @@ import Tests.ArrayConcatenationContract
 import Tests.ArrayConcatenationRendering
 import Tests.ArrayPredicateContract
 import Tests.ArrayPredicateRendering
+import Tests.ExtractContract
+import Tests.ExtractRendering
 
 namespace SQLean.Tests
 
@@ -230,6 +232,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {arrayPredicateConcrete} unchanged array predicate source certificates"
   let arrayPredicateRendering ← arrayPredicateRenderingTests
   IO.println s!"PASS: {arrayPredicateRendering} array predicate parsing and rendering checks"
+  let extractContract ← extractContractTests
+  IO.println s!"PASS: {extractContract} EXTRACT validity and signature checks"
+  let extractCorpus ← extractCorpusTests
+  IO.println s!"PASS: {extractCorpus} EXTRACT full-query certificates"
+  let extractConcrete ← extractConcreteContractTests
+  IO.println s!"PASS: {extractConcrete} unchanged EXTRACT source certificates"
+  let extractRendering ← extractRenderingTests
+  IO.println s!"PASS: {extractRendering} EXTRACT parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

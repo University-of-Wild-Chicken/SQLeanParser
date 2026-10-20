@@ -1,0 +1,1203 @@
+{
+  "format_version": 1,
+  "factor": "extract",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 50
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/date.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/date.sql",
+          "sha256": "616424ff98227d02b301013b618711b85ad1ff9e1619c7ec9f7bc362c265a1b0"
+        },
+        {
+          "path": "src/test/regress/sql/interval.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/interval.sql",
+          "sha256": "d0250948638904fcb7f039d85ca99337c3041d805ff8475a7258faa576eab6b8"
+        },
+        {
+          "path": "src/test/regress/sql/time.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/time.sql",
+          "sha256": "89f74ddb5ec458c8f9ff219eab06f48f6ea13767c563782f80569ce364d0960c"
+        },
+        {
+          "path": "src/test/regress/sql/timestamp.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/timestamp.sql",
+          "sha256": "68b4cd1d083eac4379f7603fa5ca8c7580d5f755d0682161753da4b4ef69f99b"
+        },
+        {
+          "path": "src/test/regress/sql/timestamptz.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/timestamptz.sql",
+          "sha256": "343ac9b784dd67c56f1e16c6d1b93a21713cade546609f4c7a08e2de27d9d324"
+        },
+        {
+          "path": "src/test/regress/sql/timetz.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/timetz.sql",
+          "sha256": "ece2756ca374eeb6a319bd733870acfd62eb65120f8642d437f0cda3952b1209"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6129,
+        "end": 6181,
+        "statement_index": 176
+      },
+      "sql_sha256": "b35c3c60d8d11d85de86ad9e2d0c389fea72943e6baa900837451bdbc980d6cd",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "epoch",
+            "declared_type": "date",
+            "literal": "1970-01-01"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6209,
+        "end": 6259,
+        "statement_index": 177
+      },
+      "sql_sha256": "c1d7d44dcd85352f1482278f44379906acd5bb92fb33abfc3a10e23a33421fe0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "date",
+            "literal": "0101-12-31 BC"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6809,
+        "end": 6862,
+        "statement_index": 187
+      },
+      "sql_sha256": "3589b43f852fd6684cfaead948cbc25b725b7e6ef9c46568d5373bc3d189b3b3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "millennium",
+            "declared_type": "date",
+            "literal": "0001-12-31 BC"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7308,
+        "end": 7354,
+        "statement_index": 194
+      },
+      "sql_sha256": "2e7f488a3d694eb072d3d85cc6699e54d98f7c9735b0ffc3eae966c45fbc2051",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "decade",
+            "declared_type": "date",
+            "literal": "1994-12-25"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8006,
+        "end": 8059,
+        "statement_index": 206
+      },
+      "sql_sha256": "d2eeda7f4aa316007412a0b4434491af806b84148c6f8d8c59a2bc0fc172b97c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "day",
+            "declared_type": "date",
+            "literal": "2020-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8060,
+        "end": 8113,
+        "statement_index": 207
+      },
+      "sql_sha256": "ddcafa1dc7e7862744c69f7cd72a626a344fe924b5aa992dcad5663b0b3dd0a7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "month",
+            "declared_type": "date",
+            "literal": "2020-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8114,
+        "end": 8167,
+        "statement_index": 208
+      },
+      "sql_sha256": "60bb1f66cc5b8eac88fab401ba55a48b71b6d20e6e16896d060b1ea1bfa73df7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "year",
+            "declared_type": "date",
+            "literal": "2020-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8387,
+        "end": 8440,
+        "statement_index": 213
+      },
+      "sql_sha256": "d3a8ada63722d8dd2e4a54c585c11cb03a26d133139608489115930dba21bced",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "isoyear",
+            "declared_type": "date",
+            "literal": "2020-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8498,
+        "end": 8551,
+        "statement_index": 215
+      },
+      "sql_sha256": "641224069b6d2312ea262735020af724cde3527a976bcdf3a051764fe4180fa7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "quarter",
+            "declared_type": "date",
+            "literal": "2020-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8552,
+        "end": 8605,
+        "statement_index": 216
+      },
+      "sql_sha256": "af43e072c510d84e76de9f5281aa6cc71c0654bf89af2af93ac64aeca8f429cc",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "week",
+            "declared_type": "date",
+            "literal": "2020-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8606,
+        "end": 8659,
+        "statement_index": 217
+      },
+      "sql_sha256": "b225c601bee515966cf39075e52ab3dbb40116fdeb61626f067c1dcbd3ca59fa",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "dow",
+            "declared_type": "date",
+            "literal": "2020-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8714,
+        "end": 8767,
+        "statement_index": 219
+      },
+      "sql_sha256": "a20c9273686f1069113a9a944c451f666e16b0d214ff06409d0073f8b8fd292c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "isodow",
+            "declared_type": "date",
+            "literal": "2020-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8822,
+        "end": 8875,
+        "statement_index": 221
+      },
+      "sql_sha256": "2e059b6cd29fef129b3873ceeaa3fdd00d4620afe2cf946bd2999c883cdc5eba",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "doy",
+            "declared_type": "date",
+            "literal": "2020-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9092,
+        "end": 9145,
+        "statement_index": 226
+      },
+      "sql_sha256": "d72a3a07b415743cdde348d353e282ca2185f796a10d7e46e6f397e4102f8c3d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "julian",
+            "declared_type": "date",
+            "literal": "2020-08-11"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 10196,
+        "end": 10237,
+        "statement_index": 242
+      },
+      "sql_sha256": "fcc2d7491b6b6fee2d09ed35f17824e592212681172c7771651b5fcf4f140fff",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "day",
+            "declared_type": "date",
+            "literal": "infinity"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 10819,
+        "end": 10862,
+        "statement_index": 251
+      },
+      "sql_sha256": "87d34c1d983ae0140cff3baa9c15b3bd7f0cfc86ffcbe73aa4feacf90432d441",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "epoch",
+            "declared_type": "date",
+            "literal": "infinity"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6266,
+        "end": 6316,
+        "statement_index": 178
+      },
+      "sql_sha256": "979d23af039f182a9b806a528ef7577b26912c15a0a839f9ed44eaf0c7d98e52",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "date",
+            "literal": "0100-12-31 BC"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6323,
+        "end": 6373,
+        "statement_index": 179
+      },
+      "sql_sha256": "acd1933b8fa4955e9671796faf4dfdcca81b2e3cb8edb7c3b01fbb9cdb29ddad",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "date",
+            "literal": "0001-12-31 BC"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6380,
+        "end": 6427,
+        "statement_index": 180
+      },
+      "sql_sha256": "04830f4acee43ca1570df641bb5cc9bf8c19f58d305622ae978044779f040663",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "date",
+            "literal": "0001-01-01"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6437,
+        "end": 6487,
+        "statement_index": 181
+      },
+      "sql_sha256": "9bff31d1afb562c40bbeffceb972a6918a568d1181ef59bbbb2ad13df7f2a91f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "date",
+            "literal": "0001-01-01 AD"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6494,
+        "end": 6541,
+        "statement_index": 182
+      },
+      "sql_sha256": "60fd266f86fd9b99fce383a469c1261a93f0b71fddd39404979a9467daca89a0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "date",
+            "literal": "1900-12-31"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/date.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6551,
+        "end": 6598,
+        "statement_index": 183
+      },
+      "sql_sha256": "0fc3cc85704ffcd545f84080ff7ad8a4fed18b80abf3f5a0acaaf1096900a598",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "date",
+            "literal": "1901-01-01"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/time.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1997,
+        "end": 2064,
+        "statement_index": 31
+      },
+      "sql_sha256": "9aecafdc2c00f61543a87bf34d9aacd8d1265138191e013d7220c35359588ee5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "microsecond",
+            "declared_type": "time",
+            "literal": "2020-05-26 13:30:25.575401"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/time.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2065,
+        "end": 2132,
+        "statement_index": 32
+      },
+      "sql_sha256": "afe15d6f7b31f433bc9aa6c437d71a30791f0cb3778d782ea2bb7ab7ae5fdb06",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "millisecond",
+            "declared_type": "time",
+            "literal": "2020-05-26 13:30:25.575401"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/time.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2133,
+        "end": 2200,
+        "statement_index": 33
+      },
+      "sql_sha256": "26e4f01668b5717e35844494ccf234aee9ba5b1df1fbab2fd55ff97eb7d1e5b8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "second",
+            "declared_type": "time",
+            "literal": "2020-05-26 13:30:25.575401"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/time.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2201,
+        "end": 2268,
+        "statement_index": 34
+      },
+      "sql_sha256": "78efa54d3b6bf00e613142687aa9290dbf4a235a3e068bfbfa92f3eaebefb0f8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "minute",
+            "declared_type": "time",
+            "literal": "2020-05-26 13:30:25.575401"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/time.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2269,
+        "end": 2336,
+        "statement_index": 35
+      },
+      "sql_sha256": "011c1bc75c0fdadfadd65efeff22959218608bbad36f1a90988426bd370fa04a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "hour",
+            "declared_type": "time",
+            "literal": "2020-05-26 13:30:25.575401"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/time.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2571,
+        "end": 2638,
+        "statement_index": 39
+      },
+      "sql_sha256": "006f11742fa335fc0b15966f0262c8d0ea5c5f93e795de9f13e964aa67f21d9c",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "epoch",
+            "declared_type": "time",
+            "literal": "2020-05-26 13:30:25.575401"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2429,
+        "end": 2514,
+        "statement_index": 35
+      },
+      "sql_sha256": "db930871a3cfc146e5b30a152c642c367a63e2cc76a63bbe94ddcdf992baf869",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "microsecond",
+            "declared_type": "timetz",
+            "literal": "2020-05-26 13:30:25.575401-04"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2515,
+        "end": 2600,
+        "statement_index": 36
+      },
+      "sql_sha256": "40f602d5493123f8791f24f177ef965f678d943dd60b8a20dea17987878a4a3d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "millisecond",
+            "declared_type": "timetz",
+            "literal": "2020-05-26 13:30:25.575401-04"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2601,
+        "end": 2686,
+        "statement_index": 37
+      },
+      "sql_sha256": "43af00f523b8d2faec97c0d3f0c5418beee102f598753f1fac81fcd92608c115",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "second",
+            "declared_type": "timetz",
+            "literal": "2020-05-26 13:30:25.575401-04"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2687,
+        "end": 2772,
+        "statement_index": 38
+      },
+      "sql_sha256": "2dc808e804d0af647ef6fb45a14dfcf9cabe5169c46cba29ad531d7f65865b92",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "minute",
+            "declared_type": "timetz",
+            "literal": "2020-05-26 13:30:25.575401-04"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2773,
+        "end": 2858,
+        "statement_index": 39
+      },
+      "sql_sha256": "4c0af8e8de5d4cb1bed69afefbe8704cd8f3bba34f9f394d600f15ed2d5b7177",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "hour",
+            "declared_type": "timetz",
+            "literal": "2020-05-26 13:30:25.575401-04"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3051,
+        "end": 3139,
+        "statement_index": 42
+      },
+      "sql_sha256": "b7370e2a0e9ca4eeaebbbf2e128bf23130100a14f4c2e851ea4cfca6595f2769",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "timezone",
+            "declared_type": "timetz",
+            "literal": "2020-05-26 13:30:25.575401-04:30"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3140,
+        "end": 3232,
+        "statement_index": 43
+      },
+      "sql_sha256": "08aeb2cb3eb36da6ea315fb633edd2c1d120c3bb450e0a1b365785df559baa43",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "timezone_hour",
+            "declared_type": "timetz",
+            "literal": "2020-05-26 13:30:25.575401-04:30"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3233,
+        "end": 3325,
+        "statement_index": 44
+      },
+      "sql_sha256": "ce2335709866112e6dcd9aeaa8ab905fd09356c45ee92d3586d80016c047745f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "timezone_minute",
+            "declared_type": "timetz",
+            "literal": "2020-05-26 13:30:25.575401-04:30"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timetz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3326,
+        "end": 3411,
+        "statement_index": 45
+      },
+      "sql_sha256": "530658c0d870e8408424b59360ea4a42bafd4f68972c6a7a0b61b28c7cfda2c4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "epoch",
+            "declared_type": "timetz",
+            "literal": "2020-05-26 13:30:25.575401-04"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamp.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 12574,
+        "end": 12636,
+        "statement_index": 134
+      },
+      "sql_sha256": "ee8be88ae3aeb2004725c46db59fd55987741167cd2ac0cede5f7b2da56de157",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "epoch",
+            "declared_type": "timestamp",
+            "literal": "294270-01-01 00:00:00"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamp.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 12676,
+        "end": 12736,
+        "statement_index": 135
+      },
+      "sql_sha256": "edf3acaa4d385d6e3782330630e3070eca21d142ba4a0fb54fc1bdd401337355",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "epoch",
+            "declared_type": "timestamp",
+            "literal": "5000-01-01 00:00:00"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamptz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13628,
+        "end": 13695,
+        "statement_index": 154
+      },
+      "sql_sha256": "3fc049a0fd14127c11c5e4b69d41b2442706d3555d676e30c1c28931aa045bfa",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "epoch",
+            "declared_type": "timestamptz",
+            "literal": "294270-01-01 00:00:00+00"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/timestamptz.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13735,
+        "end": 13800,
+        "statement_index": 155
+      },
+      "sql_sha256": "a47166a89732c5520418919e5a27bbe746c0fc22fcbf90c63b6a482810dd8dac",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "epoch",
+            "declared_type": "timestamptz",
+            "literal": "5000-01-01 00:00:00+00"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22507,
+        "end": 22552,
+        "statement_index": 333
+      },
+      "sql_sha256": "3f0047b5aa3643bcd248bb57c9ec55342d9134993d8660f391c941b1a7501f5f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "decade",
+            "declared_type": "interval",
+            "literal": "100 y"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22553,
+        "end": 22597,
+        "statement_index": 334
+      },
+      "sql_sha256": "9623a9d2e588313f76a73285b746fe2996d89c6dd7072a99e5d0f3d5c4bf919b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "decade",
+            "declared_type": "interval",
+            "literal": "99 y"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22598,
+        "end": 22643,
+        "statement_index": 335
+      },
+      "sql_sha256": "549792bd78635e76ed123dc527347682f189979481b59ba6e76eeb297a372ba4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "decade",
+            "declared_type": "interval",
+            "literal": "-99 y"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22644,
+        "end": 22690,
+        "statement_index": 336
+      },
+      "sql_sha256": "f42bacfa3a0b7e77102698eb9cf248228cc1d0057664a30deee1804ee2d73ed4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "decade",
+            "declared_type": "interval",
+            "literal": "-100 y"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22692,
+        "end": 22738,
+        "statement_index": 337
+      },
+      "sql_sha256": "61e92738d56584a69710375d1442d7bc1a55a4cc125fc00c910c2a3aa0ddad25",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "interval",
+            "literal": "100 y"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22739,
+        "end": 22784,
+        "statement_index": 338
+      },
+      "sql_sha256": "b760ec7703c5a432c4dca1461b1ef51faf95f8bb3c845406d75e52fdae4bb410",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "interval",
+            "literal": "99 y"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22785,
+        "end": 22831,
+        "statement_index": 339
+      },
+      "sql_sha256": "7ff37a858c525fab73f1ede08b28e5078f6123257969e8813c5e31b74a162a20",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "interval",
+            "literal": "-99 y"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 22832,
+        "end": 22879,
+        "statement_index": 340
+      },
+      "sql_sha256": "52c2f56d63ba7106a29daf87c42227396800653cd1c09b65e8b4d6d8607b02d0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "century",
+            "declared_type": "interval",
+            "literal": "-100 y"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 23232,
+        "end": 23286,
+        "statement_index": 342
+      },
+      "sql_sha256": "14a0837a00a4404dde40c65091cb502149fcec61be8d6039508b8dd51acac9b3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "temporal_extractions": [
+          {
+            "field": "epoch",
+            "declared_type": "interval",
+            "literal": "1000000000 days"
+          }
+        ]
+      }
+    }
+  ]
+}

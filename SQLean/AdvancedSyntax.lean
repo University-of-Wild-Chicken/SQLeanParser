@@ -119,6 +119,9 @@ mutual
     /-- PostgreSQL `&&`; the independent typing profile selects supported
     operand families separately from this structural syntax. -/
     | overlap (left right : Expr)
+    /-- PostgreSQL EXTRACT special syntax. The field is a decoded SQL string,
+    never an expression or an interpolated SQL fragment. -/
+    | extract (field : String) (arg : Expr)
     | cast (arg : Expr) (target : DataType)
     /-- PostgreSQL ARRAY[...] constructor. Nested bracket shorthand normalizes
     to nested constructors; declared dimensions remain runtime properties. -/

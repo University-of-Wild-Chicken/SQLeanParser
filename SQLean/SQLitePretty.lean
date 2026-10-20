@@ -62,6 +62,7 @@ mutual
     | .containment left right containedBy =>
         paren (exprSql left ++ (if containedBy then " <@ " else " @> ") ++ exprSql right)
     | .overlap left right => paren (exprSql left ++ " && " ++ exprSql right)
+    | .extract field arg => "EXTRACT(" ++ quoteText field ++ " FROM " ++ exprSql arg ++ ")"
     | .cast arg type => "CAST(" ++ exprSql arg ++ " AS " ++ type.toSql ++ ")"
     -- Excluded by SQLite admissibility; this total structural spelling is only
     -- used by serialization laws over arbitrary finite ASTs.

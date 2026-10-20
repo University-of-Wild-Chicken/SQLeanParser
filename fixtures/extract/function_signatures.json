@@ -1,0 +1,50 @@
+[
+  {
+    "name": "extract",
+    "inputs": [
+      "text",
+      "date"
+    ],
+    "output": "numeric"
+  },
+  {
+    "name": "extract",
+    "inputs": [
+      "text",
+      "time"
+    ],
+    "output": "numeric"
+  },
+  {
+    "name": "extract",
+    "inputs": [
+      "text",
+      "time with time zone"
+    ],
+    "output": "numeric"
+  },
+  {
+    "name": "extract",
+    "inputs": [
+      "text",
+      "timestamp"
+    ],
+    "output": "numeric"
+  },
+  {
+    "name": "extract",
+    "inputs": [
+      "text",
+      "timestamp with time zone"
+    ],
+    "output": "numeric"
+  },
+  {
+    "name": "extract",
+    "inputs": [
+      "text",
+      "interval"
+    ],
+    "output": "numeric"
+  }
+]

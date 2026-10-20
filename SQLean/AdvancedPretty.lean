@@ -97,6 +97,7 @@ mutual
     | .containment left right containedBy =>
         paren (exprSql pg left ++ (if containedBy then " <@ " else " @> ") ++ exprSql pg right)
     | .overlap left right => paren (exprSql pg left ++ " && " ++ exprSql pg right)
+    | .extract field arg => "EXTRACT(" ++ quoteText field ++ " FROM " ++ exprSql pg arg ++ ")"
     | .cast arg type => "CAST(" ++ exprSql pg arg ++ " AS " ++ type.toSql ++ ")"
     | .subscript base subscripts => paren (exprSql pg base) ++ String.join
         (subscripts.attach.map fun (subscript : {s : Subscript // s ∈ subscripts}) =>

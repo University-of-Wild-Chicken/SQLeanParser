@@ -27,6 +27,18 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.20 EXTRACT increment](docs/extract-contract-v0.20.md)
+adds temporal field extraction with all six PostgreSQL declarations and exact
+NUMERIC results. Fifty synthetic queries and 50 unchanged PostgreSQL source
+queries receive full static and rendering certificates. Nullable results
+account for infinite dates/timestamps; unsupported field units and literal
+conversion remain runtime obligations. Decoded field strings retain their
+contents through canonical rendering.
+Native checks cover 112 value/type observations, 112 SQL NULL observations,
+130 exact result descriptors and 18 expected errors. The updated
+[industrial corpus replay](docs/corpus/extract-v0.20/README.md) accepts
+238 of 276 statements, closing all three original EXTRACT syntax failures.
+
 The [v0.19 array-predicate increment](docs/array-predicates-contract-v0.19.md)
 adds array containment (`@>`, `<@`) and overlap (`&&`) with matching element
 types and strict outer-NULL propagation. Separate inventories retain the three
@@ -361,7 +373,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.19` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.20` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

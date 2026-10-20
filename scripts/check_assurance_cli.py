@@ -26,7 +26,7 @@ EXIT_CODES = {
 }
 ASSURANCE = {"contract": "declarative", "checked": "executable", "syntax": "syntax"}
 PROFILES = {
-    "contract": "sqlean-basic-select-v0.19",
+    "contract": "sqlean-basic-select-v0.20",
     "checked": "sqlean-expanded-v0",
     "syntax": "sqlean-syntax-v0",
 }
@@ -170,6 +170,10 @@ def assert_report(
     if status == "valid":
         assert report.get("catalogUnchanged") is True, (args, report)
         assert report.get("typePrecision") == "exact", (args, report)
+        actual_columns = report.get("outputColumns")
+        assert isinstance(actual_columns, list), (args, report)
+        assert all(isinstance(column, dict) and type(column.get("nullable")) is bool
+                   for column in actual_columns), (args, report)
     elif status == "checked":
         assert report.get("typePrecision") == "family", (args, report)
     if status in {"invalid", "rejected", "unsupported", "inconclusive"}:
