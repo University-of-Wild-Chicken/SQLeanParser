@@ -66,6 +66,12 @@ def checkTypeName (name : TypeName) (modifiers : List Nat) : Except Failure Unit
   | .time, [p] | .timeTZ, [p] | .timestamp, [p] | .timestampTZ, [p] | .interval, [p] =>
       if p ≤ 6 then pure ()
       else invalid "representation.type-modifiers" "fractional-second precision must be between 0 and 6"
+  | .intervalRange fields, [p] =>
+      if !fields.allowsPrecision then
+        invalid "representation.type-modifiers" "interval precision requires a final SECOND field"
+      else if p ≤ 6 then pure ()
+      else .error (.unsupported ⟨"coverage.interval-precision",
+        "PostgreSQL clamps interval precision above 6; this exact declaration profile preserves only 0 to 6"⟩)
   | _, _ => invalid "representation.type-modifiers" "invalid modifiers for this type"
 
 def checkDataType (type : DataType) : Except Failure Unit :=

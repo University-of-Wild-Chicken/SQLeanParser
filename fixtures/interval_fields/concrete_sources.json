@@ -1,0 +1,1296 @@
+{
+  "format_version": 1,
+  "factor": "interval_fields",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 49,
+    "duckdb": 1
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/interval.sql",
+          "local_path": "fixtures/extended_types/sources/postgres/src/test/regress/sql/interval.sql",
+          "sha256": "d0250948638904fcb7f039d85ca99337c3041d805ff8475a7258faa576eab6b8"
+        }
+      ]
+    },
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "source_kind": "engine-regression",
+      "source_dialect": "duckdb",
+      "files": [
+        {
+          "path": "test/sql/types/interval/test_interval.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/types/interval/test_interval.test",
+          "sha256": "bcd0145d5818889472ca7341df1b955b43989a0ceca6c1fdf767b5e48f7334f0"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7013,
+        "end": 7042,
+        "statement_index": 92
+      },
+      "sql_sha256": "fd33a7aafe564d8ee45718239d4d949225db070f5ef43d32476b6c0d590d4d59",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "second",
+            "mask": 4096,
+            "precision": null,
+            "literal": "999",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7076,
+        "end": 7105,
+        "statement_index": 93
+      },
+      "sql_sha256": "ec5c695d8135246502ec2072359b13f4c87adba506bff803fb1cb49962362dc6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute",
+            "mask": 2048,
+            "precision": null,
+            "literal": "999",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7106,
+        "end": 7133,
+        "statement_index": 94
+      },
+      "sql_sha256": "c4363a0bb03dac9f71ccf17d4162c851683c08f8364732a94287d921364d012f",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour",
+            "mask": 1024,
+            "precision": null,
+            "literal": "999",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7134,
+        "end": 7160,
+        "statement_index": 95
+      },
+      "sql_sha256": "120e36a4ac803146d3b5c58ae5c5b1b68f05f1f1964a33f63f0f85b1f77c86ae",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day",
+            "mask": 8,
+            "precision": null,
+            "literal": "999",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7161,
+        "end": 7189,
+        "statement_index": 96
+      },
+      "sql_sha256": "454b6d68c99bc22ec94cc82c3b670d17dd6491bef0cc13c5cc236037885f6bcf",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "month",
+            "mask": 2,
+            "precision": null,
+            "literal": "999",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7243,
+        "end": 7268,
+        "statement_index": 97
+      },
+      "sql_sha256": "9fb6ba7bf29f524be11f3a8f4fb8b3cc418f3436413a9940230aa0a97e0b66e0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "year",
+            "mask": 4,
+            "precision": null,
+            "literal": "1",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7269,
+        "end": 7295,
+        "statement_index": 98
+      },
+      "sql_sha256": "5b5275ce257fbdd4cd4974f93364450b9a666461adfac038db26e00ce86af7f6",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "month",
+            "mask": 2,
+            "precision": null,
+            "literal": "2",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7296,
+        "end": 7320,
+        "statement_index": 99
+      },
+      "sql_sha256": "baf793f74f7a137c4344de22324e8acea09d0a3494fb641f54e027ebbcbc5ef2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day",
+            "mask": 8,
+            "precision": null,
+            "literal": "3",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7321,
+        "end": 7346,
+        "statement_index": 100
+      },
+      "sql_sha256": "8d9176fa58505938005d3966634bec629359d3babc4a662eb3351b36580a9801",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour",
+            "mask": 1024,
+            "precision": null,
+            "literal": "4",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7347,
+        "end": 7374,
+        "statement_index": 101
+      },
+      "sql_sha256": "e877993f333df3e5107726c0306a4c7c812a755cb06eda36aa9f13f830b99d05",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute",
+            "mask": 2048,
+            "precision": null,
+            "literal": "5",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7375,
+        "end": 7402,
+        "statement_index": 102
+      },
+      "sql_sha256": "e87877f8ba2811d2b244f929cb33d74d1a7ef37fea0509266ce5432f20d810f1",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "second",
+            "mask": 4096,
+            "precision": null,
+            "literal": "6",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7403,
+        "end": 7437,
+        "statement_index": 103
+      },
+      "sql_sha256": "c2268a25d177090ef42a913a7eff9c7dca35ce0806857e618bed99e105f426ba",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "year to month",
+            "mask": 6,
+            "precision": null,
+            "literal": "1",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7438,
+        "end": 7474,
+        "statement_index": 104
+      },
+      "sql_sha256": "7e5bbab2962849b78351dc164cf10a21b215c88a1d4d5eddf069b7afc0d62bcb",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "year to month",
+            "mask": 6,
+            "precision": null,
+            "literal": "1-2",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7475,
+        "end": 7509,
+        "statement_index": 105
+      },
+      "sql_sha256": "8bf485e2275dab0d0bca5a807fa1f63c203328189987ea6766ec671b701b3fab",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to hour",
+            "mask": 1032,
+            "precision": null,
+            "literal": "1 2",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7510,
+        "end": 7547,
+        "statement_index": 106
+      },
+      "sql_sha256": "4c4ec380ef42fa5a9d5da7849973d56910723510d26ffa9055a3b40c5b104e5a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to hour",
+            "mask": 1032,
+            "precision": null,
+            "literal": "1 2:03",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7548,
+        "end": 7588,
+        "statement_index": 107
+      },
+      "sql_sha256": "c84fcd0752ee07e246463abcee3fe6371013b24028c8154c19eeba65a3709510",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to hour",
+            "mask": 1032,
+            "precision": null,
+            "literal": "1 2:03:04",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7589,
+        "end": 7625,
+        "statement_index": 108
+      },
+      "sql_sha256": "542915978fe6a23bbbffe130ac95f951268b5728779ab7191fed4c67b847a608",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to minute",
+            "mask": 3080,
+            "precision": null,
+            "literal": "1 2",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7626,
+        "end": 7665,
+        "statement_index": 109
+      },
+      "sql_sha256": "b36f2191737dfaa3afcc2fc541e3cc630f47de6ccc0a0c0500084f4b33d30377",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to minute",
+            "mask": 3080,
+            "precision": null,
+            "literal": "1 2:03",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7666,
+        "end": 7708,
+        "statement_index": 110
+      },
+      "sql_sha256": "bb3098f7543a302d6e2b28bd9321fe8f32ab2df3d88c5084e8cc96ca15336bf7",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to minute",
+            "mask": 3080,
+            "precision": null,
+            "literal": "1 2:03:04",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7709,
+        "end": 7745,
+        "statement_index": 111
+      },
+      "sql_sha256": "5fb4c1af0ae7a4fffe98bb4f51a84761a69b2fa14ede6e4c8df36239342fda65",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to second",
+            "mask": 7176,
+            "precision": null,
+            "literal": "1 2",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7746,
+        "end": 7785,
+        "statement_index": 112
+      },
+      "sql_sha256": "d8178b1570d4ae8e8ce8dd6da47f403b9383bab9c808e1645a48e3d8e85119d0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to second",
+            "mask": 7176,
+            "precision": null,
+            "literal": "1 2:03",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7786,
+        "end": 7828,
+        "statement_index": 113
+      },
+      "sql_sha256": "1c0df40d5b3101fdaec49b7bfa33b74d856a8c4c6a85f5f43794a7cf22ae967d",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to second",
+            "mask": 7176,
+            "precision": null,
+            "literal": "1 2:03:04",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7829,
+        "end": 7866,
+        "statement_index": 114
+      },
+      "sql_sha256": "f6a1a9be714d84bad8df5f0b22fbbddf891f26f61f81ce891b660b6fbd3c6f95",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour to minute",
+            "mask": 3072,
+            "precision": null,
+            "literal": "1 2",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7867,
+        "end": 7907,
+        "statement_index": 115
+      },
+      "sql_sha256": "9fac5a99488f2d56e881f1d84bf22c664518a39e4f30504cec8ca1ba987ee05a",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour to minute",
+            "mask": 3072,
+            "precision": null,
+            "literal": "1 2:03",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7908,
+        "end": 7951,
+        "statement_index": 116
+      },
+      "sql_sha256": "f6ce9dcc5ba4b34df5ab2ad266b18bc0a723be4c142026bb62ca4c026f792aa0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour to minute",
+            "mask": 3072,
+            "precision": null,
+            "literal": "1 2:03:04",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7952,
+        "end": 7989,
+        "statement_index": 117
+      },
+      "sql_sha256": "62d55badac95fe5beb6eb1a7369029112928899b6d7e00e081135865eabddf59",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour to second",
+            "mask": 7168,
+            "precision": null,
+            "literal": "1 2",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7990,
+        "end": 8030,
+        "statement_index": 118
+      },
+      "sql_sha256": "bf494f589759d0411d3faa01e439f8a5ccaa714e575105758b7c516e9f99dfa0",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour to second",
+            "mask": 7168,
+            "precision": null,
+            "literal": "1 2:03",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8031,
+        "end": 8074,
+        "statement_index": 119
+      },
+      "sql_sha256": "c815b8a08d0f8c7d517eb4099b94b07b14d8f6d3352da0db6bd2f7b837825c82",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour to second",
+            "mask": 7168,
+            "precision": null,
+            "literal": "1 2:03:04",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8075,
+        "end": 8114,
+        "statement_index": 120
+      },
+      "sql_sha256": "18496c6ed2bd5e92e9fc7fcef83387041bf1d89dd904255d27abcdf8019996a8",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": null,
+            "literal": "1 2",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8115,
+        "end": 8157,
+        "statement_index": 121
+      },
+      "sql_sha256": "15504b5116fbbc3189273c2ff2f4beca73771c23996754f00dec43382239aec3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": null,
+            "literal": "1 2:03",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8158,
+        "end": 8203,
+        "statement_index": 122
+      },
+      "sql_sha256": "69e35f442a7d708d95531c0fd54ef1cad4e1cb8aa0aea902dc5d626bbcb1f03e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": null,
+            "literal": "1 2:03:04",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8204,
+        "end": 8247,
+        "statement_index": 123
+      },
+      "sql_sha256": "7ebaada99f378cb30fa764ea4a3b41dbcce36e5b5587276a50512ab24e27b4d2",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": null,
+            "literal": "1 +2:03",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8248,
+        "end": 8294,
+        "statement_index": 124
+      },
+      "sql_sha256": "547255298ef244c7d6e1027e462f345489d559f4522079d84faa50b517453df5",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": null,
+            "literal": "1 +2:03:04",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8295,
+        "end": 8338,
+        "statement_index": 125
+      },
+      "sql_sha256": "07b979535170a5a255e479ebf317266163c86c914d38bed6e1bfe37e4e069f97",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": null,
+            "literal": "1 -2:03",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8339,
+        "end": 8385,
+        "statement_index": 126
+      },
+      "sql_sha256": "c02386a91ae1f55c7300071f4086607b83519deb1b76b418521c771fe1612353",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": null,
+            "literal": "1 -2:03:04",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8386,
+        "end": 8423,
+        "statement_index": 127
+      },
+      "sql_sha256": "47dd1bbf79ca0e4f313714e07634835d9bff44c2723d7f572446f798bb411dc4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to hour",
+            "mask": 1032,
+            "precision": null,
+            "literal": "123 11",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8716,
+        "end": 8765,
+        "statement_index": 133
+      },
+      "sql_sha256": "e05cbb5ced58b4228c3695d56139e7bde8baf7a99d41012f5aff2cf5b62bb0aa",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": 2,
+            "literal": "12:34.5678",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8783,
+        "end": 8814,
+        "statement_index": 134
+      },
+      "sql_sha256": "b9b8f1568b41b3e66f090ad2920b3622ae4bded8883688a434ce4409597d162b",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "second",
+            "mask": 4096,
+            "precision": null,
+            "literal": "1.234",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8815,
+        "end": 8849,
+        "statement_index": 135
+      },
+      "sql_sha256": "3181b1c4436203074c592b57cb3930602c06085ad631acfca7ca0dffaedf0f61",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "second",
+            "mask": 4096,
+            "precision": 2,
+            "literal": "1.234",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8850,
+        "end": 8893,
+        "statement_index": 136
+      },
+      "sql_sha256": "4f5dde9ad0e61474036284907158e758c8d44987dafb488112d7a5d05d09de58",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to second",
+            "mask": 7176,
+            "precision": 2,
+            "literal": "1 2.345",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8894,
+        "end": 8936,
+        "statement_index": 137
+      },
+      "sql_sha256": "c12e3df8c8419f80334112002b94fde0b249ec79c9ededd1ff8ff67bb84aaa91",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to second",
+            "mask": 7176,
+            "precision": 2,
+            "literal": "1 2:03",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8937,
+        "end": 8984,
+        "statement_index": 138
+      },
+      "sql_sha256": "4cf6c6b657b3fdf73db9155f2d2c7cfa3e76abdd1eda5a3fd0363bdae1e34b47",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to second",
+            "mask": 7176,
+            "precision": 2,
+            "literal": "1 2:03.4567",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8985,
+        "end": 9035,
+        "statement_index": 139
+      },
+      "sql_sha256": "4132c09d0b3491d543704652420976e6a32845a30b08a607a66790b31c32d2b4",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day to second",
+            "mask": 7176,
+            "precision": 2,
+            "literal": "1 2:03:04.5678",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9036,
+        "end": 9080,
+        "statement_index": 140
+      },
+      "sql_sha256": "0cabf7b8fc75daeb26446f9f1c840a43166f0e263f0c41888f34a886a9e32493",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour to second",
+            "mask": 7168,
+            "precision": 2,
+            "literal": "1 2.345",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9081,
+        "end": 9130,
+        "statement_index": 141
+      },
+      "sql_sha256": "bf19119e83257ed7c2ecc0d0996ff00ee03c6f85243d1028baa52045244577d3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour to second",
+            "mask": 7168,
+            "precision": 2,
+            "literal": "1 2:03.45678",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9131,
+        "end": 9182,
+        "statement_index": 142
+      },
+      "sql_sha256": "dd5195265560ec900a821a69e3856c97be78e52a9f6531049f7a920aaa9b9592",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "hour to second",
+            "mask": 7168,
+            "precision": 2,
+            "literal": "1 2:03:04.5678",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9183,
+        "end": 9230,
+        "statement_index": 143
+      },
+      "sql_sha256": "6438aaa5f8a26bdc9f9160a2831591bb8f57c54ee214a537cf9d15261e659992",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": 2,
+            "literal": "1 2.3456",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9231,
+        "end": 9281,
+        "statement_index": 144
+      },
+      "sql_sha256": "30c64f7188ed9e58f38065a4e47665f6cfae22e50fbdb21d4eee70466df30068",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": 2,
+            "literal": "1 2:03.5678",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/interval.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 9282,
+        "end": 9335,
+        "statement_index": 145
+      },
+      "sql_sha256": "25899012fe29ce444dab5965e7a3cb444669932d5bd8fa08417bdd5f498d492e",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "minute to second",
+            "mask": 6144,
+            "precision": 2,
+            "literal": "1 2:03:04.5678",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/types/interval/test_interval.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "start": 3649,
+        "end": 3675,
+        "header_line": 158
+      },
+      "sql_sha256": "0a2385840b3f2139bdd4cfc1820bfbe02d6e1fd62f995f59156015917ed4f1d3",
+      "observed_syntax": {
+        "function_names": [],
+        "conditional_forms": [],
+        "source_free": true,
+        "interval_fields": [
+          {
+            "fields": "day",
+            "mask": 8,
+            "precision": null,
+            "literal": "90",
+            "form": "typed-literal"
+          }
+        ]
+      }
+    }
+  ]
+}

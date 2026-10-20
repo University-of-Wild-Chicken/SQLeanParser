@@ -104,8 +104,8 @@ def extendedTypeRenderingTests : IO Nat := do
     let _ ← expectOk source ((RenderContract.check .postgres16V01 query).mapError reprStr)
     count := count + 1
   for source in [
-    "CHARACTER 'abc'", "CHAR 'abc'", "INTERVAL '1' YEAR",
-    "INTERVAL '1 day' DAY TO SECOND", "CAST('1' AS INTERVAL YEAR)",
+    "CHARACTER 'abc'", "CHAR 'abc'", "INTERVAL '1' YEAR TO SECOND",
+    "INTERVAL '1 day' DAY TO MONTH", "CAST('1' AS INTERVAL YEAR(2))",
     "CAST('1' AS \"int4\")", "CAST('1' AS \"DATE\")", "CAST('1' AS \"char\")",
     "CAST('1' AS public.custom)", "CAST('1' AS INTEGER[3])"] do
     expectError source (Advanced.parseExpression source)

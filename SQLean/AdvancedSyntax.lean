@@ -4,10 +4,27 @@ import SQLean.SyntaxBase
 exactly; no floating-point conversion occurs during parsing or rendering. -/
 namespace SQLean.Advanced
 
+/-- The thirteen interval field ranges admitted by PostgreSQL's grammar.
+Precision, where present, belongs to the final SECOND field. -/
+inductive IntervalFields where
+  | year | month | day | hour | minute | second
+  | yearToMonth | dayToHour | dayToMinute | dayToSecond
+  | hourToMinute | hourToSecond | minuteToSecond
+  deriving Repr, BEq, DecidableEq, Inhabited
+
+def IntervalFields.all : List IntervalFields :=
+  [.year, .month, .day, .hour, .minute, .second, .yearToMonth,
+   .dayToHour, .dayToMinute, .dayToSecond, .hourToMinute, .hourToSecond, .minuteToSecond]
+
+def IntervalFields.allowsPrecision : IntervalFields → Bool
+  | .second | .dayToSecond | .hourToSecond | .minuteToSecond => true
+  | _ => false
+
 inductive TypeName where
   | int | bigInt | text | varchar | bool | real | doublePrecision | numeric
   | smallInt | char | date | time | timeTZ | timestamp | timestampTZ
   | interval | uuid | json | jsonb | bytea
+  | intervalRange (fields : IntervalFields)
   /-- Each wrapper retains one declared unsized array suffix. PostgreSQL does
   not use the declared dimension count as a distinct runtime type. -/
   | array (element : TypeName)
@@ -36,7 +53,7 @@ def TypeName.sqlType : TypeName → SqlType
   | .timeTZ => .opaque .timeTZ
   | .timestamp => .opaque .timestamp
   | .timestampTZ => .opaque .timestampTZ
-  | .interval => .opaque .interval
+  | .interval | .intervalRange _ => .opaque .interval
   | .uuid => .opaque .uuid
   | .json => .opaque .json
   | .jsonb => .opaque .jsonb

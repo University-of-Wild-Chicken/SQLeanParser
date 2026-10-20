@@ -20,6 +20,9 @@ def DataTypeWellFormed (type : DataType) : Prop :=
   | .numeric, [p, s] => 0 < p ∧ p ≤ 1000 ∧ s ≤ 1000
   | .time, [] | .timeTZ, [] | .timestamp, [] | .timestampTZ, [] | .interval, [] => True
   | .time, [p] | .timeTZ, [p] | .timestamp, [p] | .timestampTZ, [p] | .interval, [p] => p ≤ 6
+  | .intervalRange _, [] => True
+  | .intervalRange fields, [p] => fields.allowsPrecision = true ∧ p ≤ 6
+  | .intervalRange _, _ => False
   | .varchar, _ | .char, _ | .numeric, _
   | .time, _ | .timeTZ, _ | .timestamp, _ | .timestampTZ, _ | .interval, _ => False
   | _, modifiers => modifiers = []
@@ -332,7 +335,7 @@ def typeNameLabel : Advanced.TypeName → Name
   | .bool => "bool" | .real => "float4" | .doublePrecision => "float8"
   | .numeric => "numeric" | .date => "date" | .time => "time"
   | .timeTZ => "timetz" | .timestamp => "timestamp" | .timestampTZ => "timestamptz"
-  | .interval => "interval" | .uuid => "uuid" | .json => "json"
+  | .interval | .intervalRange _ => "interval" | .uuid => "uuid" | .json => "json"
   | .jsonb => "jsonb" | .bytea => "bytea"
   | .array element => typeNameLabel element
 

@@ -11,6 +11,29 @@ private def invalid (code message : String) : Failure := .invalid ⟨code, messa
 private def unsupported (code message : String) : Failure := .unsupported ⟨code, message⟩
 private def exhausted : Failure := .inconclusive ⟨"resource_limit", "SELECT contract checking exhausted its recursion budget"⟩
 
+/-- PostgreSQL warns and clamps excess SECOND precision. This profile keeps
+only canonical 0..6 declarations, so that boundary is missing coverage. -/
+private def intervalPrecisionGap (type : DataType) : Bool :=
+  match type.name.scalarBase, type.modifiers with
+  | .intervalRange fields, [precision] => fields.allowsPrecision && precision > 6
+  | _, _ => false
+
+/-- Used only to distinguish an unsupported precision boundary from unrelated
+invalid metadata. No certificate is ever constructed for this replacement. -/
+private def precisionDiagnosticType (type : DataType) : DataType :=
+  if intervalPrecisionGap type then {type with modifiers := [6]} else type
+
+private def precisionDiagnosticParameters (params : ParameterEnv) : ParameterEnv :=
+  params.map fun binding => {binding with type := precisionDiagnosticType binding.type}
+
+private def precisionDiagnosticCatalog (catalog : Catalog) : Catalog :=
+  catalog.map fun table => {table with columns := table.columns.map fun column =>
+    {column with type := precisionDiagnosticType column.type}}
+
+private def intervalPrecisionFailure : Failure :=
+  unsupported "interval_precision"
+    "Qualified interval precision above six requires PostgreSQL warning/clamping normalization outside this profile"
+
 private def uncontextualizedString : Advanced.Expr → Bool
   | .literal (.text _) => true
   | _ => false
@@ -30,7 +53,8 @@ private def operatorFailure (types : List ExprType) (hasUnknownString : Bool)
 private def hasUncoveredArithmetic : ExprType → Bool
   | none => false
   | some type => match type.base with
-    | .date | .time _ | .timeTZ _ | .timestamp _ | .timestampTZ _ | .interval _ | .jsonb => true
+    | .date | .time _ | .timeTZ _ | .timestamp _ | .timestampTZ _
+    | .interval _ | .intervalRange .. | .jsonb => true
     | _ => false
 
 private def binaryFailure (op : BinOp) (a b : Advanced.Expr) (ta tb : ExprType) : Failure :=
@@ -237,6 +261,7 @@ mutual
             else invalid "array_overlap_signature"
               "Array overlap requires matching concrete array element types and a known array context")
       | .cast a target => do
+          if intervalPrecisionGap target then throw intervalPrecisionFailure
           if declaration : DataTypeWellFormed target then
             match supported : concreteType target with
             | none => .error (unsupported "cast_type" "Cast target is outside the concrete PostgreSQL scalar profile")
@@ -643,6 +668,8 @@ def checkPaginationBounds (profile : Profile) (params : ParameterEnv) (query : A
     let limit ← checkPagination fuel params query.limit
     let offset ← checkPagination fuel params query.offset
     .ok ⟨limit.val, offset.val, .bounds environment limit.property offset.property⟩
+  else if ParametersWellFormed (precisionDiagnosticParameters params) then
+    .error intervalPrecisionFailure
   else .error (invalid "invalid_environment" "Parameter metadata violates index uniqueness, positivity or type-declaration rules")
 
 /-- Pagination-only soundness has no premise asserting validity of the body. -/
@@ -879,6 +906,9 @@ def checkQuery (profile : Profile) (catalog : Catalog) (params : ParameterEnv) (
         .ok ⟨checked.output, .certified environment supported checked.valid parameterOrder⟩
       else .error (invalid "parameter_notation" "Use positive numbered parameters or consecutive anonymous parameters, without mixing styles")
     else .error (unsupported "environment_type" "A catalog or parameter type is outside the concrete PostgreSQL scalar inventory")
+  else if WellFormedEnvironment (precisionDiagnosticCatalog catalog)
+      (precisionDiagnosticParameters params) then
+    .error intervalPrecisionFailure
   else .error (invalid "invalid_environment" "Catalog or parameter metadata violates uniqueness, naming, type-declaration or key rules")
 
 /-- Soundness is against Spec.SelectValid, not an abbreviation for checker

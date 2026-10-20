@@ -1,0 +1,1015 @@
+[
+  {
+    "id": "interval-fields-01-literal-year",
+    "source_kind": "synthetic",
+    "shape": "literal-year",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' YEAR AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval year",
+    "expected_value": "1 year",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' YEAR AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-02-literal-month",
+    "source_kind": "synthetic",
+    "shape": "literal-month",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' MONTH AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval month",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval month",
+    "expected_value": "1 year 2 mons",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' MONTH AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-03-literal-day",
+    "source_kind": "synthetic",
+    "shape": "literal-day",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' DAY AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day",
+    "expected_value": "1 year 2 mons 3 days",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' DAY AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-04-literal-hour",
+    "source_kind": "synthetic",
+    "shape": "literal-hour",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' HOUR AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval hour",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval hour",
+    "expected_value": "1 year 2 mons 3 days 04:00:00",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' HOUR AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-05-literal-minute",
+    "source_kind": "synthetic",
+    "shape": "literal-minute",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' MINUTE AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval minute",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval minute",
+    "expected_value": "1 year 2 mons 3 days 04:05:00",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' MINUTE AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-06-literal-second",
+    "source_kind": "synthetic",
+    "shape": "literal-second",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' SECOND AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval second",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval second",
+    "expected_value": "1 year 2 mons 3 days 04:05:06.789",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' SECOND AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-07-literal-year-to-month",
+    "source_kind": "synthetic",
+    "shape": "literal-year-to-month",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' YEAR TO MONTH AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year to month",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval year to month",
+    "expected_value": "1 year 2 mons",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' YEAR TO MONTH AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-08-literal-day-to-hour",
+    "source_kind": "synthetic",
+    "shape": "literal-day-to-hour",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' DAY TO HOUR AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day to hour",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day to hour",
+    "expected_value": "1 year 2 mons 3 days 04:00:00",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' DAY TO HOUR AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-09-literal-day-to-minute",
+    "source_kind": "synthetic",
+    "shape": "literal-day-to-minute",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' DAY TO MINUTE AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day to minute",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day to minute",
+    "expected_value": "1 year 2 mons 3 days 04:05:00",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' DAY TO MINUTE AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-10-literal-day-to-second",
+    "source_kind": "synthetic",
+    "shape": "literal-day-to-second",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' DAY TO SECOND AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day to second",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day to second",
+    "expected_value": "1 year 2 mons 3 days 04:05:06.789",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' DAY TO SECOND AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-11-literal-hour-to-minute",
+    "source_kind": "synthetic",
+    "shape": "literal-hour-to-minute",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' HOUR TO MINUTE AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval hour to minute",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval hour to minute",
+    "expected_value": "1 year 2 mons 3 days 04:05:00",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' HOUR TO MINUTE AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-12-literal-hour-to-second",
+    "source_kind": "synthetic",
+    "shape": "literal-hour-to-second",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' HOUR TO SECOND AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval hour to second",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval hour to second",
+    "expected_value": "1 year 2 mons 3 days 04:05:06.789",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' HOUR TO SECOND AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-13-literal-minute-to-second",
+    "source_kind": "synthetic",
+    "shape": "literal-minute-to-second",
+    "sql": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' MINUTE TO SECOND AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval minute to second",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval minute to second",
+    "expected_value": "1 year 2 mons 3 days 04:05:06.789",
+    "sqlite_input": "SELECT INTERVAL '1 year 2 mons 3 days 04:05:06.789' MINUTE TO SECOND AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-14-second-precision-0",
+    "source_kind": "synthetic",
+    "shape": "second-precision-0",
+    "sql": "SELECT CAST('-1.234567 seconds' AS interval second(0)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval second(0)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval second(0)",
+    "expected_value": "-00:00:01",
+    "sqlite_input": "SELECT CAST('-1.234567 seconds' AS interval second(0)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-15-second-precision-6",
+    "source_kind": "synthetic",
+    "shape": "second-precision-6",
+    "sql": "SELECT CAST('-1.234567 seconds' AS interval second(6)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval second(6)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval second(6)",
+    "expected_value": "-00:00:01.234567",
+    "sqlite_input": "SELECT CAST('-1.234567 seconds' AS interval second(6)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-16-day-to-second-precision-0",
+    "source_kind": "synthetic",
+    "shape": "day-to-second-precision-0",
+    "sql": "SELECT CAST('-1.234567 seconds' AS interval day to second(0)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day to second(0)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day to second(0)",
+    "expected_value": "-00:00:01",
+    "sqlite_input": "SELECT CAST('-1.234567 seconds' AS interval day to second(0)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-17-day-to-second-precision-6",
+    "source_kind": "synthetic",
+    "shape": "day-to-second-precision-6",
+    "sql": "SELECT CAST('-1.234567 seconds' AS interval day to second(6)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day to second(6)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day to second(6)",
+    "expected_value": "-00:00:01.234567",
+    "sqlite_input": "SELECT CAST('-1.234567 seconds' AS interval day to second(6)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-18-hour-to-second-precision-0",
+    "source_kind": "synthetic",
+    "shape": "hour-to-second-precision-0",
+    "sql": "SELECT CAST('-1.234567 seconds' AS interval hour to second(0)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval hour to second(0)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval hour to second(0)",
+    "expected_value": "-00:00:01",
+    "sqlite_input": "SELECT CAST('-1.234567 seconds' AS interval hour to second(0)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-19-hour-to-second-precision-6",
+    "source_kind": "synthetic",
+    "shape": "hour-to-second-precision-6",
+    "sql": "SELECT CAST('-1.234567 seconds' AS interval hour to second(6)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval hour to second(6)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval hour to second(6)",
+    "expected_value": "-00:00:01.234567",
+    "sqlite_input": "SELECT CAST('-1.234567 seconds' AS interval hour to second(6)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-20-minute-to-second-precision-0",
+    "source_kind": "synthetic",
+    "shape": "minute-to-second-precision-0",
+    "sql": "SELECT CAST('-1.234567 seconds' AS interval minute to second(0)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval minute to second(0)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval minute to second(0)",
+    "expected_value": "-00:00:01",
+    "sqlite_input": "SELECT CAST('-1.234567 seconds' AS interval minute to second(0)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-21-minute-to-second-precision-6",
+    "source_kind": "synthetic",
+    "shape": "minute-to-second-precision-6",
+    "sql": "SELECT CAST('-1.234567 seconds' AS interval minute to second(6)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval minute to second(6)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval minute to second(6)",
+    "expected_value": "-00:00:01.234567",
+    "sqlite_input": "SELECT CAST('-1.234567 seconds' AS interval minute to second(6)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-22-numeric-year",
+    "source_kind": "synthetic",
+    "shape": "numeric-year",
+    "sql": "SELECT INTERVAL '2' YEAR AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval year",
+    "expected_value": "2 years",
+    "sqlite_input": "SELECT INTERVAL '2' YEAR AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-23-numeric-month",
+    "source_kind": "synthetic",
+    "shape": "numeric-month",
+    "sql": "SELECT INTERVAL '14' MONTH AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval month",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval month",
+    "expected_value": "1 year 2 mons",
+    "sqlite_input": "SELECT INTERVAL '14' MONTH AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-24-numeric-day",
+    "source_kind": "synthetic",
+    "shape": "numeric-day",
+    "sql": "SELECT INTERVAL '90' DAY AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day",
+    "expected_value": "90 days",
+    "sqlite_input": "SELECT INTERVAL '90' DAY AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-25-numeric-hour",
+    "source_kind": "synthetic",
+    "shape": "numeric-hour",
+    "sql": "SELECT INTERVAL '27' HOUR AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval hour",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval hour",
+    "expected_value": "27:00:00",
+    "sqlite_input": "SELECT INTERVAL '27' HOUR AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-26-numeric-minute",
+    "source_kind": "synthetic",
+    "shape": "numeric-minute",
+    "sql": "SELECT INTERVAL '90' MINUTE AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval minute",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval minute",
+    "expected_value": "01:30:00",
+    "sqlite_input": "SELECT INTERVAL '90' MINUTE AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-27-numeric-second(2)",
+    "source_kind": "synthetic",
+    "shape": "numeric-second(2)",
+    "sql": "SELECT INTERVAL '1.235' SECOND(2) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval second(2)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval second(2)",
+    "expected_value": "00:00:01.24",
+    "sqlite_input": "SELECT INTERVAL '1.235' SECOND(2) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-28-numeric-year-to-month",
+    "source_kind": "synthetic",
+    "shape": "numeric-year-to-month",
+    "sql": "SELECT INTERVAL '2-3' YEAR TO MONTH AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year to month",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval year to month",
+    "expected_value": "2 years 3 mons",
+    "sqlite_input": "SELECT INTERVAL '2-3' YEAR TO MONTH AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-29-numeric-day-to-hour",
+    "source_kind": "synthetic",
+    "shape": "numeric-day-to-hour",
+    "sql": "SELECT INTERVAL '2 3' DAY TO HOUR AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day to hour",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day to hour",
+    "expected_value": "2 days 03:00:00",
+    "sqlite_input": "SELECT INTERVAL '2 3' DAY TO HOUR AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-30-unknown-input",
+    "source_kind": "synthetic",
+    "shape": "unknown-input",
+    "sql": "SELECT '1'::INTERVAL YEAR AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval year",
+    "expected_value": "1 year",
+    "sqlite_input": "SELECT '1'::INTERVAL YEAR AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-31-known-text-input",
+    "source_kind": "synthetic",
+    "shape": "known-text-input",
+    "sql": "SELECT '1'::TEXT::INTERVAL YEAR AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval year",
+    "expected_value": "00:00:00",
+    "sqlite_input": "SELECT '1'::TEXT::INTERVAL YEAR AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-32-known-interval-input",
+    "source_kind": "synthetic",
+    "shape": "known-interval-input",
+    "sql": "SELECT (INTERVAL '1')::INTERVAL YEAR AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval year",
+    "expected_value": "00:00:00",
+    "sqlite_input": "SELECT (INTERVAL '1')::INTERVAL YEAR AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-33-array-element-input",
+    "source_kind": "synthetic",
+    "shape": "array-element-input",
+    "sql": "SELECT '{1,2}'::INTERVAL YEAR[] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval[]",
+    "postgres_display_type": "interval year[]",
+    "expected_value": "{00:00:00,00:00:00}",
+    "sqlite_input": "SELECT '{1,2}'::INTERVAL YEAR[] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-34-array-equal-modifiers",
+    "source_kind": "synthetic",
+    "shape": "array-equal-modifiers",
+    "sql": "SELECT ARRAY[INTERVAL '1' YEAR, INTERVAL '2' YEAR] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval[]",
+    "postgres_display_type": "interval year[]",
+    "expected_value": "{\"1 year\",\"2 years\"}",
+    "sqlite_input": "SELECT ARRAY[INTERVAL '1' YEAR, INTERVAL '2' YEAR] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-35-array-different-modifiers",
+    "source_kind": "synthetic",
+    "shape": "array-different-modifiers",
+    "sql": "SELECT ARRAY[INTERVAL '1' YEAR, INTERVAL '2' MONTH] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval[]",
+    "postgres_display_type": "interval[]",
+    "expected_value": "{\"1 year\",\"2 mons\"}",
+    "sqlite_input": "SELECT ARRAY[INTERVAL '1' YEAR, INTERVAL '2' MONTH] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-36-array-cast",
+    "source_kind": "synthetic",
+    "shape": "array-cast",
+    "sql": "SELECT '{\"1 year 2 mons\",\"2 years 3 mons\"}'::INTERVAL YEAR[] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year[]",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval[]",
+    "postgres_display_type": "interval year[]",
+    "expected_value": "{\"1 year\",\"2 years\"}",
+    "sqlite_input": "SELECT '{\"1 year 2 mons\",\"2 years 3 mons\"}'::INTERVAL YEAR[] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-37-array-index",
+    "source_kind": "synthetic",
+    "shape": "array-index",
+    "sql": "SELECT (ARRAY[INTERVAL '1' YEAR, INTERVAL '2' YEAR])[2] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval year",
+    "expected_value": "2 years",
+    "sqlite_input": "SELECT (ARRAY[INTERVAL '1' YEAR, INTERVAL '2' YEAR])[2] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-38-array-slice",
+    "source_kind": "synthetic",
+    "shape": "array-slice",
+    "sql": "SELECT (ARRAY[INTERVAL '1' YEAR, INTERVAL '2' YEAR])[1:1] AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year[]",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "interval[]",
+    "postgres_display_type": "interval year[]",
+    "expected_value": "{\"1 year\"}",
+    "sqlite_input": "SELECT (ARRAY[INTERVAL '1' YEAR, INTERVAL '2' YEAR])[1:1] AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-39-coalesce-equal-modifiers",
+    "source_kind": "synthetic",
+    "shape": "coalesce-equal-modifiers",
+    "sql": "SELECT COALESCE(NULL::INTERVAL DAY TO SECOND(2), INTERVAL '1 day 01:02:03.456' DAY TO SECOND(2)) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day to second(2)",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day to second(2)",
+    "expected_value": "1 day 01:02:03.46",
+    "sqlite_input": "SELECT COALESCE(NULL::INTERVAL DAY TO SECOND(2), INTERVAL '1 day 01:02:03.456' DAY TO SECOND(2)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-40-coalesce-different-modifiers",
+    "source_kind": "synthetic",
+    "shape": "coalesce-different-modifiers",
+    "sql": "SELECT COALESCE(INTERVAL '2' YEAR, INTERVAL '3' MONTH) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "2 years",
+    "sqlite_input": "SELECT COALESCE(INTERVAL '2' YEAR, INTERVAL '3' MONTH) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-41-nullif-left-modifiers",
+    "source_kind": "synthetic",
+    "shape": "nullif-left-modifiers",
+    "sql": "SELECT NULLIF(INTERVAL '2' HOUR, INTERVAL '3' MINUTE) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval hour",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval hour",
+    "expected_value": "02:00:00",
+    "sqlite_input": "SELECT NULLIF(INTERVAL '2' HOUR, INTERVAL '3' MINUTE) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-42-null-binding",
+    "source_kind": "synthetic",
+    "shape": "null-binding",
+    "sql": "SELECT CAST($1 AS INTERVAL YEAR) AS v;",
+    "parameter_types": "text?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year",
+        "nullable": true
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval year",
+    "expected_value": null,
+    "sqlite_input": "SELECT CAST(?1 AS INTERVAL YEAR) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-43-reordered",
+    "source_kind": "synthetic",
+    "shape": "reordered",
+    "sql": "SELECT CAST($2 AS INTERVAL YEAR) > CAST($1 AS INTERVAL MONTH) AS v;",
+    "parameter_types": "text,text",
+    "parameter_values": [
+      "2 months",
+      "1 year"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT CAST(?2 AS INTERVAL YEAR) > CAST(?1 AS INTERVAL MONTH) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-44-repeated",
+    "source_kind": "synthetic",
+    "shape": "repeated",
+    "sql": "SELECT CAST($1 AS INTERVAL SECOND(2)) + CAST($1 AS INTERVAL SECOND(2)) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "1.235"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:00:02.48",
+    "sqlite_input": "SELECT CAST(?1 AS INTERVAL SECOND(2)) + CAST(?1 AS INTERVAL SECOND(2)) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-45-anonymous-known-text",
+    "source_kind": "synthetic",
+    "shape": "anonymous-known-text",
+    "sql": "SELECT CAST(? AS INTERVAL DAY) AS v;",
+    "parameter_types": "text",
+    "parameter_values": [
+      "90"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval day",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval day",
+    "expected_value": "00:00:00",
+    "sqlite_input": "SELECT CAST(? AS INTERVAL DAY) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-46-parameter-drops-modifiers",
+    "source_kind": "synthetic",
+    "shape": "parameter-drops-modifiers",
+    "sql": "SELECT COALESCE($1, NULL::INTERVAL YEAR) AS v;",
+    "parameter_types": "interval year",
+    "parameter_values": [
+      "1"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval",
+    "expected_value": "00:00:01",
+    "sqlite_input": "SELECT COALESCE(?1, NULL::INTERVAL YEAR) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-47-parameter-explicit-cast",
+    "source_kind": "synthetic",
+    "shape": "parameter-explicit-cast",
+    "sql": "SELECT $1::INTERVAL YEAR AS v;",
+    "parameter_types": "interval year",
+    "parameter_values": [
+      "1 year 2 mons"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval year",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "interval",
+    "postgres_display_type": "interval year",
+    "expected_value": "1 year",
+    "sqlite_input": "SELECT ?1::INTERVAL YEAR AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-48-extract",
+    "source_kind": "synthetic",
+    "shape": "extract",
+    "sql": "SELECT EXTRACT(MONTH FROM INTERVAL '1 year 2 mons' MONTH) AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "numeric",
+    "postgres_display_type": "numeric",
+    "expected_value": "2",
+    "sqlite_input": "SELECT EXTRACT(MONTH FROM INTERVAL '1 year 2 mons' MONTH) AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-49-comparison",
+    "source_kind": "synthetic",
+    "shape": "comparison",
+    "sql": "SELECT INTERVAL '2' HOUR > INTERVAL '3' MINUTE AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "boolean",
+    "postgres_display_type": "boolean",
+    "expected_value": "true",
+    "sqlite_input": "SELECT INTERVAL '2' HOUR > INTERVAL '3' MINUTE AS v;",
+    "sqlite_supported": false
+  },
+  {
+    "id": "interval-fields-50-date-arithmetic",
+    "source_kind": "synthetic",
+    "shape": "date-arithmetic",
+    "sql": "SELECT DATE '2024-01-31' + INTERVAL '1' MONTH AS v;",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "timestamp",
+        "nullable": false
+      }
+    ],
+    "postgres_type": "timestamp without time zone",
+    "postgres_display_type": "timestamp without time zone",
+    "expected_value": "2024-02-29 00:00:00",
+    "sqlite_input": "SELECT DATE '2024-01-31' + INTERVAL '1' MONTH AS v;",
+    "sqlite_supported": false
+  }
+]

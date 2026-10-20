@@ -27,6 +27,18 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.21 interval qualifier increment](docs/interval-fields-contract-v0.21.md)
+adds all 13 field/range forms, including `YEAR TO MONTH` and
+`DAY TO SECOND(p)`, to literals, casts, array types and catalog declarations.
+Fifty synthetic queries and 50 unchanged source queries receive full static
+and rendering certificates. Exact field masks and precision survive output
+metadata; PostgreSQL parameter declarations erase them until an explicit cast.
+Rendering preserves the different interpretations of unknown strings, typed
+TEXT and interval arrays. Precision above six remains an explicit coverage
+gap because PostgreSQL warns and clamps it.
+The [industrial replay](docs/corpus/interval-fields-v0.21/README.md) now accepts
+245 of 276 statements, closing seven further TPC-H syntax failures.
+
 The [v0.20 EXTRACT increment](docs/extract-contract-v0.20.md)
 adds temporal field extraction with all six PostgreSQL declarations and exact
 NUMERIC results. Fifty synthetic queries and 50 unchanged PostgreSQL source
@@ -244,6 +256,7 @@ python3 scripts/check_concatenation_cli.py --local-bin /usr/lib/postgresql/16/bi
 python3 scripts/check_pattern_matching_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_json_extraction_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/check_json_containment_cli.py --local-bin /usr/lib/postgresql/16/bin
+python3 scripts/check_interval_fields_cli.py --local-bin /usr/lib/postgresql/16/bin
 python3 scripts/inventory_postgresql_grammar.py --check
 python3 scripts/generate_postgresql_grammar.py --check
 python3 scripts/check_postgresql_grammar_cli.py
@@ -373,7 +386,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.20` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.21` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.

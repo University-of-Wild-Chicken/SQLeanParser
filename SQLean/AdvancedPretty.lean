@@ -21,6 +21,14 @@ def lockingClauseSql (clause : LockingClause) : String :=
 def lockingSql (clauses : List LockingClause) : String :=
   String.join (clauses.map fun clause => " " ++ lockingClauseSql clause)
 
+def IntervalFields.toSql : IntervalFields → String
+  | .year => "YEAR" | .month => "MONTH" | .day => "DAY"
+  | .hour => "HOUR" | .minute => "MINUTE" | .second => "SECOND"
+  | .yearToMonth => "YEAR TO MONTH" | .dayToHour => "DAY TO HOUR"
+  | .dayToMinute => "DAY TO MINUTE" | .dayToSecond => "DAY TO SECOND"
+  | .hourToMinute => "HOUR TO MINUTE" | .hourToSecond => "HOUR TO SECOND"
+  | .minuteToSecond => "MINUTE TO SECOND"
+
 /-- Modifiers belong to the scalar element declaration. Array brackets follow
 the complete declaration, including any time-zone qualifier. -/
 def TypeName.toSql (name : TypeName) (modifiers : List Nat) : String :=
@@ -37,6 +45,7 @@ def TypeName.toSql (name : TypeName) (modifiers : List Nat) : String :=
   | .timestamp => "TIMESTAMP" ++ suffix
   | .timestampTZ => "TIMESTAMP" ++ suffix ++ " WITH TIME ZONE"
   | .interval => "INTERVAL" ++ suffix | .uuid => "UUID" ++ suffix
+  | .intervalRange fields => "INTERVAL " ++ fields.toSql ++ suffix
   | .json => "JSON" ++ suffix | .jsonb => "JSONB" ++ suffix | .bytea => "BYTEA" ++ suffix
 
 def DataType.toSql (type : DataType) : String :=

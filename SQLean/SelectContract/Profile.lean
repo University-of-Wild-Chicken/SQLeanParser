@@ -11,11 +11,11 @@ formalization of PostgreSQL's general overload-resolution algorithm. -/
 namespace SQLean.SelectContract
 
 inductive Profile where
-  | basicV20
+  | basicV21
   deriving Repr, BEq, DecidableEq, Inhabited
 
 def Profile.name : Profile → String
-  | .basicV20 => "sqlean-basic-select-v0.20"
+  | .basicV21 => "sqlean-basic-select-v0.21"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes
@@ -31,6 +31,8 @@ inductive ScalarType where
   | timestamp (modifiers : List Nat := [])
   | timestampTZ (modifiers : List Nat := [])
   | interval (modifiers : List Nat := [])
+  /-- Explicit interval field masks are exact typmods, not distinct base OIDs. -/
+  | intervalRange (fields : Advanced.IntervalFields) (modifiers : List Nat := [])
   | uuid | json | jsonb | bytea
   | array (element : ScalarType)
   deriving Repr, BEq, DecidableEq, Inhabited
@@ -70,6 +72,7 @@ def ScalarType.dataType : ScalarType → Advanced.DataType
   | .date => ⟨.date, []⟩ | .time m => ⟨.time, m⟩ | .timeTZ m => ⟨.timeTZ, m⟩
   | .timestamp m => ⟨.timestamp, m⟩ | .timestampTZ m => ⟨.timestampTZ, m⟩
   | .interval m => ⟨.interval, m⟩
+  | .intervalRange fields m => ⟨.intervalRange fields, m⟩
   | .uuid => ⟨.uuid, []⟩ | .json => ⟨.json, []⟩ | .jsonb => ⟨.jsonb, []⟩ | .bytea => ⟨.bytea, []⟩
   | .array element => let type := element.dataType; ⟨.array type.name, type.modifiers⟩
 
@@ -77,7 +80,7 @@ def ScalarType.unmodified : ScalarType → ScalarType
   | .numeric _ => .numeric [] | .varchar _ => .varchar [] | .char _ => .char []
   | .time _ => .time [] | .timeTZ _ => .timeTZ []
   | .timestamp _ => .timestamp [] | .timestampTZ _ => .timestampTZ []
-  | .interval _ => .interval []
+  | .interval _ | .intervalRange .. => .interval []
   | .array element => element.unmodified.asArray
   | type => type
 
@@ -163,6 +166,7 @@ def concreteTypeName : Advanced.TypeName → List Nat → Option ScalarType
   | .date, [] => some .date | .time, m => some (.time m)
   | .timeTZ, m => some (.timeTZ m) | .timestamp, m => some (.timestamp m)
   | .timestampTZ, m => some (.timestampTZ m) | .interval, m => some (.interval m)
+  | .intervalRange fields, m => some (.intervalRange fields m)
   | .uuid, [] => some .uuid | .json, [] => some .json
   | .jsonb, [] => some .jsonb | .bytea, [] => some .bytea
   | _, _ => none

@@ -47,6 +47,7 @@ POPULATIONS = {
     "array_overlap": {"postgres": 21, "rum": 12, "readyset": 11, "risingwave": 4,
                       "sqlc": 1, "yugabyte": 1},
     "extract": {"postgres": 50},
+    "interval_fields": {"postgres": 49, "duckdb": 1},
 }
 CONDITIONAL_FORMS = {"searched-case", "simple-case", "coalesce", "nullif", "greatest", "least"}
 AGGREGATES = {"count", "sum", "avg", "min", "max"}
@@ -817,6 +818,71 @@ def observe_temporal_extractions(parsed: dict) -> dict:
     return {"source_free": True, "temporal_extractions": entries}
 
 
+INTERVAL_FIELD_MASKS = {
+    4: "year", 2: "month", 8: "day", 1024: "hour", 2048: "minute", 4096: "second",
+    6: "year to month", 1032: "day to hour", 3080: "day to minute",
+    7176: "day to second", 3072: "hour to minute", 7168: "hour to second",
+    6144: "minute to second",
+}
+
+
+def validate_interval_fields(entries: list[dict]) -> None:
+    if not isinstance(entries, list) or len(entries) != 1:
+        raise ValueError("interval field source must retain one explicit qualifier")
+    entry = entries[0]
+    if (not isinstance(entry, dict)
+            or set(entry) != {"fields", "mask", "precision", "literal", "form"}
+            or type(entry["mask"]) is not int or entry["mask"] not in INTERVAL_FIELD_MASKS
+            or entry["fields"] != INTERVAL_FIELD_MASKS[entry["mask"]]
+            or entry["form"] != "typed-literal"
+            or not isinstance(entry["literal"], str) or not entry["literal"]):
+        raise ValueError("invalid explicit interval field observation")
+    precision = entry["precision"]
+    if (precision is not None
+            and (type(precision) is not int or not 0 <= precision <= 6
+                 or not (entry["mask"] & 4096))):
+        raise ValueError("interval field precision must qualify a SECOND-ending range")
+
+
+def observe_interval_fields(parsed: dict) -> dict:
+    """Record one new explicit field/range; unrestricted INTERVAL(p) is excluded."""
+    if not isinstance(parsed, dict) or set(parsed) != {"SelectStmt"}:
+        raise ValueError("interval field source must be a SELECT")
+    query = parsed["SelectStmt"]
+    if (set(query) - {"targetList", "op", "limitOption"}
+            or query.get("op") != "SETOP_NONE"
+            or query.get("limitOption") != "LIMIT_OPTION_DEFAULT"
+            or not isinstance(query.get("targetList"), list) or len(query["targetList"]) != 1):
+        raise ValueError("interval field population requires one source-free projection")
+    target = query["targetList"][0].get("ResTarget", {})
+    if set(target) - {"val", "location"} or set(target.get("val", {})) != {"TypeCast"}:
+        raise ValueError("interval field population requires an unaliased typed literal")
+    try:
+        cast = target["val"]["TypeCast"]
+        typename = cast["typeName"]
+        if (cast.get("location") != -1
+                or typename["names"] != [{"String": {"sval": "pg_catalog"}}, {"String": {"sval": "interval"}}]
+                or typename.get("arrayBounds")
+                or set(cast["arg"]) != {"A_Const"}):
+            raise ValueError("interval field source is not a scalar interval typed literal")
+        mods = typename.get("typmods", [])
+        if len(mods) not in (1, 2):
+            raise ValueError("interval field source lacks one field mask and optional precision")
+        if any(set(mod) != {"A_Const"} or "ival" not in mod["A_Const"] for mod in mods):
+            raise ValueError("interval field modifiers must be raw integer constants")
+        values = [mod["A_Const"]["ival"].get("ival", 0) for mod in mods]
+        mask, precision = values[0], values[1] if len(values) == 2 else None
+        if type(mask) is not int or mask not in INTERVAL_FIELD_MASKS:
+            raise ValueError("unrestricted precision or unknown field mask is not new field syntax")
+        literal = cast["arg"]["A_Const"]["sval"]["sval"]
+    except (KeyError, TypeError) as error:
+        raise ValueError("interval field source requires an explicit string typed literal") from error
+    entries = [{"fields": INTERVAL_FIELD_MASKS[mask], "mask": mask, "precision": precision,
+                "literal": literal, "form": "typed-literal"}]
+    validate_interval_fields(entries)
+    return {"source_free": True, "interval_fields": entries}
+
+
 PATTERN_OPERATORS = {"ilike": {"ILIKE", "NOT ILIKE"}, "regex": {"~", "~*", "!~", "!~*"}}
 PATTERN_OPERAND_FORMS = {"A_Const", "ColumnRef", "TypeCast", "A_Expr", "FuncCall"}
 
@@ -1234,6 +1300,9 @@ def observe_oracle(sql: str, factor: str) -> dict:
     if factor == "extract":
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation.update(observe_temporal_extractions(parsed))
+    if factor == "interval_fields":
+        parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
+        observation.update(observe_interval_fields(parsed))
     if factor in PATTERN_OPERATORS:
         parsed = json.loads(parser.parse_sql_json(sql))["stmts"][0]["stmt"]
         observation["pattern_matches"] = observe_pattern_matches(parsed, factor)
@@ -1268,6 +1337,7 @@ def validate_population(records: list[dict], factor: str) -> None:
         Counter(), Counter(), Counter(), Counter(), Counter())
     containment_scopes = Counter()
     temporal_types, temporal_fields, temporal_infinities = Counter(), Counter(), Counter()
+    interval_masks, interval_precisions = Counter(), Counter()
     for row in records:
         if row["factor"] != factor or not re.match(r"(SELECT|WITH)\b", first_sql_text(row["sql"]), re.I):
             raise ValueError("factor/whole-query identity changed")
@@ -1303,6 +1373,8 @@ def validate_population(records: list[dict], factor: str) -> None:
             expected_keys.update(("array_predicates", "source_free"))
         if factor == "extract":
             expected_keys.update(("temporal_extractions", "source_free"))
+        if factor == "interval_fields":
+            expected_keys.update(("interval_fields", "source_free"))
         if factor in PATTERN_OPERATORS:
             expected_keys.add("pattern_matches")
         if factor == "json_extraction":
@@ -1413,6 +1485,14 @@ def validate_population(records: list[dict], factor: str) -> None:
             temporal_fields.update(entry["field"] for entry in entries)
             temporal_infinities.update((entry["declared_type"], entry["field"], entry["literal"])
                                       for entry in entries if "infinity" in entry["literal"])
+        if factor == "interval_fields":
+            if (observation["source_free"] is not True
+                    or observation["function_names"] or observation["conditional_forms"]):
+                raise ValueError("interval field source must remain a source-free typed literal")
+            entries = observation["interval_fields"]
+            validate_interval_fields(entries)
+            interval_masks.update(entry["mask"] for entry in entries)
+            interval_precisions.update(entry["precision"] for entry in entries)
         if factor in PATTERN_OPERATORS:
             entries = observation["pattern_matches"]
             validate_pattern_matches(entries, factor)
@@ -1533,6 +1613,11 @@ def validate_population(records: list[dict], factor: str) -> None:
                 "timezone_minute": 1}
             or temporal_infinities != {("date", "day", "infinity"): 1, ("date", "epoch", "infinity"): 1}):
         raise ValueError("EXTRACT population must retain six temporal types, 22 units and two infinity cases")
+    if factor == "interval_fields" and (
+            interval_masks != {4: 1, 2: 2, 8: 3, 1024: 2, 2048: 2, 4096: 4, 6: 2,
+                               1032: 4, 3080: 3, 7176: 7, 3072: 3, 7168: 6, 6144: 11}
+            or interval_precisions != {None: 38, 2: 12}):
+        raise ValueError("interval field population must retain all 13 explicit ranges and exact precisions")
 
 
 def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
@@ -1555,7 +1640,7 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
             if key in files:
                 raise ValueError("duplicate source input")
             files[key] = checked_file(root, entry["local_path"], entry["sha256"]).decode("utf-8")
-            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+            if factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract", "interval_fields"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
                 spans[key] = statement_spans(files[key]) if entry["path"].endswith(".sql") else []
     records, used = [], set()
     for selection in manifest["selections"]:
@@ -1573,14 +1658,14 @@ def extract(manifest: dict, factor: str, root: Path = ROOT) -> list[dict]:
                     ("array_subscripts", "duckdb"), ("ilike", "duckdb"),
                     ("array_concatenation", "risingwave"),
                     ("array_containment", "risingwave"), ("array_overlap", "risingwave"),
-                    ("array_overlap", "readyset")}):
+                    ("array_overlap", "readyset"), ("interval_fields", "duckdb")}):
                 raise ValueError("SQLLogicTest selection is outside its explicit source factor")
             sql, line, detail = selected_sqllogic_sql(files[key], selection["selector"])
         elif selection["selector"]["kind"] == "rust_string":
             if factor != "array_overlap" or name != "readyset" or not path.endswith(".rs"):
                 raise ValueError("Rust query selection is outside its explicit source factor")
             sql, line, detail = selected_rust_sql(files[key], selection["selector"])
-        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
+        elif factor in {"locking", "derived_contract", "row_comparisons", "concatenation", "json_extraction", "json_containment", "extract", "interval_fields"} | ARRAY_FACTORS | JOIN_FACTORS | PATTERN_OPERATORS.keys():
             sql, line, detail = selected_sql(files[key], selection["selector"], spans[key])
         else:
             sql, line, detail = select_sql(files[key], selection["selector"])

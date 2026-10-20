@@ -40,7 +40,7 @@ def typeCategory (type : ScalarType) : Nat :=
   else match type with
   | .bool => 2
   | .date | .time _ | .timeTZ _ | .timestamp _ | .timestampTZ _ => 3
-  | .interval _ => 4
+  | .interval _ | .intervalRange .. => 4
   | .array _ => 6
   | _ => 5
 

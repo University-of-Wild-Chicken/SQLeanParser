@@ -22,7 +22,7 @@ being silently interpreted as SQLite NUMERIC affinity. -/
 def checkSQLiteDataType (type : DataType) : Except Failure Unit :=
   match type.name with
   | .array _ => unsupported "array-type"
-  | .date | .time | .timeTZ | .timestamp | .timestampTZ | .interval
+  | .date | .time | .timeTZ | .timestamp | .timestampTZ | .interval | .intervalRange _
   | .uuid | .json | .jsonb | .bytea => unsupported "PostgreSQL-type"
   | _ => pure ()
 

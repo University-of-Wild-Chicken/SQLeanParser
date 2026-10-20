@@ -68,6 +68,8 @@ import Tests.ArrayPredicateContract
 import Tests.ArrayPredicateRendering
 import Tests.ExtractContract
 import Tests.ExtractRendering
+import Tests.IntervalFieldsContract
+import Tests.IntervalFieldsRendering
 
 namespace SQLean.Tests
 
@@ -240,6 +242,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {extractConcrete} unchanged EXTRACT source certificates"
   let extractRendering ← extractRenderingTests
   IO.println s!"PASS: {extractRendering} EXTRACT parsing and rendering checks"
+  let intervalFieldsContract ← intervalFieldsContractTests
+  IO.println s!"PASS: {intervalFieldsContract} interval field modifier and signature checks"
+  let intervalFieldsCorpus ← intervalFieldsCorpusTests
+  IO.println s!"PASS: {intervalFieldsCorpus} interval field full-query certificates"
+  let intervalFieldsConcrete ← intervalFieldsConcreteContractTests
+  IO.println s!"PASS: {intervalFieldsConcrete} unchanged interval field source certificates"
+  let intervalFieldsRendering ← intervalFieldsRenderingTests
+  IO.println s!"PASS: {intervalFieldsRendering} interval field parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

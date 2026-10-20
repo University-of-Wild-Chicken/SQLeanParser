@@ -237,11 +237,15 @@ private def extractField : Parser String := do
         pure value
       else fail "PostgreSQL keyword is not an EXTRACT field"
   | _ => fail "expected EXTRACT field identifier or string"
-private def alias? : Parser (Option Name) := do
+private def alias? (columnLabel : Bool := false) : Parser (Option Name) := do
   if ← eat "as" then return some (← identifier)
   match (← peek).kind with
   | .quoted _ => return some (← identifier)
-  | .word s => if !reserved.contains s.toLower then return some (← identifier) else pure none
+  | .word s =>
+      if columnLabel && !(← read) &&
+          (SQLean.PostgresGrammar.Generated.keyword s.toLower).any (fun keyword => !keyword.bareLabel) then
+        return none
+      if !reserved.contains s.toLower then return some (← identifier) else pure none
   | _ => pure none
 private def natural : Parser Nat := do
   match (← pop).kind with
@@ -259,6 +263,46 @@ private def names (fuel : Nat) : Parser (List Name) := do
   pure values
 private def optionalNames (fuel : Nat) : Parser (List Name) := do
   if ← isAt "(" then names fuel else pure []
+
+private def intervalFieldsStart : Parser Bool := do
+  pure (match (← peek).kind.keyword with
+    | .word name => (["year", "month", "day", "hour", "minute", "second"] : List String).contains name
+    | _ => false)
+
+/-- Only the thirteen `opt_interval` alternatives are represented. The optional
+precision follows SECOND and is never a leading-field width. -/
+private def intervalQualifier : Parser (Option (IntervalFields × List Nat)) := do
+  unless ← intervalFieldsStart do return none
+  let first ← pop
+  let fields ← match first.kind.keyword with
+    | .word "year" =>
+        if ← eat "to" then do expect "month"; pure IntervalFields.yearToMonth else pure .year
+    | .word "month" => pure .month
+    | .word "day" =>
+        if ← eat "to" then
+          match (← pop).kind.keyword with
+          | .word "hour" => pure .dayToHour
+          | .word "minute" => pure .dayToMinute
+          | .word "second" => pure .dayToSecond
+          | _ => fail "DAY interval range must end in HOUR, MINUTE or SECOND"
+        else pure .day
+    | .word "hour" =>
+        if ← eat "to" then
+          match (← pop).kind.keyword with
+          | .word "minute" => pure .hourToMinute
+          | .word "second" => pure .hourToSecond
+          | _ => fail "HOUR interval range must end in MINUTE or SECOND"
+        else pure .hour
+    | .word "minute" =>
+        if ← eat "to" then do expect "second"; pure .minuteToSecond else pure .minute
+    | .word "second" => pure .second
+    | _ => fail "expected interval field"
+  let modifiers ← if fields.allowsPrecision && (← eat "(") then do
+    let precision ← natural
+    expect ")"
+    pure [precision]
+    else pure []
+  return some (fields, modifiers)
 
 private def arraySuffixes : Nat → TypeName → Parser TypeName
   | 0, _ => fail "array type nesting exceeds parser budget"
@@ -300,6 +344,11 @@ private def dataType (fuel : Nat) : Parser DataType := do
     expect ")"
     pure values
     else pure []
+  let (name, modifiers) ← if name == .interval && modifiers.isEmpty then do
+    match ← intervalQualifier with
+    | some (fields, precision) => pure (TypeName.intervalRange fields, precision)
+    | none => pure (name, modifiers)
+    else pure (name, modifiers)
   let name ← if name == .time || name == .timestamp then do
     if ← eat "with" then
       expect "time"
@@ -320,6 +369,8 @@ private def dataType (fuel : Nat) : Parser DataType := do
   | .numeric, [p,s] => if p == 0 || p > 1000 || s > 1000 then fail "unsupported NUMERIC precision/scale"
   | .time, [p] | .timeTZ, [p] | .timestamp, [p] | .timestampTZ, [p] | .interval, [p] =>
       if p > 6 then fail "fractional-second precision must be between 0 and 6"
+  | .intervalRange fields, [_] =>
+      if !fields.allowsPrecision then fail "invalid interval field precision"
   | _, _ => fail "invalid type modifiers"
   let name ← arraySuffixes fuel name
   pure {name, modifiers}
@@ -357,6 +408,25 @@ private def typeWord (word : String) : Bool :=
 CAST(string AS type). Bare CHARACTER constants are excluded: unlike a bare
 CHAR cast they do not supply an implicit length of one. -/
 private def typedString (fuel : Nat) : Parser Expr := do
+  if ← eat "interval" then
+    let prefixPrecision ← if ← eat "(" then do
+      let precision ← natural
+      expect ")"
+      if precision > 6 then fail "fractional-second precision must be between 0 and 6"
+      pure (some precision)
+      else pure none
+    let value ← match (← pop).kind with
+      | .text value => pure value
+      | _ => fail "INTERVAL requires a string before its field qualifier"
+    let type ← match prefixPrecision with
+      | some precision =>
+          if ← intervalFieldsStart then fail "INTERVAL prefix precision cannot combine with a field qualifier"
+          pure (⟨.interval, [precision]⟩ : DataType)
+      | none =>
+          match ← intervalQualifier with
+          | some (fields, precision) => pure ⟨.intervalRange fields, precision⟩
+          | none => pure ⟨.interval, []⟩
+    return .cast (.literal (.text value)) type
   let type ← dataType fuel
   if type.name.isArray then
     fail "array typed-string constants require CAST or ::"
@@ -365,11 +435,6 @@ private def typedString (fuel : Nat) : Parser Expr := do
     | _ => fail "expected string after SQL type"
   if type.name == .char && type.modifiers.isEmpty then
     fail "bare CHAR typed strings require an unbounded-character type; use an explicit length"
-  if type.name == .interval then
-    match (← peek).kind.keyword with
-    | .word "year" | .word "month" | .word "day" | .word "hour" | .word "minute" | .word "second" =>
-        fail "INTERVAL field qualifiers are not represented in this type profile"
-    | _ => pure ()
   pure (.cast (.literal (.text value)) type)
 
 /-- This is a lookahead hint, not proof that the entire group is a query. -/
@@ -736,7 +801,7 @@ mutual
         | _ => pure ()
       | _ => pure ()
       let value ← expression fuel 0
-      let alias ← alias?
+      let alias ← alias? true
       return .expression value alias
 
   private def fromAtom : Nat → Parser From

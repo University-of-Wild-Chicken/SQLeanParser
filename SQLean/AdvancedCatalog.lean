@@ -55,6 +55,7 @@ def validDataType (type : DataType) : Bool :=
   | .varchar, _ | .char, _ | .numeric, _ => false
   | .time, [precision] | .timeTZ, [precision] | .timestamp, [precision]
   | .timestampTZ, [precision] | .interval, [precision] => precision ≤ 6
+  | .intervalRange fields, [precision] => fields.allowsPrecision && precision ≤ 6
   | _, modifiers => modifiers.isEmpty
 
 def requireCheck (condition : Bool) (message : String) : Except ValidationError Unit :=
