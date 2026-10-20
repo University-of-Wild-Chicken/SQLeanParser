@@ -1,4 +1,4 @@
-import SQLean.RenderContract.Translation
+import SQLean.RenderContract.RecursionPreservation
 import SQLean.SelectContract.Spec
 
 /-! Parameter translation preserves the independent basic SELECT judgment.
@@ -646,6 +646,45 @@ theorem pagination_bounds_valid_translated
 identity, aliases, order and NULL-extension flags. Locking premises therefore
 remain the same propositions; no name is re-resolved after translation. -/
 
+@[simp] theorem without_with_translated (query : Advanced.Query) :
+    withoutWith (translateParameters query) = translateParameters (withoutWith query) := by
+  cases query
+  simp [withoutWith, translateParameters]
+
+
+private theorem translated_query_ctes (query : Advanced.Query) :
+    (translateParameters query).ctes = query.ctes.map translateCTE := by
+  rw [translateParameters]
+  simp only [List.attach_map_val]
+
+private theorem translated_query_recursive (query : Advanced.Query) :
+    (translateParameters query).recursive = query.recursive := by
+  rw [translateParameters]
+
+private theorem translated_cte_query (cte : Advanced.CTE) :
+    (translateCTE cte).query = translateParameters cte.query := by rw [translateCTE]
+private theorem translated_cte_name (cte : Advanced.CTE) :
+    (translateCTE cte).name = cte.name := by rw [translateCTE]
+private theorem translated_cte_columns (cte : Advanced.CTE) :
+    (translateCTE cte).columns = cte.columns := by rw [translateCTE]
+
+private theorem cte_names_valid_translated (ctes : List Advanced.CTE)
+    (valid : CTENamesValid ctes) : CTENamesValid (ctes.map translateCTE) := by
+  simpa only [CTENamesValid, recursive_cte_names_translated, List.mem_map,
+    forall_exists_index, and_imp, forall_apply_eq_imp_iff₂, translated_cte_name] using valid
+
+private theorem query_ctes_size_lt (query : Advanced.Query) :
+    sizeOf query.ctes < sizeOf query := by cases query; simp; omega
+
+private theorem without_with_size_lt (query : Advanced.Query) (nonempty : query.ctes ≠ []) :
+    sizeOf (withoutWith query) < sizeOf query := by
+  cases query with
+  | mk body ctes recursive orderBy limit offset locking offsetFirst =>
+    cases ctes with
+    | nil => exact False.elim (nonempty rfl)
+    | cons head tail => cases head; simp [withoutWith]; omega
+
+
 mutual
   /-- The complete source derivation survives translation: ON predicates retain
   their child scope, outer joins retain exact output nullability, USING/NATURAL
@@ -747,8 +786,24 @@ mutual
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
         · have translated := pagination_valid_translated offsetValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
+    | @recursiveWith env visible cteUses query output bodyUses nonemptyDefinitions names recursiveFlag definitions body =>
+      simp only [List.map_append]
+      apply QueryValid.recursiveWith
+      · rw [translated_query_ctes]
+        intro empty
+        exact nonemptyDefinitions (List.map_eq_nil_iff.mp empty)
+      · rw [translated_query_ctes]
+        exact cte_names_valid_translated _ names
+      · simpa only [translated_query_recursive] using recursiveFlag
+      · simpa only [translated_query_ctes, recursive_outer_env_translated] using
+          recursive_ctes_valid_translated definitions
+      · simpa only [without_with_translated] using query_valid_translated body
   termination_by 2 * sizeOf query
-  decreasing_by all_goals (try cases select) <;> simp <;> omega
+  decreasing_by
+    all_goals (try have withoutSize := without_with_size_lt _ nonemptyDefinitions)
+    all_goals (try have ctesSize := query_ctes_size_lt query)
+    all_goals subst_vars
+    all_goals (try cases select) <;> (try cases query) <;> (try simp at withoutSize) <;> simp <;> omega
 
   theorem set_operand_valid_translated
       (valid : SetOperandValid profile catalog params env query output uses) :
@@ -791,8 +846,24 @@ mutual
       have translated := query_valid_translated complete
       simp only [translateParameters, translateQueryBody, List.attach_map_val] at translated ⊢
       exact SetOperandValid.set translated
+    | @recursiveWith env visible cteUses query output bodyUses nonemptyDefinitions names recursiveFlag definitions body =>
+      simp only [List.map_append]
+      apply SetOperandValid.recursiveWith
+      · rw [translated_query_ctes]
+        intro empty
+        exact nonemptyDefinitions (List.map_eq_nil_iff.mp empty)
+      · rw [translated_query_ctes]
+        exact cte_names_valid_translated _ names
+      · simpa only [translated_query_recursive] using recursiveFlag
+      · simpa only [translated_query_ctes, recursive_outer_env_translated] using
+          recursive_ctes_valid_translated definitions
+      · simpa only [without_with_translated] using set_operand_valid_translated body
   termination_by 2 * sizeOf query + 1
-  decreasing_by all_goals (try cases select) <;> simp <;> omega
+  decreasing_by
+    all_goals (try have withoutSize := without_with_size_lt _ nonemptyDefinitions)
+    all_goals (try have ctesSize := query_ctes_size_lt query)
+    all_goals subst_vars
+    all_goals (try cases select) <;> (try cases query) <;> (try simp at withoutSize) <;> simp <;> omega
 
   /-- Definition order and exposed names are unchanged; each body contributes
   its translated occurrences once, independently of references. -/
@@ -807,7 +878,62 @@ mutual
           CTEsValid.cons (head := {head with query := translateParameters head.query}) (query_valid_translated body)
             aliases (ctes_valid_translated tail)
   termination_by 2 * sizeOf ctes
-  decreasing_by all_goals (cases head; simp_all; omega)
+  decreasing_by all_goals subst_vars; cases head; simp; omega
+
+  theorem recursive_cte_valid_translated
+      (valid : RecursiveCTEValid profile catalog params env cte output uses) :
+      RecursiveCTEValid profile catalog params env (translateCTE cte) output
+        (uses.map translateParameter) := by
+    cases valid with
+    | union names notShadowed prefixFree definitions anchorFree stepReference anchor anchorInputs
+        aliases step leftUnlocked rightUnlocked merged sameTypes collation =>
+      rw [translateCTE, translateParameters, translateQueryBody]
+      simp only [List.attach_map_val, List.map_append]
+      apply RecursiveCTEValid.union
+      · exact cte_names_valid_translated _ names
+      · simpa only [List.mem_map, forall_exists_index, and_imp,
+          forall_apply_eq_imp_iff₂, translated_cte_name] using notShadowed
+      · simpa only [recursive_cte_references_translated] using prefixFree
+      · exact ctes_valid_translated definitions
+      · simpa only [recursive_references_translated] using anchorFree
+      · simpa only [recursive_references_translated] using stepReference
+      · exact query_valid_translated anchor
+      · exact set_operand_valid_translated anchorInputs
+      · exact aliases
+      · exact set_operand_valid_translated step
+      · simpa only [translateParameters] using leftUnlocked
+      · simpa only [translateParameters] using rightUnlocked
+      · exact merged
+      · exact sameTypes
+      · have translated := recursive_collation_safe_translated collation
+        rw [translateParameters, translateQueryBody] at translated
+        simpa only [List.attach_map_val, List.map_nil] using translated
+  termination_by 2 * sizeOf cte
+  decreasing_by all_goals simp <;> omega
+
+  theorem recursive_ctes_valid_translated
+      (valid : RecursiveCTEsValid profile catalog params env ctes visible uses) :
+      RecursiveCTEsValid profile catalog params env (ctes.map translateCTE) visible
+        (uses.map translateParameter) := by
+    cases valid with
+    | nil => exact .nil
+    | @ordinary remaining env output uses visible restUses head forwardFree noSelf body aliases tail =>
+      simp only [List.map_cons, List.map_append]
+      apply RecursiveCTEsValid.ordinary
+        (output := output)
+      · simpa only [translated_cte_query] using (no_forward_cte_references_translated _ _).mpr forwardFree
+      · simpa only [translated_cte_name, translated_cte_query, recursive_references_translated] using noSelf
+      · simpa only [translated_cte_query] using query_valid_translated body
+      · simpa only [translated_cte_columns] using aliases
+      · simpa only [translated_cte_name, translated_cte_columns] using recursive_ctes_valid_translated tail
+    | @recursive remaining env head output uses visible restUses forwardFree body tail =>
+      simp only [List.map_cons, List.map_append]
+      apply RecursiveCTEsValid.recursive
+      · simpa only [translated_cte_query] using (no_forward_cte_references_translated _ _).mpr forwardFree
+      · exact recursive_cte_valid_translated body
+      · simpa only [translated_cte_name] using recursive_ctes_valid_translated tail
+  termination_by 2 * sizeOf ctes
+  decreasing_by all_goals cases head <;> simp <;> omega
 end
 
 /-- Translating anonymous occurrences to numbered parameters preserves every

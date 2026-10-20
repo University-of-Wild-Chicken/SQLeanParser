@@ -14,6 +14,7 @@ ALLOWED = {
     'SQLean.SelectContract.Spec',
     'SQLean.SelectContract.Profile',
     'SQLean.SelectContract.ScalarSignatures',
+    'SQLean.SelectContract.Recursion',
     'SQLean.CatalogSyntax',
     'SQLean.AdvancedSyntax',
     'SQLean.SyntaxBase',

@@ -1066,6 +1066,18 @@ structure CTEsCertificate (profile : Profile) (catalog : Catalog) (params : Para
   uses : List Parameter
   valid : CTEsValid profile catalog params env ctes visible uses
 
+private structure RecursiveCTEsCertificate (profile : Profile) (catalog : Catalog) (params : ParameterEnv)
+    (env : CTEEnv) (ctes : List Advanced.CTE) where
+  visible : CTEEnv
+  uses : List Parameter
+  valid : RecursiveCTEsValid profile catalog params env ctes visible uses
+
+private structure RecursiveCTECertificate (profile : Profile) (catalog : Catalog) (params : ParameterEnv)
+    (env : CTEEnv) (cte : Advanced.CTE) where
+  output : List OutputColumn
+  uses : List Parameter
+  valid : RecursiveCTEValid profile catalog params env cte output uses
+
 mutual
   private def checkSource (fuel : Nat) (profile : Profile) (catalog : Catalog) (params : ParameterEnv)
       (env : CTEEnv) (source : Option Advanced.From) :
@@ -1262,7 +1274,29 @@ mutual
                 else .error (unsupported "having" "Independent HAVING and grouped-query rules are not implemented yet")
               else .error (unsupported "group_by" "Independent grouping rules are not implemented yet")
           else .error (invalid "cte_names" "WITH names must be nonempty and unique within the local definition list")
-        else .error (unsupported "recursive_cte" "Independent recursive CTE rules are not implemented yet")
+        else if nonemptyDefinitions : ctes ≠ [] then
+          if namesValid : CTENamesValid ctes then
+            let definitions ← checkRecursiveCTEs fuel profile catalog params (recursiveOuterEnv env ctes) ctes
+            let checkedBody ← checkQueryCore fuel profile catalog params definitions.visible (withoutWith query)
+            have recursiveFlag : query.recursive = true := by
+              rw [queryEq]
+              cases recursive <;> simp_all
+            .ok ⟨⟨checkedBody.output, definitions.uses ++ checkedBody.uses, by
+                apply QueryValid.recursiveWith
+                · simpa only [queryEq] using nonemptyDefinitions
+                · simpa only [queryEq] using namesValid
+                · exact recursiveFlag
+                · simpa only [queryEq] using definitions.valid
+                · exact checkedBody.valid⟩,
+              checkedBody.inputs, by
+                apply SetOperandValid.recursiveWith
+                · simpa only [queryEq] using nonemptyDefinitions
+                · simpa only [queryEq] using namesValid
+                · exact recursiveFlag
+                · simpa only [queryEq] using definitions.valid
+                · exact checkedBody.operandValid⟩
+          else .error (invalid "cte_names" "WITH names must be nonempty and unique")
+        else .error (invalid "recursive_empty" "WITH RECURSIVE requires a definition")
 
   private def checkCTEs (fuel : Nat) (profile : Profile) (catalog : Catalog)
       (params : ParameterEnv) (env : CTEEnv) (ctes : List Advanced.CTE) :
@@ -1286,6 +1320,95 @@ mutual
           .ok ⟨tail.visible, child.uses ++ tail.uses, .cons child.valid aliases tail.valid⟩
         else .error (invalid "cte_column_aliases"
           "WITH column aliases must be nonempty and cannot exceed the certified output width")
+
+  private def checkRecursiveCTE (fuel : Nat) (profile : Profile) (catalog : Catalog)
+      (params : ParameterEnv) (env : CTEEnv) (head : Advanced.CTE) :
+      Except Failure (RecursiveCTECertificate profile catalog params env head) :=
+    match fuel with
+    | 0 => .error exhausted
+    | fuel + 1 => do
+      match headEq : head with
+      | ⟨name, query, aliases⟩ =>
+        match queryEq : query with
+        | ⟨body, ctes, recursive, orderBy, limit, offset, locking, offsetFirst⟩ =>
+          if noRecursive : recursive = false then
+            if noOrder : orderBy = [] then
+              if noLimit : limit = none then
+                if noOffset : offset = none then
+                  if noLocks : locking = [] then
+                    match bodyEq : body with
+                    | .select _ => .error (invalid "recursive_shape" "A recursive definition must have root UNION or UNION ALL")
+                    | .set op all left right =>
+                      if unionOp : op = .union then
+                        if names : CTENamesValid ctes then
+                          if notShadowed : ∀ cte ∈ ctes, cte.name ≠ name then
+                            if prefixFree : (recursiveCTEReferences name false false ctes).count = 0 then
+                              if anchorFree : (recursiveReferences name false false left).count = 0 then
+                                if stepReference : recursiveReferences name false true right = ⟨1, true⟩ then
+                                  if leftUnlocked : left.locking = [] then
+                                    if rightUnlocked : right.locking = [] then
+                                      let definitions ← checkCTEs fuel profile catalog params env ctes
+                                      let anchor ← checkQueryCore fuel profile catalog params definitions.visible left
+                                      if columnAliases : ColumnAliasesValid aliases anchor.output then
+                                        let binding : CTEBinding := ⟨name, recursiveOutput (renameOutput aliases anchor.output)⟩
+                                        let step ← checkQueryCore fuel profile catalog params (binding :: definitions.visible) right
+                                        let merged ← checkSetColumns fuel .union all anchor.inputs step.inputs
+                                        if sameTypes : merged.val.map (fun column => column.type.base) = anchor.output.map (fun column => column.type.base) then
+                                          if collation : RecursiveCollationSafe catalog params env name query anchor.output then
+                                            .ok ⟨binding.output, definitions.uses ++ anchor.uses ++ step.uses, by
+                                              rw [headEq, queryEq, bodyEq, unionOp, noRecursive, noOrder, noLimit, noOffset, noLocks]
+                                              exact .union names notShadowed prefixFree definitions.valid anchorFree stepReference
+                                                anchor.valid anchor.operandValid columnAliases step.operandValid leftUnlocked rightUnlocked
+                                                merged.property sameTypes (by
+                                                  simpa only [queryEq, bodyEq, unionOp, noRecursive, noOrder, noLimit, noOffset, noLocks] using collation)⟩
+                                          else .error (unsupported "recursive_collation" "Recursive output collation requires provenance outside the closed uniform-default fragment")
+                                        else .error (invalid "recursive_type" "Recursive result type and typmod must equal the complete anchor type in every position")
+                                      else .error (invalid "cte_column_aliases" "WITH aliases cannot exceed the anchor output width")
+                                    else .error (invalid "locking_set_operand" "A direct recursive set operand cannot have row-locking clauses")
+                                  else .error (invalid "locking_set_operand" "A direct recursive set operand cannot have row-locking clauses")
+                                else .error (invalid "recursive_reference" "The recursive arm requires exactly one self reference in a permitted position")
+                              else .error (invalid "recursive_reference" "The anchor cannot contain a self reference")
+                            else .error (invalid "recursive_reference" "WITH definitions attached to the recursive UNION cannot reference its output")
+                          else .error (invalid "recursive_reference" "A body-local WITH definition cannot shadow an active recursive binding")
+                        else .error (invalid "cte_names" "WITH names must be nonempty and unique")
+                      else .error (invalid "recursive_shape" "A recursive definition must have root UNION or UNION ALL")
+                  else .error (invalid "recursive_modifiers" "A recursive UNION cannot have row-locking clauses")
+                else .error (invalid "recursive_modifiers" "A recursive UNION cannot have OFFSET")
+              else .error (invalid "recursive_modifiers" "A recursive UNION cannot have LIMIT")
+            else .error (invalid "recursive_modifiers" "A recursive UNION cannot have ORDER BY")
+          else .error (unsupported "recursive_body_with" "An actual recursive UNION with its own RECURSIVE WITH prefix needs a separate scope rule")
+
+  private def checkRecursiveCTEs (fuel : Nat) (profile : Profile) (catalog : Catalog)
+      (params : ParameterEnv) (env : CTEEnv) (ctes : List Advanced.CTE) :
+      Except Failure (RecursiveCTEsCertificate profile catalog params env ctes) :=
+    match fuel with
+    | 0 => .error exhausted
+    | fuel + 1 => match ctes with
+      | [] => .ok ⟨env, [], .nil⟩
+      | head :: remaining => do
+        if forwardFree : NoForwardCTEReferences remaining head.query then
+          if noSelf : (recursiveReferences head.name false true head.query).count = 0 then
+            let child ← match checkQueryCore fuel profile catalog params env head.query with
+              | .error (.invalid diagnostic) =>
+                if diagnostic.code == "locking_nullable" then
+                  .error (unsupported "cte_planning_lock" "Unused WITH definitions may avoid nullable-side locking planning checks")
+                else .error (.invalid diagnostic)
+              | result => result
+            if aliases : ColumnAliasesValid head.columns child.output then
+              let tail ← checkRecursiveCTEs fuel profile catalog params
+                (⟨head.name, renameOutput head.columns child.output⟩ :: env) remaining
+              .ok ⟨tail.visible, child.uses ++ tail.uses, .ordinary forwardFree noSelf child.valid aliases tail.valid⟩
+            else .error (invalid "cte_column_aliases" "WITH column aliases cannot exceed the certified output width")
+          else
+            let child ← match checkRecursiveCTE fuel profile catalog params env head with
+              | .error (.invalid diagnostic) =>
+                if diagnostic.code == "locking_nullable" then
+                  .error (unsupported "cte_planning_lock" "Unused recursive WITH definitions may avoid nullable-side locking planning checks")
+                else .error (.invalid diagnostic)
+              | result => result
+            let tail ← checkRecursiveCTEs fuel profile catalog params (⟨head.name, child.output⟩ :: env) remaining
+            .ok ⟨tail.visible, child.uses ++ tail.uses, .recursive forwardFree child.valid tail.valid⟩
+        else .error (unsupported "recursive_dependency" "Forward and mutually dependent WITH definitions require a dependency-order extension")
 
 end
 

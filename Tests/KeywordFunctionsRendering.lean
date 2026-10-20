@@ -41,7 +41,7 @@ private def parsed (source : String) (expected : Advanced.Expr) : IO Unit := do
   SQLean.Tests.assert (decide (expr = expected)) s!"keyword function AST mismatch: {source}"
 
 private def unsupported (expr : Advanced.Expr) : IO Unit := do
-  match SelectContract.checkQuery .basicV30 [] [] (queryOf expr) with
+  match SelectContract.checkQuery .basicV31 [] [] (queryOf expr) with
   | .error (.unsupported _) => pure ()
   | result => throw (IO.userError s!"unknown keyword function acquired static validity: {reprStr (result.map (·.output))}")
 
@@ -83,7 +83,7 @@ def keywordFunctionsRenderingTests : IO Nat := do
       count := count + (← roundTrip expr (Advanced.expressionParameters 256 expr))
     for callee in [[name], ["pg_catalog", name]] do
       let expr := Advanced.Expr.call callee [text "abcdef", 2]
-      let cert ← expectOk "LEFT/RIGHT exact validity" ((SelectContract.checkQuery .basicV30 [] [] (queryOf expr)).mapError reprStr)
+      let cert ← expectOk "LEFT/RIGHT exact validity" ((SelectContract.checkQuery .basicV31 [] [] (queryOf expr)).mapError reprStr)
       SQLean.Tests.assert (cert.output == [⟨name, ⟨.text, false⟩⟩]) "keyword function label/type changed"
       count := count + 1
     let uppercase := name.toUpper
@@ -95,7 +95,7 @@ def keywordFunctionsRenderingTests : IO Nat := do
       expectError source (Advanced.parseExpression source)
       count := count + 1
     parsed (name ++ "(x=>?)") (.namedCall [name] [.named "x" (anon 1)])
-    match SelectContract.checkQuery .basicV30 [] []
+    match SelectContract.checkQuery .basicV31 [] []
         (queryOf (.namedCall [name] [.named "x" (text "abc")])) with
     | .error (.unsupported _) => pure ()
     | result => throw (IO.userError s!"keyword named call bypassed explicit signature metadata: {reprStr (result.map (·.output))}")

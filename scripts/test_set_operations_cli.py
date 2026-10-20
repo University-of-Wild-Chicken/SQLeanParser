@@ -249,7 +249,7 @@ class SetOperationsCliTests(unittest.TestCase):
     def test_analysis_observations_keep_conversion_success_separate_from_typing(self):
         rows = checker.boundary_cases()
         self.assertEqual(len(rows), 90)
-        self.assertEqual(Counter(r["status"] for r in rows), {"invalid": 75, "unsupported": 12, "valid": 3})
+        self.assertEqual(Counter(r["status"] for r in rows), {"invalid": 75, "unsupported": 9, "valid": 6})
         conversion = [r for r in rows if r["id"].endswith("unknown-string-conversion")]
         self.assertEqual(len(conversion), 3)
         self.assertTrue(all(r["status"] == "valid" and r["prepare_state"] == "22P02" for r in conversion))

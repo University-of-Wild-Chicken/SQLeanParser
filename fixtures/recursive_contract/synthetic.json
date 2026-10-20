@@ -1,0 +1,7164 @@
+[
+  {
+    "id": "recursive-001",
+    "source_kind": "synthetic",
+    "shape": "ascending-all",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE n<4) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE n<4) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-002",
+    "source_kind": "synthetic",
+    "shape": "ascending-distinct",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION SELECT n+1 FROM t WHERE n<4) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION SELECT n+1 FROM t WHERE n<4) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-003",
+    "source_kind": "synthetic",
+    "shape": "descending",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 5 UNION ALL SELECT n-1 FROM t WHERE n>1) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 5 UNION ALL SELECT n-1 FROM t WHERE n>1) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        5
+      ],
+      [
+        4
+      ],
+      [
+        3
+      ],
+      [
+        2
+      ],
+      [
+        1
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        5
+      ],
+      [
+        4
+      ],
+      [
+        3
+      ],
+      [
+        2
+      ],
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          5
+        ],
+        [
+          4
+        ],
+        [
+          3
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          5
+        ],
+        [
+          4
+        ],
+        [
+          3
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          5
+        ],
+        [
+          4
+        ],
+        [
+          3
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          5
+        ],
+        [
+          4
+        ],
+        [
+          3
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          5
+        ],
+        [
+          4
+        ],
+        [
+          3
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          5
+        ],
+        [
+          4
+        ],
+        [
+          3
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          5
+        ],
+        [
+          4
+        ],
+        [
+          3
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          5
+        ],
+        [
+          4
+        ],
+        [
+          3
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-004",
+    "source_kind": "synthetic",
+    "shape": "negative-sequence",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT -3 UNION ALL SELECT n+1 FROM t WHERE n<0) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT -3 UNION ALL SELECT n+1 FROM t WHERE n<0) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        -3
+      ],
+      [
+        -2
+      ],
+      [
+        -1
+      ],
+      [
+        0
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        -3
+      ],
+      [
+        -2
+      ],
+      [
+        -1
+      ],
+      [
+        0
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          -3
+        ],
+        [
+          -2
+        ],
+        [
+          -1
+        ],
+        [
+          0
+        ]
+      ],
+      "nodes_only": [
+        [
+          -3
+        ],
+        [
+          -2
+        ],
+        [
+          -1
+        ],
+        [
+          0
+        ]
+      ],
+      "edges_only": [
+        [
+          -3
+        ],
+        [
+          -2
+        ],
+        [
+          -1
+        ],
+        [
+          0
+        ]
+      ],
+      "both": [
+        [
+          -3
+        ],
+        [
+          -2
+        ],
+        [
+          -1
+        ],
+        [
+          0
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          -3
+        ],
+        [
+          -2
+        ],
+        [
+          -1
+        ],
+        [
+          0
+        ]
+      ],
+      "nodes_only": [
+        [
+          -3
+        ],
+        [
+          -2
+        ],
+        [
+          -1
+        ],
+        [
+          0
+        ]
+      ],
+      "edges_only": [
+        [
+          -3
+        ],
+        [
+          -2
+        ],
+        [
+          -1
+        ],
+        [
+          0
+        ]
+      ],
+      "both": [
+        [
+          -3
+        ],
+        [
+          -2
+        ],
+        [
+          -1
+        ],
+        [
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-005",
+    "source_kind": "synthetic",
+    "shape": "empty-anchor",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 WHERE FALSE UNION ALL SELECT n+1 FROM t WHERE n<4) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 WHERE FALSE UNION ALL SELECT n+1 FROM t WHERE n<4) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [],
+    "expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [],
+      "edges_only": [],
+      "both": []
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [],
+      "edges_only": [],
+      "both": []
+    }
+  },
+  {
+    "id": "recursive-006",
+    "source_kind": "synthetic",
+    "shape": "empty-step",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE FALSE) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE FALSE) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-007",
+    "source_kind": "synthetic",
+    "shape": "typed-null-anchor",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT CAST(NULL AS INTEGER) UNION ALL SELECT n FROM t WHERE FALSE) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT CAST(NULL AS INTEGER) UNION ALL SELECT n FROM t WHERE FALSE) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "nodes_only": [
+        [
+          null
+        ]
+      ],
+      "edges_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "nodes_only": [
+        [
+          null
+        ]
+      ],
+      "edges_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-008",
+    "source_kind": "synthetic",
+    "shape": "unknown-null-anchor",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT NULL UNION ALL SELECT n FROM t WHERE FALSE) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT NULL UNION ALL SELECT n FROM t WHERE FALSE) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "text",
+        "nullable": true,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "nodes_only": [
+        [
+          null
+        ]
+      ],
+      "edges_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "nodes_only": [
+        [
+          null
+        ]
+      ],
+      "edges_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-009",
+    "source_kind": "synthetic",
+    "shape": "text-growth",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 'a' UNION ALL SELECT n||'x' FROM t WHERE LENGTH(n)<3) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 'a' UNION ALL SELECT n||'x' FROM t WHERE LENGTH(n)<3) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "text",
+        "nullable": true,
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "ax"
+      ],
+      [
+        "axx"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.scalar-function-signatures",
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "ax"
+      ],
+      [
+        "axx"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "edges_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "edges_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-010",
+    "source_kind": "synthetic",
+    "shape": "varchar-modifier",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT CAST('a' AS VARCHAR(3)) UNION ALL SELECT CAST(n||'x' AS VARCHAR(3)) FROM t WHERE LENGTH(n)<3) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT CAST('a' AS VARCHAR(3)) UNION ALL SELECT CAST(n||'x' AS VARCHAR(3)) FROM t WHERE LENGTH(n)<3) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "varchar(3)",
+        "nullable": true,
+        "postgres_type": "VARCHAR(3)",
+        "postgres_display_type": "character varying(3)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "ax"
+      ],
+      [
+        "axx"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "render_unsupported",
+    "sqlite_diagnostic": "coverage.sqlite.scalar-function-signatures",
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "ax"
+      ],
+      [
+        "axx"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "edges_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "edges_only": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ],
+      "both": [
+        [
+          "a"
+        ],
+        [
+          "ax"
+        ],
+        [
+          "axx"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-011",
+    "source_kind": "synthetic",
+    "shape": "numeric-modifier",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT CAST(1 AS NUMERIC(6,2)) UNION ALL SELECT CAST(n+0.5 AS NUMERIC(6,2)) FROM t WHERE n<2) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT CAST(1 AS NUMERIC(6,2)) UNION ALL SELECT CAST(n+0.5 AS NUMERIC(6,2)) FROM t WHERE n<2) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "numeric(6,2)",
+        "nullable": true,
+        "postgres_type": "NUMERIC(6,2)",
+        "postgres_display_type": "numeric(6,2)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "1.00"
+      ],
+      [
+        "1.50"
+      ],
+      [
+        "2.00"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        1.5
+      ],
+      [
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "1.00"
+        ],
+        [
+          "1.50"
+        ],
+        [
+          "2.00"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "1.00"
+        ],
+        [
+          "1.50"
+        ],
+        [
+          "2.00"
+        ]
+      ],
+      "edges_only": [
+        [
+          "1.00"
+        ],
+        [
+          "1.50"
+        ],
+        [
+          "2.00"
+        ]
+      ],
+      "both": [
+        [
+          "1.00"
+        ],
+        [
+          "1.50"
+        ],
+        [
+          "2.00"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          1.5
+        ],
+        [
+          2
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          1.5
+        ],
+        [
+          2
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          1.5
+        ],
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          1.5
+        ],
+        [
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-012",
+    "source_kind": "synthetic",
+    "shape": "bigint-range",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT CAST(2147483647 AS BIGINT) UNION ALL SELECT n+1 FROM t WHERE n<2147483649) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT CAST(2147483647 AS BIGINT) UNION ALL SELECT n+1 FROM t WHERE n<2147483649) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "bigint",
+        "nullable": true,
+        "postgres_type": "BIGINT",
+        "postgres_display_type": "bigint"
+      }
+    ],
+    "expected_rows": [
+      [
+        2147483647
+      ],
+      [
+        2147483648
+      ],
+      [
+        2147483649
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        2147483647
+      ],
+      [
+        2147483648
+      ],
+      [
+        2147483649
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          2147483647
+        ],
+        [
+          2147483648
+        ],
+        [
+          2147483649
+        ]
+      ],
+      "nodes_only": [
+        [
+          2147483647
+        ],
+        [
+          2147483648
+        ],
+        [
+          2147483649
+        ]
+      ],
+      "edges_only": [
+        [
+          2147483647
+        ],
+        [
+          2147483648
+        ],
+        [
+          2147483649
+        ]
+      ],
+      "both": [
+        [
+          2147483647
+        ],
+        [
+          2147483648
+        ],
+        [
+          2147483649
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          2147483647
+        ],
+        [
+          2147483648
+        ],
+        [
+          2147483649
+        ]
+      ],
+      "nodes_only": [
+        [
+          2147483647
+        ],
+        [
+          2147483648
+        ],
+        [
+          2147483649
+        ]
+      ],
+      "edges_only": [
+        [
+          2147483647
+        ],
+        [
+          2147483648
+        ],
+        [
+          2147483649
+        ]
+      ],
+      "both": [
+        [
+          2147483647
+        ],
+        [
+          2147483648
+        ],
+        [
+          2147483649
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-013",
+    "source_kind": "synthetic",
+    "shape": "real-sequence",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT CAST(1 AS REAL) UNION ALL SELECT n+CAST(0.5 AS REAL) FROM t WHERE n<2) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT CAST(1 AS REAL) UNION ALL SELECT n+CAST(0.5 AS REAL) FROM t WHERE n<2) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "real",
+        "nullable": true,
+        "postgres_type": "REAL",
+        "postgres_display_type": "real"
+      }
+    ],
+    "expected_rows": [
+      [
+        "1"
+      ],
+      [
+        "1.5"
+      ],
+      [
+        "2"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1.0
+      ],
+      [
+        1.5
+      ],
+      [
+        2.0
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "1"
+        ],
+        [
+          "1.5"
+        ],
+        [
+          "2"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "1"
+        ],
+        [
+          "1.5"
+        ],
+        [
+          "2"
+        ]
+      ],
+      "edges_only": [
+        [
+          "1"
+        ],
+        [
+          "1.5"
+        ],
+        [
+          "2"
+        ]
+      ],
+      "both": [
+        [
+          "1"
+        ],
+        [
+          "1.5"
+        ],
+        [
+          "2"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1.0
+        ],
+        [
+          1.5
+        ],
+        [
+          2.0
+        ]
+      ],
+      "nodes_only": [
+        [
+          1.0
+        ],
+        [
+          1.5
+        ],
+        [
+          2.0
+        ]
+      ],
+      "edges_only": [
+        [
+          1.0
+        ],
+        [
+          1.5
+        ],
+        [
+          2.0
+        ]
+      ],
+      "both": [
+        [
+          1.0
+        ],
+        [
+          1.5
+        ],
+        [
+          2.0
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-014",
+    "source_kind": "synthetic",
+    "shape": "double-sequence",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT CAST(1 AS DOUBLE PRECISION) UNION ALL SELECT n+1 FROM t WHERE n<3) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT CAST(1 AS DOUBLE PRECISION) UNION ALL SELECT n+1 FROM t WHERE n<3) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "double precision",
+        "nullable": true,
+        "postgres_type": "DOUBLE PRECISION",
+        "postgres_display_type": "double precision"
+      }
+    ],
+    "expected_rows": [
+      [
+        "1"
+      ],
+      [
+        "2"
+      ],
+      [
+        "3"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1.0
+      ],
+      [
+        2.0
+      ],
+      [
+        3.0
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "1"
+        ],
+        [
+          "2"
+        ],
+        [
+          "3"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "1"
+        ],
+        [
+          "2"
+        ],
+        [
+          "3"
+        ]
+      ],
+      "edges_only": [
+        [
+          "1"
+        ],
+        [
+          "2"
+        ],
+        [
+          "3"
+        ]
+      ],
+      "both": [
+        [
+          "1"
+        ],
+        [
+          "2"
+        ],
+        [
+          "3"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1.0
+        ],
+        [
+          2.0
+        ],
+        [
+          3.0
+        ]
+      ],
+      "nodes_only": [
+        [
+          1.0
+        ],
+        [
+          2.0
+        ],
+        [
+          3.0
+        ]
+      ],
+      "edges_only": [
+        [
+          1.0
+        ],
+        [
+          2.0
+        ],
+        [
+          3.0
+        ]
+      ],
+      "both": [
+        [
+          1.0
+        ],
+        [
+          2.0
+        ],
+        [
+          3.0
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-015",
+    "source_kind": "synthetic",
+    "shape": "smallint-sequence",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT CAST(1 AS SMALLINT) UNION ALL SELECT CAST(n+1 AS SMALLINT) FROM t WHERE n<3) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT CAST(1 AS SMALLINT) UNION ALL SELECT CAST(n+1 AS SMALLINT) FROM t WHERE n<3) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "smallint",
+        "nullable": true,
+        "postgres_type": "SMALLINT",
+        "postgres_display_type": "smallint"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-016",
+    "source_kind": "synthetic",
+    "shape": "boolean-toggle",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT FALSE UNION ALL SELECT NOT n FROM t WHERE n=FALSE) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT FALSE UNION ALL SELECT NOT n FROM t WHERE n=FALSE) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "bool",
+        "nullable": true,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ],
+      [
+        true
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        0
+      ],
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ],
+        [
+          true
+        ]
+      ],
+      "nodes_only": [
+        [
+          false
+        ],
+        [
+          true
+        ]
+      ],
+      "edges_only": [
+        [
+          false
+        ],
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          false
+        ],
+        [
+          true
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          0
+        ],
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-017",
+    "source_kind": "synthetic",
+    "shape": "array-growth",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT ARRAY[1] UNION ALL SELECT n||2 FROM t WHERE n[2] IS NULL) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT ARRAY[1] UNION ALL SELECT n||2 FROM t WHERE n[2] IS NULL) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "integer[]",
+        "nullable": true,
+        "postgres_type": "INTEGER[]",
+        "postgres_display_type": "integer[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{1}"
+      ],
+      [
+        "{1,2}"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "input_excluded",
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        "{1}"
+      ],
+      [
+        "{1,2}"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{1}"
+        ],
+        [
+          "{1,2}"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "{1}"
+        ],
+        [
+          "{1,2}"
+        ]
+      ],
+      "edges_only": [
+        [
+          "{1}"
+        ],
+        [
+          "{1,2}"
+        ]
+      ],
+      "both": [
+        [
+          "{1}"
+        ],
+        [
+          "{1,2}"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          "{1}"
+        ],
+        [
+          "{1,2}"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "{1}"
+        ],
+        [
+          "{1,2}"
+        ]
+      ],
+      "edges_only": [
+        [
+          "{1}"
+        ],
+        [
+          "{1,2}"
+        ]
+      ],
+      "both": [
+        [
+          "{1}"
+        ],
+        [
+          "{1,2}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-018",
+    "source_kind": "synthetic",
+    "shape": "null-array-element",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT ARRAY[CAST(NULL AS INTEGER)] UNION ALL SELECT n||1 FROM t WHERE n[2] IS NULL) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT ARRAY[CAST(NULL AS INTEGER)] UNION ALL SELECT n||1 FROM t WHERE n[2] IS NULL) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "integer[]",
+        "nullable": true,
+        "postgres_type": "INTEGER[]",
+        "postgres_display_type": "integer[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{NULL}"
+      ],
+      [
+        "{NULL,1}"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "input_excluded",
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        "{NULL}"
+      ],
+      [
+        "{NULL,1}"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{NULL}"
+        ],
+        [
+          "{NULL,1}"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "{NULL}"
+        ],
+        [
+          "{NULL,1}"
+        ]
+      ],
+      "edges_only": [
+        [
+          "{NULL}"
+        ],
+        [
+          "{NULL,1}"
+        ]
+      ],
+      "both": [
+        [
+          "{NULL}"
+        ],
+        [
+          "{NULL,1}"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          "{NULL}"
+        ],
+        [
+          "{NULL,1}"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "{NULL}"
+        ],
+        [
+          "{NULL,1}"
+        ]
+      ],
+      "edges_only": [
+        [
+          "{NULL}"
+        ],
+        [
+          "{NULL,1}"
+        ]
+      ],
+      "both": [
+        [
+          "{NULL}"
+        ],
+        [
+          "{NULL,1}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-019",
+    "source_kind": "synthetic",
+    "shape": "array-deduplication",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT ARRAY[1] UNION SELECT n FROM t) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT ARRAY[1] UNION SELECT n FROM t) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "integer[]",
+        "nullable": true,
+        "postgres_type": "INTEGER[]",
+        "postgres_display_type": "integer[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{1}"
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "input_excluded",
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        "{1}"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{1}"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "{1}"
+        ]
+      ],
+      "edges_only": [
+        [
+          "{1}"
+        ]
+      ],
+      "both": [
+        [
+          "{1}"
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          "{1}"
+        ]
+      ],
+      "nodes_only": [
+        [
+          "{1}"
+        ]
+      ],
+      "edges_only": [
+        [
+          "{1}"
+        ]
+      ],
+      "both": [
+        [
+          "{1}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-020",
+    "source_kind": "synthetic",
+    "shape": "integer-deduplication",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION SELECT n FROM t) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION SELECT n FROM t) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-021",
+    "source_kind": "synthetic",
+    "shape": "bounded-depth",
+    "sql": "WITH RECURSIVE t(n,depth) AS (SELECT 1,0 UNION ALL SELECT n,depth+1 FROM t WHERE depth<3) SELECT n,depth FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n,depth) AS (SELECT 1,0 UNION ALL SELECT n,depth+1 FROM t WHERE depth<3) SELECT n,depth FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "depth",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n",
+      "depth"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "both": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "both": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-022",
+    "source_kind": "synthetic",
+    "shape": "fibonacci",
+    "sql": "WITH RECURSIVE t(a,b) AS (SELECT 0,1 UNION ALL SELECT b,a+b FROM t WHERE a<3) SELECT a,b FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(a,b) AS (SELECT 0,1 UNION ALL SELECT b,a+b FROM t WHERE a<3) SELECT a,b FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "b",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "a",
+      "b"
+    ],
+    "sqlite_expected_rows": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "nodes_only": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "edges_only": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "both": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          5
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "nodes_only": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "edges_only": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "both": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-023",
+    "source_kind": "synthetic",
+    "shape": "earlier-nonrecursive-definition",
+    "sql": "WITH RECURSIVE seed AS (SELECT 2 AS x), t(n) AS (SELECT x FROM seed UNION ALL SELECT n+2 FROM t WHERE n<6) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE seed AS (SELECT 2 AS x), t(n) AS (SELECT x FROM seed UNION ALL SELECT n+2 FROM t WHERE n<6) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ],
+      [
+        4
+      ],
+      [
+        6
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        2
+      ],
+      [
+        4
+      ],
+      [
+        6
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ],
+        [
+          4
+        ],
+        [
+          6
+        ]
+      ],
+      "nodes_only": [
+        [
+          2
+        ],
+        [
+          4
+        ],
+        [
+          6
+        ]
+      ],
+      "edges_only": [
+        [
+          2
+        ],
+        [
+          4
+        ],
+        [
+          6
+        ]
+      ],
+      "both": [
+        [
+          2
+        ],
+        [
+          4
+        ],
+        [
+          6
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          2
+        ],
+        [
+          4
+        ],
+        [
+          6
+        ]
+      ],
+      "nodes_only": [
+        [
+          2
+        ],
+        [
+          4
+        ],
+        [
+          6
+        ]
+      ],
+      "edges_only": [
+        [
+          2
+        ],
+        [
+          4
+        ],
+        [
+          6
+        ]
+      ],
+      "both": [
+        [
+          2
+        ],
+        [
+          4
+        ],
+        [
+          6
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-024",
+    "source_kind": "synthetic",
+    "shape": "later-nonrecursive-definition",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE n<3), result AS (SELECT n+10 AS x FROM t) SELECT x FROM result;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE n<3), result AS (SELECT n+10 AS x FROM t) SELECT x FROM result;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        11
+      ],
+      [
+        12
+      ],
+      [
+        13
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "x"
+    ],
+    "sqlite_expected_rows": [
+      [
+        11
+      ],
+      [
+        12
+      ],
+      [
+        13
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ]
+      ],
+      "nodes_only": [
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ]
+      ],
+      "edges_only": [
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ]
+      ],
+      "both": [
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ]
+      ],
+      "nodes_only": [
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ]
+      ],
+      "edges_only": [
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ]
+      ],
+      "both": [
+        [
+          11
+        ],
+        [
+          12
+        ],
+        [
+          13
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-025",
+    "source_kind": "synthetic",
+    "shape": "two-independent-recursions",
+    "sql": "WITH RECURSIVE a(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM a WHERE n<3), b(m) AS (SELECT 1 UNION ALL SELECT m+1 FROM b WHERE m<2) SELECT n,m FROM a CROSS JOIN b;",
+    "sqlite_sql": "WITH RECURSIVE a(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM a WHERE n<3), b(m) AS (SELECT 1 UNION ALL SELECT m+1 FROM b WHERE m<2) SELECT n,m FROM a CROSS JOIN b;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "m",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n",
+      "m"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "nodes_only": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "edges_only": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "both": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "nodes_only": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "edges_only": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "both": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-026",
+    "source_kind": "synthetic",
+    "shape": "nested-derived-reference",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT d.n+1 FROM (SELECT n FROM t) d WHERE d.n<3) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT d.n+1 FROM (SELECT n FROM t) d WHERE d.n<3) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "analysis_error",
+    "sqlite_diagnostic": null,
+    "sqlite_error": "circular reference: t",
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-027",
+    "source_kind": "synthetic",
+    "shape": "nested-cte-reference",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL (WITH c AS (SELECT n FROM t) SELECT n+1 FROM c WHERE n<3)) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL (WITH c AS (SELECT n FROM t) SELECT n+1 FROM c WHERE n<3)) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "input_excluded",
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-028",
+    "source_kind": "synthetic",
+    "shape": "derived-anchor",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT x FROM (SELECT 1 AS x) seed UNION ALL SELECT n+1 FROM t WHERE n<3) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT x FROM (SELECT 1 AS x) seed UNION ALL SELECT n+1 FROM t WHERE n<3) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-029",
+    "source_kind": "synthetic",
+    "shape": "operand-local-pagination",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL (SELECT n+1 FROM t WHERE n<3 ORDER BY n LIMIT 1)) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL (SELECT n+1 FROM t WHERE n<3 ORDER BY n LIMIT 1)) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "input_excluded",
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-030",
+    "source_kind": "synthetic",
+    "shape": "unused-inner-reference",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION (WITH unused AS (SELECT n FROM t) SELECT 2)) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION (WITH unused AS (SELECT n FROM t) SELECT 2)) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "input_excluded",
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-031",
+    "source_kind": "synthetic",
+    "shape": "anonymous-parameters",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT ? UNION ALL SELECT n+? FROM t WHERE n<?) SELECT n FROM t ORDER BY n LIMIT ? OFFSET ?;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT ? UNION ALL SELECT n+? FROM t WHERE n<?) SELECT n FROM t ORDER BY n LIMIT ? OFFSET ?;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "int,int,int,int,int",
+    "parameter_values": [
+      1,
+      2,
+      6,
+      2,
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        3
+      ],
+      [
+        5
+      ]
+    ],
+    "ordered": true,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        3
+      ],
+      [
+        5
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "nodes_only": [
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "edges_only": [
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "both": [
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "nodes_only": [
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "edges_only": [
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "both": [
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-032",
+    "source_kind": "synthetic",
+    "shape": "numbered-parameters",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT $2 UNION ALL SELECT n+$1 FROM t WHERE n<$3) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT ?2 UNION ALL SELECT n+?1 FROM t WHERE n<?3) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      2,
+      1,
+      5
+    ],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        5
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ],
+      [
+        5
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-033",
+    "source_kind": "synthetic",
+    "shape": "unused-definition-parameters",
+    "sql": "WITH RECURSIVE unused AS (SELECT ? AS x), t(n) AS (SELECT ? UNION ALL SELECT n+? FROM t WHERE n<?) SELECT ? AS marker,n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE unused AS (SELECT ? AS x), t(n) AS (SELECT ? UNION ALL SELECT n+? FROM t WHERE n<?) SELECT ? AS marker,n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "int,int,int,int,int",
+    "parameter_values": [
+      99,
+      1,
+      1,
+      3,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        7,
+        1
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        7,
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "marker",
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        7,
+        1
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        7,
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "both": [
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ],
+      "both": [
+        [
+          7,
+          1
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-034",
+    "source_kind": "synthetic",
+    "shape": "quoted-dot-identities",
+    "sql": "WITH RECURSIVE \"r.dot\"(\"v.dot\") AS (SELECT 1 UNION ALL SELECT \"v.dot\"+1 FROM \"r.dot\" WHERE \"v.dot\"<3) SELECT \"v.dot\" FROM \"r.dot\";",
+    "sqlite_sql": "WITH RECURSIVE \"r.dot\"(\"v.dot\") AS (SELECT 1 UNION ALL SELECT \"v.dot\"+1 FROM \"r.dot\" WHERE \"v.dot\"<3) SELECT \"v.dot\" FROM \"r.dot\";",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v.dot",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "v.dot"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-035",
+    "source_kind": "synthetic",
+    "shape": "prefix-column-alias",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 AS x,10 AS y UNION ALL SELECT n+1,y+2 FROM t WHERE n<3) SELECT n,y FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 AS x,10 AS y UNION ALL SELECT n+1,y+2 FROM t WHERE n<3) SELECT n,y FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "y",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        10
+      ],
+      [
+        2,
+        12
+      ],
+      [
+        3,
+        14
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "analysis_error",
+    "sqlite_diagnostic": null,
+    "sqlite_error": "table t has 2 values for 1 columns",
+    "sqlite_output_names": [
+      "n",
+      "y"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        10
+      ],
+      [
+        2,
+        12
+      ],
+      [
+        3,
+        14
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          3,
+          14
+        ]
+      ],
+      "nodes_only": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          3,
+          14
+        ]
+      ],
+      "edges_only": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          3,
+          14
+        ]
+      ],
+      "both": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          3,
+          14
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          3,
+          14
+        ]
+      ],
+      "nodes_only": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          3,
+          14
+        ]
+      ],
+      "edges_only": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          3,
+          14
+        ]
+      ],
+      "both": [
+        [
+          1,
+          10
+        ],
+        [
+          2,
+          12
+        ],
+        [
+          3,
+          14
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-036",
+    "source_kind": "synthetic",
+    "shape": "nonnullable-outer-expression",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE n<3) SELECT n IS NULL AS missing FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE n<3) SELECT n IS NULL AS missing FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "missing",
+        "type": "bool",
+        "nullable": false,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ],
+      [
+        false
+      ],
+      [
+        false
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "missing"
+    ],
+    "sqlite_expected_rows": [
+      [
+        0
+      ],
+      [
+        0
+      ],
+      [
+        0
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ],
+        [
+          false
+        ],
+        [
+          false
+        ]
+      ],
+      "nodes_only": [
+        [
+          false
+        ],
+        [
+          false
+        ],
+        [
+          false
+        ]
+      ],
+      "edges_only": [
+        [
+          false
+        ],
+        [
+          false
+        ],
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ],
+        [
+          false
+        ],
+        [
+          false
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "nodes_only": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "edges_only": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ],
+      "both": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-037",
+    "source_kind": "synthetic",
+    "shape": "recursive-derived-source",
+    "sql": "SELECT d.n FROM (WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE n<3) SELECT n FROM t) d;",
+    "sqlite_sql": "SELECT d.n FROM (WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE n<3) SELECT n FROM t) d;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-038",
+    "source_kind": "synthetic",
+    "shape": "recursive-inside-ordinary-cte",
+    "sql": "WITH c AS (WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE n<3) SELECT n FROM t) SELECT n FROM c;",
+    "sqlite_sql": "WITH c AS (WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM t WHERE n<3) SELECT n FROM t) SELECT n FROM c;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-039",
+    "source_kind": "synthetic",
+    "shape": "distinct-recursive-arm",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT DISTINCT n+1 FROM t WHERE n<3) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL SELECT DISTINCT n+1 FROM t WHERE n<3) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-040",
+    "source_kind": "synthetic",
+    "shape": "intersect-recursive-arm",
+    "sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL (SELECT n+1 FROM t WHERE n<3 INTERSECT SELECT 2)) SELECT n FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(n) AS (SELECT 1 UNION ALL (SELECT n+1 FROM t WHERE n<3 INTERSECT SELECT 2)) SELECT n FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "input_excluded",
+    "sqlite_diagnostic": "input.parse",
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "n"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-041",
+    "source_kind": "synthetic",
+    "shape": "hierarchy-all",
+    "sql": "WITH RECURSIVE t(id) AS (SELECT id FROM nodes WHERE parent IS NULL UNION ALL SELECT n.id FROM nodes n JOIN t ON n.parent=t.id) SELECT id FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(id) AS (SELECT id FROM nodes WHERE parent IS NULL UNION ALL SELECT n.id FROM nodes n JOIN t ON n.parent=t.id) SELECT id FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "id"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-042",
+    "source_kind": "synthetic",
+    "shape": "hierarchy-distinct",
+    "sql": "WITH RECURSIVE t(id) AS (SELECT id FROM nodes WHERE parent IS NULL UNION SELECT n.id FROM nodes n JOIN t ON n.parent=t.id) SELECT id FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(id) AS (SELECT id FROM nodes WHERE parent IS NULL UNION SELECT n.id FROM nodes n JOIN t ON n.parent=t.id) SELECT id FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "id"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-043",
+    "source_kind": "synthetic",
+    "shape": "ancestors",
+    "sql": "WITH RECURSIVE t(id) AS (SELECT id FROM nodes WHERE id=4 UNION ALL SELECT n.parent FROM nodes n JOIN t ON n.id=t.id WHERE n.parent IS NOT NULL) SELECT id FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(id) AS (SELECT id FROM nodes WHERE id=4 UNION ALL SELECT n.parent FROM nodes n JOIN t ON n.id=t.id WHERE n.parent IS NOT NULL) SELECT id FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        4
+      ],
+      [
+        2
+      ],
+      [
+        1
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "id"
+    ],
+    "sqlite_expected_rows": [
+      [
+        4
+      ],
+      [
+        2
+      ],
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          4
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          4
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          4
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          4
+        ],
+        [
+          2
+        ],
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-044",
+    "source_kind": "synthetic",
+    "shape": "hierarchy-depth",
+    "sql": "WITH RECURSIVE t(id,depth) AS (SELECT id,0 FROM nodes WHERE parent IS NULL UNION ALL SELECT n.id,t.depth+1 FROM nodes n JOIN t ON n.parent=t.id) SELECT id,depth FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(id,depth) AS (SELECT id,0 FROM nodes WHERE parent IS NULL UNION ALL SELECT n.id,t.depth+1 FROM nodes n JOIN t ON n.parent=t.id) SELECT id,depth FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "depth",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "id",
+      "depth"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-045",
+    "source_kind": "synthetic",
+    "shape": "graph-path-bags",
+    "sql": "WITH RECURSIVE t(id) AS (SELECT 1 UNION ALL SELECT e.dst FROM t JOIN edges e ON t.id=e.src) SELECT id FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(id) AS (SELECT 1 UNION ALL SELECT e.dst FROM t JOIN edges e ON t.id=e.src) SELECT id FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        5
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "id"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        5
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          5
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          5
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          5
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-046",
+    "source_kind": "synthetic",
+    "shape": "graph-reachability",
+    "sql": "WITH RECURSIVE t(id) AS (SELECT 1 UNION SELECT e.dst FROM t JOIN edges e ON t.id=e.src) SELECT id FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(id) AS (SELECT 1 UNION SELECT e.dst FROM t JOIN edges e ON t.id=e.src) SELECT id FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "id"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-047",
+    "source_kind": "synthetic",
+    "shape": "weighted-paths",
+    "sql": "WITH RECURSIVE t(id,total) AS (SELECT 1,0 UNION ALL SELECT e.dst,t.total+e.weight FROM t JOIN edges e ON t.id=e.src) SELECT id,total FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(id,total) AS (SELECT 1,0 UNION ALL SELECT e.dst,t.total+e.weight FROM t JOIN edges e ON t.id=e.src) SELECT id,total FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "total",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        20
+      ],
+      [
+        4,
+        40
+      ],
+      [
+        4,
+        60
+      ],
+      [
+        5,
+        90
+      ],
+      [
+        5,
+        110
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "id",
+      "total"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        20
+      ],
+      [
+        4,
+        40
+      ],
+      [
+        4,
+        60
+      ],
+      [
+        5,
+        90
+      ],
+      [
+        5,
+        110
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          0
+        ]
+      ],
+      "nodes_only": [
+        [
+          1,
+          0
+        ]
+      ],
+      "edges_only": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          3,
+          20
+        ],
+        [
+          4,
+          40
+        ],
+        [
+          4,
+          60
+        ],
+        [
+          5,
+          90
+        ],
+        [
+          5,
+          110
+        ]
+      ],
+      "both": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          3,
+          20
+        ],
+        [
+          4,
+          40
+        ],
+        [
+          4,
+          60
+        ],
+        [
+          5,
+          90
+        ],
+        [
+          5,
+          110
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [
+        [
+          1,
+          0
+        ]
+      ],
+      "nodes_only": [
+        [
+          1,
+          0
+        ]
+      ],
+      "edges_only": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          3,
+          20
+        ],
+        [
+          4,
+          40
+        ],
+        [
+          4,
+          60
+        ],
+        [
+          5,
+          90
+        ],
+        [
+          5,
+          110
+        ]
+      ],
+      "both": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          10
+        ],
+        [
+          3,
+          20
+        ],
+        [
+          4,
+          40
+        ],
+        [
+          4,
+          60
+        ],
+        [
+          5,
+          90
+        ],
+        [
+          5,
+          110
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-048",
+    "source_kind": "synthetic",
+    "shape": "catalog-visible-paths",
+    "sql": "WITH RECURSIVE t(id) AS (SELECT id FROM nodes WHERE parent IS NULL UNION ALL SELECT e.dst FROM t JOIN edges e ON t.id=e.src JOIN nodes n ON n.id=e.dst) SELECT id FROM t;",
+    "sqlite_sql": "WITH RECURSIVE t(id) AS (SELECT id FROM nodes WHERE parent IS NULL UNION ALL SELECT e.dst FROM t JOIN edges e ON t.id=e.src JOIN nodes n ON n.id=e.dst) SELECT id FROM t;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        5
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "id"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        5
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          5
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-049",
+    "source_kind": "synthetic",
+    "shape": "using-outer-result",
+    "sql": "WITH RECURSIVE t(id) AS (SELECT 1 UNION ALL SELECT e.dst FROM t JOIN edges e ON t.id=e.src) SELECT t.id FROM t JOIN nodes USING(id);",
+    "sqlite_sql": "WITH RECURSIVE t(id) AS (SELECT 1 UNION ALL SELECT e.dst FROM t JOIN edges e ON t.id=e.src) SELECT t.id FROM t JOIN nodes USING(id);",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        5
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "id"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        5
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          5
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ],
+        [
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "recursive-050",
+    "source_kind": "synthetic",
+    "shape": "outer-join-result",
+    "sql": "WITH RECURSIVE t(id) AS (SELECT 1 UNION ALL SELECT e.dst FROM t JOIN edges e ON t.id=e.src) SELECT n.id,t.id AS reachable FROM nodes n LEFT JOIN t ON n.id=t.id;",
+    "sqlite_sql": "WITH RECURSIVE t(id) AS (SELECT 1 UNION ALL SELECT e.dst FROM t JOIN edges e ON t.id=e.src) SELECT n.id,t.id AS reachable FROM nodes n LEFT JOIN t ON n.id=t.id;",
+    "catalogFile": "fixtures/recursive_contract/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "reachable",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        5,
+        5
+      ]
+    ],
+    "ordered": false,
+    "sqlite_mode": "execute",
+    "sqlite_diagnostic": null,
+    "sqlite_error": null,
+    "sqlite_output_names": [
+      "id",
+      "reachable"
+    ],
+    "sqlite_expected_rows": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        5,
+        5
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ],
+        [
+          5,
+          null
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          5,
+          5
+        ]
+      ]
+    },
+    "sqlite_expected_rows_by_state": {
+      "empty": [],
+      "nodes_only": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ],
+        [
+          5,
+          null
+        ]
+      ],
+      "edges_only": [],
+      "both": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          5,
+          5
+        ]
+      ]
+    }
+  }
+]

@@ -212,6 +212,22 @@ def local_import_closure(root: Path, initial: str) -> set[str]:
 
 
 def check_specification_independence(root: Path) -> None:
+    initial = "SQLean.SelectContract.Spec"
+    if root.joinpath(*initial.split(".")).with_suffix(".lean").is_file():
+        # This normative judgment may use syntax, catalog data, and reviewed
+        # declarative type/recursion helpers. Executable inference and rendering
+        # must never become premises through a helper's transitive imports.
+        allowed = {
+            initial, "SQLean.SelectContract.Profile",
+            "SQLean.SelectContract.ScalarSignatures", "SQLean.SelectContract.Recursion",
+            "SQLean.CatalogSyntax", "SQLean.AdvancedSyntax", "SQLean.SyntaxBase", "Std",
+        }
+        forbidden = sorted(local_import_closure(root, initial) - allowed)
+        if forbidden:
+            raise ValueError("SelectContract.Spec imports modules outside its reviewed "
+                             "normative boundary: " + ", ".join(forbidden))
+        print("PASS: SelectContract.Spec import closure is independent of parser, "
+              "renderer, and executable inference", flush=True)
     syntax_boundary = {
         "SQLean.RenderContract.Profile",
         "SQLean.AdvancedSyntax", "SQLean.SyntaxBase", "Std",

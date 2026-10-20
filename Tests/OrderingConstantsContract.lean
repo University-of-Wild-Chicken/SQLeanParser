@@ -84,7 +84,7 @@ private def orderingCases : List (String × String) := [
 def orderingConstantsContractTests : IO Nat := do
   for (sql, expected) in orderingCases do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV30 [] [] query with
+    match SelectContract.checkQuery .basicV31 [] [] query with
     | .ok certificate =>
         SQLean.Tests.assert (expected == "valid" && certificate.output == orderingColumns)
           s!"unexpected ORDER BY constant certificate: {sql}"
@@ -100,7 +100,7 @@ def orderingConstantsContractTests : IO Nat := do
   let query ← expectOk "parameter ordering" (Advanced.parseQuery
     "SELECT ? AS a, ? AS b ORDER BY -? + ?")
   let params ← expectOk "parameter types" (Assurance.parseContractParameterTypes "int,int,int,int")
-  let certificate ← expectOk "parameter sort" ((SelectContract.checkQuery .basicV30 [] params query).mapError reprStr)
+  let certificate ← expectOk "parameter sort" ((SelectContract.checkQuery .basicV31 [] params query).mapError reprStr)
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   SQLean.Tests.assert (Advanced.queryParameters 1024 query ==
     [.anonymous 1,.anonymous 2,.anonymous 3,.anonymous 4])

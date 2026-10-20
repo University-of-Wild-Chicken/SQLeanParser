@@ -27,6 +27,14 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.31 recursive CTE increment](docs/recursive-cte-contract-v0.31.md) adds
+independent anchor/step typing, exact result modifiers, scoped self-reference
+rules and lexical parameter preservation. It includes fifty authored and fifty
+unchanged source queries; 21 sources have preregistered complete static schemas.
+Collatable recursion requires independent uniform-default evidence. Full
+collation provenance, forward dependencies and other PostgreSQL contracts
+remain release obligations; static validity does not establish termination.
+
 The [v0.30 set-operation increment](docs/set-operations-contract-v0.30.md) adds
 independent `UNION`, `INTERSECT` and `EXCEPT` validity, including `ALL`, contextual
 NULL/string types, exact modifiers, nested operands and compound sorting.
@@ -42,8 +50,8 @@ contribute parameters once in written order, including unused definitions.
 References retain a distinct namespace origin without fabricating catalog
 tables. Fifty authored queries and thirteen unchanged sources receive complete
 certificates; all fifty sources receive checked rendering. Native observations
-keep PostgreSQL and SQLite scoping differences explicit. Recursive CTE validity
-and the other remaining PostgreSQL contracts still gate the alpha release.
+keep PostgreSQL and SQLite scoping differences explicit. The remaining
+PostgreSQL contracts still gate the alpha release.
 
 The [v0.28 null-predicate increment](docs/null-predicates-contract-v0.28.md)
 adds `IS [NOT] DISTINCT FROM`, postfix `ISNULL`/`NOTNULL`, and flat-row
@@ -491,7 +499,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses the fixed `sqlean-basic-select-v0.30` profile.
+- `--assurance contract` uses the fixed `sqlean-basic-select-v0.31` profile.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
   missing rule or excluded feature, and `inconclusive` reports budget exhaustion.
@@ -618,8 +626,15 @@ outputs remain contextual until a branch-local sort/DISTINCT or a complete
 CTE/derived/set-query boundary resolves them. Compound ORDER BY permits only
 unambiguous result labels and ordinals; direct set/operand locks are invalid.
 
-Independent rules for grouping/aggregates, correlation, LATERAL, recursive
-CTEs and expression subqueries remain future milestones.
+Recursive SELECT CTEs require a self-reference-free anchor, one permitted
+recursive reference and exact agreement between anchor and complete UNION
+result types and modifiers. Recursive bindings conservatively expose nullable
+columns. Definitions without actual recursion retain ordinary type resolution.
+Collatable outputs require independent uniform-default evidence; unresolved
+collation provenance and forward dependencies remain Unsupported.
+
+Independent rules for grouping/aggregates, correlation, LATERAL and expression
+subqueries remain future milestones.
 DISTINCT ON also requires a separate rule. These forms
 remain supported by the expanded parser/checker. The contract draft remains the
 target for the general SELECT family; the first implementation does not claim
@@ -640,7 +655,7 @@ open SQLean
 def contractQuery : Advanced.Query := {
   body := .select { items := [.expression (.literal (.int 1)) (some "one")] } }
 
-#eval (SelectContract.checkQuery .basicV02 [] [] contractQuery).map
+#eval (SelectContract.checkQuery .basicV31 [] [] contractQuery).map
   (fun certificate => certificate.output)
 
 example (certificate : SelectContract.Certificate profile catalog params query) :

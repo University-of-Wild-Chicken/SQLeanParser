@@ -87,6 +87,8 @@ import Tests.CTEContract
 import Tests.CTERendering
 import Tests.SetOperationsContract
 import Tests.SetOperationsRendering
+import Tests.RecursiveContract
+import Tests.RecursiveContractRendering
 import Tests.NullPredicatesContract
 import Tests.NullPredicatesRendering
 
@@ -343,6 +345,14 @@ def run : IO Unit := do
   IO.println s!"PASS: {setConcrete} unchanged set-operation certificates (all 150 rendered)"
   let setRendering ← setOperationsRenderingTests
   IO.println s!"PASS: {setRendering} set-operation parsing and rendering checks"
+  let recursiveContract ← recursiveContractTests
+  IO.println s!"PASS: {recursiveContract} recursive CTE type, scope and coverage checks"
+  let recursiveCorpus ← recursiveCorpusTests
+  IO.println s!"PASS: {recursiveCorpus} authored recursive CTE full-query certificates"
+  let recursiveConcrete ← recursiveConcreteContractTests
+  IO.println s!"PASS: {recursiveConcrete} unchanged recursive CTE certificates (all 50 rendered)"
+  let recursiveRendering ← recursiveContractRenderingTests
+  IO.println s!"PASS: {recursiveRendering} recursive CTE parsing and rendering checks"
   let pgLexical ← postgresLexerTests
   IO.println s!"PASS: {pgLexical} PostgreSQL lexer and exact-source checks"
   let pgGrammar ← postgresGrammarTests

@@ -1,0 +1,227 @@
+[
+  {
+    "id": "recursive_contract:postgres:src/test/regress/sql/with.sql:statement-9",
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:postgres:src/test/regress/sql/with.sql:statement-11",
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:postgres:src/test/regress/sql/with.sql:statement-103",
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:postgres:src/test/regress/sql/with.sql:statement-104",
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:postgres:src/test/regress/sql/with.sql:statement-157",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/recursive_cte_column_pruning.test:sqllogic-query-72",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-6",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-13",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-21",
+    "output_columns": [
+      {
+        "name": "zz",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-28",
+    "output_columns": [
+      {
+        "name": "zz",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-36",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-42",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-58",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "y",
+        "type": "text",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-87",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union.test:sqllogic-query-94",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/recursive_array_slice.test:sqllogic-query-60",
+    "output_columns": [
+      {
+        "name": "arr",
+        "type": "integer[]",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union_all.test:sqllogic-query-6",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union_all.test:sqllogic-query-14",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_union_all.test:sqllogic-query-30",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "y",
+        "type": "text",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_nested_recursive_cte.test:sqllogic-query-5",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive_contract:duckdb:test/sql/cte/test_recursive_cte_tutorial.test:sqllogic-query-109",
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "fibₙ",
+        "type": "bigint",
+        "nullable": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,1590 @@
+[
+  {
+    "id": "recursive-boundary-unknown-null-int",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT NULL UNION ALL SELECT 1 FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_type",
+    "postgres_sqlstate": "42804",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-unknown-string-int",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT '1' UNION ALL SELECT 1 FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_type",
+    "postgres_sqlstate": "42804",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-unknown-null-null",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT NULL UNION ALL SELECT NULL FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "uniform-default",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-numeric-equal",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT NULL::NUMERIC(8,2) UNION ALL SELECT NULL::NUMERIC(8,2) FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "numeric(8,2)"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "numeric(8,2)",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-numeric-diff",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT NULL::NUMERIC(8,2) UNION ALL SELECT NULL::NUMERIC(9,2) FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_type",
+    "postgres_sqlstate": "42804",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-numeric-unmod-right",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT NULL::NUMERIC(8,2) UNION ALL SELECT NULL::NUMERIC FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_type",
+    "postgres_sqlstate": "42804",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-numeric-unmod-left",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT NULL::NUMERIC UNION ALL SELECT NULL::NUMERIC(8,2) FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "numeric"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "numeric",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-varchar-equal",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 'a'::VARCHAR(5) UNION ALL SELECT 'b'::VARCHAR(5) FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "character varying(5)"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "uniform-default",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "varchar(5)",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-varchar-diff",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 'a'::VARCHAR(5) UNION ALL SELECT 'b'::VARCHAR(6) FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_type",
+    "postgres_sqlstate": "42804",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-varchar-unmod-left",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 'a'::VARCHAR UNION ALL SELECT 'b'::VARCHAR(6) FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "character varying"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "uniform-default",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "varchar",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-interval-equal",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT INTERVAL '1' YEAR UNION ALL SELECT INTERVAL '2' YEAR FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "interval year"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "interval year",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-interval-diff",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT INTERVAL '1' YEAR UNION ALL SELECT INTERVAL '2' MONTH FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_type",
+    "postgres_sqlstate": "42804",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-interval-unmod-left",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT INTERVAL '1' UNION ALL SELECT INTERVAL '2' MONTH FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "interval"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "interval",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-array-numeric-equal",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT NULL::NUMERIC(8,2)[] UNION ALL SELECT NULL::NUMERIC(8,2)[] FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "numeric(8,2)[]"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "numeric(8,2)[]",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-array-numeric-diff",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT NULL::NUMERIC(8,2)[] UNION ALL SELECT NULL::NUMERIC(9,2)[] FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_type",
+    "postgres_sqlstate": "42804",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-array-int-width",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT ARRAY[1] UNION ALL SELECT ARRAY[1::BIGINT] FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_type",
+    "postgres_sqlstate": "42804",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-outer-UNION",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION SELECT x+1 FROM t WHERE x<2) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-outer-UNION ALL",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL SELECT x+1 FROM t WHERE x<2) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-outer-INTERSECT",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 INTERSECT SELECT x+1 FROM t WHERE x<2) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_shape",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-outer-INTERSECT ALL",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 INTERSECT ALL SELECT x+1 FROM t WHERE x<2) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_shape",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-outer-EXCEPT",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 EXCEPT SELECT x+1 FROM t WHERE x<2) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_shape",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-outer-EXCEPT ALL",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 EXCEPT ALL SELECT x+1 FROM t WHERE x<2) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_shape",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-derived",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT x FROM (SELECT x FROM t) d)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-inner-cte",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (WITH d AS (SELECT x FROM t) SELECT x FROM d)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-inner-unused-cte",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (WITH d AS (SELECT x FROM t) SELECT 2)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-inner-shadow",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (WITH t AS (SELECT 2 AS x) SELECT x FROM t)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-inner-self-shadow",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (WITH t AS (SELECT x FROM t) SELECT x FROM t)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-two-ref",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT a.x FROM t a CROSS JOIN t b)) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_reference",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-unused-second-ref",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (WITH d AS (SELECT x FROM t) SELECT x FROM t)) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_reference",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-left-preserved",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT t.x FROM t LEFT JOIN (SELECT 1 AS y) d ON TRUE)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-left-nullable",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT t.x FROM (SELECT 1 AS y) d LEFT JOIN t ON TRUE)) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_reference",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-right-preserved",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT t.x FROM (SELECT 1 AS y) d RIGHT JOIN t ON TRUE)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-full-nullable",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT t.x FROM t FULL JOIN (SELECT 1 AS y) d ON TRUE)) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_reference",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-scalar-sublink",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT (SELECT x FROM t))) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "subquery",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-exists-sublink",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT 2 WHERE EXISTS(SELECT 1 FROM t))) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "subquery",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-in-sublink",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT 2 WHERE 1 IN (SELECT x FROM t))) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "subquery",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-step-order",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT x FROM t ORDER BY x LIMIT 1)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-step-derived-order",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT x FROM (SELECT x FROM t ORDER BY x LIMIT 1) d)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-step-group",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT x FROM t GROUP BY x)) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "group_by",
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-step-distinct",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT DISTINCT x FROM t)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-step-aggregate",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT MAX(x) FROM t)) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "aggregate",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-step-union",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT x FROM t UNION SELECT 2)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-step-intersect",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT x FROM t INTERSECT SELECT 2)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-step-intersect-all",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT x FROM t INTERSECT ALL SELECT 2)) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_reference",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-step-except-left",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT x FROM t EXCEPT SELECT 2)) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-step-except-right",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL (SELECT 2 EXCEPT SELECT x FROM t)) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_reference",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-anchor-self",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT x FROM t UNION ALL SELECT 1) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_reference",
+    "postgres_sqlstate": "42P19",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-forward",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE a(x) AS(SELECT x FROM b),b(x) AS(SELECT 1) SELECT * FROM a",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_dependency",
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "noncollatable",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-mutual",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE a(x) AS(SELECT 1 UNION ALL SELECT x FROM b),b(x) AS(SELECT x FROM a) SELECT * FROM a",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_dependency",
+    "postgres_sqlstate": "0A000",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-boundary-prefix-alias",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT 1 AS a,2 AS b UNION ALL SELECT x+1,b FROM t WHERE x<2) SELECT * FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "b",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "b",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-boundary-duplicate-output",
+    "source_kind": "synthetic",
+    "group": "type-and-placement",
+    "sql": "WITH RECURSIVE t(x,x) AS(SELECT 1,2 UNION ALL SELECT 3,4 FROM t WHERE FALSE) SELECT * FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ],
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      },
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-wrapper-1",
+    "source_kind": "synthetic",
+    "group": "root-modifiers-and-nonrecursive",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL SELECT x FROM t ORDER BY 1) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_modifiers",
+    "postgres_sqlstate": "0A000",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-wrapper-2",
+    "source_kind": "synthetic",
+    "group": "root-modifiers-and-nonrecursive",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL SELECT x FROM t LIMIT 1) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_modifiers",
+    "postgres_sqlstate": "0A000",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-wrapper-3",
+    "source_kind": "synthetic",
+    "group": "root-modifiers-and-nonrecursive",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL SELECT x FROM t OFFSET 0) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_modifiers",
+    "postgres_sqlstate": "0A000",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-wrapper-4",
+    "source_kind": "synthetic",
+    "group": "root-modifiers-and-nonrecursive",
+    "sql": "WITH RECURSIVE t(x) AS ((SELECT NULL LIMIT 1) UNION ALL SELECT 1 FROM t) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_type",
+    "postgres_sqlstate": "42804",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-wrapper-5",
+    "source_kind": "synthetic",
+    "group": "root-modifiers-and-nonrecursive",
+    "sql": "WITH RECURSIVE t(x) AS ((SELECT NULL UNION SELECT 1) UNION ALL SELECT x FROM t) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-wrapper-6",
+    "source_kind": "synthetic",
+    "group": "root-modifiers-and-nonrecursive",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT NULL UNION ALL SELECT 1) SELECT x FROM t",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "noncollatable",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "int32",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-wrapper-7",
+    "source_kind": "synthetic",
+    "group": "root-modifiers-and-nonrecursive",
+    "sql": "WITH RECURSIVE a(x) AS(SELECT NULL UNION ALL SELECT x FROM b),b(x) AS(SELECT 1) SELECT * FROM a",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_dependency",
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "integer"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "noncollatable",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-wrapper-8",
+    "source_kind": "synthetic",
+    "group": "root-modifiers-and-nonrecursive",
+    "sql": "WITH RECURSIVE t(x) AS (SELECT 1 UNION ALL SELECT x FROM t FOR UPDATE) SELECT x FROM t",
+    "expected_status": "invalid",
+    "diagnostic": "recursive_modifiers",
+    "postgres_sqlstate": "0A000",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "not-reached",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-text-name-text-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT ('b'::NAME)::TEXT FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-text-name-text-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT 'a'::TEXT AS x UNION ALL SELECT ('b'::NAME)::TEXT",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-name-text-text-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT ('a'::NAME)::TEXT UNION ALL SELECT 'b'::TEXT FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-name-text-text-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT ('a'::NAME)::TEXT AS x UNION ALL SELECT 'b'::TEXT",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-unknown-name-text-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT 'a' UNION ALL SELECT ('b'::NAME)::TEXT FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-unknown-name-text-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT 'a' AS x UNION ALL SELECT ('b'::NAME)::TEXT",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-null-name-text-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT NULL UNION ALL SELECT ('b'::NAME)::TEXT FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-null-name-text-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT NULL AS x UNION ALL SELECT ('b'::NAME)::TEXT",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-name-text-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::NAME UNION ALL SELECT 'b'::TEXT FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "name"
+      ]
+    ],
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-name-text-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT 'a'::NAME AS x UNION ALL SELECT 'b'::TEXT",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "name"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "name",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-text-name-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT 'b'::NAME FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-text-name-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT 'a'::TEXT AS x UNION ALL SELECT 'b'::NAME",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-name-text-name-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT ('a'::TEXT)::NAME UNION ALL SELECT 'b'::NAME FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-name-text-name-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT ('a'::TEXT)::NAME AS x UNION ALL SELECT 'b'::NAME",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "name"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "name",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-text-name-text-varchar-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT (('b'::NAME)::VARCHAR)::TEXT FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-text-name-text-varchar-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT 'a'::TEXT AS x UNION ALL SELECT (('b'::NAME)::VARCHAR)::TEXT",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-text-current-schema-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT CURRENT_SCHEMA::TEXT FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-text-current-schema-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT 'a'::TEXT AS x UNION ALL SELECT CURRENT_SCHEMA::TEXT",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-text-current-catalog-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT CURRENT_CATALOG::TEXT FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-text-current-catalog-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT 'a'::TEXT AS x UNION ALL SELECT CURRENT_CATALOG::TEXT",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-text-concat-name-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT CURRENT_USER || '' FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-text-concat-name-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT 'a'::TEXT AS x UNION ALL SELECT CURRENT_USER || ''",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-text-lower-name-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT 'a'::TEXT UNION ALL SELECT LOWER(CURRENT_USER) FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-text-lower-name-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT 'a'::TEXT AS x UNION ALL SELECT LOWER(CURRENT_USER)",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": false
+      }
+    ]
+  },
+  {
+    "id": "recursive-collation-array-text-name-text-recursive",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "WITH RECURSIVE t(x) AS(SELECT ARRAY['a'::TEXT] UNION ALL SELECT ARRAY[('b'::NAME)::TEXT] FROM t WHERE FALSE) SELECT x FROM t",
+    "expected_status": "unsupported",
+    "diagnostic": "recursive_collation",
+    "postgres_sqlstate": "42P21",
+    "postgres_columns": null,
+    "actual_recursion": true,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": null
+  },
+  {
+    "id": "recursive-collation-array-text-name-text-ordinary",
+    "source_kind": "synthetic",
+    "group": "collation-provenance",
+    "sql": "SELECT ARRAY['a'::TEXT] AS x UNION ALL SELECT ARRAY[('b'::NAME)::TEXT]",
+    "expected_status": "valid",
+    "diagnostic": null,
+    "postgres_sqlstate": "00000",
+    "postgres_columns": [
+      [
+        "x",
+        "text[]"
+      ]
+    ],
+    "actual_recursion": false,
+    "collation_class": "name-derived-unresolved",
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "text[]",
+        "nullable": false
+      }
+    ]
+  }
+]

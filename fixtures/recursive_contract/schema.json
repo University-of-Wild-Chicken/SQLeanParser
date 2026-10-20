@@ -1,0 +1,48 @@
+{
+  "tables": [
+    {
+      "name": "nodes",
+      "schema": "public",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "parent",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "label",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "name": "edges",
+      "schema": "public",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "src",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "dst",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "weight",
+          "type": "int",
+          "nullable": false
+        }
+      ]
+    }
+  ]
+}

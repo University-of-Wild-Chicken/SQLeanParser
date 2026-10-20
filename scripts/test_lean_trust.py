@@ -155,6 +155,46 @@ class LeanTrustSourceTests(unittest.TestCase):
             self.assertTrue((ROOT / "SQLean" / "RenderContract" / f"{domain}.lean").is_file())
         check_specification_independence(ROOT)
 
+    def test_actual_select_specification_has_only_reviewed_normative_dependencies(self) -> None:
+        self.assertEqual(local_import_closure(ROOT, "SQLean.SelectContract.Spec"), {
+            "SQLean.SelectContract.Spec", "SQLean.SelectContract.Profile",
+            "SQLean.SelectContract.ScalarSignatures", "SQLean.SelectContract.Recursion",
+            "SQLean.CatalogSyntax", "SQLean.AdvancedSyntax", "SQLean.SyntaxBase", "Std",
+        })
+        check_specification_independence(ROOT)
+
+    def test_select_spec_rejects_direct_inference_parser_and_renderer_imports(self) -> None:
+        for dependency in ("SQLean.SelectContract.Checker", "SQLean.AdvancedParser",
+                           "SQLean.AdvancedPretty", "SQLean.RenderContract.Checker"):
+            with self.subTest(dependency=dependency), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                (root / "SQLean/SelectContract").mkdir(parents=True)
+                (root / "SQLean/SelectContract/Spec.lean").write_text(
+                    f"import SQLean.SelectContract.Profile {dependency}\n", encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "SelectContract.Spec.*" + dependency):
+                    check_specification_independence(root)
+
+    def test_select_recursion_helper_cannot_import_executable_inference_transitively(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "SQLean/SelectContract").mkdir(parents=True)
+            (root / "SQLean/SelectContract/Spec.lean").write_text(
+                "import SQLean.SelectContract.Recursion\n", encoding="utf-8")
+            (root / "SQLean/SelectContract/Recursion.lean").write_text(
+                "import SQLean.SelectContract.ScalarSignatures SQLean.AdvancedQueryValidation "
+                "-- SQLean.Ignored\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "SelectContract.Spec.*AdvancedQueryValidation"):
+                check_specification_independence(root)
+
+    def test_select_boundary_is_closed_to_unreviewed_helpers(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "SQLean/SelectContract").mkdir(parents=True)
+            (root / "SQLean/SelectContract/Spec.lean").write_text(
+                "import SQLean.SelectContract.FutureHelper\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "SelectContract.Spec.*FutureHelper"):
+                check_specification_independence(root)
+
     def test_sqlite_domain_direct_checker_dependency_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

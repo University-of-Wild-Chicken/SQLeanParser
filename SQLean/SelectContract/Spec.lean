@@ -1,4 +1,4 @@
-import SQLean.SelectContract.ScalarSignatures
+import SQLean.SelectContract.Recursion
 
 /-! Independent declarative rules for the first SELECT contract milestone.
 There is deliberately no import of any SELECT checker or expression inference
@@ -949,6 +949,11 @@ instance (ctes : List Advanced.CTE) : Decidable (CTENamesValid ctes) := by
   unfold CTENamesValid
   infer_instance
 
+/-- The body of a WITH query retains all non-WITH clauses and their lexical
+parameter order. -/
+def withoutWith (query : Advanced.Query) : Advanced.Query :=
+  {query with ctes := [], recursive := false}
+
 mutual
   /-- Every ON predicate sees exactly its two child scopes, before this join's
   own NULL extension. Parameters are visited left source, right source, then ON.
@@ -1047,6 +1052,14 @@ mutual
           (cteUses ++ leftUses ++ rightUses ++
             if offsetFirst then offsetUses ++ limitUses else limitUses ++ offsetUses)
 
+    | recursiveWith (nonemptyDefinitions : query.ctes ≠ [])
+        (names : CTENamesValid query.ctes)
+        (recursiveFlag : query.recursive = true)
+        (definitions : RecursiveCTEsValid profile catalog params
+          (recursiveOuterEnv env query.ctes) query.ctes visible cteUses)
+        (body : QueryValid profile catalog params visible (withoutWith query) output bodyUses) :
+        QueryValid profile catalog params env query output (cteUses ++ bodyUses)
+
   /-- Contextual set operands have their own projection judgment. The ordinary
   SELECT premises remain independent of checker success; only their pending
   output treatment differs. A nested set has already selected concrete types. -/
@@ -1077,6 +1090,14 @@ mutual
         SetOperandValid profile catalog params env
           ⟨.set op all left right, ctes, recursive, orderBy, limit, offset, locking, offsetFirst⟩
           (knownColumns output) uses
+    | recursiveWith (nonemptyDefinitions : query.ctes ≠ [])
+        (names : CTENamesValid query.ctes)
+        (recursiveFlag : query.recursive = true)
+        (definitions : RecursiveCTEsValid profile catalog params
+          (recursiveOuterEnv env query.ctes) query.ctes visible cteUses)
+        (body : SetOperandValid profile catalog params visible (withoutWith query) output bodyUses) :
+        SetOperandValid profile catalog params env query output (cteUses ++ bodyUses)
+
   /-- Definitions are analyzed in order. A name becomes visible only after its
   own query is certified, allowing inherited/base lookup in its defining body.
   References reuse output metadata and never duplicate definition occurrences. -/
@@ -1088,6 +1109,51 @@ mutual
         (tail : CTEsValid profile catalog params
           (⟨head.name, renameOutput head.columns output⟩ :: env) remaining visible restUses) :
         CTEsValid profile catalog params env (head :: remaining) visible (uses ++ restUses)
+
+  /-- The recursive binding is established from the complete anchor row, while
+  UNION coercion still sees the original pending anchor inputs. Equality of the
+  final concrete bases includes every typmod; nullability is conservatively
+  widened on the self binding and every externally exposed recursive column. -/
+  inductive RecursiveCTEValid (profile : Profile) (catalog : Catalog) (params : ParameterEnv) :
+      CTEEnv → Advanced.CTE → List OutputColumn → List Parameter → Prop where
+    | union (names : CTENamesValid ctes)
+        (notShadowed : ∀ cte ∈ ctes, cte.name ≠ name)
+        (prefixFree : (recursiveCTEReferences name false false ctes).count = 0)
+        (definitions : CTEsValid profile catalog params env ctes visible prefixUses)
+        (anchorFree : (recursiveReferences name false false left).count = 0)
+        (stepReference : recursiveReferences name false true right = ⟨1, true⟩)
+        (anchor : QueryValid profile catalog params visible left anchorOutput leftUses)
+        (anchorInputs : SetOperandValid profile catalog params visible left leftInputs leftUses)
+        (aliases : ColumnAliasesValid columns anchorOutput)
+        (step : SetOperandValid profile catalog params
+          (⟨name, recursiveOutput (renameOutput columns anchorOutput)⟩ :: visible) right rightInputs rightUses)
+        (leftUnlocked : left.locking = []) (rightUnlocked : right.locking = [])
+        (merged : SetColumnsValid .union all leftInputs rightInputs mergedOutput)
+        (sameTypes : mergedOutput.map (fun column => column.type.base) = anchorOutput.map (fun column => column.type.base))
+        (collation : RecursiveCollationSafe catalog params env name
+          ⟨.set .union all left right, ctes, false, [], none, none, [], offsetFirst⟩ anchorOutput) :
+        RecursiveCTEValid profile catalog params env
+          ⟨name, ⟨.set .union all left right, ctes, false, [], none, none, [], offsetFirst⟩, columns⟩
+          (recursiveOutput (renameOutput columns anchorOutput)) (prefixUses ++ leftUses ++ rightUses)
+
+  /-- This increment accepts dependency order already present in the source.
+  A forward or mutual dependency is explicit missing coverage, never a lookup
+  against an inherited binding or physical table of the same name. -/
+  inductive RecursiveCTEsValid (profile : Profile) (catalog : Catalog) (params : ParameterEnv) :
+      CTEEnv → List Advanced.CTE → CTEEnv → List Parameter → Prop where
+    | nil : RecursiveCTEsValid profile catalog params env [] env []
+    | ordinary (forwardFree : NoForwardCTEReferences remaining head.query)
+        (noSelf : (recursiveReferences head.name false true head.query).count = 0)
+        (body : QueryValid profile catalog params env head.query output uses)
+        (aliases : ColumnAliasesValid head.columns output)
+        (tail : RecursiveCTEsValid profile catalog params
+          (⟨head.name, renameOutput head.columns output⟩ :: env) remaining visible restUses) :
+        RecursiveCTEsValid profile catalog params env (head :: remaining) visible (uses ++ restUses)
+    | recursive (forwardFree : NoForwardCTEReferences remaining head.query)
+        (body : RecursiveCTEValid profile catalog params env head output uses)
+        (tail : RecursiveCTEsValid profile catalog params
+          (⟨head.name, output⟩ :: env) remaining visible restUses) :
+        RecursiveCTEsValid profile catalog params env (head :: remaining) visible (uses ++ restUses)
 end
 
 /-- The public judgment checks exact metadata and parameter notation once,

@@ -15,7 +15,7 @@ private def integerArm : Advanced.Query :=
 
 /-- Unknown input evidence is distinct from complete SELECT's TEXT output. -/
 private theorem nullArm_valid :
-    SetOperandValid .basicV30 [] [] [] nullArm [⟨"?column?", .unknown true⟩] [] := by
+    SetOperandValid .basicV31 [] [] [] nullArm [⟨"?column?", .unknown true⟩] [] := by
   apply SetOperandValid.basic (cteUses := []) (visible := []) (by decide) .nil
     (scope := .empty) (sourceUses := []) (selectUses := []) (whereUses := [])
     (orderUses := []) (limitUses := []) (offsetUses := [])
@@ -35,7 +35,7 @@ private theorem nullArm_valid :
   · rfl
 
 private theorem integerArm_valid :
-    SetOperandValid .basicV30 [] [] [] integerArm
+    SetOperandValid .basicV31 [] [] [] integerArm
       [⟨"?column?", .known ⟨.int32, false⟩⟩] [] := by
   apply SetOperandValid.basic (cteUses := []) (visible := []) (by decide) .nil
     (scope := .empty) (sourceUses := []) (selectUses := []) (whereUses := [])
@@ -58,7 +58,7 @@ private theorem integerArm_valid :
 
 private def nullUnion : Advanced.Query := {body := .set .union true nullArm integerArm}
 private theorem nullUnion_valid :
-    SelectValid .basicV30 [] [] nullUnion [⟨"?column?", ⟨.int32, true⟩⟩] := by
+    SelectValid .basicV31 [] [] nullUnion [⟨"?column?", ⟨.int32, true⟩⟩] := by
   apply SelectValid.certified (uses := [])
   · decide
   · decide
@@ -68,7 +68,7 @@ private theorem nullUnion_valid :
       (by decide) .nil .absent .absent
   · decide
 
-example : SelectValid .basicV30 [] [] (RenderContract.translateParameters nullUnion)
+example : SelectValid .basicV31 [] [] (RenderContract.translateParameters nullUnion)
     [⟨"?column?", ⟨.int32, true⟩⟩] :=
   RenderContract.translateParameters_valid nullUnion_valid
 
@@ -100,7 +100,7 @@ private def setExpected (record : Lean.Json) : IO (List OutputColumn) := do
 private def setCertificate (query : Advanced.Query) (catalog : Advanced.Catalog := [])
     (params : ParameterEnv := []) : IO (List OutputColumn) := do
   let certificate ← expectOk "complete set query"
-    ((SelectContract.checkQuery .basicV30 catalog params query).mapError reprStr)
+    ((SelectContract.checkQuery .basicV31 catalog params query).mapError reprStr)
   have _catalog := certificate.catalog_unchanged
   have _preserved := RenderContract.translateParameters_valid certificate.valid
   let identity ← expectOk "set identity" ((RenderContract.check .identityV01 query).mapError reprStr)
@@ -131,6 +131,7 @@ def setOperationsContractTests : IO Nat := do
     ("SELECT CAST('a' AS CHAR(3)) AS x UNION ALL SELECT CAST('b' AS TEXT)", [⟨"x", ⟨.char [], false⟩⟩]),
     ("SELECT CAST('a' AS TEXT) AS x UNION ALL SELECT CAST('b' AS CHAR(3))", [⟨"x", ⟨.text, false⟩⟩]),
     ("SELECT ARRAY[1] AS x UNION SELECT ARRAY[CAST(2 AS BIGINT)]", [⟨"x", ⟨.array .int64, false⟩⟩]),
+    ("WITH RECURSIVE c AS (SELECT 1 UNION SELECT 2) SELECT * FROM c", [⟨"?column?", ⟨.int32, false⟩⟩]),
     ("WITH c AS (SELECT NULL UNION SELECT 1) SELECT * FROM c", [⟨"?column?", ⟨.int32, true⟩⟩]),
     ("SELECT * FROM (SELECT 1 AS x FOR UPDATE) d UNION SELECT 2", [⟨"x", ⟨.int32, false⟩⟩]),
     ("WITH c AS (SELECT 1 AS x UNION SELECT 2) SELECT * FROM c FOR UPDATE", [⟨"x", ⟨.int32, false⟩⟩])]
@@ -157,18 +158,17 @@ def setOperationsContractTests : IO Nat := do
     "(SELECT 1 UNION SELECT 2) FOR UPDATE"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV30 [] [] query with
+    match SelectContract.checkQuery .basicV31 [] [] query with
     | .error (.invalid _) => pure ()
     | result => throw (IO.userError s!"set Invalid expected {sql}: {reprStr (result.map (fun _ => ()))}")
   let unsupported := [
     "SELECT 1 AS x,CAST(1 AS INTEGER) AS x ORDER BY x",
     "(SELECT 1 AS x,2 AS x ORDER BY x) UNION SELECT 1,2",
-    "WITH RECURSIVE c AS (SELECT 1 UNION SELECT 2) SELECT * FROM c",
     "SELECT COUNT(*) UNION SELECT 1",
     "SELECT (SELECT 1) UNION SELECT 2"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
-    match SelectContract.checkQuery .basicV30 [] [] query with
+    match SelectContract.checkQuery .basicV31 [] [] query with
     | .error (.unsupported _) => pure ()
     | result => throw (IO.userError s!"set Unsupported expected {sql}: {reprStr (result.map (fun _ => ()))}")
   let mut count := valid.length + invalid.length + unsupported.length
@@ -179,7 +179,7 @@ def setOperationsContractTests : IO Nat := do
       if op == "UNION ALL" then
         SQLean.Tests.assert ((← setCertificate query) == [⟨"x", ⟨← setType type, true⟩⟩]) sql
       else
-        match SelectContract.checkQuery .basicV30 [] [] query with
+        match SelectContract.checkQuery .basicV31 [] [] query with
         | .error (.invalid _) => pure ()
         | result => throw (IO.userError s!"analysis-time element equality {sql}: {reprStr (result.map (fun _ => ()))}")
       count := count + 1
@@ -203,7 +203,7 @@ def setOperationsContractTests : IO Nat := do
       let sql := s!"SELECT {value} AS x,{value} AS x ORDER BY {ordering}"
       for statement in [sql, s!"({sql}) UNION ALL SELECT NULL,NULL"] do
         let query ← expectOk statement (Advanced.parseQuery statement)
-        match SelectContract.checkQuery .basicV30 [] [] query with
+        match SelectContract.checkQuery .basicV31 [] [] query with
         | .error (.invalid diagnostic) =>
           SQLean.Tests.assert (diagnostic.code == "ambiguous_output") "sequential unknown target resolution"
         | result => throw (IO.userError s!"sequential sort ambiguity {statement}: {reprStr (result.map (fun _ => ()))}")

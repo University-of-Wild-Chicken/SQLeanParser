@@ -93,6 +93,7 @@ jobs:
           python3 scripts/extract_factor_corpus.py --factor null_predicates --check
           python3 scripts/extract_factor_corpus.py --factor cte_contract --check
           python3 scripts/extract_set_operation_corpus.py --check
+          python3 scripts/extract_recursive_contract_corpus.py --check
           python3 scripts/extract_statement_corpus.py --check
 
   integration:
@@ -246,6 +247,10 @@ jobs:
         run: python3 scripts/check_set_operation_structure.py --local-bin /usr/lib/postgresql/16/bin
       - name: Verify set-operation ORDER BY name resolution sequences
         run: python3 scripts/check_set_order_sequences.py --local-bin /usr/lib/postgresql/16/bin
+      - name: Verify recursive SELECT CTE contracts and native observations
+        run: python3 scripts/check_recursive_contract_cli.py --local-bin /usr/lib/postgresql/16/bin
+      - name: Verify recursive CTE static and PostgreSQL analysis boundaries
+        run: python3 scripts/check_recursive_boundaries.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

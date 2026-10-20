@@ -1,0 +1,3860 @@
+{
+  "format_version": 1,
+  "factor": "recursive_contract",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 14,
+    "duckdb": 31,
+    "sqlc": 4,
+    "hatchet": 1
+  },
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "license_file": "fixtures/extended_types/licenses/postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "source_kind": "engine-regression",
+      "files": [
+        {
+          "path": "src/test/regress/sql/with.sql",
+          "sha256": "e76fa662f0679f7220b78799c948244d62982f7c65ebbfa0c8e40f8aeeceb921",
+          "local_path": "fixtures/statement_families/sources/postgres/src/test/regress/sql/with.sql"
+        }
+      ]
+    },
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "license_file": "fixtures/factor_sources/licenses/duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "source_kind": "engine-regression",
+      "source_dialect": "duckdb",
+      "files": [
+        {
+          "path": "test/sql/cte/recursive_array_slice.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/cte/recursive_array_slice.test",
+          "sha256": "17077b8e176d03a911d4b8a08c1a700056162717bad23c461294041a43795b91"
+        },
+        {
+          "path": "test/sql/cte/recursive_cte_column_pruning.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/cte/recursive_cte_column_pruning.test",
+          "sha256": "5d28247ca8cae070880ba8fc9f10b917c69434312852ad49d3ff9fbe7fbb6d17"
+        },
+        {
+          "path": "test/sql/cte/recursive_cte_parallel_union_distinct_sink.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/cte/recursive_cte_parallel_union_distinct_sink.test",
+          "sha256": "86e39a6ac64995167095a60fad49255fc86db380715735ff2e28e6bd9c21af36"
+        },
+        {
+          "path": "test/sql/cte/test_nested_recursive_cte.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/cte/test_nested_recursive_cte.test",
+          "sha256": "64d646820572585f18026cd37846bca1fc37bb01ae06b319a9f313391a5e8075"
+        },
+        {
+          "path": "test/sql/cte/test_recursive_cte_tutorial.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/cte/test_recursive_cte_tutorial.test",
+          "sha256": "adb076e942b91a9c4d176be6de9cf91821c56b174f63ec0819588a594a923cf2"
+        },
+        {
+          "path": "test/sql/cte/test_recursive_cte_union.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/cte/test_recursive_cte_union.test",
+          "sha256": "95c794e6360a0b3739e9ae84b9e0e7a56db407949cafc192d2df9154f41869aa"
+        },
+        {
+          "path": "test/sql/cte/test_recursive_cte_union_all.test",
+          "local_path": "fixtures/factor_sources/sources/duckdb/test/sql/cte/test_recursive_cte_union_all.test",
+          "sha256": "b849502b71a7d8cbbfab2e05269058cc761dea17365ad5b01dc01085ccf85083"
+        }
+      ]
+    },
+    "sqlc": {
+      "repository": "https://github.com/sqlc-dev/sqlc",
+      "commit": "0f1602fe1a4b780336e3e878dde720892fd8578d",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/sqlc-LICENSE.txt",
+      "license_sha256": "fc69a4525f6f7e79675fba3645351f2cdaf9331978e72d44155634575a4455ea",
+      "source_kind": "compiler-regression",
+      "files": [
+        {
+          "path": "internal/endtoend/testdata/cte_recursive/pgx/v5/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/cte_recursive/pgx/v5/query.sql",
+          "sha256": "875ae78f5b7d050a8fdc03e067bf3aa65c7a62c6ec408e38763058c607518b1a"
+        },
+        {
+          "path": "internal/endtoend/testdata/cte_recursive_star/postgresql/pgx/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/cte_recursive_star/postgresql/pgx/query.sql",
+          "sha256": "f67e283ac204ad1e253f7f91ca18f1d3191eee9ead05bbcfd4a328fe23869489"
+        },
+        {
+          "path": "internal/endtoend/testdata/cte_recursive_subquery/postgresql/pgx/query.sql",
+          "local_path": "fixtures/factor_sources/sources/sqlc/internal/endtoend/testdata/cte_recursive_subquery/postgresql/pgx/query.sql",
+          "sha256": "b6592f32b5732f52d6cb930ab39833944c903d596386e3537b139c25bc3f0e4d"
+        }
+      ]
+    },
+    "hatchet": {
+      "repository": "https://github.com/hatchet-dev/hatchet",
+      "commit": "392e7c472221cdab235cca674640e98f904e1ea0",
+      "ref": "main",
+      "license": "MIT",
+      "license_file": "fixtures/extended_types/licenses/hatchet-LICENSE.txt",
+      "license_sha256": "7388b34bd1ad4b9db3c72dcb73f434ea27c88e5ca8f02a24d4f970c906d79be3",
+      "source_kind": "application-constant",
+      "files": [
+        {
+          "path": "pkg/repository/sqlcv1/olap.sql.go",
+          "local_path": "fixtures/factor_sources/sources/hatchet/pkg/repository/sqlcv1/olap.sql.go",
+          "sha256": "b6c819d1f09a5c8fbbba708577a8d914c4f7181ecb0bea2b4603cdbca9452233"
+        }
+      ]
+    }
+  },
+  "selections": [
+    {
+      "source": "hatchet",
+      "path": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getRunsListRecursive"
+      },
+      "sql_sha256": "1fd4a9907e936cf14d5bea97c7f6622ce981a36181fcc345bb1b1eb00c60f4df",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "all_runs",
+            "column_aliases": [],
+            "byte_location": 51,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "v1_lookup_table_olap"
+            ],
+            "byte_location": 243,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 51,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "v1_tasks_olap"
+            ],
+            "byte_location": 280,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 51,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "v1_runs_olap"
+            ],
+            "byte_location": 686,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 51,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "all_runs"
+            ],
+            "byte_location": 710,
+            "definition_byte_location": 51,
+            "contexts": [
+              {
+                "definition_byte_location": 51,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "v1_dag_to_task_olap"
+            ],
+            "byte_location": 823,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 51,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "v1_tasks_olap"
+            ],
+            "byte_location": 985,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 51,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "all_runs"
+            ],
+            "byte_location": 1477,
+            "definition_byte_location": 51,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [
+          2,
+          1,
+          3,
+          4
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/cte_recursive/pgx/v5/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 28,
+        "end": 227,
+        "statement_index": 0
+      },
+      "sql_sha256": "776a6bbe0640d5132ae91f5374ab9fb3b69fa6be3bb351ce8755069b2b48283c",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "cte",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "bar"
+            ],
+            "byte_location": 48,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "bar"
+            ],
+            "byte_location": 127,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "cte"
+            ],
+            "byte_location": 137,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "cte"
+            ],
+            "byte_location": 195,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [
+          1
+        ],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/cte_recursive_star/postgresql/pgx/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 27,
+        "end": 568,
+        "statement_index": 0
+      },
+      "sql_sha256": "e020730afc319e43e0e315f0a7949a0721910d9fb44392cd2bc08694b667cdfd",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "dicttree",
+            "column_aliases": [
+              "id",
+              "code",
+              "parent_code",
+              "label",
+              "value",
+              "path",
+              "depth"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "dict"
+            ],
+            "byte_location": 155,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "dict"
+            ],
+            "byte_location": 213,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "dict"
+            ],
+            "byte_location": 388,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "dicttree"
+            ],
+            "byte_location": 400,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "dicttree"
+            ],
+            "byte_location": 502,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {
+          "SubLink": 1
+        },
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/cte_recursive_subquery/postgresql/pgx/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 31,
+        "end": 508,
+        "statement_index": 0
+      },
+      "sql_sha256": "105e301b3d46dc8d7108c3544034928fb64f0944393d7f844850c67bbc3bf0bc",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "search_tree",
+            "column_aliases": [
+              "id",
+              "chain_id",
+              "chain_counter"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "versions"
+            ],
+            "byte_location": 124,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "versions"
+            ],
+            "byte_location": 266,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "search_tree"
+            ],
+            "byte_location": 292,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "search_tree"
+            ],
+            "byte_location": 412,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {
+          "distinctClause": 1
+        },
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "sqlc",
+      "path": "internal/endtoend/testdata/cte_recursive_subquery/postgresql/pgx/query.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 553,
+        "end": 1092,
+        "statement_index": 1
+      },
+      "sql_sha256": "edc834c14cdf309b8627e6810c7d62292484ffb73919db791620caf28c91e0a5",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "search_tree",
+            "column_aliases": [
+              "id",
+              "chain_id",
+              "chain_counter"
+            ],
+            "byte_location": 64,
+            "query_depth": 1,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "versions"
+            ],
+            "byte_location": 15,
+            "definition_byte_location": null,
+            "contexts": []
+          },
+          {
+            "parts": [
+              "versions"
+            ],
+            "byte_location": 173,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 64,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "versions"
+            ],
+            "byte_location": 317,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 64,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "search_tree"
+            ],
+            "byte_location": 343,
+            "definition_byte_location": 64,
+            "contexts": [
+              {
+                "definition_byte_location": 64,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "search_tree"
+            ],
+            "byte_location": 470,
+            "definition_byte_location": 64,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {
+          "SubLink": 1,
+          "distinctClause": 1
+        },
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1086,
+        "end": 1170,
+        "statement_index": 9
+      },
+      "sql_sha256": "b4db7cb0f00762f9f88b193d539d612216209c69b260dd0410b277b982fea04c",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "n"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 65,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 82,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1390,
+        "end": 1482,
+        "statement_index": 11
+      },
+      "sql_sha256": "baaf2759199047560644c4fe0a26a451979a8a5ed85480b63e41258c212f65f5",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "n"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 64,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 81,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 66,
+        "start": 1436,
+        "end": 1542
+      },
+      "sql_sha256": "3d8e997985d58fdaf09d23d990dcd024bd7738e5d478436e91a5702ac3a80414",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 57,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 94,
+            "definition_byte_location": 15,
+            "contexts": []
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 100,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {
+          "aggregate": 1
+        },
+        "functions": [
+          "min"
+        ],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3893,
+        "end": 4192,
+        "statement_index": 26
+      },
+      "sql_sha256": "24d899173276c961524f24438383009c5503be8408bd480dd961c8598321ee2c",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "subdepartment",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "department"
+            ],
+            "byte_location": 91,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "department"
+            ],
+            "byte_location": 182,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "subdepartment"
+            ],
+            "byte_location": 199,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "subdepartment"
+            ],
+            "byte_location": 271,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4251,
+        "end": 4570,
+        "statement_index": 27
+      },
+      "sql_sha256": "9fafe0809b59503b428674c612074d32a01ba2ac9529a900f5855b77283e6fa6",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "subdepartment",
+            "column_aliases": [
+              "level",
+              "id",
+              "parent_department",
+              "name"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "department"
+            ],
+            "byte_location": 111,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "department"
+            ],
+            "byte_location": 202,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "subdepartment"
+            ],
+            "byte_location": 219,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "subdepartment"
+            ],
+            "byte_location": 291,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4660,
+        "end": 4996,
+        "statement_index": 28
+      },
+      "sql_sha256": "20a430b05b7857448aff44b228eeb01f01c86e9cb4148c0ea08ec1057befdd0b",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "subdepartment",
+            "column_aliases": [
+              "level",
+              "id",
+              "parent_department",
+              "name"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "department"
+            ],
+            "byte_location": 111,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "department"
+            ],
+            "byte_location": 202,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "subdepartment"
+            ],
+            "byte_location": 219,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "subdepartment"
+            ],
+            "byte_location": 291,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5246,
+        "end": 5636,
+        "statement_index": 30
+      },
+      "sql_sha256": "3bb1ba332767f056f9d47e067aae884d7447b63a7fb669b47922a706d99162a0",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "n"
+            ],
+            "byte_location": 42,
+            "query_depth": 1,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          },
+          {
+            "name": "t",
+            "column_aliases": [
+              "n"
+            ],
+            "byte_location": 215,
+            "query_depth": 2,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 97,
+            "definition_byte_location": 42,
+            "contexts": [
+              {
+                "definition_byte_location": 42,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 137,
+            "definition_byte_location": 42,
+            "contexts": []
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 281,
+            "definition_byte_location": 215,
+            "contexts": [
+              {
+                "definition_byte_location": 215,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 341,
+            "definition_byte_location": 215,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {
+          "SubLink": 1,
+          "aggregate": 1
+        },
+        "functions": [
+          "count"
+        ],
+        "actual_recursive_count": 2
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6736,
+        "end": 7007,
+        "statement_index": 38
+      },
+      "sql_sha256": "104f61205160959c0971300ca28bf0d6291adb7fd6a7e0a2718d712736167d97",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "q",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          },
+          {
+            "name": "x",
+            "column_aliases": [],
+            "byte_location": 89,
+            "query_depth": 2,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "department"
+            ],
+            "byte_location": 42,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "department"
+            ],
+            "byte_location": 121,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              },
+              {
+                "definition_byte_location": 89,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "q"
+            ],
+            "byte_location": 177,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              },
+              {
+                "definition_byte_location": 89,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "x"
+            ],
+            "byte_location": 203,
+            "definition_byte_location": 89,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              },
+              {
+                "definition_byte_location": 89,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "x"
+            ],
+            "byte_location": 237,
+            "definition_byte_location": 89,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "q"
+            ],
+            "byte_location": 260,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 2
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 8775,
+        "end": 8875,
+        "statement_index": 47
+      },
+      "sql_sha256": "227d327b3849e7b918d312f4597f9ffe68d8607a84763a412fe308bd1d7d43bc",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "cte",
+            "column_aliases": [
+              "a"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "duplicates"
+            ],
+            "byte_location": 43,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "cte"
+            ],
+            "byte_location": 76,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "cte"
+            ],
+            "byte_location": 96,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13227,
+        "end": 13509,
+        "statement_index": 71
+      },
+      "sql_sha256": "2243adee1bd964d2f0b7f12a746442d46057378f5cc7ad8ff6d07399a1a8edd1",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "search_graph",
+            "column_aliases": [
+              "f",
+              "t",
+              "label",
+              "is_cycle",
+              "path"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "graph"
+            ],
+            "byte_location": 106,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "graph"
+            ],
+            "byte_location": 193,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "search_graph"
+            ],
+            "byte_location": 202,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "search_graph"
+            ],
+            "byte_location": 269,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13564,
+        "end": 13851,
+        "statement_index": 72
+      },
+      "sql_sha256": "b9eaa4dd705fdf0494ef2e06ebcbb899db4d66cc0884e780fc8360cd42d75fe7",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "search_graph",
+            "column_aliases": [
+              "f",
+              "t",
+              "label",
+              "is_cycle",
+              "path"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "graph"
+            ],
+            "byte_location": 106,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "graph"
+            ],
+            "byte_location": 198,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "search_graph"
+            ],
+            "byte_location": 207,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "search_graph"
+            ],
+            "byte_location": 274,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13922,
+        "end": 14218,
+        "statement_index": 73
+      },
+      "sql_sha256": "d2b9e30b7f71b959718384835bcb45a561f1350d9ea5cc34f3921867ea259f4b",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "search_graph",
+            "column_aliases": [
+              "f",
+              "t",
+              "label",
+              "is_cycle",
+              "path"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "graph"
+            ],
+            "byte_location": 106,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "graph"
+            ],
+            "byte_location": 193,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "search_graph"
+            ],
+            "byte_location": 202,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "search_graph"
+            ],
+            "byte_location": 269,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20106,
+        "end": 20350,
+        "statement_index": 103
+      },
+      "sql_sha256": "87d40d734ff0ea9eda9ff9665af261f7c43c73b702257a8955d0bd8e5775a8ec",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "x",
+            "column_aliases": [
+              "id"
+            ],
+            "byte_location": 18,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          },
+          {
+            "name": "y",
+            "column_aliases": [
+              "id"
+            ],
+            "byte_location": 90,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 0,
+            "anchor_references": 0,
+            "step_references": 0
+          },
+          {
+            "name": "z",
+            "column_aliases": [
+              "id"
+            ],
+            "byte_location": 152,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "x"
+            ],
+            "byte_location": 69,
+            "definition_byte_location": 18,
+            "contexts": [
+              {
+                "definition_byte_location": 18,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "x"
+            ],
+            "byte_location": 119,
+            "definition_byte_location": 18,
+            "contexts": [
+              {
+                "definition_byte_location": 90,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "x"
+            ],
+            "byte_location": 145,
+            "definition_byte_location": 18,
+            "contexts": [
+              {
+                "definition_byte_location": 90,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "x"
+            ],
+            "byte_location": 181,
+            "definition_byte_location": 18,
+            "contexts": [
+              {
+                "definition_byte_location": 152,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "z"
+            ],
+            "byte_location": 210,
+            "definition_byte_location": 152,
+            "contexts": [
+              {
+                "definition_byte_location": 152,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "z"
+            ],
+            "byte_location": 242,
+            "definition_byte_location": 152,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 2
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 20352,
+        "end": 20596,
+        "statement_index": 104
+      },
+      "sql_sha256": "235908c01e710dacb2d97262cadea7576b94bcffa96b9b47c036acdc95fdabaa",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "x",
+            "column_aliases": [
+              "id"
+            ],
+            "byte_location": 18,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          },
+          {
+            "name": "y",
+            "column_aliases": [
+              "id"
+            ],
+            "byte_location": 90,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 0,
+            "anchor_references": 0,
+            "step_references": 0
+          },
+          {
+            "name": "z",
+            "column_aliases": [
+              "id"
+            ],
+            "byte_location": 152,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "x"
+            ],
+            "byte_location": 69,
+            "definition_byte_location": 18,
+            "contexts": [
+              {
+                "definition_byte_location": 18,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "x"
+            ],
+            "byte_location": 119,
+            "definition_byte_location": 18,
+            "contexts": [
+              {
+                "definition_byte_location": 90,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "x"
+            ],
+            "byte_location": 145,
+            "definition_byte_location": 18,
+            "contexts": [
+              {
+                "definition_byte_location": 90,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "y"
+            ],
+            "byte_location": 181,
+            "definition_byte_location": 90,
+            "contexts": [
+              {
+                "definition_byte_location": 152,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "z"
+            ],
+            "byte_location": 210,
+            "definition_byte_location": 152,
+            "contexts": [
+              {
+                "definition_byte_location": 152,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "z"
+            ],
+            "byte_location": 242,
+            "definition_byte_location": 152,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 2
+      }
+    },
+    {
+      "source": "postgres",
+      "path": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 27484,
+        "end": 27676,
+        "statement_index": 157
+      },
+      "sql_sha256": "cf71e74b2245ef5396176658c4714a91d49566f9868c416968eb4503c6c68de8",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "outermost",
+            "column_aliases": [
+              "x"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          },
+          {
+            "name": "innermost",
+            "column_aliases": [],
+            "byte_location": 58,
+            "query_depth": 2,
+            "with_recursive": false,
+            "operator": "none",
+            "all": false,
+            "self_references": 0,
+            "anchor_references": 0,
+            "step_references": 0
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "outermost"
+            ],
+            "byte_location": 105,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "innermost"
+            ],
+            "byte_location": 144,
+            "definition_byte_location": 58,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "outermost"
+            ],
+            "byte_location": 171,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/recursive_cte_column_pruning.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 33,
+        "start": 811,
+        "end": 962
+      },
+      "sql_sha256": "a2fc1662c1bb30683389446f8e53013877c34cac55851919ec0a057fef1a2c8f",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "i",
+              "unused"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 107,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 137,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "repeat"
+        ],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/recursive_cte_column_pruning.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 45,
+        "start": 982,
+        "end": 1129
+      },
+      "sql_sha256": "dc147aa85010a59bb93fc87e2d824b93140451e2b9a36afc61c0b60a6f21913e",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "r",
+            "column_aliases": [
+              "a",
+              "b",
+              "c"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "r"
+            ],
+            "byte_location": 103,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "r"
+            ],
+            "byte_location": 133,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "repeat"
+        ],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/recursive_cte_column_pruning.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 58,
+        "start": 1243,
+        "end": 1440
+      },
+      "sql_sha256": "d2d302a20dc9a1f1672c578b7ab28a02210a8b0652153a4a84df5e9b4029ddc4",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "a",
+              "b",
+              "c",
+              "level",
+              "d"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 132,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 179,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "repeat"
+        ],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/recursive_cte_column_pruning.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 72,
+        "start": 1573,
+        "end": 1725
+      },
+      "sql_sha256": "018f9a67f514d1ae6c9ad6bbda936eb42417e4e0c2605093752804b3fa57c962",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "a",
+              "b",
+              "c",
+              "level"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 100,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 134,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/recursive_cte_column_pruning.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 102,
+        "start": 2167,
+        "end": 2322
+      },
+      "sql_sha256": "1081501bd8a8042f727d5a367f98e00ecea82a8758dc824c3c101b2f74cad581",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "i",
+              "identity_payload"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 100,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 152,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {
+          "aggregate": 1
+        },
+        "functions": [
+          "count"
+        ],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 6,
+        "start": 165,
+        "end": 264
+      },
+      "sql_sha256": "f8c4ba536222da02dc631d6e2ab78e08da1aa4285dc37a05febb375885b96de9",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 57,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 86,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 13,
+        "start": 284,
+        "end": 381
+      },
+      "sql_sha256": "dbdbd31af172b0c435d002d1e3d93fcd8121517fb6288c57f34c0d693f6b5d0c",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "x"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 55,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 84,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 21,
+        "start": 421,
+        "end": 527
+      },
+      "sql_sha256": "96901f73d627fafb80ed459cc16ac335ef210533aaf3aebd40d40ba583f49751",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "x"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 55,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 85,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 28,
+        "start": 547,
+        "end": 665
+      },
+      "sql_sha256": "345ea03e10624ff81c6025282b97576e30962d1b7439cf485e12e5f8043cf09f",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "x"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 57,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 97,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 36,
+        "start": 731,
+        "end": 805
+      },
+      "sql_sha256": "c506ec40bf88f71e115abbe53afd28f2abe8dd2a765675ae25cc77dc9ae7b614",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 55,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 72,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 42,
+        "start": 858,
+        "end": 964
+      },
+      "sql_sha256": "9facc800c4305188fc9ae9961e5a8d8af216fb1763eea934801538705e3292be",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 57,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 93,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 58,
+        "start": 1207,
+        "end": 1342
+      },
+      "sql_sha256": "3a541de7ba214feabaa9e30b25bdf1ab504811b87392dde988c151ca502b71fe",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 92,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 121,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 72,
+        "start": 1589,
+        "end": 1698
+      },
+      "sql_sha256": "d7283e6fce075ae5bded1476ed2651ee053ca60296a03f6ecef86471a66179b9",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 66,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 95,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {
+          "SubLink": 1
+        },
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 87,
+        "start": 1945,
+        "end": 2101
+      },
+      "sql_sha256": "bee3d5e27cf3c3918d32180621907d2243a89e343131e492cf3b0ab17e795e93",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 74,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 145,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 94,
+        "start": 2121,
+        "end": 2277
+      },
+      "sql_sha256": "cbaefca8aab895d15a71e1cb306a0b93eb76afb726a21c7440d66c81d3d15f86",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 98,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 145,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/recursive_array_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 11,
+        "start": 239,
+        "end": 386
+      },
+      "sql_sha256": "cab2f7476f9182ca081391096746a626c451e36af762423778cb2a16f12a5eb5",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "y",
+              "arr"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 108,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "p"
+            ],
+            "byte_location": 111,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 144,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/recursive_array_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 32,
+        "start": 477,
+        "end": 634
+      },
+      "sql_sha256": "bdfac9bb5fd4324cc1bd49724d0f66f6077a41b8248aea292ab92e8c03ac8c14",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "y",
+              "arr"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 102,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "p"
+            ],
+            "byte_location": 105,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 154,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/recursive_array_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 46,
+        "start": 691,
+        "end": 854
+      },
+      "sql_sha256": "575ac931ccc00c0c42f1965dff4bc0195469f9e4b8ceddb6de7c8e1c6d8fcc78",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "y",
+              "arr"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 108,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "p"
+            ],
+            "byte_location": 111,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 160,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/recursive_array_slice.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 60,
+        "start": 895,
+        "end": 1039
+      },
+      "sql_sha256": "b680590bed66173ed4834035f4244708a672e88b008de458f92d29cab1dd9ef8",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "arr"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 104,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 141,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/recursive_cte_parallel_union_distinct_sink.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 62,
+        "start": 1554,
+        "end": 1656
+      },
+      "sql_sha256": "90340166cc0f845871faa6785c3b3995fa8455e40580b276f046b671cb0ee36d",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "i"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": false,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 61,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 99,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {
+          "aggregate": 1
+        },
+        "functions": [
+          "sum"
+        ],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union_all.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 6,
+        "start": 173,
+        "end": 265
+      },
+      "sql_sha256": "524e5ac189df87b7fd5d153be196525e17413c1da3e8708f4589ad518061d417",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 61,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 90,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union_all.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 14,
+        "start": 322,
+        "end": 421
+      },
+      "sql_sha256": "82e74ae2d8c24c85f7dda1619e2f5cd858413cd4d5f54a530ea89f36a940dcd2",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 61,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 97,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union_all.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 30,
+        "start": 657,
+        "end": 785
+      },
+      "sql_sha256": "a5f9678d1c5e5f44ce3bcb207b03c36c901f3b8b758b1e3e00a31da537e55088",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 96,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 125,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union_all.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 38,
+        "start": 879,
+        "end": 989
+      },
+      "sql_sha256": "43662f124010b1e37499fb3b538eb781c0fdd845013de04aa352006bff8fd7c7",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 61,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 98,
+            "definition_byte_location": 15,
+            "contexts": []
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 104,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {
+          "aggregate": 1
+        },
+        "functions": [
+          "min"
+        ],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_union_all.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 44,
+        "start": 1036,
+        "end": 1138
+      },
+      "sql_sha256": "2122bf1f66c7e2ee616407533c8b63381a4aad46c6ffadaee8dcbd22e0a0391c",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 70,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 99,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {
+          "SubLink": 1
+        },
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_nested_recursive_cte.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 5,
+        "start": 144,
+        "end": 377
+      },
+      "sql_sha256": "67ff6b8a63fdd69cdc1250b7eb9d2ab5c9e0bf583edb759d9348b36786cbb4ff",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "t",
+            "column_aliases": [
+              "x"
+            ],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          },
+          {
+            "name": "u",
+            "column_aliases": [
+              "x"
+            ],
+            "byte_location": 92,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 72,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 122,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 92,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "u"
+            ],
+            "byte_location": 170,
+            "definition_byte_location": 92,
+            "contexts": [
+              {
+                "definition_byte_location": 92,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "t"
+            ],
+            "byte_location": 173,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 92,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "u"
+            ],
+            "byte_location": 211,
+            "definition_byte_location": 92,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 2
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_tutorial.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 29,
+        "start": 1581,
+        "end": 1811
+      },
+      "sql_sha256": "30d3d4e0a80933d472f182a46ce1be5b7ea4120abce75c2fbf14fa9638b0868a",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "ctename",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "emp"
+            ],
+            "byte_location": 65,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "emp"
+            ],
+            "byte_location": 152,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "ctename"
+            ],
+            "byte_location": 170,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "ctename"
+            ],
+            "byte_location": 221,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_tutorial.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 45,
+        "start": 1859,
+        "end": 2146
+      },
+      "sql_sha256": "9747f36e652d75dfb34cb2e79e69c40bfbbfaf6fbc9bbf866acc52759ffbc598",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "ctename",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "emp"
+            ],
+            "byte_location": 90,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "emp"
+            ],
+            "byte_location": 209,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "ctename"
+            ],
+            "byte_location": 227,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "ctename"
+            ],
+            "byte_location": 278,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_tutorial.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 63,
+        "start": 2200,
+        "end": 2508
+      },
+      "sql_sha256": "33e4fa41cab34783a2e329f7a3ba94ff835bed7aa924049e6b2547db43759df4",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "ctename",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "emp"
+            ],
+            "byte_location": 93,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "anchor"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "emp"
+            ],
+            "byte_location": 230,
+            "definition_byte_location": null,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "ctename"
+            ],
+            "byte_location": 248,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "ctename"
+            ],
+            "byte_location": 299,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": false,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    },
+    {
+      "source": "duckdb",
+      "path": "test/sql/cte/test_recursive_cte_tutorial.test",
+      "selector": {
+        "kind": "sqllogic_query",
+        "header_line": 109,
+        "start": 3144,
+        "end": 3396
+      },
+      "sql_sha256": "9ee32d6deef0e1a99aa11696d2afe6f7a2ce1360c20780bf3cc020025c424109",
+      "observed_syntax": {
+        "ctes": [
+          {
+            "name": "fib",
+            "column_aliases": [],
+            "byte_location": 15,
+            "query_depth": 0,
+            "with_recursive": true,
+            "operator": "union",
+            "all": true,
+            "self_references": 1,
+            "anchor_references": 0,
+            "step_references": 1
+          }
+        ],
+        "relations": [
+          {
+            "parts": [
+              "fib"
+            ],
+            "byte_location": 232,
+            "definition_byte_location": 15,
+            "contexts": [
+              {
+                "definition_byte_location": 15,
+                "arm": "step"
+              }
+            ]
+          },
+          {
+            "parts": [
+              "fib"
+            ],
+            "byte_location": 262,
+            "definition_byte_location": 15,
+            "contexts": []
+          }
+        ],
+        "parameter_slots": [],
+        "source_free": true,
+        "dependencies": {},
+        "functions": [],
+        "actual_recursive_count": 1
+      }
+    }
+  ]
+}
