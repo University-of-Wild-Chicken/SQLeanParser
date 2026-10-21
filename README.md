@@ -27,12 +27,25 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.36 VALUES increment](docs/values-query-contract-v0.36.md) adds
+VALUES query bodies and PostgreSQL 16 anonymous derived sources to independent
+validity and renderer preservation. Fifty authored queries and fifty unchanged
+source queries pass their finite gates; all fifty sources have complete
+certificates with 65 ordered output columns. The sources' 54 internal VALUES
+body descriptors are preregistered but not separately certified. The
+[industrial replay](docs/corpus/values-queries-v0.36/README.md) remains at
+257 of 276 accepted statements. All 56 local integration gates pass, along
+with 1,385 Python tests and 89 offline fixture/provenance checks from a clean
+export. Full PostgreSQL release obligations remain open.
+
 The [v0.35 quantified-query increment](docs/quantified-subquery-contract-v0.35.md)
 adds independent scalar and flat-row `ANY`/`SOME`/`ALL` validity and renderer
 preservation. It includes fifty authored queries per class and eighteen
-operator-direction controls. Eighty of 84 unchanged sources receive full
-certificates; all 84 receive rendering checks. The authentic row population
-has an explicit sixteen-query shortage pending VALUES support.
+operator-direction controls. With v0.36 VALUES support, all seventeen previously
+deferred inputs activate unchanged: the authentic population now has 101
+queries, fifty scalar and 51 row. Ninety-seven receive complete certificates
+with 110 ordered columns; all 101 receive rendering checks. This closes the
+v0.35 authentic row-example shortage.
 
 The [v0.34 row-IN increment](docs/row-in-subquery-contract-v0.34.md) adds
 independent validity and renderer preservation for flat row-valued
@@ -535,7 +548,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses `sqlean-basic-select-v0.35` with its declared
+- `--assurance contract` uses `sqlean-basic-select-v0.36` with its declared
   collation snapshot.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
@@ -679,8 +692,14 @@ single-column type. Flat row-valued IN checks positive and matching arity and
 an equality overload for each output position, merging collations per field.
 Scalar and flat-row ANY/SOME/ALL queries retain exact child output types,
 requested comparison operators and per-field comparison collations.
-Independent rules for grouping/aggregates, correlation,
-LATERAL and VALUES query bodies remain future milestones.
+VALUES query bodies resolve each column across all rows, retaining default
+column labels, post-coercion modifiers, collation and conservative nullability.
+Their complete query context supports CTEs, set operands, sorting and pagination.
+Anonymous derived sources expose unqualified columns without inventing a visible
+qualifier. Outer locking of a derived source remains Unsupported, including base-table
+children.
+Independent rules for grouping/aggregates, correlation and LATERAL remain future
+milestones.
 DISTINCT ON also requires a separate rule. These forms
 remain supported by the expanded parser/checker. The contract draft remains the
 target for the general SELECT family; the first implementation does not claim

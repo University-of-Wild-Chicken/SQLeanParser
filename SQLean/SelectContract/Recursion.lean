@@ -29,6 +29,9 @@ mutual
     let localHidden := hidden || (query.ctes.map Advanced.CTE.name).contains target
     let definitions := recursiveCTEReferences target (if query.recursive then localHidden else hidden) allowed query.ctes
     let body := match _bodyEq : query.body with
+      | .values rows => (rows.attach.map fun (row : {r : List Advanced.Expr // r ∈ rows}) =>
+          have : sizeOf row.val < sizeOf rows := List.sizeOf_lt_of_mem row.property
+          recursiveExprsReferences target localHidden row.val).foldl RecursiveReferences.append ⟨0, true⟩
       | .select select => recursiveSelectReferences target localHidden allowed select
       | .set op all left right =>
         let leftAllowed := allowed && !(op == .except && all) && !(op == .intersect && all)
@@ -57,6 +60,7 @@ mutual
     match source with
     | .table name _ _ schema =>
       if !hidden && schema.isNone && name == target then ⟨1, allowed⟩ else ⟨0, true⟩
+    | .derivedAnonymous query _ => recursiveReferences target hidden allowed query
     | .derived query _ _ _ => recursiveReferences target hidden allowed query
     | .join kind left right condition =>
       (recursiveSourceReferences target hidden (allowed && !(kind == .right || kind == .full)) left).append
@@ -252,6 +256,9 @@ mutual
     let visible := query.ctes.map Advanced.CTE.name ++ locals
     uniformDefaultCTEs catalog env target (if query.recursive then visible else locals) query.ctes &&
     (match _bodyEq : query.body with
+      | .values rows => (rows.attach.map fun (row : {r : List Advanced.Expr // r ∈ rows}) =>
+          have : sizeOf row.val < sizeOf rows := List.sizeOf_lt_of_mem row.property
+          uniformDefaultExprs row.val).all id
       | .select select =>
         (select.items.all fun item => match item with | .all .. => true | .expression expr _ => uniformDefaultExpr expr) &&
         (match _sourceEq : select.source with | none => true | some source => uniformDefaultSource catalog env target visible source) &&
@@ -267,6 +274,7 @@ mutual
       (locals : List Name) (source : Advanced.From) : Bool :=
     match source with
     | .table name _ _ schema => uniformDefaultRelation catalog env target locals name schema
+    | .derivedAnonymous query _ => uniformDefaultQuery catalog env target locals query
     | .derived query _ _ _ => uniformDefaultQuery catalog env target locals query
     | .join _ left right condition =>
       uniformDefaultSource catalog env target locals left && uniformDefaultSource catalog env target locals right &&

@@ -222,6 +222,7 @@ def check_specification_independence(root: Path) -> None:
             "SQLean.SelectContract.ScalarSignatures", "SQLean.SelectContract.Recursion",
             "SQLean.SelectContract.ExpressionSpec", "SQLean.SelectContract.Collation",
             "SQLean.SelectContract.CollationApplications", "SQLean.SelectContract.CollationRules",
+            "SQLean.SelectContract.Values",
             "SQLean.CollationSyntax", "SQLean.CatalogSyntax",
             "SQLean.AdvancedSyntax", "SQLean.SyntaxBase", "Std",
         }

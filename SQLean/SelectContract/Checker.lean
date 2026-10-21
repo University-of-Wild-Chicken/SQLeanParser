@@ -1,4 +1,4 @@
-import SQLean.SelectContract.CollationChecker
+import SQLean.SelectContract.ValuesChecker
 
 namespace SQLean.SelectContract
 open Advanced
@@ -359,7 +359,7 @@ def checkLocking (scope : Scope) (distinct : Bool)
   | clause :: clauses => do
     if ordinary : distinct = false then
       let selected := if clause.targets.isEmpty then scope.relations else
-        clause.targets.filterMap (fun target => scope.relations.find? (fun relation => relation.name == target))
+        clause.targets.filterMap (fun target => scope.relations.find? (fun relation => relation.visible && relation.name == target))
       if !clause.targets.isEmpty && selected.any (fun relation => relation.origin == .cte) then
         throw (invalid "locking_cte" "An explicit OF target cannot name a WITH query")
       if selected.any (fun relation => relation.origin == .derived) then
@@ -404,6 +404,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
 private def checkLockingShape (fuel : Nat) (query : Advanced.Query) : Except Failure Unit := do
   if query.locking.isEmpty then pure () else
   match query.body with
+  | .values _ => .error (invalid "locking_values" "Row locking cannot apply to a VALUES result")
   | .set .. => .error (invalid "locking_set_operation" "Row locking cannot apply to a set-operation result")
   | .select select =>
     if select.distinct || !select.distinctOn.isEmpty then
@@ -518,6 +519,11 @@ mutual
                   else .error (invalid "cte_reference_aliases" "A CTE reference column alias list requires a relation alias")
                 else .error (invalid "cte_reference_aliases" "CTE reference aliases cannot exceed its width or contain empty names")
         else .error (invalid "empty_alias" "A relation alias must be nonempty")
+    | some (.derivedAnonymous query lateral) => do
+        if nonLateral : lateral = false then
+          let child ← checkQueryCore fuel profile catalog params env query
+          .ok ⟨Scope.ofAnonymousOutput child.output, child.uses, .derivedAnonymous child.valid nonLateral⟩
+        else .error (unsupported "lateral_source" "Independent correlated LATERAL source rules are not implemented yet")
     | some (.derived query alias columns lateral) => do
         if nonLateral : lateral = false then
           if aliasValid : alias ≠ "" then
@@ -608,6 +614,29 @@ mutual
             let checkSubquery : SubqueryChecker (QueryValid profile catalog params) definitions.visible :=
               fun child => expressionSubqueryResult (checkQueryCore fuel profile catalog params definitions.visible child)
             match bodyEq : body with
+            | .values rows =>
+              if unlocked : locking = [] then
+                if shape : valuesShape rows = true then
+                  let cells ← checkValuesRows (QueryValid profile catalog params) definitions.visible
+                    checkSubquery fuel profile params rows
+                  let columns ← checkValuesColumns fuel 0 (valuesTranspose cells.cells)
+                  if nonempty : columns.val ≠ [] then
+                    let orders ← checkSetOrders fuel columns.val orderBy
+                    let checkedLimit ← checkPaginationCore (QueryValid profile catalog params) definitions.visible checkSubquery fuel profile params limit
+                    let checkedOffset ← checkPaginationCore (QueryValid profile catalog params) definitions.visible checkSubquery fuel profile params offset
+                    let uses := definitions.uses ++ cells.uses ++
+                      if offsetFirst then checkedOffset.val ++ checkedLimit.val else checkedLimit.val ++ checkedOffset.val
+                    have complete : QueryValid profile catalog params env query columns.val uses := by
+                      rw [queryEq, bodyEq, noRecursive, unlocked]
+                      exact .values namesValid definitions.valid shape cells.valid columns.property nonempty
+                        orders.property checkedLimit.property checkedOffset.property
+                    .ok ⟨⟨columns.val, uses, complete⟩, knownColumns columns.val, by
+                      dsimp only
+                      rw [queryEq, bodyEq]
+                      exact .values (by simpa only [queryEq, bodyEq] using complete)⟩
+                  else .error (invalid "values_arity" "VALUES must expose positive column arity")
+                else .error (invalid "values_arity" "VALUES requires nonempty, equally sized rows")
+              else .error (invalid "locking_values" "Row locking cannot apply to a VALUES result")
             | .set op all left right =>
               if unlocked : locking = [] then
                 if leftUnlocked : left.locking = [] then
@@ -733,6 +762,7 @@ mutual
                 if noOffset : offset = none then
                   if noLocks : locking = [] then
                     match bodyEq : body with
+                    | .values _ => .error (invalid "recursive_shape" "A recursive definition must have root UNION or UNION ALL")
                     | .select _ => .error (invalid "recursive_shape" "A recursive definition must have root UNION or UNION ALL")
                     | .set op all left right =>
                       if unionOp : op = .union then

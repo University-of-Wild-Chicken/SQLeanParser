@@ -143,6 +143,7 @@ mutual
   def translateSource (source : Advanced.From) : Advanced.From :=
     match source with
     | .table name alias columns schema => .table name alias columns schema
+    | .derivedAnonymous query lateral => .derivedAnonymous (translateParameters query) lateral
     | .derived query alias columns lateral => .derived (translateParameters query) alias columns lateral
     | .join kind left right condition =>
         .join kind (translateSource left) (translateSource right) (translateJoinCondition condition)
@@ -168,6 +169,11 @@ mutual
 
   def translateQueryBody (body : Advanced.QueryBody) : Advanced.QueryBody :=
     match body with
+    | .values rows => .values (rows.attach.map fun (row : {r : List Advanced.Expr // r ∈ rows}) =>
+        have : sizeOf row.val < sizeOf rows := List.sizeOf_lt_of_mem row.property
+        row.val.attach.map fun (expr : {e : Advanced.Expr // e ∈ row.val}) =>
+          have : sizeOf expr.val < sizeOf row.val := List.sizeOf_lt_of_mem expr.property
+          translateExpr expr.val)
     | .select select => .select (translateSelect select)
     | .set op all left right => .set op all (translateParameters left) (translateParameters right)
   termination_by sizeOf body
@@ -197,6 +203,22 @@ mutual
   termination_by sizeOf cte
   decreasing_by all_goals cases cte; simp_all; omega
 end
+
+/-- A structural normalization for nested attached row maps. -/
+theorem map_attached_rows (rows : List (List α)) (f : α → β) (g : List β → γ) :
+    rows.attach.map (fun row => g (row.val.attach.map (fun expr => f expr.val))) =
+      rows.map (fun row => g (row.map f)) := by
+  calc
+    _ = rows.attach.map (fun row => g (row.val.map f)) := by
+      apply List.map_congr_left
+      intro row _
+      rw [List.attach_map_val]
+    _ = _ := List.attach_map_val (l := rows) (f := fun (row : List α) => g (row.map f))
+
+@[simp] theorem translate_values_body (rows : List (List Advanced.Expr)) :
+    translateQueryBody (.values rows) = .values (rows.map (List.map translateExpr)) := by
+  simp only [translateQueryBody]
+  exact congrArg Advanced.QueryBody.values (map_attached_rows rows translateExpr id)
 
 @[simp] theorem translateCallArgument_expression (arg : CallArgument) :
     (translateCallArgument arg).expression = translateExpr arg.expression := by

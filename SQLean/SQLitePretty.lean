@@ -163,6 +163,7 @@ mutual
     match source with
     | .table name alias columns schema => (schema.map (fun s => quoteName s ++ ".")).getD "" ++ quoteName name ++
       (alias.map (fun a => " AS " ++ quoteName a)).getD "" ++ (if columns.isEmpty then "" else nameList columns)
+    | .derivedAnonymous query lateral => (if lateral then "LATERAL " else "") ++ paren (querySql query)
     | .derived query alias columns lateral => (if lateral then "LATERAL " else "") ++
       paren (querySql query) ++ " AS " ++ quoteName alias ++ (if columns.isEmpty then "" else nameList columns)
     | .join kind left right condition => paren (sourceSql left ++ " " ++
@@ -201,6 +202,11 @@ mutual
         quoteName cte.val.name ++ (if cte.val.columns.isEmpty then "" else nameList cte.val.columns) ++
           " AS " ++ paren (querySql cte.val.query)) ++ " ") ++
     (match _h : query.body with
+     | .values rows => "VALUES " ++ comma (rows.attach.map fun (row : {r : List Advanced.Expr // r ∈ rows}) =>
+         have : sizeOf row.val < sizeOf rows := List.sizeOf_lt_of_mem row.property
+         paren (comma (row.val.attach.map fun (expr : {e : Advanced.Expr // e ∈ row.val}) =>
+           have : sizeOf expr.val < sizeOf row.val := List.sizeOf_lt_of_mem expr.property
+           exprSql expr.val)))
      | .select select => selectSql select
      | .set op all left right => querySql left ++ " " ++ setSql op ++
          (if all then " ALL " else " ") ++ querySql right) ++

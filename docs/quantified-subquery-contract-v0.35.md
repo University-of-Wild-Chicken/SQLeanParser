@@ -43,14 +43,22 @@ NULL left operand in these observations; static validity does not establish
 runtime success for arbitrary queries.
 
 The [authentic registry](../fixtures/quantified_subqueries/CONCRETE_SOURCES.md)
-currently retains 84 unchanged inputs: fifty scalar and 34 row queries.
-Eighty preregistered inputs, with 93 ordered output columns, receive complete
+at the v0.35 checkpoint retained 84 unchanged inputs: fifty scalar and 34 row queries.
+Eighty preregistered inputs, with 93 ordered output columns, received complete
 certificates under closed or retained written catalog declarations. All 84
-receive checked identity/PostgreSQL rendering. There is an explicit shortage
-of sixteen authentic row examples. Seventeen additional unchanged inputs are
-retained separately: they require VALUES query bodies, including anonymous
-derived sources. They are not counted as covered by this increment and are
-never rewritten into an easier query. Source SQL and setup DDL are never run.
+received checked identity/PostgreSQL rendering. That checkpoint had an explicit
+shortage of sixteen authentic row examples. Seventeen additional unchanged
+inputs were retained separately: they required VALUES query bodies, including
+anonymous derived sources. They were not counted as covered by v0.35 or rewritten
+into an easier query. Source SQL and setup DDL are never run.
+
+The [v0.36 VALUES increment](values-query-contract-v0.36.md) subsequently closes
+this source shortage. All seventeen retained inputs activate unchanged after
+VALUES and anonymous-derived static/rendering gates pass. The active population
+is now 101 queries, fifty scalar and 51 row, with 97 complete certificates and
+110 ordered output columns. All 101 receive checked rendering. The historical
+17-input snapshot remains in `deferred_values_v0.35.jsonl`; these later results
+do not rewrite the v0.35 checkpoint counts above or its audit artifacts.
 
 The isolated and main builds pass with warnings treated as errors. The full
 Lean executable includes 72 quantified-query constructor, scope and transport

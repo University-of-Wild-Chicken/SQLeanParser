@@ -101,6 +101,7 @@ jobs:
           python3 scripts/extract_subquery_corpus.py --check
           python3 scripts/extract_row_in_subquery_corpus.py --check
           python3 scripts/extract_quantified_subquery_corpus.py --check
+          python3 scripts/extract_values_query_corpus.py --check
           python3 scripts/generate_collation_examples.py --check
           python3 scripts/extract_statement_corpus.py --check
 
@@ -271,6 +272,12 @@ jobs:
 
       - name: Verify scalar and row ANY, SOME and ALL subquery contracts
         run: python3 scripts/check_quantified_subqueries_cli.py --local-bin /usr/lib/postgresql/16/bin --source-registry
+
+      - name: Verify VALUES query contracts and native stage observations
+        run: python3 scripts/check_values_queries_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Verify unchanged VALUES source contracts without execution
+        run: python3 scripts/check_values_sources_cli.py
 
       - name: Recheck Astra signed-integer counterexamples
         run: python3 scripts/check_signed_literals_cli.py --local-bin /usr/lib/postgresql/16/bin

@@ -1,0 +1,195 @@
+[
+  {
+    "id": "missing-rows",
+    "source_kind": "synthetic",
+    "sql": "VALUES",
+    "status": "invalid",
+    "diagnostic": "input.parse",
+    "prepare": "42601",
+    "plan": null,
+    "execute": null,
+    "output_columns": null
+  },
+  {
+    "id": "empty-row",
+    "source_kind": "synthetic",
+    "sql": "VALUES ()",
+    "status": "invalid",
+    "diagnostic": "input.parse",
+    "prepare": "42601",
+    "plan": null,
+    "execute": null,
+    "output_columns": null
+  },
+  {
+    "id": "mismatched-arity",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1),(2,3)",
+    "status": "invalid",
+    "diagnostic": "values_arity",
+    "prepare": "42601",
+    "plan": null,
+    "execute": null,
+    "output_columns": null
+  },
+  {
+    "id": "incompatible-types",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1),('x'::TEXT)",
+    "status": "invalid",
+    "diagnostic": "values_common_type",
+    "prepare": "42804",
+    "plan": null,
+    "execute": null,
+    "output_columns": null
+  },
+  {
+    "id": "boolean-integer",
+    "source_kind": "synthetic",
+    "sql": "VALUES (TRUE),(1)",
+    "status": "invalid",
+    "diagnostic": "values_common_type",
+    "prepare": "42804",
+    "plan": null,
+    "execute": null,
+    "output_columns": null
+  },
+  {
+    "id": "operator-signature",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1+TRUE)",
+    "status": "invalid",
+    "diagnostic": "operator_signature",
+    "prepare": "42883",
+    "plan": null,
+    "execute": null,
+    "output_columns": null
+  },
+  {
+    "id": "explicit-collation-conflict",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('x' COLLATE \"C\"),('y' COLLATE \"POSIX\")",
+    "status": "invalid",
+    "diagnostic": "collation_conflict",
+    "prepare": "42P21",
+    "plan": null,
+    "execute": null,
+    "output_columns": null
+  },
+  {
+    "id": "values-boundary-finalizes-unknown",
+    "source_kind": "synthetic",
+    "sql": "VALUES (NULL),(NULL) UNION SELECT 1",
+    "status": "invalid",
+    "diagnostic": "set_common_type",
+    "prepare": "42804",
+    "plan": null,
+    "execute": null,
+    "output_columns": null
+  },
+  {
+    "id": "limit-negative",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1) LIMIT -1",
+    "status": "valid",
+    "diagnostic": null,
+    "prepare": "00000",
+    "plan": "00000",
+    "execute": "2201W",
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ]
+  },
+  {
+    "id": "offset-negative",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1) OFFSET -1",
+    "status": "valid",
+    "diagnostic": null,
+    "prepare": "00000",
+    "plan": "00000",
+    "execute": "2201X",
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ]
+  },
+  {
+    "id": "division-runtime",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1/0)",
+    "status": "valid",
+    "diagnostic": null,
+    "prepare": "00000",
+    "plan": "22012",
+    "execute": "22012",
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ]
+  },
+  {
+    "id": "literal-conversion",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('bad'::INTEGER)",
+    "status": "valid",
+    "diagnostic": null,
+    "prepare": "22P02",
+    "plan": null,
+    "execute": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ]
+  },
+  {
+    "id": "scalar-cardinality",
+    "source_kind": "synthetic",
+    "sql": "SELECT (VALUES (1),(2)) AS v",
+    "status": "valid",
+    "diagnostic": null,
+    "prepare": "00000",
+    "plan": "00000",
+    "execute": "21000",
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ]
+  }
+]

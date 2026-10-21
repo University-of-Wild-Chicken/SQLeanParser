@@ -1,4 +1,4 @@
-import SQLean.RenderContract.ExpressionCollationPreservation
+import SQLean.RenderContract.ValuesPreservation
 import SQLean.RenderContract.LabelPreservation
 import SQLean.RenderContract.RecursionPreservation
 import SQLean.SelectContract.Spec
@@ -110,6 +110,7 @@ notation, including for sources outside the independent validity fragment. -/
     fromRelations (translateSource source) = fromRelations source := by
   cases source with
   | table name alias columns schema => simp only [translateSource, fromRelations]
+  | derivedAnonymous query lateral => simp only [translateSource, fromRelations]
   | derived query alias columns lateral => simp only [translateSource, fromRelations]
   | join kind left right condition =>
       simp only [translateSource, fromRelations,
@@ -125,6 +126,7 @@ decreasing_by all_goals (simp_all <;> omega)
     fromDerivedNames (translateSource source) = fromDerivedNames source := by
   cases source with
   | table name alias columns schema => simp only [translateSource, fromDerivedNames]
+  | derivedAnonymous query lateral => simp only [translateSource, fromDerivedNames]
   | derived query alias columns lateral => simp only [translateSource, fromDerivedNames]
   | join kind left right condition =>
       simp only [translateSource, fromDerivedNames,
@@ -476,6 +478,9 @@ mutual
           SourceValid.natural (source_valid_translated leftValid) (source_valid_translated rightValid)
             aliases
             kindValid unique keysValid
+    | derivedAnonymous queryValid nonLateral =>
+        simpa only [Option.map_some, translateSource] using
+          SourceValid.derivedAnonymous (query_valid_translated queryValid) nonLateral
     | derived queryValid aliasValid columnsValid nonLateral =>
         simpa only [Option.map_some, translateSource] using
           SourceValid.derived (query_valid_translated queryValid) aliasValid columnsValid nonLateral
@@ -526,6 +531,24 @@ mutual
         · simp only [translateSelect]
           split <;> simp_all
         · simp only [translateSelect, List.attach_map_val, noDistinctOn, List.map_nil]
+    | @values ctes env visible cteUses rows cells rowUses output orderBy limit limitUses offset offsetUses offsetFirst
+        names definitions shape cellsValid columns nonempty orders limitValid offsetValid =>
+      cases offsetFirst <;>
+        simp only [translateParameters, translate_values_body, List.attach_map_val,
+          Bool.false_eq_true, ↓reduceIte, List.map_append]
+      all_goals
+        apply QueryValid.values (cells := cells)
+        · simpa [CTENamesValid, List.map_map, Function.comp_def, translateCTE] using names
+        · exact ctes_valid_translated definitions
+        · simpa only [values_shape_translated] using shape
+        · exact values_rows_valid_translated_core preserved cellsValid
+        · exact columns
+        · exact nonempty
+        · exact set_orders_valid_translated orders
+        · have translated := pagination_valid_translated_core preserved limitValid
+          split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
+        · have translated := pagination_valid_translated_core preserved offsetValid
+          split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
     | @set ctes env visible cteUses left leftInputs leftUses right rightInputs rightUses op all output
         orderBy limit limitUses offset offsetUses offsetFirst names definitions leftValid rightValid
         leftUnlocked rightUnlocked columns nonempty orders limitValid offsetValid =>
@@ -610,6 +633,10 @@ mutual
           subst_vars
           rfl
         · simp only [List.attach_map_val, noDistinctOn, List.map_nil]
+    | values complete =>
+      have translated := query_valid_translated complete
+      simp only [translateParameters, translateQueryBody, List.attach_map_val] at translated ⊢
+      exact SetOperandValid.values translated
     | set complete =>
       have translated := query_valid_translated complete
       simp only [translateParameters, translateQueryBody, List.attach_map_val] at translated ⊢

@@ -14,7 +14,10 @@ structure Profile where
   collations : CollationEnv := .builtin
   deriving Repr, BEq, DecidableEq, Inhabited
 
-def Profile.basicV35 : Profile := {}
+def Profile.basicV36 : Profile := {}
+
+/-- Compatibility spelling for the preceding quantified-query profile. -/
+abbrev Profile.basicV35 : Profile := .basicV36
 
 /-- Compatibility spelling for the preceding row-IN query profile. -/
 abbrev Profile.basicV34 : Profile := .basicV35
@@ -28,7 +31,7 @@ abbrev Profile.basicV32 : Profile := .basicV33
 def Profile.withCollations (profile : Profile) (collations : CollationEnv) : Profile :=
   {profile with collations}
 
-def Profile.name (_profile : Profile) : String := "sqlean-basic-select-v0.35"
+def Profile.name (_profile : Profile) : String := "sqlean-basic-select-v0.36"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes
@@ -187,6 +190,8 @@ structure RelationNamespace where
   aliased : Bool
   columns : List OutputColumn
   nullable : Bool := false
+  /-- Anonymous derived sources retain lock provenance without a visible name. -/
+  visible : Bool := true
   deriving Repr, BEq, DecidableEq, Inhabited
 
 structure Scope where
@@ -198,13 +203,19 @@ def Scope.empty : Scope := ⟨[], []⟩
 
 def Scope.ofTable (identity : Advanced.RelationIdentity) (alias : Option Name)
     (output : List OutputColumn) : Scope :=
-  ⟨[⟨alias.getD identity.name, .base identity, alias.isSome, output, false⟩], output⟩
+  ⟨[⟨alias.getD identity.name, .base identity, alias.isSome, output, false, true⟩], output⟩
+
+/-- PostgreSQL 16 anonymous derived sources expose their columns to unqualified
+lookup and star expansion. A non-visible derived marker retains the row-lock
+propagation boundary without creating a qualified namespace or alias. -/
+def Scope.ofAnonymousOutput (output : List OutputColumn) : Scope :=
+  ⟨[⟨"", .derived, true, output, false, false⟩], output⟩
 
 def Scope.ofOutput (qualifier : Name) (output : List OutputColumn) : Scope :=
-  ⟨[⟨qualifier, .derived, true, output, false⟩], output⟩
+  ⟨[⟨qualifier, .derived, true, output, false, true⟩], output⟩
 
 def Scope.ofCTE (name : Name) (alias : Option Name) (output : List OutputColumn) : Scope :=
-  ⟨[⟨alias.getD name, .cte, alias.isSome, output, false⟩], output⟩
+  ⟨[⟨alias.getD name, .cte, alias.isSome, output, false, true⟩], output⟩
 
 def Scope.append (left right : Scope) : Scope :=
   ⟨left.relations ++ right.relations, left.output ++ right.output⟩
@@ -213,7 +224,7 @@ instance : Append Scope := ⟨Scope.append⟩
 
 def RelationNamespace.matches (relation : RelationNamespace) (name : Name)
     (schema : Option Name := none) : Bool :=
-  match schema with
+  relation.visible && match schema with
   | none => relation.name == name
   | some schema => !relation.aliased && relation.origin.base?.any (fun identity =>
       identity.schema == some schema && identity.name == name)

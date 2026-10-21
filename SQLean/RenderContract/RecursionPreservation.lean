@@ -40,6 +40,27 @@ mutual
       rw [translateParameters]
       simp only [List.attach_map_val]
       cases body with
+      | values rows =>
+        have selected :
+            rows.map (fun row => recursiveExprsReferences target
+              (hidden || (ctes.map Advanced.CTE.name).contains target) (row.map translateExpr)) =
+            rows.map (recursiveExprsReferences target
+              (hidden || (ctes.map Advanced.CTE.name).contains target)) :=
+          List.map_congr_left fun row member =>
+            have : sizeOf row < sizeOf rows := List.sizeOf_lt_of_mem member
+            recursive_exprs_references_translated target _ row
+        rw [translate_values_body]
+        conv => lhs; rw [recursiveReferences.eq_def]
+        conv => rhs; rw [recursiveReferences.eq_def]
+        cases limit <;> cases offset <;>
+          simpa only [List.attach_map_val, List.map_map, Function.comp_def, translateCTE,
+            Option.map_none, Option.map_some] using
+            recursive_append_congr
+              (recursive_append_congr
+                (recursive_append_congr
+                  (recursive_append_congr defs
+                    (congrArg (fun inputs => inputs.foldl RecursiveReferences.append ⟨0, true⟩) selected))
+                  ordering) limiting) offsetting
       | select select =>
         have selected := recursive_select_references_translated target
           (hidden || (ctes.map Advanced.CTE.name).contains target) allowed select
@@ -114,6 +135,9 @@ mutual
         recursiveSourceReferences target hidden allowed source := by
     cases source with
     | table name alias columns schema => simp only [translateSource]
+    | derivedAnonymous query lateral =>
+      simp only [translateSource, recursiveSourceReferences,
+        recursive_references_translated target hidden allowed query]
     | derived query alias columns lateral =>
       simp only [translateSource, recursiveSourceReferences,
         recursive_references_translated target hidden allowed query]
@@ -553,6 +577,15 @@ mutual
       have definitions := uniform_default_ctes_translated catalog env target
         (if recursive then ctes.map Advanced.CTE.name ++ locals else locals) ctes
       cases body with
+      | values rows =>
+        cases limit <;> cases offset <;> rw [translateParameters] <;>
+          simp only [translate_values_body, List.attach_map_val]
+        all_goals conv => lhs; rw [uniformDefaultQuery.eq_def]
+        all_goals conv => rhs; rw [uniformDefaultQuery.eq_def]
+        all_goals simp only [List.attach_map_val]
+        all_goals simp only [recursive_cte_names_translated, definitions, List.all_map,
+          Function.comp_def, uniform_default_exprs_translated, uniform_default_order_translated,
+          uniform_default_expr_translated, Option.all]
       | select select =>
         cases select with
         | mk items source whereClause groupBy having distinct distinctOn =>
@@ -596,6 +629,8 @@ mutual
         uniformDefaultSource catalog env target locals source := by
     cases source with
     | table name alias columns schema => simp only [translateSource]
+    | derivedAnonymous query lateral =>
+      simp only [translateSource, uniformDefaultSource, uniform_default_query_translated catalog env target locals query]
     | derived query alias columns lateral =>
       simp only [translateSource, uniformDefaultSource, uniform_default_query_translated catalog env target locals query]
     | join kind left right condition =>

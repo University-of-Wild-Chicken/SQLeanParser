@@ -149,13 +149,26 @@ class ReportTests(unittest.TestCase):
 
 
 class AuthoredSubqueryInputTests(unittest.TestCase):
+    def test_values_populations_preserve_source_bytes_and_only_adapt_authored_parameters(self):
+        authored = cli.read_cases(cli.ROOT / "fixtures/values_queries/synthetic.json")
+        source = cli.read_cases(cli.ROOT / "fixtures/values_queries/concrete.jsonl")
+        self.assertEqual((len(authored), len(source)), (50, 50))
+        adapted = [row for row in authored if "grammar_input_transformations" in row]
+        self.assertEqual(len(adapted), 1)
+        self.assertEqual(adapted[0]["grammar_original_sql"], "VALUES (?,?),(?,?);")
+        self.assertEqual(adapted[0]["sql"], "VALUES ($1,$2),($3,$4);")
+        self.assertEqual(Counter(row["query_class"] for row in source),
+                         {"standalone-values": 7, "select-containing-values": 43})
+        self.assertTrue(all(row["sql"] == row["raw_sql"] and row["transformations"] == []
+                            and "grammar_input_transformations" not in row for row in source))
+
     def test_quantified_query_populations_keep_only_authored_adapters(self):
         authored = [row for name in ("synthetic.json", "row_synthetic.json", "operator_direction.json")
                     for row in cli.read_cases(cli.ROOT / "fixtures/quantified_subqueries" / name)]
         originals = cli.read_cases(cli.ROOT / "fixtures/quantified_subqueries/concrete.jsonl")
-        self.assertEqual((len(authored), len(originals)), (118, 84))
+        self.assertEqual((len(authored), len(originals)), (118, 101))
         self.assertEqual(sum("grammar_input_transformations" in row for row in authored), 2)
-        self.assertEqual(Counter(row["query_class"] for row in originals), {"scalar":50,"row":34})
+        self.assertEqual(Counter(row["query_class"] for row in originals), {"scalar":50,"row":51})
         self.assertTrue(all(row["sql"] == row["raw_sql"] and row["transformations"] == []
                             and "grammar_input_transformations" not in row for row in originals))
 

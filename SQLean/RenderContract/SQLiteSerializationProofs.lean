@@ -199,6 +199,10 @@ mutual
       Advanced.SQLite.sourceSql (translateSource source) = Advanced.SQLite.sourceSql source := by
     cases source with
     | table name alias columns schema => simp only [translateSource, Advanced.SQLite.sourceSql.eq_def]
+    | derivedAnonymous query lateral =>
+      rw [translateSource, Advanced.SQLite.sourceSql.eq_def]
+      conv => rhs; rw [Advanced.SQLite.sourceSql.eq_def]
+      simp only [querySql_translated query]
     | derived query alias columns lateral =>
       rw [translateSource, Advanced.SQLite.sourceSql.eq_def]
       conv => rhs; rw [Advanced.SQLite.sourceSql.eq_def]
@@ -302,6 +306,25 @@ mutual
           have : sizeOf cte.val.query < sizeOf cte.val := by cases cte.val; simp; omega
           simp only [querySql_translated cte.val.query]
       · cases body with
+        | values rows =>
+          rw [translate_values_body]
+          change ("VALUES " ++ String.intercalate ", "
+            ((rows.map (List.map translateExpr)).attach.map (fun row =>
+              "(" ++ String.intercalate ", " (row.val.attach.map (fun expr => SQLite.exprSql expr.val)) ++ ")"))) =
+            ("VALUES " ++ String.intercalate ", " (rows.attach.map (fun row =>
+              "(" ++ String.intercalate ", " (row.val.attach.map (fun expr => SQLite.exprSql expr.val)) ++ ")")))
+          rw [map_attached_rows _ (SQLite.exprSql) (fun items => "(" ++ String.intercalate ", " items ++ ")")]
+          rw [map_attached_rows _ (SQLite.exprSql) (fun items => "(" ++ String.intercalate ", " items ++ ")")]
+          simp only [List.map_map, Function.comp_def]
+          congr 2
+          apply List.map_congr_left
+          intro row member
+          have : sizeOf row < sizeOf rows := List.sizeOf_lt_of_mem member
+          congr 3
+          apply List.map_congr_left
+          intro expr member
+          have : sizeOf expr < sizeOf row := List.sizeOf_lt_of_mem member
+          exact exprSql_translated expr
         | select select =>
           rw [translateQueryBody]
           exact selectSql_translated select

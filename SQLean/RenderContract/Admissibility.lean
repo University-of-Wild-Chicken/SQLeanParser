@@ -255,6 +255,7 @@ mutual
         if alias.isNone && !columns.isEmpty then
           invalid "representation.column-aliases" "table column aliases require a relation alias"
         else leaf
+    | .derivedAnonymous query _ => combine [inspectQuery query]
     | .derived query alias columns _ =>
         checkName alias; checkNames columns; combine [inspectQuery query]
     | .join kind left right condition =>
@@ -308,6 +309,14 @@ mutual
              checkNames cte.val.columns
              inspectQuery cte.val.query) ++
         [match _h : query.body with
+         | .values rows => do
+             if rows.isEmpty || rows.any List.isEmpty then
+               invalid "representation.values" "VALUES requires positive rows and columns"
+             else combine (rows.attach.map fun (row : {r : List Advanced.Expr // r ∈ rows}) =>
+               have : sizeOf row.val < sizeOf rows := List.sizeOf_lt_of_mem row.property
+               combine (row.val.attach.map fun (expr : {e : Advanced.Expr // e ∈ row.val}) =>
+                 have : sizeOf expr.val < sizeOf row.val := List.sizeOf_lt_of_mem expr.property
+                 inspectExpr expr.val))
          | .select select => inspectSelect select
          | .set _ _ left right => combine [inspectQuery left, inspectQuery right]] ++
         (query.orderBy.attach.map fun (order : {o : Advanced.OrderBy // o ∈ query.orderBy}) =>

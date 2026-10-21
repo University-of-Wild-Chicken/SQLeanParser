@@ -1036,5 +1036,209 @@
         "collation": null
       }
     ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1638",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1725",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1892",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1971",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2140",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2220",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2390",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2470",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2871",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3793",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3880",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:183",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:271",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:359",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:525",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:618",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:769",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
   }
 ]

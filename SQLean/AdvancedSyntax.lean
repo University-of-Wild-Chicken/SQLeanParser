@@ -244,6 +244,7 @@ mutual
   inductive From where
     | table (name : Name) (alias : Option Name := none) (columns : List Name := [])
         (schema : Option Name := none)
+    | derivedAnonymous (query : Query) (lateral : Bool := false)
     | derived (query : Query) (alias : Name) (columns : List Name := []) (lateral : Bool := false)
     | join (kind : JoinKind) (left right : From) (condition : JoinCondition)
     deriving Repr, BEq, Inhabited
@@ -259,6 +260,7 @@ mutual
     deriving Repr, BEq, Inhabited
 
   inductive QueryBody where
+    | values (rows : List (List Expr))
     | select (select : Select)
     | set (op : SetOp) (all : Bool) (left right : Query)
     deriving Repr, BEq, Inhabited

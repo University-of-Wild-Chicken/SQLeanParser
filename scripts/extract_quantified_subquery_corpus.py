@@ -17,8 +17,8 @@ from extract_subquery_corpus import declaration_table
 
 ROOT = Path(__file__).resolve().parents[1]
 DIRECTORY = ROOT / 'fixtures/quantified_subqueries'
-MANIFEST_SHA256 = '344a22eb5ced8b9de448297c449cc24c35dc6b1021d645a8f15103eaf2a3748c'
-SOURCE_REGISTRY_SHA256 = 'dd563a258ab8dd608d4e004d8b92f451e56df2a499215d8f71e6760e0f2f3055'
+MANIFEST_SHA256 = '894f6aee67ecb9dcb581adde246150160c1cd61a5c685933a0e41eaceb9c1394'
+SOURCE_REGISTRY_SHA256 = 'c9926ed86ef5b8a6380d7329f3eb0c21831323b0eee7c1f513ab14a105a86183'
 ORIGINAL_SELECTIONS_SHA256 = '1d681dc55687e84d4a5346534ffebf35fb33122fedc91437c3c76984d6cf0a99'
 ORIGINAL_REGISTRY_SHA256 = '373a558b17f343ddc67946a8df6e444c0f66d14de5d5cbed5ef3f120fec3c30f'
 
@@ -80,9 +80,11 @@ def validate_contexts(manifest, data):
 def validate_registry(manifest, registry):
     if sha256(canonical(registry).encode()) != SOURCE_REGISTRY_SHA256:
         raise ValueError('preregistered source certificate metadata changed')
-    if (len(registry) != 80 or sum(len(r['output_columns']) for r in registry) != 93
+    if (len(registry) != 97 or sum(len(r['output_columns']) for r in registry) != 110
             or sha256(canonical(registry[:47]).encode()) != ORIGINAL_REGISTRY_SHA256):
         raise ValueError('fixed certificate population changed')
+    if sha256(canonical(registry[:80]).encode()) != manifest['values_activation']['prior_registry_sha256']:
+        raise ValueError('pre-VALUES registry metadata changed')
     selected = {s['id']: s for s in manifest['selections']}
     for entry in registry:
         source = selected[entry['id']]
@@ -137,6 +139,15 @@ def reproduce(manifest, oracle=False, deferred=False):
         raise ValueError('closed quantified source manifest changed')
     if sha256(canonical(manifest['selections'][:50]).encode()) != ORIGINAL_SELECTIONS_SHA256:
         raise ValueError('original source population changed')
+    activation = manifest['values_activation']
+    archived = [json.loads(line) for line in checked_file(ROOT, activation['archive'], activation['archive_sha256']).decode().splitlines()]
+    if (activation['profile'] != 'sqlean-basic-select-v0.36' or activation['source_sql_transformed'] is not False
+            or activation['source_sql_executed'] is not False or len(archived) != 17
+            or sha256(canonical(manifest['selections'][:84]).encode()) != activation['prior_active_selections_sha256']
+            or [s['id'] for s in manifest['selections'][84:]] != activation['activated_ids']
+            or [s['id'] for s in archived] != activation['activated_ids']
+            or [s['sql_sha256'] for s in archived] != [s['sql_sha256'] for s in manifest['selections'][84:]]):
+        raise ValueError('VALUES activation changed historical source inputs')
     all_selections = manifest['selections'] + manifest['deferred_selections']
     if (len({s['id'] for s in all_selections}) != len(all_selections)
             or len({s['normalized_tokens_sha256'] for s in all_selections}) != len(all_selections)):
@@ -210,8 +221,8 @@ def main():
                 raise ValueError('saved fixtures differ from whole unchanged source extraction')
         else:
             path.write_text(text)
-    print('84 unchanged sources (50 scalar / 34 row); 16-row coverage shortage; '
-          '17 VALUES inputs deferred; 80 fixed certificate candidates / 93 columns; '
+    print('101 unchanged sources (50 scalar / 51 row); no class shortage; '
+          '17 unchanged VALUES inputs activated; 97 fixed certificate candidates / 110 columns; '
           'no source SQL or DDL executed')
 
 

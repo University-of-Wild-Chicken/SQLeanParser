@@ -255,6 +255,9 @@ mutual
                     | skip
     case table.table a0 a1 a2 a3 b0 b1 b2 b3 =>
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2 ∧ a3 = b3) (by simp only [From.table.injEq])
+    case derivedAnonymous.derivedAnonymous a0 a1 b0 b1 =>
+      letI : Decidable (a0 = b0) := exactQueryDecEq a0 b0
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [From.derivedAnonymous.injEq])
     case derived.derived a0 a1 a2 a3 b0 b1 b2 b3 =>
       letI : Decidable (a0 = b0) := exactQueryDecEq a0 b0
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2 ∧ a3 = b3) (by simp only [From.derived.injEq])
@@ -285,6 +288,9 @@ mutual
     cases a <;> cases b
     all_goals first | solve | apply isFalse; intro h; cases h
                     | skip
+    case values.values a0 b0 =>
+      letI : Decidable (a0 = b0) := exactListListExprDecEq a0 b0
+      exact decidable_of_iff (a0 = b0) (by simp only [QueryBody.values.injEq])
     case select.select a0 b0 =>
       letI : Decidable (a0 = b0) := exactSelectDecEq a0 b0
       exact decidable_of_iff (a0 = b0) (by simp only [QueryBody.select.injEq])
@@ -318,6 +324,18 @@ mutual
     case mk.mk a0 a1 a2 b0 b1 b2 =>
       letI : Decidable (a1 = b1) := exactQueryDecEq a1 b1
       exact decidable_of_iff (a0 = b0 ∧ a1 = b1 ∧ a2 = b2) (by simp only [CTE.mk.injEq])
+  termination_by sizeOf a
+  decreasing_by all_goals (simp_all <;> omega)
+
+  private def exactListListExprDecEq (a b : List (List Expr)) : Decidable (a = b) := by
+    cases a <;> cases b
+    all_goals first | solve | apply isFalse; intro h; cases h
+                    | skip
+    case nil.nil => exact isTrue rfl
+    case cons.cons a0 a1 b0 b1 =>
+      letI : Decidable (a0 = b0) := exactListExprDecEq a0 b0
+      letI : Decidable (a1 = b1) := exactListListExprDecEq a1 b1
+      exact decidable_of_iff (a0 = b0 ∧ a1 = b1) (by simp only [List.cons.injEq])
   termination_by sizeOf a
   decreasing_by all_goals (simp_all <;> omega)
 

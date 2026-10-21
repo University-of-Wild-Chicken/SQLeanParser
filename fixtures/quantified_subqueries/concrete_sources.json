@@ -1,9 +1,9 @@
 {
   "format_version": 2,
   "population": "quantified_subqueries",
-  "expected_count": 84,
+  "expected_count": 101,
   "expected_sources": {
-    "duckdb": 75,
+    "duckdb": 92,
     "materialize": 4,
     "postgres": 3,
     "calcite": 2
@@ -4243,21 +4243,7 @@
       "context_ids": [],
       "candidate_catalog_file": null,
       "assurance_tier": "rendering-only"
-    }
-  ],
-  "expected_classes": {
-    "scalar": 50,
-    "row": 34
-  },
-  "original_population": {
-    "count": 50,
-    "selections_sha256": "1d681dc55687e84d4a5346534ffebf35fb33122fedc91437c3c76984d6cf0a99",
-    "registry_count": 47,
-    "registry_sha256": "373a558b17f343ddc67946a8df6e444c0f66d14de5d5cbed5ef3f120fec3c30f"
-  },
-  "expected_registry_count": 80,
-  "expected_registry_columns": 93,
-  "deferred_selections": [
+    },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1638",
       "source": "duckdb",
@@ -4301,10 +4287,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1725",
@@ -4349,10 +4333,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1892",
@@ -4397,10 +4379,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1971",
@@ -4445,10 +4425,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2140",
@@ -4493,10 +4471,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2220",
@@ -4541,10 +4517,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2390",
@@ -4589,10 +4563,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2470",
@@ -4637,10 +4609,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2871",
@@ -4685,10 +4655,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3793",
@@ -4733,10 +4701,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3880",
@@ -4781,10 +4747,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:183",
@@ -4829,10 +4793,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:271",
@@ -4877,10 +4839,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:359",
@@ -4925,10 +4885,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:525",
@@ -4973,10 +4931,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:618",
@@ -5021,10 +4977,8 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     },
     {
       "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:769",
@@ -5069,22 +5023,65 @@
       "scope_catalog_columns": {},
       "context_ids": [],
       "candidate_catalog_file": null,
-      "assurance_tier": "rendering-only",
-      "coverage_gaps": [
-        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
-      ]
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "coverage_gaps": []
     }
   ],
+  "expected_classes": {
+    "scalar": 50,
+    "row": 51
+  },
+  "original_population": {
+    "count": 50,
+    "selections_sha256": "1d681dc55687e84d4a5346534ffebf35fb33122fedc91437c3c76984d6cf0a99",
+    "registry_count": 47,
+    "registry_sha256": "373a558b17f343ddc67946a8df6e444c0f66d14de5d5cbed5ef3f120fec3c30f"
+  },
+  "expected_registry_count": 97,
+  "expected_registry_columns": 110,
+  "deferred_selections": [],
   "required_classes": {
     "scalar": 50,
     "row": 50
   },
   "coverage_shortfall": {
     "scalar": 0,
-    "row": 16
+    "row": 0
   },
-  "expected_deferred_count": 17,
-  "expected_deferred_sources": {
-    "duckdb": 17
+  "expected_deferred_count": 0,
+  "expected_deferred_sources": {},
+  "values_activation": {
+    "profile": "sqlean-basic-select-v0.36",
+    "required_features": [
+      "values-query-body",
+      "anonymous-derived-source"
+    ],
+    "prior_manifest_sha256": "344a22eb5ced8b9de448297c449cc24c35dc6b1021d645a8f15103eaf2a3748c",
+    "prior_registry_sha256": "dd563a258ab8dd608d4e004d8b92f451e56df2a499215d8f71e6760e0f2f3055",
+    "prior_active_selections_sha256": "6b9e76d21de6f6a4747cc66743950b459da780ba775ca138af644c658add1739",
+    "archive": "fixtures/quantified_subqueries/deferred_values_v0.35.jsonl",
+    "archive_sha256": "c8e9f0b0de4bdce35ebe5022a8cd3216248a72543e29c94100b2fe10a126ebd1",
+    "activated_ids": [
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1638",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1725",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1892",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1971",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2140",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2220",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2390",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2470",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2871",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3793",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3880",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:183",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:271",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:359",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:525",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:618",
+      "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:769"
+    ],
+    "expected_output_rule": "flat-row quantified comparisons yield BOOL, conservatively nullable, without output collation; each source is closed",
+    "source_sql_transformed": false,
+    "source_sql_executed": false
   }
 }

@@ -20,11 +20,11 @@ class QuantifiedSubqueryExtractionTests(unittest.TestCase):
             rows = corpus.reproduce(self.manifest)
         saved = [json.loads(s) for s in (corpus.DIRECTORY / 'concrete.jsonl').read_text().splitlines()]
         self.assertEqual(rows, saved)
-        self.assertEqual(len(rows), 84)
-        self.assertEqual(Counter(r['query_class'] for r in rows), {'scalar': 50, 'row': 34})
-        self.assertEqual(self.manifest['coverage_shortfall'], {'scalar': 0, 'row': 16})
-        self.assertEqual(Counter(r['source'] for r in rows), {'duckdb': 75, 'materialize': 4, 'postgres': 3, 'calcite': 2})
-        self.assertEqual(Counter(q for r in rows for q in r['quantifiers']), {'ANY': 46, 'SOME': 13, 'ALL': 25})
+        self.assertEqual(len(rows), 101)
+        self.assertEqual(Counter(r['query_class'] for r in rows), {'scalar': 50, 'row': 51})
+        self.assertEqual(self.manifest['coverage_shortfall'], {'scalar': 0, 'row': 0})
+        self.assertEqual(Counter(r['source'] for r in rows), {'duckdb': 92, 'materialize': 4, 'postgres': 3, 'calcite': 2})
+        self.assertEqual(Counter(q for r in rows for q in r['quantifiers']), {'ANY': 54, 'SOME': 13, 'ALL': 34})
         self.assertEqual({q['operator'] for r in rows for q in r['quantified_queries']}, {'=', '<>', '<', '<=', '>', '>='})
         for row in rows:
             self.assertEqual(row['sql'], row['raw_sql'])
@@ -52,9 +52,9 @@ class QuantifiedSubqueryExtractionTests(unittest.TestCase):
 
     def test_fixed_static_registry_and_rendering_only_exclusions(self):
         self.assertIs(corpus.validate_registry(self.manifest, self.registry), self.registry)
-        self.assertEqual(len(self.registry), 80)
-        self.assertEqual(sum(len(r['output_columns']) for r in self.registry), 93)
-        self.assertEqual(sum(r['catalogFile'] is None for r in self.registry), 46)
+        self.assertEqual(len(self.registry), 97)
+        self.assertEqual(sum(len(r['output_columns']) for r in self.registry), 110)
+        self.assertEqual(sum(r['catalogFile'] is None for r in self.registry), 63)
         ids = {r['id'] for r in self.registry}
         excluded = [r for r in self.rows if r['id'] not in ids]
         self.assertEqual(Counter(r['source'] for r in excluded), {'postgres': 2, 'calcite': 2})
@@ -78,22 +78,28 @@ class QuantifiedSubqueryExtractionTests(unittest.TestCase):
                          corpus.ORIGINAL_REGISTRY_SHA256)
         self.assertEqual(sum(len(r['output_columns']) for r in self.registry[:47]), 49)
 
-    def test_deferred_values_never_pad_the_active_population(self):
-        deferred = corpus.reproduce(self.manifest, deferred=True)
-        saved = [json.loads(s) for s in (corpus.DIRECTORY / 'deferred_values.jsonl').read_text().splitlines()]
-        self.assertEqual(deferred, saved)
-        self.assertEqual(len(deferred), 17)
-        active_ids = {r['id'] for r in self.rows}
-        registry_ids = {r['id'] for r in self.registry}
-        for row in deferred:
-            self.assertEqual(row['query_class'], 'row')
-            self.assertIn('VALUES', row['sql'].upper())
-            self.assertTrue(row['coverage_gaps'])
-            self.assertEqual(row['validity_scope'], 'rendering-only')
-            self.assertNotIn(row['id'], active_ids | registry_ids)
-        mixed = {'quantified_queries': [{'row_left': True}, {'row_left': False}]}
-        with self.assertRaisesRegex(ValueError, 'mixed'):
-            corpus.query_class(mixed)
+    def test_values_activation_preserves_historical_inputs_without_double_counting(self):
+        self.assertEqual(corpus.reproduce(self.manifest,deferred=True),[])
+        self.assertEqual((corpus.DIRECTORY/'deferred_values.jsonl').read_text(),'')
+        activation=self.manifest['values_activation']
+        archive=[json.loads(line) for line in (corpus.ROOT/activation['archive']).read_text().splitlines()]
+        self.assertEqual(len(archive),17)
+        active={row['id']:row for row in self.rows};registry={row['id']:row for row in self.registry}
+        self.assertEqual([row['id'] for row in archive],activation['activated_ids'])
+        for row in archive:
+            self.assertEqual(row['query_class'],'row')
+            self.assertTrue(row['coverage_gaps'])  # Frozen v0.35 historical boundary.
+            self.assertEqual(row['sql'],active[row['id']]['sql'])
+            self.assertEqual(row['sql_sha256'],active[row['id']]['sql_sha256'])
+            self.assertEqual(active[row['id']]['coverage_gaps'],[])
+            self.assertEqual(registry[row['id']]['output_columns'],[
+                {'name':'?column?','type':'bool','nullable':True,'collation':None}])
+        self.assertEqual(corpus.sha256(corpus.canonical(self.registry[:80]).encode()),
+                         activation['prior_registry_sha256'])
+        self.assertEqual(corpus.sha256(corpus.canonical(self.manifest['selections'][:84]).encode()),
+                         activation['prior_active_selections_sha256'])
+        mixed={'quantified_queries':[{'row_left':True},{'row_left':False}]}
+        with self.assertRaisesRegex(ValueError,'mixed'):corpus.query_class(mixed)
 
     def test_registry_rejects_invented_types_labels_nullability_or_catalogs(self):
         changes = [lambda r: r.pop(), lambda r: r[0].update(catalogFile='invented.json'),

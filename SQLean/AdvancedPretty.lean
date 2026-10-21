@@ -225,6 +225,7 @@ mutual
     match source with
     | .table name alias columns schema => (schema.map (fun s => quoteName s ++ ".")).getD "" ++ quoteName name ++
       (alias.map (fun a => " AS " ++ quoteName a)).getD "" ++ (if columns.isEmpty then "" else nameList columns)
+    | .derivedAnonymous query lateral => (if lateral then "LATERAL " else "") ++ paren (querySql pg query)
     | .derived query alias columns lateral => (if lateral then "LATERAL " else "") ++
       paren (querySql pg query) ++ " AS " ++ quoteName alias ++ (if columns.isEmpty then "" else nameList columns)
     | .join kind left right condition => paren (sourceSql pg left ++ " " ++
@@ -263,6 +264,11 @@ mutual
         quoteName cte.val.name ++ (if cte.val.columns.isEmpty then "" else nameList cte.val.columns) ++
           " AS " ++ paren (querySql pg cte.val.query)) ++ " ") ++
     (match _h : query.body with
+     | .values rows => "VALUES " ++ comma (rows.attach.map fun (row : {r : List Advanced.Expr // r ∈ rows}) =>
+         have : sizeOf row.val < sizeOf rows := List.sizeOf_lt_of_mem row.property
+         paren (comma (row.val.attach.map fun (expr : {e : Advanced.Expr // e ∈ row.val}) =>
+           have : sizeOf expr.val < sizeOf row.val := List.sizeOf_lt_of_mem expr.property
+           exprSql pg expr.val)))
      | .select select => selectSql pg select
      | .set op all left right => paren (querySql pg left) ++ " " ++ setSql op ++
          (if all then " ALL " else " ") ++ paren (querySql pg right)) ++

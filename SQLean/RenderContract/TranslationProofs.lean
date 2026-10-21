@@ -196,6 +196,7 @@ mutual
       translateSource (translateSource source) = translateSource source := by
     cases source with
     | table name alias columns schema => simp only [translateSource]
+    | derivedAnonymous query lateral => simp only [translateSource, translateParameters_idempotent query]
     | derived query alias columns lateral => simp only [translateSource, translateParameters_idempotent query]
     | join kind left right condition =>
         simp only [translateSource, translateSource_idempotent left, translateSource_idempotent right,
@@ -233,6 +234,14 @@ mutual
   theorem translateQueryBody_idempotent (body : Advanced.QueryBody) :
       translateQueryBody (translateQueryBody body) = translateQueryBody body := by
     cases body with
+    | values rows =>
+        simp only [translateQueryBody, List.attach_map_val]
+        congr 1
+        exact map_twice (List.map translateExpr) rows fun row member =>
+          have : sizeOf row < sizeOf rows := List.sizeOf_lt_of_mem member
+          map_twice translateExpr row fun expr member =>
+            have : sizeOf expr < sizeOf row := List.sizeOf_lt_of_mem member
+            translateExpr_idempotent expr
     | select select => simp only [translateQueryBody, translateSelect_idempotent select]
     | set op all left right => simp only [translateQueryBody, translateParameters_idempotent left, translateParameters_idempotent right]
   termination_by sizeOf body

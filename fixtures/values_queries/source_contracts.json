@@ -1,0 +1,692 @@
+[
+  {
+    "id": "values:postgres:contrib/pg_stat_statements/sql/select.sql:880",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "f",
+        "type": "numeric",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:postgres:src/test/regress/sql/collate.sql:6282",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "text",
+        "nullable": false,
+        "collation": "default"
+      },
+      {
+        "name": "b",
+        "type": "text",
+        "nullable": false,
+        "collation": "C"
+      },
+      {
+        "name": "lt",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:postgres:src/test/regress/sql/with.sql:25456",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:postgres:src/test/regress/sql/select.sql:3764",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "column2",
+        "type": "numeric",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:postgres:src/test/regress/sql/select.sql:7624",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "k",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:postgres:src/test/regress/sql/select.sql:7691",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "k",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:postgres:src/test/regress/sql/union.sql:4743",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "integer[]",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:postgres:src/test/regress/sql/union.sql:5009",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "integer[]",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:postgres:src/test/regress/sql/union.sql:5276",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "x",
+        "type": "integer[]",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/projection/test_value_list.test:219",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "column2",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/projection/test_value_list.test:299",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "column2",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/projection/test_value_list.test:411",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "column2",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "column3",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/projection/test_value_list.test:517",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "column2",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "column3",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/projection/test_value_list.test:630",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "column2",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "column3",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/projection/test_value_list.test:1243",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "date",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "column2",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/projection/test_value_list.test:1358",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "text",
+        "nullable": true,
+        "collation": "default"
+      },
+      {
+        "name": "column2",
+        "type": "text",
+        "nullable": true,
+        "collation": "default"
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/projection/test_value_list.test:1455",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "column2",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/projection/test_value_list.test:1531",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/projection/test_value_list.test:1790",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "text",
+        "nullable": true,
+        "collation": "default"
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/types/decimal/decimal_values_warning.test:1023",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "numeric",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/types/decimal/decimal_values_warning.test:1161",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "numeric(38,24)",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/types/decimal/decimal_values_warning.test:1265",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "numeric",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/types/decimal/decimal_values_warning.test:1525",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "numeric",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all_variant_extremum.test:1987",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all_variant_extremum.test:2067",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all_variant_extremum.test:2187",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1638",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1725",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1892",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1971",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2140",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2220",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2390",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2470",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2871",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3793",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3880",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:183",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:271",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:359",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:525",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:618",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:769",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:862",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:950",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:1038",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:1126",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:1222",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:1382",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "values:duckdb:test/sql/subquery/table/test_unnamed_subquery.test:234",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      },
+      {
+        "name": "column2",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  }
+]

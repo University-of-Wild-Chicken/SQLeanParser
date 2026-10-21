@@ -281,7 +281,8 @@ def read_cases(path, expected="grammar-accepted"):
                     ROOT / "fixtures/row_in_subqueries/synthetic.json",
                     ROOT / "fixtures/quantified_subqueries/synthetic.json",
                     ROOT / "fixtures/quantified_subqueries/row_synthetic.json",
-                    ROOT / "fixtures/quantified_subqueries/operator_direction.json"}:
+                    ROOT / "fixtures/quantified_subqueries/operator_direction.json",
+                    ROOT / "fixtures/values_queries/synthetic.json"}:
             row = authored_subquery_input(row)
         result.append({**row, "id": path.relative_to(ROOT).as_posix() + ":" + row["id"],
                        "expected": expected, "fixture": path.relative_to(ROOT).as_posix()})
@@ -310,6 +311,8 @@ def load_cases(include_statement_families=True):
         ROOT / "fixtures/quantified_subqueries/row_synthetic.json",
         ROOT / "fixtures/quantified_subqueries/operator_direction.json",
         ROOT / "fixtures/quantified_subqueries/concrete.jsonl",
+        ROOT / "fixtures/values_queries/synthetic.json",
+        ROOT / "fixtures/values_queries/concrete.jsonl",
         *[ROOT / "fixtures/subqueries" / (factor + "_concrete.jsonl")
           for factor in ["scalar", "exists", "in"]],
     ]

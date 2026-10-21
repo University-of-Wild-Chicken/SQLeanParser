@@ -87,8 +87,8 @@ def source_checks():
     rows=[json.loads(line) for line in (FIXTURES/'concrete.jsonl').read_text().splitlines()]
     validate_registry(manifest,registry)
     assert frozen_json(rows)==frozen_json(reproduce(manifest))
-    assert len(rows)==len({r['id'] for r in rows})==len({r['sql'] for r in rows})==84
-    assert manifest['expected_classes']=={'scalar':50,'row':34}
+    assert len(rows)==len({r['id'] for r in rows})==len({r['sql'] for r in rows})==101
+    assert manifest['expected_classes']=={'scalar':50,'row':51}
     by_id={row['id']:row for row in rows}
     for row in rows:
         assert row['source_kind']!='synthetic' and row['sql']==row['raw_sql']

@@ -340,6 +340,7 @@ mutual
       query.limit.toList.flatMap (exprTables fuel) ++
       query.offset.toList.flatMap (exprTables fuel) ++
       match query.body with
+      | .values rows => rows.flatMap (fun row => row.flatMap (exprTables fuel))
       | .set _ _ left right => queryTables fuel left ++ queryTables fuel right
       | .select select =>
         (select.source.toList.flatMap (fromTables fuel)) ++
@@ -366,6 +367,7 @@ mutual
     | 0, _ => []
     | fuel + 1, source => match source with
       | .table name _ _ schema => if schema.isNone then [name] else []
+      | .derivedAnonymous query _ => queryTables fuel query
       | .derived query _ _ _ => queryTables fuel query
       | .join _ left right condition => fromTables fuel left ++ fromTables fuel right ++
         match condition with | .on expr => exprTables fuel expr | _ => []
@@ -377,6 +379,7 @@ private def simpleRecursiveSource : Nat → From → Bool
     | .table .. => true
     | .join kind left right _ => (kind == .inner || kind == .cross) &&
         simpleRecursiveSource fuel left && simpleRecursiveSource fuel right
+    | .derivedAnonymous .. => false
     | .derived .. => false
 
 private def simpleRecursiveExpr : Nat → Expr → Bool
@@ -399,6 +402,7 @@ private def simpleRecursiveExpr : Nat → Expr → Bool
 private def recursiveStepShape (fuel : Nat) (query : Query) : Bool :=
   query.ctes.isEmpty && query.orderBy.isEmpty && query.limit.isNone && query.offset.isNone && query.locking.isEmpty &&
   match query.body with
+  | .values _ => false
   | .set .. => false
   | .select select => select.groupBy.isEmpty && select.having.isNone && !select.distinct &&
     select.distinctOn.isEmpty && select.source.all (simpleRecursiveSource fuel) &&
@@ -409,6 +413,7 @@ private def recursiveStepShape (fuel : Nat) (query : Query) : Bool :=
 private def lockingRelations : Nat → Bool → From → Except ValidationError (List (Name × Bool × Bool))
   | 0, _, _ => invalid "advanced validation depth exhausted"
   | _ + 1, nullable, .table name alias _ _ => pure [(alias.getD name, nullable, false)]
+  | _ + 1, _, .derivedAnonymous .. => invalid "anonymous derived sources require the independent query contract"
   | _ + 1, nullable, .derived _ alias _ _ => pure [(alias, nullable, true)]
   | fuel + 1, nullable, .join kind left right _ => do
     let left ← lockingRelations fuel (nullable || kind == .right || kind == .full) left
@@ -441,6 +446,7 @@ mutual
     | 0, _, _ => invalid "advanced validation depth exhausted"
     | _ + 1, names, .table name alias _ schema =>
       pure (if schema.isNone && names.contains name then [alias.getD name] else [])
+    | _ + 1, _, .derivedAnonymous .. => pure []
     | _ + 1, _, .derived .. => pure []
     | fuel + 1, names, .join _ left right _ => do
       pure ((← cteSourceNames fuel names left) ++ (← cteSourceNames fuel names right))
@@ -468,6 +474,7 @@ mutual
   private def checkCTELockSource : Nat → List Name → From → Except ValidationError Unit
     | 0, _, _ => invalid "advanced validation depth exhausted"
     | _ + 1, _, .table .. => pure ()
+    | fuel + 1, names, .derivedAnonymous query _ => checkCTELockQuery fuel names query
     | fuel + 1, names, .derived query _ _ _ => checkCTELockQuery fuel names query
     | fuel + 1, names, .join _ left right condition => do
       checkCTELockSource fuel names left
@@ -486,6 +493,7 @@ mutual
           checkCTELockQuery fuel visible cte.query
           visible := cte.name :: visible
       match query.body with
+      | .values rows => rows.forM fun row => row.forM (checkCTELockExpr fuel names)
       | .set _ _ left right => checkCTELockQuery fuel names left; checkCTELockQuery fuel names right
       | .select select =>
         let targets ← match select.source with
@@ -727,6 +735,7 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         match schema.find? (·.name == name) with
         | none => invalid s!"unknown table '{name}'"
         | some table => namedRelation (alias.getD name) table.columns aliases
+      | .derivedAnonymous _ _ => invalid "anonymous derived sources require the independent query contract"
       | .derived query alias aliases lateral =>
         let columns ← checkQueryTypes fuel schema params
           (if lateral then lateralScope :: outer else outer) query
@@ -902,6 +911,7 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         ensure (type.isNone || (finishType type).numeric)
           "pagination requires a numeric or NULL expression outside local row scope"
       match query.body with
+      | .values _ => invalid "VALUES requires the independent query contract"
       | .select select => checkSelect fuel schema params outer select query.orderBy query.locking
       | .set op all left right =>
         ensure query.locking.isEmpty "row locking is forbidden on set-operation results"
@@ -955,6 +965,7 @@ mutual
     | fuel + 1, query =>
       query.ctes.flatMap (fun c => queryParameters fuel c.query) ++
       (match query.body with
+      | .values rows => rows.flatMap (fun row => row.flatMap (expressionParameters fuel))
       | .set _ _ left right => queryParameters fuel left ++ queryParameters fuel right
       | .select select =>
         select.distinctOn.flatMap (expressionParameters fuel) ++
@@ -972,6 +983,7 @@ mutual
     | 0, _ => []
     | fuel + 1, source => match source with
       | .table .. => []
+      | .derivedAnonymous query _ => queryParameters fuel query
       | .derived query _ _ _ => queryParameters fuel query
       | .join _ left right condition => sourceParameters fuel left ++ sourceParameters fuel right ++
         match condition with | .on expr => expressionParameters fuel expr | _ => []

@@ -19,6 +19,7 @@ ALLOWED = {
     'SQLean.SelectContract.Collation',
     'SQLean.SelectContract.CollationApplications',
     'SQLean.SelectContract.CollationRules',
+    'SQLean.SelectContract.Values',
     'SQLean.CollationSyntax',
     'SQLean.CatalogSyntax',
     'SQLean.AdvancedSyntax',

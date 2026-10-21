@@ -99,7 +99,6 @@ private def rejected : List String := [
   "SELECT id IS FROM users", "SELECT id IS DISTINCT FROM 1 IS NULL FROM users",
   "SELECT id < age < 100 FROM users",
   "SELECT * FROM users;;", "SELECT * FROM users; SELECT * FROM orders",
-  "SELECT id FROM (SELECT id FROM users)",
   "SELECT id FROM (SELECT id FROM users) AS",
   "SELECT q.id FROM (SELECT id FROM users;) q",
   "SELECT q.id FROM (SELECT id FROM users; SELECT id FROM users) q",

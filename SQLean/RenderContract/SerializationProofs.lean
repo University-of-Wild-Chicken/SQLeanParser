@@ -201,6 +201,10 @@ mutual
       sourceSql pg (translateSource source) = sourceSql true source := by
     cases source with
     | table name alias columns schema => simp only [translateSource, sourceSql.eq_def]
+    | derivedAnonymous query lateral =>
+      rw [translateSource, sourceSql.eq_def]
+      conv => rhs; rw [sourceSql.eq_def]
+      simp only [querySql_translated pg query]
     | derived query alias columns lateral =>
       rw [translateSource, sourceSql.eq_def]
       conv => rhs; rw [sourceSql.eq_def]
@@ -304,6 +308,25 @@ mutual
           have : sizeOf cte.val.query < sizeOf cte.val := by cases cte.val; simp; omega
           simp only [querySql_translated pg cte.val.query]
       · cases body with
+        | values rows =>
+          rw [translate_values_body]
+          change ("VALUES " ++ String.intercalate ", "
+            ((rows.map (List.map translateExpr)).attach.map (fun row =>
+              "(" ++ String.intercalate ", " (row.val.attach.map (fun expr => exprSql pg expr.val)) ++ ")"))) =
+            ("VALUES " ++ String.intercalate ", " (rows.attach.map (fun row =>
+              "(" ++ String.intercalate ", " (row.val.attach.map (fun expr => exprSql true expr.val)) ++ ")")))
+          rw [map_attached_rows _ (exprSql pg) (fun items => "(" ++ String.intercalate ", " items ++ ")")]
+          rw [map_attached_rows _ (exprSql true) (fun items => "(" ++ String.intercalate ", " items ++ ")")]
+          simp only [List.map_map, Function.comp_def]
+          congr 2
+          apply List.map_congr_left
+          intro row member
+          have : sizeOf row < sizeOf rows := List.sizeOf_lt_of_mem member
+          congr 3
+          apply List.map_congr_left
+          intro expr member
+          have : sizeOf expr < sizeOf row := List.sizeOf_lt_of_mem member
+          exact exprSql_translated pg expr
         | select select =>
           rw [translateQueryBody]
           exact selectSql_translated pg select

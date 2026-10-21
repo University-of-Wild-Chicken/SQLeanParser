@@ -1,0 +1,1619 @@
+[
+  {
+    "id": "values-query-01-integer",
+    "factor": "values_query",
+    "shape": "integer",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-02-duplicates",
+    "factor": "values_query",
+    "shape": "duplicates",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1),(1),(2);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-03-heterogeneous-columns",
+    "factor": "values_query",
+    "shape": "heterogeneous-columns",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1,TRUE,'a'),(2,FALSE,'b');",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      },
+      {
+        "name": "column2",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "boolean",
+        "native_type": "boolean",
+        "oid": 16
+      },
+      {
+        "name": "column3",
+        "type": "text",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        true,
+        "a"
+      ],
+      [
+        2,
+        false,
+        "b"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-04-all-null",
+    "factor": "values_query",
+    "shape": "all-null",
+    "source_kind": "synthetic",
+    "sql": "VALUES (NULL),(NULL);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "text",
+        "nullable": true,
+        "collation": "default",
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ],
+      [
+        null
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-05-unknown-strings",
+    "factor": "values_query",
+    "shape": "unknown-strings",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('a'),('b');",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "text",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      }
+    ],
+    "expected_rows": [
+      [
+        "a"
+      ],
+      [
+        "b"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-06-simultaneous-null-null-int",
+    "factor": "values_query",
+    "shape": "simultaneous-null-null-int",
+    "source_kind": "synthetic",
+    "sql": "VALUES (NULL),(NULL),(1);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ],
+      [
+        null
+      ],
+      [
+        1
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-07-simultaneous-unknown-conversion",
+    "factor": "values_query",
+    "shape": "simultaneous-unknown-conversion",
+    "source_kind": "synthetic",
+    "sql": "VALUES (NULL),('2'),(3);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-08-nullable-per-column",
+    "factor": "values_query",
+    "shape": "nullable-per-column",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1,NULL),(NULL,'b'),(3,'c');",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      },
+      {
+        "name": "column2",
+        "type": "text",
+        "nullable": true,
+        "collation": "default",
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        null
+      ],
+      [
+        null,
+        "b"
+      ],
+      [
+        3,
+        "c"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-09-numeric-common",
+    "factor": "values_query",
+    "shape": "numeric-common",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1),(2.5);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "numeric",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "numeric",
+        "native_type": "numeric",
+        "oid": 1700
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2.5
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-10-bigint-common",
+    "factor": "values_query",
+    "shape": "bigint-common",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1),(2147483648);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "bigint",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "bigint",
+        "native_type": "bigint",
+        "oid": 20
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2147483648
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-11-smallint",
+    "factor": "values_query",
+    "shape": "smallint",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1::SMALLINT),(2::SMALLINT);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "smallint",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "smallint",
+        "native_type": "smallint",
+        "oid": 21
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-12-varchar-modifier-agreement",
+    "factor": "values_query",
+    "shape": "varchar-modifier-agreement",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('ab'::VARCHAR(3)),('xy'::VARCHAR(3));",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "varchar(3)",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "character varying(3)",
+        "native_type": "character varying",
+        "oid": 1043
+      }
+    ],
+    "expected_rows": [
+      [
+        "ab"
+      ],
+      [
+        "xy"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-13-varchar-modifier-disagreement",
+    "factor": "values_query",
+    "shape": "varchar-modifier-disagreement",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('ab'::VARCHAR(3)),('xy'::VARCHAR(4));",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "varchar",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "character varying",
+        "native_type": "character varying",
+        "oid": 1043
+      }
+    ],
+    "expected_rows": [
+      [
+        "ab"
+      ],
+      [
+        "xy"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-14-varchar-unknown-erases-modifier",
+    "factor": "values_query",
+    "shape": "varchar-unknown-erases-modifier",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('ab'::VARCHAR(3)),('xy');",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "varchar",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "character varying",
+        "native_type": "character varying",
+        "oid": 1043
+      }
+    ],
+    "expected_rows": [
+      [
+        "ab"
+      ],
+      [
+        "xy"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-15-numeric-modifier-agreement",
+    "factor": "values_query",
+    "shape": "numeric-modifier-agreement",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1.25::NUMERIC(5,2)),(2.5::NUMERIC(5,2));",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "numeric(5,2)",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "numeric(5,2)",
+        "native_type": "numeric",
+        "oid": 1700
+      }
+    ],
+    "expected_rows": [
+      [
+        1.25
+      ],
+      [
+        2.5
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-16-numeric-modifier-disagreement",
+    "factor": "values_query",
+    "shape": "numeric-modifier-disagreement",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1.25::NUMERIC(5,2)),(2.5::NUMERIC(6,2));",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "numeric",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "numeric",
+        "native_type": "numeric",
+        "oid": 1700
+      }
+    ],
+    "expected_rows": [
+      [
+        1.25
+      ],
+      [
+        2.5
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-17-char-modifier-agreement",
+    "factor": "values_query",
+    "shape": "char-modifier-agreement",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('x'::CHAR(3)),('yz'::CHAR(3));",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "char(3)",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "character(3)",
+        "native_type": "character",
+        "oid": 1042
+      }
+    ],
+    "expected_rows": [
+      [
+        "x  "
+      ],
+      [
+        "yz "
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-18-char-modifier-disagreement",
+    "factor": "values_query",
+    "shape": "char-modifier-disagreement",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('x'::CHAR(3)),('yz'::CHAR(4));",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "bpchar",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "bpchar",
+        "native_type": "character",
+        "oid": 1042
+      }
+    ],
+    "expected_rows": [
+      [
+        "x  "
+      ],
+      [
+        "yz  "
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-19-date",
+    "factor": "values_query",
+    "shape": "date",
+    "source_kind": "synthetic",
+    "sql": "VALUES (DATE '2024-01-02'),(DATE '2024-01-03');",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "date",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "date",
+        "native_type": "date",
+        "oid": 1082
+      }
+    ],
+    "expected_rows": [
+      [
+        "2024-01-02"
+      ],
+      [
+        "2024-01-03"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-20-timestamp-modifier",
+    "factor": "values_query",
+    "shape": "timestamp-modifier",
+    "source_kind": "synthetic",
+    "sql": "VALUES (TIMESTAMP(2) '2024-01-02 03:04:05.12'),(TIMESTAMP(2) '2024-01-02 03:04:06.25');",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "timestamp(2)",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "timestamp(2) without time zone",
+        "native_type": "timestamp without time zone",
+        "oid": 1114
+      }
+    ],
+    "expected_rows": [
+      [
+        "2024-01-02T03:04:05.12"
+      ],
+      [
+        "2024-01-02T03:04:06.25"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-21-array-null-elements",
+    "factor": "values_query",
+    "shape": "array-null-elements",
+    "source_kind": "synthetic",
+    "sql": "VALUES (ARRAY[1,NULL]),(ARRAY[2,3]);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "integer[]",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer[]",
+        "native_type": "integer[]",
+        "oid": 1007
+      }
+    ],
+    "expected_rows": [
+      [
+        [
+          1,
+          null
+        ]
+      ],
+      [
+        [
+          2,
+          3
+        ]
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-22-array-modifiers",
+    "factor": "values_query",
+    "shape": "array-modifiers",
+    "source_kind": "synthetic",
+    "sql": "VALUES (ARRAY[1.25::NUMERIC(5,2)]),(ARRAY[2.5::NUMERIC(5,2)]);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "numeric(5,2)[]",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "numeric(5,2)[]",
+        "native_type": "numeric[]",
+        "oid": 1231
+      }
+    ],
+    "expected_rows": [
+      [
+        [
+          1.25
+        ]
+      ],
+      [
+        [
+          2.5
+        ]
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-23-name-unknown",
+    "factor": "values_query",
+    "shape": "name-unknown",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('x'::NAME),('y');",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "name",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "name",
+        "native_type": "name",
+        "oid": 19
+      }
+    ],
+    "expected_rows": [
+      [
+        "x"
+      ],
+      [
+        "y"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-24-explicit-collation",
+    "factor": "values_query",
+    "shape": "explicit-collation",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('x' COLLATE \"C\"),('y');",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      }
+    ],
+    "expected_rows": [
+      [
+        "x"
+      ],
+      [
+        "y"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-25-separate-column-collations",
+    "factor": "values_query",
+    "shape": "separate-column-collations",
+    "source_kind": "synthetic",
+    "sql": "VALUES ('a' COLLATE \"C\",'b' COLLATE \"POSIX\"),('c','d');",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "text",
+        "nullable": false,
+        "collation": "C",
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      },
+      {
+        "name": "column2",
+        "type": "text",
+        "nullable": false,
+        "collation": "POSIX",
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      }
+    ],
+    "expected_rows": [
+      [
+        "a",
+        "b"
+      ],
+      [
+        "c",
+        "d"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-26-implicit-collation-conflict",
+    "factor": "values_query",
+    "shape": "implicit-collation-conflict",
+    "source_kind": "synthetic",
+    "sql": "VALUES ((SELECT 'x' COLLATE \"C\")),((SELECT 'y' COLLATE \"POSIX\"));",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "text",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      }
+    ],
+    "expected_rows": [
+      [
+        "x"
+      ],
+      [
+        "y"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-27-array-coercion-collation",
+    "factor": "values_query",
+    "shape": "array-coercion-collation",
+    "source_kind": "synthetic",
+    "sql": "VALUES (ARRAY[(SELECT 'x'::NAME COLLATE \"POSIX\")]),(ARRAY['y']);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "name[]",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003
+      }
+    ],
+    "expected_rows": [
+      [
+        [
+          "x"
+        ]
+      ],
+      [
+        [
+          "y"
+        ]
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-28-coalesce-expressions",
+    "factor": "values_query",
+    "shape": "coalesce-expressions",
+    "source_kind": "synthetic",
+    "sql": "VALUES (COALESCE(NULL,1)),(COALESCE(NULL,2));",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-29-arithmetic-expressions",
+    "factor": "values_query",
+    "shape": "arithmetic-expressions",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1+2),(3*4),(9-5);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        3
+      ],
+      [
+        12
+      ],
+      [
+        4
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-30-boolean-null-expressions",
+    "factor": "values_query",
+    "shape": "boolean-null-expressions",
+    "source_kind": "synthetic",
+    "sql": "VALUES (TRUE AND NULL),(FALSE OR NULL),(NOT FALSE);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "boolean",
+        "native_type": "boolean",
+        "oid": 16
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ],
+      [
+        null
+      ],
+      [
+        true
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-31-derived-alias",
+    "factor": "values_query",
+    "shape": "derived-alias",
+    "source_kind": "synthetic",
+    "sql": "SELECT q.n FROM (VALUES (1),(2)) AS q(n);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-32-derived-prefix-alias",
+    "factor": "values_query",
+    "shape": "derived-prefix-alias",
+    "source_kind": "synthetic",
+    "sql": "SELECT * FROM (VALUES (1,'a'),(2,'b')) AS q(n);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      },
+      {
+        "name": "column2",
+        "type": "text",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "a"
+      ],
+      [
+        2,
+        "b"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-33-cte-default-labels",
+    "factor": "values_query",
+    "shape": "cte-default-labels",
+    "source_kind": "synthetic",
+    "sql": "WITH q AS (VALUES (1),(2)) SELECT * FROM q;",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-34-cte-prefix-alias",
+    "factor": "values_query",
+    "shape": "cte-prefix-alias",
+    "source_kind": "synthetic",
+    "sql": "WITH q(n) AS (VALUES (1,'a'),(2,'b')) SELECT * FROM q;",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      },
+      {
+        "name": "column2",
+        "type": "text",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        "a"
+      ],
+      [
+        2,
+        "b"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-35-cte-visible-child",
+    "factor": "values_query",
+    "shape": "cte-visible-child",
+    "source_kind": "synthetic",
+    "sql": "WITH a(n) AS (SELECT 4), q AS (VALUES ((SELECT n FROM a)),(5)) SELECT * FROM q;",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        4
+      ],
+      [
+        5
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-36-union-all",
+    "factor": "values_query",
+    "shape": "union-all",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1),(2) UNION ALL VALUES (2),(3);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-37-union-distinct",
+    "factor": "values_query",
+    "shape": "union-distinct",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1),(2) UNION VALUES (2),(3);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-38-intersect",
+    "factor": "values_query",
+    "shape": "intersect",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1),(2),(2) INTERSECT VALUES (2),(3);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-39-except-all",
+    "factor": "values_query",
+    "shape": "except-all",
+    "source_kind": "synthetic",
+    "sql": "VALUES (1),(2),(2) EXCEPT ALL VALUES (2);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-40-ordered-limit",
+    "factor": "values_query",
+    "shape": "ordered-limit",
+    "source_kind": "synthetic",
+    "sql": "VALUES (3),(1),(2) ORDER BY 1 LIMIT 2;",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ]
+    ],
+    "ordered": true
+  },
+  {
+    "id": "values-query-41-ordered-offset",
+    "factor": "values_query",
+    "shape": "ordered-offset",
+    "source_kind": "synthetic",
+    "sql": "VALUES (3),(1),(2) ORDER BY column1 DESC OFFSET 1 LIMIT 1;",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ]
+    ],
+    "ordered": true
+  },
+  {
+    "id": "values-query-42-derived-filter",
+    "factor": "values_query",
+    "shape": "derived-filter",
+    "source_kind": "synthetic",
+    "sql": "SELECT n FROM (VALUES (1),(2),(3)) AS q(n) WHERE n>1;",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        2
+      ],
+      [
+        3
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-43-empty-derived",
+    "factor": "values_query",
+    "shape": "empty-derived",
+    "source_kind": "synthetic",
+    "sql": "SELECT n FROM (VALUES (1),(2)) AS q(n) WHERE FALSE;",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [],
+    "ordered": false
+  },
+  {
+    "id": "values-query-44-anonymous-row-order",
+    "factor": "values_query",
+    "shape": "anonymous-row-order",
+    "source_kind": "synthetic",
+    "sql": "VALUES (?,?),(?,?);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      },
+      {
+        "name": "column2",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        4
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-45-numbered-repeated-reordered",
+    "factor": "values_query",
+    "shape": "numbered-repeated-reordered",
+    "source_kind": "synthetic",
+    "sql": "VALUES ($2,$1),($1,$2);",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      2,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      },
+      {
+        "name": "column2",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        7,
+        2
+      ],
+      [
+        2,
+        7
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-46-nullable-parameter",
+    "factor": "values_query",
+    "shape": "nullable-parameter",
+    "source_kind": "synthetic",
+    "sql": "VALUES ($1),('x');",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "text?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "text",
+        "nullable": true,
+        "collation": "default",
+        "postgres_type": "text",
+        "native_type": "text",
+        "oid": 25
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ],
+      [
+        "x"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-47-parameter-typmod-erasure",
+    "factor": "values_query",
+    "shape": "parameter-typmod-erasure",
+    "source_kind": "synthetic",
+    "sql": "VALUES ($1),('xy'::VARCHAR(3));",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "varchar(3)",
+    "parameter_values": [
+      "ab"
+    ],
+    "output_columns": [
+      {
+        "name": "column1",
+        "type": "varchar",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "character varying",
+        "native_type": "character varying",
+        "oid": 1043
+      }
+    ],
+    "expected_rows": [
+      [
+        "ab"
+      ],
+      [
+        "xy"
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-48-scalar-values-child",
+    "factor": "values_query",
+    "shape": "scalar-values-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT (VALUES (7)) AS v;",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "integer",
+        "native_type": "integer",
+        "oid": 23
+      }
+    ],
+    "expected_rows": [
+      [
+        7
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-49-exists-values-child",
+    "factor": "values_query",
+    "shape": "exists-values-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(VALUES (NULL)) AS v;",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "boolean",
+        "native_type": "boolean",
+        "oid": 16
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "ordered": false
+  },
+  {
+    "id": "values-query-50-in-values-child",
+    "factor": "values_query",
+    "shape": "in-values-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 IN(VALUES (1),(2),(NULL::INTEGER)) AS v;",
+    "catalogFile": "fixtures/values_queries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "boolean",
+        "native_type": "boolean",
+        "oid": 16
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "ordered": false
+  }
+]

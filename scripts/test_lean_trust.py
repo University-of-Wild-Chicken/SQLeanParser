@@ -161,6 +161,7 @@ class LeanTrustSourceTests(unittest.TestCase):
             "SQLean.SelectContract.ScalarSignatures", "SQLean.SelectContract.Recursion",
             "SQLean.SelectContract.ExpressionSpec", "SQLean.SelectContract.Collation",
             "SQLean.SelectContract.CollationApplications", "SQLean.SelectContract.CollationRules",
+            "SQLean.SelectContract.Values",
             "SQLean.CollationSyntax", "SQLean.CatalogSyntax",
             "SQLean.AdvancedSyntax", "SQLean.SyntaxBase", "Std",
         })
@@ -199,7 +200,7 @@ class LeanTrustSourceTests(unittest.TestCase):
                 check_specification_independence(root)
 
     def test_collation_specification_helpers_cannot_depend_on_inference_or_rendering(self) -> None:
-        for helper in ("Collation", "CollationApplications", "CollationRules", "ExpressionSpec"):
+        for helper in ("Collation", "CollationApplications", "CollationRules", "ExpressionSpec", "Values"):
             for forbidden in ("SQLean.SelectContract.Checker", "SQLean.RenderContract.ValidityPreservation"):
                 with self.subTest(helper=helper, forbidden=forbidden), tempfile.TemporaryDirectory() as directory:
                     root = Path(directory)

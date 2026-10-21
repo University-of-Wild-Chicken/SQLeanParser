@@ -101,7 +101,12 @@ def main() -> None:
         ("SELECT COUNT(*) FROM users WHERE COUNT(*) > 0", "validation error"),
         ("SELECT city FROM users GROUP BY COUNT(*)", "validation error"),
         ("SELECT COUNT(*) FROM users HAVING name = 'Alice'", "validation error"),
-        ("SELECT x.id FROM (SELECT id FROM users)", "parse error"),
+        # PostgreSQL 16 anonymous sources parse; the broad validator keeps its
+        # explicit boundary while the independent contract supports this scope.
+        ("SELECT x.id FROM (SELECT id FROM users)",
+         "validation error: anonymous derived sources require the independent query contract"),
+        ("SELECT id FROM (SELECT id FROM users)",
+         "validation error: anonymous derived sources require the independent query contract"),
         ("SELECT x.missing FROM (SELECT id FROM users) AS x", "validation error"),
         ("SELECT x.id FROM (SELECT u.id FROM users) AS x", "validation error"),
         ("WITH x AS (SELECT id FROM users) SELECT missing FROM x", "validation error"),
@@ -112,6 +117,14 @@ def main() -> None:
     ]
     for source, message in negative:
         run(["--schema", str(SCHEMA), source], 1, message)
+    anonymous_contract = json.loads(run([
+        "--assurance", "contract", "--schema", str(SCHEMA),
+        "SELECT id FROM (SELECT id FROM users)",
+    ]))
+    assert anonymous_contract.get("status") == "valid", anonymous_contract
+    assert anonymous_contract.get("assurance") == "declarative", anonymous_contract
+    assert [column["name"] for column in anonymous_contract["outputColumns"]] == ["id"], anonymous_contract
+    print("PASS: anonymous derived sources retain the broad-validator boundary and independent-contract coverage")
     print(f"PASS: {total} relational examples certified by the CLI and compiled by SQLite (source + canonical)")
     print(f"PASS: source and canonical results agree on empty and populated databases ({total * 2} comparisons)")
     print(f"PASS: {len(negative)} relational CLI rejection cases")

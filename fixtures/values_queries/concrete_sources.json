@@ -1,0 +1,2710 @@
+{
+  "format_version": 1,
+  "population": "values_queries",
+  "expected_count": 50,
+  "expected_sources": {
+    "postgres": 9,
+    "duckdb": 41
+  },
+  "expected_classes": {
+    "select-containing-values": 43,
+    "standalone-values": 7
+  },
+  "expected_output_columns": 65,
+  "extraction_scope": "Complete unchanged VALUES/SELECT query inputs, never INSERT VALUES or extracted expression/view fragments. No source SQL, DDL, controls or expected results execute.",
+  "sources": {
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/values_queries/licenses/postgres-postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "files": [
+        {
+          "path": "contrib/pg_stat_statements/sql/select.sql",
+          "local_path": "fixtures/values_queries/sources/postgres/contrib/pg_stat_statements/sql/select.sql",
+          "sha256": "bdb5f4eb1315fca6609df3eaa883f68db20287b644c7eca91bb3649ca7cbfe1e"
+        },
+        {
+          "path": "src/test/regress/sql/collate.sql",
+          "local_path": "fixtures/values_queries/sources/postgres/src/test/regress/sql/collate.sql",
+          "sha256": "c20c9868d2e539295294150de52f0008b454ac8358924df80f4227e4ab2095d0"
+        },
+        {
+          "path": "src/test/regress/sql/select.sql",
+          "local_path": "fixtures/values_queries/sources/postgres/src/test/regress/sql/select.sql",
+          "sha256": "76a06a847e20ca5ad6e53b29c6825784b0b992aff0ac691fcb9c9ff12d0db6a5"
+        },
+        {
+          "path": "src/test/regress/sql/union.sql",
+          "local_path": "fixtures/values_queries/sources/postgres/src/test/regress/sql/union.sql",
+          "sha256": "f251eff1e17f131c2e6de785fe4f1cfb69084157e544bbcaf1289650d22ba4e3"
+        },
+        {
+          "path": "src/test/regress/sql/with.sql",
+          "local_path": "fixtures/values_queries/sources/postgres/src/test/regress/sql/with.sql",
+          "sha256": "e76fa662f0679f7220b78799c948244d62982f7c65ebbfa0c8e40f8aeeceb921"
+        }
+      ]
+    },
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/values_queries/licenses/duckdb-duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "files": [
+        {
+          "path": "test/sql/projection/test_value_list.test",
+          "local_path": "fixtures/values_queries/sources/duckdb/test/sql/projection/test_value_list.test",
+          "sha256": "137877139d153262cab38b18bde73bee1650b0cd771f7a6753ea90354808af0b"
+        },
+        {
+          "path": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+          "local_path": "fixtures/values_queries/sources/duckdb/test/sql/subquery/any_all/test_row_comparison_any_all.test",
+          "sha256": "45c02cc57957c1563ebd792b92a98c2bd58fe05b47567df61662c51a2272dc9e"
+        },
+        {
+          "path": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+          "local_path": "fixtures/values_queries/sources/duckdb/test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+          "sha256": "daaafa0a3270a6f049da06dd68fcc6c4a0545ef9f626c2f4892edaf0c3246822"
+        },
+        {
+          "path": "test/sql/subquery/any_all_variant_extremum.test",
+          "local_path": "fixtures/values_queries/sources/duckdb/test/sql/subquery/any_all_variant_extremum.test",
+          "sha256": "5a6c2e4d4b02f93c43a30935c6d938d6a840e81f7cf9680c4b1d0fe2d0d1d05c"
+        },
+        {
+          "path": "test/sql/subquery/table/test_unnamed_subquery.test",
+          "local_path": "fixtures/values_queries/sources/duckdb/test/sql/subquery/table/test_unnamed_subquery.test",
+          "sha256": "dfe36c2b8f88d3800b83197130521c6b36b00ff2bbc3aed9c6dea72f985ef0e9"
+        },
+        {
+          "path": "test/sql/types/decimal/decimal_values_warning.test",
+          "local_path": "fixtures/values_queries/sources/duckdb/test/sql/types/decimal/decimal_values_warning.test",
+          "sha256": "075a5cc58faf75e75d9c19c1f96ca51e2951c182d05f98f88ad98b454a10203a"
+        }
+      ]
+    }
+  },
+  "primary_sources": [
+    {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "path": "src/backend/parser/analyze.c",
+      "local_path": "fixtures/values_queries/primary_sources/analyze.c",
+      "sha256": "b65fdc84eed1b3601db3102881d084caa1bb9c741f42923cda119d434a001674",
+      "license": "PostgreSQL"
+    },
+    {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "path": "src/backend/parser/parse_coerce.c",
+      "local_path": "fixtures/values_queries/primary_sources/parse_coerce.c",
+      "sha256": "0be658918e0c1cb34673430287e42be1fa9138142697a8258bee964c795e5938",
+      "license": "PostgreSQL"
+    },
+    {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "path": "src/backend/parser/parse_relation.c",
+      "local_path": "fixtures/values_queries/primary_sources/parse_relation.c",
+      "sha256": "f367b80269139b13b255b2061a518a098c497bee7701c53d4529c298488d404c",
+      "license": "PostgreSQL"
+    }
+  ],
+  "selections": [
+    {
+      "id": "values:postgres:contrib/pg_stat_statements/sql/select.sql:880",
+      "source": "postgres",
+      "source_file": "contrib/pg_stat_statements/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 880,
+        "end": 948,
+        "statement_index": 26
+      },
+      "sql_sha256": "bd706aa2fbbb8078888aaecc193563a8b6162138a5eabf0adddec4a27279905f",
+      "normalized_tokens_sha256": "360d59a82cb0772a3f4c640adf27cc567c6e952e9abea1d718171baba14eeed7",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [
+          "t"
+        ],
+        "cte_names": [
+          "t"
+        ],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "4dba77d34b99e4491acc74f78bc5d055649f3d43b4b60e61b0460dd29ae0784b"
+      },
+      "scope_basis": "closed expressions and retained local nonrecursive CTE",
+      "metadata_basis": "All numeric literals have base numeric with no typmod; local CTE alias f survives projection.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "numeric",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:postgres:src/test/regress/sql/collate.sql:6282",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6282,
+        "end": 6365,
+        "statement_index": 75
+      },
+      "sql_sha256": "c5d58dcc7ff4c8fe9e31ba556da4c6424343f7da90df1c64ea50e254ca336c70",
+      "normalized_tokens_sha256": "e98e6663c9251d0db85d522cfd1502bf3318f012d6171def10e043168a07654d",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "0c81f8697ac350afca39bd4355f3c01a49e60841c62a6226422018419bba0e23"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "All unknown strings resolve simultaneously to text; explicit C fixes the second VALUES column collation. Aliases a,b and comparison alias lt survive.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "text",
+            "nullable": false,
+            "collation": "default"
+          },
+          {
+            "name": "column2",
+            "type": "text",
+            "nullable": false,
+            "collation": "C"
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:postgres:src/test/regress/sql/with.sql:25456",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/with.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 25456,
+        "end": 25518,
+        "statement_index": 147
+      },
+      "sql_sha256": "8c1187f85a4a97fbb7d4ded0df84fe88dd2d5504c09a8ce9e7bc9e06fb6360fc",
+      "normalized_tokens_sha256": "b8a36b20d0cbcd49e1fc7cbcf175f727a8846fd4750a3997b166593390efc5c1",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              1
+            ]
+          },
+          {
+            "rows": 1,
+            "widths": [
+              1
+            ]
+          }
+        ],
+        "query_class": "standalone-values",
+        "relation_references": [
+          "cte"
+        ],
+        "cte_names": [
+          "cte"
+        ],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "fe02769f77bb35d4133b99f5306eee01f027a2527035116ba849e9a20b21f9cc"
+      },
+      "scope_basis": "closed expressions and retained local nonrecursive CTE",
+      "metadata_basis": "Local nonrecursive CTE foo is int32; outer scalar subquery is nullable. Default outer VALUES label is column1.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          }
+        ],
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:postgres:src/test/regress/sql/select.sql:3764",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3764,
+        "end": 3796,
+        "statement_index": 25
+      },
+      "sql_sha256": "82ffe24a98bc13dc0b970f850edef533051f8e0e2e3f6c87d6ed99fff6ed14d4",
+      "normalized_tokens_sha256": "f463dae6dfedd4e6c317dc16bf89d912269958e73c18f0ddb27190a7367cec83",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 3,
+            "widths": [
+              2,
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "standalone-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "efd51dfa5dee24c50c5cdaa991851408e2b4796cf1120c75fa15d8e51de25a99"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Column two resolves int32,int32,numeric simultaneously to unmodified numeric; both columns nonnullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "numeric",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:postgres:src/test/regress/sql/select.sql:7624",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7624,
+        "end": 7690,
+        "statement_index": 81
+      },
+      "sql_sha256": "7a426dfc66fc1c395f61f88aa2df5cc40d84e91f52deb395b108ef66e726158e",
+      "normalized_tokens_sha256": "f14117eb05512995dcd29803926b5776f95d01b4d1876c514e33e57194148aa3",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 3,
+            "widths": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "d45944ea6567f1933d517d9720385115ca7cada34093a0ad721ca05da02aaef2"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "VALUES 2,NULL,1 resolves to nullable int32; WHERE does not refine the conservative output nullability.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:postgres:src/test/regress/sql/select.sql:7691",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/select.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 7691,
+        "end": 7746,
+        "statement_index": 82
+      },
+      "sql_sha256": "b22ce4cf5b09627b41ed3b1bc4646bd4612d131c9b5e1db7be657791ff2de0d8",
+      "normalized_tokens_sha256": "f75519e3b00fc02458fb9f0d569ddbd99763ecb19917864218cd8f3551e1f1be",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 3,
+            "widths": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "5dd89b77c2324b572fcc4953b5a276d83db2e6f4a19559c524c65cf146d03c11"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "VALUES 2,NULL,1 resolves to nullable int32; WHERE does not refine the conservative output nullability.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:postgres:src/test/regress/sql/union.sql:4743",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 4743,
+        "end": 4863,
+        "statement_index": 61
+      },
+      "sql_sha256": "f898fa1d763df15930b081f196bf9251275abd430fbc7ba7b8b9a8e0bbcc154e",
+      "normalized_tokens_sha256": "8885783b04f9ef9ad08b625f6a68fb9a3de8dc939b4c85dbe2423e952909b4eb",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          },
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "2fbf1c8887704f7d3e73ace293844b6f921cb47d68caab18c18fc7f291194840"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Both VALUES bodies expose nonnullable integer arrays. Local alias x and array type survive the set operation.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "integer[]",
+            "nullable": false,
+            "collation": null
+          }
+        ],
+        [
+          {
+            "name": "column1",
+            "type": "integer[]",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:postgres:src/test/regress/sql/union.sql:5009",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5009,
+        "end": 5133,
+        "statement_index": 63
+      },
+      "sql_sha256": "b29ed4751a3f4a3f4bbdf84ddc65fb071f19b51d25ceb4b14912dd9477753ab2",
+      "normalized_tokens_sha256": "b7b4dacad1d41c1431bc36a255bfda92290ad2c46aa3334b0a7729039b61c903",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          },
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "7a7221d0fbdf897ca7338cc28c183cbbc3e3a3358ea21c856ba28769ae81d517"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Both VALUES bodies expose nonnullable integer arrays. Local alias x and array type survive the set operation.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "integer[]",
+            "nullable": false,
+            "collation": null
+          }
+        ],
+        [
+          {
+            "name": "column1",
+            "type": "integer[]",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:postgres:src/test/regress/sql/union.sql:5276",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/union.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 5276,
+        "end": 5397,
+        "statement_index": 65
+      },
+      "sql_sha256": "9afeeddb6bd2949774b8472594209294d1a9c8c5a86cc3026dd3f035b3ad60d5",
+      "normalized_tokens_sha256": "3cd7e922acb6fd37a7b4596532cff06df857041b88ccb86d56cebd3d299ef740",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          },
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "4956ff3c41a6dc5406488ad47541126511717f08be161e0167d2a7a8faeb979b"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Both VALUES bodies expose nonnullable integer arrays. Local alias x and array type survive the set operation.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "integer[]",
+            "nullable": false,
+            "collation": null
+          }
+        ],
+        [
+          {
+            "name": "column1",
+            "type": "integer[]",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/projection/test_value_list.test:219",
+      "source": "duckdb",
+      "source_file": "test/sql/projection/test_value_list.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 9,
+        "start": 219,
+        "end": 244
+      },
+      "sql_sha256": "a49bbd10110d69bf2cf0e44dd2d2ca5bc876da4ec116f689d8f8256630c4f4eb",
+      "normalized_tokens_sha256": "7d442e0b6cb7bc87eb4076457e89d1dc687de07da7e08cfaf3a785e322d26427",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "standalone-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "e1519f83508c32259012abd06659d5a1e190f8cda5cd601da77233a27dc7db59"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Default VALUES columnN labels; simultaneous per-column type resolution and any-row nullable. Untyped-only columns resolve to text/default; scalar-query expressions are nullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/projection/test_value_list.test:299",
+      "source": "duckdb",
+      "source_file": "test/sql/projection/test_value_list.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 16,
+        "start": 299,
+        "end": 355
+      },
+      "sql_sha256": "824c59261a8f6143aa79180ad683fa61f54b159251980a8d58e5c374c7bd1fd0",
+      "normalized_tokens_sha256": "12540029b36ae2877257cd2cf66d011a028b1e30dd01ecedf3eae054602c3543",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 3,
+            "widths": [
+              2,
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "f2f12a5e89b083de12e5135bf77d02028c0a18b473cb2e81ebc6c4a505323b0a"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Default VALUES columnN labels; simultaneous per-column type resolution and any-row nullable. Untyped-only columns resolve to text/default; scalar-query expressions are nullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/projection/test_value_list.test:411",
+      "source": "duckdb",
+      "source_file": "test/sql/projection/test_value_list.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 24,
+        "start": 411,
+        "end": 459
+      },
+      "sql_sha256": "7f2beceeba94609be53e55f4a9ec047aba32c3bd9e999b1c1c56e741520ed380",
+      "normalized_tokens_sha256": "119657c428610a2ea1f316d1392fb289ae765f39262dbd0759bf29ab5e386d2f",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              3,
+              3
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "ca2d232006333e6e019e3b97a86fd53f49aae0a5b95ada10248fd41b640e865c"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Default VALUES columnN labels; simultaneous per-column type resolution and any-row nullable. Untyped-only columns resolve to text/default; scalar-query expressions are nullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column3",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/projection/test_value_list.test:517",
+      "source": "duckdb",
+      "source_file": "test/sql/projection/test_value_list.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 31,
+        "start": 517,
+        "end": 573
+      },
+      "sql_sha256": "627986508acf228b1c50dcf60673d871694776f589ece2ac77b9f3888ccc147e",
+      "normalized_tokens_sha256": "956af46991764acbcf2c015199cd3abe6220fd870ca629e4a9685fb0aca12581",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              3,
+              3
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "f41baf0b451fd7ba16762e0f4ec11205b64400c8cfef4fb24da141d26dd57297"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Default VALUES columnN labels; simultaneous per-column type resolution and any-row nullable. Untyped-only columns resolve to text/default; scalar-query expressions are nullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column3",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/projection/test_value_list.test:630",
+      "source": "duckdb",
+      "source_file": "test/sql/projection/test_value_list.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 38,
+        "start": 630,
+        "end": 690
+      },
+      "sql_sha256": "efd6a79f7f465127f4837831ff516cc053aba60d96ed80f2012c8600a5e90ecd",
+      "normalized_tokens_sha256": "d920fb06a90577a4d658b39525976664f80b56a63e1a6b93b136e54f4869c5b4",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              3,
+              3
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "8c018f59d65bfa05ca49e541cc9f1b99f2383f7f7a2c44c208f513721be68531"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Default VALUES columnN labels; simultaneous per-column type resolution and any-row nullable. Untyped-only columns resolve to text/default; scalar-query expressions are nullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column3",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/projection/test_value_list.test:1243",
+      "source": "duckdb",
+      "source_file": "test/sql/projection/test_value_list.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 65,
+        "start": 1243,
+        "end": 1307
+      },
+      "sql_sha256": "a378e5002f1187b9553ba0dbdab9609bfa6f83b8adc516e0ab8505dac7fbb5b8",
+      "normalized_tokens_sha256": "a0f55d9f7c908faaf411a3174b0a448ac05241d920888ca62830b903e9e02588",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "76c63105f46bc95245414a60f9874f59b2ec138e5486b6f2dde7ce62d2ae6cf1"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Default VALUES columnN labels; simultaneous per-column type resolution and any-row nullable. Untyped-only columns resolve to text/default; scalar-query expressions are nullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "date",
+            "nullable": true,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/projection/test_value_list.test:1358",
+      "source": "duckdb",
+      "source_file": "test/sql/projection/test_value_list.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 72,
+        "start": 1358,
+        "end": 1398
+      },
+      "sql_sha256": "ada909a5242449a21fe4ee4e0fffc1a8a7a922a08fd22449c1b1310a6e20a8c2",
+      "normalized_tokens_sha256": "3b56f504f56e05d8cb783d7046ed43be942720240a563b48932b61c3b28dc145",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "a80c78297724ec88e1ba5a0198a38da7d7a3d8ceaa12a1991865b70726bc24d9"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Default VALUES columnN labels; simultaneous per-column type resolution and any-row nullable. Untyped-only columns resolve to text/default; scalar-query expressions are nullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "text",
+            "nullable": true,
+            "collation": "default"
+          },
+          {
+            "name": "column2",
+            "type": "text",
+            "nullable": true,
+            "collation": "default"
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/projection/test_value_list.test:1455",
+      "source": "duckdb",
+      "source_file": "test/sql/projection/test_value_list.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 78,
+        "start": 1455,
+        "end": 1503
+      },
+      "sql_sha256": "0cab562279c5d86b9ed8821168c3c7455641ba823dc80084e806c3e80c53d5ea",
+      "normalized_tokens_sha256": "5036ba55beb321998d58ef6a07b5ad075d11662a7fd4b3cb81e69b09246a801a",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "4b62b2aca8765ad304f7724778620db3e532548eb012f792ece361bd1ca57e13"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Default VALUES columnN labels; simultaneous per-column type resolution and any-row nullable. Untyped-only columns resolve to text/default; scalar-query expressions are nullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/projection/test_value_list.test:1531",
+      "source": "duckdb",
+      "source_file": "test/sql/projection/test_value_list.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 84,
+        "start": 1531,
+        "end": 1570
+      },
+      "sql_sha256": "c56e642632e4acdd67badbebaaebb27e4eb6f6d57d343d5266827166046a6d11",
+      "normalized_tokens_sha256": "c1d6aa05d3ec2c70c92ba42a4ec74fa5d4b71d3847dac0e2e7509e422d7561f2",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "65dc84b15f4ee8d0c25f403283c8836f0c86939b3aec187d0137fe8868ce8f95"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Default VALUES columnN labels; simultaneous per-column type resolution and any-row nullable. Untyped-only columns resolve to text/default; scalar-query expressions are nullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/projection/test_value_list.test:1790",
+      "source": "duckdb",
+      "source_file": "test/sql/projection/test_value_list.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 100,
+        "start": 1790,
+        "end": 1835
+      },
+      "sql_sha256": "c977ef38d8581eb0f7ca0177f76457acd059fe37114f6bad1491eeb9398af421",
+      "normalized_tokens_sha256": "d8df4e5da0706b6d9cf5d3ed85e1bd5079e611bf0faa8aae68e9e40c7c95c465",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "6681cf9413b44d58d7a5873b4f976cf292a9c2c62805039c04feec98083904ca"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Default VALUES columnN labels; simultaneous per-column type resolution and any-row nullable. Untyped-only columns resolve to text/default; scalar-query expressions are nullable.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "text",
+            "nullable": true,
+            "collation": "default"
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/types/decimal/decimal_values_warning.test:1023",
+      "source": "duckdb",
+      "source_file": "test/sql/types/decimal/decimal_values_warning.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 24,
+        "start": 1023,
+        "end": 1097
+      },
+      "sql_sha256": "08d7bcefcb8e21976953435a04ac1262c54d104e0c0fd6b4278f24e582b12bad",
+      "normalized_tokens_sha256": "18fa0ac773c810ce21aee04ffdd8ef3401d6f8004762f131479b4fd953340402",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "standalone-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "836951ccc133fbfbf32b5f7786360942b477006bbd0beac4654e65861b084248"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Untyped NULL coerces to numeric with typmod -1; shared typmod is dropped.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "numeric",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/types/decimal/decimal_values_warning.test:1161",
+      "source": "duckdb",
+      "source_file": "test/sql/types/decimal/decimal_values_warning.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 28,
+        "start": 1161,
+        "end": 1251
+      },
+      "sql_sha256": "f565a1b355bb4bcabbd2341706e0fe05748c0043315a931d3ed933c4b48ebae2",
+      "normalized_tokens_sha256": "2ccd326c5e07edbb81582b3bf19de3fac9aac5e06121b68c3e5647f4521de1b5",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "standalone-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "8d524f62bcde95008e899986259972fdd08576ae19eeb5108ddc1de1dab4f805"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Both already numeric(38,24), including typed NULL: identical typmod is retained.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "numeric(38,24)",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/types/decimal/decimal_values_warning.test:1265",
+      "source": "duckdb",
+      "source_file": "test/sql/types/decimal/decimal_values_warning.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 31,
+        "start": 1265,
+        "end": 1354
+      },
+      "sql_sha256": "0e77b49d7eb01a4398c55d2bd6c1532f4334923ba89e47a72497caa5e7add6e3",
+      "normalized_tokens_sha256": "072e722eb501bdacad8121cea624bc842021ea1b97e479590011472d984007e1",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "standalone-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "17eb69bd10e426592ffef3a1c3082c43e323f58838dc19ac6f222c2d93360750"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Numeric(38,24) and numeric(10,2) share OID but not typmod: typmod is dropped.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "numeric",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/types/decimal/decimal_values_warning.test:1525",
+      "source": "duckdb",
+      "source_file": "test/sql/types/decimal/decimal_values_warning.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 41,
+        "start": 1525,
+        "end": 1681
+      },
+      "sql_sha256": "315be6515ee0d526949d9d1a54f73fd850d38932c409c0af99f030b6bd5dbe57",
+      "normalized_tokens_sha256": "9d5a729b77d926f48e96f897ee9d856da3d46d6bd0b7e742bc51b30c035e0313",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 3,
+            "widths": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "standalone-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "f2ab3be25299d24317b584ceda36579db23f6523b84107e7df8728c49edd1655"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Two numeric(38,24) rows and unmodified numeric NULL: typmod is dropped.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "numeric",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all_variant_extremum.test:1987",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all_variant_extremum.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 93,
+        "start": 1987,
+        "end": 2048
+      },
+      "sql_sha256": "cee23766d9f2a6a5c3da0474aa9addd45d46d941e63f0d29f1722d7519ea5d1d",
+      "normalized_tokens_sha256": "b10a8cfe80d94c4681cfc7ce718977908be8026bba2cb2c0b2c7d77b6e6e1af7",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 3,
+            "widths": [
+              1,
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "d9d13322bd00072017d56165c85e57c56db947d64ce0cf02727d851551ab9401"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Strict scalar comparison nullability is left-or-child nullability. WHERE does not infer cardinality or refine types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all_variant_extremum.test:2067",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all_variant_extremum.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 98,
+        "start": 2067,
+        "end": 2121
+      },
+      "sql_sha256": "507ad7c7d9d41978a4cbdf2bb1b5e9d3b98af82717acdbc89b0a52cbbab036ac",
+      "normalized_tokens_sha256": "576959f6523c69750f478ac732e4b9b31ccc7e3e73a757cfad8a320e4f4a8cc9",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              1,
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "95c75b635881252f22b46219e483a3a77ac76042740b38559dd55cf0a78fc28a"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Strict scalar comparison nullability is left-or-child nullability. WHERE does not infer cardinality or refine types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all_variant_extremum.test:2187",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all_variant_extremum.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 105,
+        "start": 2187,
+        "end": 2251
+      },
+      "sql_sha256": "cbcee602e61c4e8b918b046f7014d3cf1500bd8321506c187bc791e1421a56af",
+      "normalized_tokens_sha256": "9c6e7f29436c87cdecb40e8a1ebf9534992e863bf66f6bf7d52f0b73b0539c43",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              1
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "50195c589fca4a68ad14970ed500fd64d98ce5d10de9c9d6c0ce31b36f857dd6"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Strict scalar comparison nullability is left-or-child nullability. WHERE does not infer cardinality or refine types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1638",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 87,
+        "start": 1638,
+        "end": 1706
+      },
+      "sql_sha256": "fce9198afadd866714ecc431952e7fcc901e7dadcf6b94405d7655c694dea557",
+      "normalized_tokens_sha256": "a88a4fdef9361f2ea419a2cfe59caf3b97394f5276dec20309176737927df406",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 3,
+            "widths": [
+              2,
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "b2c51b25c9db59bd84cf3bae7b27d10571e8598206290b4fb574a6d0691bf899"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1725",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 92,
+        "start": 1725,
+        "end": 1785
+      },
+      "sql_sha256": "ea12705d192485e9078f1d9b3eceb040227a67d34955c41e1ec665ea72b64ee9",
+      "normalized_tokens_sha256": "faa0de0418e6d32cb28b1e0dedf6b927e5da57f549950198297ebbdc1291dd4e",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "3a54f5a92699fd0c0715770f38fdb532255574746b41f45843d245b0608fe35c"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1892",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 103,
+        "start": 1892,
+        "end": 1952
+      },
+      "sql_sha256": "cefc243621c1f430f198bd166d7f67e9143b90faf028d1df705109e919b2c70e",
+      "normalized_tokens_sha256": "8a0e018904e0fc1e91c90ba8b06e3916c4e626889ad41f23d73679f19a40e390",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "7e1339adca017a9b7ec5cdd47f080d425a68da8e1247c2e5a2f3783600b11faf"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1971",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 108,
+        "start": 1971,
+        "end": 2031
+      },
+      "sql_sha256": "a1fe45dfa4efb6def4c93912d9bd37406b5f5d9cba0f71961f7eac5d401ce8a0",
+      "normalized_tokens_sha256": "dbade41a16e63719658e48e4dec69c605d922d7b88e859c08d92d2bf5bf3a8a7",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "0e9fed9a17cab0d0900c98efedbefeed33171ae5218f483f2a6c23f01b60e671"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2140",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 119,
+        "start": 2140,
+        "end": 2201
+      },
+      "sql_sha256": "6857cba50490ddf3348e5dca552b1fd705da321f10e8f42759a18d6a93e2e675",
+      "normalized_tokens_sha256": "faa93c956410d2bc3980cb10baa7fd5351c8d34c667821803fdd2370b264f1ed",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "c5ac87b07ba04ec6f5798a69facb05c1487afccb2d99c7d6cf372f9670fbcc45"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2220",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 124,
+        "start": 2220,
+        "end": 2281
+      },
+      "sql_sha256": "5e5755663899f847e1c445291c0f0888e9395127c83080dac9478be78bddb6b7",
+      "normalized_tokens_sha256": "ccac0765be9a88358812d2f89ce8c0e6fe7074c95f019bf9e3d4db1fad70e787",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "dc41034f56049760140735573df4d195ebcb498acbe261b37ad49bc10f3a03dd"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2390",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 135,
+        "start": 2390,
+        "end": 2451
+      },
+      "sql_sha256": "7a40be5fe298dff9d39307afb0804ce14714860513be075b663caad5cc35e20c",
+      "normalized_tokens_sha256": "f2868d192b7d604f5863f28157995f0fd12e21a7d4cb07bfb41cab29da5620f9",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "686e2c8d1b884b4521b735a5da57521ddc8f96041bc9bc46ada65d98b8ce9404"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2470",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 140,
+        "start": 2470,
+        "end": 2531
+      },
+      "sql_sha256": "db5c4b9a5c84626f6c0b4201dd40b9cadf2b5daa243bd9cd9471f1322117dabd",
+      "normalized_tokens_sha256": "aed46b351bea2b3a78cf8001f1a5ceadc9cd79d6f0a19971050cf0cce949e08d",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "95ce98bf40d77e5be5dc789196728db9713a1fa4930f43214be2bdb420e0316e"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2871",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 167,
+        "start": 2871,
+        "end": 2931
+      },
+      "sql_sha256": "dd80bdfdf295f5042af7f274972a5c53afd1d25c93c8c8cf237f06dd67335651",
+      "normalized_tokens_sha256": "5563de88bda0269c7c07f0dd25525a60ef9a35b6ea76d175ea3cb7838d775422",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "d819fe8dad893e2a5c76090f418f0ff9a7d711650557af385b71552237245776"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3793",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 232,
+        "start": 3793,
+        "end": 3861
+      },
+      "sql_sha256": "fb2572678f97c8814db9da4a533e820e56e359e07e263328fdfea1e953c0fde0",
+      "normalized_tokens_sha256": "d64a7e853114fa217951e411af019b790dd7584b0b0f3368fefe030f9bb15c88",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 3,
+            "widths": [
+              2,
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "421b3fb0a12df8c889d2e66844c9f62be3c38614310f9a0d58c5a2db8e67e25b"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3880",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 237,
+        "start": 3880,
+        "end": 3948
+      },
+      "sql_sha256": "d14afbf74332a6bd6894e03cad6475dadfb08dd08b49a645c64cd5b9b855baf8",
+      "normalized_tokens_sha256": "036a165ffb1f84018e162dc31090ad94f28ab4cef0651a0a3dd5c407ba127f3b",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 3,
+            "widths": [
+              2,
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "deacb4542ad2ecaf48bb1d8896eef06f2497ba7f57e03e6704b676166f61a245"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:183",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 5,
+        "start": 183,
+        "end": 252
+      },
+      "sql_sha256": "e5af70961979a3cb867d7cf710089fe9018f266d51c95059195dc04d2a66b326",
+      "normalized_tokens_sha256": "cf38ac510e7fb82dfc85ec7f0bf76cfc72eaf5356fbb00b74a9cc9e82dd52d78",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "0ff6ee61d163ee9739abefc6d84db213cf3218711e11066ccc9fafd588eab8c5"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:271",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 10,
+        "start": 271,
+        "end": 340
+      },
+      "sql_sha256": "0f721496f36e14f3c31f08b42c06b350ca55ca62a7468140fa898081d9b3bbca",
+      "normalized_tokens_sha256": "215ef449db1b72a41d0d2c949d0814250ee6a53952e68e62a9d25004a14a5667",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "5880d00041fd45268e86cab6683b7e48b8bd732369a95d15568aeb1a1f395ea8"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:359",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 15,
+        "start": 359,
+        "end": 436
+      },
+      "sql_sha256": "2aee7235853e36d287ed265537d348f9ced6ed3e24d2360adc95220d629f5f49",
+      "normalized_tokens_sha256": "12271d80c01fc7ecffe12f9d79e7f3e48cfb0a083351776adfb5f3e75577a619",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "74e52dbd6bee05b83a2c59ebf788c10b80363794adc1f2a01d189f6ed31faa24"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": true,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:525",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 21,
+        "start": 525,
+        "end": 599
+      },
+      "sql_sha256": "a717e72466093b8a2d1314f1b5b3f3a9a9009243cc738d8c1ba2c78673d052e7",
+      "normalized_tokens_sha256": "a6262d069b3f1e5038b9377c630b7b6b881abc9edd532c5ee1e8ff821b3c2e75",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "addd44f90ac135edc256f7e86bdf64f65e29a51f36ae99670fa992c8ae722e0f"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:618",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 28,
+        "start": 618,
+        "end": 692
+      },
+      "sql_sha256": "1433e5fe3b830bd0af071c62f5705f392e06a21f15b774dc9fed4c7f6e78d352",
+      "normalized_tokens_sha256": "e5fab64c13be60606343ad5159a3bf0b8d4c7e395d37401a6ddecae1b51cf7ec",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "951cea392d593923dd7a7b16a09da234a1e6dca594f0811e6456205debac4a4e"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:769",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 36,
+        "start": 769,
+        "end": 843
+      },
+      "sql_sha256": "5feadc0bf5a24b9f6079589573e0419feda5d63b6fd3e973c5d88fc7811ee3d6",
+      "normalized_tokens_sha256": "31e4b3e2067e3485de1a140b9efe53e31388e2ae2212bc84c9a52e71482e3935",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "b7e3ab5878f55cd26ab42994fb2f744f6a76543e133d898982107964a5dee2fc"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:862",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 43,
+        "start": 862,
+        "end": 931
+      },
+      "sql_sha256": "8dba62e09958e22e4d9d3312736ea0f2a3f9c05e82ebc20fda6815947a680e07",
+      "normalized_tokens_sha256": "a4bb30272415169f2164e89977a0cdace29087187ac2870618715c320b4cebfb",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "eaedab1af47837c876f89b0b821af3a4bacc6b734b7f72904cd81c595fe7bbdb"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:950",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 48,
+        "start": 950,
+        "end": 1019
+      },
+      "sql_sha256": "21fe291e61a3034414eced069bd33ed196d67c0cdefd74a5aa953eab7e3129a8",
+      "normalized_tokens_sha256": "1822dcc6ca1ab8a96105c564ab114880dc8c579b1f2dda5aad401a006a3e7b64",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "02f88c95c6be13922a13a6ccec29c35657ffdf037dc73cb4233caccc235ccf3a"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:1038",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 53,
+        "start": 1038,
+        "end": 1107
+      },
+      "sql_sha256": "3953edaf4e3af0f912f1a02a54d6f45b14aaa9438510614ca1ed02e29ce45540",
+      "normalized_tokens_sha256": "f2b1ca945429d35654acbfd6d5a3fe6d29e0cfd315a24ad04d2e3b24b1fdce13",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "3913c93e8a0798f394a034a14f6f74c2bdc923e3dee4448dde839d0f3de4eb03"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:1126",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 58,
+        "start": 1126,
+        "end": 1203
+      },
+      "sql_sha256": "71464c06adc8566728cb38d4612a4752da222d593e97df70fcca297f63a5af3a",
+      "normalized_tokens_sha256": "b85de3589dbe871fc98bd601b6bd0580fb1e8ae09097ec2ed37c40d614bac983",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 2,
+            "widths": [
+              2,
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "8a91a592b22f1b0b0de4ee3406642dff81579688970398eea6db47dfbd89aeed"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:1222",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 63,
+        "start": 1222,
+        "end": 1295
+      },
+      "sql_sha256": "eae403716f7dc456522666d2204fd39f171d69921b7c5cca18c6a0af49caacfb",
+      "normalized_tokens_sha256": "2bd9d200c8004a6f98119ece4a9afe4bc9405c8a96034f89c6ebbb9bbdd6f75f",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "99ba6b8dd6aef1853504186e18e8528b77b6abcf65fa4faf5d5daede62759671"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:1382",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 69,
+        "start": 1382,
+        "end": 1484
+      },
+      "sql_sha256": "82c6f54b66a67c61246a3767d1e2314ecb9d9a55170c2628b0fd83532adce664",
+      "normalized_tokens_sha256": "293322c9b8e1bfa48ad91cdb79af3160939c14f3bcfb6f94548faea1586d772f",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 0,
+        "ast_sha256": "d32d784a6dc37a3978e63393cb9dc4d5340be5f3a91f2766034ee92b2f90c95f"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "Flat row comparison returns conservative nullable bool. VALUES columns use their written integer expressions/typed NULLs; mixed outer SMALLINT does not change child BIGINT types.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "bigint",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "bigint",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "values:duckdb:test/sql/subquery/table/test_unnamed_subquery.test:234",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/table/test_unnamed_subquery.test",
+      "selector": {
+        "kind": "values_sqllogic_input",
+        "header_line": 15,
+        "start": 234,
+        "end": 266
+      },
+      "sql_sha256": "5a5e7d69171f1699c95224795b7d1fc10111538f46a52fbbde690a8d71b45be7",
+      "normalized_tokens_sha256": "f6e1177f27d150a2e2a3e7145c5165e3c4114cedfa1a7db1b71ca6ea711c80fb",
+      "observation": {
+        "values_bodies": [
+          {
+            "rows": 1,
+            "widths": [
+              2
+            ]
+          }
+        ],
+        "query_class": "select-containing-values",
+        "relation_references": [],
+        "cte_names": [],
+        "external_relation_candidates": [],
+        "parameters": [],
+        "functions": [],
+        "lateral": false,
+        "anonymous_derived_relations": 1,
+        "ast_sha256": "db41416007761e6c305df5927fe5768a42737552df55310301849f9f19228140"
+      },
+      "scope_basis": "closed expressions and local derived VALUES",
+      "metadata_basis": "PG16 permits omitted derived-table alias; VALUES output names remain column1,column2.",
+      "values_body_columns": [
+        [
+          {
+            "name": "column1",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          },
+          {
+            "name": "column2",
+            "type": "int32",
+            "nullable": false,
+            "collation": null
+          }
+        ]
+      ],
+      "assurance_tier": "fixed-static-certificate-candidate"
+    }
+  ],
+  "required_grammar_features": {
+    "values_query_body": 50,
+    "anonymous_derived_relation": 12
+  }
+}

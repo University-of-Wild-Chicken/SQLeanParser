@@ -102,6 +102,7 @@ mutual
     | .table _ _ columns schema =>
         if schema.isSome then unsupported "schema-qualification"
         else if columns.isEmpty then pure () else unsupported "relation-column-aliases"
+    | .derivedAnonymous _ _ => unsupported "anonymous-derived-source"
     | .derived query _ columns lateral =>
         if lateral then unsupported "LATERAL"
         else if !columns.isEmpty then unsupported "relation-column-aliases"
@@ -144,6 +145,7 @@ mutual
         have : sizeOf cte.val.query < sizeOf cte.val := by cases cte.val; simp; omega
         checkSQLiteQuery cte.val.query
       match _h : query.body with
+      | .values _ => unsupported "VALUES-query"
       | .select select => checkSQLiteSelect select
       | .set op all left right =>
           if all && op != .union then unsupported "INTERSECT-or-EXCEPT-ALL"
@@ -151,6 +153,7 @@ mutual
             unsupported "operand-local-clauses"
           else
             match right.body with
+            | .values _ => unsupported "VALUES-query"
             | .set .. => unsupported "right-nested-compound"
             | .select _ =>
                 checkSQLiteQuery left

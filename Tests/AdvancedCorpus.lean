@@ -41,6 +41,7 @@ mutual
       query.ctes.any (fun cte => advancedQueryFeature category fuel cte.query) ||
       query.orderBy.any (fun order => advancedExprFeature category fuel order.expr) ||
       match query.body with
+      | .values rows => rows.any (fun row => row.any (advancedExprFeature category fuel))
       | .set op _ left right =>
           (op == .intersect && category == "intersect") ||
           (op == .except && category == "except") ||
@@ -59,6 +60,8 @@ mutual
     | fuel + 1, source =>
       match source with
       | .table .. => false
+      | .derivedAnonymous query lateral => (lateral && category == "lateral") ||
+          advancedQueryFeature category fuel query
       | .derived query _ _ lateral => (lateral && category == "lateral") ||
           advancedQueryFeature category fuel query
       | .join _ left right condition =>

@@ -1,4 +1,4 @@
-import SQLean.SelectContract.CollationRules
+import SQLean.SelectContract.Values
 
 /-! Independent query, source, and namespace judgments. Scalar typing and
 collation derivations are separate prerequisites of every expression context. -/
@@ -154,6 +154,7 @@ def joinScope (kind : JoinKind) (left right : Scope) : Scope :=
 This is structural metadata, independent of column resolution or a checker. -/
 def fromRelations : Advanced.From → List (Name × Bool)
   | .table name alias _ _ => [(alias.getD name, false)]
+  | .derivedAnonymous _ _ => []
   | .derived _ alias _ _ => [(alias, false)]
   | .join kind left right _ =>
       (fromRelations left).map (fun relation =>
@@ -166,6 +167,7 @@ def sourceRelations (source : Option Advanced.From) : List (Name × Bool) :=
 
 def fromDerivedNames : Advanced.From → List Name
   | .table .. => []
+  | .derivedAnonymous _ _ => []
   | .derived _ alias _ _ => [alias]
   | .join _ left right _ => fromDerivedNames left ++ fromDerivedNames right
 
@@ -175,7 +177,7 @@ def sourceDerivedNames (source : Option Advanced.From) : List Name :=
 /-- Equal visible names are legal only for distinct unaliased base relations.
 Column lookup can still be ambiguous; the namespace itself remains well formed. -/
 def NamespaceCompatible (left right : RelationNamespace) : Prop :=
-  left.name ≠ right.name ∨
+  left.visible = false ∨ right.visible = false ∨ left.name ≠ right.name ∨
     (left.aliased = false ∧ right.aliased = false ∧
       left.origin.isBase = true ∧ right.origin.isBase = true ∧ left.origin ≠ right.origin)
 
@@ -574,7 +576,7 @@ def PaginationBoundsCertificate.runtimeObligation
 /-- PostgreSQL OF resolves the first matching visible relation in range-table
 order. This deliberately differs from unique namespace resolution for columns. -/
 def LockTarget (scope : Scope) (target : Name) : Prop :=
-  target ≠ "" ∧ ∃ relation ∈ scope.relations.find? (fun relation => relation.name == target),
+  target ≠ "" ∧ ∃ relation ∈ scope.relations.find? (fun relation => relation.visible && relation.name == target),
     relation.origin.isBase = true ∧ relation.nullable = false
 
 instance (scope : Scope) (target : Name) : Decidable (LockTarget scope target) := by
@@ -731,6 +733,10 @@ mutual
         SourceValid profile catalog params env (some (.join kind left right .natural))
           (mergedJoinScope kind leftScope rightScope
             (naturalJoinKeys leftScope.output rightScope.output) merged) (leftUses ++ rightUses)
+    | derivedAnonymous (queryValid : QueryValid profile catalog params env query output uses)
+        (nonLateral : lateral = false) :
+        SourceValid profile catalog params env (some (.derivedAnonymous query lateral))
+          (Scope.ofAnonymousOutput output) uses
     | derived (queryValid : QueryValid profile catalog params env query output uses)
         (aliasValid : alias ≠ "") (columnsValid : ColumnAliasesValid columns output)
         (nonLateral : lateral = false) :
@@ -762,6 +768,19 @@ mutual
           ⟨.select select, ctes, false, orderBy, limit, offset, locking, offsetFirst⟩ output
           (cteUses ++ if offsetFirst then selectUses ++ sourceUses ++ whereUses ++ orderUses ++ offsetUses ++ limitUses
            else selectUses ++ sourceUses ++ whereUses ++ orderUses ++ limitUses ++ offsetUses)
+    | values (names : CTENamesValid ctes)
+        (definitions : CTEsValid profile catalog params env ctes visible cteUses)
+        (shape : valuesShape rows = true)
+        (cellsValid : ValuesRowsValidCore (QueryValid profile catalog params) profile params visible rows cells rowUses)
+        (columns : ValuesColumnsValid 0 (valuesTranspose cells) output)
+        (nonempty : output ≠ [])
+        (orders : SetOrdersValid output orderBy)
+        (limitValid : PaginationValidCore (QueryValid profile catalog params) profile params visible limit limitUses)
+        (offsetValid : PaginationValidCore (QueryValid profile catalog params) profile params visible offset offsetUses) :
+        QueryValid profile catalog params env
+          ⟨.values rows, ctes, false, orderBy, limit, offset, [], offsetFirst⟩ output
+          (cteUses ++ rowUses ++
+            if offsetFirst then offsetUses ++ limitUses else limitUses ++ offsetUses)
     | set (names : CTENamesValid ctes)
         (definitions : CTEsValid profile catalog params env ctes visible cteUses)
         (leftValid : SetOperandValid profile catalog params visible left leftInputs leftUses)
@@ -812,6 +831,11 @@ mutual
           (resolveLeafInputs profile select.distinct orderBy pending)
           (cteUses ++ if offsetFirst then selectUses ++ sourceUses ++ whereUses ++ orderUses ++ offsetUses ++ limitUses
            else selectUses ++ sourceUses ++ whereUses ++ orderUses ++ limitUses ++ offsetUses)
+    | values (complete : QueryValid profile catalog params env
+        ⟨.values rows, ctes, recursive, orderBy, limit, offset, locking, offsetFirst⟩ output uses) :
+        SetOperandValid profile catalog params env
+          ⟨.values rows, ctes, recursive, orderBy, limit, offset, locking, offsetFirst⟩
+          (knownColumns output) uses
     | set (complete : QueryValid profile catalog params env
         ⟨.set op all left right, ctes, recursive, orderBy, limit, offset, locking, offsetFirst⟩ output uses) :
         SetOperandValid profile catalog params env

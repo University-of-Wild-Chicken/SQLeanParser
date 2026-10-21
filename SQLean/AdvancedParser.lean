@@ -559,7 +559,7 @@ private def typedString (fuel : Nat) : Parser Expr := do
 private def queryStart : Parser Bool := do
   let tokens := (← get).tokens.dropWhile (fun t => t.kind == .symbol "(")
   pure (match tokens.head? with
-    | some token => token.kind.keyword == .word "select" || token.kind.keyword == .word "with"
+    | some token => token.kind.keyword == .word "select" || token.kind.keyword == .word "with" || token.kind.keyword == .word "values"
     | none => false)
 
 private def parseJoinKind : Parser (Option JoinKind) := do
@@ -1095,9 +1095,11 @@ mutual
           return ← alternative (do
             let q ← query fuel
             expect ")"
-            let some alias ← alias? | fail "derived tables require an alias"
-            let columns ← optionalNames fuel
-            pure (.derived q alias columns lateral)) grouped
+            match ← alias? with
+            | none => pure (.derivedAnonymous q lateral)
+            | some alias =>
+              let columns ← optionalNames fuel
+              pure (.derived q alias columns lateral)) grouped
         return ← grouped
       if lateral then fail "LATERAL requires a derived table"
       let parts ← qualifiedName fuel
@@ -1196,6 +1198,14 @@ mutual
         let q ← query fuel
         expect ")"
         pure q
+      else if ← eat "values" then
+        let row := do
+          expect "("
+          let cells ← separated (expression fuel 0) fuel
+          expect ")"
+          pure cells
+        let rows ← separated row fuel
+        pure {body := .values rows}
       else selectCore fuel
 
   private def intersectTail : Nat → Query → Parser Query
