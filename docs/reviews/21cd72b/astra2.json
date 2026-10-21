@@ -1,0 +1,118 @@
+{
+  "requested_model_identity": "GPT-6 Astra",
+  "actual_model_identity": "Not independently exposed by runtime tools; agent was assigned as GPT-6 Astra reviewer 2.",
+  "reviewer": "astra_review_2 / escalation level 3 reviewer 2",
+  "commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+  "snapshot": "/tmp/sqlean-review-21cd72b-fuypy_75",
+  "cli_sha256": "2c00c6692f3acf23d027849b18d8efc3036f033339e5a87dfd6e165a7d60824a",
+  "claimed_surface": [
+    "Bounded independent correctness review of typed SELECT renderer, parameter transport, exact output names/types/modifiers/collations, source parsing versus canonical structure, and test provenance.",
+    "No full PostgreSQL release approval; StaticValid excludes execution, cardinality, literal conversion and recursive termination."
+  ],
+  "attempts": [
+    {
+      "id": "composed-arrays-joins-precedence",
+      "count": 242,
+      "result": "241 contract-valid cases and one parser rejection. Native source and canonical gdesc agreed for all admitted cases. Compared exact names/types/modifiers and collations against contract: one concrete signed-boundary mismatch, reduced separately. 233 valid native temporary-view descriptors permitted catalog collation comparison; eight indeterminate-collation FULL JOIN outputs cannot be persisted as view columns, while source/canonical gdesc succeeded and contract reported null collation.",
+      "evidence_paths": [
+        "/tmp/sqlean-astra2-probe.py",
+        "/tmp/sqlean-astra2-probe.json",
+        "/tmp/sqlean-astra2-probe.log",
+        "/tmp/sqlean-astra2-compare.py",
+        "/tmp/sqlean-astra2-compare.json"
+      ]
+    },
+    {
+      "id": "signed-boundary-matrix",
+      "count": 62,
+      "result": "Independently authored signed literal tests around 2^31 and 2^63, repeated minus, unary plus, parentheses, cast and scalar-subquery barriers, array/CTE/arithmetic/UNION composition. Ten exact-type discrepancies from the same incomplete raw-literal folding rule. Source and canonical native descriptors agree. Bare double-negative values execute successfully as positive bigint/numeric values. Explicit cast and scalar-subquery barriers retain the narrower native types and agree with the contract.",
+      "evidence_paths": [
+        "/tmp/sqlean-astra2-signs.py",
+        "/tmp/sqlean-astra2-signs.json",
+        "/tmp/sqlean-astra2-signs.log",
+        "/tmp/sqlean-astra2-boundary-matrix.json"
+      ]
+    },
+    {
+      "id": "static-transport-provenance-inspection",
+      "result": "Inspected lexical/AST parameter traversal, binding map and transport, renderer ambiguities, fixed corpus hashes/count assertions, source-only nonexecution guards, and separate PREPARE/gdesc/execution paths. No additional concrete issue established; did not execute source corpus SQL or DDL.",
+      "evidence_paths": [
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/AdvancedParser.lean",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/AdvancedPretty.lean",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/RenderContract/Profile.lean",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/RenderContract/Admissibility.lean",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/scripts/sql_parameter_observer.py",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/scripts/check_subqueries_cli.py"
+      ]
+    }
+  ],
+  "objections": [
+    {
+      "id": "ASTRA2-001",
+      "severity": "P1 / exact-type contract blocker",
+      "file": "SQLean/SelectContract/ExpressionChecker.lean",
+      "line": 390,
+      "claim": "Repeated raw unary minus on an integer boundary is typed by recursively assigning the inner minimum signed integer and then preserving that narrow type. PostgreSQL folds the entire raw minus-literal chain before selecting its type. Thus an admitted result can have a different native type from its exact output contract. The same issue is in normative OrdinaryUnary/ExprValid rules, not only the checker.",
+      "reproducer": {
+        "catalog": {
+          "tables": []
+        },
+        "parameters": [],
+        "sql": "SELECT -(-2147483648)",
+        "cli": "/tmp/sqlean-review-21cd72b-fuypy_75/.lake/build/bin/sqlean --assurance contract --schema /tmp/sqlean-astra2-schema.json \"SELECT -(-2147483648)\"",
+        "native": "SELECT -(-2147483648) followed by psql \\gdesc; repeat canonical SELECT (-(-2147483648));",
+        "additional_sql": [
+          "SELECT - - 9223372036854775808",
+          "SELECT ARRAY[-(-2147483648)]",
+          "WITH c AS (SELECT -(-2147483648) AS n) SELECT n FROM c",
+          "SELECT -(-2147483648) UNION ALL SELECT 1"
+        ]
+      },
+      "expected": "Native original and canonical output descriptor ?column?|bigint; value 2147483648. At 2^63 the output type is numeric and value 9223372036854775808. The contract must match native types or return Unsupported, rather than Valid with int32/bigint respectively.",
+      "actual": "status valid, typePrecision exact, outputColumns [{name:\"?column?\",nullable:false,type:\"int32\"}], outputCollations [null]; 2^63 case reports bigint, array case integer[] instead of bigint[]. Native source/canonical both analyze and the bare positive boundary result executes successfully, so this is not a runtime-overflow exclusion.",
+      "evidence_paths": [
+        "/tmp/sqlean-astra2-signs.json",
+        "/tmp/sqlean-astra2-boundary-matrix.json",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/SelectContract/ExpressionChecker.lean:388",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/SelectContract/Profile.lean:347",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/SelectContract/Profile.lean:360",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/SelectContract/ExpressionSpec.lean:232",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/RenderContract/ExpressionPreservation.lean:114"
+      ]
+    }
+  ],
+  "notes": [
+    "No repository edits, Lake builds, shared build artifacts or authentic source-corpus execution. Native experiments used independently authored SQL with a private PostgreSQL 16 cluster, then stopped and removed the cluster.",
+    "Only /tmp review scripts/evidence were written; copied CLI SHA256 was verified.",
+    "Native temporary-view failure for indeterminate collation is stricter than SELECT analysis and is not counted as an objection.",
+    "Initial offline comparison normalization incorrectly renamed native bpchar/bigint/array names; corrected to exact profile aliases before recording the sole discrepancy.",
+    "Open objection prevents approval of this frozen candidate."
+  ],
+  "regression_implementation": {
+    "files": [
+      "fixtures/review_regressions/signed_integer.json",
+      "scripts/check_signed_literals_cli.py",
+      "scripts/test_signed_literals_cli.py"
+    ],
+    "registry_cases": 70,
+    "expected_type_provenance": "First 62 exact native descriptors from independently authored pre-repair boundary matrix; eight authored barrier/parameter controls; expected values fixed using exact integer arithmetic. No expected result derived from repaired checker.",
+    "native_preflight": {
+      "command": "LD_LIBRARY_PATH=/home/augustus/.local/opt/sqlean-postgresql-16/usr/lib/x86_64-linux-gnu PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 scripts/check_signed_literals_cli.py --source-only --local-bin /home/augustus/.local/opt/sqlean-postgresql-16/usr/lib/postgresql/16/bin",
+      "exit_code": 0,
+      "postgres": "16.15",
+      "descriptor_observations": 140,
+      "execution_observations": 140,
+      "per_form_classifications": {
+        "success": 61,
+        "excluded-runtime-overflow": 8,
+        "excluded-literal-conversion": 1
+      }
+    },
+    "unit_tests": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -m unittest discover -s scripts -p test_signed_literals_cli.py",
+      "tests": 10,
+      "exit_code": 0
+    },
+    "status": "Regression implementation complete; full fixed-CLI native replay and independent objection recheck pending. ASTRA2-001 remains open."
+  }
+}

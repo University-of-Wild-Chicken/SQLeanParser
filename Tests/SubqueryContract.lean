@@ -84,4 +84,29 @@ example : SelectValid .basicV33 [] [] (RenderContract.translateParameters scalar
     [⟨"?column?", ⟨.int32, true⟩, none⟩] :=
   RenderContract.translateParameters_valid (whole_valid scalarOne_valid)
 
+private def rowInOneExpr : Advanced.Expr := .inQuery (.row [.literal (.int 1)]) oneQuery
+
+private theorem rowInOne_typed : ExprValidCore (QueryValid .basicV34 [] []) [] [] .empty
+    rowInOneExpr (some ⟨.bool, true⟩) [] :=
+  .inRowQuery (selected := [⟨[.int32, .int32], .bool⟩])
+    (.cons (.int (by decide)) .nil) oneQuery_valid (by decide) rfl (by decide)
+
+private theorem rowInOne_collation : ExprCollationValidCore (QueryValid .basicV34 [] []) .basicV34 [] [] .empty
+    rowInOneExpr (some ⟨.bool, true⟩) .none :=
+  .inRowQuery (signatures := [⟨[.int32, .int32], .bool⟩]) rowInOne_typed
+    (.cons (.atom (.int (by decide)) .int) .nil) oneQuery_valid (by decide)
+    (.cons (leftType := .int32) (rightType := .int32) rfl rfl .nil)
+
+private theorem rowInOne_valid : QueryValid .basicV34 [] [] [] (singleProjection rowInOneExpr)
+    [⟨"?column?", ⟨.bool, true⟩, none⟩] [] :=
+  singleProjection_valid rowInOne_typed rowInOne_collation (.ordinary rfl)
+
+example : SelectValid .basicV34 [] [] (singleProjection rowInOneExpr)
+    [⟨"?column?", ⟨.bool, true⟩, none⟩] := whole_valid rowInOne_valid
+
+example : SelectValid .basicV34 [] []
+    (RenderContract.translateParameters (singleProjection rowInOneExpr))
+    [⟨"?column?", ⟨.bool, true⟩, none⟩] :=
+  RenderContract.translateParameters_valid (whole_valid rowInOne_valid)
+
 end SQLean.Tests

@@ -375,6 +375,8 @@ def run : IO Unit := do
   IO.println s!"PASS: {subqueryCorpus} authored scalar, EXISTS and IN-subquery full-query certificates"
   let subquerySource ← subquerySourceCorpusTests
   IO.println s!"PASS: {subquerySource} unchanged subquery full-query certificates (all 150 rendered)"
+  let (rowInAuthored, rowInSources) ← rowInSubqueryCorpusTests
+  IO.println s!"PASS: {rowInAuthored} authored and {rowInSources} unchanged row-IN certificates (all 50 sources rendered)"
   IO.println "All tests passed. Lean proof examples compiled successfully."
 
 end SQLean.Tests

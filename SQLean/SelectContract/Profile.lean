@@ -14,7 +14,10 @@ structure Profile where
   collations : CollationEnv := .builtin
   deriving Repr, BEq, DecidableEq, Inhabited
 
-def Profile.basicV33 : Profile := {}
+def Profile.basicV34 : Profile := {}
+
+/-- Compatibility spelling for the preceding uncorrelated-subquery profile. -/
+abbrev Profile.basicV33 : Profile := .basicV34
 
 /-- Compatibility spelling for clients migrating the explicit profile name. -/
 abbrev Profile.basicV32 : Profile := .basicV33
@@ -22,7 +25,7 @@ abbrev Profile.basicV32 : Profile := .basicV33
 def Profile.withCollations (profile : Profile) (collations : CollationEnv) : Profile :=
   {profile with collations}
 
-def Profile.name (_profile : Profile) : String := "sqlean-basic-select-v0.33"
+def Profile.name (_profile : Profile) : String := "sqlean-basic-select-v0.34"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes
@@ -355,10 +358,27 @@ def unarySignature (op : UnOp) (arg : ExprType) : Option ExprType :=
       else none
     | none => if op == .pos then some (some ⟨.doublePrecision, true⟩) else none
 
-/-- PostgreSQL folds these signed boundary constants before operator resolution.
-Generic unary derivations exclude them so their result cannot be widened twice. -/
+/-- PostgreSQL folds a raw chain of minus signs before selecting the integer
+constant's type. Unary plus, casts and every other expression constructor are
+barriers: their values already undergo ordinary expression transformation. -/
+def rawIntegerValue : Advanced.Expr → Option Int
+  | .literal (.int n) => some (Int.ofNat n)
+  | .unary .neg arg => (rawIntegerValue arg).map Int.neg
+  | _ => none
+
+/-- The entire folded value determines the concrete constant type. In
+particular, negating a raw minimum constant twice can cross the positive
+boundary and widen the result to BIGINT or NUMERIC. -/
+def foldedIntegerType (value : Int) : ScalarType :=
+  if -2147483648 ≤ value ∧ value ≤ 2147483647 then .int32
+  else if -9223372036854775808 ≤ value ∧ value ≤ 9223372036854775807 then .int64
+  else .numeric []
+
+/-- A raw minus-literal spine has no ordinary unary-operator derivation.
+Excluding the entire family prevents a narrow intermediate minimum from
+producing an incorrect type for an enclosing folded minus. -/
 def OrdinaryUnary : UnOp → Advanced.Expr → Prop
-  | .neg, .literal (.int n) => n ≠ 2147483648 ∧ n ≠ 9223372036854775808
+  | .neg, arg => rawIntegerValue arg = none
   | _, _ => True
 
 instance (op : UnOp) (arg : Advanced.Expr) : Decidable (OrdinaryUnary op arg) := by

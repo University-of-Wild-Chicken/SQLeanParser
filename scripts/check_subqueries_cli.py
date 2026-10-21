@@ -321,7 +321,7 @@ def boundary_classification(row):
     unsupported = {
         'exists-missing-column': 'subquery_correlation',
         'exists-nullable-lock': 'subquery_planning_lock',
-        'in-row': 'row_subquery', 'in-json-array-runtime': 'array_element_operator',
+        'in-json-array-runtime': 'array_element_operator',
         'scalar-indeterminate-collation': 'scalar_subquery_collation',
         'sibling-output-hidden': 'subquery_correlation',
         'correlated-qualified': 'subquery_correlation',
@@ -334,6 +334,7 @@ def boundary_classification(row):
     if id_ in unsupported:
         return {'status': 'unsupported', 'diagnostic': unsupported[id_]}
     valid = {
+        'in-row': ('?column?', 'bool', True),
         'scalar-many': ('?column?', 'int32', True),
         'scalar-many-equal': ('?column?', 'int32', True),
         'exists-bad-literal': ('exists', 'bool', False),

@@ -343,21 +343,21 @@ class ConcatenationCliTests(unittest.TestCase):
     def test_parser_and_semantic_boundaries_keep_their_exact_classifications(self):
         good = subprocess.CompletedProcess([], 1, json.dumps({
             "status": "invalid", "diagnostic": {"code": "input.parse"}}), "")
-        with patch.object(checker, "assert_report") as reports, \
+        with patch.object(checker, "assert_report", return_value={"outputCollations": ["default"]}) as reports, \
                 patch.object(checker, "invoke", return_value=good) as invoke:
             self.assertEqual(checker.boundaries(), 17)
         self.assertEqual(len(invoke.call_args_list), 3)
         self.assertTrue(all(call.args[0][:2] == ["--render-assurance", "identity"]
                             for call in invoke.call_args_list))
         self.assertEqual(sum(call.args[1] == "invalid" for call in reports.call_args_list), 8)
-        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 2)
-        self.assertEqual(sum(call.args[1] == "valid" for call in reports.call_args_list), 3)
+        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 1)
+        self.assertEqual(sum(call.args[1] == "valid" for call in reports.call_args_list), 4)
         for code, status, diagnostic in ((0, "rendered", "input.parse"),
                                          (1, "invalid", "resource.depth"),
                                          (3, "unsupported", "input.parse")):
             result = subprocess.CompletedProcess([], code, json.dumps({
                 "status": status, "diagnostic": {"code": diagnostic}}), "")
-            with self.subTest(status=status), patch.object(checker, "assert_report"), \
+            with self.subTest(status=status), patch.object(checker, "assert_report", return_value={"outputCollations": ["default"]}), \
                     patch.object(checker, "invoke", return_value=result), self.assertRaises(AssertionError):
                 checker.boundaries()
 

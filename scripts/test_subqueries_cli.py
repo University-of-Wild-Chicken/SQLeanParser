@@ -190,10 +190,11 @@ class SubqueryCliTests(unittest.TestCase):
     def test_static_boundaries_are_preregistered_and_wrong_codes_fail(self):
         cases = checker.boundary_cases()
         self.assertEqual(Counter(checker.boundary_classification(r)['status'] for r in cases),
-                         {'valid': 12, 'invalid': 14, 'unsupported': 8, 'parse-excluded': 4})
+                         {'valid': 13, 'invalid': 14, 'unsupported': 7, 'parse-excluded': 4})
         rows = {r['id']: checker.boundary_classification(r) for r in cases}
         self.assertEqual(rows['scalar-indeterminate-collation']['diagnostic'], 'scalar_subquery_collation')
-        self.assertEqual(rows['in-row']['diagnostic'], 'row_subquery')
+        self.assertEqual(rows['in-row']['output_columns'],
+                         [{'name': '?column?', 'type': 'bool', 'nullable': True, 'collation': None}])
         self.assertEqual(rows['exists-nullable-lock']['diagnostic'], 'subquery_planning_lock')
         self.assertEqual(rows['scalar-unknown-arithmetic']['diagnostic'], 'operator_signature')
         self.assertEqual(rows['exists-bad-operator']['diagnostic'], 'operator_signature')

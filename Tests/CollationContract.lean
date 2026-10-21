@@ -6,6 +6,19 @@ import Tests.Support
 import Lean.Data.Json
 
 namespace SQLean.Tests
+
+/-- Array element conversion is a second implicit collation contributor. -/
+example : SelectContract.knownCoercedCollation (.array .text) (.array .name)
+    (.implicit .databaseDefault) = .implicit .c := by decide
+
+example : (SelectContract.knownCoercedCollation (.array .text) (.array .name)
+    (.implicit .posix)).identity = none := by decide
+
+example : SelectContract.knownCoercedCollation (.array .text) (.array .name)
+    (.explicit .posix) = .explicit .posix := by decide
+
+example : SelectContract.knownCoercedCollation .text .name
+    (.implicit .databaseDefault) = .implicit .databaseDefault := by decide
 open SelectContract
 
 /-- Independent constructors witness explicit annotation and outer override.

@@ -1,0 +1,1871 @@
+[
+  {
+    "id": "matrix-00",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT  2147483647",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483647
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-01",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - 2147483647",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483647
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-02",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - 2147483647",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483647
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-03",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - - 2147483647",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483647
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-04",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - 2147483647",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483647
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-05",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + 2147483647",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483647
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-06",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - - 2147483647",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483647
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-07",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + - 2147483647",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483647
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-08",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - + 2147483647",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483647
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-09",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT  2147483648",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-10",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - 2147483648",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-11",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - 2147483648",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-12",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - - 2147483648",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-13",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - 2147483648",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-14",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + 2147483648",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-15",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - - 2147483648",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-16",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + - 2147483648",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "excluded-runtime-overflow",
+      "sqlstate": "22003",
+      "rows": null
+    }
+  },
+  {
+    "id": "matrix-17",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - + 2147483648",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-18",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT  2147483649",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483649
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-19",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - 2147483649",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483649
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-20",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - 2147483649",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483649
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-21",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - - 2147483649",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483649
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-22",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - 2147483649",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483649
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-23",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + 2147483649",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483649
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-24",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - - 2147483649",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483649
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-25",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + - 2147483649",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483649
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-26",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - + 2147483649",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483649
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-27",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT  9223372036854775807",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775807
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-28",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - 9223372036854775807",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775807
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-29",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - 9223372036854775807",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775807
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-30",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - - 9223372036854775807",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775807
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-31",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - 9223372036854775807",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775807
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-32",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + 9223372036854775807",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775807
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-33",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - - 9223372036854775807",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775807
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-34",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + - 9223372036854775807",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775807
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-35",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - + 9223372036854775807",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775807
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-36",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT  9223372036854775808",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775808
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-37",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - 9223372036854775808",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775808
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-38",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - 9223372036854775808",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775808
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-39",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - - 9223372036854775808",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775808
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-40",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - 9223372036854775808",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775808
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-41",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + 9223372036854775808",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775808
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-42",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - - 9223372036854775808",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775808
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-43",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + - 9223372036854775808",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "excluded-runtime-overflow",
+      "sqlstate": "22003",
+      "rows": null
+    }
+  },
+  {
+    "id": "matrix-44",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - + 9223372036854775808",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775808
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-45",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT  9223372036854775809",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775809
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-46",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - 9223372036854775809",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775809
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-47",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - 9223372036854775809",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775809
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-48",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - - 9223372036854775809",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775809
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-49",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - 9223372036854775809",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775809
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-50",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + 9223372036854775809",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -9223372036854775809
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-51",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT + - - 9223372036854775809",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775809
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-52",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - + - 9223372036854775809",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775809
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-53",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT - - + 9223372036854775809",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775809
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-54",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT -(-2147483648)",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-55",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT -(-9223372036854775808)",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 9223372036854775808
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-56",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT -(SELECT -2147483648)",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": true,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "excluded-runtime-overflow",
+      "sqlstate": "22003",
+      "rows": null
+    }
+  },
+  {
+    "id": "matrix-57",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT -CAST(-2147483648 AS INTEGER)",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "excluded-runtime-overflow",
+      "sqlstate": "22003",
+      "rows": null
+    }
+  },
+  {
+    "id": "matrix-58",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT -(-2147483648) + 0",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-59",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT ARRAY[-(-2147483648)]",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "array",
+        "type": "bigint[]",
+        "nullable": false,
+        "postgres_type": "bigint[]",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "array": [
+            2147483648
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-60",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "WITH c AS (SELECT -(-2147483648) AS n) SELECT n FROM c",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "n",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "n": 2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "matrix-61",
+    "source_kind": "synthetic",
+    "origin": "astra2-native-boundary-matrix-62",
+    "sql": "SELECT -(-2147483648) UNION ALL SELECT 1",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": 2147483648
+        },
+        {
+          "?column?": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "bigint-cast-barrier",
+    "source_kind": "synthetic",
+    "origin": "authored-barrier-control",
+    "sql": "SELECT -CAST(-9223372036854775808 AS BIGINT)",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "excluded-runtime-overflow",
+      "sqlstate": "22003",
+      "rows": null
+    }
+  },
+  {
+    "id": "bigint-scalar-barrier",
+    "source_kind": "synthetic",
+    "origin": "authored-barrier-control",
+    "sql": "SELECT -(SELECT -9223372036854775808)",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bigint",
+        "nullable": true,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "excluded-runtime-overflow",
+      "sqlstate": "22003",
+      "rows": null
+    }
+  },
+  {
+    "id": "plus-cast-barrier",
+    "source_kind": "synthetic",
+    "origin": "authored-barrier-control",
+    "sql": "SELECT +CAST(-2147483648 AS INTEGER)",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "?column?": -2147483648
+        }
+      ]
+    }
+  },
+  {
+    "id": "text-conversion-excluded",
+    "source_kind": "synthetic",
+    "origin": "authored-barrier-control",
+    "sql": "SELECT -CAST($1 AS INTEGER)",
+    "parameter_types": "text",
+    "parameter_values": [
+      "not-an-integer"
+    ],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "excluded-literal-conversion",
+      "sqlstate": "22P02",
+      "rows": null
+    }
+  },
+  {
+    "id": "text-cast-overflow",
+    "source_kind": "synthetic",
+    "origin": "authored-barrier-control",
+    "sql": "SELECT -CAST($1 AS INTEGER) AS v",
+    "parameter_types": "text",
+    "parameter_values": [
+      "-2147483648"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "excluded-runtime-overflow",
+      "sqlstate": "22003",
+      "rows": null
+    }
+  },
+  {
+    "id": "parameter-overflow",
+    "source_kind": "synthetic",
+    "origin": "authored-barrier-control",
+    "sql": "SELECT -($1)",
+    "parameter_types": "int",
+    "parameter_values": [
+      -2147483648
+    ],
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "postgres_type": "integer",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "excluded-runtime-overflow",
+      "sqlstate": "22003",
+      "rows": null
+    }
+  },
+  {
+    "id": "parameter-plus-folded-boundary",
+    "source_kind": "synthetic",
+    "origin": "authored-barrier-control",
+    "sql": "SELECT $1 + -(-2147483648) AS v",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bigint",
+        "nullable": false,
+        "postgres_type": "bigint",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "v": 2147483655
+        }
+      ]
+    }
+  },
+  {
+    "id": "anonymous-minus-boundary",
+    "source_kind": "synthetic",
+    "origin": "authored-barrier-control",
+    "sql": "SELECT ? + -(-9223372036854775808) AS v",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric",
+        "nullable": false,
+        "postgres_type": "numeric",
+        "collation": null
+      }
+    ],
+    "static_status": "valid",
+    "execution": {
+      "classification": "success",
+      "sqlstate": "00000",
+      "rows": [
+        {
+          "v": 9223372036854775815
+        }
+      ]
+    }
+  }
+]

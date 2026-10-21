@@ -1,0 +1,194 @@
+[
+  {
+    "id": "row-in:postgres:src/test/regress/sql/collate.sql:6403",
+    "catalogFile": "fixtures/row_in_subqueries/catalogs/collate.json",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true,
+        "collation": "C"
+      },
+      {
+        "name": "y",
+        "type": "text",
+        "nullable": true,
+        "collation": "POSIX"
+      }
+    ]
+  },
+  {
+    "id": "row-in:postgres:src/test/regress/sql/collate.sql:6518",
+    "catalogFile": "fixtures/row_in_subqueries/catalogs/collate.json",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true,
+        "collation": "C"
+      },
+      {
+        "name": "y",
+        "type": "text",
+        "nullable": true,
+        "collation": "POSIX"
+      }
+    ]
+  },
+  {
+    "id": "row-in:postgres:src/test/regress/sql/collate.sql:6630",
+    "catalogFile": "fixtures/row_in_subqueries/catalogs/collate.json",
+    "output_columns": [
+      {
+        "name": "a",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "x",
+        "type": "text",
+        "nullable": true,
+        "collation": "C"
+      },
+      {
+        "name": "y",
+        "type": "text",
+        "nullable": true,
+        "collation": "POSIX"
+      }
+    ]
+  },
+  {
+    "id": "row-in:postgres:src/test/regress/sql/subselect.sql:1437",
+    "catalogFile": "fixtures/row_in_subqueries/catalogs/subselect.json",
+    "output_columns": [
+      {
+        "name": "f1",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "f2",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "row-in:postgres:src/test/regress/sql/subselect.sql:2119",
+    "catalogFile": "fixtures/row_in_subqueries/catalogs/subselect.json",
+    "output_columns": [
+      {
+        "name": "Correlated Field",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "row-in:postgres:src/test/regress/sql/subselect.sql:13388",
+    "catalogFile": "fixtures/row_in_subqueries/catalogs/7597.json",
+    "output_columns": [
+      {
+        "name": "f1",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "f2",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "row-in:duckdb:test/sql/sql_export/mark_results.test:684",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "int32",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "row-in:materialize:test/sqllogictest/cockroach/tuple.slt:6281",
+    "catalogFile": "fixtures/row_in_subqueries/catalogs/tuple.json",
+    "output_columns": [
+      {
+        "name": "r",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "row-in:materialize:test/sqllogictest/cockroach/tuple.slt:6376",
+    "catalogFile": "fixtures/row_in_subqueries/catalogs/tuple.json",
+    "output_columns": [
+      {
+        "name": "r",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "row-in:materialize:test/sqllogictest/cockroach/subquery.slt:1503",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "row-in:materialize:test/sqllogictest/cockroach/subquery.slt:4611",
+    "catalogFile": "fixtures/row_in_subqueries/catalogs/abc.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "row-in:materialize:test/sqllogictest/cockroach/subquery.slt:4670",
+    "catalogFile": "fixtures/row_in_subqueries/catalogs/abc.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  }
+]

@@ -31,6 +31,7 @@ example (params : SelectContract.ParameterEnv) (scope : SelectContract.Scope)
   intro valid
   cases valid with
   | subscript _ _ nonempty _ => exact nonempty rfl
+  | foldedInteger folded => simp [SelectContract.rawIntegerValue] at folded
 
 private def subscriptCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :

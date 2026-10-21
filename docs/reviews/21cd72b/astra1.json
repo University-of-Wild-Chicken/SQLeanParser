@@ -1,0 +1,148 @@
+{
+  "model": "gpt-6-astra",
+  "reviewer": "astra_review_1",
+  "commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+  "candidate_commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+  "snapshot": "/tmp/sqlean-review-21cd72b-fuypy_75",
+  "cli_sha256": "2c00c6692f3acf23d027849b18d8efc3036f033339e5a87dfd6e165a7d60824a",
+  "claimed_surface": [
+    "Bounded ordinary-correctness preflight against documented PG16.15 static typing and exact output metadata; not release approval or proof discharge.",
+    "Independent expression/collation judgments, recursive reference traversal, modifiers and overload coercions at scalar-subquery and array boundaries."
+  ],
+  "attempts": [
+    {
+      "name": "Descriptor and canonical rendering composition",
+      "cases": 875,
+      "status_counts": {
+        "valid": 669,
+        "invalid": 182,
+        "unsupported": 1,
+        "no-json": 23
+      },
+      "method": "Authored SELECTs, contract and checked rendering CLI, PG16.15 source/canonical gdesc without executing those SELECTs.",
+      "result": "669 Valid cases: 659 analyze with matching reported/native/canonical labels and exact types/modifiers after native spelling normalization; 10 bad-string numeric conversions are documented conversion failures and not objections.",
+      "evidence_paths": [
+        "/tmp/sqlean-astra1-probe.py",
+        "/tmp/sqlean-astra1-probe.json",
+        "/tmp/sqlean-astra1-analyze.py"
+      ]
+    },
+    {
+      "name": "NAME/text/char/array and function collation composition",
+      "cases": 1014,
+      "status_counts": {
+        "valid": 966,
+        "invalid": 48
+      },
+      "method": "Authored SELECT gdesc plus pg_collation_for output observation.",
+      "result": "966 Valid: 921 native identities match; 38 implicit-collation comparison runtime errors excluded under documented scope; 7 successful evaluations expose incorrect reported output identity, consolidated into ASTRA1-001.",
+      "evidence_paths": [
+        "/tmp/sqlean-astra1-collation.py",
+        "/tmp/sqlean-astra1-collation.json",
+        "/tmp/sqlean-astra1-collation.log"
+      ]
+    },
+    {
+      "name": "Recursive CTE lexical shadowing and forbidden-reference contexts",
+      "cases": 96,
+      "status_counts": {
+        "valid": 69,
+        "unsupported": 3,
+        "invalid": 24
+      },
+      "method": "Native gdesc for nested WITH/RECURSIVE, derived sources, unused definitions, nullable join sides and set-operator reference placements.",
+      "result": "69 Valid, no native-analysis rejection. Read full structural recursion scanner and expression constructors; no missing traversal established.",
+      "evidence_paths": [
+        "/tmp/sqlean-astra1-recursion.py",
+        "/tmp/sqlean-astra1-recursion.json"
+      ]
+    },
+    {
+      "name": "Minimal collation controls and catalog evidence",
+      "cases": 17,
+      "method": "Source/canonical gdesc plus explicit pg_typeof OID, pg_collation_for with visible SQL NULL marker, value capture; read-only pg_type, pg_cast and pg_operator queries.",
+      "result": "Confirmed known TEXT[] to NAME[] coercion changes output collation differently from scalar TEXT to NAME; direct raw ARRAY-targeted cast correctly handled.",
+      "evidence_paths": [
+        "/tmp/sqlean-astra1-minimal.py",
+        "/tmp/sqlean-astra1-minimal.json",
+        "/tmp/sqlean-astra1-controls.py",
+        "/tmp/sqlean-astra1-controls.json"
+      ]
+    }
+  ],
+  "objections": [
+    {
+      "id": "ASTRA1-001",
+      "severity": "P1",
+      "file": "SQLean/SelectContract/Collation.lean",
+      "line": 12,
+      "claim": "Known array coercions preserve input collation through target.collationResult without modeling native ArrayCoerceExpr element collation. Consequently the independent rules and executable checker certify incorrect exact outputCollations, including database-default instead of C and POSIX instead of indeterminate. This is a successful native evaluation/metadata discrepancy, not literal conversion, cardinality, or locale comparison execution failure.",
+      "reproducer": {
+        "schema": "/tmp/sqlean-review-21cd72b-fuypy_75/fixtures/subqueries/schema.json",
+        "sql": "SELECT CAST((SELECT ARRAY['x']) AS NAME[]) AS v",
+        "no_subquery_control": "SELECT CAST(COALESCE(ARRAY['x']) AS NAME[]) AS v",
+        "conflicting_input_sql": "SELECT CAST((SELECT ARRAY['x'] COLLATE \"POSIX\") AS NAME[]) AS v",
+        "polymorphic_operator_sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] || ARRAY['x'] AS v",
+        "cli": [
+          "/tmp/sqlean-review-21cd72b-fuypy_75/.lake/build/bin/sqlean",
+          "--assurance",
+          "contract",
+          "--schema",
+          "/tmp/sqlean-review-21cd72b-fuypy_75/fixtures/subqueries/schema.json",
+          "SELECT CAST((SELECT ARRAY['x']) AS NAME[]) AS v"
+        ],
+        "native_observation": "SELECT pg_typeof(v)::text, pg_typeof(v)::oid, pg_collation_for(v), pg_collation_for(v) IS NULL, v::text FROM (SELECT CAST((SELECT ARRAY['x']) AS NAME[]) AS v) q;"
+      },
+      "expected": {
+        "minimal_native": "name[]|1003|\"C\"|f|{x}",
+        "minimal_outputCollations": [
+          "C"
+        ],
+        "conflicting_input_outputCollations": [
+          null
+        ],
+        "polymorphic_operator_outputCollations": [
+          null
+        ]
+      },
+      "actual": {
+        "minimal_status": "valid",
+        "minimal_outputCollations": [
+          "default"
+        ],
+        "conflicting_input_status": "valid",
+        "conflicting_input_outputCollations": [
+          "POSIX"
+        ],
+        "polymorphic_operator_status": "valid",
+        "polymorphic_operator_outputCollations": [
+          "POSIX"
+        ]
+      },
+      "evidence_paths": [
+        "/tmp/sqlean-astra1-minimal.json",
+        "/tmp/sqlean-astra1-controls.json",
+        "/tmp/sqlean-astra1-collation.json"
+      ],
+      "related_loci": [
+        "SQLean/SelectContract/Collation.lean:97 knownCoercedCollation repeats source/target collation-result simplification for query/array consumers.",
+        "SQLean/SelectContract/CollationRules.lean:141 cast judgment delegates to coercedCollation.",
+        "SQLean/SelectContract/CollationApplications.lean:31 arrayConcat obtains concrete coerced argument targets; ordinary application merge inherits the same incomplete array coercion model.",
+        "SQLean/SelectContract/Profile.lean:122 ScalarType.collationResult preserves any existing input derivation for collatable targets."
+      ],
+      "controls": [
+        "CAST(ARRAY['x'] AS NAME[]) correctly reports/native-observes C because direct constructor targeting is separate.",
+        "CAST((SELECT 'x') AS NAME) correctly reports/native-observes default; applying an unconditional NAME-target C reset to scalar casts would regress this.",
+        "Array concat with direct explicit POSIX retains POSIX; wrapping that input inside scalar SELECT reduces strength to implicit and exposes the conflict.",
+        "NAME[] to TEXT[] with implicit POSIX remains POSIX; TEXT[] to NAME[] with implicit POSIX becomes indeterminate.",
+        "Native type OIDs: NAME 19/C=950, TEXT 25/default=100, NAME[] 1003/C=950, TEXT[] 1009/default=100; relevant array_cat operator OID375 uses anycompatiblearray."
+      ]
+    }
+  ],
+  "notes": [
+    "Frozen snapshot only; no source/build edits, Lake commands, shared artifact mutation, downloaded SQL/DDL execution, or native DDL were performed. Native private clusters were created by existing connection helper and removed afterward.",
+    "Observed library-level rule mismatch affects independent normative typing/collation model; no claim of Lean kernel unsoundness or checker disagreement with its current judgments.",
+    "Two extra recursive collation probes were accepted by both native and checker; they did not establish an additional objection and remain at /tmp/sqlean-astra1-recursive-counterexample.json.",
+    "Review stopped at verified concrete P1 so parent can repair. Baseline should remain blocked until repaired and independently rechecked."
+  ]
+}

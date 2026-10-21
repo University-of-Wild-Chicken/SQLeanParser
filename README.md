@@ -27,6 +27,14 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.34 row-IN increment](docs/row-in-subquery-contract-v0.34.md) adds
+independent validity and renderer preservation for flat row-valued
+`IN (SELECT …)` comparisons. It retains fifty authored and fifty unchanged
+source examples, with twelve preregistered source certificates. It also repairs
+the signed-literal and array-coercion collation counterexamples constructed by
+the first six-reviewer [release preflight](docs/releases/review-closure-ladder.md).
+That preflight is a failed historical candidate, not release approval.
+
 The [v0.33 expression-subquery increment](docs/subquery-contract-v0.33.md)
 adds independent validity for uncorrelated scalar subqueries, EXISTS and scalar
 IN-subquery comparisons, including child output labels, types, collation and
@@ -520,7 +528,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses `sqlean-basic-select-v0.33` with its declared
+- `--assurance contract` uses `sqlean-basic-select-v0.34` with its declared
   collation snapshot.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
@@ -660,8 +668,10 @@ Forward dependencies remain Unsupported.
 Uncorrelated scalar subqueries, EXISTS and scalar IN-subqueries reuse the complete
 child-query judgment under the visible CTE environment. Child row scopes do not
 inherit parent columns. Scalar output is nullable; IN uses the child's finalized
-single-column type. Independent rules for grouping/aggregates, correlation,
-LATERAL, row-valued IN and quantified query comparisons remain future milestones.
+single-column type. Flat row-valued IN checks positive and matching arity and
+an equality overload for each output position, merging collations per field.
+Independent rules for grouping/aggregates, correlation,
+LATERAL and quantified query comparisons remain future milestones.
 DISTINCT ON also requires a separate rule. These forms
 remain supported by the expanded parser/checker. The contract draft remains the
 target for the general SELECT family; the first implementation does not claim

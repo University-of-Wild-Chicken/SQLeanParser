@@ -1,0 +1,43 @@
+{
+  "reviewer": "GPT-6 Luna (reviewer2)",
+  "model": "GPT-6 Luna",
+  "candidate_commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+  "claimed_surface": "v0.33 uncorrelated scalar, EXISTS, and scalar IN-subquery static judgments; exact output row/name/type/collation preservation; canonical identity/PostgreSQL parameter transport; unchanged-source rendering registry; bounded PostgreSQL/SQLite observations and CI fail-closed checks",
+  "objections": [],
+  "nonblocking_notes": [
+    "The first native replay attempt could not load initdb because LD_LIBRARY_PATH was omitted; rerunning with the supplied PostgreSQL library path completed successfully. This was an invocation setup issue, not a candidate failure.",
+    "The successful native replay supports only the authored finite fixtures and registered boundary experiments. The contract correctly excludes correlation, row-valued IN, scalar cardinality/runtime errors, and general cross-dialect semantic equivalence."
+  ],
+  "actual_adversarial_attempts": [
+    {
+      "id": "anonymous-parameter-order-across-cte-and-expression-sublink",
+      "command": "printf '%s\\n' 'WITH a AS (SELECT ? AS n) SELECT ? IN (SELECT ? FROM a WHERE ? = ? ORDER BY ? LIMIT ? OFFSET ?)' | .lake/build/bin/sqlean --render-assurance postgres",
+      "result": "rendered; parameterMap was anonymous ordinals 1..8 mapped to slots 1..8, and SQL placed $1 in the CTE, $2 on the left of IN, $3 in the child projection, $4/$5 in its predicate, and $6/$7/$8 in ORDER BY/LIMIT/OFFSET.",
+      "evidence_paths": ["SQLean/AdvancedQueryValidation.lean:947", "SQLean/AdvancedPretty.lean:345", "SQLean/RenderContract/Checker.lean:50"]
+    },
+    {
+      "id": "postgres-numbered-repetition-and-reordering-across-sublink",
+      "command": "printf '%s\\n' 'SELECT $4 IN (SELECT $2 WHERE $1 = $2 ORDER BY $3)' | .lake/build/bin/sqlean --render-assurance postgres",
+      "result": "rendered with exact target references unchanged; binding map contained only referenced identities 4, 2, 1, 3 at their original target slots, including repeated $2.",
+      "evidence_paths": ["SQLean/RenderContract/Checker.lean:59", "SQLean/RenderContract/Checker.lean:69"]
+    },
+    {
+      "id": "jsonb-question-operator-versus-anonymous-bindings-across-in-sublink",
+      "command": "printf '%s\\n' \"SELECT '{\\\"a\\\":1}'::jsonb ? ? IN (SELECT ?)\" | .lake/build/bin/sqlean --render-assurance postgres",
+      "result": "rendered as CAST('{\\\"a\\\":1}' AS JSONB) ? $1 IN (SELECT $2); the JSONB question-mark operator did not consume a binding ordinal.",
+      "evidence_paths": ["SQLean/AdvancedParser.lean:10", "SQLean/AdvancedParser.lean:198", "SQLean/RenderContract/Checker.lean:122"]
+    },
+    {
+      "id": "registered-native-full-replay",
+      "command": "LD_LIBRARY_PATH=/home/augustus/.local/opt/sqlean-postgresql-16/usr/lib/x86_64-linux-gnu python3 scripts/check_subqueries_cli.py --local-bin /home/augustus/.local/opt/sqlean-postgresql-16/usr/lib/postgresql/16/bin --source-registry",
+      "result": "PASS PostgreSQL 16.15: 1,200 typed row captures, 1,200 collation captures, 318 descriptor positions, 72 three-stage boundaries, 8 operator input-collation checks, 26 recursive SubLink checks, 18 IN-normalization PREPARE checks; 78 fixed authentic certificates and 150 unchanged sources rendered, none executed; PASS SQLite 3.41.2: 176 authored row/label observations.",
+      "evidence_paths": ["scripts/check_subqueries_cli.py:153", "scripts/check_subqueries_cli.py:190", "scripts/check_subqueries_cli.py:566", "docs/subquery-contract-v0.33.md:79"]
+    },
+    {
+      "id": "binary-identity",
+      "command": "sha256sum .lake/build/bin/sqlean",
+      "result": "2c00c6692f3acf23d027849b18d8efc3036f033339e5a87dfd6e165a7d60824a, matches the supplied binary hash.",
+      "evidence_paths": [".lake/build/bin/sqlean"]
+    }
+  ]
+}

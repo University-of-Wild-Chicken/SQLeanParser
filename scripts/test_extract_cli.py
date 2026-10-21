@@ -408,8 +408,12 @@ class ExtractCliTests(unittest.TestCase):
             self.assertEqual(checker.boundaries(), 23)
         self.assertEqual([sum(call.args[1] == status for call in reports.call_args_list)
                           for status in ("invalid", "unsupported", "valid", "rejected")],
-                         [9, 2, 3, 1])
+                         [9, 1, 4, 1])
         self.assertEqual(len(invoke.call_args_list), 8)
+        scalar = [call for call in reports.call_args_list
+                  if call.args[0][-1] == "SELECT EXTRACT(YEAR FROM (SELECT DATE '2024-01-01'))"]
+        self.assertEqual(len(scalar), 1)
+        self.assertEqual(scalar[0].kwargs["columns"], (("extract", "numeric", True),))
         for sql in ("SELECT EXTRACT(foo FROM DATE '2024-01-01')",
                     "SELECT EXTRACT(HOUR FROM DATE '2024-01-01')"):
             self.assertTrue(any(call.args[0][-1] == sql and call.args[1] == "valid"

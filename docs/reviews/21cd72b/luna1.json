@@ -1,0 +1,29 @@
+{
+  "reviewer": "reviewer 1",
+  "model": "GPT-6 Luna",
+  "candidate_commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+  "claimed_surface": "v0.33 independent typing, output-label, and collation judgments for uncorrelated scalar/EXISTS/scalar-IN subqueries; exact child CTE environment and empty local row scope; recursive-reference scanning through expression SubLinks with lexical CTE shadowing; preserved type, modifier, nullability, label, collation, and parameter occurrence results.",
+  "objections": [],
+  "nonblocking_notes": {
+    "conclusion": "No concrete counterexample found in the focused adversarial attempts. This is a bounded review, not a full proof or release sign-off.",
+    "attempts": [
+      "Checked a local derived source inside a scalar child (CLI valid; PostgreSQL 16.15 PREPARE 00000) and a correlated outer-column control (CLI unsupported as documented).",
+      "Checked nested CTE shadowing (CLI valid; PostgreSQL PREPARE 00000), including a nested CTE shadowing a recursive name inside EXISTS (CLI valid; PostgreSQL PREPARE 00000).",
+      "Checked a recursive self-reference inside EXISTS (CLI invalid recursive_reference; PostgreSQL PREPARE 42P19).",
+      "Checked INTEGER IN (SELECT TEXT literal) (CLI invalid in_subquery_signature; PostgreSQL PREPARE 42883).",
+      "Compared seven PostgreSQL 16.15 output descriptors against CLI label cases: scalar child labels, cast and CASE inheritance, child CTE alias, EXISTS, and IN; observed labels and types matched.",
+      "Checked a scalar subquery with explicit C collation (CLI output collation C; PostgreSQL PREPARE 00000).",
+      "Tried recursive UNION arms containing INTERSECT/EXCEPT, including ALL variants. Static acceptance/rejection matched PostgreSQL PREPARE for the attempted cases."
+    ],
+    "workspace": "Repository remained read-only; the pre-existing untracked .gitignore remains untouched."
+  },
+  "evidence_paths": [
+    "/tmp/sqlean-ladder-luna1-evidence.txt",
+    "/home/augustus/SQLeanParser/docs/subquery-contract-v0.33.md:21",
+    "/home/augustus/SQLeanParser/docs/subquery-contract-v0.33.md:37",
+    "/home/augustus/SQLeanParser/docs/subquery-contract-v0.33.md:70",
+    "/home/augustus/SQLeanParser/SQLean/SelectContract/Recursion.lean:28",
+    "/home/augustus/SQLeanParser/SQLean/SelectContract/Recursion.lean:77",
+    "/home/augustus/SQLeanParser/SQLean/SelectContract/Spec.lean:69"
+  ]
+}

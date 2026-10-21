@@ -1,0 +1,22 @@
+{
+  "kind": "historical-bounded-independent-repair-rechecks",
+  "baseline_commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+  "repaired_cli_sha256": "114b3ec7ec105f69328286934019af86d5885292362ba8c16e65e0eb62ff405f",
+  "release_approval": false,
+  "fresh_final_review_ladder_required": true,
+  "reports": [
+    {
+      "path": "docs/reviews/repairs-v0.34/astra1.json",
+      "sha256": "618366140d0f7b17bfaebad31c86a14413a5a5f138b7b7efb88d3165b1d02b91"
+    },
+    {
+      "path": "docs/reviews/repairs-v0.34/astra2.json",
+      "sha256": "7e8254122b158af97afd09e2e636072978dce83494bdc7c43b9e0a637bf51ff8"
+    }
+  ],
+  "limitations": [
+    "These retained rechecks apply only to the named binary and registered counterexamples.",
+    "Temporary raw log paths in the reports are historical; checked-in fixtures and scripts reproduce the observations.",
+    "A changed source root requires fresh release evidence."
+  ]
+}

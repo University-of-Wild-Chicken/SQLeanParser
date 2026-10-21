@@ -1,0 +1,31 @@
+{
+  "tables": [
+    {
+      "name": "abc",
+      "columns": [
+        {
+          "name": "a",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "b",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "c",
+          "type": "int",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "context_ids": [
+      "materialize:abc:4149"
+    ],
+    "source_sql_executed": false,
+    "assumption": "Successful declarations in an unshadowed corresponding PostgreSQL type/name catalog; no source data or execution is imported."
+  }
+}

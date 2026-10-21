@@ -233,6 +233,8 @@ mutual
         (some ⟨.int32, false⟩) []
     | minInt64 : ExprValidCore subqueries params env scope (.unary .neg (.literal (.int 9223372036854775808)))
         (some ⟨.int64, false⟩) []
+    | foldedInteger (folded : rawIntegerValue expr = some value) :
+        ExprValidCore subqueries params env scope expr (some ⟨foldedIntegerType value, false⟩) []
     | text : ExprValidCore subqueries params env scope (.literal (.text value)) (some ⟨.text, false⟩) []
     | bool : ExprValidCore subqueries params env scope (.literal (.bool value)) (some ⟨.bool, false⟩) []
     | null : ExprValidCore subqueries params env scope .null none []
@@ -400,6 +402,16 @@ mutual
         (signature : equalityOverload (scalarInput a ta) (.known column.type) = some selected) :
         ExprValidCore subqueries params env scope (.inQuery a child)
           (some ⟨.bool, (scalarInput a ta).nullable || column.type.nullable⟩) (ua ++ uq)
+    /-- A row SubLink compares already-transformed fields with the child's
+    finalized output columns. Each field pair selects its own equality
+    operator; no common type is chosen across different row positions. -/
+    | inRowQuery (args : ExprListValidCore subqueries params env scope fields types ua)
+        (query : subqueries env child output uq)
+        (nonempty : fields ≠ []) (arity : fields.length = output.length)
+        (signature : rowDistinctSignature (scalarInputs fields types)
+          (output.map (fun column => ScalarInput.known column.type)) = some selected) :
+        ExprValidCore subqueries params env scope (.inQuery (.row fields) child)
+          (some ⟨.bool, true⟩) (ua ++ uq)
     | between (arg : ExprValidCore subqueries params env scope a ta ua) (lower : ExprValidCore subqueries params env scope b tb ub)
         (upper : ExprValidCore subqueries params env scope c tc uc)
         (signature : comparisonListSignature [ta, tb, tc] = some result) :
@@ -474,7 +486,7 @@ abbrev ExprValid (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) 
   ExprValidCore subqueries params env scope expr type uses
 
 namespace ExprValid
-export ExprValidCore (int bigInt numericInt decimal minInt32 minInt64 text bool null contextValue parameter column binary concat arrayConcat rowComparison distinctScalar distinctNullLeft distinctNullRight distinctRows distinctRowNullLeft distinctRowNullRight unary isNull isNullRow pattern ilike regex extract jsonAccess jsonExistence containment arrayContainment overlap cast collate array castArray substring defaultCall namedCall call coalesce greatest least nullIf caseExpr quantifiedComparison subscript inList «exists» scalarQuery inQuery between)
+export ExprValidCore (int bigInt numericInt decimal minInt32 minInt64 foldedInteger text bool null contextValue parameter column binary concat arrayConcat rowComparison distinctScalar distinctNullLeft distinctNullRight distinctRows distinctRowNullLeft distinctRowNullRight unary isNull isNullRow pattern ilike regex extract jsonAccess jsonExistence containment arrayContainment overlap cast collate array castArray substring defaultCall namedCall call coalesce greatest least nullIf caseExpr quantifiedComparison subscript inList «exists» scalarQuery inQuery inRowQuery between)
 end ExprValid
 
 abbrev ExprListValid (params : ParameterEnv) (scope : Scope) (exprs : List Advanced.Expr) (types : List ExprType) (uses : List Parameter)

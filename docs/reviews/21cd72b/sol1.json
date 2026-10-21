@@ -1,0 +1,65 @@
+{
+  "reviewer": "reviewer 1, escalation level 2",
+  "model": "GPT-6.1 Sol",
+  "candidate_commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+  "frozen_source": "/tmp/sqlean-review-21cd72b-fuypy_75",
+  "binary_sha256": "2c00c6692f3acf23d027849b18d8efc3036f033339e5a87dfd6e165a7d60824a",
+  "claimed_surface": "Bounded v0.33 independent static-validity typing, labels, collation, expression-child scopes and CTE environments, recursive reference guards, and query type finalization. Runtime evaluation, cardinality, literal conversion, documented unsupported features and release approval are outside this review.",
+  "attempts": [
+    {
+      "id": "scalar-in-cross-product",
+      "count": 610,
+      "description": "Independently authored scalar/IN expressions over unknown strings, NULL, text/name/varchar/char, integers, Boolean and arrays; explicit C/POSIX identities; scalar child casts, ordering and limits; unknown set operands; nested WITH scopes in recursive SubLinks. Compared frozen CLI contract classifications to isolated PostgreSQL 16 PREPARE.",
+      "actual": "309 valid/native-success, 215 invalid/native-error, 72 syntax rejection/native-error, two unsupported/native-success, and 12 valid/native-error due exclusively to excluded malformed literal conversion. No invalid/native-success case.",
+      "evidence_paths": [
+        "/tmp/sqlean-sol1-probes.py",
+        "/tmp/sqlean-sol1-probes.json"
+      ]
+    },
+    {
+      "id": "descriptor-comparison",
+      "count": 309,
+      "description": "Used psql gdesc without executing each valid/native-success query from the first population. Compared output labels and concrete types/modifiers.",
+      "actual": "Labels and types matched, including scalar label inheritance, name and name[] outputs, varchar(3), char(3), unknown-set type finalization and smallint.",
+      "evidence_paths": [
+        "/tmp/sqlean-sol1-metadata.py",
+        "/tmp/sqlean-sol1-metadata.json"
+      ]
+    },
+    {
+      "id": "recursive-derived-with-and-set-precision",
+      "count": 101,
+      "description": "Recursive references through nested WITH/derived FROM; nested independent recursive CTE shadowing; forbidden self references in IN children, LIMIT and OFFSET; permitted locally shadowed child references; numeric/varchar modifiers and set-operation collation compositions.",
+      "actual": "71 valid/native PREPARE-success and 30 invalid/native-error. Native descriptors matched the 71 accepted cases, including numeric(3,1) versus merged numeric and cast varchar(7). Optional execution observations contained excluded scalar cardinality and noncollatable pg_collation_for errors; these were not treated as static defects.",
+      "evidence_paths": [
+        "/tmp/sqlean-sol1-extra.py",
+        "/tmp/sqlean-sol1-extra.json"
+      ]
+    },
+    {
+      "id": "collation-reentry-and-coercion",
+      "count": 61,
+      "description": "Bounded authored scalar children with UNION/UNION ALL and LIMIT 1; combinations of text/name/varchar and explicit C/POSIX; scalar casts and CASE inheritance, plus name[] collations. Compared pg_collation_for observations to frozen CLI outputCollations.",
+      "actual": "61 successful observations and 61 matching identities. Conflicting explicit identities were rejected before observation.",
+      "evidence_paths": [
+        "/tmp/sqlean-sol1-collation.py",
+        "/tmp/sqlean-sol1-collation.json"
+      ]
+    },
+    {
+      "id": "source-inspection",
+      "description": "Inspected independent expression typing/labels/collation rules and proof-producing child checker, exact inherited CTE environment versus local row scope, unknown set-input finalization, and structural recursive guards.",
+      "evidence_paths": [
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/SelectContract/ExpressionSpec.lean:393",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/SelectContract/Spec.lean:69",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/SelectContract/Checker.lean:596",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/SelectContract/Checker.lean:720",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/SelectContract/CollationChecker.lean:587",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/SQLean/SelectContract/Recursion.lean:28"
+      ]
+    }
+  ],
+  "objections": [],
+  "conclusion": "No concrete static-validity discrepancy was found in these bounded constructed attempts. This is not release or full PostgreSQL approval.",
+  "workspace_changes": "No frozen-source, live-repository, Lake, olean or CLI writes. Review scripts and evidence were written only under /tmp. Python bytecode writing was disabled; isolated native clusters were stopped and removed."
+}

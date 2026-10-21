@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "mode": "design",
+  "release": "0.0.1-alpha",
+  "target": {
+    "postgresql_version": "16.15",
+    "postgresql_commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+    "inventory": "fixtures/postgresql_grammar/inventory.json",
+    "source_productions": 3284,
+    "outer_statement_families": 125,
+    "full_independent_validity_required": true,
+    "full_renderer_contract_required": true,
+    "grammar_recognition_is_not_typed_validity": true
+  },
+  "ladder": [
+    {"level": 1, "model": "gpt-6-luna", "independent_reviewers": 2},
+    {"level": 2, "model": "gpt-6.1-sol", "independent_reviewers": 2},
+    {"level": 3, "model": "gpt-6-astra", "independent_reviewers": 2}
+  ],
+  "review_policy": {
+    "same_frozen_candidate_per_level": true,
+    "both_reviews_required_before_escalation": true,
+    "constructed_objections_block_escalation": true,
+    "retain_original_failure_evidence": true,
+    "independent_registered_regression_required": true,
+    "independent_repair_recheck_required": true,
+    "missing_or_unavailable_review_blocks": true,
+    "input_mutation_invalidates_release_evidence": true,
+    "llm_opinion_is_not_claim_discharge": true,
+    "manual_override_allowed": false
+  },
+  "closure_requirements": {
+    "frozen_finite_claims": true,
+    "canonical_input_manifest": true,
+    "registered_hashed_verifiers": true,
+    "explicit_trusted_computing_base": true,
+    "unique_implementation_proof_correspondence": true,
+    "checked_concrete_witnesses": true,
+    "required_isolated_clean_builds": 2,
+    "determinism_required": true,
+    "public_claim_provenance_required": true,
+    "unresolved_is_blocking": true,
+    "warning_affecting_required_claim_is_blocking": true,
+    "final_required_state": "VERIFIED"
+  },
+  "example_policy": {
+    "synthetic_per_syntactic_factor": 50,
+    "unchanged_authentic_per_syntactic_factor": 50,
+    "retain_exact_input_and_immutable_source_provenance": true,
+    "do_not_execute_downloaded_sql_or_setup": true,
+    "do_not_pad_shortages_with_transformed_or_synthetic_sources": true,
+    "source_origin_does_not_supply_catalog_or_validity": true
+  },
+  "initial_preflight": {
+    "candidate_commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+    "scope": "bounded v0.33 admitted contract surface, not full PostgreSQL or release approval",
+    "completed_reviewers_by_level": [2, 2, 2],
+    "constructed_blockers": ["ASTRA1-001", "ASTRA2-001"],
+    "release_approval": false
+  }
+}

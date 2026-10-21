@@ -1,0 +1,95 @@
+{
+  "reviewer": "astra_review_2",
+  "requested_model_identity": "GPT-6 Astra",
+  "actual_model_identity": "Not independently exposed by runtime tools; assigned GPT-6 Astra reviewer 2.",
+  "objection": "ASTRA2-001",
+  "status": "RESOLVED_FOR_REVIEWED_BINARY_AND_PREREGISTERED_REGRESSION_SCOPE",
+  "candidate": {
+    "base_commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+    "working_tree": "uncommitted repaired production sources",
+    "cli": "/home/augustus/SQLeanParser/.lake/build/bin/sqlean",
+    "sha256": "114b3ec7ec105f69328286934019af86d5885292362ba8c16e65e0eb62ff405f",
+    "sha256_checked_before_and_after": true
+  },
+  "preregistered_oracles": {
+    "cases": 70,
+    "canonical_json_sha256": "90e9d8c9e0f82475638fa34035cb04e5bedf028d4a106a633bd9c6385003f3cc",
+    "file_sha256": "1a95c6b73a0669468429cb4d855b7c92081f3c9d2de2a857c6e889b20038922b",
+    "unchanged_since_preflight": true,
+    "expected_values_not_derived_from_repaired_checker": true
+  },
+  "fixed_gate": {
+    "command": "LD_LIBRARY_PATH=/home/augustus/.local/opt/sqlean-postgresql-16/usr/lib/x86_64-linux-gnu PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 scripts/check_signed_literals_cli.py --exe /home/augustus/SQLeanParser/.lake/build/bin/sqlean --local-bin /home/augustus/.local/opt/sqlean-postgresql-16/usr/lib/postgresql/16/bin",
+    "exit_code": 0,
+    "postgres": "16.15",
+    "static_checks": 140,
+    "renderer_invocations_including_canonical_replay": 280,
+    "native_descriptors": 140,
+    "native_execution_outcomes": 140,
+    "per_form_execution_classification": {
+      "success": 61,
+      "excluded-runtime-overflow": 8,
+      "excluded-literal-conversion": 1
+    },
+    "evidence": "/tmp/sqlean-astra2-signed-fixed.log"
+  },
+  "negative_controls": [
+    {
+      "name": "unmodified harness against frozen CLI",
+      "sha256": "2c00c6692f3acf23d027849b18d8efc3036f033339e5a87dfd6e165a7d60824a",
+      "exit_code": 1,
+      "first_failure": "matrix-00 profile: current gate expects v0.34, baseline reports v0.33",
+      "evidence": "/tmp/sqlean-astra2-signed-baseline.log"
+    },
+    {
+      "name": "same harness and oracles, in-memory baseline profile-version compatibility only",
+      "exit_code": 1,
+      "first_failure": "matrix-11 SELECT - - 2147483648: exact output int32 differs from preregistered bigint",
+      "adaptation": "Imported checker module in a separate Python process and set checker.PROFILES={**checker.PROFILES, contract:sqlean-basic-select-v0.33}; no file or type/value expectation changed. Same --exe frozen baseline invocation.",
+      "evidence": "/tmp/sqlean-astra2-signed-baseline-typed.log"
+    },
+    {
+      "name": "complete baseline source/canonical static sweep with same profile compatibility",
+      "checks": 140,
+      "mismatches": 24,
+      "affected_cases": 12,
+      "matched": 116,
+      "evidence": [
+        "/tmp/sqlean-astra2-signed-baseline-sweep.json",
+        "/tmp/sqlean-astra2-signed-baseline-sweep.log"
+      ]
+    }
+  ],
+  "independent_source_review": {
+    "result": "Raw minus-literal chains now fold before type selection; unary plus, cast, parameter and SubLink barriers remain ordinary expression paths. The normative OrdinaryUnary guard excludes all raw integer spines, preventing the old narrow intermediate derivation. Folded integer collation and parameter translation preservation have corresponding branches. No additional discrepancy found in the reviewed repair.",
+    "loci": [
+      "SQLean/SelectContract/Profile.lean:364",
+      "SQLean/SelectContract/Profile.lean:372",
+      "SQLean/SelectContract/Profile.lean:380",
+      "SQLean/SelectContract/ExpressionChecker.lean:388",
+      "SQLean/SelectContract/ExpressionSpec.lean:236",
+      "SQLean/RenderContract/ExpressionPreservation.lean:30",
+      "SQLean/SelectContract/CollationChecker.lean:577",
+      "SQLean/RenderContract/ExpressionCollationPreservation.lean:116"
+    ]
+  },
+  "reviewed_file_sha256": {
+    "fixtures/review_regressions/signed_integer.json": "1a95c6b73a0669468429cb4d855b7c92081f3c9d2de2a857c6e889b20038922b",
+    "scripts/check_signed_literals_cli.py": "a87e1392d4d55094de2cec0aee77e641dd7c122162e62c62150c9bf430de89bd",
+    "scripts/test_signed_literals_cli.py": "40511f30eb067f5182adc3951b27d75e804b60fc05394ea30d28b718a1921b72",
+    "SQLean/SelectContract/Profile.lean": "5f3271cd893664d38a6b706dceddae8edb838c903b5a5060714cdbae03366822",
+    "SQLean/SelectContract/ExpressionSpec.lean": "60143c3b5a19c9dc96e0a499a0c67cec5630a7995fa82af111973f31bffcb70c",
+    "SQLean/SelectContract/ExpressionChecker.lean": "04e3b3ef1ad3729dfc755f567053a6b18f17ca51dadf763dc1edc15c45489413",
+    "SQLean/SelectContract/CollationRules.lean": "93c73bcb0f85fefbd857c7fb32f9c8569339058be61d061ce8f009c3d27a7252",
+    "SQLean/SelectContract/CollationChecker.lean": "930f84daca8ca80db67280efebea74115431dd196901bde426a887636d2c89c7",
+    "SQLean/RenderContract/ExpressionPreservation.lean": "5615403eddd9896472fce50875d889a12945b5df7b7e8f270f80c2e4bfe6e719",
+    "SQLean/RenderContract/ExpressionCollationPreservation.lean": "f7693ff42779ae98a7a5d9bd4811e1800c54aa2e0116c8303c4c319670a7f420"
+  },
+  "remaining_counterexamples": [],
+  "limits": [
+    "Resolution is specific to ASTRA2-001 and the pinned repaired binary; not whole-tier or full PostgreSQL release approval.",
+    "No Lean build, production source edits, original report edits or shared artifact writes performed during recheck.",
+    "Original baseline report remains separate; this report is additional evidence, not a retrospective rewrite.",
+    "Root still owns the overall mechanical matrix and release/review ladder status."
+  ]
+}

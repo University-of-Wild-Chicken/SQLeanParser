@@ -75,12 +75,25 @@ example : SelectContract.binarySignature .add
 /-- Closed pagination typing and runtime nonnegativity are separate facts. -/
 example : SelectContract.PaginationValid .basicV32 []
     (some (.unary .neg (.literal (.int 1)))) [] :=
-  .present (.unary (.int (by decide)) rfl (by decide))
-    (.atom (.unary (.int (by decide)) rfl (by decide)) .signedInt) (.int32Widen false)
+  .present (.foldedInteger rfl)
+    (.atom (.foldedInteger rfl) .signedInt) (.int32Widen false)
 
 example : ¬ SelectContract.PaginationValueAllowed (some (-1)) := by
   unfold SelectContract.PaginationValueAllowed
   decide
+
+/-- Complete raw minus folding happens before integer type selection. -/
+example : SelectContract.ExprValid [] .empty
+    (.unary .neg (.unary .neg (.literal (.int 2147483648))))
+    (some ⟨.int64, false⟩) [] := .foldedInteger (value := 2147483648) rfl
+
+example : SelectContract.ExprValid [] .empty
+    (.unary .neg (.unary .neg (.literal (.int 9223372036854775808))))
+    (some ⟨.numeric [], false⟩) [] := .foldedInteger (value := 9223372036854775808) rfl
+
+/-- An ordinary operator derivation cannot reintroduce the former wrong type. -/
+example : ¬ SelectContract.OrdinaryUnary .neg
+    (.unary .neg (.literal (.int 2147483648))) := by decide
 
 example : SelectContract.PaginationValid .basicV32 [] (some .null) [] :=
   .present .null (.atom .null .null) .unknownNull

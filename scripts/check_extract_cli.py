@@ -164,14 +164,15 @@ def boundaries():
             "'{}'::JSONB", "ARRAY[1]", "ARRAY[]::DATE[]",
         )
     ]
-    unsupported = ["SELECT EXTRACT(YEAR FROM (SELECT DATE '2024-01-01'))",
-                   "SELECT EXTRACT(YEAR FROM unknown_function())"]
+    unsupported = ["SELECT EXTRACT(YEAR FROM unknown_function())"]
     valid = ["SELECT EXTRACT(foo FROM DATE '2024-01-01')",
              "SELECT EXTRACT(HOUR FROM DATE '2024-01-01')",
-             "SELECT EXTRACT('' FROM NULL::TIME)"]
+             "SELECT EXTRACT('' FROM NULL::TIME)",
+             "SELECT EXTRACT(YEAR FROM (SELECT DATE '2024-01-01'))"]
     for status, queries in (("invalid", invalid), ("unsupported", unsupported), ("valid", valid)):
         for sql in queries:
-            assert_report(["--assurance", "contract", sql], status, "contract")
+            columns = (("extract", "numeric", True),) if sql == valid[-1] else None
+            assert_report(["--assurance", "contract", sql], status, "contract", columns=columns)
     syntax = ["SELECT EXTRACT()", "SELECT EXTRACT(YEAR DATE '2024-01-01')",
               "SELECT EXTRACT(* FROM DATE '2024-01-01')",
               "SELECT EXTRACT(TIME FROM DATE '2024-01-01')",

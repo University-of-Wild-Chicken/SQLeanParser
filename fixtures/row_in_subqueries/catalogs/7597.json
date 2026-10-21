@@ -1,0 +1,42 @@
+{
+  "tables": [
+    {
+      "name": "outer_7597",
+      "columns": [
+        {
+          "name": "f1",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "f2",
+          "type": "int",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "name": "inner_7597",
+      "columns": [
+        {
+          "name": "c1",
+          "type": "bigint",
+          "nullable": true
+        },
+        {
+          "name": "c2",
+          "type": "bigint",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "context_ids": [
+      "postgres:outer_7597:13091",
+      "postgres:inner_7597:13299"
+    ],
+    "source_sql_executed": false,
+    "assumption": "Successful declarations in an unshadowed corresponding PostgreSQL type/name catalog; no source data or execution is imported."
+  }
+}

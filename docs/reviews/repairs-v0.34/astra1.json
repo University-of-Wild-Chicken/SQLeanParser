@@ -1,0 +1,38 @@
+{
+  "objection": "ASTRA1-001",
+  "scope": "Finite independent regression witnesses only; not a fresh review ladder, full release approval, or formal proof discharge.",
+  "fixed_cli_sha256": "114b3ec7ec105f69328286934019af86d5885292362ba8c16e65e0eb62ff405f",
+  "baseline_cli_sha256": "2c00c6692f3acf23d027849b18d8efc3036f033339e5a87dfd6e165a7d60824a",
+  "fixture_cases": 181,
+  "source_only_observations": 373,
+  "full_observations": 554,
+  "observation_breakdown": {
+    "independent_inputs": 192,
+    "source_outputs": 181,
+    "canonical_outputs": 181
+  },
+  "json_null_output_collation_cases": 10,
+  "native_version": "PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)",
+  "native_preflight": "PASS",
+  "fixed_cli_source_and_canonical": "PASS",
+  "frozen_baseline_negative_control": "FAIL as expected on minimal-scalar-array-cast: actual default, independently expected C",
+  "protocol_tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -m unittest discover -s scripts -p test_array_coercion_collations_cli.py -v",
+    "tests": 14,
+    "result": "PASS"
+  },
+  "files": {
+    "fixtures/review_regressions/array_coercion_collation.json": "fc63774cf4116dd2ef082346e44c2d094994415e8d16c4ea50ed9a0e78c17dfe",
+    "scripts/check_array_coercion_collations_cli.py": "e4fb1b851a7483ccbbc9390cc5cf549b19081964a531abe6052cac03282ce13c",
+    "scripts/test_array_coercion_collations_cli.py": "d39530423acd28ea3f3a016e4a70d26d45eb4fafe89c8b2e65ee35ddc7f0bfa7"
+  },
+  "logs": [
+    "/tmp/sqlean-array-regressions-repaired.log",
+    "/tmp/sqlean-array-regressions-baseline.log"
+  ],
+  "limitations": [
+    "Native nullability is not inferred from pg_typeof or gdesc. Fixture nullability is the independently declared conservative static contract expectation.",
+    "Input and output native types/OIDs/collations are observed without result-type declarations; gdesc separately verifies modifiers.",
+    "The fixture matrix was independently authored and natively validated before repaired CLI verification; no expectation was derived from repaired checker output."
+  ]
+}

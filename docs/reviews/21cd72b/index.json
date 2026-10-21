@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "mode": "bounded-development-preflight",
+  "candidate_commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+  "input_root_sha256": "847d1e0f5d749066bb976c296d38be3082183ddd7a5ccc82f3ba4f87bf51a7f4",
+  "input_manifest": "docs/reviews/21cd72b/input-manifest.json",
+  "model_identity_trust": "Requested routing through the collaboration tool; not an independent model-weights attestation.",
+  "reviews": [
+    {
+      "level": 1,
+      "requested_model": "gpt-6-luna",
+      "reviewer": "luna1",
+      "report": "docs/reviews/21cd72b/luna1.json",
+      "report_sha256": "d51d618fc9e47e79f502c9c86de71b913cfbaf40c3e0c042deedaeb4bfbb6c46",
+      "constructed_objections": []
+    },
+    {
+      "level": 1,
+      "requested_model": "gpt-6-luna",
+      "reviewer": "luna2",
+      "report": "docs/reviews/21cd72b/luna2.json",
+      "report_sha256": "b1a8cf42c21623f0cc735299143b307a64967f2f167957b0dd0b797af1510e41",
+      "constructed_objections": []
+    },
+    {
+      "level": 2,
+      "requested_model": "gpt-6.1-sol",
+      "reviewer": "sol1",
+      "report": "docs/reviews/21cd72b/sol1.json",
+      "report_sha256": "ef82877071ad7b33237e3bd07554eaf7034c8e6dae2cdf7789161de0e52d3c4c",
+      "constructed_objections": []
+    },
+    {
+      "level": 2,
+      "requested_model": "gpt-6.1-sol",
+      "reviewer": "sol2",
+      "report": "docs/reviews/21cd72b/sol2.json",
+      "report_sha256": "854709309291f5c6a26946b15e20c19ece282fec73388b910e5f2c265eaef068",
+      "constructed_objections": []
+    },
+    {
+      "level": 3,
+      "requested_model": "gpt-6-astra",
+      "reviewer": "astra1",
+      "report": "docs/reviews/21cd72b/astra1.json",
+      "report_sha256": "e1d8f24380e3e0b53c0615bbe4ccb32155696b1468608b5954654c052b21c640",
+      "constructed_objections": [
+        "ASTRA1-001"
+      ]
+    },
+    {
+      "level": 3,
+      "requested_model": "gpt-6-astra",
+      "reviewer": "astra2",
+      "report": "docs/reviews/21cd72b/astra2.json",
+      "report_sha256": "5ecae5a2a461fd7597a916096784a2b9bf166d396109ae8bd28bde75dc187523",
+      "constructed_objections": [
+        "ASTRA2-001"
+      ]
+    }
+  ],
+  "review_result": "CONSTRUCTED_BLOCKERS",
+  "release_approval": false,
+  "limitations": [
+    "Not a full PostgreSQL release candidate.",
+    "LLM findings are candidate issues, not proof discharge.",
+    "Historical experiment paths may be temporary; registered regression fixtures preserve the objections.",
+    "Release requires fresh reviews and complete bound mechanical closure."
+  ]
+}

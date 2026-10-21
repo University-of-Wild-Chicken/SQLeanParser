@@ -5,10 +5,55 @@ expression types, consult executable query checkers, or evaluate locale rules. -
 namespace SQLean.SelectContract
 open Advanced
 
+/-- Merge a synthesized child carrying native type collation. Its strength is
+implicit, so it can create an implicit conflict but never an explicit conflict.
+This total form is tied to the ordinary merge judgment by the theorem below. -/
+def mergeBaseCollation (input : CollationDerivation) : Option CollationId → CollationDerivation
+  | none => input
+  | some id => match input with
+    | .none => .implicit id
+    | .explicit existing => .explicit existing
+    | .conflict left right => .conflict left right
+    | .implicit existing =>
+      if existing = id then .implicit existing
+      else if existing = .databaseDefault then .implicit id
+      else if id = .databaseDefault then .implicit existing
+      else .conflict existing id
+
+theorem mergeBaseCollation_spec (input : CollationDerivation) (base : Option CollationId) :
+    CollationDerivation.merge input (.stored base) = some (mergeBaseCollation input base) := by
+  cases base <;> cases input <;> simp only [CollationDerivation.stored,
+    CollationDerivation.merge, mergeBaseCollation]
+  split <;> try rfl
+  split <;> try rfl
+  split <;> rfl
+
+/-- PostgreSQL synthesizes a CaseTestExpr with no collation for an ArrayCoerceExpr
+and analyzes its element coercion as a second child alongside the array argument.
+For different admitted array type OIDs, that coercion node obtains the target
+leaf's native collation. Merely reusing the same array type creates no such
+child. Modifiers are not OIDs: same-base modifier conversions use the existing
+result-node rule below, and do not introduce NAME's C identity.
+
+The admitted true-array OIDs have no direct pg_cast entries; their conversion
+path is the element path in parse_coerce.c. Raw ARRAY casts have a separate
+per-element transform and do not use this known-array rule. -/
+def arrayCoercionElementCollation (source target : ScalarType) : Option CollationId :=
+  if source.isArray && target.isArray && source.unmodified != target.unmodified then
+    target.arrayElement.defaultCollation
+  else none
+
+def knownCoercedCollation (source target : ScalarType)
+    (derivation : CollationDerivation) : CollationDerivation :=
+  if source = target then derivation
+  else target.collationResult
+    (mergeBaseCollation derivation (arrayCoercionElementCollation source target))
+
 /-- Unknown literals receive the target's typcollation when converted. A
 COLLATE wrapper remains explicit through a collatable conversion and disappears
-through conversion to a noncollatable target. Known inputs preserve provenance
-through collatable casts, including TEXT-to-NAME and NAME-to-TEXT. -/
+through conversion to a noncollatable target. Known scalar inputs preserve
+provenance through collatable casts, including TEXT-to-NAME and NAME-to-TEXT.
+Known arrays also account for the synthesized element coercion child. -/
 def coercedCollation (expr : Advanced.Expr) (input : ExprType) (target : ScalarType)
     (derivation : CollationDerivation) : CollationDerivation :=
   match expr with
@@ -17,9 +62,7 @@ def coercedCollation (expr : Advanced.Expr) (input : ExprType) (target : ScalarT
       else coercedCollation arg input target .none
   | _ => match scalarInput expr input with
     | .unknown _ => .stored target.defaultCollation
-    | .known source =>
-      if source.base = target then derivation
-      else target.collationResult derivation
+    | .known source => knownCoercedCollation source.base target derivation
 
 def coercedCollations : List Advanced.Expr → List ExprType → List CollationDerivation →
     List ScalarType → Option (List CollationDerivation)
@@ -86,17 +129,12 @@ def pendingCoercion (origin : PendingOrigin) (input : ScalarInput)
   match origin, input with
   | .unknownWrapper, .unknown _ => derivation
   | _, .unknown _ => .stored target.defaultCollation
-  | _, .known source =>
-      if source.base = target then derivation else target.collationResult derivation
+  | _, .known source => knownCoercedCollation source.base target derivation
 
 def caseOperandType (type : ExprType) (expr : Advanced.Expr) : ExactType :=
   match scalarInput expr type with
   | .unknown nullable => ⟨.text, nullable⟩
   | .known type => type
-
-def knownCoercedCollation (source target : ScalarType)
-    (derivation : CollationDerivation) : CollationDerivation :=
-  if source = target then derivation else target.collationResult derivation
 
 def substringCollationTargets (form : SubstringForm) (inputs : List ScalarType) :
     Option (List ScalarType) :=

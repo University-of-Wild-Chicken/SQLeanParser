@@ -24,7 +24,8 @@ example (params : SelectContract.ParameterEnv) (scope : SelectContract.Scope)
     (fields : List Advanced.Expr) (type : SelectContract.ExprType) (uses : List Advanced.Parameter) :
     ¬ SelectContract.ExprValid params scope (.row fields) type uses := by
   intro valid
-  cases valid
+  cases valid with
+  | foldedInteger folded => simp [SelectContract.rawIntegerValue] at folded
 
 private def rowCertificate (query : Advanced.Query)
     (params : SelectContract.ParameterEnv := []) :

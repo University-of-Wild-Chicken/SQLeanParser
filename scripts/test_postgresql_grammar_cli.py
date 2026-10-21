@@ -148,6 +148,17 @@ class ReportTests(unittest.TestCase):
 
 
 class AuthoredSubqueryInputTests(unittest.TestCase):
+    def test_row_in_population_keeps_authored_adapters_separate_from_sources(self):
+        authored = cli.read_cases(cli.ROOT / "fixtures/row_in_subqueries/synthetic.json")
+        source = cli.read_cases(cli.ROOT / "fixtures/row_in_subqueries/concrete.jsonl")
+        self.assertEqual((len(authored), len(source)), (50, 50))
+        adapted = [row for row in authored if "grammar_input_transformations" in row]
+        self.assertEqual(len(adapted), 2)
+        self.assertTrue(all(row["grammar_input_origin"] == "authored-sqlean-parameter-fixture"
+                            for row in adapted))
+        self.assertTrue(all(row["sql"] == row["raw_sql"] and row["transformations"] == []
+                            and "grammar_input_transformations" not in row for row in source))
+
     def test_anonymous_markers_preserve_lexical_order_and_source_evidence(self):
         sql = "WITH c AS(SELECT ? x) SELECT ?,(SELECT ?)"
         row = {"id": "a", "source_kind": "synthetic", "sql": sql}

@@ -1,0 +1,2560 @@
+{
+  "format_version": 1,
+  "population": "row_valued_in_subqueries",
+  "expected_count": 50,
+  "expected_sources": {
+    "hatchet": 10,
+    "postgres": 7,
+    "duckdb": 1,
+    "materialize": 5,
+    "sqlite": 25,
+    "calcite": 2
+  },
+  "extraction_scope": "Complete retained source inputs; parser/renderer replay only. No source SQL, DDL, test directives or expected results are executed.",
+  "sources": {
+    "hatchet": {
+      "repository": "https://github.com/hatchet-dev/hatchet",
+      "commit": "392e7c472221cdab235cca674640e98f904e1ea0",
+      "ref": "main",
+      "license": "MIT",
+      "source_kind": "application-constant",
+      "license_file": "fixtures/row_in_subqueries/licenses/hatchet-hatchet-LICENSE.txt",
+      "license_sha256": "7388b34bd1ad4b9db3c72dcb73f434ea27c88e5ca8f02a24d4f970c906d79be3",
+      "files": [
+        {
+          "path": "pkg/repository/sqlcv1/dags.sql.go",
+          "local_path": "fixtures/row_in_subqueries/sources/hatchet/pkg/repository/sqlcv1/dags.sql.go",
+          "sha256": "9511b90aa712b45338096eb0738c7ff58fff0dcf78d02b822ed30dacaa4c8b0b"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/durable_event_log.sql.go",
+          "local_path": "fixtures/row_in_subqueries/sources/hatchet/pkg/repository/sqlcv1/durable_event_log.sql.go",
+          "sha256": "072cf1b3052eabf47dd67d8adb3393efc096ff2bfcba4cdd1a7705145594f1c6"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/matches.sql.go",
+          "local_path": "fixtures/row_in_subqueries/sources/hatchet/pkg/repository/sqlcv1/matches.sql.go",
+          "sha256": "18b0fc4d86c0bb05b9a3be4b802cebf87b67504031a9aed2c023eb1b4ca8a9ca"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/olap.sql.go",
+          "local_path": "fixtures/row_in_subqueries/sources/hatchet/pkg/repository/sqlcv1/olap.sql.go",
+          "sha256": "b6c819d1f09a5c8fbbba708577a8d914c4f7181ecb0bea2b4603cdbca9452233"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/queue.sql.go",
+          "local_path": "fixtures/row_in_subqueries/sources/hatchet/pkg/repository/sqlcv1/queue.sql.go",
+          "sha256": "af5416c8ea8ea8ad39857d80ee19b840568e9275f716091ec7158c778c07460f"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/tasks.sql.go",
+          "local_path": "fixtures/row_in_subqueries/sources/hatchet/pkg/repository/sqlcv1/tasks.sql.go",
+          "sha256": "b439f6e7e5642fb90e79d61e568ceb849ded87c86d04aa1e093b9d78240979e4"
+        },
+        {
+          "path": "pkg/repository/sqlcv1/workers.sql.go",
+          "local_path": "fixtures/row_in_subqueries/sources/hatchet/pkg/repository/sqlcv1/workers.sql.go",
+          "sha256": "66b3e2518cab2f497148ab2c524167305db1cfbf76eac48e2a946014c3a8b4d5"
+        }
+      ]
+    },
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/row_in_subqueries/licenses/postgres-postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "files": [
+        {
+          "path": "src/test/regress/sql/collate.icu.utf8.sql",
+          "local_path": "fixtures/row_in_subqueries/sources/postgres/src/test/regress/sql/collate.icu.utf8.sql",
+          "sha256": "8f673ffd31191f10db96cfc2cc540079c1566c956326813d2de15221de122c9d"
+        },
+        {
+          "path": "src/test/regress/sql/collate.sql",
+          "local_path": "fixtures/row_in_subqueries/sources/postgres/src/test/regress/sql/collate.sql",
+          "sha256": "c20c9868d2e539295294150de52f0008b454ac8358924df80f4227e4ab2095d0"
+        },
+        {
+          "path": "src/test/regress/sql/subselect.sql",
+          "local_path": "fixtures/row_in_subqueries/sources/postgres/src/test/regress/sql/subselect.sql",
+          "sha256": "233a9f22e38ae691505d7fdfff51e8559e87c96b2b864490ac9e630442c2dc91"
+        }
+      ]
+    },
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/row_in_subqueries/licenses/duckdb-duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "files": [
+        {
+          "path": "test/sql/sql_export/mark_results.test",
+          "local_path": "fixtures/row_in_subqueries/sources/duckdb/test/sql/sql_export/mark_results.test",
+          "sha256": "58a9c51ad8ef73c586dde212c1becd7c0404bf58ac41e1a8b335c84e478fb629"
+        }
+      ]
+    },
+    "materialize": {
+      "repository": "https://github.com/MaterializeInc/materialize",
+      "commit": "726570dba1d2e4d839c707a84a986fb3b3acc5c3",
+      "ref": "pinned main snapshot",
+      "license": "BSL-1.1 (change date 2030-10-20; change license Apache-2.0)",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/row_in_subqueries/licenses/materialize-materialize-20261020-LICENSE",
+      "license_sha256": "5d4ca070f541414a03ad8b84021e4ba3deeca4025e4b4274053abaa2e93ec032",
+      "files": [
+        {
+          "path": "test/sqllogictest/cockroach/subquery.slt",
+          "local_path": "fixtures/row_in_subqueries/sources/materialize/test/sqllogictest/cockroach/subquery.slt",
+          "sha256": "46c42a4f2f38d7c59ed4b0bdc3f1fab3ca8a37d7a9e94dc360f8b5e12abbd0f0"
+        },
+        {
+          "path": "test/sqllogictest/cockroach/tuple.slt",
+          "local_path": "fixtures/row_in_subqueries/sources/materialize/test/sqllogictest/cockroach/tuple.slt",
+          "sha256": "0f8e405c5aae74ed81c3b0fdf9138701681e154dfd079348245f9262fe7e17c4"
+        }
+      ]
+    },
+    "sqlite": {
+      "repository": "https://github.com/sqlite/sqlite",
+      "commit": "5484850c7a2cd90f2a06b8d4f3453b259aefc1e1",
+      "ref": "master",
+      "license": "Public Domain",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/row_in_subqueries/licenses/sqlite-sqlite-LICENSE.md",
+      "license_sha256": "c9053892d578840a196d588ff68baa9bc0f5240eb215fb9cf91cd6b0b3209305",
+      "files": [
+        {
+          "path": "test/in7.test",
+          "local_path": "fixtures/row_in_subqueries/sources/sqlite/test/in7.test",
+          "sha256": "de88f817d546aa2c119e54fb7a066cf1122de87224e0671fcab73dc3a20353ad"
+        },
+        {
+          "path": "test/join.test",
+          "local_path": "fixtures/row_in_subqueries/sources/sqlite/test/join.test",
+          "sha256": "1628296fe67e3c5beb5172ead40983908c80f506497cc517db52f7ae1224e621"
+        },
+        {
+          "path": "test/join8.test",
+          "local_path": "fixtures/row_in_subqueries/sources/sqlite/test/join8.test",
+          "sha256": "8e662f0ad075b5b6d1c71b71c915461d35858fef6144761c50d763e81c9d0f21"
+        },
+        {
+          "path": "test/rowvalue.test",
+          "local_path": "fixtures/row_in_subqueries/sources/sqlite/test/rowvalue.test",
+          "sha256": "0263c6fb6604a9f252bf4cbcc907747403365a734d162820134414dc86b69a2a"
+        },
+        {
+          "path": "test/rowvalue3.test",
+          "local_path": "fixtures/row_in_subqueries/sources/sqlite/test/rowvalue3.test",
+          "sha256": "eb20134fb78b44885fd72df852bdc02efc101a0e8a50cc2181fffec89b158060"
+        },
+        {
+          "path": "test/rowvalue9.test",
+          "local_path": "fixtures/row_in_subqueries/sources/sqlite/test/rowvalue9.test",
+          "sha256": "02b73148938b3e6a12af16319ca5cea88e4955eb387cf8635060079f9e6aefda"
+        }
+      ]
+    },
+    "calcite": {
+      "repository": "https://github.com/apache/calcite",
+      "commit": "83a36ba09be41ce447773feb231716b2b4e71198",
+      "license": "Apache-2.0",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/row_in_subqueries/licenses/calcite-calcite-LICENSE",
+      "license_sha256": "530c12df4df6cbfd34cb3cf42a3bb900185942f3c4c08b4d64984818940af5e1",
+      "files": [
+        {
+          "path": "core/src/test/resources/sql/sub-query.iq",
+          "local_path": "fixtures/row_in_subqueries/sources/calcite/core/src/test/resources/sql/sub-query.iq",
+          "sha256": "dd44d8883a2a003b25868e9d4aa2229e1fd210f318bcdfa1b43873dd27037035"
+        }
+      ],
+      "additional_notices": [
+        {
+          "path": "NOTICE",
+          "local_path": "fixtures/row_in_subqueries/licenses/calcite-calcite-NOTICE",
+          "sha256": "7d04aa2cc4bb1991ac646e2dfce23880d4e5c8f1c42a9746866bce4066015db1",
+          "source_url": "https://raw.githubusercontent.com/apache/calcite/83a36ba09be41ce447773feb231716b2b4e71198/NOTICE"
+        }
+      ]
+    }
+  },
+  "contexts": [
+    {
+      "id": "postgres:subselect_tbl:627",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/subselect.sql",
+      "start": 627,
+      "end": 697,
+      "sql": "CREATE TABLE SUBSELECT_TBL (\n  f1 integer,\n  f2 integer,\n  f3 float\n);",
+      "sql_sha256": "de9209d5507f7f3f29ecdbf3afb4b9a6fb04a0d12c663808fad7a543d013e913",
+      "table": {
+        "name": "subselect_tbl",
+        "columns": [
+          {
+            "name": "f1",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "f2",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "f3",
+            "type": "double",
+            "nullable": true
+          }
+        ]
+      },
+      "claim": "Conditional transcription of this complete retained table declaration; source SQL/DDL not executed."
+    },
+    {
+      "id": "postgres:outer_7597:13091",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/subselect.sql",
+      "start": 13091,
+      "end": 13139,
+      "sql": "create temp table outer_7597 (f1 int4, f2 int4);",
+      "sql_sha256": "95f287082558dd3a5c08f11496644c41c9e4c2874d4ed6f255cf2aff2469934e",
+      "table": {
+        "name": "outer_7597",
+        "columns": [
+          {
+            "name": "f1",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "f2",
+            "type": "int",
+            "nullable": true
+          }
+        ]
+      },
+      "claim": "Conditional transcription of this complete retained table declaration; source SQL/DDL not executed."
+    },
+    {
+      "id": "postgres:inner_7597:13299",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/subselect.sql",
+      "start": 13299,
+      "end": 13346,
+      "sql": "create temp table inner_7597(c1 int8, c2 int8);",
+      "sql_sha256": "5417efe3da0505fc66d6471f9d1df5655974d714544daf194ca46cd9c72ffaf3",
+      "table": {
+        "name": "inner_7597",
+        "columns": [
+          {
+            "name": "c1",
+            "type": "bigint",
+            "nullable": true
+          },
+          {
+            "name": "c2",
+            "type": "bigint",
+            "nullable": true
+          }
+        ]
+      },
+      "claim": "Conditional transcription of this complete retained table declaration; source SQL/DDL not executed."
+    },
+    {
+      "id": "materialize:t:4459",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/tuple.slt",
+      "start": 4459,
+      "end": 4495,
+      "sql": "CREATE TABLE t (a int, b int, c int)",
+      "sql_sha256": "227277472e6ac03e23d240e80b3da9b49ae57abd950fa6ddbbbdc08df3582199",
+      "table": {
+        "name": "t",
+        "columns": [
+          {
+            "name": "a",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "b",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "c",
+            "type": "int",
+            "nullable": true
+          }
+        ]
+      },
+      "claim": "Conditional transcription of this complete retained table declaration; source SQL/DDL not executed."
+    },
+    {
+      "id": "materialize:abc:4149",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/subquery.slt",
+      "start": 4149,
+      "end": 4199,
+      "sql": "CREATE TABLE abc (a INT PRIMARY KEY, b INT, c INT)",
+      "sql_sha256": "ed8a7fd0f5f3d24304385a5d70619fa2d9d72f47426e9a49c59f5abae664e203",
+      "table": {
+        "name": "abc",
+        "columns": [
+          {
+            "name": "a",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "b",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "c",
+            "type": "int",
+            "nullable": true
+          }
+        ]
+      },
+      "claim": "Conditional transcription of this complete retained table declaration; source SQL/DDL not executed."
+    },
+    {
+      "id": "postgres:collate_test10:2298",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/collate.sql",
+      "start": 2298,
+      "end": 2392,
+      "sql": "CREATE TABLE collate_test10 (\n    a int,\n    x text COLLATE \"C\",\n    y text COLLATE \"POSIX\"\n);",
+      "sql_sha256": "750c164f54acf26602014c6d88eb0c959620890287dead7d8dff9f9a41d3625c",
+      "table": {
+        "name": "collate_test10",
+        "columns": [
+          {
+            "name": "a",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "x",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "y",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "columnCollations": [
+          {
+            "column": "x",
+            "collation": "C"
+          },
+          {
+            "column": "y",
+            "collation": "POSIX"
+          }
+        ]
+      },
+      "claim": "Conditional transcription of this complete retained table declaration; source SQL/DDL not executed."
+    }
+  ],
+  "catalogs": [
+    {
+      "local_path": "fixtures/row_in_subqueries/catalogs/subselect.json",
+      "sha256": "d5440ff3e7655abc4d2161cdabaa924d3d469ba9d65a8cfc3a45f90fd3b9c6b3",
+      "context_ids": [
+        "postgres:subselect_tbl:627"
+      ]
+    },
+    {
+      "local_path": "fixtures/row_in_subqueries/catalogs/7597.json",
+      "sha256": "2b382da6407cb109cdd94be41da9aaa3dfaa3af22bb8da71d352b2a240206c65",
+      "context_ids": [
+        "postgres:outer_7597:13091",
+        "postgres:inner_7597:13299"
+      ]
+    },
+    {
+      "local_path": "fixtures/row_in_subqueries/catalogs/tuple.json",
+      "sha256": "1f41d87a4142eae63567e36baa5652b6520a011f61ad66ceeffd89ee3ffcce83",
+      "context_ids": [
+        "materialize:t:4459"
+      ]
+    },
+    {
+      "local_path": "fixtures/row_in_subqueries/catalogs/abc.json",
+      "sha256": "19aba8257089c49482a23bad76b72d7c4acf89f71311f716bb5c2cd477bfb964",
+      "context_ids": [
+        "materialize:abc:4149"
+      ]
+    },
+    {
+      "local_path": "fixtures/row_in_subqueries/catalogs/collate.json",
+      "sha256": "6592b1d9c66b79d62ca9d2d47e925cd0a52c59d1fc6d8682dafbabbca620834f",
+      "context_ids": [
+        "postgres:collate_test10:2298"
+      ]
+    }
+  ],
+  "selections": [
+    {
+      "id": "row-in:hatchet:pkg/repository/sqlcv1/dags.sql.go:getDAGData",
+      "source": "hatchet",
+      "source_file": "pkg/repository/sqlcv1/dags.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getDAGData"
+      },
+      "sql_sha256": "279348208a4e3079892d17c656a1846fdeed4230ca06e26fc73d7e5dff859262",
+      "normalized_tokens_sha256": "bca6b7290dd2764fab4d51dfcde5eb00e0f41d897286789ab77b87531891f8b5",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "unnest"
+        ],
+        "external_relations": [
+          "v1_dag",
+          "v1_dag_data"
+        ],
+        "parameters": [
+          1,
+          2,
+          3
+        ],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:hatchet:pkg/repository/sqlcv1/durable_event_log.sql.go:getDurableTaskLogFiles",
+      "source": "hatchet",
+      "source_file": "pkg/repository/sqlcv1/durable_event_log.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getDurableTaskLogFiles"
+      },
+      "sql_sha256": "e2dd1472c699807c1203f0b829e133433cab6f5a2a5d92b50c2a97308522d566",
+      "normalized_tokens_sha256": "ad104d1a913ceadb10b1afebd4879c1e38e30d45264c5b0632114dd64a4a6bef",
+      "row_in_arities": [
+        3
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "unnest"
+        ],
+        "external_relations": [
+          "v1_durable_event_log_file"
+        ],
+        "parameters": [
+          1,
+          2,
+          3
+        ],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:hatchet:pkg/repository/sqlcv1/matches.sql.go:getActiveMatchForDurableWait",
+      "source": "hatchet",
+      "source_file": "pkg/repository/sqlcv1/matches.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getActiveMatchForDurableWait"
+      },
+      "sql_sha256": "9ee108b9d8d03e6aefd42036445813f8229c3bd65d1070d23f8ea0592a98035f",
+      "normalized_tokens_sha256": "b88417cfa885c0b422a545504fa6837aa28f83381293fb1f0d06ab52e1bafec0",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 2
+        },
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "unnest"
+        ],
+        "external_relations": [
+          "v1_match",
+          "v1_match_condition"
+        ],
+        "parameters": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:hatchet:pkg/repository/sqlcv1/olap.sql.go:getTaskStartedTimestamps",
+      "source": "hatchet",
+      "source_file": "pkg/repository/sqlcv1/olap.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "getTaskStartedTimestamps"
+      },
+      "sql_sha256": "6de163292c4563145446cf186a41eb0ba33bad6ab72e92abbf128b11132d4442",
+      "normalized_tokens_sha256": "fd5bdd49682d56367257df987c298fdb421638a358a8c2964867b7eb51aef29d",
+      "row_in_arities": [
+        3
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {
+          "groupClause": 1,
+          "function_calls": 2
+        },
+        "functions": [
+          "min",
+          "unnest"
+        ],
+        "external_relations": [
+          "v1_task_events_olap"
+        ],
+        "parameters": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:hatchet:pkg/repository/sqlcv1/queue.sql.go:listQueueItemsForTasks",
+      "source": "hatchet",
+      "source_file": "pkg/repository/sqlcv1/queue.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listQueueItemsForTasks"
+      },
+      "sql_sha256": "91ed5a569c0af41ce2f0e30f34cf27560ab02b08d18598c8ce158713c694e300",
+      "normalized_tokens_sha256": "7d14ede29cd54a2a9bcca4221109555b33fbf51d7a373d0d7710fa7c95d3d11e",
+      "row_in_arities": [
+        3
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "unnest"
+        ],
+        "external_relations": [
+          "v1_queue_item"
+        ],
+        "parameters": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:hatchet:pkg/repository/sqlcv1/tasks.sql.go:filterValidTasks",
+      "source": "hatchet",
+      "source_file": "pkg/repository/sqlcv1/tasks.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "filterValidTasks"
+      },
+      "sql_sha256": "d84b14fc4e6d0381557289bd166393a93e97b3b6861933fcca426a81cb543864",
+      "normalized_tokens_sha256": "794a436fcf3a996a76c62a5dc73fd6f12b8b5e00bca3a93ba20ed81cc5d79a6a",
+      "row_in_arities": [
+        3
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "unnest"
+        ],
+        "external_relations": [
+          "Step",
+          "v1_task"
+        ],
+        "parameters": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:hatchet:pkg/repository/sqlcv1/tasks.sql.go:listTaskExpressionEvals",
+      "source": "hatchet",
+      "source_file": "pkg/repository/sqlcv1/tasks.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTaskExpressionEvals"
+      },
+      "sql_sha256": "a796ee1562cfb327046f5a9da7ef61be3f389192a33b73c6478a52d4841889cd",
+      "normalized_tokens_sha256": "3725c4d9f39ba2d482c64387dcea68d388e12ec313fc4a4aea6652772a867929",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "unnest"
+        ],
+        "external_relations": [
+          "v1_task_expression_eval"
+        ],
+        "parameters": [
+          1,
+          2,
+          3
+        ],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:hatchet:pkg/repository/sqlcv1/tasks.sql.go:listTaskParentOutputs",
+      "source": "hatchet",
+      "source_file": "pkg/repository/sqlcv1/tasks.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTaskParentOutputs"
+      },
+      "sql_sha256": "0006ac4f2684d41742db6d5d9ea78d12f7a711b60f126277a2829c5b79923da7",
+      "normalized_tokens_sha256": "74e21e6cb42820f2775d323cbf70290eaf40ee68d6e864bf3be3c73c1f765727",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {
+          "distinctClause": 1,
+          "groupClause": 1,
+          "function_calls": 2
+        },
+        "functions": [
+          "max",
+          "unnest"
+        ],
+        "external_relations": [
+          "v1_dag_to_task",
+          "v1_task",
+          "v1_task_event"
+        ],
+        "parameters": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:hatchet:pkg/repository/sqlcv1/tasks.sql.go:listTaskRunningStatuses",
+      "source": "hatchet",
+      "source_file": "pkg/repository/sqlcv1/tasks.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listTaskRunningStatuses"
+      },
+      "sql_sha256": "0134bef4246ee2e21601af691aa6289221dbb18a8d005437ccdaad9867d33ce0",
+      "normalized_tokens_sha256": "659a69be0ccf161840fc2602f1f76dd73c0af27e82f1b977ba3558e7e84e0369",
+      "row_in_arities": [
+        3
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "unnest"
+        ],
+        "external_relations": [
+          "v1_task",
+          "v1_task_runtime"
+        ],
+        "parameters": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:hatchet:pkg/repository/sqlcv1/workers.sql.go:listDurableTaskDispatcherIdsForTasks",
+      "source": "hatchet",
+      "source_file": "pkg/repository/sqlcv1/workers.sql.go",
+      "selector": {
+        "kind": "go_constant",
+        "symbol": "listDurableTaskDispatcherIdsForTasks"
+      },
+      "sql_sha256": "f6719a1661543da5d4d8a8dba63b6ff0c5a82672fa3b33e0bd60f16213b0a687",
+      "normalized_tokens_sha256": "fe090c07ab6ec1bc9510b5066158b8b16639875c319fff572ea8bab66f567606",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "unnest"
+        ],
+        "external_relations": [
+          "Worker",
+          "v1_task_runtime"
+        ],
+        "parameters": [
+          1,
+          2,
+          3
+        ],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:postgres:src/test/regress/sql/collate.icu.utf8.sql:29518",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/collate.icu.utf8.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 29518,
+        "end": 29592,
+        "statement_index": 390
+      },
+      "sql_sha256": "d64b3f1b23282b03c21c977c1aa9b5c0fca5367dd62f29ef2359075998679218",
+      "normalized_tokens_sha256": "351d31b92e8f73d876efddc5a9944a8af01e24875d5ea5fa909e1f84546615ee",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "inner_text",
+          "outer_text"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:postgres:src/test/regress/sql/collate.sql:6403",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6403,
+        "end": 6486,
+        "statement_index": 76
+      },
+      "sql_sha256": "f7991497d725779adb56ffebd2ab7a8aa82c60034745cf9d2ad3e992a775428d",
+      "normalized_tokens_sha256": "25ef2ed8bb021be3303036b309da97070def20578a01b134dfc542b0d838d7a6",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "collate_test10"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [
+        "postgres:collate_test10:2298"
+      ],
+      "candidate_catalog_file": "fixtures/row_in_subqueries/catalogs/collate.json",
+      "scope_catalog_columns": {
+        "collate_test10": [
+          "a",
+          "x",
+          "y"
+        ]
+      }
+    },
+    {
+      "id": "row-in:postgres:src/test/regress/sql/collate.sql:6518",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6518,
+        "end": 6629,
+        "statement_index": 77
+      },
+      "sql_sha256": "7cfc65432fb52947644cb7cb15921e5a926891fba9bbd68dbc27bfa3b6fce4bd",
+      "normalized_tokens_sha256": "c06692988a03774dafce2b090b4c7cb781e9f23332c2550f146bda4eda44789b",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "collate_test10"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [
+        "postgres:collate_test10:2298"
+      ],
+      "candidate_catalog_file": "fixtures/row_in_subqueries/catalogs/collate.json",
+      "scope_catalog_columns": {
+        "collate_test10": [
+          "a",
+          "x",
+          "y"
+        ]
+      }
+    },
+    {
+      "id": "row-in:postgres:src/test/regress/sql/collate.sql:6630",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/collate.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 6630,
+        "end": 6741,
+        "statement_index": 78
+      },
+      "sql_sha256": "8984e72fb3dfa1758e9bc3be6b9390224e9b325220c08b5b5972cc5b4024c355",
+      "normalized_tokens_sha256": "1cdcbeab151fba8c6b80fb4149f7ddd2db10270e828fcc9e15ec51976853e2fb",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "collate_test10"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [
+        "postgres:collate_test10:2298"
+      ],
+      "candidate_catalog_file": "fixtures/row_in_subqueries/catalogs/collate.json",
+      "scope_catalog_columns": {
+        "collate_test10": [
+          "a",
+          "x",
+          "y"
+        ]
+      }
+    },
+    {
+      "id": "row-in:postgres:src/test/regress/sql/subselect.sql:1437",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/subselect.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 1437,
+        "end": 1591,
+        "statement_index": 26
+      },
+      "sql_sha256": "09376758fdfc86c64d97e3d2d7f7756d4fca8050688bbd17da363f57b9aaef39",
+      "normalized_tokens_sha256": "85765f759e61f14187789660eeffe6e0b98ead0211572814e11c907a319f51a7",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "subselect_tbl"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [
+        "postgres:subselect_tbl:627"
+      ],
+      "candidate_catalog_file": "fixtures/row_in_subqueries/catalogs/subselect.json",
+      "scope_catalog_columns": {
+        "subselect_tbl": [
+          "f1",
+          "f2",
+          "f3"
+        ]
+      }
+    },
+    {
+      "id": "row-in:postgres:src/test/regress/sql/subselect.sql:2119",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/subselect.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 2119,
+        "end": 2283,
+        "statement_index": 30
+      },
+      "sql_sha256": "1ac6ae4af7da22d8a28d43adf19a82f11feb245d0a652aa1d3e540c7b21d1f49",
+      "normalized_tokens_sha256": "02e79c7b8ba2587737789ae82b8fdef25a0a867e2e47284baf23627ada372218",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "subselect_tbl"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [
+        "postgres:subselect_tbl:627"
+      ],
+      "candidate_catalog_file": "fixtures/row_in_subqueries/catalogs/subselect.json",
+      "scope_catalog_columns": {
+        "subselect_tbl": [
+          "f1",
+          "f2",
+          "f3"
+        ]
+      }
+    },
+    {
+      "id": "row-in:postgres:src/test/regress/sql/subselect.sql:13388",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/subselect.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 13388,
+        "end": 13462,
+        "statement_index": 141
+      },
+      "sql_sha256": "4c6c0886b8060b202ab37720552c4493fdd893799ca3e47a980703ca3d4fee63",
+      "normalized_tokens_sha256": "721bf810a86c1d5a179fcd4c90ce06b8c6f2385fa46523963ec715a00ecfe1fd",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "inner_7597",
+          "outer_7597"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [
+        "postgres:outer_7597:13091",
+        "postgres:inner_7597:13299"
+      ],
+      "candidate_catalog_file": "fixtures/row_in_subqueries/catalogs/7597.json",
+      "scope_catalog_columns": {
+        "outer_7597": [
+          "f1",
+          "f2"
+        ],
+        "inner_7597": [
+          "c1",
+          "c2"
+        ]
+      }
+    },
+    {
+      "id": "row-in:duckdb:test/sql/sql_export/mark_results.test:684",
+      "source": "duckdb",
+      "source_file": "test/sql/sql_export/mark_results.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 46,
+        "start": 684,
+        "end": 722
+      },
+      "sql_sha256": "2ffda5558da9b94188c122d1e76d413f75dc6f7054c395bf5139833ecad3c164",
+      "normalized_tokens_sha256": "b4da921f7273208ef953e7c603cdcfb35a20ea55ab014685cd365d007cda2778",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [],
+      "candidate_catalog_file": null
+    },
+    {
+      "id": "row-in:materialize:test/sqllogictest/cockroach/tuple.slt:6281",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/tuple.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 291,
+        "start": 6281,
+        "end": 6346
+      },
+      "sql_sha256": "418ee9e648983be9401788df910f686dc91d82f227875c2f83c2228294bd9772",
+      "normalized_tokens_sha256": "bd5bdaca1df31a5322f59088e75926344a213f7b1e466e49803928fb1908e5a8",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "t"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [
+        "materialize:t:4459"
+      ],
+      "candidate_catalog_file": "fixtures/row_in_subqueries/catalogs/tuple.json",
+      "scope_catalog_columns": {
+        "t": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+    {
+      "id": "row-in:materialize:test/sqllogictest/cockroach/tuple.slt:6376",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/tuple.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 297,
+        "start": 6376,
+        "end": 6443
+      },
+      "sql_sha256": "617aed728ef394eb1a9937a9bde47b7d46c5e60e41e9a73fa62831180d3214d1",
+      "normalized_tokens_sha256": "6a742dbd9ab2b9b954e0ed9823162b18a5ad3288537d7e0f5211fb50f78cf287",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "t"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [
+        "materialize:t:4459"
+      ],
+      "candidate_catalog_file": "fixtures/row_in_subqueries/catalogs/tuple.json",
+      "scope_catalog_columns": {
+        "t": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+    {
+      "id": "row-in:materialize:test/sqllogictest/cockroach/subquery.slt:1503",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/subquery.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 55,
+        "start": 1503,
+        "end": 1540
+      },
+      "sql_sha256": "16da61702f3c555617148e8a96b38456d1baedf09aa5f80a4dec4192264d2d06",
+      "normalized_tokens_sha256": "a35e07e8aff939f8390e03a1c156ab66dfd08cd6abc48a3448231369f3b20100",
+      "row_in_arities": [
+        3
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [],
+      "candidate_catalog_file": null
+    },
+    {
+      "id": "row-in:materialize:test/sqllogictest/cockroach/subquery.slt:4611",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/subquery.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 206,
+        "start": 4611,
+        "end": 4651
+      },
+      "sql_sha256": "d1a1bd30f848b5ec28686cec8973ec8fdbaee8075eb4218ac74bbde8aeb10c42",
+      "normalized_tokens_sha256": "601ed0701af40c9927e91a83309afa862a226e169c3d0be67ddab9a2be0f673a",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "abc"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [
+        "materialize:abc:4149"
+      ],
+      "candidate_catalog_file": "fixtures/row_in_subqueries/catalogs/abc.json",
+      "scope_catalog_columns": {
+        "abc": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+    {
+      "id": "row-in:materialize:test/sqllogictest/cockroach/subquery.slt:4670",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/subquery.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 211,
+        "start": 4670,
+        "end": 4722
+      },
+      "sql_sha256": "dcdde88c1ef90cdf4dcb21c4a7b406d67185ba86113809042bf98f008a418898",
+      "normalized_tokens_sha256": "eb7aead9f5792c0c4c9846b591920abd4ceaeed9b6eb0989266779c5f76dc29f",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "abc"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "fixed-static-certificate-candidate",
+      "baseline_render_status": "rendered",
+      "context_ids": [
+        "materialize:abc:4149"
+      ],
+      "candidate_catalog_file": "fixtures/row_in_subqueries/catalogs/abc.json",
+      "scope_catalog_columns": {
+        "abc": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+    {
+      "id": "row-in:sqlite:test/join.test:40906",
+      "source": "sqlite",
+      "source_file": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 40876,
+        "block_start": 40903,
+        "block_end": 41007,
+        "start": 40906,
+        "end": 41006,
+        "statement_index": 0
+      },
+      "sql_sha256": "c31fd53b6e562127235d4e03ce9e1f518157b09a43a0b54865594056afd6de15",
+      "normalized_tokens_sha256": "f19c848da2c446a23633dbe1ecb0ec7a10e783245d7a7e56564b7aec7ed11582",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "empty",
+          "t0"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/join.test:41061",
+      "source": "sqlite",
+      "source_file": "test/join.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 41031,
+        "block_start": 41058,
+        "block_end": 41167,
+        "start": 41061,
+        "end": 41166,
+        "statement_index": 0
+      },
+      "sql_sha256": "b59839f910eab621de5d218a205eec9c58b02bbe3486393d775b2c23a04a7b1d",
+      "normalized_tokens_sha256": "d357ea1e74eaccf5405a6f339ad2b34dc7149ca413f77a1437dc63b3abda572b",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "empty",
+          "t0"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue.test:6807",
+      "source": "sqlite",
+      "source_file": "test/rowvalue.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 6617,
+        "block_start": 6639,
+        "block_end": 6921,
+        "start": 6807,
+        "end": 6920,
+        "statement_index": 4
+      },
+      "sql_sha256": "3ec495f69545764751967cdcbd050890bd0070b4998614e9426036824c09cb3a",
+      "normalized_tokens_sha256": "efdff3e3698183b8185616dba7b875d43c9db3a4a77caccfdd85a4ebf953aed2",
+      "row_in_arities": [
+        2,
+        3
+      ],
+      "observation": {
+        "factors": {
+          "in": 2
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "dual",
+          "t3"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue.test:12902",
+      "source": "sqlite",
+      "source_file": "test/rowvalue.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 12877,
+        "block_start": 12899,
+        "block_end": 12967,
+        "start": 12902,
+        "end": 12965,
+        "statement_index": 0
+      },
+      "sql_sha256": "4df50df36efac98b45e2fb0073469f812be54e7e6be444986de895db22244494",
+      "normalized_tokens_sha256": "b2eadb91463b21202a31041e88cbebc91e152274fc93597253ada487dc8b0ac5",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "b3",
+          "b5"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue.test:13281",
+      "source": "sqlite",
+      "source_file": "test/rowvalue.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 13256,
+        "block_start": 13278,
+        "block_end": 13371,
+        "start": 13281,
+        "end": 13369,
+        "statement_index": 0
+      },
+      "sql_sha256": "ead8630f83f9bcf59a80167274880f65b2825b163cafc9c1930974549aaee5ef",
+      "normalized_tokens_sha256": "bd3b87737c6c93542231b2b7fa79ebcf8282ae2964034dc15076be25cb26a474",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "b3",
+          "b4",
+          "b5"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue.test:26485",
+      "source": "sqlite",
+      "source_file": "test/rowvalue.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 26330,
+        "block_start": 26352,
+        "block_end": 26529,
+        "start": 26485,
+        "end": 26528,
+        "statement_index": 3
+      },
+      "sql_sha256": "a90c79e695b566904ee525c9cc21fd6bb327d4e5275c215b5692f5512a7a6d3e",
+      "normalized_tokens_sha256": "caa966d2b5a6c5fe9d716e26a12163d5b57d948b4eb2e8592dac79898ded29e6",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "t1"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue.test:26558",
+      "source": "sqlite",
+      "source_file": "test/rowvalue.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 26533,
+        "block_start": 26555,
+        "block_end": 26602,
+        "start": 26558,
+        "end": 26601,
+        "statement_index": 0
+      },
+      "sql_sha256": "1624c96e7abe473131c11a456f47e3c80efb557fc6e8506fbc0c23900c358a44",
+      "normalized_tokens_sha256": "065f04d2d7e5fee97f94ac9f13d3b2ade7acbe470ea6a502e5421bb047a1fc62",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "t1"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/join8.test:5678",
+      "source": "sqlite",
+      "source_file": "test/join8.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 5540,
+        "block_start": 5568,
+        "block_end": 5774,
+        "start": 5678,
+        "end": 5773,
+        "statement_index": 2
+      },
+      "sql_sha256": "ff4353390ffb1d47da08ade4d5d236b009acfacdf3bfe6a4ebedebf3aabf7a4c",
+      "normalized_tokens_sha256": "42ac1591e7351fc0c9991a6bc82d2cc18631c102727d313f3e44ca770863e78a",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "t1"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "rowid"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/join8.test:10317",
+      "source": "sqlite",
+      "source_file": "test/join8.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 10159,
+        "block_start": 10187,
+        "block_end": 10402,
+        "start": 10317,
+        "end": 10401,
+        "statement_index": 2
+      },
+      "sql_sha256": "9b52f1f2414433770608a26d389f08530910ac012d444e94e1f805b1035b50dd",
+      "normalized_tokens_sha256": "be8afdea46a87a76f2c8d7ff39f5a68f134b9380cbb9d714753d00e500acf8f2",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "t1"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/in7.test:8169",
+      "source": "sqlite",
+      "source_file": "test/in7.test",
+      "selector": {
+        "kind": "tcl_sql_statement",
+        "command_start": 8145,
+        "block_start": 8166,
+        "block_end": 8252,
+        "start": 8169,
+        "end": 8251,
+        "statement_index": 0
+      },
+      "sql_sha256": "95a78b5c2e75d898a19406da84bf691f61726d4fd44662d73b4776c6e40d38b0",
+      "normalized_tokens_sha256": "2d1077139ecec54c23b6508ee9d538ce332e4d17dccafa19e3bafc663879805d",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {
+          "function_calls": 1
+        },
+        "functions": [
+          "min"
+        ],
+        "external_relations": [
+          "t0",
+          "t2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "c2"
+          ],
+          [
+            "c2"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:calcite:core/src/test/resources/sql/sub-query.iq:8698",
+      "source": "calcite",
+      "source_file": "core/src/test/resources/sql/sub-query.iq",
+      "selector": {
+        "kind": "quidem_complete_query_input",
+        "start": 8698,
+        "end": 8808
+      },
+      "sql_sha256": "9fb21c7e73a039f68859c33afe1ca7f44178b7baa6112251f5b379d3eeae7015",
+      "normalized_tokens_sha256": "219699481fcac84a9044d400c5f6ca0ac81d1b472ad5fafdd2d68f8dcc3efc62",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "dept",
+          "emp"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "deptno"
+          ],
+          [
+            "deptno"
+          ],
+          [
+            "deptno"
+          ],
+          [
+            "gender"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:calcite:core/src/test/resources/sql/sub-query.iq:8840",
+      "source": "calcite",
+      "source_file": "core/src/test/resources/sql/sub-query.iq",
+      "selector": {
+        "kind": "quidem_complete_query_input",
+        "start": 8840,
+        "end": 8932
+      },
+      "sql_sha256": "3005a020f276cc303833a5705990cd7a5df3f2299eb6aa185d4766808a8c3910",
+      "normalized_tokens_sha256": "96a7597c71480e4832e466c8acd16ddd22b55eb2ce27eee2626f8f5426b6e7f1",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "emp"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "gender"
+          ],
+          [
+            "gender"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:2783",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 2760,
+        "block_start": 2783,
+        "block_end": 2848
+      },
+      "sql_sha256": "89b9a4aae026bf78df2cebd4deed210a724f6756bfedda0df1edda294b497eff",
+      "normalized_tokens_sha256": "ce377fe17c6e175cf689b517b9deb15c9bfefd84912b2e161d8ee2172e24c579",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "a1",
+          "a2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "x"
+          ],
+          [
+            "y"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:3710",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 3689,
+        "block_start": 3710,
+        "block_end": 3768
+      },
+      "sql_sha256": "d79cd18dc4a76eafcfd9489af4f554b3494f65068e688f750fa6ee19688fd725",
+      "normalized_tokens_sha256": "53941582e630d357aceffe40fd58cef9cf1fa1e489eb4f8426b11e3c71b85527",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "c1",
+          "c2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "x"
+          ],
+          [
+            "y"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:3918",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 3897,
+        "block_start": 3918,
+        "block_end": 3977
+      },
+      "sql_sha256": "6cc9231923b11ddd8b3e70826ea0d51ae3e486d451b079ecb31485ff368b8c66",
+      "normalized_tokens_sha256": "c0477e9642dd21b37051b6b4b2bb7d349c2e3c88f2a05dbf4e2421f62019c1ed",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "c1",
+          "c2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "x"
+          ],
+          [
+            "y"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:5212",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 5185,
+        "block_start": 5212,
+        "block_end": 5279
+      },
+      "sql_sha256": "d7e643e92842296c357c40dbe91c1e1be7ef876e0a08bee37957ffb16332bae7",
+      "normalized_tokens_sha256": "fd1b74330369fb0bbbdf407d17c856032ee65837aa58deef03fcf4c7de9c4327",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "d1",
+          "d2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "x"
+          ],
+          [
+            "y"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:5315",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 5288,
+        "block_start": 5315,
+        "block_end": 5382
+      },
+      "sql_sha256": "24f45bd6395946b2c236967b77ac5f208ef090e2b05c8444ffe294c920f4e79b",
+      "normalized_tokens_sha256": "afdc0cfc074b111b1b3f2454e76a4c7fe5c09c74dffc9625a4280fad4eff8bf2",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "d1",
+          "d2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "x"
+          ],
+          [
+            "y"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:5418",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 5391,
+        "block_start": 5418,
+        "block_end": 5486
+      },
+      "sql_sha256": "d6e9d11b82fdcea8495f9d7cfd6ed72833184193b626f9cc3c98899ec241d0e1",
+      "normalized_tokens_sha256": "1e58a237ac1e417009bedab0c3670482bad902eb797b25969d938653fef1943f",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "d1",
+          "d2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "x"
+          ],
+          [
+            "y"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:6140",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 6119,
+        "block_start": 6140,
+        "block_end": 6203
+      },
+      "sql_sha256": "b323657d7b76281e813d2715c2c8133e21fe2db1ea2c8c94ca475f0c69eb9bb6",
+      "normalized_tokens_sha256": "2f3b96ec34a8bd4f7adb1859c7603e236f97bc28f1dcc55004b17231868c0314",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "e1",
+          "e2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "x"
+          ],
+          [
+            "y"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:6583",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 6562,
+        "block_start": 6583,
+        "block_end": 6680
+      },
+      "sql_sha256": "6b52efb88e3339b6af892000a57973b2f8bc5874b17bb4059322b249c34fdd30",
+      "normalized_tokens_sha256": "61d72965ffd302503f0805d1b77baee5ac8a83da8fb3ceeca817e88a563a07f0",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "f1",
+          "f2",
+          "f3"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "d"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:7243",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 7222,
+        "block_start": 7243,
+        "block_end": 7335
+      },
+      "sql_sha256": "f32f91f1d2fad1bbc4082d2e932be8fc841a631c37e17c32f3eed87551976277",
+      "normalized_tokens_sha256": "0d9934ec344a6e86337a71d5a2824a901b9480b449119258bb594eabb1514c6f",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "g1",
+          "g2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:7371",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 7350,
+        "block_start": 7371,
+        "block_end": 7461
+      },
+      "sql_sha256": "da2d5b427968d9e4aee8c9c0f2aca112c4d971eb021c7ea716cd87bf436d2ec9",
+      "normalized_tokens_sha256": "8a06c1bd32bda2d7c0240f1da813b7d09887b4a5d887a4c67ff7992d2637ba60",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "g1",
+          "g2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue9.test:7497",
+      "source": "sqlite",
+      "source_file": "test/rowvalue9.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 7476,
+        "block_start": 7497,
+        "block_end": 7587
+      },
+      "sql_sha256": "ee1514c120591245dfb3f9bf776ff36281525c8a0cbad12b2e1ebb172e7ae62d",
+      "normalized_tokens_sha256": "f18fe22c2cf898b45550f4a692424315f3a3a3d9caa094cdc6092a53093bbcca",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "g1",
+          "g2"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue3.test:2323",
+      "source": "sqlite",
+      "source_file": "test/rowvalue3.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 2296,
+        "block_start": 2323,
+        "block_end": 2384
+      },
+      "sql_sha256": "5fd138d2fa218fb32f834186c683b9a68de801e3ec05cdc71f0abfce10631866",
+      "normalized_tokens_sha256": "3f2dd7c03c176588cabdb22fcd06393bd862c67026f6e3a2755adf8502522fd6",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "kk",
+          "z1"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue3.test:2422",
+      "source": "sqlite",
+      "source_file": "test/rowvalue3.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 2395,
+        "block_start": 2422,
+        "block_end": 2485
+      },
+      "sql_sha256": "51c879294a9cc2645b39a699f628a53ef2cc2ab91265a3cbd65d82486b3c3bd0",
+      "normalized_tokens_sha256": "20e87c2f622b597dbcad5d040c956c2383f3129002b0db73cf003704135695f6",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "kk",
+          "z1"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue3.test:2525",
+      "source": "sqlite",
+      "source_file": "test/rowvalue3.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 2498,
+        "block_start": 2525,
+        "block_end": 2593
+      },
+      "sql_sha256": "844f111d8b0e529c7d1c197ffb5395ab38dcaf6fbfa464b4593ba7ba4b5ecf8e",
+      "normalized_tokens_sha256": "86019c8e672f74684d32b523f6a8d30f553a4c1720dfd62009fb14bd43df1545",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "kk",
+          "z1"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    },
+    {
+      "id": "row-in:sqlite:test/rowvalue3.test:2626",
+      "source": "sqlite",
+      "source_file": "test/rowvalue3.test",
+      "selector": {
+        "kind": "whole_tcl_sql_argument",
+        "command_start": 2599,
+        "block_start": 2626,
+        "block_end": 2689
+      },
+      "sql_sha256": "0fe6bd8f8f2481b0bf9b8b3162349a11e7479191ebec51a58d0e9bfc45fb6c80",
+      "normalized_tokens_sha256": "e2104f152e421a3a13a38c12b0941f158163c5ddc9c41cbbc7d0e90537e80dc6",
+      "row_in_arities": [
+        2
+      ],
+      "observation": {
+        "factors": {
+          "in": 1
+        },
+        "dependencies": {},
+        "functions": [],
+        "external_relations": [
+          "kk",
+          "z1"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "assurance_tier": "rendering-only",
+      "baseline_render_status": "rendered"
+    }
+  ]
+}

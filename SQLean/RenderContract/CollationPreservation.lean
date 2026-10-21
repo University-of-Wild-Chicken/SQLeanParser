@@ -244,6 +244,15 @@ theorem comparison_collations_translated
         rw [← contextual_collations_translated] at coercion
         simpa only [List.map_cons, List.map_nil] using coercion) merge ih
 
+theorem subquery_comparison_collations_translated
+    (pairs : SubqueryComparisonCollations exprs types derivations columns signatures) :
+    SubqueryComparisonCollations (exprs.map translateExpr) types derivations columns signatures := by
+  induction pairs with
+  | nil => exact .nil
+  | cons arguments merge tail ih =>
+      simp only [List.map_cons]
+      exact .cons arguments (by simpa only [coerced_collation_translated] using merge) ih
+
 theorem case_condition_collations_translated
     (conditions : CaseConditionCollations operand derivation exprs types derivations) :
     CaseConditionCollations operand derivation (exprs.map translateExpr) types derivations := by

@@ -51,6 +51,9 @@ jobs:
       - name: Reject Lean proof placeholders and bypasses
         run: python3 scripts/check_lean_trust.py --source-only
 
+      - name: Verify review ladder design and archived preflight
+        run: python3 scripts/check_review_ladder.py
+
       - name: Check generated fixtures
         run: |
           for generator in scripts/generate_*_examples.py; do
@@ -96,6 +99,7 @@ jobs:
           python3 scripts/extract_recursive_contract_corpus.py --check
           python3 scripts/extract_collation_corpus.py --check
           python3 scripts/extract_subquery_corpus.py --check
+          python3 scripts/extract_row_in_subquery_corpus.py --check
           python3 scripts/generate_collation_examples.py --check
           python3 scripts/extract_statement_corpus.py --check
 
@@ -260,6 +264,15 @@ jobs:
         run: python3 scripts/check_collation_boundaries_cli.py --local-bin /usr/lib/postgresql/16/bin
       - name: Verify scalar, EXISTS and IN subquery contracts and native observations
         run: python3 scripts/check_subqueries_cli.py --local-bin /usr/lib/postgresql/16/bin --source-registry
+
+      - name: Verify row-valued IN subqueries and native NULL semantics
+        run: python3 scripts/check_row_in_subqueries_cli.py --local-bin /usr/lib/postgresql/16/bin --source-registry
+
+      - name: Recheck Astra signed-integer counterexamples
+        run: python3 scripts/check_signed_literals_cli.py --local-bin /usr/lib/postgresql/16/bin
+
+      - name: Recheck Astra array-coercion collation counterexamples
+        run: python3 scripts/check_array_coercion_collations_cli.py --local-bin /usr/lib/postgresql/16/bin
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

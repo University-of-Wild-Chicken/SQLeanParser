@@ -15,6 +15,7 @@ example (params : SelectContract.ParameterEnv) (scope : SelectContract.Scope)
   | array args signature =>
     cases args
     simp [SelectContract.arraySignature, SelectContract.scalarInputs] at signature
+  | foldedInteger folded => simp [SelectContract.rawIntegerValue] at folded
 
 /-- A direct declared target supplies an empty constructor's type. -/
 example : SelectContract.ExprValid [] .empty

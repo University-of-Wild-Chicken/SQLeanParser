@@ -1,0 +1,31 @@
+{
+  "tables": [
+    {
+      "name": "subselect_tbl",
+      "columns": [
+        {
+          "name": "f1",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "f2",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "f3",
+          "type": "double",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "context_ids": [
+      "postgres:subselect_tbl:627"
+    ],
+    "source_sql_executed": false,
+    "assumption": "Successful declarations in an unshadowed corresponding PostgreSQL type/name catalog; no source data or execution is imported."
+  }
+}

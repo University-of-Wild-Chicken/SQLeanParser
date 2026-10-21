@@ -1,0 +1,104 @@
+{
+  "model": "gpt-6.1-sol",
+  "reviewer": "sol_review_2",
+  "candidate_commit": "21cd72b60b9b42825ac568ad5f3cb4f47db153c3",
+  "snapshot": "/tmp/sqlean-review-21cd72b-fuypy_75",
+  "cli_sha256": "2c00c6692f3acf23d027849b18d8efc3036f033339e5a87dfd6e165a7d60824a",
+  "claimed_surface": [
+    "Bounded independent v0.33 review of independently authored SQL; no release approval.",
+    "Scalar/EXISTS/IN-subquery labels, native output types/modifiers, collation composition, canonical PostgreSQL rendering, and statement-wide parameters.",
+    "Recursive-reference contexts and nested CTE visibility/shadowing.",
+    "Focused corpus/native-oracle wiring and CI inspection; LLM review does not discharge Lean/theorem or semantic claims."
+  ],
+  "actual_attempts": [
+    {
+      "name": "nested labels, exact modifiers, duplicate output ORDER BY and unknown finalization",
+      "cases": 94,
+      "contract_outcomes": {
+        "valid": 88,
+        "invalid": 6
+      },
+      "method": "Frozen copied CLI plus PostgreSQL 16.15 psql gdesc for source and canonical SQL; gdesc does not execute SELECT. PostgreSQL type aliases reconciled explicitly.",
+      "result": "No admitted native-analysis error or source/canonical descriptor discrepancy found.",
+      "evidence_paths": [
+        "/tmp/sqlean-sol2-probe.py",
+        "/tmp/sqlean-sol2-probe.json",
+        "/tmp/sqlean-sol2-probe.log"
+      ]
+    },
+    {
+      "name": "collation composition",
+      "cases": 414,
+      "contract_outcomes": {
+        "valid": 320,
+        "invalid": 94
+      },
+      "method": "Product probes for literal/NULL/NAME/scalar-SubLink C/POSIX/indeterminate-child inputs through COALESCE, CASE, concatenation, IN-list and IN-query. Source and canonical temporary view analysis, with gdesc controls for indeterminate-output view restrictions.",
+      "result": "308 Valid cases had matching catalog output collation. Twelve remaining Valid cases cannot persist an indeterminate-collation view column but both SELECT forms analyze successfully; those are not false-Valid objections. No source/canonical divergence found.",
+      "evidence_paths": [
+        "/tmp/sqlean-sol2-collation.py",
+        "/tmp/sqlean-sol2-collation.json",
+        "/tmp/sqlean-sol2-collation.log",
+        "/tmp/sqlean-sol2-unicode.json"
+      ]
+    },
+    {
+      "name": "statement-wide parameters and canonical contracts",
+      "cases": 53,
+      "contract_outcomes": {
+        "valid": 53
+      },
+      "method": "PREPARE with explicit types then EXECUTE gdesc; source/canonical descriptions and contract reports compared. Environments cover int,bigint,text,varchar(4),numeric(6,2),char(3),name,text?, repeated/reordered numbered slots and anonymous slots across CTE/SubLink/substring boundaries.",
+      "result": "All source/canonical descriptions and contract reports agree. Native parameter typmod erasure agrees with reported varchar/numeric/bpchar outputs.",
+      "evidence_paths": [
+        "/tmp/sqlean-sol2-params.py",
+        "/tmp/sqlean-sol2-params.json",
+        "/tmp/sqlean-sol2-params.log"
+      ]
+    },
+    {
+      "name": "recursive-reference contexts and CTE scope",
+      "cases": 30,
+      "contract_outcomes": {
+        "valid": 23,
+        "invalid": 7
+      },
+      "method": "Independent anchor/step, derived-table, outer-join, set-operation, nested/unused WITH and expression-SubLink probes; source/canonical native gdesc only.",
+      "result": "No Valid case rejected by native analysis and no source/canonical descriptor divergence.",
+      "evidence_paths": [
+        "/tmp/sqlean-sol2-recursion.py",
+        "/tmp/sqlean-sol2-recursion.json",
+        "/tmp/sqlean-sol2-recursion.log"
+      ]
+    },
+    {
+      "name": "unquoted Unicode boundary controls",
+      "cases": 7,
+      "method": "Native/source/render comparison.",
+      "result": "Six unquoted Unicode cases are outside typed-parser syntax; quoted Unicode label preserves native spelling. No admitted discrepancy.",
+      "evidence_paths": [
+        "/tmp/sqlean-sol2-unicode.py",
+        "/tmp/sqlean-sol2-unicode.json",
+        "/tmp/sqlean-sol2-unicode.log"
+      ]
+    },
+    {
+      "name": "focused Python tests and wiring inspection",
+      "command": "env PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -m unittest discover -s scripts -p 'test_subquer*.py'",
+      "result": "43 tests passed in 2.686s, exit 0. Inspected check_subqueries_cli.py source/canonical oracle pairs, descriptor gdesc separation, PREPARE/planning/execution boundaries, recursion guards, strict registry counts, and .github/workflows/ci.yml invocation. No concrete silent omission established.",
+      "evidence_paths": [
+        "/tmp/sqlean-review-21cd72b-fuypy_75/scripts/check_subqueries_cli.py",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/scripts/test_subqueries_cli.py",
+        "/tmp/sqlean-review-21cd72b-fuypy_75/.github/workflows/ci.yml"
+      ]
+    }
+  ],
+  "objections": [],
+  "nonblockingnotes": [
+    "All repository reads and CLI runs used the frozen snapshot. No Lake command, shared artifact mutation, CLI mutation, repository edit, or authentic corpus SQL/DDL execution was performed. Native private clusters were temporary and removed by the connection helper.",
+    "Evidence files contain independently authored probes, not source-corpus originals. The copied CLI SHA256 was verified against the task pin.",
+    "The first exploratory descriptor harness accidentally retained canonical semicolons, so that initial canonical path executed independently authored SELECTs before gdesc; that comparison was discarded and the entire 94-case phase was rerun with terminating semicolons removed. Only corrected saved descriptor results support the review.",
+    "The temporary-view experiment is stricter than SELECT analysis for indeterminate output collations. Its twelve failures were explicitly rechecked by gdesc and not promoted to blockers.",
+    "This review is finite test evidence. It does not establish arbitrary native semantic equivalence, full PostgreSQL coverage, runtime error freedom, or discharge independent Lean/theorem claims."
+  ]
+}

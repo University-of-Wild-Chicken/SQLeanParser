@@ -27,9 +27,18 @@ set_option maxHeartbeats 1000000
     parameterIndex (translateParameter parameter) = parameterIndex parameter := by
   cases parameter <;> rfl
 
+@[simp] theorem raw_integer_value_translated (expr : Advanced.Expr) :
+    rawIntegerValue (translateExpr expr) = rawIntegerValue expr := by
+  cases expr <;> simp only [translateExpr, translateExpr_case, rawIntegerValue]
+  rename_i op arg
+  cases op <;> simp only [rawIntegerValue]
+  rw [raw_integer_value_translated arg]
+termination_by sizeOf expr
+decreasing_by all_goals (simp_all <;> omega)
+
 @[simp] theorem ordinary_unary_translated (op : UnOp) (expr : Advanced.Expr) :
     OrdinaryUnary op (translateExpr expr) ↔ OrdinaryUnary op expr := by
-  cases op <;> cases expr <;> simp [OrdinaryUnary, translateExpr]
+  cases op <;> simp only [OrdinaryUnary, raw_integer_value_translated]
 
 @[simp] theorem ordinary_cast_translated (expr : Advanced.Expr) (target : DataType) :
     OrdinaryCast (translateExpr expr) target ↔ OrdinaryCast expr target := by
@@ -113,6 +122,8 @@ mutual
     | decimal lexical => simpa only [translateExpr, List.map_nil] using ExprValid.decimal lexical
     | minInt32 => simpa only [translateExpr, List.map_nil] using ExprValid.minInt32
     | minInt64 => simpa only [translateExpr, List.map_nil] using ExprValid.minInt64
+    | foldedInteger folded =>
+        exact .foldedInteger (by simpa only [raw_integer_value_translated] using folded)
     | text => simpa only [translateExpr, List.map_nil] using ExprValid.text
     | bool => simpa only [translateExpr, List.map_nil] using ExprValid.bool
     | null => simpa only [translateExpr, List.map_nil] using ExprValid.null
@@ -289,6 +300,12 @@ mutual
           ExprValid.inQuery (expr_valid_translated_core preserved arg)
             (preserved _ _ _ _ (by simp_all; omega) child)
             (by simpa only [scalar_input_translated] using signature)
+    | inRowQuery args child nonempty arity signature =>
+        simpa only [translateExpr, List.attach_map_val, List.map_append] using
+          ExprValid.inRowQuery (expr_list_valid_translated_core preserved args)
+            (preserved _ _ _ _ (by simp_all; omega) child)
+            (by simpa using nonempty) (by simpa using arity)
+            (by simpa only [scalar_inputs_translated] using signature)
     | between arg lower upper signature =>
         simpa only [translateExpr, List.map_append] using
           ExprValid.between (expr_valid_translated_core preserved arg) (expr_valid_translated_core preserved lower)

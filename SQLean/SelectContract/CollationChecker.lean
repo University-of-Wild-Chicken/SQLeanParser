@@ -71,6 +71,25 @@ private def checkComparisonCollations
         .ok ⟨.cons coercion merge tail.down⟩
   | _, _, _, _, _, _, _ => .error collationShape
 
+private def checkSubqueryComparisonCollations
+    (exprs : List Advanced.Expr) (types : List ExprType) (derivations : List CollationDerivation)
+    (columns : List OutputColumn) (signatures : List FunctionOverload) :
+    Except Failure (PLift (SubqueryComparisonCollations exprs types derivations columns signatures)) :=
+  match exprs, types, derivations, columns, signatures with
+  | [], [], [], [], [] => .ok ⟨.nil⟩
+  | expr :: exprs, type :: types, derivation :: derivations, column :: columns, selected :: rest => do
+    match arguments : selected.inputs with
+    | [leftType, rightType] =>
+      match merge : CollationDerivation.merge
+          (coercedCollation expr type leftType derivation)
+          (knownCoercedCollation column.type.base rightType (.stored column.collation)) with
+      | none => .error conflict
+      | some _ =>
+        let tail ← checkSubqueryComparisonCollations exprs types derivations columns rest
+        .ok ⟨.cons arguments merge tail.down⟩
+    | _ => .error collationShape
+  | _, _, _, _, _ => .error collationShape
+
 private def checkCaseCollations (operand : ExactType) (derivation : CollationDerivation)
     (conditions : List Advanced.Expr) (types : List ExprType) (derivations : List CollationDerivation) :
     Except Failure (PLift (CaseConditionCollations operand derivation conditions types derivations)) :=
@@ -554,12 +573,15 @@ mutual
         | none => .error collationShape
       | .unary op arg => do
         let typed ← checkExprCore subqueries env checkSubquery (fuel + 1) params scope (.unary op arg)
-        let child ← checkCompleteExprCore subqueries env checkSubquery fuel profile params scope arg
-        match selected : unarySignature op child.type with
-        | some (some _) =>
-          applicationCertificate typed
-            ⟨[child.type], [child.derivation], .cons child.collationValid .nil⟩ (.unary selected)
-        | _ => .error collationShape
+        match folded : rawIntegerValue (.unary op arg) with
+        | some _ => .ok ⟨typed, .none, .foldedInteger typed.valid folded⟩
+        | none =>
+          let child ← checkCompleteExprCore subqueries env checkSubquery fuel profile params scope arg
+          match selected : unarySignature op child.type with
+          | some (some _) =>
+            applicationCertificate typed
+              ⟨[child.type], [child.derivation], .cons child.collationValid .nil⟩ (.unary selected)
+          | _ => .error collationShape
       | .array es => do
         let typed ← checkExprCore subqueries env checkSubquery (fuel + 1) params scope (.array es)
         let children ← checkCollationListCore subqueries env checkSubquery fuel profile params scope es
@@ -599,6 +621,16 @@ mutual
           else .error (unsupported "scalar_subquery_collation"
             "A scalar subquery's indeterminate collatable output requires implicit-invalid collation provenance")
         | _ => .error (invalid "scalar_subquery_arity" "A scalar subquery must expose exactly one column")
+      | .inQuery (.row fields) child => do
+        let typed ← checkExprCore subqueries env checkSubquery (fuel + 1) params scope (.inQuery (.row fields) child)
+        let left ← checkCollationListCore subqueries env checkSubquery fuel profile params scope fields
+        let checked ← checkSubquery child
+        match selected : rowDistinctSignature (scalarInputs fields left.types)
+            (checked.output.map (fun column => ScalarInput.known column.type)) with
+        | none => .error collationShape
+        | some signatures =>
+          let pairs ← checkSubqueryComparisonCollations fields left.types left.derivations checked.output signatures
+          .ok ⟨typed, .none, .inRowQuery typed.valid left.valid checked.valid selected pairs.down⟩
       | .inQuery arg child => do
         let typed ← checkExprCore subqueries env checkSubquery (fuel + 1) params scope (.inQuery arg child)
         let left ← checkCompleteExprCore subqueries env checkSubquery fuel profile params scope arg

@@ -1,0 +1,2460 @@
+[
+  {
+    "id": "row-in-01-match",
+    "factor": "row_in_subquery",
+    "shape": "match",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2) IN (SELECT 1,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-02-mismatch",
+    "factor": "row_in_subquery",
+    "shape": "mismatch",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2) IN (SELECT 1,3) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-03-false-dominates-null",
+    "factor": "row_in_subquery",
+    "shape": "false-dominates-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,NULL) IN (SELECT 2,NULL::INTEGER) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-04-left-null",
+    "factor": "row_in_subquery",
+    "shape": "left-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,NULL) IN (SELECT 1,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-05-right-null",
+    "factor": "row_in_subquery",
+    "shape": "right-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2) IN (SELECT 1,NULL::INTEGER) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-06-both-null",
+    "factor": "row_in_subquery",
+    "shape": "both-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT (NULL,NULL) IN (SELECT NULL::INTEGER,NULL::INTEGER) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-07-empty",
+    "factor": "row_in_subquery",
+    "shape": "empty",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2) IN (SELECT 1,2 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-08-null-empty",
+    "factor": "row_in_subquery",
+    "shape": "null-empty",
+    "source_kind": "synthetic",
+    "sql": "SELECT (NULL,NULL) IN (SELECT 1,2 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-09-duplicate",
+    "factor": "row_in_subquery",
+    "shape": "duplicate",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2) IN (SELECT 1,2 UNION ALL SELECT 1,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-10-match-beats-unknown",
+    "factor": "row_in_subquery",
+    "shape": "match-beats-unknown",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2) IN (SELECT 1,NULL::INTEGER UNION ALL SELECT 1,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-11-unknown-beats-false",
+    "factor": "row_in_subquery",
+    "shape": "unknown-beats-false",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2) IN (SELECT 1,NULL::INTEGER UNION SELECT 4,5) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-12-all-false",
+    "factor": "row_in_subquery",
+    "shape": "all-false",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2) IN (SELECT 3,2 UNION ALL SELECT 1,4) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-13-not-match",
+    "factor": "row_in_subquery",
+    "shape": "not-match",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2) NOT IN (SELECT 1,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-14-not-unknown",
+    "factor": "row_in_subquery",
+    "shape": "not-unknown",
+    "source_kind": "synthetic",
+    "sql": "SELECT (NULL,2) NOT IN (SELECT 1,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-15-not-empty",
+    "factor": "row_in_subquery",
+    "shape": "not-empty",
+    "source_kind": "synthetic",
+    "sql": "SELECT (NULL,2) NOT IN (SELECT 1,2 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-16-three-fields",
+    "factor": "row_in_subquery",
+    "shape": "three-fields",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2,3) IN (SELECT 1,2,3) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-17-four-fields",
+    "factor": "row_in_subquery",
+    "shape": "four-fields",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2,3,4) IN (SELECT 1,2,3,5) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-18-one-field",
+    "factor": "row_in_subquery",
+    "shape": "one-field",
+    "source_kind": "synthetic",
+    "sql": "SELECT ROW(1) IN (SELECT 1) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-19-contextual-string",
+    "factor": "row_in_subquery",
+    "shape": "contextual-string",
+    "source_kind": "synthetic",
+    "sql": "SELECT ('1','2') IN (SELECT 1,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-20-contextual-null",
+    "factor": "row_in_subquery",
+    "shape": "contextual-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT (NULL,2) IN (SELECT 1::BIGINT,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-21-int64",
+    "factor": "row_in_subquery",
+    "shape": "int64",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1::BIGINT,2) IN (SELECT 1,2::BIGINT) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-22-numeric-modifiers",
+    "factor": "row_in_subquery",
+    "shape": "numeric-modifiers",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1.23::NUMERIC(5,2),2) IN (SELECT 1.230::NUMERIC(6,3),2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-23-text",
+    "factor": "row_in_subquery",
+    "shape": "text",
+    "source_kind": "synthetic",
+    "sql": "SELECT ('a','b') IN (SELECT 'a','b') AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-24-bpchar-text",
+    "factor": "row_in_subquery",
+    "shape": "bpchar-text",
+    "source_kind": "synthetic",
+    "sql": "SELECT ('a'::CHAR(3),2) IN (SELECT 'a'::TEXT,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-25-booleans",
+    "factor": "row_in_subquery",
+    "shape": "booleans",
+    "source_kind": "synthetic",
+    "sql": "SELECT (TRUE,FALSE) IN (SELECT TRUE,FALSE) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-26-dates",
+    "factor": "row_in_subquery",
+    "shape": "dates",
+    "source_kind": "synthetic",
+    "sql": "SELECT (DATE '2024-01-01',2) IN (SELECT DATE '2024-01-01',2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-27-times",
+    "factor": "row_in_subquery",
+    "shape": "times",
+    "source_kind": "synthetic",
+    "sql": "SELECT (TIME '12:30:00',2) IN (SELECT TIME '12:30:00',2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-28-jsonb",
+    "factor": "row_in_subquery",
+    "shape": "jsonb",
+    "source_kind": "synthetic",
+    "sql": "SELECT ('{\"a\":1}'::JSONB,2) IN (SELECT '{\"a\":1}'::JSONB,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-29-bytea",
+    "factor": "row_in_subquery",
+    "shape": "bytea",
+    "source_kind": "synthetic",
+    "sql": "SELECT ('abc'::BYTEA,2) IN (SELECT 'abc'::BYTEA,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-30-arrays",
+    "factor": "row_in_subquery",
+    "shape": "arrays",
+    "source_kind": "synthetic",
+    "sql": "SELECT (ARRAY[1,2],2) IN (SELECT ARRAY[1,2],2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-31-independent-default-collations",
+    "factor": "row_in_subquery",
+    "shape": "independent-default-collations",
+    "source_kind": "synthetic",
+    "sql": "SELECT ('a'::TEXT,'b'::TEXT) IN (SELECT 'a'::TEXT,'b'::TEXT) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-32-independent-explicit-fields",
+    "factor": "row_in_subquery",
+    "shape": "independent-explicit-fields",
+    "source_kind": "synthetic",
+    "sql": "SELECT ('a' COLLATE \"C\",'b' COLLATE \"POSIX\") IN (SELECT 'a' COLLATE \"C\",'b' COLLATE \"POSIX\") AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-33-child-collations",
+    "factor": "row_in_subquery",
+    "shape": "child-collations",
+    "source_kind": "synthetic",
+    "sql": "SELECT ('a','b') IN (SELECT 'a' COLLATE \"C\",'b' COLLATE \"POSIX\") AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-34-explicit-left-wins-implicit-child",
+    "factor": "row_in_subquery",
+    "shape": "explicit-left-wins-implicit-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT ('a' COLLATE \"C\",'b' COLLATE \"C\") IN (SELECT 'a' COLLATE \"POSIX\",'b' COLLATE \"POSIX\") AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-35-anonymous-order",
+    "factor": "row_in_subquery",
+    "shape": "anonymous-order",
+    "source_kind": "synthetic",
+    "sql": "SELECT (?,?) IN (SELECT ?,?) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      1,
+      2,
+      1,
+      2
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-36-numbered-reordered",
+    "factor": "row_in_subquery",
+    "shape": "numbered-reordered",
+    "source_kind": "synthetic",
+    "sql": "SELECT ($4,$1) IN (SELECT $3,$2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "int,int,int,int",
+    "parameter_values": [
+      2,
+      2,
+      1,
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-37-numbered-repeated",
+    "factor": "row_in_subquery",
+    "shape": "numbered-repeated",
+    "source_kind": "synthetic",
+    "sql": "SELECT ($1,$1) IN (SELECT $1,$1) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      3
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-38-nullable-parameter",
+    "factor": "row_in_subquery",
+    "shape": "nullable-parameter",
+    "source_kind": "synthetic",
+    "sql": "SELECT ($1,2) IN (SELECT 1,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "int?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-39-visible-cte",
+    "factor": "row_in_subquery",
+    "shape": "visible-cte",
+    "source_kind": "synthetic",
+    "sql": "WITH c(a,b) AS(SELECT 1,2) SELECT (1,2) IN(SELECT a,b FROM c) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-40-derived-child",
+    "factor": "row_in_subquery",
+    "shape": "derived-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,2) IN (SELECT a,b FROM (SELECT 1 AS a,2 AS b) q) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-41-child-set-order-limit",
+    "factor": "row_in_subquery",
+    "shape": "child-set-order-limit",
+    "source_kind": "synthetic",
+    "sql": "SELECT (2,3) IN (SELECT 1 AS a,2 AS b UNION ALL SELECT 2,3 ORDER BY a DESC LIMIT 1 OFFSET 0) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-42-scalar-fields",
+    "factor": "row_in_subquery",
+    "shape": "scalar-fields",
+    "source_kind": "synthetic",
+    "sql": "SELECT ((SELECT 1),(SELECT 2)) IN (SELECT 1,2) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-43-case-result",
+    "factor": "row_in_subquery",
+    "shape": "case-result",
+    "source_kind": "synthetic",
+    "sql": "SELECT CASE WHEN (1,2) IN(SELECT 1,2) THEN 'yes' ELSE 'no' END AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "yes"
+      ]
+    ],
+    "sqlite_supported": false,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "yes"
+        ]
+      ],
+      "items_only": [
+        [
+          "yes"
+        ]
+      ],
+      "labels_only": [
+        [
+          "yes"
+        ]
+      ],
+      "both": [
+        [
+          "yes"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-44-coalesce-result",
+    "factor": "row_in_subquery",
+    "shape": "coalesce-result",
+    "source_kind": "synthetic",
+    "sql": "SELECT COALESCE((NULL,2) IN(SELECT 1,2),FALSE) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-45-null-predicate",
+    "factor": "row_in_subquery",
+    "shape": "null-predicate",
+    "source_kind": "synthetic",
+    "sql": "SELECT ((NULL,2) IN(SELECT 1,2)) IS NULL AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-46-outer-items",
+    "factor": "row_in_subquery",
+    "shape": "outer-items",
+    "source_kind": "synthetic",
+    "sql": "SELECT (i.id,i.score) IN(SELECT id,score FROM items) AS v FROM items i;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ],
+      [
+        null
+      ],
+      [
+        true
+      ],
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          true
+        ],
+        [
+          null
+        ],
+        [
+          true
+        ],
+        [
+          true
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          true
+        ],
+        [
+          null
+        ],
+        [
+          true
+        ],
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-47-outer-labels",
+    "factor": "row_in_subquery",
+    "shape": "outer-labels",
+    "source_kind": "synthetic",
+    "sql": "SELECT (l.id,l.category) IN(SELECT id,category FROM labels) AS v FROM labels l;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ],
+      [
+        true
+      ],
+      [
+        true
+      ],
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [
+        [
+          true
+        ],
+        [
+          true
+        ],
+        [
+          true
+        ],
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ],
+        [
+          true
+        ],
+        [
+          true
+        ],
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-48-item-score-membership",
+    "factor": "row_in_subquery",
+    "shape": "item-score-membership",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1,10) IN (SELECT id,score FROM items) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-49-join-duplicate-membership",
+    "factor": "row_in_subquery",
+    "shape": "join-duplicate-membership",
+    "source_kind": "synthetic",
+    "sql": "SELECT (i.id,l.id) IN(SELECT id,id FROM items) AS v FROM items i JOIN labels l ON i.id=l.id;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ],
+      [
+        true
+      ],
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [],
+      "both": [
+        [
+          true
+        ],
+        [
+          true
+        ],
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "row-in-50-cte-anonymous-global-order",
+    "factor": "row_in_subquery",
+    "shape": "cte-anonymous-global-order",
+    "source_kind": "synthetic",
+    "sql": "WITH c(a,b) AS(SELECT ?,?) SELECT (?,?) IN(SELECT a,b FROM c WHERE ?>0) AS v;",
+    "catalogFile": "fixtures/row_in_subqueries/schema.json",
+    "parameter_types": "int,int,int,int,int",
+    "parameter_values": [
+      1,
+      2,
+      1,
+      2,
+      1
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "sqlite_supported": true,
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  }
+]

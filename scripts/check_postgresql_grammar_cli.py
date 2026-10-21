@@ -277,7 +277,8 @@ def read_cases(path, expected="grammar-accepted"):
         if "expected_status" in row:
             require(row["expected_status"] == expected, f"fixture status disagrees with category: {path}")
         seen.add(row["id"])
-        if path == ROOT / "fixtures/subqueries/synthetic.json":
+        if path in {ROOT / "fixtures/subqueries/synthetic.json",
+                    ROOT / "fixtures/row_in_subqueries/synthetic.json"}:
             row = authored_subquery_input(row)
         result.append({**row, "id": path.relative_to(ROOT).as_posix() + ":" + row["id"],
                        "expected": expected, "fixture": path.relative_to(ROOT).as_posix()})
@@ -300,6 +301,8 @@ def load_cases(include_statement_families=True):
                          "distinct_from", "null_predicates", "cte_contract", "set_operations",
                          "recursive_contract", "collations"]],
         ROOT / "fixtures/subqueries/synthetic.json",
+        ROOT / "fixtures/row_in_subqueries/synthetic.json",
+        ROOT / "fixtures/row_in_subqueries/concrete.jsonl",
         *[ROOT / "fixtures/subqueries" / (factor + "_concrete.jsonl")
           for factor in ["scalar", "exists", "in"]],
     ]

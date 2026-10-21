@@ -1,0 +1,6107 @@
+[
+  {
+    "id": "minimal-scalar-array-cast",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "controls",
+    "sql": "SELECT CAST((SELECT ARRAY['x']) AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY['x']) AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "minimal-coalesce-array-cast",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "controls",
+    "sql": "SELECT CAST(COALESCE(ARRAY['x']) AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY['x']) AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-unknown-array-target",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "controls",
+    "sql": "SELECT CAST(ARRAY['x'] AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY['x'] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "scalar-text-to-name-unchanged",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "controls",
+    "sql": "SELECT CAST((SELECT 'x') AS NAME) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT 'x') AS v",
+        "column": {
+          "name": "v",
+          "type": "text",
+          "nullable": true,
+          "postgres_type": "text",
+          "native_type": "text",
+          "oid": 25,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true,
+        "postgres_type": "name",
+        "native_type": "name",
+        "oid": 19,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "minimal-conflicting-array-cast",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "controls",
+    "sql": "SELECT CAST((SELECT ARRAY['x'] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY['x'] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": null
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-name-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-name-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-name-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-name-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-name-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-name-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-name-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-name-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-name-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-text-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-text-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-text-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-text-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-text-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-text-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-text-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-text-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-text-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-varchar(4)-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-varchar(4)-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-varchar(4)-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-varchar(4)-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-varchar(4)-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-varchar(4)-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-varchar(4)-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-varchar(4)-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-varchar(4)-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-char(4)-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-char(4)-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-char(4)-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-char(4)-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-char(4)-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-char(4)-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-char(4)-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": true,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-char(4)-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-name-char(4)-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS NAME)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-name-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-name-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-name-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-name-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-name-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-name-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-name-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": null
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-name-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-name-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-text-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-text-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-text-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-text-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-text-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-text-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-text-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-text-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-text-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-varchar(4)-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-varchar(4)-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-varchar(4)-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-varchar(4)-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-varchar(4)-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-varchar(4)-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-varchar(4)-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-varchar(4)-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-varchar(4)-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-char(4)-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-char(4)-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-char(4)-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-char(4)-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-char(4)-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-char(4)-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-char(4)-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-char(4)-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-text-char(4)-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS TEXT)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-name-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-name-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-name-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-name-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-name-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-name-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-name-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": null
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-name-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-name-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-text-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-text-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-text-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-text-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-text-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-text-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-text-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-text-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-text-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-varchar(4)-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-varchar(4)-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-varchar(4)-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-varchar(4)-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-varchar(4)-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-varchar(4)-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-varchar(4)-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-varchar(4)-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-varchar(4)-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-char(4)-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-char(4)-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-char(4)-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-char(4)-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-char(4)-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-char(4)-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-char(4)-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-char(4)-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-varchar(3)-char(4)-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-name-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-name-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-name-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-name-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-name-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-name-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-name-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": null
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-name-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-name-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-text-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-text-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-text-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-text-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-text-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-text-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-text-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": true,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-text-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-text-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-varchar(4)-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-varchar(4)-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-varchar(4)-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-varchar(4)-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-varchar(4)-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-varchar(4)-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-varchar(4)-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-varchar(4)-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-varchar(4)-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-char(4)-default-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-char(4)-default-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-char(4)-default-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-char(4)-C-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-char(4)-C-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-char(4)-C-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-char(4)-POSIX-implicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": true,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": true,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-char(4)-POSIX-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST((ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "cast-char(3)-char(4)-POSIX-coalesce-explicit",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "cast-matrix",
+    "sql": "SELECT CAST(COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT COALESCE(ARRAY[CAST('xy' AS CHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-name-name",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS NAME)] AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS NAME)] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-name-text",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS NAME)] AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS NAME)] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-name-varchar(4)",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS NAME)] AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS NAME)] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-name-char(4)",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS NAME)] AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS NAME)] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-text-name",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS TEXT)] AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS TEXT)] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-text-text",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS TEXT)] AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS TEXT)] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-text-varchar(4)",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS TEXT)] AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS TEXT)] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-text-char(4)",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS TEXT)] AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS TEXT)] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-varchar(3)-name",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS VARCHAR(3))] AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS VARCHAR(3))] AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-varchar(3)-text",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS VARCHAR(3))] AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS VARCHAR(3))] AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-varchar(3)-varchar(4)",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS VARCHAR(3))] AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS VARCHAR(3))] AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-varchar(3)-char(4)",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS VARCHAR(3))] AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS VARCHAR(3))] AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": false,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-char(3)-name",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS CHAR(3))] AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS CHAR(3))] AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-char(3)-text",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS CHAR(3))] AS TEXT[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS CHAR(3))] AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-char(3)-varchar(4)",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS CHAR(3))] AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS CHAR(3))] AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": false,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "raw-typed-char(3)-char(4)",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "raw-array-controls",
+    "sql": "SELECT CAST(ARRAY[CAST('xy' AS CHAR(3))] AS CHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[CAST('xy' AS CHAR(3))] AS v",
+        "column": {
+          "name": "v",
+          "type": "char(3)[]",
+          "nullable": false,
+          "postgres_type": "character(3)[]",
+          "native_type": "character[]",
+          "oid": 1014,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)[]",
+        "nullable": false,
+        "postgres_type": "character(4)[]",
+        "native_type": "character[]",
+        "oid": 1014,
+        "collation": "default"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "same-oid-varchar(3)-varchar",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "same-oid",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS VARCHAR[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR(3))] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar(3)[]",
+          "nullable": true,
+          "postgres_type": "character varying(3)[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar[]",
+        "nullable": true,
+        "postgres_type": "character varying[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "same-oid-varchar-varchar(4)",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "same-oid",
+    "sql": "SELECT CAST((SELECT ARRAY[CAST('xy' AS VARCHAR)] COLLATE \"POSIX\") AS VARCHAR(4)[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT ARRAY[CAST('xy' AS VARCHAR)] COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "varchar[]",
+          "nullable": true,
+          "postgres_type": "character varying[]",
+          "native_type": "character varying[]",
+          "oid": 1015,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(4)[]",
+        "nullable": true,
+        "postgres_type": "character varying(4)[]",
+        "native_type": "character varying[]",
+        "oid": 1015,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "array-cat",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "composition",
+    "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] || ARRAY['x'] AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      },
+      {
+        "sql": "SELECT ARRAY['x'] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": null
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "array-cat-reverse",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "composition",
+    "sql": "SELECT ARRAY['x'] || ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      },
+      {
+        "sql": "SELECT ARRAY['x'] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "array-append",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "composition",
+    "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] || CAST('x' AS TEXT) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      },
+      {
+        "sql": "SELECT CAST('x' AS TEXT) AS v",
+        "column": {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "postgres_type": "text",
+          "native_type": "text",
+          "oid": 25,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "array-prepend",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "composition",
+    "sql": "SELECT CAST('x' AS TEXT) || ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+    "inputs": [
+      {
+        "sql": "SELECT CAST('x' AS TEXT) AS v",
+        "column": {
+          "name": "v",
+          "type": "text",
+          "nullable": false,
+          "postgres_type": "text",
+          "native_type": "text",
+          "oid": 25,
+          "collation": "default"
+        }
+      },
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "common-coalesce",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "composition",
+    "sql": "SELECT COALESCE(ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")], ARRAY['x']) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      },
+      {
+        "sql": "SELECT ARRAY['x'] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": null
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "common-case",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "composition",
+    "sql": "SELECT CASE WHEN TRUE THEN ARRAY['x'] ELSE ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] END AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      },
+      {
+        "sql": "SELECT ARRAY['x'] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": null
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "common-case-reverse",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "composition",
+    "sql": "SELECT CASE WHEN TRUE THEN ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] ELSE ARRAY['x'] END AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      },
+      {
+        "sql": "SELECT ARRAY['x'] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "nested-array-constructor",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "composition",
+    "sql": "SELECT ARRAY[ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")], ARRAY['x']] AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      },
+      {
+        "sql": "SELECT ARRAY['x'] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": null
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "explicit-array-override",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "composition",
+    "sql": "SELECT (ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] || ARRAY['x']) COLLATE \"POSIX\" AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      },
+      {
+        "sql": "SELECT ARRAY['x'] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "union-all-common",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "set",
+    "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v UNION ALL SELECT ARRAY['x'] AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      },
+      {
+        "sql": "SELECT ARRAY['x'] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": false,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": null
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "union-all-common-reverse",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "set",
+    "sql": "SELECT ARRAY['x'] AS v UNION ALL SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+    "inputs": [
+      {
+        "sql": "SELECT ARRAY['x'] AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": false,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      },
+      {
+        "sql": "SELECT ARRAY[(SELECT CAST('x' AS NAME) COLLATE \"POSIX\")] AS v",
+        "column": {
+          "name": "v",
+          "type": "name[]",
+          "nullable": false,
+          "postgres_type": "name[]",
+          "native_type": "name[]",
+          "oid": 1003,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text[]",
+        "nullable": false,
+        "postgres_type": "text[]",
+        "native_type": "text[]",
+        "oid": 1009,
+        "collation": "POSIX"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "null-array-default",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "null-input",
+    "sql": "SELECT CAST((SELECT CAST(NULL AS TEXT[]) COLLATE \"default\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT CAST(NULL AS TEXT[]) COLLATE \"default\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "default"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "null-array-C",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "null-input",
+    "sql": "SELECT CAST((SELECT CAST(NULL AS TEXT[]) COLLATE \"C\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT CAST(NULL AS TEXT[]) COLLATE \"C\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "C"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": "C"
+      }
+    ],
+    "static_status": "valid"
+  },
+  {
+    "id": "null-array-POSIX",
+    "source_kind": "synthetic",
+    "origin": "independently-authored-ASTRA1-001",
+    "category": "null-input",
+    "sql": "SELECT CAST((SELECT CAST(NULL AS TEXT[]) COLLATE \"POSIX\") AS NAME[]) AS v",
+    "inputs": [
+      {
+        "sql": "SELECT (SELECT CAST(NULL AS TEXT[]) COLLATE \"POSIX\") AS v",
+        "column": {
+          "name": "v",
+          "type": "text[]",
+          "nullable": true,
+          "postgres_type": "text[]",
+          "native_type": "text[]",
+          "oid": 1009,
+          "collation": "POSIX"
+        }
+      }
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name[]",
+        "nullable": true,
+        "postgres_type": "name[]",
+        "native_type": "name[]",
+        "oid": 1003,
+        "collation": null
+      }
+    ],
+    "static_status": "valid"
+  }
+]

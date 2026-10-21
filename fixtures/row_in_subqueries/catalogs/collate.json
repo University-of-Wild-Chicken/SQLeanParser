@@ -1,0 +1,41 @@
+{
+  "tables": [
+    {
+      "name": "collate_test10",
+      "columns": [
+        {
+          "name": "a",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "x",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "y",
+          "type": "text",
+          "nullable": true
+        }
+      ],
+      "columnCollations": [
+        {
+          "column": "x",
+          "collation": "C"
+        },
+        {
+          "column": "y",
+          "collation": "POSIX"
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "context_ids": [
+      "postgres:collate_test10:2298"
+    ],
+    "source_sql_executed": false,
+    "assumption": "Successful declarations in an unshadowed corresponding PostgreSQL type/name catalog; no source data or execution is imported."
+  }
+}

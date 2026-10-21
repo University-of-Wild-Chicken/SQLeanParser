@@ -385,16 +385,17 @@ mutual
                   .arrayConcat left.valid right.valid arraySignature⟩
               | none => .error (invalid "concatenation_signature"
                   "No admitted PostgreSQL scalar or compatible-array concatenation operator accepts these input types")
-      | .unary .neg (.literal (.int 2147483648)) => .ok ⟨some ⟨.int32, false⟩, [], .minInt32⟩
-      | .unary .neg (.literal (.int 9223372036854775808)) => .ok ⟨some ⟨.int64, false⟩, [], .minInt64⟩
       | .unary op a => do
-          if ordinary : OrdinaryUnary op a then
-            let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
-            match signature : unarySignature op arg.type with
-            | none => .error (missingSignature (uncontextualizedString a)
-                "operator_signature" "Unary overload resolution is outside the explicit profile signatures")
-            | some type => .ok ⟨type, arg.uses, .unary arg.valid signature ordinary⟩
-          else .error (unsupported "signed_integer_boundary" "Signed integer boundary requires literal folding")
+          match folded : rawIntegerValue (.unary op a) with
+          | some value => .ok ⟨some ⟨foldedIntegerType value, false⟩, [], .foldedInteger folded⟩
+          | none =>
+            if ordinary : OrdinaryUnary op a then
+              let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
+              match signature : unarySignature op arg.type with
+              | none => .error (missingSignature (uncontextualizedString a)
+                  "operator_signature" "Unary overload resolution is outside the explicit profile signatures")
+              | some type => .ok ⟨type, arg.uses, .unary arg.valid signature ordinary⟩
+            else .error (unsupported "signed_integer_boundary" "Raw signed integer syntax requires literal folding")
       | .isNull (.row args) negated => do
           let typed ← checkExprListCore subqueries env checkSubquery fuel params scope args
           .ok ⟨some ⟨.bool, false⟩, typed.uses, .isNullRow (negated := negated) typed.valid⟩
@@ -649,10 +650,22 @@ mutual
           | [column] => .ok ⟨some ⟨column.type.base, true⟩, checked.uses,
               .scalarQuery (width ▸ checked.valid)⟩
           | _ => .error (invalid "scalar_subquery_arity" "A scalar subquery must expose exactly one column")
+      | .inQuery (.row fields) child => do
+          if nonempty : fields ≠ [] then
+            let left ← checkExprListCore subqueries env checkSubquery fuel params scope fields
+            let checked ← checkSubquery child
+            if arity : fields.length = checked.output.length then
+              match signature : rowDistinctSignature (scalarInputs fields left.types)
+                  (checked.output.map (fun column => ScalarInput.known column.type)) with
+              | some _ => .ok ⟨some ⟨.bool, true⟩, left.uses ++ checked.uses,
+                  .inRowQuery left.valid checked.valid nonempty arity signature⟩
+              | none => .error (operatorFailure
+                  (left.types ++ checked.output.map (fun column => some column.type))
+                  (fields.any uncontextualizedString) "in_row_subquery_signature"
+                  "Row IN fields require compatible equality operators for each child output column")
+            else .error (invalid "in_row_subquery_arity" "A row IN subquery must expose exactly one column per left field")
+          else .error (invalid "in_row_subquery_arity" "A row IN subquery requires at least one left field")
       | .inQuery arg child => do
-          if (match arg with | .row .. => true | _ => false) then
-            .error (unsupported "row_subquery" "Row IN subqueries require independent pairwise row rules")
-          else
             let left ← checkExprCore subqueries env checkSubquery fuel params scope arg
             let checked ← checkSubquery child
             match width : checked.output with

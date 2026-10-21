@@ -143,18 +143,20 @@ def boundaries():
     valid = ["SELECT ARRAY[1] || ARRAY[2]", "SELECT ARRAY[1] || 2", "SELECT 1 || ARRAY[2]"]
     unsupported = [
         "SELECT ROW(1,2) || 'x'::TEXT",
-        "SELECT (SELECT 'x') || 'y'",
     ]
     syntax = ["SELECT 'x' | 'y'", "SELECT 'x' ||| 'y'", "SELECT 'x' ||"]
     for status, queries in (("invalid", invalid), ("unsupported", unsupported), ("valid", valid)):
         for sql in queries:
             assert_report(["--assurance", "contract", sql], status, "contract")
+    scalar = assert_report(["--assurance", "contract", "SELECT (SELECT 'x') || 'y'"],
+                           "valid", "contract", columns=(("?column?", "text", True),))
+    assert scalar["outputCollations"] == ["default"], scalar
     for sql in syntax:
         result = invoke(["--render-assurance", "identity", sql])
         report = json.loads(result.stdout)
         assert (result.returncode, report["status"], report["diagnostic"]["code"]) == (1, "invalid", "input.parse"), report
     assert_report(["--assurance", "checked", "SELECT 'x' || 'y'"], "rejected", "checked")
-    return len(invalid) + len(unsupported) + len(valid) + len(syntax) + 1
+    return len(invalid) + len(unsupported) + len(valid) + len(syntax) + 2
 
 
 def main():

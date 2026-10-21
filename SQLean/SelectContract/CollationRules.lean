@@ -39,6 +39,21 @@ inductive ComparisonCollations :
       ComparisonCollations (a :: as) (ta :: ats) (da :: ads)
         (b :: bs) (tb :: bts) (db :: bds) (selected :: rest)
 
+/-- A row IN SubLink has one independent input-collation context per field.
+The right input is a finalized child output, represented by PostgreSQL's
+PARAM_SUBLINK behavior rather than by a new raw literal or scalar SubLink. -/
+inductive SubqueryComparisonCollations :
+    List Advanced.Expr → List ExprType → List CollationDerivation →
+    List OutputColumn → List FunctionOverload → Prop where
+  | nil : SubqueryComparisonCollations [] [] [] [] []
+  | cons (arguments : selected.inputs = [leftType, rightType])
+      (merge : CollationDerivation.merge
+        (coercedCollation expr type leftType derivation)
+        (knownCoercedCollation column.type.base rightType (.stored column.collation)) = some input)
+      (tail : SubqueryComparisonCollations exprs types derivations columns rest) :
+      SubqueryComparisonCollations (expr :: exprs) (type :: types)
+        (derivation :: derivations) (column :: columns) (selected :: rest)
+
 inductive CaseConditionCollations :
     ExactType → CollationDerivation → List Advanced.Expr →
     List ExprType → List CollationDerivation → Prop where
@@ -106,6 +121,9 @@ mutual
     | atom (typed : ExprValidCore subqueries params env scope expr type uses)
         (atom : CollationAtom expr type derivation) :
         ExprCollationValidCore subqueries profile params env scope expr type derivation
+    | foldedInteger (typed : ExprValidCore subqueries params env scope expr type uses)
+        (folded : rawIntegerValue expr = some value) :
+        ExprCollationValidCore subqueries profile params env scope expr type .none
     | exists (query : subqueries env child output uses) :
         ExprCollationValidCore subqueries profile params env scope (.exists child)
           (some ⟨.bool, false⟩) .none
@@ -122,6 +140,13 @@ mutual
           (coercedCollation arg type leftType derivation)
           (knownCoercedCollation column.type.base rightType (.stored column.collation)) = some input) :
         ExprCollationValidCore subqueries profile params env scope (.inQuery arg child) result .none
+    | inRowQuery (typed : ExprValidCore subqueries params env scope (.inQuery (.row fields) child) result uses)
+        (left : ExprCollationListValidCore subqueries profile params env scope fields types derivations)
+        (query : subqueries env child output queryUses)
+        (selected : rowDistinctSignature (scalarInputs fields types)
+          (output.map (fun column => ScalarInput.known column.type)) = some signatures)
+        (pairs : SubqueryComparisonCollations fields types derivations output signatures) :
+        ExprCollationValidCore subqueries profile params env scope (.inQuery (.row fields) child) result .none
     | parameter (present : binding ∈ params) (identity : binding.index = parameterIndex parameter)
         (supported : concreteType binding.type = some base) :
         ExprCollationValidCore subqueries profile params env scope (.parameter parameter)
@@ -278,7 +303,7 @@ abbrev ExprCollationValid (profile : Profile) (params : ParameterEnv) (scope : S
   ExprCollationValidCore subqueries profile params env scope expr type derivation
 
 namespace ExprCollationValid
-export ExprCollationValidCore (atom «exists» scalarQuery inQuery parameter column application independent cast collate castArray subscript rowComparison rowDistinct inList between extract defaultCall namedCall substring searchedCase simpleCase rec)
+export ExprCollationValidCore (atom foldedInteger «exists» scalarQuery inQuery inRowQuery parameter column application independent cast collate castArray subscript rowComparison rowDistinct inList between extract defaultCall namedCall substring searchedCase simpleCase rec)
 end ExprCollationValid
 
 abbrev ExprCollationListValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (exprs : List Advanced.Expr) (types : List ExprType) (derivations : List CollationDerivation)

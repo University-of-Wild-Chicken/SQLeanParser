@@ -153,4 +153,65 @@ def subquerySourceCorpusTests : IO Nat := do
     "fixed independently reviewed source contract population"
   pure certified
 
+def rowInSubqueryCorpusTests : IO (Nat × Nat) := do
+  let authored ← subqueryJsonArray "fixtures/row_in_subqueries/synthetic.json"
+  let (profile, catalog) ← subqueryEnvironment "fixtures/row_in_subqueries/schema.json"
+  SQLean.Tests.assert (authored.size == 50) "fifty authored row-IN queries"
+  let mut authoredIds : List String := []
+  let mut authoredSQL : List String := []
+  for record in authored do
+    let id ← subqueryField record "id"
+    let sql ← subqueryField record "sql"
+    SQLean.Tests.assert ((← subqueryField record "source_kind") == "synthetic" &&
+      (← subqueryField record "factor") == "row_in_subquery" &&
+      (← subqueryField record "catalogFile") == "fixtures/row_in_subqueries/schema.json")
+      s!"{id}: exact authored row-IN population"
+    let params ← expectOk id (Assurance.parseContractParameterTypes
+      (← subqueryField record "parameter_types"))
+    let query ← expectOk id (Advanced.parseQuery sql)
+    subqueryCertificate id profile catalog params query (← subqueryExpected record)
+    authoredIds := id :: authoredIds
+    authoredSQL := sql :: authoredSQL
+  SQLean.Tests.assert (decide authoredIds.Nodup && decide authoredSQL.Nodup)
+    "distinct authored row-IN statements"
+  let registry ← subqueryJsonArray "fixtures/row_in_subqueries/source_contracts.json"
+  let lines := (← IO.FS.readFile "fixtures/row_in_subqueries/concrete.jsonl").splitOn "\n"
+  let mut records : List Lean.Json := []
+  let mut sourceIds : List String := []
+  for line in lines do
+    if !line.trimAscii.toString.isEmpty then
+      let record ← expectOk "row-IN source" (Lean.Json.parse line)
+      let id ← subqueryField record "id"
+      let sql ← subqueryField record "sql"
+      SQLean.Tests.assert (sql == (← subqueryField record "raw_sql")) s!"{id}: original source SQL"
+      let query ← expectOk id (Advanced.parseQuery sql)
+      for rendering in [RenderContract.Profile.identityV01, .postgres16V01] do
+        let rendered ← expectOk id ((RenderContract.check rendering query).mapError reprStr)
+        have _roundTrip := rendered.roundTrip
+        let parsed ← expectOk id (RenderContract.parseRendered rendering rendered.sql)
+        let again ← expectOk id ((RenderContract.check rendering parsed).mapError reprStr)
+        SQLean.Tests.assert (again.sql == rendered.sql) s!"{id}: row-IN source canonicality"
+      sourceIds := id :: sourceIds
+      records := record :: records
+  SQLean.Tests.assert (records.length == 50 && decide sourceIds.Nodup)
+    "complete fifty-source row-IN population"
+  let mut outputCount := 0
+  let mut registeredIds : List String := []
+  for contract in registry do
+    let id ← subqueryField contract "id"
+    let some record := records.find? (fun record =>
+      (record.getObjVal? "id" >>= Lean.Json.getStr?).toOption == some id)
+      | throw (IO.userError s!"{id}: missing fixed row-IN source")
+    let (profile, catalog) ← match ← expectOk id (contract.getObjVal? "catalogFile") with
+      | .null => pure (Profile.basicV34, [])
+      | value => subqueryEnvironment (← expectOk id value.getStr?)
+    let query ← expectOk id (Advanced.parseQuery (← subqueryField record "sql"))
+    let expected ← subqueryExpected contract
+    subqueryCertificate id profile catalog [] query expected
+    registeredIds := id :: registeredIds
+    outputCount := outputCount + expected.length
+  SQLean.Tests.assert (registry.size == 12 && outputCount == 20 && decide registeredIds.Nodup)
+    "fixed independently inspected row-IN source schemas"
+  pure (authored.size, registry.size)
+
 end SQLean.Tests
