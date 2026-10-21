@@ -50,6 +50,7 @@ import Tests.ArrayConstructorContract
 import Tests.ArrayConstructorRendering
 import Tests.ArrayQuantifiedContract
 import Tests.ArrayQuantifiedRendering
+import Tests.QuantifiedSubqueryContract
 import Tests.ArraySubscriptContract
 import Tests.ArraySubscriptRendering
 import Tests.RowComparisonContract
@@ -377,6 +378,8 @@ def run : IO Unit := do
   IO.println s!"PASS: {subquerySource} unchanged subquery full-query certificates (all 150 rendered)"
   let (rowInAuthored, rowInSources) ← rowInSubqueryCorpusTests
   IO.println s!"PASS: {rowInAuthored} authored and {rowInSources} unchanged row-IN certificates (all 50 sources rendered)"
+  let quantifiedQueries ← quantifiedSubqueryContractTests
+  IO.println s!"PASS: {quantifiedQueries} quantified-query typing, scope, constructor and transport checks"
   IO.println "All tests passed. Lean proof examples compiled successfully."
 
 end SQLean.Tests

@@ -126,6 +126,9 @@ mutual
           exprSql value.val)))
     | .between arg lower upper negated => paren (exprSql arg ++
         (if negated then " NOT BETWEEN " else " BETWEEN ") ++ exprSql lower ++ " AND " ++ exprSql upper)
+    | .quantifiedQuery op quantifier arg query =>
+        paren (exprSql arg ++ " " ++ op.toSql ++ " " ++ quantifier.toSql ++
+          paren (querySql query))
     | .inQuery arg query => paren (exprSql arg ++ " IN " ++ paren (querySql query))
     | .exists query => "EXISTS " ++ paren (querySql query)
     | .scalarQuery query => paren (querySql query)

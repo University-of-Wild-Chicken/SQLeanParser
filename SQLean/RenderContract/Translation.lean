@@ -95,6 +95,8 @@ mutual
           have : sizeOf value.val < sizeOf values := List.sizeOf_lt_of_mem value.property
           translateExpr value.val)
     | .between arg lower upper negated => .between (translateExpr arg) (translateExpr lower) (translateExpr upper) negated
+    | .quantifiedQuery op quantifier arg query =>
+        .quantifiedQuery op quantifier (translateExpr arg) (translateParameters query)
     | .inQuery arg query => .inQuery (translateExpr arg) (translateParameters query)
     | .exists query => .exists (translateParameters query)
     | .scalarQuery query => .scalarQuery (translateParameters query)

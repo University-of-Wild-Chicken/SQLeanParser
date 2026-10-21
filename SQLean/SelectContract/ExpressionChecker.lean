@@ -650,6 +650,32 @@ mutual
           | [column] => .ok ⟨some ⟨column.type.base, true⟩, checked.uses,
               .scalarQuery (width ▸ checked.valid)⟩
           | _ => .error (invalid "scalar_subquery_arity" "A scalar subquery must expose exactly one column")
+      | .quantifiedQuery op quantifier (.row fields) child => do
+          if nonempty : fields ≠ [] then
+            let left ← checkExprListCore subqueries env checkSubquery fuel params scope fields
+            let checked ← checkSubquery child
+            if arity : fields.length = checked.output.length then
+              match signature : quantifiedRowSignature op (scalarInputs fields left.types)
+                  (checked.output.map (fun column => ScalarInput.known column.type)) with
+              | some _ => .ok ⟨some ⟨.bool, true⟩, left.uses ++ checked.uses,
+                  .quantifiedRowQuery left.valid checked.valid nonempty arity signature⟩
+              | none => .error (operatorFailure
+                  (left.types ++ checked.output.map (fun column => some column.type))
+                  (fields.any uncontextualizedString) "quantified_row_subquery_signature"
+                  "Quantified row fields require compatible scalar comparisons and ordering strategy families")
+            else .error (invalid "quantified_row_subquery_arity" "A quantified row query must expose one column per left field")
+          else .error (invalid "quantified_row_subquery_arity" "A quantified row query requires at least one left field")
+      | .quantifiedQuery op quantifier arg child => do
+            let left ← checkExprCore subqueries env checkSubquery fuel params scope arg
+            let checked ← checkSubquery child
+            match width : checked.output with
+            | [column] =>
+              match signature : comparisonOverload op (scalarInput arg left.type) (.known column.type) with
+              | none => .error (operatorFailure [left.type, some column.type] (uncontextualizedString arg)
+                  "quantified_subquery_signature" "Quantified query operands have no covered comparison signature")
+              | some _ => .ok ⟨some ⟨.bool, (scalarInput arg left.type).nullable || column.type.nullable⟩,
+                  left.uses ++ checked.uses, .quantifiedQuery left.valid (width ▸ checked.valid) signature⟩
+            | _ => .error (invalid "quantified_subquery_arity" "A scalar quantified query must expose exactly one column")
       | .inQuery (.row fields) child => do
           if nonempty : fields ≠ [] then
             let left ← checkExprListCore subqueries env checkSubquery fuel params scope fields

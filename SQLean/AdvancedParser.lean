@@ -1043,13 +1043,21 @@ mutual
               else if ← eat "some" then pure ArrayQuantifier.some
               else do expect "all"; pure ArrayQuantifier.all
             expect "("
-            let right ← expression fuel 0
-            expect ")"
-            -- Parentheses around SELECT do not disambiguate it into an array
-            -- expression in PostgreSQL. A cast or other wrapper does.
-            if let .scalarQuery _ := right then
-              fail "quantified subquery comparison is outside the array-expression profile"
-            return ← tailExpr (collateAllowed := collateAllowed) fuel minPrec (.quantifiedComparison comparison quantifier left right) 4
+            let arrayExpression : Parser Expr := do
+              let right ← expression fuel 0
+              expect ")"
+              -- Extra parentheses around a bare SELECT retain SubLink syntax;
+              -- an explicit cast or other expression wrapper selects the array form.
+              pure (match right with
+                | .scalarQuery child => .quantifiedQuery comparison quantifier left child
+                | _ => .quantifiedComparison comparison quantifier left right)
+            let result ← if ← queryStart then
+              alternative (do
+                let child ← query fuel
+                expect ")"
+                pure (.quantifiedQuery comparison quantifier left child)) arrayExpression
+              else arrayExpression
+            return ← tailExpr (collateAllowed := collateAllowed) fuel minPrec result 4
           let right ← expression fuel (prec + 1) collateAllowed
           tailExpr (collateAllowed := collateAllowed) fuel minPrec (.binary op left right) (if prec == 4 then 4 else 0)
         | none => pure left

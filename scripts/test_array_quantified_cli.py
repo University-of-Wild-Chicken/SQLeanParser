@@ -291,31 +291,25 @@ class ArrayQuantifiedCliTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Wrong result arity"):
             checker.parse_results(key + '\n"value","type"\n"false"\n')
 
-    def test_subquery_collision_checks_use_structured_renderer_parse_failures(self):
-        result = subprocess.CompletedProcess([], 1, json.dumps({
-            "status": "invalid", "diagnostic": {"code": "input.parse"}}), "")
-        with patch.object(checker, "assert_report") as reports, \
-                patch.object(checker, "invoke", return_value=result) as invoke:
-            self.assertEqual(checker.boundaries(), 15)
-        self.assertEqual(len(invoke.call_args_list), 3)
-        self.assertTrue(all(call.args[0][:2] == ["--render-assurance", "identity"]
-                            for call in invoke.call_args_list))
-        self.assertEqual(sum(call.args[1] == "invalid" for call in reports.call_args_list), 10)
-        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 0)
-        scalar_calls = [call for call in reports.call_args_list if "(SELECT ARRAY[1])" in call.args[0][-1]]
-        self.assertEqual(len(scalar_calls), 1)
-        self.assertEqual(scalar_calls[0].args[1:], ("valid", "contract", (("?column?", "bool", True),)))
-        self.assertEqual(reports.call_args_list[-1].args[1:3], ("rejected", "checked"))
+    def test_query_rhs_uses_query_operator_types_and_cast_rhs_uses_array_types(self):
+        report={"diagnostic":{"code":"quantified_subquery_signature"}}
+        with patch.object(checker,"assert_report",return_value=report) as reports, \
+                patch.object(checker,"invoke") as invoke:
+            self.assertEqual(checker.boundaries(),15)
+        self.assertFalse(invoke.called)
+        self.assertEqual(sum(call.args[1]=="invalid" for call in reports.call_args_list),13)
+        self.assertEqual(sum(call.args[1]=="unsupported" for call in reports.call_args_list),0)
+        scalar_sql="SELECT 1 = ANY(CAST((SELECT ARRAY[1]) AS INTEGER[]))"
+        scalar_calls=[call for call in reports.call_args_list if call.args[0][-1]==scalar_sql]
+        self.assertEqual(len(scalar_calls),1)
+        self.assertEqual(scalar_calls[0].args[1:],("valid","contract",(("?column?","bool",True),)))
+        self.assertEqual(reports.call_args_list[-1].args[1:3],("rejected","checked"))
 
-    def test_subquery_collision_cannot_pass_on_options_resources_or_success(self):
-        for code, status, diagnostic in (
-                (0, "rendered", "input.parse"), (2, "invalid", "input.parse"),
-                (1, "unsupported", "input.parse"), (1, "invalid", "resource.depth")):
-            result = subprocess.CompletedProcess([], code, json.dumps({
-                "status": status, "diagnostic": {"code": diagnostic}}), "")
-            with self.subTest(code=code, status=status, diagnostic=diagnostic), \
-                    patch.object(checker, "assert_report"), \
-                    patch.object(checker, "invoke", return_value=result), \
+    def test_query_rhs_rejects_missing_or_wrong_operator_diagnostic(self):
+        for report in ({"diagnostic":{"code":"input.parse"}},
+                       {"diagnostic":{"code":"operator_signature"}},
+                       {"diagnostic":{"code":"resource.depth"}}):
+            with self.subTest(report=report), patch.object(checker,"assert_report",return_value=report), \
                     self.assertRaises(AssertionError):
                 checker.boundaries()
 

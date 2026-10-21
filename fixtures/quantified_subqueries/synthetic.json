@@ -1,0 +1,2375 @@
+[
+  {
+    "id": "quantified-query-01-equal-any",
+    "factor": "quantified_subquery",
+    "shape": "equal-any",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = ANY(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-02-equal-some",
+    "factor": "quantified_subquery",
+    "shape": "equal-some",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = SOME(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-03-equal-all",
+    "factor": "quantified_subquery",
+    "shape": "equal-all",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = ALL(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-04-unequal-any",
+    "factor": "quantified_subquery",
+    "shape": "unequal-any",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 <> ANY(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-05-unequal-some",
+    "factor": "quantified_subquery",
+    "shape": "unequal-some",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 <> SOME(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-06-unequal-all",
+    "factor": "quantified_subquery",
+    "shape": "unequal-all",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 <> ALL(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-07-less-any",
+    "factor": "quantified_subquery",
+    "shape": "less-any",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 < ANY(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-08-less-some",
+    "factor": "quantified_subquery",
+    "shape": "less-some",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 < SOME(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-09-less-all",
+    "factor": "quantified_subquery",
+    "shape": "less-all",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 < ALL(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-10-less-equal-any",
+    "factor": "quantified_subquery",
+    "shape": "less-equal-any",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 <= ANY(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-11-less-equal-some",
+    "factor": "quantified_subquery",
+    "shape": "less-equal-some",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 <= SOME(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-12-less-equal-all",
+    "factor": "quantified_subquery",
+    "shape": "less-equal-all",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 <= ALL(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-13-greater-any",
+    "factor": "quantified_subquery",
+    "shape": "greater-any",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 > ANY(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-14-greater-some",
+    "factor": "quantified_subquery",
+    "shape": "greater-some",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 > SOME(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-15-greater-all",
+    "factor": "quantified_subquery",
+    "shape": "greater-all",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 > ALL(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-16-greater-equal-any",
+    "factor": "quantified_subquery",
+    "shape": "greater-equal-any",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 >= ANY(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-17-greater-equal-some",
+    "factor": "quantified_subquery",
+    "shape": "greater-equal-some",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 >= SOME(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-18-greater-equal-all",
+    "factor": "quantified_subquery",
+    "shape": "greater-equal-all",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 >= ALL(SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-19-null-empty-any",
+    "factor": "quantified_subquery",
+    "shape": "null-empty-any",
+    "source_kind": "synthetic",
+    "sql": "SELECT NULL = ANY(SELECT 1 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-20-null-empty-some",
+    "factor": "quantified_subquery",
+    "shape": "null-empty-some",
+    "source_kind": "synthetic",
+    "sql": "SELECT NULL = SOME(SELECT 1 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-21-null-empty-all",
+    "factor": "quantified_subquery",
+    "shape": "null-empty-all",
+    "source_kind": "synthetic",
+    "sql": "SELECT NULL = ALL(SELECT 1 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-22-dominant-any",
+    "factor": "quantified_subquery",
+    "shape": "dominant-any",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = ANY(SELECT NULL::INTEGER UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-23-unknown-any",
+    "factor": "quantified_subquery",
+    "shape": "unknown-any",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = ANY(SELECT NULL::INTEGER UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-24-dominant-some",
+    "factor": "quantified_subquery",
+    "shape": "dominant-some",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = SOME(SELECT NULL::INTEGER UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-25-unknown-some",
+    "factor": "quantified_subquery",
+    "shape": "unknown-some",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = SOME(SELECT NULL::INTEGER UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-26-dominant-all",
+    "factor": "quantified_subquery",
+    "shape": "dominant-all",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = ALL(SELECT NULL::INTEGER UNION ALL SELECT 2 UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-27-unknown-all",
+    "factor": "quantified_subquery",
+    "shape": "unknown-all",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = ALL(SELECT NULL::INTEGER UNION ALL SELECT 3) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-28-null-only-any",
+    "factor": "quantified_subquery",
+    "shape": "null-only-any",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = ANY(SELECT NULL::INTEGER) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-29-null-only-some",
+    "factor": "quantified_subquery",
+    "shape": "null-only-some",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = SOME(SELECT NULL::INTEGER) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-30-null-only-all",
+    "factor": "quantified_subquery",
+    "shape": "null-only-all",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = ALL(SELECT NULL::INTEGER) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-31-negated-unknown",
+    "factor": "quantified_subquery",
+    "shape": "negated-unknown",
+    "source_kind": "synthetic",
+    "sql": "SELECT NOT (2 = ANY(SELECT NULL::INTEGER)) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-32-contextual-left",
+    "factor": "quantified_subquery",
+    "shape": "contextual-left",
+    "source_kind": "synthetic",
+    "sql": "SELECT '2' <= ALL(SELECT 2) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-33-numeric-modifiers",
+    "factor": "quantified_subquery",
+    "shape": "numeric-modifiers",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1.23::NUMERIC(5,2) = SOME(SELECT 1.230::NUMERIC(6,3)) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-34-date",
+    "factor": "quantified_subquery",
+    "shape": "date",
+    "source_kind": "synthetic",
+    "sql": "SELECT DATE '2024-01-01' < ALL(SELECT DATE '2024-01-02') AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-35-explicit-collation",
+    "factor": "quantified_subquery",
+    "shape": "explicit-collation",
+    "source_kind": "synthetic",
+    "sql": "SELECT 'a' COLLATE \"C\" = ANY(SELECT 'a' COLLATE \"POSIX\") AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-36-boolean",
+    "factor": "quantified_subquery",
+    "shape": "boolean",
+    "source_kind": "synthetic",
+    "sql": "SELECT TRUE <> ALL(SELECT FALSE) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-37-bytea",
+    "factor": "quantified_subquery",
+    "shape": "bytea",
+    "source_kind": "synthetic",
+    "sql": "SELECT 'abc'::BYTEA = SOME(SELECT 'abc'::BYTEA) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-38-array-output",
+    "factor": "quantified_subquery",
+    "shape": "array-output",
+    "source_kind": "synthetic",
+    "sql": "SELECT ARRAY[1,2] = ANY(SELECT ARRAY[1,2]) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-39-anonymous-order",
+    "factor": "quantified_subquery",
+    "shape": "anonymous-order",
+    "source_kind": "synthetic",
+    "sql": "SELECT ? < ANY(SELECT ?) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      2,
+      3
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-40-numbered-reordered",
+    "factor": "quantified_subquery",
+    "shape": "numbered-reordered",
+    "source_kind": "synthetic",
+    "sql": "SELECT $2 >= ALL(SELECT $1) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      2,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-41-numbered-repeated",
+    "factor": "quantified_subquery",
+    "shape": "numbered-repeated",
+    "source_kind": "synthetic",
+    "sql": "SELECT $1 = SOME(SELECT $1) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      4
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-42-nullable-parameter",
+    "factor": "quantified_subquery",
+    "shape": "nullable-parameter",
+    "source_kind": "synthetic",
+    "sql": "SELECT $1 = ALL(SELECT 1) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "int?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-43-visible-cte",
+    "factor": "quantified_subquery",
+    "shape": "visible-cte",
+    "source_kind": "synthetic",
+    "sql": "WITH c(x) AS(SELECT 3) SELECT 2 < ANY(SELECT x FROM c) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-44-cte-shadow",
+    "factor": "quantified_subquery",
+    "shape": "cte-shadow",
+    "source_kind": "synthetic",
+    "sql": "WITH c(x) AS(SELECT 3) SELECT 2 < ALL(WITH c(x) AS(SELECT 1) SELECT x FROM c) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-45-derived-child",
+    "factor": "quantified_subquery",
+    "shape": "derived-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 <= ALL(SELECT x FROM(SELECT 3 AS x)q) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-46-child-order-limit",
+    "factor": "quantified_subquery",
+    "shape": "child-order-limit",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 = ANY(SELECT 1 AS x UNION ALL SELECT 2 ORDER BY x DESC LIMIT 1) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-47-scalar-left",
+    "factor": "quantified_subquery",
+    "shape": "scalar-left",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT 2) = ALL(SELECT 2) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-48-outer-items",
+    "factor": "quantified_subquery",
+    "shape": "outer-items",
+    "source_kind": "synthetic",
+    "sql": "SELECT i.score = ANY(SELECT score FROM items) AS v FROM items i;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ],
+      [
+        null
+      ],
+      [
+        true
+      ],
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          true
+        ],
+        [
+          null
+        ],
+        [
+          true
+        ],
+        [
+          true
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          true
+        ],
+        [
+          null
+        ],
+        [
+          true
+        ],
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-49-table-child",
+    "factor": "quantified_subquery",
+    "shape": "table-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 < ALL(SELECT id FROM labels) AS v;",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "quantified-query-50-where-membership",
+    "factor": "quantified_subquery",
+    "shape": "where-membership",
+    "source_kind": "synthetic",
+    "sql": "SELECT i.id AS v FROM items i WHERE i.id = ANY(SELECT id FROM labels);",
+    "catalogFile": "fixtures/quantified_subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  }
+]

@@ -39,7 +39,7 @@ inductive ComparisonCollations :
       ComparisonCollations (a :: as) (ta :: ats) (da :: ads)
         (b :: bs) (tb :: bts) (db :: bds) (selected :: rest)
 
-/-- A row IN SubLink has one independent input-collation context per field.
+/-- A row comparison SubLink has one independent input-collation context per field.
 The right input is a finalized child output, represented by PostgreSQL's
 PARAM_SUBLINK behavior rather than by a new raw literal or scalar SubLink. -/
 inductive SubqueryComparisonCollations :
@@ -131,6 +131,26 @@ mutual
         (reentry : column.type.base.collatable = false ∨ column.collation.isSome = true) :
         ExprCollationValidCore subqueries profile params env scope (.scalarQuery child)
           (some ⟨column.type.base, true⟩) (.stored column.collation)
+    /-- PARAM_SUBLINK reentry is a stored child identity, independently of
+    scalar SubLink's implicit-invalid collation boundary. -/
+    | quantifiedRowQuery (typed : ExprValidCore subqueries params env scope
+          (.quantifiedQuery op quantifier (.row fields) child) result uses)
+        (left : ExprCollationListValidCore subqueries profile params env scope fields types derivations)
+        (query : subqueries env child output queryUses)
+        (selected : quantifiedRowSignature op (scalarInputs fields types)
+          (output.map (fun column => ScalarInput.known column.type)) = some signatures)
+        (pairs : SubqueryComparisonCollations fields types derivations output signatures) :
+        ExprCollationValidCore subqueries profile params env scope
+          (.quantifiedQuery op quantifier (.row fields) child) result .none
+    | quantifiedQuery (typed : ExprValidCore subqueries params env scope (.quantifiedQuery op quantifier arg child) result uses)
+        (left : ExprCollationValidCore subqueries profile params env scope arg type derivation)
+        (query : subqueries env child [column] queryUses)
+        (selected : comparisonOverload op (scalarInput arg type) (.known column.type) = some signature)
+        (arguments : signature.inputs = [leftType, rightType])
+        (merge : CollationDerivation.merge
+          (coercedCollation arg type leftType derivation)
+          (knownCoercedCollation column.type.base rightType (.stored column.collation)) = some input) :
+        ExprCollationValidCore subqueries profile params env scope (.quantifiedQuery op quantifier arg child) result .none
     | inQuery (typed : ExprValidCore subqueries params env scope (.inQuery arg child) result uses)
         (left : ExprCollationValidCore subqueries profile params env scope arg type derivation)
         (query : subqueries env child [column] queryUses)
@@ -303,7 +323,7 @@ abbrev ExprCollationValid (profile : Profile) (params : ParameterEnv) (scope : S
   ExprCollationValidCore subqueries profile params env scope expr type derivation
 
 namespace ExprCollationValid
-export ExprCollationValidCore (atom foldedInteger «exists» scalarQuery inQuery inRowQuery parameter column application independent cast collate castArray subscript rowComparison rowDistinct inList between extract defaultCall namedCall substring searchedCase simpleCase rec)
+export ExprCollationValidCore (atom foldedInteger «exists» scalarQuery inQuery quantifiedQuery quantifiedRowQuery inRowQuery parameter column application independent cast collate castArray subscript rowComparison rowDistinct inList between extract defaultCall namedCall substring searchedCase simpleCase rec)
 end ExprCollationValid
 
 abbrev ExprCollationListValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (exprs : List Advanced.Expr) (types : List ExprType) (derivations : List CollationDerivation)

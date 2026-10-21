@@ -1,0 +1,26 @@
+{
+  "tables": [
+    {
+      "name": "test_data",
+      "columns": [
+        {
+          "name": "a",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "b",
+          "type": "int",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "context_ids": [
+      "duckdb:test_row_comparison_any_all.test:declaration"
+    ],
+    "source_sql_executed": false,
+    "assumption": "Conditional transcription of retained written table declaration; PostgreSQL INTEGER meaning, unchanged namespace, no undeclared shadowing. No source DDL or data executed."
+  }
+}

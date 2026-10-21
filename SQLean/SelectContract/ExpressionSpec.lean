@@ -397,6 +397,18 @@ mutual
     | scalarQuery (query : subqueries env child [column] uses) :
         ExprValidCore subqueries params env scope (.scalarQuery child)
           (some ⟨column.type.base, true⟩) uses
+    | quantifiedRowQuery (args : ExprListValidCore subqueries params env scope fields types ua)
+        (query : subqueries env child output uq)
+        (nonempty : fields ≠ []) (arity : fields.length = output.length)
+        (signature : quantifiedRowSignature op (scalarInputs fields types)
+          (output.map (fun column => ScalarInput.known column.type)) = some selected) :
+        ExprValidCore subqueries params env scope (.quantifiedQuery op quantifier (.row fields) child)
+          (some ⟨.bool, true⟩) (ua ++ uq)
+    | quantifiedQuery (arg : ExprValidCore subqueries params env scope a ta ua)
+        (query : subqueries env child [column] uq)
+        (signature : comparisonOverload op (scalarInput a ta) (.known column.type) = some selected) :
+        ExprValidCore subqueries params env scope (.quantifiedQuery op quantifier a child)
+          (some ⟨.bool, (scalarInput a ta).nullable || column.type.nullable⟩) (ua ++ uq)
     | inQuery (arg : ExprValidCore subqueries params env scope a ta ua)
         (query : subqueries env child [column] uq)
         (signature : equalityOverload (scalarInput a ta) (.known column.type) = some selected) :
@@ -486,7 +498,7 @@ abbrev ExprValid (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) 
   ExprValidCore subqueries params env scope expr type uses
 
 namespace ExprValid
-export ExprValidCore (int bigInt numericInt decimal minInt32 minInt64 foldedInteger text bool null contextValue parameter column binary concat arrayConcat rowComparison distinctScalar distinctNullLeft distinctNullRight distinctRows distinctRowNullLeft distinctRowNullRight unary isNull isNullRow pattern ilike regex extract jsonAccess jsonExistence containment arrayContainment overlap cast collate array castArray substring defaultCall namedCall call coalesce greatest least nullIf caseExpr quantifiedComparison subscript inList «exists» scalarQuery inQuery inRowQuery between)
+export ExprValidCore (int bigInt numericInt decimal minInt32 minInt64 foldedInteger text bool null contextValue parameter column binary concat arrayConcat rowComparison distinctScalar distinctNullLeft distinctNullRight distinctRows distinctRowNullLeft distinctRowNullRight unary isNull isNullRow pattern ilike regex extract jsonAccess jsonExistence containment arrayContainment overlap cast collate array castArray substring defaultCall namedCall call coalesce greatest least nullIf caseExpr quantifiedComparison subscript inList «exists» scalarQuery inQuery quantifiedQuery quantifiedRowQuery inRowQuery between)
 end ExprValid
 
 abbrev ExprListValid (params : ParameterEnv) (scope : Scope) (exprs : List Advanced.Expr) (types : List ExprType) (uses : List Parameter)

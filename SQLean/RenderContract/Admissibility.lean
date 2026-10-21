@@ -214,6 +214,7 @@ mutual
           inspectExpr value.val)
     | .between arg lower upper _ =>
         combine [inspectExpr arg, inspectExpr lower, inspectExpr upper]
+    | .quantifiedQuery _ _ arg query => combine [inspectExpr arg, inspectQuery query]
     | .inQuery arg query => combine [inspectExpr arg, inspectQuery query]
     | .exists query | .scalarQuery query => combine [inspectQuery query]
   termination_by sizeOf expr

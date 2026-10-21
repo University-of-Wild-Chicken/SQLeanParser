@@ -121,8 +121,7 @@ def arrayQuantifiedRenderingTests : IO Nat := do
   for profile in [RenderContract.Profile.identityV01, .postgres16V01, .sqliteV01] do
     rejected profile ambiguous "unsupported" "coverage.quantified-subquery"
     count := count + 1
-  for source in ["1 = ANY(SELECT ARRAY[1])", "1 = ANY((SELECT ARRAY[1]))",
-      "1 = SOME(((SELECT ARRAY[1])))", "1 = ALL(SELECT 1)", "1 + ANY(ARRAY[1])",
+  for source in ["1 + ANY(ARRAY[1])",
       "1 = ANY()", "1 = ANY(ARRAY[1], ARRAY[2])"] do
     expectError source (Advanced.parseExpression source)
     count := count + 1

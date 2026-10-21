@@ -214,7 +214,7 @@ mutual
     | .between arg lower upper _ => collationNoVarExpr arg && collationNoVarExpr lower && collationNoVarExpr upper
     | .countAll => true
     | .exists _ | .scalarQuery _ => true
-    | .inQuery arg _ => collationNoVarExpr arg
+    | .inQuery arg _ | .quantifiedQuery _ _ arg _ => collationNoVarExpr arg
   termination_by sizeOf expr
   decreasing_by all_goals (simp_all <;> omega)
 

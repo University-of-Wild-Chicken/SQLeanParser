@@ -95,17 +95,15 @@ def boundaries():
                   (("?column?", "bool", True),))
     # Parenthesized SELECT still selects the subquery production in PostgreSQL;
     # the typed array form must not silently reinterpret it.
-    syntax = [
+    query_operands = [
         "SELECT 1 = ANY(SELECT ARRAY[1])", "SELECT 1 = ANY((SELECT ARRAY[1]))",
         "SELECT 1 = ANY(((SELECT ARRAY[1])))",
     ]
-    for sql in syntax:
-        result = invoke(["--render-assurance", "identity", sql])
-        report = json.loads(result.stdout)
-        assert result.returncode == 1 and report["status"] == "invalid", report
-        assert report["diagnostic"]["code"] == "input.parse", report
+    for sql in query_operands:
+        report = assert_report(["--assurance", "contract", sql], "invalid", "contract")
+        assert report["diagnostic"]["code"] == "quantified_subquery_signature", report
     assert_report(["--assurance", "checked", "SELECT 1 = ANY(ARRAY[1])"], "rejected", "checked")
-    return len(invalid) + len(syntax) + 2
+    return len(invalid) + len(query_operands) + 2
 
 
 def main():

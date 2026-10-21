@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -148,6 +149,16 @@ class ReportTests(unittest.TestCase):
 
 
 class AuthoredSubqueryInputTests(unittest.TestCase):
+    def test_quantified_query_populations_keep_only_authored_adapters(self):
+        authored = [row for name in ("synthetic.json", "row_synthetic.json", "operator_direction.json")
+                    for row in cli.read_cases(cli.ROOT / "fixtures/quantified_subqueries" / name)]
+        originals = cli.read_cases(cli.ROOT / "fixtures/quantified_subqueries/concrete.jsonl")
+        self.assertEqual((len(authored), len(originals)), (118, 84))
+        self.assertEqual(sum("grammar_input_transformations" in row for row in authored), 2)
+        self.assertEqual(Counter(row["query_class"] for row in originals), {"scalar":50,"row":34})
+        self.assertTrue(all(row["sql"] == row["raw_sql"] and row["transformations"] == []
+                            and "grammar_input_transformations" not in row for row in originals))
+
     def test_row_in_population_keeps_authored_adapters_separate_from_sources(self):
         authored = cli.read_cases(cli.ROOT / "fixtures/row_in_subqueries/synthetic.json")
         source = cli.read_cases(cli.ROOT / "fixtures/row_in_subqueries/concrete.jsonl")

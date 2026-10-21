@@ -155,6 +155,7 @@ mutual
           exprSql_translated pg arg, mapped]
     | between arg lower upper negated =>
         simp only [translateExpr, exprSql, exprSql_translated pg arg, exprSql_translated pg lower, exprSql_translated pg upper]
+    | quantifiedQuery op quantifier arg query => simp only [translateExpr, exprSql, exprSql_translated pg arg, querySql_translated pg query]
     | inQuery arg query => simp only [translateExpr, exprSql, exprSql_translated pg arg, querySql_translated pg query]
     | «exists» query => simp only [translateExpr, exprSql, querySql_translated pg query]
     | scalarQuery query => simp only [translateExpr, exprSql, querySql_translated pg query]

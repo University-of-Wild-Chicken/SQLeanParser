@@ -27,6 +27,13 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.35 quantified-query increment](docs/quantified-subquery-contract-v0.35.md)
+adds independent scalar and flat-row `ANY`/`SOME`/`ALL` validity and renderer
+preservation. It includes fifty authored queries per class and eighteen
+operator-direction controls. Eighty of 84 unchanged sources receive full
+certificates; all 84 receive rendering checks. The authentic row population
+has an explicit sixteen-query shortage pending VALUES support.
+
 The [v0.34 row-IN increment](docs/row-in-subquery-contract-v0.34.md) adds
 independent validity and renderer preservation for flat row-valued
 `IN (SELECT …)` comparisons. It retains fifty authored and fifty unchanged
@@ -528,7 +535,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses `sqlean-basic-select-v0.34` with its declared
+- `--assurance contract` uses `sqlean-basic-select-v0.35` with its declared
   collation snapshot.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
@@ -670,8 +677,10 @@ child-query judgment under the visible CTE environment. Child row scopes do not
 inherit parent columns. Scalar output is nullable; IN uses the child's finalized
 single-column type. Flat row-valued IN checks positive and matching arity and
 an equality overload for each output position, merging collations per field.
+Scalar and flat-row ANY/SOME/ALL queries retain exact child output types,
+requested comparison operators and per-field comparison collations.
 Independent rules for grouping/aggregates, correlation,
-LATERAL and quantified query comparisons remain future milestones.
+LATERAL and VALUES query bodies remain future milestones.
 DISTINCT ON also requires a separate rule. These forms
 remain supported by the expanded parser/checker. The contract draft remains the
 target for the general SELECT family; the first implementation does not claim

@@ -1,0 +1,72 @@
+{
+  "tables": [
+    {
+      "name": "items",
+      "schema": "public",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "score",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    },
+    {
+      "name": "labels",
+      "schema": "public",
+      "exposeUnqualified": true,
+      "columns": [
+        {
+          "name": "id",
+          "type": "int",
+          "nullable": false
+        },
+        {
+          "name": "category",
+          "type": "text",
+          "nullable": false
+        }
+      ]
+    }
+  ],
+  "collations": {
+    "encoding": "UTF8",
+    "entries": [
+      {
+        "id": "default",
+        "schema": "pg_catalog",
+        "name": "default",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "C",
+        "schema": "pg_catalog",
+        "name": "C",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      },
+      {
+        "id": "POSIX",
+        "schema": "pg_catalog",
+        "name": "POSIX",
+        "encoding": null,
+        "deterministic": true,
+        "exposeUnqualified": true
+      }
+    ]
+  }
+}

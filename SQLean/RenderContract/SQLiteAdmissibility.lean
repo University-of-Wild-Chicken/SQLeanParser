@@ -37,6 +37,7 @@ mutual
     | .column _ _ schema =>
         if schema.isSome then unsupported "schema-qualification" else pure ()
     | .quantifiedComparison .. => unsupported "array-quantified-comparison"
+    | .quantifiedQuery .. => unsupported "query-quantified-comparison"
     | .regex .. => unsupported "regex"
     | .jsonExistence .. => unsupported "json-existence"
     | .jsonAccess .. => unsupported "json-extraction"

@@ -1,0 +1,5090 @@
+{
+  "format_version": 2,
+  "population": "quantified_subqueries",
+  "expected_count": 84,
+  "expected_sources": {
+    "duckdb": 75,
+    "materialize": 4,
+    "postgres": 3,
+    "calcite": 2
+  },
+  "extraction_scope": "Whole unchanged upstream SELECT inputs. No SQL, declarations, test directives, or expected results execute; static candidates are separately preregistered.",
+  "sources": {
+    "duckdb": {
+      "repository": "https://github.com/duckdb/duckdb",
+      "commit": "917243df252f114d9c448b1d23f8618f0d683769",
+      "ref": "pinned main snapshot",
+      "license": "MIT",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/quantified_subqueries/licenses/duckdb-duckdb-LICENSE",
+      "license_sha256": "075c33400ffcb0c586dd106a029d3e733e9da3693f8fcb9cebfc651c8a2f14e3",
+      "files": [
+        {
+          "path": "test/sql/subquery/any_all/test_any_all.test",
+          "local_path": "fixtures/quantified_subqueries/sources/duckdb/test/sql/subquery/any_all/test_any_all.test",
+          "sha256": "d6b1ccc134b975ed851a5a3d00f9acbe60a24e42733297a10123ed03440b4be5"
+        },
+        {
+          "path": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+          "local_path": "fixtures/quantified_subqueries/sources/duckdb/test/sql/subquery/any_all/test_row_comparison_any_all.test",
+          "sha256": "45c02cc57957c1563ebd792b92a98c2bd58fe05b47567df61662c51a2272dc9e"
+        },
+        {
+          "path": "test/sql/subquery/any_all/test_scalar_any_all.test",
+          "local_path": "fixtures/quantified_subqueries/sources/duckdb/test/sql/subquery/any_all/test_scalar_any_all.test",
+          "sha256": "32e07645ac2879da34c979ef5094299652f98c17914fb83395148b8bd274e09b"
+        },
+        {
+          "path": "test/sql/subquery/any_all/test_some_subquery.test",
+          "local_path": "fixtures/quantified_subqueries/sources/duckdb/test/sql/subquery/any_all/test_some_subquery.test",
+          "sha256": "36913be6bc125b9ff72536769f8f8f4455c1ef4c14c0da49270325fa6c6e4d15"
+        },
+        {
+          "path": "test/sql/subquery/any_all/test_uncorrelated_any_subquery.test",
+          "local_path": "fixtures/quantified_subqueries/sources/duckdb/test/sql/subquery/any_all/test_uncorrelated_any_subquery.test",
+          "sha256": "83287341fa4d7c239a3fcc2a6f65794f1b1156daa54721692ac823e6b54281e5"
+        },
+        {
+          "path": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+          "local_path": "fixtures/quantified_subqueries/sources/duckdb/test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+          "sha256": "daaafa0a3270a6f049da06dd68fcc6c4a0545ef9f626c2f4892edaf0c3246822"
+        },
+        {
+          "path": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+          "local_path": "fixtures/quantified_subqueries/sources/duckdb/test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+          "sha256": "1a7af1cb59509e913ea917294b8b05a23413e59c0cdc60348af6a396cae7883d"
+        }
+      ]
+    },
+    "materialize": {
+      "repository": "https://github.com/MaterializeInc/materialize",
+      "commit": "726570dba1d2e4d839c707a84a986fb3b3acc5c3",
+      "ref": "pinned main snapshot",
+      "license": "BSL-1.1 (change date 2030-10-20; change license Apache-2.0)",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/quantified_subqueries/licenses/materialize-materialize-20261020-LICENSE",
+      "license_sha256": "5d4ca070f541414a03ad8b84021e4ba3deeca4025e4b4274053abaa2e93ec032",
+      "files": [
+        {
+          "path": "test/sqllogictest/cockroach/subquery.slt",
+          "local_path": "fixtures/quantified_subqueries/sources/materialize/test/sqllogictest/cockroach/subquery.slt",
+          "sha256": "46c42a4f2f38d7c59ed4b0bdc3f1fab3ca8a37d7a9e94dc360f8b5e12abbd0f0"
+        }
+      ]
+    },
+    "postgres": {
+      "repository": "https://github.com/postgres/postgres",
+      "commit": "f0595c3d839debdb140903621c1b44a4f4d86256",
+      "ref": "REL_16_STABLE",
+      "license": "PostgreSQL",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/quantified_subqueries/licenses/postgres-postgres-COPYRIGHT.txt",
+      "license_sha256": "3d6af92ff8a4c2cdf69afb1cf44edea727922f5cd0cf8b5f72b11cdecac8fdfd",
+      "files": [
+        {
+          "path": "src/test/regress/sql/subselect.sql",
+          "local_path": "fixtures/quantified_subqueries/sources/postgres/src/test/regress/sql/subselect.sql",
+          "sha256": "233a9f22e38ae691505d7fdfff51e8559e87c96b2b864490ac9e630442c2dc91"
+        },
+        {
+          "path": "src/test/regress/sql/rowtypes.sql",
+          "local_path": "fixtures/quantified_subqueries/sources/postgres/src/test/regress/sql/rowtypes.sql",
+          "sha256": "b2ab6529278b567f30c06a9a73672a1749249ada2d624b920c8768b7198161ea"
+        }
+      ]
+    },
+    "calcite": {
+      "repository": "https://github.com/apache/calcite",
+      "commit": "83a36ba09be41ce447773feb231716b2b4e71198",
+      "license": "Apache-2.0",
+      "source_kind": "engine-regression",
+      "license_file": "fixtures/quantified_subqueries/licenses/calcite-calcite-LICENSE",
+      "license_sha256": "530c12df4df6cbfd34cb3cf42a3bb900185942f3c4c08b4d64984818940af5e1",
+      "files": [
+        {
+          "path": "core/src/test/resources/sql/sub-query.iq",
+          "local_path": "fixtures/quantified_subqueries/sources/calcite/core/src/test/resources/sql/sub-query.iq",
+          "sha256": "dd44d8883a2a003b25868e9d4aa2229e1fd210f318bcdfa1b43873dd27037035"
+        }
+      ],
+      "additional_notices": [
+        {
+          "path": "NOTICE",
+          "local_path": "fixtures/quantified_subqueries/licenses/calcite-calcite-NOTICE",
+          "sha256": "7d04aa2cc4bb1991ac646e2dfce23880d4e5c8f1c42a9746866bce4066015db1",
+          "source_url": "https://raw.githubusercontent.com/apache/calcite/83a36ba09be41ce447773feb231716b2b4e71198/NOTICE"
+        }
+      ]
+    }
+  },
+  "contexts": [
+    {
+      "id": "duckdb:test_any_all.test:declaration",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_any_all.test",
+      "selector": {
+        "kind": "sqllogic_table_declaration",
+        "header_start": 108,
+        "start": 121,
+        "end": 153
+      },
+      "sql": "CREATE TABLE integers(i INTEGER)",
+      "sql_sha256": "c77559e6fd382125270c8adfd5fb4b99e14c994baf44674abef1173398f03801",
+      "table": {
+        "name": "integers",
+        "columns": [
+          {
+            "name": "i",
+            "type": "int",
+            "nullable": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "duckdb:test_row_comparison_any_all.test:declaration",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "sqllogic_table_declaration",
+        "header_start": 449,
+        "start": 462,
+        "end": 507
+      },
+      "sql": "CREATE TABLE test_data(a INTEGER, b INTEGER);",
+      "sql_sha256": "937f1ba58461dc617323c369d4e59038c66d6741f56488506f368016f17aeb39",
+      "table": {
+        "name": "test_data",
+        "columns": [
+          {
+            "name": "a",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "b",
+            "type": "int",
+            "nullable": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "duckdb:test_uncorrelated_any_subquery.test:declaration",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_any_subquery.test",
+      "selector": {
+        "kind": "sqllogic_table_declaration",
+        "header_start": 190,
+        "start": 203,
+        "end": 235
+      },
+      "sql": "CREATE TABLE integers(i INTEGER)",
+      "sql_sha256": "c77559e6fd382125270c8adfd5fb4b99e14c994baf44674abef1173398f03801",
+      "table": {
+        "name": "integers",
+        "columns": [
+          {
+            "name": "i",
+            "type": "int",
+            "nullable": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "duckdb:test_uncorrelated_all_subquery.test:declaration",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "sqllogic_table_declaration",
+        "header_start": 190,
+        "start": 203,
+        "end": 235
+      },
+      "sql": "CREATE TABLE integers(i INTEGER)",
+      "sql_sha256": "c77559e6fd382125270c8adfd5fb4b99e14c994baf44674abef1173398f03801",
+      "table": {
+        "name": "integers",
+        "columns": [
+          {
+            "name": "i",
+            "type": "int",
+            "nullable": true
+          }
+        ]
+      }
+    }
+  ],
+  "catalogs": [
+    {
+      "local_path": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+      "sha256": "51bbf05a66879de54b0e9da0fa67c483698e49d7a6ccdb7c2070f8bd919bd174",
+      "context_ids": [
+        "duckdb:test_any_all.test:declaration"
+      ]
+    },
+    {
+      "local_path": "fixtures/quantified_subqueries/catalogs/test_row_comparison_any_all.json",
+      "sha256": "3c61eff6e6ec413186ff36c6b01fefcc53405c0495b52c851f656954f42ce67c",
+      "context_ids": [
+        "duckdb:test_row_comparison_any_all.test:declaration"
+      ]
+    },
+    {
+      "local_path": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+      "sha256": "679f1119b9b3269656a934d0e4f05e4a9449e0ec174e82039bf5bbae1ae2e25f",
+      "context_ids": [
+        "duckdb:test_uncorrelated_any_subquery.test:declaration"
+      ]
+    },
+    {
+      "local_path": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "sha256": "ac839d46d50cfca58e1780df3e5fec021ac4fd662abcfab4a9eb55c2b2aaa163",
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ]
+    }
+  ],
+  "selections": [
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:260",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 12,
+        "start": 260,
+        "end": 299
+      },
+      "sql_sha256": "41c738af420d6ace2828038b464646d64b75d0806428631b52e047a0a7d50d35",
+      "normalized_tokens_sha256": "b90a9e99f36e00187459b03b30c8189eb470def4a390e851242b555955111afe",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_any_all.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:315",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 17,
+        "start": 315,
+        "end": 354
+      },
+      "sql_sha256": "a292f92ee946ec253131a35053d59a6441dff1439072be216b509c3895f50172",
+      "normalized_tokens_sha256": "af182c4286934ac7b6e7c9d9c790979eb2fb82bc1aa8e0747b719f2ec63da0eb",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_any_all.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:370",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 22,
+        "start": 370,
+        "end": 409
+      },
+      "sql_sha256": "ad06f6abc92c8b0ea34d92caf4541e8a96906b79c5cc58de477e98287bb2f47b",
+      "normalized_tokens_sha256": "801b1ab3a94fbc5e846a4cb8c8025531f76cc7efe163fae8e119ad62becd6cdc",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_any_all.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:425",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 27,
+        "start": 425,
+        "end": 464
+      },
+      "sql_sha256": "da34e99c74e40a880904143e78b00718230d091286ee2f739d871cb0e01c68ac",
+      "normalized_tokens_sha256": "4b68198b46cd51c1d32f29976464c9aa2376b4e746ade064f6d31012f90e6247",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_any_all.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:523",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 33,
+        "start": 523,
+        "end": 565
+      },
+      "sql_sha256": "8e172d9bd536d0afe2ffd19201191bd3d8bcce9936c13b83b288681bb8a2b383",
+      "normalized_tokens_sha256": "2d13d5fe8464e6fe0d413181d9eb50605c3654a047873cc8c0dd632964624d4d",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_any_all.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:584",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 38,
+        "start": 584,
+        "end": 626
+      },
+      "sql_sha256": "30f35515135ffab9f41bdd05d8db2df45637fe0d3554353080f369fccd7d88c0",
+      "normalized_tokens_sha256": "8d95f812ed68f5c1d865dddca12055bc883135a7596bf1b758b8684e61a3cb1a",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_any_all.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:629",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 17,
+        "start": 629,
+        "end": 663
+      },
+      "sql_sha256": "40c574f27e26f3295efe7a4882bdd6fbfaecf95c8af9b7dbc817f1dfe41def78",
+      "normalized_tokens_sha256": "2674fd4a47e132a799f03505f8e3d3de7e2c0fea58d1ffe1003baf240ac46896",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:682",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 22,
+        "start": 682,
+        "end": 731
+      },
+      "sql_sha256": "21a16a846a553667aaa707d938a0c142370ea7a559ad27e55e65c2e0d0f082b5",
+      "normalized_tokens_sha256": "64b9ae36c2ede1577bf7db102270ea8e6919cd7178e4fc758bdfaa006b69ebaa",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "test_data"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "test_data": [
+          "a",
+          "b"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_row_comparison_any_all.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_row_comparison_any_all.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:750",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 27,
+        "start": 750,
+        "end": 799
+      },
+      "sql_sha256": "7d758a57a166da33de049195a92a92a4e06b11c9547f9896068323cf64ec92bf",
+      "normalized_tokens_sha256": "02a57e1c969ee3ad4a502adc27a4fa6370f46c473acc9705b8296462794694b7",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "test_data"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "test_data": [
+          "a",
+          "b"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_row_comparison_any_all.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_row_comparison_any_all.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:887",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 33,
+        "start": 887,
+        "end": 927
+      },
+      "sql_sha256": "bd107158b3f9544ada8255d0a3202514b48353d4df2615d7201f694981d95e8f",
+      "normalized_tokens_sha256": "826d34bd58361b3ad8197398d32a49355bfb1a65f6277e454549facb0aca2f49",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:946",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 38,
+        "start": 946,
+        "end": 1018
+      },
+      "sql_sha256": "c00217507988fc726542e0d54c4feeb710b123637206a8f048499bf42743778d",
+      "normalized_tokens_sha256": "9f20cf84746ec627b0fec584ea56a634268ecffc5b3977847761b4f962d21196",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "test_data"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "test_data": [
+          "a",
+          "b"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_row_comparison_any_all.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_row_comparison_any_all.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1071",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 44,
+        "start": 1071,
+        "end": 1105
+      },
+      "sql_sha256": "d33e8d921f08c1b3563c2f3fb001e9f0d3f2ff3075e2e1772125d4564943094d",
+      "normalized_tokens_sha256": "c9d32518c96ecd2e86b5b179b68c540a984ed10c65e2a6322ed1ef3383bcbfd6",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1124",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 49,
+        "start": 1124,
+        "end": 1193
+      },
+      "sql_sha256": "e92e2fc4148c5cffb66043ebbe7e8b8e49a793440cb1fc00edb2c09eb49ca1ab",
+      "normalized_tokens_sha256": "b37df5af8d100610db79bc64e4928d79bd2d168e193bc92b22227ba8849982f4",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "test_data"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "test_data": [
+          "a",
+          "b"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_row_comparison_any_all.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_row_comparison_any_all.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1212",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 54,
+        "start": 1212,
+        "end": 1246
+      },
+      "sql_sha256": "f1ca28da868848c2fbc66ef5d3ed4a86452cea9cfdc81dec0229e270e81d6bd1",
+      "normalized_tokens_sha256": "7b5c0e5fbc094cad1bb7d05acfa5f7cf1a5ede65a11852c9ffb52f31b63d66f0",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1300",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 60,
+        "start": 1300,
+        "end": 1335
+      },
+      "sql_sha256": "5bd02e15178c2a363cccab91992255f5a8ea33e0d16644e1fd93852d9ae78b39",
+      "normalized_tokens_sha256": "f01dd3152bc31be6189f75e3c195f5ce17fa0a9f515fb42444fa24d04785db84",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1354",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 65,
+        "start": 1354,
+        "end": 1389
+      },
+      "sql_sha256": "39caa14983bad3c91aace926793633a9b5281eb8ad589eabbd6caef486cac921",
+      "normalized_tokens_sha256": "9adb9b7eac150673d93eab943bc61d42da1eeb5894a9958ad44b4b8e9964997d",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1443",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 71,
+        "start": 1443,
+        "end": 1478
+      },
+      "sql_sha256": "29836af85002f1ad91de874954245eec0f01c5ef592923a3aabf70511393e804",
+      "normalized_tokens_sha256": "8b3a1babccc82ce6b41f7eae95981f3ace27dd4c470c2035a8f2bd91975c6958",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1497",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 76,
+        "start": 1497,
+        "end": 1532
+      },
+      "sql_sha256": "53ef1125b4046c4f1ae5f518ba52ea1240a9d204723ae68cfc942368470cf3e5",
+      "normalized_tokens_sha256": "970884fa6aaa8ee492ad0ebbd81c3aa8e5b5343c135ff338188f25a8e68013ae",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1585",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 82,
+        "start": 1585,
+        "end": 1619
+      },
+      "sql_sha256": "fc3a9033f2110a9de3b2a3f632b3a64e2632793da24269f83ce561f0eab12391",
+      "normalized_tokens_sha256": "895eddde80bbef857e181e9375bcde18442b468e226dcca7aa302fa09cd48ac0",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1839",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 98,
+        "start": 1839,
+        "end": 1873
+      },
+      "sql_sha256": "83593be8862811cb82562d48633821118dd3cdc2eb21c05d3cd08ae53bf2ce45",
+      "normalized_tokens_sha256": "809c96496d53801de37ffb42646c3ffac8ef600baba2d584798bf9936a8e50ab",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2086",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 114,
+        "start": 2086,
+        "end": 2121
+      },
+      "sql_sha256": "8a3f5039725e4feba4837ec7ecd74e8be971bdea20fcf752a80dbcc77ae66fb2",
+      "normalized_tokens_sha256": "4b46c624989cb3e974d4aed0016ceb5b1d675fea177251ca9f8e8a485984272c",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2336",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 130,
+        "start": 2336,
+        "end": 2371
+      },
+      "sql_sha256": "2401a8524494dcac7d63b44fc2d475205272df79cc9b235e17ba108f7412500a",
+      "normalized_tokens_sha256": "2475deee5ed271a3eea500790030d2e581a58bcc0d86082bba8a148f7563fa30",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2764",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 157,
+        "start": 2764,
+        "end": 2799
+      },
+      "sql_sha256": "abcda2d7dbd91fd61c20bbd87c0fd4b6369efae1bb50091568e5b9828d5ac9c9",
+      "normalized_tokens_sha256": "83053988a8278e2cb59ec1580f7f57c9642ea7d59e91588d89760492c62b8129",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3126",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 184,
+        "start": 3126,
+        "end": 3166
+      },
+      "sql_sha256": "3808eb5a34f1b596bb91118ddf450413f8a6925f477d598e1d5b769efaf00184",
+      "normalized_tokens_sha256": "0fa2b085f269bd8d6c88cf6cf50e51dcebce5ce5954744998df867dbf8acec10",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 3,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:143",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_scalar_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 6,
+        "start": 143,
+        "end": 168
+      },
+      "sql_sha256": "a82c8ee8ff73bb8383e38d1161ac670f418d42534916827f1e8dcacafbc1c0e0",
+      "normalized_tokens_sha256": "330d4e5d6063d3013ba40a4a62aa05d79d5cecd4abf8bfcb50969929b237e55d",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:231",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_scalar_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 16,
+        "start": 231,
+        "end": 256
+      },
+      "sql_sha256": "e626d569c3c83d49b7a9ade15a369eaef5ccf9ef96e7534b0a25e5f18b0fa843",
+      "normalized_tokens_sha256": "4904aee5ea200034b9af20c4f23c0732395674e5ee7090cfb30253e5c89eae28",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:272",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_scalar_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 21,
+        "start": 272,
+        "end": 300
+      },
+      "sql_sha256": "835148644066658b7e47d4853b1ed14fd9d16f64453d826c77a3d1e8bca0de9f",
+      "normalized_tokens_sha256": "a348deb39e0b044d7ae83b54943ae9c7b1824707f7b7cef549cf9a99ff51e31e",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:332",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_scalar_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 27,
+        "start": 332,
+        "end": 357
+      },
+      "sql_sha256": "ab94c4ed180c7263b17840e4d2745c91328bb0c6c87bcc74317cfa344c65c865",
+      "normalized_tokens_sha256": "a511c1624db8aec350ac255bf85cbc1d9da1d64833b39a51f26376f8613045b5",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:420",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_scalar_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 37,
+        "start": 420,
+        "end": 445
+      },
+      "sql_sha256": "e8cba2405871f760573eec4c89910a7fd9742f46f7f431e43fd7d663bb74b67a",
+      "normalized_tokens_sha256": "047794a98cb43822a523e07a42a15c6afb80c08ca7e550cb366eed39e8b7364c",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:461",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_scalar_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 42,
+        "start": 461,
+        "end": 489
+      },
+      "sql_sha256": "d6fad5e68d7ffb4765922cb6bcbc1363e3a598355c9bb259eca565802aba57d3",
+      "normalized_tokens_sha256": "d2acc4b46bc5a801b167284fe9a334af319d905abadd3826462479547cd14b95",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:142",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_some_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 5,
+        "start": 142,
+        "end": 168
+      },
+      "sql_sha256": "d946ae1059aff90912e121be027ce3256dc45535662de3dd95598aa64cee1cb9",
+      "normalized_tokens_sha256": "f740854688b4b8e4b7e82bd1913c3c1321dbe79ed2e06060553542d9ddc41999",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:184",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_some_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 10,
+        "start": 184,
+        "end": 225
+      },
+      "sql_sha256": "5262a769a1afeef6c37bfaa7ea4b04baec1899cfea33f85baa14d033942f8030",
+      "normalized_tokens_sha256": "ceebd14772d78036ca3b1ec40cabce6859c91fa12d3ec63101dc656bf8dbf0fd",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:241",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_some_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 15,
+        "start": 241,
+        "end": 286
+      },
+      "sql_sha256": "e30cb18f7880cbc43fe81fe31888862fccda2447712117384b698c40982223db",
+      "normalized_tokens_sha256": "016c1d13311d13723fda7d2e78f995d5462e7850cbdeb2934b54edb647611e0b",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:302",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_some_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 20,
+        "start": 302,
+        "end": 329
+      },
+      "sql_sha256": "8c54aa25518dc33b200d7fa461625814fc765cbf2f31c0f54dd048868d7ce449",
+      "normalized_tokens_sha256": "da0e142ff496c8b0aa3bd87db05d9ff09d6a00a81dc52196de64772ee0f1cfa3",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:345",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_some_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 25,
+        "start": 345,
+        "end": 371
+      },
+      "sql_sha256": "f319e15aec072854d9894170ed8bf7aa04572fc5a5c4d9ce5c0ab2ea955c9431",
+      "normalized_tokens_sha256": "0271e05125d9110a3e1752ec18c036e0514aec57ae6187a4b0115e951131c6dd",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:387",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_some_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 30,
+        "start": 387,
+        "end": 414
+      },
+      "sql_sha256": "0e8b5d7f4af427ef92944d56454536d8de5b143d78338b4f6ff635139f813ec9",
+      "normalized_tokens_sha256": "78882682e92176b8892d75d6d86411ae7cc18e5d8543aa68828d395bc6d41e34",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:430",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_some_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 35,
+        "start": 430,
+        "end": 456
+      },
+      "sql_sha256": "05cc7a165cf40fb2f62cdf9f17cdbe84e0c26599234f1bc8900a0faa9bb762c4",
+      "normalized_tokens_sha256": "7d22d79ca5ad6114e06c4c9a0ecb573f4d7328b718cf6392e71f103ba793b846",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:472",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_some_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 40,
+        "start": 472,
+        "end": 499
+      },
+      "sql_sha256": "b178332c16b48079a81cd32f315b079afb0b4be4ddf75260e6d2150e8aff067a",
+      "normalized_tokens_sha256": "f4122dafbadfcd9c34c9634bc6501067b49b8724b65ed0605c025d4896887d8c",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:515",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_some_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 45,
+        "start": 515,
+        "end": 553
+      },
+      "sql_sha256": "b7aeac93c35f08bb01e7d2248d51c69ef0cad6d3231137431ed8574911244f10",
+      "normalized_tokens_sha256": "5f72c5251cb77becd40e8d655fb6dc7d25cc8aff10b6291fc4115c4e457fe0a3",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:569",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_some_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 50,
+        "start": 569,
+        "end": 607
+      },
+      "sql_sha256": "eae31d2d997726abc76ad0dea4e0070b98a03095fba695b388c63f96579ba5d1",
+      "normalized_tokens_sha256": "6da1d71f14ba86e5bdf5aa8f7ffd10e4900289b4b40e8fc7c80d696125ba8c33",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:501",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_any_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 28,
+        "start": 501,
+        "end": 568
+      },
+      "sql_sha256": "8d3388751278bb37e762c873fca25f96ee1760f6090f9287b972967ccbfb0777",
+      "normalized_tokens_sha256": "8cbb4b83919f0bc769cb684534a54684732078c752f8738e85c4483f0b7cdfbd",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_any_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:732",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_any_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 44,
+        "start": 732,
+        "end": 802
+      },
+      "sql_sha256": "3878d3a2abe66da13bed4ad5a7f41426adb8e626211d3df4f381cfe784ebdde7",
+      "normalized_tokens_sha256": "f6658e78730ef36cdc77b95920cf285b62444c96c6352b45c6fbdcfb3f964ac8",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_any_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:materialize:test/sqllogictest/cockroach/subquery.slt:3587",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/subquery.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 156,
+        "start": 3587,
+        "end": 3620
+      },
+      "sql_sha256": "b1ea48c9592624d83b472f0e130818e4d8e5e19d601c2df45e5cbdb27c4dc491",
+      "normalized_tokens_sha256": "5057abbdc60d0a4cb7ee1f520d8a533c8e8bbe1bed37df1da18decf5bfe7314f",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:materialize:test/sqllogictest/cockroach/subquery.slt:3639",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/subquery.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 161,
+        "start": 3639,
+        "end": 3665
+      },
+      "sql_sha256": "7c896d8d038ef7f73ad1b090bed484822a73138436c1dc38280c6a631b929dd1",
+      "normalized_tokens_sha256": "43cabb1b12be3c300c7225ea414367f177cd2f2469b71c86f67f28b4fd1fc5dd",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:materialize:test/sqllogictest/cockroach/subquery.slt:3684",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/subquery.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 166,
+        "start": 3684,
+        "end": 3718
+      },
+      "sql_sha256": "a25c41a9ba38dca06c9bc30917595663d923900a923a23eb7db24533b0320bd8",
+      "normalized_tokens_sha256": "4c73efccd718f947bb9a815a5f97191076173690f19ca39e8222e07dc8d3698f",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:materialize:test/sqllogictest/cockroach/subquery.slt:3781",
+      "source": "materialize",
+      "source_file": "test/sqllogictest/cockroach/subquery.slt",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 176,
+        "start": 3781,
+        "end": 3814
+      },
+      "sql_sha256": "6f8a05ff3d3ff05d1abebc74eea2c4ae8276dd3a93c73c571928260ec9ab2b0d",
+      "normalized_tokens_sha256": "5ac652f840cabfd264f970283f5145343067c14afcdc4155368a195db2cc44e5",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:postgres:src/test/regress/sql/subselect.sql:3875",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/subselect.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3875,
+        "end": 3910,
+        "statement_index": 45
+      },
+      "sql_sha256": "e235d46fe2cf45e1966271bf9ab74849ed35d26e63bce9c01a00c3e9741c9854",
+      "normalized_tokens_sha256": "f7aebb76af33a22b14446203eecb21d25a9b0a414ebecc3793cabc3d66367901",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1,
+          "scalar": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:postgres:src/test/regress/sql/subselect.sql:14596",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/subselect.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 14596,
+        "end": 14647,
+        "statement_index": 154
+      },
+      "sql_sha256": "0cca45094f966e1e1e49b5d483dfdc9a54c94a1cd0c2d8c8b5ab8b66d90df9fb",
+      "normalized_tokens_sha256": "ca9e68709eac72471a0eefc7f79e08042a1e0daca4d6291daa25f43815e07342",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only"
+    },
+    {
+      "id": "quantified:calcite:core/src/test/resources/sql/sub-query.iq:13289",
+      "source": "calcite",
+      "source_file": "core/src/test/resources/sql/sub-query.iq",
+      "selector": {
+        "kind": "quidem_complete_query_input",
+        "start": 13289,
+        "end": 13396
+      },
+      "sql_sha256": "77d943c36ecb3f3a5a1f94d9a35689db4fe576544c297e0b060565b09fd13346",
+      "normalized_tokens_sha256": "dba88d4b51252c241a89c61bc52312c9e9af516f5d910962392931d1bd748994",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "dept",
+          "emp"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "deptno"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only"
+    },
+    {
+      "id": "quantified:calcite:core/src/test/resources/sql/sub-query.iq:102303",
+      "source": "calcite",
+      "source_file": "core/src/test/resources/sql/sub-query.iq",
+      "selector": {
+        "kind": "quidem_complete_query_input",
+        "start": 102303,
+        "end": 102430
+      },
+      "sql_sha256": "de07e1985460ed7a4fbc526a43a747739224b4806a6f7ce01884734571bb79dd",
+      "normalized_tokens_sha256": "c9da0352f100fd8ba2e14e2c432ca3a14fe328402fb771bcda1bed65fb3ff3c9",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "SOME"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "scott.emp"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [
+          [
+            "emp1",
+            "empno"
+          ]
+        ],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2710",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 152,
+        "start": 2710,
+        "end": 2744
+      },
+      "sql_sha256": "56bb1dfe91d0a8ad3b3af2788d61b8c3ce7b3020ab28f987e8a5ef564ed732f6",
+      "normalized_tokens_sha256": "0a6473d941d0025baf1c7b8cd0d37711ccf73d74ac8f657cac3911f0eca32011",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2988",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 173,
+        "start": 2988,
+        "end": 3025
+      },
+      "sql_sha256": "5c4533ac0b76852ebf5bf9af5c57774a1f25398588912f0f67a8d8f35e4f60f7",
+      "normalized_tokens_sha256": "e0d266291a106defdc371994eec5dc9bf4038633aff0e0552b12a2a588ecdba8",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3044",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 178,
+        "start": 3044,
+        "end": 3081
+      },
+      "sql_sha256": "52f8ce52fc6ac8b3113bc77741e2498fdd4fcd51d3e3908673a49f84d16d7870",
+      "normalized_tokens_sha256": "a37e9f718dd5ea2054de53fce2c2ec93bfa95ebeafbb473119b4ad5448b3bbbb",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3185",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 189,
+        "start": 3185,
+        "end": 3225
+      },
+      "sql_sha256": "d56a386690b1ae6d99e5db705a2429a08b8798a2235ab1450885a670ee439160",
+      "normalized_tokens_sha256": "7b26a16d02a010ce2ba7e0f927acba184b8047cc4d63fda7f3b39614bf43e013",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 3,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3244",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 194,
+        "start": 3244,
+        "end": 3284
+      },
+      "sql_sha256": "fb9694cc70ea6e987c6138416d2a69ad0d94e71fef5dc69ec5308d1014b7694b",
+      "normalized_tokens_sha256": "b9f64206dd8efba65f2552d43293b6847f9604d23ffb2d5534c485b7856aac09",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 3,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3362",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 200,
+        "start": 3362,
+        "end": 3396
+      },
+      "sql_sha256": "a1a841fe9fce9616b5ed32da54416a03fef1c86927f837324d2dbdbeb9bec4e6",
+      "normalized_tokens_sha256": "49aa0e39193fd84bf17cebc755d95204c7e262bd5d68d97b16c1c63f02550b66",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3415",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 205,
+        "start": 3415,
+        "end": 3449
+      },
+      "sql_sha256": "09d77d741a1638b1570883a7465d903bb0fc7a07698359887267cb8dca214e7e",
+      "normalized_tokens_sha256": "cedd9e37d692ab8808a4ec9dc714b63dcad9a347b85601331f7ccfe36dd74cbd",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3532",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 211,
+        "start": 3532,
+        "end": 3566
+      },
+      "sql_sha256": "be2bbaf2b122bbab162f424958d73784a121e688a94f8aaf00598819debbc2df",
+      "normalized_tokens_sha256": "3a914110afe2db85b8530dffb6faff929e2c58f426b00fca7b45861c44e9202a",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3586",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 216,
+        "start": 3586,
+        "end": 3621
+      },
+      "sql_sha256": "761576d457531028f7aa479ae94b5bab451d3c813160384994a228d09327fbbf",
+      "normalized_tokens_sha256": "2388ffeb9979f0c1ba87e1ee68833b3070a4e7b87227dc93cd26a0dcd3ada563",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3640",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 221,
+        "start": 3640,
+        "end": 3674
+      },
+      "sql_sha256": "9017277d75ee04fb837b480c61bf0d6da810d4717584fbb411b9137305f696ca",
+      "normalized_tokens_sha256": "b551339b0d9687b3e18edeab0e1d93f4583aca3d775e8f39270924d7254d4f1f",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3694",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 226,
+        "start": 3694,
+        "end": 3729
+      },
+      "sql_sha256": "96a7591b86c3abc2efef9982cddef1f641155abee2d1390067ac920b30a0547a",
+      "normalized_tokens_sha256": "28e17afde72a842d9f575a84321b704db45b81a35e984beaf16d2566700ac1fa",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:328",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 15,
+        "start": 328,
+        "end": 390
+      },
+      "sql_sha256": "90bafa11610cdd1f942518a9739c94d0e31ca8f23e2f99bb25f119b06223aa5d",
+      "normalized_tokens_sha256": "f28de7498f288dd2e185a572b7dd792899a3633ba5266df8e7e3faad6f9405b8",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:405",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 19,
+        "start": 405,
+        "end": 473
+      },
+      "sql_sha256": "e22e37b5c37411e0729b4439ff1c6d1dc8560de78557ca3b9918ca6098b8e801",
+      "normalized_tokens_sha256": "44d5e3d233a2fc3abf80f09bd55dccfe7b632c5dec110c82839fff31cf6b2f4f",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:512",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 27,
+        "start": 512,
+        "end": 594
+      },
+      "sql_sha256": "f1281eaccd1d1e2d628f6b8227098dadfdbff74d2d09ac19c5b8e1d1fb2f1230",
+      "normalized_tokens_sha256": "0ebfe555e3aca1fc4da3ed06ef8063b25eecb1cffe3c686b3662f3ae3e676246",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:611",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 32,
+        "start": 611,
+        "end": 699
+      },
+      "sql_sha256": "14f395b4ea524f3c1a8218e27d26ab55b715426fbc7a710e62abfa64c998918f",
+      "normalized_tokens_sha256": "528b28ff47145039b64bcaa48596f1f29f560ed9f6330af99137c5a5a3eb21ce",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1012",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 57,
+        "start": 1012,
+        "end": 1074
+      },
+      "sql_sha256": "eab75c1c63a815f62ef8e8f8f15a9370020edfeb89dbc9eeceedccb2fb492fc8",
+      "normalized_tokens_sha256": "e7858d482058049f37f92ed4b83c4d06ec01d0bd8fb730f87c15b538c0faf893",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1088",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 61,
+        "start": 1088,
+        "end": 1170
+      },
+      "sql_sha256": "fed479244af08a21889c4cc208a553c4f349200b85ba2afe1b722176b2e08844",
+      "normalized_tokens_sha256": "90e37c35265fa9a1aecff52d3408cee4405de52622c3819561c9126a89b50941",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1186",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 66,
+        "start": 1186,
+        "end": 1257
+      },
+      "sql_sha256": "8576f783b534b66657f2140450332f6898d3872f9ceacfe84dd189103caa80ec",
+      "normalized_tokens_sha256": "d7116e561e5cd179e31003aeff2608841ea331955a21ae9933258c6bde318933",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1273",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 71,
+        "start": 1273,
+        "end": 1345
+      },
+      "sql_sha256": "d4f2ee8c364c433c84f53f4d6d02e174f2d75380a91182c0bc050d04ee9d1c2d",
+      "normalized_tokens_sha256": "195602c248247fc25f137f0cad0940f30aaa18f047cf8729a52824a10ffffcd0",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1363",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 77,
+        "start": 1363,
+        "end": 1444
+      },
+      "sql_sha256": "4c5f0caa5df5699693f6650afe4d42e360ef366d3dadd572e1832c55fd6d5a88",
+      "normalized_tokens_sha256": "50053b99f8fcbfc92b910d18b1de00edbb33b0761737d408cd5ae243207e5a7d",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1458",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 81,
+        "start": 1458,
+        "end": 1540
+      },
+      "sql_sha256": "892e9fef40a23486329ed814fb77036911624d4322c636abff54a846171fe1d2",
+      "normalized_tokens_sha256": "f1f7174886f77cd426045b974e60a87e4eb9f13a52a6bace8aeed7dd6abc3a24",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1621",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 86,
+        "start": 1621,
+        "end": 1706
+      },
+      "sql_sha256": "212ef4a88ecb7a95a114c4952a77e7edf6f001c04c67646941605e9b8f62a035",
+      "normalized_tokens_sha256": "60d21c813705668f5f59c6e0be50c186c02518bf447fe70d9779e99f132b30fc",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1732",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 94,
+        "start": 1732,
+        "end": 1812
+      },
+      "sql_sha256": "b5154459275168911f145ceb36586351be1e9f62e01bc5fad45f65f1a4fc947f",
+      "normalized_tokens_sha256": "71aaf4c98350911101448acd943f8c946e01b13e8450304c7823873521886ae3",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1893",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 103,
+        "start": 1893,
+        "end": 1972
+      },
+      "sql_sha256": "f8159415725a38e36756b04f0ffd325db75b1ce34f99596a03da06227ac43102",
+      "normalized_tokens_sha256": "f9834d471674f9b1808c5ed020784a26ea4819a6facab2b5ece4f3d824bbefff",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:2006",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 111,
+        "start": 2006,
+        "end": 2085
+      },
+      "sql_sha256": "e78a29f5e51b202fff92ee995ca8a25345eb4a8c5ab94f1b58f37b26b7c7ab01",
+      "normalized_tokens_sha256": "af60dad6cd08619fdb9864bdcc6dd6a9e82b1b65f0164ed3efaf33b66c588730",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:2119",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 119,
+        "start": 2119,
+        "end": 2199
+      },
+      "sql_sha256": "5715ac4ef02ca5e83c9dd6c370d29f8893d1205eec59759d275ad1a325fc8be4",
+      "normalized_tokens_sha256": "b728830b80905ef7b0ecc1cbc6cfc03048c30dabe20a8506dc992a94946f40f9",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:2233",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 127,
+        "start": 2233,
+        "end": 2313
+      },
+      "sql_sha256": "42dc0f700f370903327ff7c986440bf55a62e4eb65be44da279f64c2c6f54263",
+      "normalized_tokens_sha256": "c4df3adb70545514bb9d742218ae9c8c06e0976e663c682e1dc46a62591c83fb",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:2347",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 135,
+        "start": 2347,
+        "end": 2426
+      },
+      "sql_sha256": "2465d354bae6bec9ec3775c2e238ac7ee91eed7306a52a86717dfc69cbd8a72e",
+      "normalized_tokens_sha256": "4be9cc249861ca00269aef94f384043b19495829cf13ae6f347e813d962e9070",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:2460",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_all_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 143,
+        "start": 2460,
+        "end": 2540
+      },
+      "sql_sha256": "615d7a71c125c9902d7f4768eae3d00d2e8940aa30f68f0263f76126da0941bc",
+      "normalized_tokens_sha256": "f30a96b394e66db0065ff07846cde11571ae0f1a26ec2dc16907f986fbf5c482",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_all_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:328",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_any_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 15,
+        "start": 328,
+        "end": 390
+      },
+      "sql_sha256": "3a38fcb3a2faba826eac0c8c1d0d1bdf9d7130db8f0593c24fdf291aae9f7d0a",
+      "normalized_tokens_sha256": "36777c029cd996b9aff8efdc9dadfe1704c3dfb366409e862f9b2267ab7fa2e1",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_any_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:410",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_any_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 22,
+        "start": 410,
+        "end": 482
+      },
+      "sql_sha256": "2e3918d10e1903a81e5767b1b443b8a29e1e0df79ee246ab8ba87276d20853b2",
+      "normalized_tokens_sha256": "d9f495502482fde89357a88e88de9dbd4cbb22e78e146da337bc6302cfbe2c5f",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_any_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:608",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_any_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 36,
+        "start": 608,
+        "end": 695
+      },
+      "sql_sha256": "25bcc687824015abfa977e993a8df5f3ae102fa46136792c5a6bd028ab1db382",
+      "normalized_tokens_sha256": "04e2f637174bd9444c399e18f9c9c0ce89de95a25852a6d95b62e24992521e79",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_any_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:848",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_uncorrelated_any_subquery.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 52,
+        "start": 848,
+        "end": 938
+      },
+      "sql_sha256": "97ca8a716af22b190ed4c607b3c2e7ef231f7b4381ce572a624706a44875565b",
+      "normalized_tokens_sha256": "2b70522279dfde4335c026a29b2a874ebafb7baacc51aca8509f860441f67bdd",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 1,
+          "row_left": false
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "integers"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {
+        "integers": [
+          "i"
+        ]
+      },
+      "context_ids": [
+        "duckdb:test_uncorrelated_any_subquery.test:declaration"
+      ],
+      "candidate_catalog_file": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+      "assurance_tier": "fixed-static-certificate-candidate"
+    },
+    {
+      "id": "quantified:postgres:src/test/regress/sql/rowtypes.sql:3826",
+      "source": "postgres",
+      "source_file": "src/test/regress/sql/rowtypes.sql",
+      "selector": {
+        "kind": "sql_slice",
+        "start": 3826,
+        "end": 3974,
+        "statement_index": 59
+      },
+      "sql_sha256": "b90fa908f62ff8424e9d6555858d59f79b941aedf5006b244eff9882bcae5be5",
+      "normalized_tokens_sha256": "2ece5d14f46a58365253aecdb7335cd906e13c4f58d0681d7acdeee7ef48d45d",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [
+          "tenk1"
+        ],
+        "parameters": [],
+        "source_free": false,
+        "correlated": [],
+        "uncertain_scope": [
+          [
+            "ten"
+          ],
+          [
+            "ten"
+          ],
+          [
+            "hundred"
+          ]
+        ],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only"
+    }
+  ],
+  "expected_classes": {
+    "scalar": 50,
+    "row": 34
+  },
+  "original_population": {
+    "count": 50,
+    "selections_sha256": "1d681dc55687e84d4a5346534ffebf35fb33122fedc91437c3c76984d6cf0a99",
+    "registry_count": 47,
+    "registry_sha256": "373a558b17f343ddc67946a8df6e444c0f66d14de5d5cbed5ef3f120fec3c30f"
+  },
+  "expected_registry_count": 80,
+  "expected_registry_columns": 93,
+  "deferred_selections": [
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1638",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 87,
+        "start": 1638,
+        "end": 1706
+      },
+      "sql_sha256": "fce9198afadd866714ecc431952e7fcc901e7dadcf6b94405d7655c694dea557",
+      "normalized_tokens_sha256": "a88a4fdef9361f2ea419a2cfe59caf3b97394f5276dec20309176737927df406",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1725",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 92,
+        "start": 1725,
+        "end": 1785
+      },
+      "sql_sha256": "ea12705d192485e9078f1d9b3eceb040227a67d34955c41e1ec665ea72b64ee9",
+      "normalized_tokens_sha256": "faa0de0418e6d32cb28b1e0dedf6b927e5da57f549950198297ebbdc1291dd4e",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1892",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 103,
+        "start": 1892,
+        "end": 1952
+      },
+      "sql_sha256": "cefc243621c1f430f198bd166d7f67e9143b90faf028d1df705109e919b2c70e",
+      "normalized_tokens_sha256": "8a0e018904e0fc1e91c90ba8b06e3916c4e626889ad41f23d73679f19a40e390",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1971",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 108,
+        "start": 1971,
+        "end": 2031
+      },
+      "sql_sha256": "a1fe45dfa4efb6def4c93912d9bd37406b5f5d9cba0f71961f7eac5d401ce8a0",
+      "normalized_tokens_sha256": "dbade41a16e63719658e48e4dec69c605d922d7b88e859c08d92d2bf5bf3a8a7",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2140",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 119,
+        "start": 2140,
+        "end": 2201
+      },
+      "sql_sha256": "6857cba50490ddf3348e5dca552b1fd705da321f10e8f42759a18d6a93e2e675",
+      "normalized_tokens_sha256": "faa93c956410d2bc3980cb10baa7fd5351c8d34c667821803fdd2370b264f1ed",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2220",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 124,
+        "start": 2220,
+        "end": 2281
+      },
+      "sql_sha256": "5e5755663899f847e1c445291c0f0888e9395127c83080dac9478be78bddb6b7",
+      "normalized_tokens_sha256": "ccac0765be9a88358812d2f89ce8c0e6fe7074c95f019bf9e3d4db1fad70e787",
+      "quantified_queries": [
+        {
+          "operator": "<=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2390",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 135,
+        "start": 2390,
+        "end": 2451
+      },
+      "sql_sha256": "7a40be5fe298dff9d39307afb0804ce14714860513be075b663caad5cc35e20c",
+      "normalized_tokens_sha256": "f2868d192b7d604f5863f28157995f0fd12e21a7d4cb07bfb41cab29da5620f9",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2470",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 140,
+        "start": 2470,
+        "end": 2531
+      },
+      "sql_sha256": "db5c4b9a5c84626f6c0b4201dd40b9cadf2b5daa243bd9cd9471f1322117dabd",
+      "normalized_tokens_sha256": "aed46b351bea2b3a78cf8001f1a5ceadc9cd79d6f0a19971050cf0cce949e08d",
+      "quantified_queries": [
+        {
+          "operator": ">=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2871",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 167,
+        "start": 2871,
+        "end": 2931
+      },
+      "sql_sha256": "dd80bdfdf295f5042af7f274972a5c53afd1d25c93c8c8cf237f06dd67335651",
+      "normalized_tokens_sha256": "5563de88bda0269c7c07f0dd25525a60ef9a35b6ea76d175ea3cb7838d775422",
+      "quantified_queries": [
+        {
+          "operator": "=",
+          "kind": "ALL_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ALL"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3793",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 232,
+        "start": 3793,
+        "end": 3861
+      },
+      "sql_sha256": "fb2572678f97c8814db9da4a533e820e56e359e07e263328fdfea1e953c0fde0",
+      "normalized_tokens_sha256": "d64a7e853114fa217951e411af019b790dd7584b0b0f3368fefe030f9bb15c88",
+      "quantified_queries": [
+        {
+          "operator": "<",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3880",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_comparison_any_all.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 237,
+        "start": 3880,
+        "end": 3948
+      },
+      "sql_sha256": "d14afbf74332a6bd6894e03cad6475dadfb08dd08b49a645c64cd5b9b855baf8",
+      "normalized_tokens_sha256": "036a165ffb1f84018e162dc31090ad94f28ab4cef0651a0a3dd5c407ba127f3b",
+      "quantified_queries": [
+        {
+          "operator": ">",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:183",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 5,
+        "start": 183,
+        "end": 252
+      },
+      "sql_sha256": "e5af70961979a3cb867d7cf710089fe9018f266d51c95059195dc04d2a66b326",
+      "normalized_tokens_sha256": "cf38ac510e7fb82dfc85ec7f0bf76cfc72eaf5356fbb00b74a9cc9e82dd52d78",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:271",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 10,
+        "start": 271,
+        "end": 340
+      },
+      "sql_sha256": "0f721496f36e14f3c31f08b42c06b350ca55ca62a7468140fa898081d9b3bbca",
+      "normalized_tokens_sha256": "215ef449db1b72a41d0d2c949d0814250ee6a53952e68e62a9d25004a14a5667",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:359",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 15,
+        "start": 359,
+        "end": 436
+      },
+      "sql_sha256": "2aee7235853e36d287ed265537d348f9ced6ed3e24d2360adc95220d629f5f49",
+      "normalized_tokens_sha256": "12271d80c01fc7ecffe12f9d79e7f3e48cfb0a083351776adfb5f3e75577a619",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:525",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 21,
+        "start": 525,
+        "end": 599
+      },
+      "sql_sha256": "a717e72466093b8a2d1314f1b5b3f3a9a9009243cc738d8c1ba2c78673d052e7",
+      "normalized_tokens_sha256": "a6262d069b3f1e5038b9377c630b7b6b881abc9edd532c5ee1e8ff821b3c2e75",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:618",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 28,
+        "start": 618,
+        "end": 692
+      },
+      "sql_sha256": "1433e5fe3b830bd0af071c62f5705f392e06a21f15b774dc9fed4c7f6e78d352",
+      "normalized_tokens_sha256": "e5fab64c13be60606343ad5159a3bf0b8d4c7e395d37401a6ddecae1b51cf7ec",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    },
+    {
+      "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test:769",
+      "source": "duckdb",
+      "source_file": "test/sql/subquery/any_all/test_row_not_equal_any_null_semantics.test",
+      "selector": {
+        "kind": "setop_sqllogic_query",
+        "header_line": 36,
+        "start": 769,
+        "end": 843
+      },
+      "sql_sha256": "5feadc0bf5a24b9f6079589573e0419feda5d63b6fd3e973c5d88fc7811ee3d6",
+      "normalized_tokens_sha256": "31e4b3e2067e3485de1a140b9efe53e31388e2ae2212bc84c9a52e71482e3935",
+      "quantified_queries": [
+        {
+          "operator": "<>",
+          "kind": "ANY_SUBLINK",
+          "left_arity": 2,
+          "row_left": true
+        }
+      ],
+      "quantifiers": [
+        "ANY"
+      ],
+      "observation": {
+        "factors": {
+          "other": 1
+        },
+        "dependencies": {
+          "valuesLists": 1,
+          "other_sublinks": 1
+        },
+        "functions": [],
+        "external_relations": [],
+        "parameters": [],
+        "source_free": true,
+        "correlated": [],
+        "uncertain_scope": [],
+        "unresolved_scope": [],
+        "types": []
+      },
+      "scope_catalog_columns": {},
+      "context_ids": [],
+      "candidate_catalog_file": null,
+      "assurance_tier": "rendering-only",
+      "coverage_gaps": [
+        "derived VALUES is outside the current typed grammar; source is retained unchanged, no static certificate claimed"
+      ]
+    }
+  ],
+  "required_classes": {
+    "scalar": 50,
+    "row": 50
+  },
+  "coverage_shortfall": {
+    "scalar": 0,
+    "row": 16
+  },
+  "expected_deferred_count": 17,
+  "expected_deferred_sources": {
+    "duckdb": 17
+  }
+}

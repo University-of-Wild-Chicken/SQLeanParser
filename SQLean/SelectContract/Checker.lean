@@ -386,7 +386,7 @@ private def currentAggregate : Nat → Advanced.Expr → Except Failure Bool
         | .binary _ a b | .pattern a b _ | .nullIf a b
         | .quantifiedComparison _ _ a b | .concat a b | .regex a b .. | .jsonAccess _ a b | .jsonExistence _ a b
         | .containment a b _ | .overlap a b | .distinctFrom a b _ => [a, b]
-        | .unary _ a | .cast a _ | .collate a _ | .extract _ a | .isNull a _ | .inQuery a _ => [a]
+        | .unary _ a | .cast a _ | .collate a _ | .extract _ a | .isNull a _ | .inQuery a _ | .quantifiedQuery _ _ a _ => [a]
         | .subscript base indices => base :: indices.flatMap Advanced.Subscript.expressions
         | .namedCall _ args => args.map CallArgument.expression
         | .array args | .row args | .call _ args | .substring _ args

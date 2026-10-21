@@ -783,6 +783,26 @@ def rowDistinctSignature (left right : List ScalarInput) :
   if left.length != right.length then none
   else (left.zip right).mapM fun (a, b) => distinctSignature a b
 
+/-- Each quantified row field resolves the requested comparison operator.
+In particular, <> selects its own operator rather than borrowing the = premise
+of IS DISTINCT FROM. These admitted built-ins have matching strict Boolean
+signatures, but that catalog coincidence does not erase the operator index. -/
+def rowFieldComparisonSignatures (op : Advanced.ComparisonOp)
+    (left right : List ScalarInput) : Option (List FunctionOverload) := do
+  if left.length != right.length then none
+  else (left.zip right).mapM fun (a, b) => do
+    let selected ← comparisonOverload op a b
+    if selected.output == .bool then some selected else none
+
+/-- Quantified row SubLinks combine the requested = or <> field operators with
+AND or OR; ordering retains each admitted B-tree strategy. The independent
+expression rule separately requires positive equal field counts. -/
+def quantifiedRowSignature (op : Advanced.ComparisonOp)
+    (left right : List ScalarInput) : Option (List FunctionOverload) :=
+  match op with
+  | .eq | .ne => rowFieldComparisonSignatures op left right
+  | _ => rowComparisonSignature op left right
+
 def nullIfSignature (left right : ScalarInput) : Option ExactType := do
   let signature ← equalityOverload left right
   let first ← signature.inputs.head?

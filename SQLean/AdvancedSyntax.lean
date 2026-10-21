@@ -205,6 +205,9 @@ mutual
     | filteredAggregate (aggregate predicate : Expr)
     | inList (arg : Expr) (values : List Expr)
     | between (arg lower upper : Expr) (negated : Bool := false)
+    /-- Comparison against complete query outputs. This is distinct from the
+    array-expression form, including when the query itself outputs an array. -/
+    | quantifiedQuery (op : ComparisonOp) (quantifier : ArrayQuantifier) (arg : Expr) (query : Query)
     | inQuery (arg : Expr) (query : Query)
     | exists (query : Query)
     | scalarQuery (query : Query)

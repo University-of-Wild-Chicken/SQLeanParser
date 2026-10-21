@@ -220,7 +220,7 @@ private def hasAggregate : Nat → Expr → Bool
         otherwise.any (hasAggregate fuel)
     | .inList arg values => hasAggregate fuel arg || values.any (hasAggregate fuel)
     | .between arg lower upper _ => hasAggregate fuel arg || hasAggregate fuel lower || hasAggregate fuel upper
-    | .inQuery arg _ => hasAggregate fuel arg
+    | .inQuery arg _ | .quantifiedQuery _ _ arg _ => hasAggregate fuel arg
     | _ => false
 
 /-- Keep an aggregate's own input scope while blocking references to enclosing
@@ -279,6 +279,7 @@ private def canonical : Nat → List Scope → Expr → Expr
     | .inList arg values => .inList (canonical fuel scopes arg) (values.map (canonical fuel scopes))
     | .between arg lower upper negated => .between (canonical fuel scopes arg)
         (canonical fuel scopes lower) (canonical fuel scopes upper) negated
+    | .quantifiedQuery op quantifier arg query => .quantifiedQuery op quantifier (canonical fuel scopes arg) query
     | .inQuery arg query => .inQuery (canonical fuel scopes arg) query
     | _ => expr
 
@@ -358,7 +359,7 @@ mutual
           otherwise.toList.flatMap (exprTables fuel)
       | .inList arg values => exprTables fuel arg ++ values.flatMap (exprTables fuel)
       | .between arg lower upper _ => exprTables fuel arg ++ exprTables fuel lower ++ exprTables fuel upper
-      | .inQuery arg query => exprTables fuel arg ++ queryTables fuel query
+      | .inQuery arg query | .quantifiedQuery _ _ arg query => exprTables fuel arg ++ queryTables fuel query
       | .exists query | .scalarQuery query => queryTables fuel query
       | _ => []
   private def fromTables : Nat → From → List Name
@@ -381,7 +382,7 @@ private def simpleRecursiveSource : Nat → From → Bool
 private def simpleRecursiveExpr : Nat → Expr → Bool
   | 0, _ => false
   | fuel + 1, expr => match expr with
-    | .exists _ | .scalarQuery _ | .inQuery .. | .countAll | .aggregate .. | .filteredAggregate .. => false
+    | .exists _ | .scalarQuery _ | .inQuery .. | .quantifiedQuery .. | .countAll | .aggregate .. | .filteredAggregate .. => false
     | .distinctFrom left right _ | .overlap left right | .containment left right _ | .jsonExistence _ left right | .jsonAccess _ left right | .regex left right _ _ | .concat left right | .quantifiedComparison _ _ left right | .binary _ left right | .pattern left right _ | .nullIf left right => simpleRecursiveExpr fuel left && simpleRecursiveExpr fuel right
     | .extract _ e | .unary _ e | .cast e _ | .collate e _ | .isNull e _ => simpleRecursiveExpr fuel e
     | .subscript base indices => simpleRecursiveExpr fuel base && (indices.flatMap Subscript.expressions).all (simpleRecursiveExpr fuel)
@@ -448,7 +449,7 @@ mutual
     | 0, _, _ => invalid "advanced validation depth exhausted"
     | fuel + 1, names, expr => do
       match expr with
-      | .inQuery arg query => checkCTELockExpr fuel names arg; checkCTELockQuery fuel names query
+      | .inQuery arg query | .quantifiedQuery _ _ arg query => checkCTELockExpr fuel names arg; checkCTELockQuery fuel names query
       | .exists query | .scalarQuery query => checkCTELockQuery fuel names query
       | _ =>
         let children : List Expr := match expr with
@@ -600,6 +601,8 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         invalid "regular-expression matching requires exact scalar overload resolution; use the independent contract tier"
       | .concat .. =>
         invalid "concatenation requires exact scalar overload resolution; use the independent contract tier"
+      | .quantifiedQuery .. =>
+        invalid "quantified query comparisons require exact child typing and operator signatures; use the independent contract tier"
       | .quantifiedComparison .. =>
         invalid "quantified array comparisons require exact scalar operator signatures; use the independent contract tier"
       | .row _ =>
@@ -786,7 +789,7 @@ an explicit validation error. Parameter declarations are supplied by the caller.
         checkGrouped fuel schema params scopes groups arg
         checkGrouped fuel schema params scopes groups lower
         checkGrouped fuel schema params scopes groups upper
-      | .inQuery arg query =>
+      | .inQuery arg query | .quantifiedQuery _ _ arg query =>
         checkGrouped fuel schema params scopes groups arg
         let _ ← checkQueryTypes fuel schema params (groupedScopes fuel scopes groups) query
         pure ()
@@ -944,7 +947,7 @@ mutual
       | .inList arg values => expressionParameters fuel arg ++ values.flatMap (expressionParameters fuel)
       | .between arg lower upper _ => expressionParameters fuel arg ++
         expressionParameters fuel lower ++ expressionParameters fuel upper
-      | .inQuery arg query => expressionParameters fuel arg ++ queryParameters fuel query
+      | .inQuery arg query | .quantifiedQuery _ _ arg query => expressionParameters fuel arg ++ queryParameters fuel query
       | .exists query | .scalarQuery query => queryParameters fuel query
       | _ => []
   def queryParameters : Nat → Query → List Parameter

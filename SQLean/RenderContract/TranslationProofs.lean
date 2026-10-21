@@ -134,6 +134,7 @@ mutual
           translateExpr_idempotent value
     | between arg lower upper negated =>
         simp only [translateExpr, translateExpr_idempotent arg, translateExpr_idempotent lower, translateExpr_idempotent upper]
+    | quantifiedQuery op quantifier arg query => simp only [translateExpr, translateExpr_idempotent arg, translateParameters_idempotent query]
     | inQuery arg query => simp only [translateExpr, translateExpr_idempotent arg, translateParameters_idempotent query]
     | «exists» query => simp only [translateExpr, translateParameters_idempotent query]
     | scalarQuery query => simp only [translateExpr, translateParameters_idempotent query]

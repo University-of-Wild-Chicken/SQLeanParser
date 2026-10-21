@@ -80,7 +80,7 @@ mutual
     match expr with
     | .literal _ | .null | .decimal _ | .parameter _ | .column .. | .contextValue _ | .countAll => ⟨0, true⟩
     | .exists child | .scalarQuery child => recursiveReferences target hidden false child
-    | .inQuery arg child => (recursiveExprReferences target hidden arg).append (recursiveReferences target hidden false child)
+    | .inQuery arg child | .quantifiedQuery _ _ arg child => (recursiveExprReferences target hidden arg).append (recursiveReferences target hidden false child)
     | .cast arg _ | .collate arg _ | .unary _ arg | .aggregate _ arg _ | .isNull arg _ | .extract _ arg =>
       recursiveExprReferences target hidden arg
     | .binary _ left right | .concat left right | .distinctFrom left right _
@@ -197,7 +197,7 @@ mutual
     | .inList arg values => uniformDefaultExpr arg && uniformDefaultExprs values
     | .between arg lower upper _ => uniformDefaultExpr arg && uniformDefaultExpr lower && uniformDefaultExpr upper
     | .countAll => true
-    | .inQuery .. | .exists _ | .scalarQuery _ => false
+    | .inQuery .. | .quantifiedQuery .. | .exists _ | .scalarQuery _ => false
   termination_by sizeOf expr
   decreasing_by all_goals (simp_all <;> omega)
 

@@ -295,6 +295,17 @@ mutual
     | scalarQuery child =>
         simpa only [translateExpr] using
           ExprValid.scalarQuery (preserved _ _ _ _ (by simp_all; omega) child)
+    | quantifiedRowQuery args child nonempty arity signature =>
+        simpa only [translateExpr, List.attach_map_val, List.map_append] using
+          ExprValid.quantifiedRowQuery (expr_list_valid_translated_core preserved args)
+            (preserved _ _ _ _ (by simp_all; omega) child)
+            (by simpa using nonempty) (by simpa using arity)
+            (by simpa only [scalar_inputs_translated] using signature)
+    | quantifiedQuery arg child signature =>
+        simpa only [translateExpr, List.map_append, scalar_input_translated] using
+          ExprValid.quantifiedQuery (expr_valid_translated_core preserved arg)
+            (preserved _ _ _ _ (by simp_all; omega) child)
+            (by simpa only [scalar_input_translated] using signature)
     | inQuery arg child signature =>
         simpa only [translateExpr, List.map_append, scalar_input_translated] using
           ExprValid.inQuery (expr_valid_translated_core preserved arg)

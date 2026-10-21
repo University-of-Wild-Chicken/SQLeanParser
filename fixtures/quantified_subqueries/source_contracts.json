@@ -1,0 +1,1040 @@
+[
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:260",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:315",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:370",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:425",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:523",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_any_all.test:584",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_any_all.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:629",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:682",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_row_comparison_any_all.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:750",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_row_comparison_any_all.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:887",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:946",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_row_comparison_any_all.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1071",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1124",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_row_comparison_any_all.json",
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1212",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1300",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1354",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1443",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1497",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1585",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:1839",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2086",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2336",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2764",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3126",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:143",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:231",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:272",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:332",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:420",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_scalar_any_all.test:461",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:142",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:184",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:241",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:302",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:345",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:387",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:430",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:472",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:515",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_some_subquery.test:569",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:501",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:732",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:materialize:test/sqllogictest/cockroach/subquery.slt:3587",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:materialize:test/sqllogictest/cockroach/subquery.slt:3639",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": false,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:materialize:test/sqllogictest/cockroach/subquery.slt:3684",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:materialize:test/sqllogictest/cockroach/subquery.slt:3781",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:postgres:src/test/regress/sql/subselect.sql:3875",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2710",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:2988",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3044",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3185",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3244",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3362",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3415",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3532",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3586",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3640",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_row_comparison_any_all.test:3694",
+    "catalogFile": null,
+    "output_columns": [
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:328",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:405",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:512",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:611",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1012",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1088",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1186",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1273",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1363",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1458",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1621",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1732",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:1893",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:2006",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:2119",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:2233",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:2347",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_all_subquery.test:2460",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_all_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:328",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:410",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:608",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  },
+  {
+    "id": "quantified:duckdb:test/sql/subquery/any_all/test_uncorrelated_any_subquery.test:848",
+    "catalogFile": "fixtures/quantified_subqueries/catalogs/test_uncorrelated_any_subquery.json",
+    "output_columns": [
+      {
+        "name": "i",
+        "type": "int32",
+        "nullable": true,
+        "collation": null
+      },
+      {
+        "name": "?column?",
+        "type": "bool",
+        "nullable": true,
+        "collation": null
+      }
+    ]
+  }
+]

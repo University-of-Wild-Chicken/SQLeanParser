@@ -125,6 +125,25 @@ private theorem expr_collation_transport
     intro bound preserved small
     simpa only [translateExpr] using
       ExprCollationValidCore.scalarQuery (preserved _ _ _ _ (by simp_all; omega) query) reentry
+  case quantifiedRowQuery typed left query selected pairs ihLeft =>
+    intro bound preserved small
+    simpa only [translateExpr, List.attach_map_val] using
+      ExprCollationValidCore.quantifiedRowQuery
+        (by simpa only [translateExpr, List.attach_map_val] using
+          expr_valid_translated_core preserved typed (by collation_small))
+        (ihLeft bound preserved (by collation_small))
+        (preserved _ _ _ _ (by simp_all; omega) query)
+        (by simpa only [scalar_inputs_translated] using selected)
+        (subquery_comparison_collations_translated pairs)
+  case quantifiedQuery typed left query selected arguments merge ihLeft =>
+    intro bound preserved small
+    simpa only [translateExpr, coerced_collation_translated] using
+      ExprCollationValidCore.quantifiedQuery
+        (by simpa only [translateExpr] using expr_valid_translated_core preserved typed small)
+        (ihLeft bound preserved (by collation_small))
+        (preserved _ _ _ _ (by simp_all; omega) query)
+        (by simpa only [scalar_input_translated] using selected) arguments
+        (by simpa only [coerced_collation_translated] using merge)
   case inQuery typed left query selected arguments merge ihLeft =>
     intro bound preserved small
     simpa only [translateExpr, coerced_collation_translated] using

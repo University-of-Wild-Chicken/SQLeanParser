@@ -621,6 +621,36 @@ mutual
           else .error (unsupported "scalar_subquery_collation"
             "A scalar subquery's indeterminate collatable output requires implicit-invalid collation provenance")
         | _ => .error (invalid "scalar_subquery_arity" "A scalar subquery must expose exactly one column")
+      | .quantifiedQuery op quantifier (.row fields) child => do
+        let typed ← checkExprCore subqueries env checkSubquery (fuel + 1) params scope
+          (.quantifiedQuery op quantifier (.row fields) child)
+        let left ← checkCollationListCore subqueries env checkSubquery fuel profile params scope fields
+        let checked ← checkSubquery child
+        match selected : quantifiedRowSignature op (scalarInputs fields left.types)
+            (checked.output.map (fun column => ScalarInput.known column.type)) with
+        | none => .error collationShape
+        | some signatures =>
+          let pairs ← checkSubqueryComparisonCollations fields left.types left.derivations checked.output signatures
+          .ok ⟨typed, .none, .quantifiedRowQuery typed.valid left.valid checked.valid selected pairs.down⟩
+      | .quantifiedQuery op quantifier arg child => do
+        let typed ← checkExprCore subqueries env checkSubquery (fuel + 1) params scope (.quantifiedQuery op quantifier arg child)
+        let left ← checkCompleteExprCore subqueries env checkSubquery fuel profile params scope arg
+        let checked ← checkSubquery child
+        match width : checked.output with
+        | [column] =>
+          match selected : comparisonOverload op (scalarInput arg left.type) (.known column.type) with
+          | none => .error collationShape
+          | some signature =>
+            match arguments : signature.inputs with
+            | [leftType, rightType] =>
+              match merge : CollationDerivation.merge
+                  (coercedCollation arg left.type leftType left.derivation)
+                  (knownCoercedCollation column.type.base rightType (.stored column.collation)) with
+              | none => .error conflict
+              | some _ => .ok ⟨typed, .none,
+                  .quantifiedQuery typed.valid left.collationValid (width ▸ checked.valid) selected arguments merge⟩
+            | _ => .error collationShape
+        | _ => .error (invalid "quantified_subquery_arity" "A scalar quantified query must expose exactly one column")
       | .inQuery (.row fields) child => do
         let typed ← checkExprCore subqueries env checkSubquery (fuel + 1) params scope (.inQuery (.row fields) child)
         let left ← checkCollationListCore subqueries env checkSubquery fuel profile params scope fields

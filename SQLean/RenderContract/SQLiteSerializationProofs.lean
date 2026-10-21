@@ -152,6 +152,7 @@ mutual
           exprSql_translated arg, mapped]
     | between arg lower upper negated =>
         simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, exprSql_translated lower, exprSql_translated upper]
+    | quantifiedQuery op quantifier arg query => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, querySql_translated query]
     | inQuery arg query => simp only [translateExpr, Advanced.SQLite.exprSql, exprSql_translated arg, querySql_translated query]
     | «exists» query => simp only [translateExpr, Advanced.SQLite.exprSql, querySql_translated query]
     | scalarQuery query => simp only [translateExpr, Advanced.SQLite.exprSql, querySql_translated query]
