@@ -106,8 +106,11 @@ def prepare_capture(case, sql):
 
 def postgres_script(cases, canonical):
     assert len(cases) == len(canonical), "missing canonical merged JOIN query"
+    # Unanalyzed temporary tables can give these tiny joins costs high enough
+    # to trigger LLVM compilation. Keep the finite row checks within their
+    # statement bound without spending that budget on JIT startup/optimization.
     commands = ["\\encoding UTF8", "BEGIN;", "SET LOCAL statement_timeout = '5s';",
-                "SET LOCAL standard_conforming_strings = on;", *table_statements()]
+                "SET LOCAL jit = off;", "SET LOCAL standard_conforming_strings = on;", *table_statements()]
     expected = {}
     for state in STATES:
         commands += ["TRUNCATE " + ", ".join(map(sql_identifier, TABLES)) + ";"]
