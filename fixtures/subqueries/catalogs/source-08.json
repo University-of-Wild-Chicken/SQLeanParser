@@ -1,0 +1,33 @@
+{
+  "tables": [
+    {
+      "name": "t1",
+      "columns": [
+        {
+          "name": "x",
+          "type": "int",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "name": "t2",
+      "columns": [
+        {
+          "name": "x",
+          "type": "int",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "kind": "conditional written-declaration snapshot",
+    "context_ids": [
+      "subqueries-context:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:2080",
+      "subqueries-context:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:2108"
+    ],
+    "source_sql_executed": false,
+    "assumption": "Caller supplies these exact table fields/types/nullability; no imported locale or source data assumptions."
+  }
+}

@@ -19,8 +19,8 @@ private theorem cteBody_valid :
     (scope := .empty) (sourceUses := []) (selectUses := []) (whereUses := [])
     (orderUses := []) (limitUses := []) (offsetUses := [])
   · exact .empty
-  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by decide) .nil
-  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by decide) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by decide) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by decide) .nil
   · decide
   · decide
   · exact Or.inl rfl
@@ -138,7 +138,8 @@ def cteContractTests : IO Nat := do
       [{name := "x", type := ⟨.int32, false⟩}, {name := "b", type := ⟨.int32, false⟩}]),
     ("WITH c AS (SELECT 1 AS ctid) SELECT ctid FROM c", [{name := "ctid", type := ⟨.int32, false⟩}]),
     ("WITH c AS (SELECT 1 AS x) SELECT x FROM c FOR UPDATE", cteColumns),
-    ("WITH c AS (SELECT DISTINCT 1 AS x) SELECT x FROM c FOR SHARE", cteColumns)]
+    ("WITH c AS (SELECT DISTINCT 1 AS x) SELECT x FROM c FOR SHARE", cteColumns),
+    ("WITH c AS (SELECT 1 AS x) SELECT (SELECT x FROM c)", [{name := "x", type := ⟨.int32, true⟩}])]
   for (sql, expected) in valid do
     SQLean.Tests.assert (sameOutputTypes (← cteOutput sql catalog) expected) s!"exact CTE metadata: {sql}"
   let invalid := [
@@ -167,7 +168,6 @@ def cteContractTests : IO Nat := do
     "WITH c AS (SELECT 1 AS x) SELECT c FROM c",
     "WITH c AS (SELECT 1 AS x) SELECT d FROM c d",
     "WITH c AS (SELECT 1 AS x) SELECT c.unknown FROM c",
-    "WITH c AS (SELECT 1 AS x) SELECT (SELECT x FROM c)",
     "WITH c AS (SELECT 1 AS x) SELECT * FROM LATERAL (SELECT x FROM c) d",
     "WITH c AS (SELECT 1 AS x) SELECT c.x FROM (SELECT 1 AS y) d LEFT JOIN c ON FALSE FOR UPDATE OF d",
     "WITH unused AS (SELECT i.id FROM items i LEFT JOIN labels l ON FALSE FOR UPDATE OF l) SELECT 1",

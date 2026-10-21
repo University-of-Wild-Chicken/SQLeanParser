@@ -2,8 +2,8 @@ import SQLean.SelectContract.ScalarSignatures
 
 /-! Independent structural premises for the bounded recursive SELECT profile.
 References are syntactic occurrences, including unused WITH definitions; they
-are not execution counts. Expression subqueries retain their separate typing
-coverage boundary. Collation support below is deliberately sufficient, not a
+are not execution counts. Expression subqueries are scanned in the native forbidden-reference
+context, including discarded projections and unused WITH definitions. Collation support below is deliberately sufficient, not a
 claim that a concrete scalar type determines an expression's collation. -/
 namespace SQLean.SelectContract
 open Advanced
@@ -29,26 +29,39 @@ mutual
     let localHidden := hidden || (query.ctes.map Advanced.CTE.name).contains target
     let definitions := recursiveCTEReferences target (if query.recursive then localHidden else hidden) allowed query.ctes
     let body := match _bodyEq : query.body with
-      | .select select => match _sourceEq : select.source with
-        | none => ⟨0, true⟩
-        | some source => recursiveSourceReferences target localHidden allowed source
+      | .select select => recursiveSelectReferences target localHidden allowed select
       | .set op all left right =>
         let leftAllowed := allowed && !(op == .except && all) && !(op == .intersect && all)
         let rightAllowed := allowed && !(op == .except) && !(op == .intersect && all)
         (recursiveReferences target localHidden leftAllowed left).append
           (recursiveReferences target localHidden rightAllowed right)
-    definitions.append body
+    definitions.append body |>.append (recursiveOrderReferences target localHidden query.orderBy) |>.append
+      (recursiveOptionalExprReferences target localHidden query.limit) |>.append
+      (recursiveOptionalExprReferences target localHidden query.offset)
   termination_by sizeOf query
   decreasing_by all_goals (cases query <;> (try cases select) <;> simp_all <;> omega)
+
+  def recursiveSelectReferences (target : Name) (hidden allowed : Bool) (select : Advanced.Select) : RecursiveReferences :=
+    let source := match _sourceEq : select.source with
+      | none => (⟨0, true⟩ : RecursiveReferences)
+      | some source => recursiveSourceReferences target hidden allowed source
+    source.append (recursiveItemReferences target hidden select.items) |>.append
+      (recursiveOptionalExprReferences target hidden select.whereClause) |>.append
+      (recursiveExprsReferences target hidden select.groupBy) |>.append
+      (recursiveOptionalExprReferences target hidden select.having) |>.append
+      (recursiveExprsReferences target hidden select.distinctOn)
+  termination_by sizeOf select
+  decreasing_by all_goals (cases select <;> simp_all <;> omega)
 
   def recursiveSourceReferences (target : Name) (hidden allowed : Bool) (source : Advanced.From) : RecursiveReferences :=
     match source with
     | .table name _ _ schema =>
       if !hidden && schema.isNone && name == target then ⟨1, allowed⟩ else ⟨0, true⟩
     | .derived query _ _ _ => recursiveReferences target hidden allowed query
-    | .join kind left right _ =>
+    | .join kind left right condition =>
       (recursiveSourceReferences target hidden (allowed && !(kind == .right || kind == .full)) left).append
-        (recursiveSourceReferences target hidden (allowed && !(kind == .left || kind == .full)) right)
+        (recursiveSourceReferences target hidden (allowed && !(kind == .left || kind == .full)) right) |>.append
+        (match condition with | .on expr => recursiveExprReferences target hidden expr | _ => ⟨0, true⟩)
   termination_by sizeOf source
   decreasing_by all_goals (simp_all <;> omega)
 
@@ -59,6 +72,90 @@ mutual
       (recursiveReferences target hidden allowed head.query).append
         (recursiveCTEReferences target (hidden || head.name == target) allowed tail)
   termination_by sizeOf ctes
+  decreasing_by all_goals (cases head <;> simp_all <;> omega)
+
+  /-- Raw SubLink subselects forbid recursive self references. Their IN test
+  expressions retain ordinary traversal, and nested WITH scopes still shadow. -/
+  def recursiveExprReferences (target : Name) (hidden : Bool) (expr : Advanced.Expr) : RecursiveReferences :=
+    match expr with
+    | .literal _ | .null | .decimal _ | .parameter _ | .column .. | .contextValue _ | .countAll => ⟨0, true⟩
+    | .exists child | .scalarQuery child => recursiveReferences target hidden false child
+    | .inQuery arg child => (recursiveExprReferences target hidden arg).append (recursiveReferences target hidden false child)
+    | .cast arg _ | .collate arg _ | .unary _ arg | .aggregate _ arg _ | .isNull arg _ | .extract _ arg =>
+      recursiveExprReferences target hidden arg
+    | .binary _ left right | .concat left right | .distinctFrom left right _
+    | .pattern left right _ | .regex left right _ _ | .jsonAccess _ left right
+    | .jsonExistence _ left right | .containment left right _ | .overlap left right
+    | .quantifiedComparison _ _ left right | .nullIf left right | .filteredAggregate left right =>
+      (recursiveExprReferences target hidden left).append (recursiveExprReferences target hidden right)
+    | .array args | .row args | .substring _ args | .coalesce args | .greatest args | .least args | .call _ args =>
+      recursiveExprsReferences target hidden args
+    | .namedCall _ args => recursiveArgumentReferences target hidden args
+    | .subscript base indices =>
+      (recursiveExprReferences target hidden base).append (recursiveSubscriptReferences target hidden indices)
+    | .caseExpr operand branches otherwise =>
+      (recursiveOptionalExprReferences target hidden operand).append
+        (recursiveBranchReferences target hidden branches) |>.append
+        (recursiveOptionalExprReferences target hidden otherwise)
+    | .inList arg values => (recursiveExprReferences target hidden arg).append (recursiveExprsReferences target hidden values)
+    | .between arg lower upper _ => (recursiveExprReferences target hidden arg).append
+        (recursiveExprReferences target hidden lower) |>.append (recursiveExprReferences target hidden upper)
+  termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def recursiveExprsReferences (target : Name) (hidden : Bool) (exprs : List Advanced.Expr) : RecursiveReferences :=
+    match exprs with
+    | [] => ⟨0, true⟩
+    | head :: tail => (recursiveExprReferences target hidden head).append (recursiveExprsReferences target hidden tail)
+  termination_by sizeOf exprs
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def recursiveOptionalExprReferences (target : Name) (hidden : Bool) (expr : Option Advanced.Expr) : RecursiveReferences :=
+    match expr with
+    | none => ⟨0, true⟩
+    | some expr => recursiveExprReferences target hidden expr
+  termination_by sizeOf expr
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def recursiveArgumentReferences (target : Name) (hidden : Bool) (args : List CallArgument) : RecursiveReferences :=
+    match args with
+    | [] => ⟨0, true⟩
+    | .positional value :: tail | .named _ value _ :: tail =>
+      (recursiveExprReferences target hidden value).append (recursiveArgumentReferences target hidden tail)
+  termination_by sizeOf args
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def recursiveSubscriptReferences (target : Name) (hidden : Bool) (indices : List Subscript) : RecursiveReferences :=
+    match indices with
+    | [] => ⟨0, true⟩
+    | .index value :: tail => (recursiveExprReferences target hidden value).append (recursiveSubscriptReferences target hidden tail)
+    | .slice lower upper :: tail =>
+      (recursiveOptionalExprReferences target hidden lower).append
+        (recursiveOptionalExprReferences target hidden upper) |>.append (recursiveSubscriptReferences target hidden tail)
+  termination_by sizeOf indices
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def recursiveBranchReferences (target : Name) (hidden : Bool) (branches : List (Advanced.Expr × Advanced.Expr)) : RecursiveReferences :=
+    match branches with
+    | [] => ⟨0, true⟩
+    | (condition, value) :: tail => (recursiveExprReferences target hidden condition).append
+        (recursiveExprReferences target hidden value) |>.append (recursiveBranchReferences target hidden tail)
+  termination_by sizeOf branches
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def recursiveItemReferences (target : Name) (hidden : Bool) (items : List Advanced.SelectItem) : RecursiveReferences :=
+    match items with
+    | [] => ⟨0, true⟩
+    | .all .. :: tail => recursiveItemReferences target hidden tail
+    | .expression expr _ :: tail => (recursiveExprReferences target hidden expr).append (recursiveItemReferences target hidden tail)
+  termination_by sizeOf items
+  decreasing_by all_goals (simp_all <;> omega)
+
+  def recursiveOrderReferences (target : Name) (hidden : Bool) (items : List Advanced.OrderBy) : RecursiveReferences :=
+    match items with
+    | [] => ⟨0, true⟩
+    | head :: tail => (recursiveExprReferences target hidden head.expr).append (recursiveOrderReferences target hidden tail)
+  termination_by sizeOf items
   decreasing_by all_goals (cases head <;> simp_all <;> omega)
 end
 

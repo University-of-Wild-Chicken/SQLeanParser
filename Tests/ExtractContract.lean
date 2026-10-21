@@ -125,9 +125,12 @@ def extractContractTests : IO Nat := do
         SQLean.Tests.assert (diagnostic.code == "extract_signature") s!"EXTRACT invalid input: {sql}"
     | _ => throw (IO.userError s!"EXTRACT invalid/ambiguous input accepted: {sql}")
     count := count + 1
-  for sql in [
-      "SELECT EXTRACT(year FROM (SELECT DATE '2024-01-01'))",
-      "SELECT EXTRACT(year FROM unregistered_temporal_function())"] do
+  SQLean.Tests.assert (sameOutputTypes
+    (← extractOutput "SELECT EXTRACT(year FROM (SELECT DATE '2024-01-01'))")
+    [{name := "extract", type := ⟨.numeric [], true⟩}])
+    "EXTRACT from a scalar subquery retains numeric output and nullable argument"
+  count := count + 1
+  for sql in ["SELECT EXTRACT(year FROM unregistered_temporal_function())"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()

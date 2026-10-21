@@ -90,8 +90,9 @@ def boundaries():
     ]
     for sql in invalid:
         assert_report(["--assurance", "contract", sql], "invalid", "contract")
-    unsupported = "SELECT 1 = ANY(CAST((SELECT ARRAY[1]) AS INTEGER[]))"
-    assert_report(["--assurance", "contract", unsupported], "unsupported", "contract")
+    scalar_array = "SELECT 1 = ANY(CAST((SELECT ARRAY[1]) AS INTEGER[]))"
+    assert_report(["--assurance", "contract", scalar_array], "valid", "contract",
+                  (("?column?", "bool", True),))
     # Parenthesized SELECT still selects the subquery production in PostgreSQL;
     # the typed array form must not silently reinterpret it.
     syntax = [

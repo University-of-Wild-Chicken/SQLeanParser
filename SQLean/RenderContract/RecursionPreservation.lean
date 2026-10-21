@@ -16,6 +16,12 @@ set_option maxHeartbeats 1000000
     recursiveOuterEnv env (ctes.map translateCTE) = recursiveOuterEnv env ctes := by
   simp only [recursiveOuterEnv, recursive_cte_names_translated]
 
+private theorem recursive_append_congr {a b c d : RecursiveReferences}
+    (left : a = b) (right : c = d) : a.append c = b.append d := by
+  cases left
+  cases right
+  rfl
+
 mutual
   @[simp] theorem recursive_references_translated (target : Name) (hidden allowed : Bool)
       (query : Advanced.Query) :
@@ -23,40 +29,84 @@ mutual
         recursiveReferences target hidden allowed query := by
     cases query with
     | mk body ctes recursive orders limit offset locking offsetFirst =>
-      have definitions := recursive_cte_references_translated target
-        (if recursive then hidden || (ctes.map Advanced.CTE.name).contains target else hidden)
-        allowed ctes
+      have defs := recursive_cte_references_translated target
+        (if recursive then hidden || (ctes.map Advanced.CTE.name).contains target else hidden) allowed ctes
+      have ordering := recursive_order_references_translated target
+        (hidden || (ctes.map Advanced.CTE.name).contains target) orders
+      have limiting := recursive_optional_expr_references_translated target
+        (hidden || (ctes.map Advanced.CTE.name).contains target) limit
+      have offsetting := recursive_optional_expr_references_translated target
+        (hidden || (ctes.map Advanced.CTE.name).contains target) offset
+      rw [translateParameters]
+      simp only [List.attach_map_val]
       cases body with
       | select select =>
-        cases select with
-        | mk items source whereClause groupBy having distinct distinctOn =>
-          cases source with
-          | none =>
-            rw [translateParameters]
-            simp only [translateQueryBody, translateSelect, List.attach_map_val]
-            conv => lhs; rw [recursiveReferences.eq_def]
-            conv => rhs; rw [recursiveReferences.eq_def]
-            simpa only [recursive_cte_names_translated] using
-              congrArg (fun refs => refs.append ⟨0, true⟩) definitions
-          | some inputSource =>
-            rw [translateParameters]
-            simp only [translateQueryBody, translateSelect, List.attach_map_val]
-            conv => lhs; rw [recursiveReferences.eq_def]
-            conv => rhs; rw [recursiveReferences.eq_def]
-            simpa only [recursive_cte_names_translated,
-              recursive_source_references_translated target _ allowed inputSource] using
-              congrArg (fun refs => refs.append (recursiveSourceReferences target
-                (hidden || (ctes.map Advanced.CTE.name).contains target) allowed inputSource)) definitions
-      | set op all left right =>
-        rw [translateParameters]
-        simp only [translateQueryBody, List.attach_map_val]
+        have selected := recursive_select_references_translated target
+          (hidden || (ctes.map Advanced.CTE.name).contains target) allowed select
+        simp only [translateQueryBody]
         conv => lhs; rw [recursiveReferences.eq_def]
         conv => rhs; rw [recursiveReferences.eq_def]
-        simp only [recursive_cte_names_translated,
-          recursive_references_translated target _ _ left,
-          recursive_references_translated target _ _ right, definitions]
+        cases limit <;> cases offset <;>
+          simpa only [recursive_cte_names_translated, Option.map_none, Option.map_some] using
+            recursive_append_congr
+              (recursive_append_congr
+                (recursive_append_congr
+                  (recursive_append_congr defs selected) ordering) limiting) offsetting
+      | set op all left right =>
+        have lhs := recursive_references_translated target
+          (hidden || (ctes.map Advanced.CTE.name).contains target)
+          (allowed && !(op == .except && all) && !(op == .intersect && all)) left
+        have rhs := recursive_references_translated target
+          (hidden || (ctes.map Advanced.CTE.name).contains target)
+          (allowed && !(op == .except) && !(op == .intersect && all)) right
+        simp only [translateQueryBody]
+        conv => lhs; rw [recursiveReferences.eq_def]
+        conv => rhs; rw [recursiveReferences.eq_def]
+        cases limit <;> cases offset <;>
+          simpa only [recursive_cte_names_translated, Option.map_none, Option.map_some] using
+            recursive_append_congr
+              (recursive_append_congr
+                (recursive_append_congr
+                  (recursive_append_congr defs
+                    (recursive_append_congr lhs rhs)) ordering) limiting) offsetting
   termination_by sizeOf query
-  decreasing_by all_goals (simp_all <;> omega)
+  decreasing_by all_goals (simp <;> omega)
+
+  @[simp] theorem recursive_select_references_translated (target : Name) (hidden allowed : Bool)
+      (select : Advanced.Select) :
+      recursiveSelectReferences target hidden allowed (translateSelect select) =
+        recursiveSelectReferences target hidden allowed select := by
+    cases select with
+    | mk items source whereClause groupBy having distinct distinctOn =>
+      have projected := recursive_item_references_translated target hidden items
+      have filtered := recursive_optional_expr_references_translated target hidden whereClause
+      have grouped := recursive_exprs_references_translated target hidden groupBy
+      have aggregateFiltered := recursive_optional_expr_references_translated target hidden having
+      have distincted := recursive_exprs_references_translated target hidden distinctOn
+      cases source with
+      | none =>
+        cases whereClause <;> cases having <;>
+          simpa only [translateSelect, recursiveSelectReferences, List.attach_map_val,
+            Option.map_none, Option.map_some] using
+            recursive_append_congr
+              (recursive_append_congr
+                (recursive_append_congr
+                  (recursive_append_congr
+                    (recursive_append_congr (rfl : (⟨0, true⟩ : RecursiveReferences) = _) projected) filtered) grouped)
+                  aggregateFiltered) distincted
+      | some source =>
+        have sourced := recursive_source_references_translated target hidden allowed source
+        cases whereClause <;> cases having <;>
+          simpa only [translateSelect, recursiveSelectReferences, List.attach_map_val,
+            Option.map_none, Option.map_some] using
+            recursive_append_congr
+              (recursive_append_congr
+                (recursive_append_congr
+                  (recursive_append_congr
+                    (recursive_append_congr sourced projected) filtered) grouped)
+                  aggregateFiltered) distincted
+  termination_by sizeOf select
+  decreasing_by all_goals (simp <;> omega)
 
   @[simp] theorem recursive_source_references_translated (target : Name) (hidden allowed : Bool)
       (source : Advanced.From) :
@@ -68,11 +118,19 @@ mutual
       simp only [translateSource, recursiveSourceReferences,
         recursive_references_translated target hidden allowed query]
     | join kind left right condition =>
-      simp only [translateSource, recursiveSourceReferences,
-        recursive_source_references_translated target hidden _ left,
-        recursive_source_references_translated target hidden _ right]
+      have lhs := recursive_source_references_translated target hidden
+        (allowed && !(kind == .right || kind == .full)) left
+      have rhs := recursive_source_references_translated target hidden
+        (allowed && !(kind == .left || kind == .full)) right
+      cases condition with
+      | on expr =>
+        simp only [translateSource, translateJoinCondition, recursiveSourceReferences,
+          lhs, rhs, recursive_expr_references_translated target hidden expr]
+      | «using» columns => simp only [translateSource, translateJoinCondition, recursiveSourceReferences, lhs, rhs]
+      | natural => simp only [translateSource, translateJoinCondition, recursiveSourceReferences, lhs, rhs]
+      | none => simp only [translateSource, translateJoinCondition, recursiveSourceReferences, lhs, rhs]
   termination_by sizeOf source
-  decreasing_by all_goals (simp_all <;> omega)
+  decreasing_by all_goals (simp <;> omega)
 
   @[simp] theorem recursive_cte_references_translated (target : Name) (hidden allowed : Bool)
       (ctes : List Advanced.CTE) :
@@ -87,7 +145,214 @@ mutual
           recursive_references_translated target hidden allowed query,
           recursive_cte_references_translated target (hidden || name == target) allowed tail]
   termination_by sizeOf ctes
-  decreasing_by all_goals (simp_all <;> omega)
+  decreasing_by all_goals (simp <;> omega)
+
+  @[simp] theorem recursive_optional_expr_references_translated (target : Name) (hidden : Bool)
+      (expr : Option Advanced.Expr) :
+      recursiveOptionalExprReferences target hidden (expr.map translateExpr) =
+        recursiveOptionalExprReferences target hidden expr := by
+    cases expr with
+    | none => rfl
+    | some value =>
+      simp only [Option.map_some, recursiveOptionalExprReferences,
+        recursive_expr_references_translated target hidden value]
+  termination_by sizeOf expr
+  decreasing_by all_goals (simp <;> omega)
+
+  @[simp] theorem recursive_item_references_translated (target : Name) (hidden : Bool)
+      (items : List Advanced.SelectItem) :
+      recursiveItemReferences target hidden (items.map translateSelectItem) =
+        recursiveItemReferences target hidden items := by
+    cases items with
+    | nil => rfl
+    | cons head tail =>
+      cases head with
+      | all qualifier schema =>
+        simp only [List.map_cons, translateSelectItem, recursiveItemReferences,
+          recursive_item_references_translated target hidden tail]
+      | expression expr alias =>
+        simp only [List.map_cons, translateSelectItem, recursiveItemReferences,
+          recursive_expr_references_translated target hidden expr,
+          recursive_item_references_translated target hidden tail]
+  termination_by sizeOf items
+  decreasing_by all_goals (simp <;> omega)
+
+  @[simp] theorem recursive_order_references_translated (target : Name) (hidden : Bool)
+      (items : List Advanced.OrderBy) :
+      recursiveOrderReferences target hidden (items.map translateOrderBy) =
+        recursiveOrderReferences target hidden items := by
+    cases items with
+    | nil => rfl
+    | cons head tail =>
+      cases head with
+      | mk expr direction nulls =>
+        simp only [List.map_cons, translateOrderBy, recursiveOrderReferences,
+          recursive_expr_references_translated target hidden expr,
+          recursive_order_references_translated target hidden tail]
+  termination_by sizeOf items
+  decreasing_by all_goals (simp <;> omega)
+
+  @[simp] theorem recursive_expr_references_translated (target : Name) (hidden : Bool) (expr : Advanced.Expr) :
+      recursiveExprReferences target hidden (translateExpr expr) = recursiveExprReferences target hidden expr := by
+    cases expr with
+    | literal value => simp only [translateExpr, recursiveExprReferences]
+    | null => simp only [translateExpr, recursiveExprReferences]
+    | contextValue value => simp only [translateExpr, recursiveExprReferences]
+    | decimal raw => simp only [translateExpr, recursiveExprReferences]
+    | parameter parameter => simp only [translateExpr, recursiveExprReferences]
+    | column qualifier name schema => simp only [translateExpr, recursiveExprReferences]
+    | countAll => simp only [translateExpr, recursiveExprReferences]
+    | collate arg name => simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg]
+    | inQuery arg query => simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg, recursive_references_translated target hidden false query]
+    | «exists» query => simp only [translateExpr, recursiveExprReferences, recursive_references_translated target hidden false query]
+    | scalarQuery query => simp only [translateExpr, recursiveExprReferences, recursive_references_translated target hidden false query]
+    | binary op left right =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden left, recursive_expr_references_translated target hidden right]
+    | concat left right =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden left, recursive_expr_references_translated target hidden right]
+    | distinctFrom left right negated =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden left, recursive_expr_references_translated target hidden right]
+    | pattern arg pattern insensitive =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg, recursive_expr_references_translated target hidden pattern]
+    | regex arg pattern insensitive negated =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg, recursive_expr_references_translated target hidden pattern]
+    | jsonAccess op arg key =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg, recursive_expr_references_translated target hidden key]
+    | jsonExistence op arg keys =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg, recursive_expr_references_translated target hidden keys]
+    | containment left right containedBy =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden left, recursive_expr_references_translated target hidden right]
+    | overlap left right =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden left, recursive_expr_references_translated target hidden right]
+    | quantifiedComparison op quantifier left right =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden left, recursive_expr_references_translated target hidden right]
+    | nullIf left right =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden left, recursive_expr_references_translated target hidden right]
+    | filteredAggregate aggregate predicate =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden aggregate, recursive_expr_references_translated target hidden predicate]
+    | unary op arg =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg]
+    | aggregate fn arg distinct =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg]
+    | isNull arg negated =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg]
+    | extract field arg =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg]
+    | cast arg targetType =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg]
+    | between arg lower upper negated =>
+      simp only [translateExpr, recursiveExprReferences, recursive_expr_references_translated target hidden arg, recursive_expr_references_translated target hidden lower, recursive_expr_references_translated target hidden upper]
+    | array elements =>
+      simp only [translateExpr, List.attach_map_val, recursiveExprReferences, recursive_exprs_references_translated target hidden elements]
+    | row elements =>
+      simp only [translateExpr, List.attach_map_val, recursiveExprReferences, recursive_exprs_references_translated target hidden elements]
+    | substring form args =>
+      simp only [translateExpr, List.attach_map_val, recursiveExprReferences, recursive_exprs_references_translated target hidden args]
+    | call name args =>
+      simp only [translateExpr, List.attach_map_val, recursiveExprReferences, recursive_exprs_references_translated target hidden args]
+    | coalesce args =>
+      simp only [translateExpr, List.attach_map_val, recursiveExprReferences, recursive_exprs_references_translated target hidden args]
+    | greatest args =>
+      simp only [translateExpr, List.attach_map_val, recursiveExprReferences, recursive_exprs_references_translated target hidden args]
+    | least args =>
+      simp only [translateExpr, List.attach_map_val, recursiveExprReferences, recursive_exprs_references_translated target hidden args]
+    | namedCall name args =>
+      simp only [translateExpr, List.attach_map_val, recursiveExprReferences, recursive_argument_references_translated target hidden args]
+    | subscript base indices =>
+      simp only [translateExpr, List.attach_map_val, recursiveExprReferences,
+        recursive_expr_references_translated target hidden base, recursive_subscript_references_translated target hidden indices]
+    | inList arg values =>
+      simp only [translateExpr, List.attach_map_val, recursiveExprReferences,
+        recursive_expr_references_translated target hidden arg, recursive_exprs_references_translated target hidden values]
+    | caseExpr operand branches otherwise =>
+      cases operand with
+      | none =>
+        cases otherwise with
+        | none => simp only [translateExpr, recursiveExprReferences, recursiveOptionalExprReferences,
+            List.attach_map_val (f := fun pair : Advanced.Expr × Advanced.Expr =>
+              (translateExpr pair.1, translateExpr pair.2)), recursive_branch_references_translated target hidden branches]
+        | some value => simp only [translateExpr, recursiveExprReferences, recursiveOptionalExprReferences,
+            List.attach_map_val (f := fun pair : Advanced.Expr × Advanced.Expr =>
+              (translateExpr pair.1, translateExpr pair.2)), recursive_branch_references_translated target hidden branches,
+            recursive_expr_references_translated target hidden value]
+      | some arg =>
+        cases otherwise with
+        | none => simp only [translateExpr, recursiveExprReferences, recursiveOptionalExprReferences,
+            List.attach_map_val (f := fun pair : Advanced.Expr × Advanced.Expr =>
+              (translateExpr pair.1, translateExpr pair.2)), recursive_branch_references_translated target hidden branches,
+            recursive_expr_references_translated target hidden arg]
+        | some value => simp only [translateExpr, recursiveExprReferences, recursiveOptionalExprReferences,
+            List.attach_map_val (f := fun pair : Advanced.Expr × Advanced.Expr =>
+              (translateExpr pair.1, translateExpr pair.2)), recursive_branch_references_translated target hidden branches,
+            recursive_expr_references_translated target hidden arg, recursive_expr_references_translated target hidden value]
+  termination_by sizeOf expr
+  decreasing_by all_goals (simp <;> omega)
+
+  @[simp] theorem recursive_exprs_references_translated (target : Name) (hidden : Bool) (exprs : List Advanced.Expr) :
+      recursiveExprsReferences target hidden (exprs.map translateExpr) = recursiveExprsReferences target hidden exprs := by
+    cases exprs with
+    | nil => rfl
+    | cons head tail =>
+      simp only [List.map_cons, recursiveExprsReferences,
+        recursive_expr_references_translated target hidden head, recursive_exprs_references_translated target hidden tail]
+  termination_by sizeOf exprs
+  decreasing_by all_goals (simp <;> omega)
+
+  @[simp] theorem recursive_argument_references_translated (target : Name) (hidden : Bool) (args : List CallArgument) :
+      recursiveArgumentReferences target hidden (args.map translateCallArgument) = recursiveArgumentReferences target hidden args := by
+    cases args with
+    | nil => rfl
+    | cons head tail =>
+      cases head with
+      | positional value =>
+        simp only [List.map_cons, translateCallArgument, recursiveArgumentReferences,
+          recursive_expr_references_translated target hidden value, recursive_argument_references_translated target hidden tail]
+      | named name value spelling =>
+        simp only [List.map_cons, translateCallArgument, recursiveArgumentReferences,
+          recursive_expr_references_translated target hidden value, recursive_argument_references_translated target hidden tail]
+  termination_by sizeOf args
+  decreasing_by all_goals (simp <;> omega)
+
+  @[simp] theorem recursive_subscript_references_translated (target : Name) (hidden : Bool) (indices : List Subscript) :
+      recursiveSubscriptReferences target hidden (indices.map translateSubscript) = recursiveSubscriptReferences target hidden indices := by
+    cases indices with
+    | nil => rfl
+    | cons head tail =>
+      cases head with
+      | index value =>
+        simp only [List.map_cons, translateSubscript, recursiveSubscriptReferences,
+          recursive_expr_references_translated target hidden value, recursive_subscript_references_translated target hidden tail]
+      | slice lower upper =>
+        cases lower with
+        | none =>
+          cases upper with
+          | none => simp only [List.map_cons, translateSubscript, recursiveSubscriptReferences, recursiveOptionalExprReferences,
+              recursive_subscript_references_translated target hidden tail]
+          | some value => simp only [List.map_cons, translateSubscript, recursiveSubscriptReferences, recursiveOptionalExprReferences,
+              recursive_expr_references_translated target hidden value, recursive_subscript_references_translated target hidden tail]
+        | some value =>
+          cases upper with
+          | none => simp only [List.map_cons, translateSubscript, recursiveSubscriptReferences, recursiveOptionalExprReferences,
+              recursive_expr_references_translated target hidden value, recursive_subscript_references_translated target hidden tail]
+          | some other => simp only [List.map_cons, translateSubscript, recursiveSubscriptReferences, recursiveOptionalExprReferences,
+              recursive_expr_references_translated target hidden value, recursive_expr_references_translated target hidden other,
+              recursive_subscript_references_translated target hidden tail]
+  termination_by sizeOf indices
+  decreasing_by all_goals (simp <;> omega)
+
+  @[simp] theorem recursive_branch_references_translated (target : Name) (hidden : Bool) (branches : List (Advanced.Expr × Advanced.Expr)) :
+      recursiveBranchReferences target hidden (branches.map fun pair => (translateExpr pair.1, translateExpr pair.2)) =
+        recursiveBranchReferences target hidden branches := by
+    cases branches with
+    | nil => rfl
+    | cons head tail =>
+      cases head with
+      | mk condition value =>
+        simp only [List.map_cons, recursiveBranchReferences,
+          recursive_expr_references_translated target hidden condition, recursive_expr_references_translated target hidden value,
+          recursive_branch_references_translated target hidden tail]
+  termination_by sizeOf branches
+  decreasing_by all_goals (simp <;> omega)
 end
 
 @[simp] theorem no_forward_cte_references_translated (remaining : List Advanced.CTE)

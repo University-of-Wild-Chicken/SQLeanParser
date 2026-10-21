@@ -1,0 +1,44 @@
+{
+  "tables": [
+    {
+      "name": "t1",
+      "columns": [
+        {
+          "name": "c0",
+          "type": "bool",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "name": "t2",
+      "columns": [
+        {
+          "name": "c0",
+          "type": "bool",
+          "nullable": true
+        }
+      ]
+    },
+    {
+      "name": "t3",
+      "columns": [
+        {
+          "name": "c0",
+          "type": "bool",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "kind": "conditional written-declaration snapshot",
+    "context_ids": [
+      "subqueries-context:duckdb:test/issues/general/test_18543.test:144",
+      "subqueries-context:duckdb:test/issues/general/test_18543.test:186",
+      "subqueries-context:duckdb:test/issues/general/test_18543.test:228"
+    ],
+    "source_sql_executed": false,
+    "assumption": "Caller supplies these exact table fields/types/nullability; no imported locale or source data assumptions."
+  }
+}

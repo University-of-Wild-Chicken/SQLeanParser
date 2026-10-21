@@ -1,0 +1,980 @@
+{
+  "scalar": [
+    {
+      "id": "subqueries:scalar:postgres:src/test/regress/sql/create_view.sql:statement-276",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:postgres:src/test/regress/sql/subselect.sql:statement-8",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:postgres:src/test/regress/sql/subselect.sql:statement-9",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:postgres:src/test/regress/sql/subselect.sql:statement-10",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "array",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:postgres:src/test/regress/sql/subselect.sql:statement-11",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "array",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:postgres:src/test/regress/sql/subselect.sql:statement-12",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "array",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery_cte.test:sqllogic-query-5",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery_cte.test:sqllogic-query-10",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery_cte.test:sqllogic-query-15",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery_cte.test:sqllogic-query-25",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery_cte.test:sqllogic-query-31",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery_cte.test:sqllogic-query-37",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery.test:sqllogic-query-8",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery.test:sqllogic-query-13",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery.test:sqllogic-query-18",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery.test:sqllogic-query-34",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery.test:sqllogic-query-57",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery.test:sqllogic-query-68",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/coalesce_subquery.test:sqllogic-query-5",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:materialize:test/sqllogictest/scoping.slt:sqllogic-query-114",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "a",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:materialize:test/sqllogictest/scalar_subqueries_select_list.slt:sqllogic-query-918",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "case",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        },
+        {
+          "name": "?column?",
+          "type": "text",
+          "nullable": false,
+          "collation": "default"
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:materialize:test/sqllogictest/cockroach/subquery.slt:sqllogic-query-27",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:materialize:test/sqllogictest/cockroach/subquery.slt:sqllogic-query-86",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:sqlite:test/subquery.test:tcl-statement-4157",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery_cte.test:sqllogic-query-81",
+      "catalogFile": "fixtures/subqueries/catalogs/source-10.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery_cte.test:sqllogic-query-87",
+      "catalogFile": "fixtures/subqueries/catalogs/source-10.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery.test:sqllogic-query-111",
+      "catalogFile": "fixtures/subqueries/catalogs/source-11.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:duckdb:test/sql/subquery/scalar/test_scalar_subquery.test:sqllogic-query-117",
+      "catalogFile": "fixtures/subqueries/catalogs/source-11.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:risingwave:e2e_test/batch/subquery/scalar_subquery.slt.part:sqllogic-query-7",
+      "catalogFile": "fixtures/subqueries/catalogs/source-12.json",
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        },
+        {
+          "name": "one",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:yaml-query-146",
+      "catalogFile": "fixtures/subqueries/catalogs/source-13.json",
+      "output_columns": [
+        {
+          "name": "a",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        },
+        {
+          "name": "b",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:yaml-query-332",
+      "catalogFile": "fixtures/subqueries/catalogs/source-14.json",
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        },
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:scalar:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:yaml-query-490",
+      "catalogFile": "fixtures/subqueries/catalogs/source-15.json",
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        },
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    }
+  ],
+  "exists": [
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_scalar_exists.test:sqllogic-query-5",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "exists",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_scalar_exists.test:sqllogic-query-16",
+      "catalogFile": "fixtures/subqueries/catalogs/source-01.json",
+      "output_columns": [
+        {
+          "name": "exists",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_scalar_exists.test:sqllogic-query-24",
+      "catalogFile": "fixtures/subqueries/catalogs/source-01.json",
+      "output_columns": [
+        {
+          "name": "exists",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_scalar_exists.test:sqllogic-query-29",
+      "catalogFile": "fixtures/subqueries/catalogs/source-01.json",
+      "output_columns": [
+        {
+          "name": "exists",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-15",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-23",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-31",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-35",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-49",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "exists",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-55",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "exists",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        },
+        {
+          "name": "exists",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-61",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-67",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "exists",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_issue_26401.test:sqllogic-query-15",
+      "catalogFile": "fixtures/subqueries/catalogs/source-03.json",
+      "output_columns": [
+        {
+          "name": "exists",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_issue_26401.test:sqllogic-query-21",
+      "catalogFile": "fixtures/subqueries/catalogs/source-03.json",
+      "output_columns": [
+        {
+          "name": "a",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_issue_26401.test:sqllogic-query-26",
+      "catalogFile": "fixtures/subqueries/catalogs/source-03.json",
+      "output_columns": [
+        {
+          "name": "a",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_issue_26401.test:sqllogic-query-32",
+      "catalogFile": "fixtures/subqueries/catalogs/source-04.json",
+      "output_columns": [
+        {
+          "name": "exists",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/sql/subquery/exists/test_issue_26401.test:sqllogic-query-37",
+      "catalogFile": "fixtures/subqueries/catalogs/source-04.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:duckdb:test/issues/general/test_18543.test:sqllogic-query-21",
+      "catalogFile": "fixtures/subqueries/catalogs/source-05.json",
+      "output_columns": [
+        {
+          "name": "c0",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:yaml-query-1793",
+      "catalogFile": "fixtures/subqueries/catalogs/source-06.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:yaml-query-1948",
+      "catalogFile": "fixtures/subqueries/catalogs/source-07.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:yaml-query-2136",
+      "catalogFile": "fixtures/subqueries/catalogs/source-08.json",
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:exists:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:yaml-query-2263",
+      "catalogFile": "fixtures/subqueries/catalogs/source-09.json",
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    }
+  ],
+  "in": [
+    {
+      "id": "subqueries:in:postgres:src/test/regress/sql/subselect.sql:statement-0",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "one",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:postgres:src/test/regress/sql/subselect.sql:statement-1",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "zero",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:postgres:src/test/regress/sql/subselect.sql:statement-2",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "zero",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:postgres:src/test/regress/sql/subselect.sql:statement-152",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:postgres:src/test/regress/sql/subselect.sql:statement-155",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/parser/is_not_null_cast.test:sqllogic-query-55",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "int4",
+          "type": "int32",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/any_all/test_scalar_in.test:sqllogic-query-8",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/any_all/test_scalar_in.test:sqllogic-query-13",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/any_all/test_scalar_in.test:sqllogic-query-23",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:materialize:test/sqllogictest/cockroach/subquery-opt.slt:sqllogic-query-24",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:materialize:test/sqllogictest/cockroach/subquery.slt:sqllogic-query-37",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": false,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:materialize:test/sqllogictest/cockroach/subquery.slt:sqllogic-query-81",
+      "catalogFile": null,
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/any_all/test_scalar_in.test:sqllogic-query-34",
+      "catalogFile": "fixtures/subqueries/catalogs/source-16.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/any_all/test_scalar_in.test:sqllogic-query-39",
+      "catalogFile": "fixtures/subqueries/catalogs/source-16.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/any_all/test_scalar_in.test:sqllogic-query-44",
+      "catalogFile": "fixtures/subqueries/catalogs/source-16.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/any_all/test_scalar_in.test:sqllogic-query-64",
+      "catalogFile": "fixtures/subqueries/catalogs/source-16.json",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/any_all/test_scalar_in.test:sqllogic-query-72",
+      "catalogFile": "fixtures/subqueries/catalogs/source-16.json",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-73",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-81",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-89",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "i",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-94",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:duckdb:test/sql/subquery/exists/test_uncorrelated_exists_subquery.test:sqllogic-query-102",
+      "catalogFile": "fixtures/subqueries/catalogs/source-02.json",
+      "output_columns": [
+        {
+          "name": "?column?",
+          "type": "bool",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:yaml-query-3172",
+      "catalogFile": "fixtures/subqueries/catalogs/source-17.json",
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    },
+    {
+      "id": "subqueries:in:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:yaml-query-3340",
+      "catalogFile": "fixtures/subqueries/catalogs/source-18.json",
+      "output_columns": [
+        {
+          "name": "x",
+          "type": "int32",
+          "nullable": true,
+          "collation": null
+        }
+      ]
+    }
+  ]
+}

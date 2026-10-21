@@ -1,0 +1,22 @@
+{
+  "tables": [
+    {
+      "name": "t",
+      "columns": [
+        {
+          "name": "x",
+          "type": "int",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "kind": "conditional written-declaration snapshot",
+    "context_ids": [
+      "subqueries-context:risingwave:src/frontend/planner_test/tests/testdata/input/subquery_expr.yaml:305"
+    ],
+    "source_sql_executed": false,
+    "assumption": "Caller supplies these exact table fields/types/nullability; no imported locale or source data assumptions."
+  }
+}

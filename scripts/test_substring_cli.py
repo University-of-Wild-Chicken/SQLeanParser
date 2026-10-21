@@ -344,7 +344,7 @@ class SubstringCliTests(unittest.TestCase):
         with patch.object(checker, "assert_report") as report, patch.object(checker, "invoke", return_value=good) as invoke:
             self.assertEqual(checker.boundaries(), 23)
         self.assertEqual([sum(call.args[1] == status for call in report.call_args_list)
-                          for status in ("invalid", "unsupported")], [10, 3])
+                          for status in ("invalid", "unsupported")], [10, 2])
         self.assertEqual(len(invoke.call_args_list), 10)
         bad = subprocess.CompletedProcess([], 3, json.dumps({
             "status": "unsupported", "diagnostic": {"code": "input.parse"}}), "")

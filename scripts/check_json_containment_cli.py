@@ -128,8 +128,13 @@ def boundaries():
     ]
     invalid.append("SELECT ARRAY[1] @> ARRAY[1::BIGINT]")
     unsupported = [
-        "SELECT (SELECT '{}'::JSONB) @> '{}'", "SELECT unknown_function() <@ '{}'::JSONB",
+        "SELECT unknown_function() <@ '{}'::JSONB",
     ]
+    promoted = [
+        ("SELECT (SELECT '{}'::JSONB) @> '{}'", (('?column?', 'bool', True),)),
+    ]
+    for sql, columns in promoted:
+        assert_report(["--assurance", "contract", sql], "valid", "contract", columns)
     syntax = [
         "SELECT '{}'::JSONB @>", "SELECT <@ '{}'::JSONB",
         "SELECT '{}'::JSONB @>> '{}'", "SELECT '{}'::JSONB @>-1",
@@ -144,7 +149,7 @@ def boundaries():
         assert (result.returncode, report["status"], report["diagnostic"]["code"]) == (
             1, "invalid", "input.parse"), report
     assert_report(["--assurance", "checked", "SELECT '{}'::JSONB @> '{}'"], "rejected", "checked")
-    return len(invalid) + len(unsupported) + len(valid) + len(syntax) + 1
+    return len(invalid) + len(unsupported) + len(valid) + len(syntax) + 1 + len(promoted)
 
 
 def main():

@@ -12,8 +12,8 @@ def invalid (code message : String) : Failure := .invalid ⟨code, message⟩
 def unsupported (code message : String) : Failure := .unsupported ⟨code, message⟩
 def exhausted : Failure := .inconclusive ⟨"resource_limit", "SELECT contract checking exhausted its recursion budget"⟩
 
-private instance (profile : Profile) (items : List Advanced.SelectItem) (name : Name) :
-    Decidable (SameOutputExpressions profile items name) := by
+private instance (profile : Profile) (items : List Advanced.SelectItem) (output : List OutputColumn) (name : Name) :
+    Decidable (SameOutputExpressions profile items output name) := by
   unfold SameOutputExpressions
   split <;> infer_instance
 
@@ -79,43 +79,86 @@ def binaryFailure (op : BinOp) (a b : Advanced.Expr) (ta tb : ExprType) : Failur
         "Binary operands have no applicable PostgreSQL scalar signature"
     | .and | .or => invalid "operator_signature" "Boolean operators require Boolean operands"
 
-structure ExprCertificate (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) where
+structure SubqueryCertificate (subqueries : SubqueryJudgment) (env : CTEEnv) (query : Advanced.Query) where
+  output : List OutputColumn
+  uses : List Parameter
+  valid : subqueries env query output uses
+
+abbrev SubqueryChecker (subqueries : SubqueryJudgment) (env : CTEEnv) :=
+  (query : Advanced.Query) → Except Failure (SubqueryCertificate subqueries env query)
+
+def noSubqueryChecker : SubqueryChecker NoSubqueries env := fun _ =>
+  .error (unsupported "subquery" "This entry point has no certified query context")
+
+structure ExprLabelCertificate (subqueries : SubqueryJudgment) (env : CTEEnv) (expr : Advanced.Expr) where
+  label : Nat × Name
+  valid : ExprLabelValidCore subqueries env expr label
+
+def checkExprLabel (subqueries : SubqueryJudgment) (env : CTEEnv)
+    (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (expr : Advanced.Expr) :
+    Except Failure (ExprLabelCertificate subqueries env expr) :=
+  match fuel with
+  | 0 => .error exhausted
+  | fuel + 1 =>
+    if closed : labelNeedsSubquery expr = false then
+      .ok ⟨outputLabel expr, .ordinary closed⟩
+    else match expr with
+    | .scalarQuery child => do
+      let checked ← checkSubquery child
+      match width : checked.output with
+      | [column] => .ok ⟨(2, column.name), .scalarQuery (width ▸ checked.valid)⟩
+      | _ => .error (invalid "scalar_subquery_arity" "A scalar subquery must expose exactly one column")
+    | .cast arg target => do
+      let child ← checkExprLabel subqueries env checkSubquery fuel arg
+      .ok ⟨if child.label.1 ≤ 1 then (1, typeNameLabel target.name) else child.label, .cast child.valid⟩
+    | .subscript arg _indices => do
+      let child ← checkExprLabel subqueries env checkSubquery fuel arg
+      .ok ⟨child.label, .subscript child.valid⟩
+    | .collate arg _name => do
+      let child ← checkExprLabel subqueries env checkSubquery fuel arg
+      .ok ⟨child.label, .collate child.valid⟩
+    | .caseExpr _operand _branches (some arg) => do
+      let child ← checkExprLabel subqueries env checkSubquery fuel arg
+      .ok ⟨if child.label.1 ≤ 1 then (1, "case") else child.label, .caseExpr child.valid⟩
+    | _ => .error (unsupported "subquery_label" "The subquery-dependent output label has no independent derivation")
+
+structure ExprCertificateCore (subqueries : SubqueryJudgment) (env : CTEEnv) (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) where
   type : ExprType
   uses : List Parameter
-  valid : ExprValid params scope expr type uses
+  valid : ExprValidCore subqueries params env scope expr type uses
 
-structure ExprListCertificate (params : ParameterEnv) (scope : Scope) (exprs : List Advanced.Expr) where
+structure ExprListCertificateCore (subqueries : SubqueryJudgment) (env : CTEEnv) (params : ParameterEnv) (scope : Scope) (exprs : List Advanced.Expr) where
   types : List ExprType
   uses : List Parameter
-  valid : ExprListValid params scope exprs types uses
+  valid : ExprListValidCore subqueries params env scope exprs types uses
 
-structure OptionalExprCertificate (params : ParameterEnv) (scope : Scope) (expr : Option Advanced.Expr) where
+structure OptionalExprCertificateCore (subqueries : SubqueryJudgment) (env : CTEEnv) (params : ParameterEnv) (scope : Scope) (expr : Option Advanced.Expr) where
   type : ExprType
   uses : List Parameter
-  valid : OptionalExprValid params scope expr type uses
+  valid : OptionalExprValidCore subqueries params env scope expr type uses
 
-structure BranchesCertificate (params : ParameterEnv) (scope : Scope)
+structure BranchesCertificateCore (subqueries : SubqueryJudgment) (env : CTEEnv) (params : ParameterEnv) (scope : Scope)
     (branches : List (Advanced.Expr × Advanced.Expr)) where
   conditions : List ExprType
   results : List ExprType
   uses : List Parameter
-  valid : BranchesValid params scope branches conditions results uses
+  valid : BranchesValidCore subqueries params env scope branches conditions results uses
 
-structure ArrayCertificate (params : ParameterEnv) (scope : Scope)
+structure ArrayCertificateCore (subqueries : SubqueryJudgment) (env : CTEEnv) (params : ParameterEnv) (scope : Scope)
     (target : ScalarType) (exprs : List Advanced.Expr) where
   uses : List Parameter
-  valid : ArrayValid params scope target exprs uses
+  valid : ArrayValidCore subqueries params env scope target exprs uses
 
-structure ArrayElementsCertificate (params : ParameterEnv) (scope : Scope)
+structure ArrayElementsCertificateCore (subqueries : SubqueryJudgment) (env : CTEEnv) (params : ParameterEnv) (scope : Scope)
     (target : ScalarType) (exprs : List Advanced.Expr) where
   types : List ExprType
   uses : List Parameter
-  valid : ArrayElementsValid params scope target exprs types uses
+  valid : ArrayElementsValidCore subqueries params env scope target exprs types uses
 
-structure SubscriptsCertificate (params : ParameterEnv) (scope : Scope)
+structure SubscriptsCertificateCore (subqueries : SubqueryJudgment) (env : CTEEnv) (params : ParameterEnv) (scope : Scope)
     (indices : List Advanced.Subscript) where
   uses : List Parameter
-  valid : SubscriptsValid params scope indices uses
+  valid : SubscriptsValidCore subqueries params env scope indices uses
 
 /-- Namespace errors precede column lookup. Missing legacy schema provenance
 and PostgreSQL's whole-row function notation remain explicit coverage gaps. -/
@@ -213,8 +256,9 @@ def checkArguments (parameters : List FunctionParameter)
   else .error (invalid "duplicate_argument" "A function parameter is supplied more than once")
 
 mutual
-  def checkExpr (fuel : Nat) (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) :
-      Except Failure (ExprCertificate params scope expr) :=
+  def checkExprCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+      (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) :
+      Except Failure (ExprCertificateCore subqueries env params scope expr) :=
     match fuel with
     | 0 => .error exhausted
     | fuel + 1 => match expr with
@@ -265,38 +309,38 @@ mutual
           | _ => .error (invalid "column_binding" s!"Column '{name}' must resolve to exactly one visible binding")
       | .binary op (.row left) (.row right) =>
           match op with
-          | .eq => checkRowComparison fuel params scope .eq left right
-          | .ne => checkRowComparison fuel params scope .ne left right
-          | .lt => checkRowComparison fuel params scope .lt left right
-          | .le => checkRowComparison fuel params scope .le left right
-          | .gt => checkRowComparison fuel params scope .gt left right
-          | .ge => checkRowComparison fuel params scope .ge left right
+          | .eq => checkRowComparisonCore subqueries env checkSubquery fuel params scope .eq left right
+          | .ne => checkRowComparisonCore subqueries env checkSubquery fuel params scope .ne left right
+          | .lt => checkRowComparisonCore subqueries env checkSubquery fuel params scope .lt left right
+          | .le => checkRowComparisonCore subqueries env checkSubquery fuel params scope .le left right
+          | .gt => checkRowComparisonCore subqueries env checkSubquery fuel params scope .gt left right
+          | .ge => checkRowComparisonCore subqueries env checkSubquery fuel params scope .ge left right
           | _ => .error (invalid "row_operator"
               "Constructor-pair rows require one of the six comparison operators")
       | .binary op a b => do
-          let left ← checkExpr fuel params scope a
-          let right ← checkExpr fuel params scope b
+          let left ← checkExprCore subqueries env checkSubquery fuel params scope a
+          let right ← checkExprCore subqueries env checkSubquery fuel params scope b
           match signature : binarySignature op left.type right.type with
           | none => .error (binaryFailure op a b left.type right.type)
           | some type => .ok ⟨type, left.uses ++ right.uses, .binary left.valid right.valid signature⟩
       | .distinctFrom (.row args) .null negated => do
-          let typed ← checkExprList fuel params scope args
+          let typed ← checkExprListCore subqueries env checkSubquery fuel params scope args
           .ok ⟨some ⟨.bool, false⟩, typed.uses, .distinctRowNullRight (negated := negated) typed.valid⟩
       | .distinctFrom .null (.row args) negated => do
-          let typed ← checkExprList fuel params scope args
+          let typed ← checkExprListCore subqueries env checkSubquery fuel params scope args
           .ok ⟨some ⟨.bool, false⟩, typed.uses, .distinctRowNullLeft (negated := negated) typed.valid⟩
       | .distinctFrom .null arg negated => do
-          let typed ← checkExpr fuel params scope arg
+          let typed ← checkExprCore subqueries env checkSubquery fuel params scope arg
           .ok ⟨some ⟨.bool, false⟩, typed.uses, .distinctNullLeft (negated := negated) typed.valid⟩
       | .distinctFrom arg .null negated => do
-          let typed ← checkExpr fuel params scope arg
+          let typed ← checkExprCore subqueries env checkSubquery fuel params scope arg
           .ok ⟨some ⟨.bool, false⟩, typed.uses, .distinctNullRight (negated := negated) typed.valid⟩
       | .distinctFrom (.row left) (.row right) negated => do
           if left.length != right.length then
             .error (invalid "distinct_row_arity" "DISTINCT row constructors require equal field counts")
           else
-            let leftTyped ← checkExprList fuel params scope left
-            let rightTyped ← checkExprList fuel params scope right
+            let leftTyped ← checkExprListCore subqueries env checkSubquery fuel params scope left
+            let rightTyped ← checkExprListCore subqueries env checkSubquery fuel params scope right
             let leftInputs := scalarInputs left leftTyped.types
             let rightInputs := scalarInputs right rightTyped.types
             match signature : rowDistinctSignature leftInputs rightInputs with
@@ -310,8 +354,8 @@ mutual
       | .distinctFrom left right negated => do
           if ordinaryLeft : OrdinaryDistinctOperand left then
             if ordinaryRight : OrdinaryDistinctOperand right then
-              let leftTyped ← checkExpr fuel params scope left
-              let rightTyped ← checkExpr fuel params scope right
+              let leftTyped ← checkExprCore subqueries env checkSubquery fuel params scope left
+              let rightTyped ← checkExprCore subqueries env checkSubquery fuel params scope right
               match signature : distinctSignature
                   (scalarInput left leftTyped.type) (scalarInput right rightTyped.type) with
               | some _selected => .ok ⟨some ⟨.bool, false⟩, leftTyped.uses ++ rightTyped.uses,
@@ -326,8 +370,8 @@ mutual
           else .error (unsupported "distinct_composite"
             "Composite values outside direct flat-row pairs require a separate record type contract")
       | .concat a b => do
-          let left ← checkExpr fuel params scope a
-          let right ← checkExpr fuel params scope b
+          let left ← checkExprCore subqueries env checkSubquery fuel params scope a
+          let right ← checkExprCore subqueries env checkSubquery fuel params scope b
           match signature : concatSignature (scalarInput a left.type) (scalarInput b right.type) with
           | some selected => .ok ⟨some ⟨selected.output,
                 (scalarInput a left.type).nullable || (scalarInput b right.type).nullable⟩,
@@ -345,36 +389,36 @@ mutual
       | .unary .neg (.literal (.int 9223372036854775808)) => .ok ⟨some ⟨.int64, false⟩, [], .minInt64⟩
       | .unary op a => do
           if ordinary : OrdinaryUnary op a then
-            let arg ← checkExpr fuel params scope a
+            let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
             match signature : unarySignature op arg.type with
             | none => .error (missingSignature (uncontextualizedString a)
                 "operator_signature" "Unary overload resolution is outside the explicit profile signatures")
             | some type => .ok ⟨type, arg.uses, .unary arg.valid signature ordinary⟩
           else .error (unsupported "signed_integer_boundary" "Signed integer boundary requires literal folding")
       | .isNull (.row args) negated => do
-          let typed ← checkExprList fuel params scope args
+          let typed ← checkExprListCore subqueries env checkSubquery fuel params scope args
           .ok ⟨some ⟨.bool, false⟩, typed.uses, .isNullRow (negated := negated) typed.valid⟩
       | .isNull a negated => do
-          let arg ← checkExpr fuel params scope a
+          let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
           .ok ⟨some ⟨.bool, false⟩, arg.uses, .isNull (negated := negated) arg.valid⟩
       | .pattern a b false => do
-          let arg ← checkExpr fuel params scope a
-          let pattern ← checkExpr fuel params scope b
+          let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
+          let pattern ← checkExprCore subqueries env checkSubquery fuel params scope b
           match signature : patternSignature arg.type pattern.type with
           | none => .error (missingSignature (uncontextualizedString a || uncontextualizedString b)
               "pattern_signature" "LIKE requires compatible string or BYTEA operands")
           | some type => .ok ⟨type, arg.uses ++ pattern.uses, .pattern arg.valid pattern.valid signature⟩
       | .pattern a b true => do
-          let arg ← checkExpr fuel params scope a
-          let pattern ← checkExpr fuel params scope b
+          let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
+          let pattern ← checkExprCore subqueries env checkSubquery fuel params scope b
           match signature : stringMatchSignature (scalarInput a arg.type) (scalarInput b pattern.type) with
           | none => .error (invalid "ilike_signature" "ILIKE requires string or contextually typed unknown operands")
           | some _selected => .ok ⟨some ⟨.bool,
                 (scalarInput a arg.type).nullable || (scalarInput b pattern.type).nullable⟩,
               arg.uses ++ pattern.uses, .ilike arg.valid pattern.valid signature⟩
       | .regex a b insensitive negated => do
-          let arg ← checkExpr fuel params scope a
-          let pattern ← checkExpr fuel params scope b
+          let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
+          let pattern ← checkExprCore subqueries env checkSubquery fuel params scope b
           match signature : stringMatchSignature (scalarInput a arg.type) (scalarInput b pattern.type) with
           | none => .error (invalid "regex_signature" "Regex matching requires string or contextually typed unknown operands")
           | some _selected => .ok ⟨some ⟨.bool,
@@ -382,23 +426,23 @@ mutual
               arg.uses ++ pattern.uses,
               .regex (insensitive := insensitive) (negated := negated) arg.valid pattern.valid signature⟩
       | .extract field a => do
-          let arg ← checkExpr fuel params scope a
+          let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
           match signature : extractSignature (scalarInput a arg.type) with
           | none => .error (invalid "extract_signature"
               "EXTRACT requires an unambiguous DATE, TIME, TIMETZ, TIMESTAMP, TIMESTAMPTZ or INTERVAL input")
           | some selected => .ok ⟨some ⟨selected.output, extractNullable (scalarInput a arg.type)⟩,
               arg.uses, .extract (field := field) arg.valid signature⟩
       | .jsonAccess op a b => do
-          let arg ← checkExpr fuel params scope a
-          let key ← checkExpr fuel params scope b
+          let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
+          let key ← checkExprCore subqueries env checkSubquery fuel params scope b
           match signature : jsonAccessSignature op (scalarInput a arg.type) (scalarInput b key.type) with
           | none => .error (invalid "json_extraction_signature"
               "JSON extraction requires an unambiguous JSON/JSONB input and a compatible INTEGER/TEXT key or TEXT[] path")
           | some selected => .ok ⟨some ⟨selected.output, true⟩, arg.uses ++ key.uses,
               .jsonAccess arg.valid key.valid signature⟩
       | .jsonExistence op a b => do
-          let arg ← checkExpr fuel params scope a
-          let keys ← checkExpr fuel params scope b
+          let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
+          let keys ← checkExprCore subqueries env checkSubquery fuel params scope b
           match signature : jsonExistenceSignature op (scalarInput a arg.type) (scalarInput b keys.type) with
           | none => .error (invalid "json_existence_signature"
               "JSONB existence requires JSONB and a TEXT key or TEXT[] keys; two unknown operands are ambiguous for ?|")
@@ -407,8 +451,8 @@ mutual
                 (scalarInput a arg.type).nullable || (scalarInput b keys.type).nullable⟩,
                 arg.uses ++ keys.uses, .jsonExistence arg.valid keys.valid signature⟩
       | .containment a b containedBy => do
-          let left ← checkExpr fuel params scope a
-          let right ← checkExpr fuel params scope b
+          let left ← checkExprCore subqueries env checkSubquery fuel params scope a
+          let right ← checkExprCore subqueries env checkSubquery fuel params scope b
           match signature : jsonContainmentSignature (scalarInput a left.type) (scalarInput b right.type) with
           | some _selected => .ok ⟨some ⟨.bool,
                 (scalarInput a left.type).nullable || (scalarInput b right.type).nullable⟩,
@@ -428,8 +472,8 @@ mutual
                 else invalid "json_containment_signature"
                   "Containment requires compatible JSONB operands or matching concrete array element types")
       | .overlap a b => do
-          let left ← checkExpr fuel params scope a
-          let right ← checkExpr fuel params scope b
+          let left ← checkExprCore subqueries env checkSubquery fuel params scope a
+          let right ← checkExprCore subqueries env checkSubquery fuel params scope b
           match signature : arrayPredicateSignature (scalarInput a left.type) (scalarInput b right.type) with
           | some _selected => .ok ⟨some ⟨.bool,
                 (scalarInput a left.type).nullable || (scalarInput b right.type).nullable⟩,
@@ -441,7 +485,7 @@ mutual
             else invalid "array_overlap_signature"
               "Array overlap requires matching concrete array element types and a known array context")
       | .collate a name => do
-          let arg ← checkExpr fuel params scope a
+          let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
           .ok ⟨arg.type, arg.uses, .collate arg.valid⟩
       | .cast a target => do
           if intervalPrecisionGap target then throw intervalPrecisionFailure
@@ -450,20 +494,20 @@ mutual
             | none => .error (unsupported "cast_type" "Cast target is outside the concrete PostgreSQL scalar profile")
             | some base =>
                 if ordinary : OrdinaryCast a target then
-                  let arg ← checkExpr fuel params scope a
+                  let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
                   if allowed : castAllowed arg.type base = true then
                     .ok ⟨castSignature arg.type base, arg.uses,
                       .cast arg.valid supported declaration allowed ordinary⟩
                   else .error (invalid "cast_signature" "PostgreSQL has no explicit cast between these concrete scalar types")
                 else match shape : a with
                   | .array elements =>
-                    let args ← checkArray fuel params scope base elements
+                    let args ← checkArrayCore subqueries env checkSubquery fuel params scope base elements
                     .ok ⟨some ⟨base, false⟩, args.uses,
                       by simpa only [shape] using ExprValid.castArray args.valid supported declaration⟩
                   | _ => .error (invalid "cast_category" "Unclassified contextual cast")
           else .error (invalid "type_declaration" "Cast target has invalid type modifiers")
       | .array elements => do
-          let args ← checkExprList fuel params scope elements
+          let args ← checkExprListCore subqueries env checkSubquery fuel params scope elements
           match signature : arraySignature (scalarInputs elements args.types) with
           | none => .error (invalid "array_constructor_type"
               "An inferred array requires nonempty elements with a common implicit type; empty arrays require a direct array cast")
@@ -473,7 +517,7 @@ mutual
       | .substring form args => do
           if args.length != form.arity then
             throw (invalid "substring_arity" "SUBSTRING special syntax has the wrong number of arguments")
-          let argsTyped ← checkExprList fuel params scope args
+          let argsTyped ← checkExprListCore subqueries env checkSubquery fuel params scope args
           let arguments ← checkSubstringArguments form (scalarInputs args argsTyped.types)
           match signature : resolveOverload substringCatalog arguments.val with
           | none => .error (invalid "substring_signature"
@@ -481,7 +525,7 @@ mutual
           | some selected => .ok ⟨some ⟨selected.output, substringNullable selected arguments.val⟩,
               argsTyped.uses, .substring argsTyped.valid arguments.property signature⟩
       | .call name args => do
-          let argsTyped ← checkExprList fuel params scope args
+          let argsTyped ← checkExprListCore subqueries env checkSubquery fuel params scope args
           if callee : builtinName name = some "make_interval" then
             let binding ← checkArguments makeIntervalParameters (args.map fun _ => none)
               (scalarInputs args argsTyped.types)
@@ -499,7 +543,7 @@ mutual
             | some result => .ok ⟨some result, argsTyped.uses, .call argsTyped.valid signature⟩
       | .namedCall name args => do
           if callee : builtinName name = some "make_interval" then
-            let argsTyped ← checkExprList fuel params scope (args.map CallArgument.expression)
+            let argsTyped ← checkExprListCore subqueries env checkSubquery fuel params scope (args.map CallArgument.expression)
             let binding ← checkArguments makeIntervalParameters (args.map CallArgument.name?)
               (scalarInputs (args.map CallArgument.expression) argsTyped.types)
             match signature : makeIntervalSignature binding.val with
@@ -510,34 +554,34 @@ mutual
           else .error (unsupported "named_function_signature"
               "Named arguments require an explicit parameter-name and default-value declaration")
       | .coalesce args => do
-          let argsTyped ← checkExprList fuel params scope args
+          let argsTyped ← checkExprListCore subqueries env checkSubquery fuel params scope args
           match signature : coalesceSignature (scalarInputs args argsTyped.types) with
           | none => .error (invalid "conditional_signature" "COALESCE requires nonempty, implicitly compatible arguments")
           | some result => .ok ⟨some result, argsTyped.uses, .coalesce argsTyped.valid signature⟩
       | .greatest args => do
-          let argsTyped ← checkExprList fuel params scope args
+          let argsTyped ← checkExprListCore subqueries env checkSubquery fuel params scope args
           match signature : extremumSignature (scalarInputs args argsTyped.types) with
           | none => .error (operatorFailure argsTyped.types false "conditional_signature"
               "GREATEST requires a nonempty common orderable type")
           | some result => .ok ⟨some result, argsTyped.uses, .greatest argsTyped.valid signature⟩
       | .least args => do
-          let argsTyped ← checkExprList fuel params scope args
+          let argsTyped ← checkExprListCore subqueries env checkSubquery fuel params scope args
           match signature : extremumSignature (scalarInputs args argsTyped.types) with
           | none => .error (operatorFailure argsTyped.types false "conditional_signature"
               "LEAST requires a nonempty common orderable type")
           | some result => .ok ⟨some result, argsTyped.uses, .least argsTyped.valid signature⟩
       | .nullIf left right => do
-          let leftTyped ← checkExpr fuel params scope left
-          let rightTyped ← checkExpr fuel params scope right
+          let leftTyped ← checkExprCore subqueries env checkSubquery fuel params scope left
+          let rightTyped ← checkExprCore subqueries env checkSubquery fuel params scope right
           match signature : nullIfSignature (scalarInput left leftTyped.type) (scalarInput right rightTyped.type) with
           | none => .error (operatorFailure [leftTyped.type, rightTyped.type] false
               "conditional_signature" "NULLIF requires a unique equality operator")
           | some result => .ok ⟨some result, leftTyped.uses ++ rightTyped.uses,
               .nullIf leftTyped.valid rightTyped.valid signature⟩
       | .caseExpr operand branches otherwise => do
-          let operandTyped ← checkOptionalExpr fuel params scope operand
-          let branchesTyped ← checkBranches fuel params scope branches
-          let otherwiseTyped ← checkOptionalExpr fuel params scope otherwise
+          let operandTyped ← checkOptionalExprCore subqueries env checkSubquery fuel params scope operand
+          let branchesTyped ← checkBranchesCore subqueries env checkSubquery fuel params scope branches
+          let otherwiseTyped ← checkOptionalExprCore subqueries env checkSubquery fuel params scope otherwise
           match signature : caseSignature (operand.map fun expr => scalarInput expr operandTyped.type)
               (scalarInputs (branches.map Prod.fst) branchesTyped.conditions)
               (scalarInputs (branches.map Prod.snd) branchesTyped.results)
@@ -550,8 +594,8 @@ mutual
           | some result => .ok ⟨some result, operandTyped.uses ++ branchesTyped.uses ++ otherwiseTyped.uses,
               .caseExpr operandTyped.valid branchesTyped.valid otherwiseTyped.valid signature⟩
       | .quantifiedComparison op quantifier left right => do
-          let leftTyped ← checkExpr fuel params scope left
-          let rightTyped ← checkExpr fuel params scope right
+          let leftTyped ← checkExprCore subqueries env checkSubquery fuel params scope left
+          let rightTyped ← checkExprCore subqueries env checkSubquery fuel params scope right
           match signature : quantifiedComparisonSignature op
               (scalarInput left leftTyped.type) (scalarInput right rightTyped.type) with
           | none => .error (invalid "quantified_comparison_signature"
@@ -561,10 +605,10 @@ mutual
       | .subscript base indices => do
           if nonempty : indices ≠ [] then
             if dimensions : indices.length ≤ 6 then
-              let baseTyped ← checkExpr fuel params scope base
+              let baseTyped ← checkExprCore subqueries env checkSubquery fuel params scope base
               match shape : baseTyped.type with
               | some ⟨.array element, nullable⟩ =>
-                  let bounds ← checkSubscripts fuel params scope indices
+                  let bounds ← checkSubscriptsCore subqueries env checkSubquery fuel params scope indices
                   .ok ⟨some ⟨if indices.any Advanced.Subscript.isSlice then .array element else element, true⟩,
                     baseTyped.uses ++ bounds.uses,
                     .subscript (shape ▸ baseTyped.valid) bounds.valid nonempty dimensions⟩
@@ -577,17 +621,17 @@ mutual
           else .error (invalid "empty_subscripts" "A subscript group requires at least one dimension")
       | .inList a values => do
           if nonempty : values ≠ [] then
-            let arg ← checkExpr fuel params scope a
-            let items ← checkExprList fuel params scope values
+            let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
+            let items ← checkExprListCore subqueries env checkSubquery fuel params scope values
             match signature : comparisonListSignature (arg.type :: items.types) with
             | none => .error (operatorFailure (arg.type :: items.types) (uncontextualizedString a || values.any uncontextualizedString)
                 "comparison_signature" "IN operands have no covered common comparison signature")
             | some type => .ok ⟨type, arg.uses ++ items.uses, .inList arg.valid items.valid nonempty signature⟩
           else .error (invalid "empty_in_list" "IN requires at least one value")
       | .between a b c negated => do
-          let arg ← checkExpr fuel params scope a
-          let lower ← checkExpr fuel params scope b
-          let upper ← checkExpr fuel params scope c
+          let arg ← checkExprCore subqueries env checkSubquery fuel params scope a
+          let lower ← checkExprCore subqueries env checkSubquery fuel params scope b
+          let upper ← checkExprCore subqueries env checkSubquery fuel params scope c
           match signature : comparisonListSignature [arg.type, lower.type, upper.type] with
           | none => .error (operatorFailure [arg.type, lower.type, upper.type]
               (uncontextualizedString a || uncontextualizedString b || uncontextualizedString c)
@@ -596,31 +640,54 @@ mutual
               .between (negated := negated) arg.valid lower.valid upper.valid signature⟩
       | .countAll | .aggregate .. | .filteredAggregate .. =>
           .error (unsupported "aggregate" "Independent aggregate and grouped-query rules are not implemented yet")
-      | .inQuery .. | .exists .. | .scalarQuery .. =>
-          .error (unsupported "subquery" "Independent subquery and correlation rules are not implemented yet")
+      | .exists child => do
+          let checked ← checkSubquery child
+          .ok ⟨some ⟨.bool, false⟩, checked.uses, .exists checked.valid⟩
+      | .scalarQuery child => do
+          let checked ← checkSubquery child
+          match width : checked.output with
+          | [column] => .ok ⟨some ⟨column.type.base, true⟩, checked.uses,
+              .scalarQuery (width ▸ checked.valid)⟩
+          | _ => .error (invalid "scalar_subquery_arity" "A scalar subquery must expose exactly one column")
+      | .inQuery arg child => do
+          if (match arg with | .row .. => true | _ => false) then
+            .error (unsupported "row_subquery" "Row IN subqueries require independent pairwise row rules")
+          else
+            let left ← checkExprCore subqueries env checkSubquery fuel params scope arg
+            let checked ← checkSubquery child
+            match width : checked.output with
+            | [column] =>
+              match signature : equalityOverload (scalarInput arg left.type) (.known column.type) with
+              | none => .error (operatorFailure [left.type, some column.type] (uncontextualizedString arg)
+                  "in_subquery_signature" "IN subquery operands have no covered equality signature")
+              | some _ => .ok ⟨some ⟨.bool, (scalarInput arg left.type).nullable || column.type.nullable⟩,
+                  left.uses ++ checked.uses, .inQuery left.valid (width ▸ checked.valid) signature⟩
+            | _ => .error (invalid "in_subquery_arity" "A scalar IN subquery must expose exactly one column")
 
-  def checkExprList (fuel : Nat) (params : ParameterEnv) (scope : Scope) (exprs : List Advanced.Expr) :
-      Except Failure (ExprListCertificate params scope exprs) :=
+  def checkExprListCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+      (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (params : ParameterEnv) (scope : Scope) (exprs : List Advanced.Expr) :
+      Except Failure (ExprListCertificateCore subqueries env params scope exprs) :=
     match fuel with
     | 0 => .error exhausted
     | fuel + 1 => match exprs with
       | [] => .ok ⟨[], [], .nil⟩
       | expr :: exprs => do
-          let head ← checkExpr fuel params scope expr
-          let tail ← checkExprList fuel params scope exprs
+          let head ← checkExprCore subqueries env checkSubquery fuel params scope expr
+          let tail ← checkExprListCore subqueries env checkSubquery fuel params scope exprs
           .ok ⟨head.type :: tail.types, head.uses ++ tail.uses, .cons head.valid tail.valid⟩
 
-  def checkRowComparison (fuel : Nat) (params : ParameterEnv) (scope : Scope)
+  def checkRowComparisonCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+      (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (params : ParameterEnv) (scope : Scope)
       (op : Advanced.ComparisonOp) (left right : List Advanced.Expr) :
-      Except Failure (ExprCertificate params scope (.binary op.toBinOp (.row left) (.row right))) :=
+      Except Failure (ExprCertificateCore subqueries env params scope (.binary op.toBinOp (.row left) (.row right))) :=
     match fuel with
     | 0 => .error exhausted
     | fuel + 1 => do
       if left.isEmpty || left.length != right.length then
         .error (invalid "row_comparison_arity" "Row comparison requires equal positive field counts")
       else
-        let leftTyped ← checkExprList fuel params scope left
-        let rightTyped ← checkExprList fuel params scope right
+        let leftTyped ← checkExprListCore subqueries env checkSubquery fuel params scope left
+        let rightTyped ← checkExprListCore subqueries env checkSubquery fuel params scope right
         match signature : rowComparisonSignature op
             (scalarInputs left leftTyped.types) (scalarInputs right rightTyped.types) with
         | some _selected => .ok ⟨some ⟨.bool, true⟩, leftTyped.uses ++ rightTyped.uses,
@@ -630,88 +697,109 @@ mutual
 
   /-- Direct target-directed array construction; target context follows only
   nested raw constructors. It never crosses a function/conditional/cast node. -/
-  def checkArray (fuel : Nat) (params : ParameterEnv) (scope : Scope)
+  def checkArrayCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+      (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (params : ParameterEnv) (scope : Scope)
       (target : ScalarType) (exprs : List Advanced.Expr) :
-      Except Failure (ArrayCertificate params scope target exprs) :=
+      Except Failure (ArrayCertificateCore subqueries env params scope target exprs) :=
     match fuel with
     | 0 => .error exhausted
     | fuel + 1 => do
-      let args ← checkArrayElements fuel params scope target exprs
+      let args ← checkArrayElementsCore subqueries env checkSubquery fuel params scope target exprs
       if signature : arrayCastSignature target (scalarInputs exprs args.types) = true then
         .ok ⟨args.uses, .targeted args.valid signature⟩
       else .error (invalid "array_constructor_cast"
         "Array constructor elements cannot be explicitly coerced to the direct cast target")
 
-  def checkArrayElements (fuel : Nat) (params : ParameterEnv) (scope : Scope)
+  def checkArrayElementsCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+      (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (params : ParameterEnv) (scope : Scope)
       (target : ScalarType) (exprs : List Advanced.Expr) :
-      Except Failure (ArrayElementsCertificate params scope target exprs) :=
+      Except Failure (ArrayElementsCertificateCore subqueries env params scope target exprs) :=
     match fuel with
     | 0 => .error exhausted
     | fuel + 1 => match exprs with
       | [] => .ok ⟨[], [], .nil⟩
       | .array elements :: rest => do
-          let head ← checkArray fuel params scope target elements
-          let tail ← checkArrayElements fuel params scope target rest
+          let head ← checkArrayCore subqueries env checkSubquery fuel params scope target elements
+          let tail ← checkArrayElementsCore subqueries env checkSubquery fuel params scope target rest
           .ok ⟨some ⟨target, false⟩ :: tail.types, head.uses ++ tail.uses,
             .nested head.valid tail.valid⟩
       | expr :: exprs => do
           if category : OrdinaryArrayElement expr then
-            let head ← checkExpr fuel params scope expr
-            let tail ← checkArrayElements fuel params scope target exprs
+            let head ← checkExprCore subqueries env checkSubquery fuel params scope expr
+            let tail ← checkArrayElementsCore subqueries env checkSubquery fuel params scope target exprs
             .ok ⟨head.type :: tail.types, head.uses ++ tail.uses,
               .ordinary category head.valid tail.valid⟩
           else .error (invalid "array_element_category" "Unclassified array constructor child")
 
-  def checkOptionalExpr (fuel : Nat) (params : ParameterEnv) (scope : Scope) (expr : Option Advanced.Expr) :
-      Except Failure (OptionalExprCertificate params scope expr) :=
+  def checkOptionalExprCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+      (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (params : ParameterEnv) (scope : Scope) (expr : Option Advanced.Expr) :
+      Except Failure (OptionalExprCertificateCore subqueries env params scope expr) :=
     match fuel with
     | 0 => .error exhausted
     | fuel + 1 => match expr with
       | none => .ok ⟨none, [], .absent⟩
       | some expr => do
-          let typed ← checkExpr fuel params scope expr
+          let typed ← checkExprCore subqueries env checkSubquery fuel params scope expr
           .ok ⟨typed.type, typed.uses, .present typed.valid⟩
 
-  def checkSubscripts (fuel : Nat) (params : ParameterEnv) (scope : Scope)
+  def checkSubscriptsCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+      (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (params : ParameterEnv) (scope : Scope)
       (indices : List Advanced.Subscript) :
-      Except Failure (SubscriptsCertificate params scope indices) :=
+      Except Failure (SubscriptsCertificateCore subqueries env params scope indices) :=
     match fuel with
     | 0 => .error exhausted
     | fuel + 1 => match indices with
       | [] => .ok ⟨[], .nil⟩
       | .index expr :: rest => do
-          let bound ← checkExpr fuel params scope expr
+          let bound ← checkExprCore subqueries env checkSubquery fuel params scope expr
           if signature : subscriptBoundSignature (scalarInput expr bound.type) = true then
-            let tail ← checkSubscripts fuel params scope rest
+            let tail ← checkSubscriptsCore subqueries env checkSubquery fuel params scope rest
             .ok ⟨bound.uses ++ tail.uses, .index bound.valid signature tail.valid⟩
           else .error (invalid "subscript_bound"
             "Array bounds require assignment coercion to INTEGER; concrete numeric types or unknown inputs are admitted")
       | .slice lo hi :: rest => do
-          let lower ← checkOptionalExpr fuel params scope lo
-          let upper ← checkOptionalExpr fuel params scope hi
+          let lower ← checkOptionalExprCore subqueries env checkSubquery fuel params scope lo
+          let upper ← checkOptionalExprCore subqueries env checkSubquery fuel params scope hi
           if lowerSignature : optionalSubscriptBoundSignature lo lower.type = true then
             if upperSignature : optionalSubscriptBoundSignature hi upper.type = true then
-              let tail ← checkSubscripts fuel params scope rest
+              let tail ← checkSubscriptsCore subqueries env checkSubquery fuel params scope rest
               .ok ⟨lower.uses ++ upper.uses ++ tail.uses,
                 .slice lower.valid upper.valid lowerSignature upperSignature tail.valid⟩
             else .error (invalid "subscript_bound" "Array upper bound has no assignment coercion to INTEGER")
           else .error (invalid "subscript_bound" "Array lower bound has no assignment coercion to INTEGER")
 
-  def checkBranches (fuel : Nat) (params : ParameterEnv) (scope : Scope)
+  def checkBranchesCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+      (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (params : ParameterEnv) (scope : Scope)
       (branches : List (Advanced.Expr × Advanced.Expr)) :
-      Except Failure (BranchesCertificate params scope branches) :=
+      Except Failure (BranchesCertificateCore subqueries env params scope branches) :=
     match fuel with
     | 0 => .error exhausted
     | fuel + 1 => match branches with
       | [] => .ok ⟨[], [], [], .nil⟩
       | (condition, result) :: branches => do
-          let conditionTyped ← checkExpr fuel params scope condition
-          let resultTyped ← checkExpr fuel params scope result
-          let tail ← checkBranches fuel params scope branches
+          let conditionTyped ← checkExprCore subqueries env checkSubquery fuel params scope condition
+          let resultTyped ← checkExprCore subqueries env checkSubquery fuel params scope result
+          let tail ← checkBranchesCore subqueries env checkSubquery fuel params scope branches
           .ok ⟨conditionTyped.type :: tail.conditions, resultTyped.type :: tail.results,
             conditionTyped.uses ++ resultTyped.uses ++ tail.uses,
             .cons conditionTyped.valid resultTyped.valid tail.valid⟩
 end
 
+
+abbrev ExprCertificate := ExprCertificateCore NoSubqueries []
+abbrev ExprListCertificate := ExprListCertificateCore NoSubqueries []
+abbrev OptionalExprCertificate := OptionalExprCertificateCore NoSubqueries []
+abbrev BranchesCertificate := BranchesCertificateCore NoSubqueries []
+abbrev ArrayCertificate := ArrayCertificateCore NoSubqueries []
+abbrev ArrayElementsCertificate := ArrayElementsCertificateCore NoSubqueries []
+abbrev SubscriptsCertificate := SubscriptsCertificateCore NoSubqueries []
+abbrev checkExpr := checkExprCore NoSubqueries [] noSubqueryChecker
+abbrev checkExprList := checkExprListCore NoSubqueries [] noSubqueryChecker
+abbrev checkRowComparison := checkRowComparisonCore NoSubqueries [] noSubqueryChecker
+abbrev checkArray := checkArrayCore NoSubqueries [] noSubqueryChecker
+abbrev checkArrayElements := checkArrayElementsCore NoSubqueries [] noSubqueryChecker
+abbrev checkOptionalExpr := checkOptionalExprCore NoSubqueries [] noSubqueryChecker
+abbrev checkSubscripts := checkSubscriptsCore NoSubqueries [] noSubqueryChecker
+abbrev checkBranches := checkBranchesCore NoSubqueries [] noSubqueryChecker
 
 end SQLean.SelectContract

@@ -198,8 +198,11 @@ def arrayPredicateContractTests : IO Nat := do
       count := count + 1
     SQLean.Tests.assert (sameOutputTypes (← arrayPredicateOutput s!"SELECT ARRAY[1] {op.toSql} ARRAY[1]") [{name := "?column?", type := ⟨.bool, false⟩}]) "array predicate default label"
     count := count + 1
-    for sql in [s!"SELECT ARRAY[1] {op.toSql} (SELECT ARRAY[1])",
-        s!"SELECT unknown_function() {op.toSql} ARRAY[1]",
+    SQLean.Tests.assert (sameOutputTypes
+      (← arrayPredicateOutput s!"SELECT ARRAY[1] {op.toSql} (SELECT ARRAY[1])")
+      [{name := "?column?", type := ⟨.bool, true⟩}]) "nullable scalar-subquery array operand"
+    count := count + 1
+    for sql in [s!"SELECT unknown_function() {op.toSql} ARRAY[1]",
         s!"SELECT ROW(1,2) {op.toSql} ARRAY[1]"] do
       let query ← expectOk sql (Advanced.parseQuery sql)
       match SelectContract.checkQuery .basicV32 [] [] query with

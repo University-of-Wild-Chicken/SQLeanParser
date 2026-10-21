@@ -1,0 +1,80 @@
+[
+  {
+    "id": "exists-step",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM r WHERE n<2 AND EXISTS(SELECT 1 FROM r)) SELECT n FROM r",
+    "prepare": "42P19",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "scalar-step",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT (SELECT n FROM r LIMIT 1)+1 FROM r WHERE n<2) SELECT n FROM r",
+    "prepare": "42P19",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "in-step",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM r WHERE n<2 AND n IN(SELECT n FROM r)) SELECT n FROM r",
+    "prepare": "42P19",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "exists-only-reference",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT 2 WHERE EXISTS(SELECT 1 FROM r)) SELECT n FROM r",
+    "prepare": "42P19",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "scalar-only-reference",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT (SELECT n FROM r)+1) SELECT n FROM r",
+    "prepare": "42P19",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "join-on-reference",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT r.n+1 FROM r JOIN (SELECT 1 AS v) d ON EXISTS(SELECT 1 FROM r) WHERE n<2) SELECT n FROM r",
+    "prepare": "42P19",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "order-reference",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL (SELECT n+1 FROM r WHERE n<2 ORDER BY (SELECT n FROM r LIMIT 1))) SELECT n FROM r",
+    "prepare": "42P19",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "anchor-reference",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT (SELECT n FROM r LIMIT 1) UNION ALL SELECT n+1 FROM r WHERE n<2) SELECT n FROM r",
+    "prepare": "42P19",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "unused-cte-reference",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM r WHERE n<2 AND EXISTS(WITH x AS(SELECT n FROM r) SELECT 1)) SELECT n FROM r",
+    "prepare": "42P19",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "inner-shadow-allowed",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM r WHERE n<2 AND EXISTS(WITH r AS(SELECT 8 AS n) SELECT n FROM r)) SELECT n FROM r",
+    "prepare": "00000",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "independent-child-allowed",
+    "sql": "WITH RECURSIVE r(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM r WHERE n<2 AND EXISTS(SELECT 1)) SELECT n FROM r",
+    "prepare": "00000",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "forward-via-exists",
+    "sql": "WITH RECURSIVE a(n) AS(SELECT 1 WHERE EXISTS(SELECT 1 FROM b)),b(n) AS(SELECT 2) SELECT n FROM a",
+    "prepare": "00000",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "mutual-via-exists",
+    "sql": "WITH RECURSIVE a(n) AS(SELECT 1 WHERE EXISTS(SELECT 1 FROM b)),b(n) AS(SELECT 2 WHERE EXISTS(SELECT 1 FROM a)) SELECT n FROM a",
+    "prepare": "0A000",
+    "source_kind": "synthetic"
+  }
+]

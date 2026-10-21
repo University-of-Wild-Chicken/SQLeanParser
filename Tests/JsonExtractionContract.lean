@@ -192,10 +192,11 @@ def jsonExtractionContractTests : IO Nat := do
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"extraction enclosing/INTEGER boundary must be Invalid: {sql}")
     count := count + 1
-  for sql in [
-      "SELECT (SELECT '{}'::JSONB) -> 'a'",
-      "SELECT '{}'::JSONB -> (SELECT 'a')",
-      "SELECT unknown_function() -> 'a'",
+  for sql in ["SELECT (SELECT '{}'::JSONB) -> 'a'", "SELECT '{}'::JSONB -> (SELECT 'a')"] do
+    SQLean.Tests.assert (sameOutputTypes (← jsonOutput sql)
+      [{name := "?column?", type := ⟨.jsonb, true⟩}]) s!"nullable subquery JSON operand: {sql}"
+    count := count + 1
+  for sql in ["SELECT unknown_function() -> 'a'",
       "SELECT ROW(1,2) -> 'a'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with

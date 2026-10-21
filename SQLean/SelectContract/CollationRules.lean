@@ -98,158 +98,212 @@ inductive InCollations (arg : Advanced.Expr) (type : ExprType) (derivation : Col
       (pairs : InScalarCollations arg type derivation (inVariableArguments es types derivations)) :
       InCollations arg type derivation es types derivations
 
+set_option inductive.autoPromoteIndices false in
 mutual
-  inductive ExprCollationValid (profile : Profile) (params : ParameterEnv) (scope : Scope) :
+  inductive ExprCollationValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+      CTEEnv → Scope →
       Advanced.Expr → ExprType → CollationDerivation → Prop where
-    | atom (typed : ExprValid params scope expr type uses)
+    | atom (typed : ExprValidCore subqueries params env scope expr type uses)
         (atom : CollationAtom expr type derivation) :
-        ExprCollationValid profile params scope expr type derivation
+        ExprCollationValidCore subqueries profile params env scope expr type derivation
+    | exists (query : subqueries env child output uses) :
+        ExprCollationValidCore subqueries profile params env scope (.exists child)
+          (some ⟨.bool, false⟩) .none
+    | scalarQuery (query : subqueries env child [column] uses)
+        (reentry : column.type.base.collatable = false ∨ column.collation.isSome = true) :
+        ExprCollationValidCore subqueries profile params env scope (.scalarQuery child)
+          (some ⟨column.type.base, true⟩) (.stored column.collation)
+    | inQuery (typed : ExprValidCore subqueries params env scope (.inQuery arg child) result uses)
+        (left : ExprCollationValidCore subqueries profile params env scope arg type derivation)
+        (query : subqueries env child [column] queryUses)
+        (selected : equalityOverload (scalarInput arg type) (.known column.type) = some signature)
+        (arguments : signature.inputs = [leftType, rightType])
+        (merge : CollationDerivation.merge
+          (coercedCollation arg type leftType derivation)
+          (knownCoercedCollation column.type.base rightType (.stored column.collation)) = some input) :
+        ExprCollationValidCore subqueries profile params env scope (.inQuery arg child) result .none
     | parameter (present : binding ∈ params) (identity : binding.index = parameterIndex parameter)
         (supported : concreteType binding.type = some base) :
-        ExprCollationValid profile params scope (.parameter parameter)
+        ExprCollationValidCore subqueries profile params env scope (.parameter parameter)
           (some ⟨base.unmodified, binding.nullable⟩) (.stored base.unmodified.defaultCollation)
     | column (resolved : Resolves scope qualifier name column schema) :
-        ExprCollationValid profile params scope (.column qualifier name schema)
+        ExprCollationValidCore subqueries profile params env scope (.column qualifier name schema)
           (some column.type) (.stored column.collation)
-    | application (typed : ExprValid params scope expr type uses)
-        (children : ExprCollationListValid profile params scope es types derivations)
+    | application (typed : ExprValidCore subqueries params env scope expr type uses)
+        (children : ExprCollationListValidCore subqueries profile params env scope es types derivations)
         (application : CollationApplication expr es types targets)
         (coercions : contextualCollations es types derivations targets = some coerced)
         (merge : CollationDerivation.mergeList coerced = some input) :
-        ExprCollationValid profile params scope expr type (resultCollation type input)
-    | independent (typed : ExprValid params scope expr type uses)
-        (children : ExprCollationListValid profile params scope es types derivations)
+        ExprCollationValidCore subqueries profile params env scope expr type (resultCollation type input)
+    | independent (typed : ExprValidCore subqueries params env scope expr type uses)
+        (children : ExprCollationListValidCore subqueries profile params env scope es types derivations)
         (shape : IndependentCollationChildren expr es) :
-        ExprCollationValid profile params scope expr type .none
-    | cast (typed : ExprValid params scope (.cast arg target) type uses)
-        (child : ExprCollationValid profile params scope arg input derivation)
+        ExprCollationValidCore subqueries profile params env scope expr type .none
+    | cast (typed : ExprValidCore subqueries params env scope (.cast arg target) type uses)
+        (child : ExprCollationValidCore subqueries profile params env scope arg input derivation)
         (supported : concreteType target = some base) :
-        ExprCollationValid profile params scope (.cast arg target) type
+        ExprCollationValidCore subqueries profile params env scope (.cast arg target) type
           (coercedCollation arg input base derivation)
-    | collate (typed : ExprValid params scope (.collate arg name) type uses)
-        (child : ExprCollationValid profile params scope arg type derivation)
+    | collate (typed : ExprValidCore subqueries params env scope (.collate arg name) type uses)
+        (child : ExprCollationValidCore subqueries profile params env scope arg type derivation)
         (resolved : profile.collations.lookup name = some entry)
         (allowed : (scalarInput arg type).base.isNone ||
           (scalarInput arg type).base.any ScalarType.collatable = true) :
-        ExprCollationValid profile params scope (.collate arg name) type (.explicit entry.id)
-    | castArray (typed : ExprValid params scope (.cast (.array es) target) type uses)
+        ExprCollationValidCore subqueries profile params env scope (.collate arg name) type (.explicit entry.id)
+    | castArray (typed : ExprValidCore subqueries params env scope (.cast (.array es) target) type uses)
         (supported : concreteType target = some base)
-        (elements : ArrayCollationValid profile params scope base es derivation) :
-        ExprCollationValid profile params scope (.cast (.array es) target) type derivation
-    | subscript (typed : ExprValid params scope (.subscript arg indices) type uses)
-        (base : ExprCollationValid profile params scope arg input derivation)
-        (bounds : ExprCollationListValid profile params scope
+        (elements : ArrayCollationValidCore subqueries profile params env scope base es derivation) :
+        ExprCollationValidCore subqueries profile params env scope (.cast (.array es) target) type derivation
+    | subscript (typed : ExprValidCore subqueries params env scope (.subscript arg indices) type uses)
+        (base : ExprCollationValidCore subqueries profile params env scope arg input derivation)
+        (bounds : ExprCollationListValidCore subqueries profile params env scope
           (indices.flatMap Subscript.expressions) boundTypes boundDerivations) :
-        ExprCollationValid profile params scope (.subscript arg indices) type
+        ExprCollationValidCore subqueries profile params env scope (.subscript arg indices) type
           (resultCollation type derivation)
-    | rowComparison (typed : ExprValid params scope (.binary op.toBinOp (.row as) (.row bs)) type uses)
-        (left : ExprCollationListValid profile params scope as ats ads)
-        (right : ExprCollationListValid profile params scope bs bts bds)
+    | rowComparison (typed : ExprValidCore subqueries params env scope (.binary op.toBinOp (.row as) (.row bs)) type uses)
+        (left : ExprCollationListValidCore subqueries profile params env scope as ats ads)
+        (right : ExprCollationListValidCore subqueries profile params env scope bs bts bds)
         (selected : rowComparisonSignature op (scalarInputs as ats) (scalarInputs bs bts) = some signatures)
         (pairs : ComparisonCollations as ats ads bs bts bds signatures) :
-        ExprCollationValid profile params scope (.binary op.toBinOp (.row as) (.row bs)) type .none
-    | rowDistinct (typed : ExprValid params scope (.distinctFrom (.row as) (.row bs) negated) type uses)
-        (left : ExprCollationListValid profile params scope as ats ads)
-        (right : ExprCollationListValid profile params scope bs bts bds)
+        ExprCollationValidCore subqueries profile params env scope (.binary op.toBinOp (.row as) (.row bs)) type .none
+    | rowDistinct (typed : ExprValidCore subqueries params env scope (.distinctFrom (.row as) (.row bs) negated) type uses)
+        (left : ExprCollationListValidCore subqueries profile params env scope as ats ads)
+        (right : ExprCollationListValidCore subqueries profile params env scope bs bts bds)
         (selected : rowDistinctSignature (scalarInputs as ats) (scalarInputs bs bts) = some signatures)
         (pairs : ComparisonCollations as ats ads bs bts bds signatures) :
-        ExprCollationValid profile params scope (.distinctFrom (.row as) (.row bs) negated) type .none
-    | inList (typed : ExprValid params scope (.inList arg es) type uses)
-        (child : ExprCollationValid profile params scope arg input derivation)
-        (children : ExprCollationListValid profile params scope es types derivations)
+        ExprCollationValidCore subqueries profile params env scope (.distinctFrom (.row as) (.row bs) negated) type .none
+    | inList (typed : ExprValidCore subqueries params env scope (.inList arg es) type uses)
+        (child : ExprCollationValidCore subqueries profile params env scope arg input derivation)
+        (children : ExprCollationListValidCore subqueries profile params env scope es types derivations)
         (contexts : InCollations arg input derivation es types derivations) :
-        ExprCollationValid profile params scope (.inList arg es) type .none
-    | between (typed : ExprValid params scope (.between arg lower upper negated) type uses)
-        (args : ExprCollationListValid profile params scope [arg, lower, upper] [ta, tl, tu] [da, dl, du])
+        ExprCollationValidCore subqueries profile params env scope (.inList arg es) type .none
+    | between (typed : ExprValidCore subqueries params env scope (.between arg lower upper negated) type uses)
+        (args : ExprCollationListValidCore subqueries profile params env scope [arg, lower, upper] [ta, tl, tu] [da, dl, du])
         (low : comparisonOverload .ge (scalarInput arg ta) (scalarInput lower tl) = some lowOperator)
         (high : comparisonOverload .le (scalarInput arg ta) (scalarInput upper tu) = some highOperator)
         (pairs : ComparisonCollations [arg, arg] [ta, ta] [da, da]
           [lower, upper] [tl, tu] [dl, du] [lowOperator, highOperator]) :
-        ExprCollationValid profile params scope (.between arg lower upper negated) type .none
-    | extract (typed : ExprValid params scope (.extract field arg) type uses)
-        (child : ExprCollationValid profile params scope arg input derivation)
+        ExprCollationValidCore subqueries profile params env scope (.between arg lower upper negated) type .none
+    | extract (typed : ExprValidCore subqueries params env scope (.extract field arg) type uses)
+        (child : ExprCollationValidCore subqueries profile params env scope arg input derivation)
         (selected : extractSignature (scalarInput arg input) = some signature) :
-        ExprCollationValid profile params scope (.extract field arg) type .none
-    | defaultCall (typed : ExprValid params scope (.call name es) type uses)
-        (children : ExprCollationListValid profile params scope es types derivations)
+        ExprCollationValidCore subqueries profile params env scope (.extract field arg) type .none
+    | defaultCall (typed : ExprValidCore subqueries params env scope (.call name es) type uses)
+        (children : ExprCollationListValidCore subqueries profile params env scope es types derivations)
         (callee : builtinName name = some "make_interval")
         (arguments : ArgumentsBound makeIntervalParameters (es.map fun _ => none)
           (scalarInputs es types) inputs) :
-        ExprCollationValid profile params scope (.call name es) type .none
-    | namedCall (typed : ExprValid params scope (.namedCall name args) type uses)
-        (children : ExprCollationListValid profile params scope
+        ExprCollationValidCore subqueries profile params env scope (.call name es) type .none
+    | namedCall (typed : ExprValidCore subqueries params env scope (.namedCall name args) type uses)
+        (children : ExprCollationListValidCore subqueries profile params env scope
           (args.map CallArgument.expression) types derivations)
         (callee : builtinName name = some "make_interval")
         (arguments : ArgumentsBound makeIntervalParameters (args.map CallArgument.name?)
           (scalarInputs (args.map CallArgument.expression) types) inputs) :
-        ExprCollationValid profile params scope (.namedCall name args) type .none
-    | substring (typed : ExprValid params scope (.substring form es) type uses)
-        (children : ExprCollationListValid profile params scope es types derivations)
+        ExprCollationValidCore subqueries profile params env scope (.namedCall name args) type .none
+    | substring (typed : ExprValidCore subqueries params env scope (.substring form es) type uses)
+        (children : ExprCollationListValidCore subqueries profile params env scope es types derivations)
         (arguments : SubstringArguments form (scalarInputs es types) inputs)
         (selected : resolveOverload substringCatalog inputs = some signature)
         (targets : substringCollationTargets form signature.inputs = some lexicalTargets)
         (coercions : coercedCollations es types derivations lexicalTargets = some coerced)
         (merge : CollationDerivation.mergeList (substringCollationOrder form coerced) = some input) :
-        ExprCollationValid profile params scope (.substring form es) type (resultCollation type input)
-    | searchedCase (typed : ExprValid params scope (.caseExpr none branches otherwise) (some type) uses)
-        (conditions : ExprCollationListValid profile params scope
+        ExprCollationValidCore subqueries profile params env scope (.substring form es) type (resultCollation type input)
+    | searchedCase (typed : ExprValidCore subqueries params env scope (.caseExpr none branches otherwise) (some type) uses)
+        (conditions : ExprCollationListValidCore subqueries profile params env scope
           (branches.map Prod.fst) conditionTypes conditionDerivations)
-        (results : ExprCollationListValid profile params scope
+        (results : ExprCollationListValidCore subqueries profile params env scope
           (branches.map Prod.snd ++ otherwise.toList) resultTypes resultDerivations)
         (coercions : coercedCollations (branches.map Prod.snd ++ otherwise.toList)
           resultTypes resultDerivations
           (List.replicate (branches.length + otherwise.toList.length) type.base) = some coerced)
         (merge : CollationDerivation.mergeList coerced = some input) :
-        ExprCollationValid profile params scope (.caseExpr none branches otherwise)
+        ExprCollationValidCore subqueries profile params env scope (.caseExpr none branches otherwise)
           (some type) (type.base.collationResult input)
-    | simpleCase (typed : ExprValid params scope (.caseExpr (some operand) branches otherwise) (some type) uses)
-        (operandValid : ExprCollationValid profile params scope operand operandType operandDerivation)
-        (conditions : ExprCollationListValid profile params scope
+    | simpleCase (typed : ExprValidCore subqueries params env scope (.caseExpr (some operand) branches otherwise) (some type) uses)
+        (operandValid : ExprCollationValidCore subqueries profile params env scope operand operandType operandDerivation)
+        (conditions : ExprCollationListValidCore subqueries profile params env scope
           (branches.map Prod.fst) conditionTypes conditionDerivations)
         (comparisons : CaseConditionCollations (caseOperandType operandType operand)
           (.stored (coercedCollation operand operandType
             (caseOperandType operandType operand).base operandDerivation).identity)
           (branches.map Prod.fst) conditionTypes conditionDerivations)
-        (results : ExprCollationListValid profile params scope
+        (results : ExprCollationListValidCore subqueries profile params env scope
           (branches.map Prod.snd ++ otherwise.toList) resultTypes resultDerivations)
         (coercions : coercedCollations (branches.map Prod.snd ++ otherwise.toList)
           resultTypes resultDerivations
           (List.replicate (branches.length + otherwise.toList.length) type.base) = some coerced)
         (merge : CollationDerivation.mergeList coerced = some input) :
-        ExprCollationValid profile params scope (.caseExpr (some operand) branches otherwise)
+        ExprCollationValidCore subqueries profile params env scope (.caseExpr (some operand) branches otherwise)
           (some type) (type.base.collationResult input)
 
-  inductive ExprCollationListValid (profile : Profile) (params : ParameterEnv) (scope : Scope) :
+  inductive ExprCollationListValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+      CTEEnv → Scope →
       List Advanced.Expr → List ExprType → List CollationDerivation → Prop where
-    | nil : ExprCollationListValid profile params scope [] [] []
-    | cons (head : ExprCollationValid profile params scope expr type derivation)
-        (tail : ExprCollationListValid profile params scope exprs types derivations) :
-        ExprCollationListValid profile params scope (expr :: exprs) (type :: types) (derivation :: derivations)
+    | nil : ExprCollationListValidCore subqueries profile params env scope [] [] []
+    | cons (head : ExprCollationValidCore subqueries profile params env scope expr type derivation)
+        (tail : ExprCollationListValidCore subqueries profile params env scope exprs types derivations) :
+        ExprCollationListValidCore subqueries profile params env scope (expr :: exprs) (type :: types) (derivation :: derivations)
 
   /-- A direct array cast supplies one type to every raw nested constructor.
   Empty arrays therefore need no invented inference derivation. -/
-  inductive ArrayCollationValid (profile : Profile) (params : ParameterEnv) (scope : Scope) :
+  inductive ArrayCollationValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+      CTEEnv → Scope →
       ScalarType → List Advanced.Expr → CollationDerivation → Prop where
-    | targeted (elements : ArrayElementsCollationValid profile params scope target es ts ds)
+    | targeted (elements : ArrayElementsCollationValidCore subqueries profile params env scope target es ts ds)
         (coercions : coercedCollations es ts ds
           (List.replicate es.length
             (if (scalarInputs es ts).any (fun input => input.base.any ScalarType.isArray)
              then target else target.arrayElement)) = some coerced)
         (merge : CollationDerivation.mergeList coerced = some input) :
-        ArrayCollationValid profile params scope target es (target.collationResult input)
+        ArrayCollationValidCore subqueries profile params env scope target es (target.collationResult input)
 
-  inductive ArrayElementsCollationValid (profile : Profile) (params : ParameterEnv) (scope : Scope) :
+  inductive ArrayElementsCollationValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+      CTEEnv → Scope →
       ScalarType → List Advanced.Expr → List ExprType → List CollationDerivation → Prop where
-    | nil : ArrayElementsCollationValid profile params scope target [] [] []
+    | nil : ArrayElementsCollationValidCore subqueries profile params env scope target [] [] []
     | ordinary (category : OrdinaryArrayElement expr)
-        (head : ExprCollationValid profile params scope expr type derivation)
-        (tail : ArrayElementsCollationValid profile params scope target exprs types derivations) :
-        ArrayElementsCollationValid profile params scope target (expr :: exprs)
+        (head : ExprCollationValidCore subqueries profile params env scope expr type derivation)
+        (tail : ArrayElementsCollationValidCore subqueries profile params env scope target exprs types derivations) :
+        ArrayElementsCollationValidCore subqueries profile params env scope target (expr :: exprs)
           (type :: types) (derivation :: derivations)
-    | nested (head : ArrayCollationValid profile params scope target exprs derivation)
-        (tail : ArrayElementsCollationValid profile params scope target rest types derivations) :
-        ArrayElementsCollationValid profile params scope target (.array exprs :: rest)
+    | nested (head : ArrayCollationValidCore subqueries profile params env scope target exprs derivation)
+        (tail : ArrayElementsCollationValidCore subqueries profile params env scope target rest types derivations) :
+        ArrayElementsCollationValidCore subqueries profile params env scope target (.array exprs :: rest)
           (some ⟨target, false⟩ :: types) (derivation :: derivations)
 end
+
+abbrev ExprCollationValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) (type : ExprType) (derivation : CollationDerivation)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  ExprCollationValidCore subqueries profile params env scope expr type derivation
+
+namespace ExprCollationValid
+export ExprCollationValidCore (atom «exists» scalarQuery inQuery parameter column application independent cast collate castArray subscript rowComparison rowDistinct inList between extract defaultCall namedCall substring searchedCase simpleCase rec)
+end ExprCollationValid
+
+abbrev ExprCollationListValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (exprs : List Advanced.Expr) (types : List ExprType) (derivations : List CollationDerivation)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  ExprCollationListValidCore subqueries profile params env scope exprs types derivations
+
+namespace ExprCollationListValid
+export ExprCollationListValidCore (nil cons rec)
+end ExprCollationListValid
+
+abbrev ArrayCollationValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (target : ScalarType) (exprs : List Advanced.Expr) (derivation : CollationDerivation)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  ArrayCollationValidCore subqueries profile params env scope target exprs derivation
+
+namespace ArrayCollationValid
+export ArrayCollationValidCore (targeted rec)
+end ArrayCollationValid
+
+abbrev ArrayElementsCollationValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (target : ScalarType) (exprs : List Advanced.Expr) (types : List ExprType) (derivations : List CollationDerivation)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  ArrayElementsCollationValidCore subqueries profile params env scope target exprs types derivations
+
+namespace ArrayElementsCollationValid
+export ArrayElementsCollationValidCore (nil ordinary nested rec)
+end ArrayElementsCollationValid
+
 
 end SQLean.SelectContract

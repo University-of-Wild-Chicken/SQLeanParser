@@ -162,10 +162,14 @@ def boundaries():
         "SELECT '{}'::JSON #> ARRAY['1'::JSON]", "SELECT '{}'::JSONB -> ARRAY['a']",
     ]
     unsupported = [
-        "SELECT (SELECT '{}'::JSON) -> 'a'",
-        "SELECT '{}'::JSONB ->> (SELECT 'a')",
         "SELECT unknown_function() #> '{a}'",
     ]
+    promoted = [
+        ("SELECT (SELECT '{}'::JSON) -> 'a'", (('?column?', 'json', True),)),
+        ("SELECT '{}'::JSONB ->> (SELECT 'a')", (('?column?', 'text', True),)),
+    ]
+    for sql, columns in promoted:
+        assert_report(["--assurance", "contract", sql], "valid", "contract", columns)
     valid = ["SELECT '{}'::JSONB ? 'a'"]
     syntax = [
         "SELECT '{}'::JSON ->", "SELECT '{}'::JSON #>", "SELECT -> 'a'",
@@ -181,7 +185,7 @@ def boundaries():
         assert (result.returncode, report["status"], report["diagnostic"]["code"]) == (
             1, "invalid", "input.parse"), report
     assert_report(["--assurance", "checked", "SELECT '{}'::JSON -> 'a'"], "rejected", "checked")
-    return len(invalid) + len(unsupported) + len(valid) + len(syntax) + 1
+    return len(invalid) + len(unsupported) + len(valid) + len(syntax) + 1 + len(promoted)
 
 
 def main():

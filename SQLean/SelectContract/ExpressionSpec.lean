@@ -211,238 +211,320 @@ inductive ArgumentsBound (parameters : List FunctionParameter)
       (slots : ArgumentSlots assignments 0 parameters callInputs) :
       ArgumentsBound parameters names inputs callInputs
 
+/-- The query relation is a strictly positive parameter. Its CTE environment
+is an index, so nested expression queries inherit exactly the visible bindings. -/
+abbrev SubqueryJudgment := CTEEnv → Advanced.Query → List OutputColumn → List Parameter → Prop
+
+/-- Legacy expression-only entry points have no child-query capability. -/
+def NoSubqueries : SubqueryJudgment := fun _ _ _ _ => False
+
+set_option inductive.autoPromoteIndices false in
 mutual
-  inductive ExprValid (params : ParameterEnv) (scope : Scope) : Advanced.Expr → ExprType → List Parameter → Prop where
-    | int (range : n ≤ 2147483647) : ExprValid params scope (.literal (.int n)) (some ⟨.int32, false⟩) []
+  inductive ExprValidCore (subqueries : SubqueryJudgment) (params : ParameterEnv) :
+      CTEEnv → Scope → Advanced.Expr → ExprType → List Parameter → Prop where
+    | int (range : n ≤ 2147483647) : ExprValidCore subqueries params env scope (.literal (.int n)) (some ⟨.int32, false⟩) []
     | bigInt (large : 2147483647 < n) (range : n ≤ 9223372036854775807) :
-        ExprValid params scope (.literal (.int n)) (some ⟨.int64, false⟩) []
+        ExprValidCore subqueries params env scope (.literal (.int n)) (some ⟨.int64, false⟩) []
     | numericInt (large : 9223372036854775807 < n) :
-        ExprValid params scope (.literal (.int n)) (some ⟨.numeric [], false⟩) []
+        ExprValidCore subqueries params env scope (.literal (.int n)) (some ⟨.numeric [], false⟩) []
     | decimal (lexical : decimalLexeme lexeme = true) :
-        ExprValid params scope (.decimal lexeme) (some ⟨.numeric [], false⟩) []
-    | minInt32 : ExprValid params scope (.unary .neg (.literal (.int 2147483648)))
+        ExprValidCore subqueries params env scope (.decimal lexeme) (some ⟨.numeric [], false⟩) []
+    | minInt32 : ExprValidCore subqueries params env scope (.unary .neg (.literal (.int 2147483648)))
         (some ⟨.int32, false⟩) []
-    | minInt64 : ExprValid params scope (.unary .neg (.literal (.int 9223372036854775808)))
+    | minInt64 : ExprValidCore subqueries params env scope (.unary .neg (.literal (.int 9223372036854775808)))
         (some ⟨.int64, false⟩) []
-    | text : ExprValid params scope (.literal (.text value)) (some ⟨.text, false⟩) []
-    | bool : ExprValid params scope (.literal (.bool value)) (some ⟨.bool, false⟩) []
-    | null : ExprValid params scope .null none []
-    | contextValue : ExprValid params scope (.contextValue value) (some (contextValueType value)) []
+    | text : ExprValidCore subqueries params env scope (.literal (.text value)) (some ⟨.text, false⟩) []
+    | bool : ExprValidCore subqueries params env scope (.literal (.bool value)) (some ⟨.bool, false⟩) []
+    | null : ExprValidCore subqueries params env scope .null none []
+    | contextValue : ExprValidCore subqueries params env scope (.contextValue value) (some (contextValueType value)) []
     | parameter (present : binding ∈ params) (identity : binding.index = parameterIndex parameter)
         (supported : concreteType binding.type = some base) :
-        ExprValid params scope (.parameter parameter) (some ⟨base.unmodified, binding.nullable⟩) [parameter]
+        ExprValidCore subqueries params env scope (.parameter parameter) (some ⟨base.unmodified, binding.nullable⟩) [parameter]
     | column (resolved : Resolves scope qualifier name column schema) :
-        ExprValid params scope (.column qualifier name schema) (some column.type) []
-    | binary (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+        ExprValidCore subqueries params env scope (.column qualifier name schema) (some column.type) []
+    | binary (left : ExprValidCore subqueries params env scope a ta ua) (right : ExprValidCore subqueries params env scope b tb ub)
         (signature : binarySignature op ta tb = some result) :
-        ExprValid params scope (.binary op a b) result (ua ++ ub)
-    | concat (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+        ExprValidCore subqueries params env scope (.binary op a b) result (ua ++ ub)
+    | concat (left : ExprValidCore subqueries params env scope a ta ua) (right : ExprValidCore subqueries params env scope b tb ub)
         (signature : concatSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.concat a b)
+        ExprValidCore subqueries params env scope (.concat a b)
           (some ⟨selected.output, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩)
           (ua ++ ub)
-    | arrayConcat (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+    | arrayConcat (left : ExprValidCore subqueries params env scope a ta ua) (right : ExprValidCore subqueries params env scope b tb ub)
         (signature : arrayConcatSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.concat a b)
+        ExprValidCore subqueries params env scope (.concat a b)
           (some ⟨selected.output,
             selected.operator.nullable (scalarInput a ta).nullable (scalarInput b tb).nullable⟩)
           (ua ++ ub)
-    | rowComparison (left : ExprListValid params scope a ta ua)
-        (right : ExprListValid params scope b tb ub)
+    | rowComparison (left : ExprListValidCore subqueries params env scope a ta ua)
+        (right : ExprListValidCore subqueries params env scope b tb ub)
         (signature : rowComparisonSignature op (scalarInputs a ta) (scalarInputs b tb) = some selected) :
-        ExprValid params scope (.binary op.toBinOp (.row a) (.row b))
+        ExprValidCore subqueries params env scope (.binary op.toBinOp (.row a) (.row b))
           (some ⟨.bool, true⟩) (ua ++ ub)
-    | distinctScalar (left : ExprValid params scope a ta ua)
-        (right : ExprValid params scope b tb ub)
+    | distinctScalar (left : ExprValidCore subqueries params env scope a ta ua)
+        (right : ExprValidCore subqueries params env scope b tb ub)
         (ordinaryLeft : OrdinaryDistinctOperand a) (ordinaryRight : OrdinaryDistinctOperand b)
         (signature : distinctSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.distinctFrom a b negated) (some ⟨.bool, false⟩) (ua ++ ub)
-    | distinctNullLeft (arg : ExprValid params scope a ta uses) :
-        ExprValid params scope (.distinctFrom .null a negated) (some ⟨.bool, false⟩) uses
-    | distinctNullRight (arg : ExprValid params scope a ta uses) :
-        ExprValid params scope (.distinctFrom a .null negated) (some ⟨.bool, false⟩) uses
-    | distinctRows (left : ExprListValid params scope a ta ua)
-        (right : ExprListValid params scope b tb ub)
+        ExprValidCore subqueries params env scope (.distinctFrom a b negated) (some ⟨.bool, false⟩) (ua ++ ub)
+    | distinctNullLeft (arg : ExprValidCore subqueries params env scope a ta uses) :
+        ExprValidCore subqueries params env scope (.distinctFrom .null a negated) (some ⟨.bool, false⟩) uses
+    | distinctNullRight (arg : ExprValidCore subqueries params env scope a ta uses) :
+        ExprValidCore subqueries params env scope (.distinctFrom a .null negated) (some ⟨.bool, false⟩) uses
+    | distinctRows (left : ExprListValidCore subqueries params env scope a ta ua)
+        (right : ExprListValidCore subqueries params env scope b tb ub)
         (signature : rowDistinctSignature (scalarInputs a ta) (scalarInputs b tb) = some selected) :
-        ExprValid params scope (.distinctFrom (.row a) (.row b) negated)
+        ExprValidCore subqueries params env scope (.distinctFrom (.row a) (.row b) negated)
           (some ⟨.bool, false⟩) (ua ++ ub)
     /-- The native raw-NULL rewrite tests the whole constructed row, not its fields. -/
-    | distinctRowNullLeft (args : ExprListValid params scope es ts uses) :
-        ExprValid params scope (.distinctFrom .null (.row es) negated) (some ⟨.bool, false⟩) uses
-    | distinctRowNullRight (args : ExprListValid params scope es ts uses) :
-        ExprValid params scope (.distinctFrom (.row es) .null negated) (some ⟨.bool, false⟩) uses
-    | unary (arg : ExprValid params scope a ta uses) (signature : unarySignature op ta = some result)
+    | distinctRowNullLeft (args : ExprListValidCore subqueries params env scope es ts uses) :
+        ExprValidCore subqueries params env scope (.distinctFrom .null (.row es) negated) (some ⟨.bool, false⟩) uses
+    | distinctRowNullRight (args : ExprListValidCore subqueries params env scope es ts uses) :
+        ExprValidCore subqueries params env scope (.distinctFrom (.row es) .null negated) (some ⟨.bool, false⟩) uses
+    | unary (arg : ExprValidCore subqueries params env scope a ta uses) (signature : unarySignature op ta = some result)
         (ordinary : OrdinaryUnary op a) :
-        ExprValid params scope (.unary op a) result uses
-    | isNull (arg : ExprValid params scope a ta uses) :
-        ExprValid params scope (.isNull a negated) (some ⟨.bool, false⟩) uses
+        ExprValidCore subqueries params env scope (.unary op a) result uses
+    | isNull (arg : ExprValidCore subqueries params env scope a ta uses) :
+        ExprValidCore subqueries params env scope (.isNull a negated) (some ⟨.bool, false⟩) uses
     /-- Field-sensitive row null tests. The negated form is native IS NOT NULL,
     not Boolean negation of IS NULL when fields mix NULL and non-NULL values. -/
-    | isNullRow (args : ExprListValid params scope es ts uses) :
-        ExprValid params scope (.isNull (.row es) negated) (some ⟨.bool, false⟩) uses
-    | pattern (arg : ExprValid params scope a ta ua) (pattern : ExprValid params scope b tb ub)
+    | isNullRow (args : ExprListValidCore subqueries params env scope es ts uses) :
+        ExprValidCore subqueries params env scope (.isNull (.row es) negated) (some ⟨.bool, false⟩) uses
+    | pattern (arg : ExprValidCore subqueries params env scope a ta ua) (pattern : ExprValidCore subqueries params env scope b tb ub)
         (signature : patternSignature ta tb = some result) :
-        ExprValid params scope (.pattern a b false) result (ua ++ ub)
-    | ilike (arg : ExprValid params scope a ta ua) (pattern : ExprValid params scope b tb ub)
+        ExprValidCore subqueries params env scope (.pattern a b false) result (ua ++ ub)
+    | ilike (arg : ExprValidCore subqueries params env scope a ta ua) (pattern : ExprValidCore subqueries params env scope b tb ub)
         (signature : stringMatchSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.pattern a b true)
+        ExprValidCore subqueries params env scope (.pattern a b true)
           (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
-    | regex (arg : ExprValid params scope a ta ua) (pattern : ExprValid params scope b tb ub)
+    | regex (arg : ExprValidCore subqueries params env scope a ta ua) (pattern : ExprValidCore subqueries params env scope b tb ub)
         (signature : stringMatchSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.regex a b insensitive negated)
+        ExprValidCore subqueries params env scope (.regex a b insensitive negated)
           (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
-    | extract (arg : ExprValid params scope a ta uses)
+    | extract (arg : ExprValidCore subqueries params env scope a ta uses)
         (signature : extractSignature (scalarInput a ta) = some selected) :
-        ExprValid params scope (.extract field a)
+        ExprValidCore subqueries params env scope (.extract field a)
           (some ⟨selected.output, extractNullable (scalarInput a ta)⟩) uses
-    | jsonAccess (arg : ExprValid params scope a ta ua) (key : ExprValid params scope b tb ub)
+    | jsonAccess (arg : ExprValidCore subqueries params env scope a ta ua) (key : ExprValidCore subqueries params env scope b tb ub)
         (signature : jsonAccessSignature op (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.jsonAccess op a b) (some ⟨selected.output, true⟩) (ua ++ ub)
-    | jsonExistence (arg : ExprValid params scope a ta ua) (keys : ExprValid params scope b tb ub)
+        ExprValidCore subqueries params env scope (.jsonAccess op a b) (some ⟨selected.output, true⟩) (ua ++ ub)
+    | jsonExistence (arg : ExprValidCore subqueries params env scope a ta ua) (keys : ExprValidCore subqueries params env scope b tb ub)
         (signature : jsonExistenceSignature op (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.jsonExistence op a b)
+        ExprValidCore subqueries params env scope (.jsonExistence op a b)
           (some ⟨selected.output, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
-    | containment (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+    | containment (left : ExprValidCore subqueries params env scope a ta ua) (right : ExprValidCore subqueries params env scope b tb ub)
         (signature : jsonContainmentSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.containment a b containedBy)
+        ExprValidCore subqueries params env scope (.containment a b containedBy)
           (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
-    | arrayContainment (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+    | arrayContainment (left : ExprValidCore subqueries params env scope a ta ua) (right : ExprValidCore subqueries params env scope b tb ub)
         (signature : arrayPredicateSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.containment a b containedBy)
+        ExprValidCore subqueries params env scope (.containment a b containedBy)
           (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
-    | overlap (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+    | overlap (left : ExprValidCore subqueries params env scope a ta ua) (right : ExprValidCore subqueries params env scope b tb ub)
         (signature : arrayPredicateSignature (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.overlap a b)
+        ExprValidCore subqueries params env scope (.overlap a b)
           (some ⟨.bool, (scalarInput a ta).nullable || (scalarInput b tb).nullable⟩) (ua ++ ub)
-    | cast (arg : ExprValid params scope a ta uses) (supported : concreteType target = some base)
+    | cast (arg : ExprValidCore subqueries params env scope a ta uses) (supported : concreteType target = some base)
         (declaration : DataTypeWellFormed target) (allowed : castAllowed ta base = true)
         (ordinary : OrdinaryCast a target) :
-        ExprValid params scope (.cast a target) (castSignature ta base) uses
+        ExprValidCore subqueries params env scope (.cast a target) (castSignature ta base) uses
     /-- Name lookup and collatability are certified by the paired independent
     collation judgment. This judgment records only the preserved scalar type. -/
-    | collate (arg : ExprValid params scope a ta uses) :
-        ExprValid params scope (.collate a name) ta uses
-    | array (args : ExprListValid params scope es ts uses)
+    | collate (arg : ExprValidCore subqueries params env scope a ta uses) :
+        ExprValidCore subqueries params env scope (.collate a name) ta uses
+    | array (args : ExprListValidCore subqueries params env scope es ts uses)
         (signature : arraySignature (scalarInputs es ts) = some result) :
-        ExprValid params scope (.array es) (some result) uses
-    | castArray (args : ArrayValid params scope base es uses)
+        ExprValidCore subqueries params env scope (.array es) (some result) uses
+    | castArray (args : ArrayValidCore subqueries params env scope base es uses)
         (supported : concreteType target = some base) (declaration : DataTypeWellFormed target) :
-        ExprValid params scope (.cast (.array es) target) (some ⟨base, false⟩) uses
-    | substring (args : ExprListValid params scope es ts uses)
+        ExprValidCore subqueries params env scope (.cast (.array es) target) (some ⟨base, false⟩) uses
+    | substring (args : ExprListValidCore subqueries params env scope es ts uses)
         (arguments : SubstringArguments form (scalarInputs es ts) callInputs)
         (signature : resolveOverload substringCatalog callInputs = some selected) :
-        ExprValid params scope (.substring form es)
+        ExprValidCore subqueries params env scope (.substring form es)
           (some ⟨selected.output, substringNullable selected callInputs⟩) uses
-    | defaultCall (args : ExprListValid params scope es ts uses)
+    | defaultCall (args : ExprListValidCore subqueries params env scope es ts uses)
         (callee : builtinName name = some "make_interval")
         (binding : ArgumentsBound makeIntervalParameters (es.map fun _ => none)
           (scalarInputs es ts) callInputs)
         (signature : makeIntervalSignature callInputs = some result) :
-        ExprValid params scope (.call name es) (some result) uses
-    | namedCall (args : ExprListValid params scope (arguments.map CallArgument.expression) ts uses)
+        ExprValidCore subqueries params env scope (.call name es) (some result) uses
+    | namedCall (args : ExprListValidCore subqueries params env scope (arguments.map CallArgument.expression) ts uses)
         (callee : builtinName name = some "make_interval")
         (binding : ArgumentsBound makeIntervalParameters (arguments.map CallArgument.name?)
           (scalarInputs (arguments.map CallArgument.expression) ts) callInputs)
         (signature : makeIntervalSignature callInputs = some result) :
-        ExprValid params scope (.namedCall name arguments) (some result) uses
-    | call (args : ExprListValid params scope es ts uses)
+        ExprValidCore subqueries params env scope (.namedCall name arguments) (some result) uses
+    | call (args : ExprListValidCore subqueries params env scope es ts uses)
         (signature : callSignature name (scalarInputs es ts) = some result) :
-        ExprValid params scope (.call name es) (some result) uses
-    | coalesce (args : ExprListValid params scope es ts uses)
+        ExprValidCore subqueries params env scope (.call name es) (some result) uses
+    | coalesce (args : ExprListValidCore subqueries params env scope es ts uses)
         (signature : coalesceSignature (scalarInputs es ts) = some result) :
-        ExprValid params scope (.coalesce es) (some result) uses
-    | greatest (args : ExprListValid params scope es ts uses)
+        ExprValidCore subqueries params env scope (.coalesce es) (some result) uses
+    | greatest (args : ExprListValidCore subqueries params env scope es ts uses)
         (signature : extremumSignature (scalarInputs es ts) = some result) :
-        ExprValid params scope (.greatest es) (some result) uses
-    | least (args : ExprListValid params scope es ts uses)
+        ExprValidCore subqueries params env scope (.greatest es) (some result) uses
+    | least (args : ExprListValidCore subqueries params env scope es ts uses)
         (signature : extremumSignature (scalarInputs es ts) = some result) :
-        ExprValid params scope (.least es) (some result) uses
-    | nullIf (left : ExprValid params scope a ta ua) (right : ExprValid params scope b tb ub)
+        ExprValidCore subqueries params env scope (.least es) (some result) uses
+    | nullIf (left : ExprValidCore subqueries params env scope a ta ua) (right : ExprValidCore subqueries params env scope b tb ub)
         (signature : nullIfSignature (scalarInput a ta) (scalarInput b tb) = some result) :
-        ExprValid params scope (.nullIf a b) (some result) (ua ++ ub)
-    | caseExpr (operand : OptionalExprValid params scope a ta ua)
-        (branches : BranchesValid params scope bs conditions results ub)
-        (otherwise : OptionalExprValid params scope e te ue)
+        ExprValidCore subqueries params env scope (.nullIf a b) (some result) (ua ++ ub)
+    | caseExpr (operand : OptionalExprValidCore subqueries params env scope a ta ua)
+        (branches : BranchesValidCore subqueries params env scope bs conditions results ub)
+        (otherwise : OptionalExprValidCore subqueries params env scope e te ue)
         (signature : caseSignature (a.map fun expr => scalarInput expr ta)
           (scalarInputs (bs.map Prod.fst) conditions) (scalarInputs (bs.map Prod.snd) results)
           ((e.map fun expr => scalarInput expr te).getD (.unknown true)) = some result) :
-        ExprValid params scope (.caseExpr a bs e) (some result) (ua ++ ub ++ ue)
-    | quantifiedComparison (left : ExprValid params scope a ta ua)
-        (right : ExprValid params scope b tb ub)
+        ExprValidCore subqueries params env scope (.caseExpr a bs e) (some result) (ua ++ ub ++ ue)
+    | quantifiedComparison (left : ExprValidCore subqueries params env scope a ta ua)
+        (right : ExprValidCore subqueries params env scope b tb ub)
         (signature : quantifiedComparisonSignature op (scalarInput a ta) (scalarInput b tb) = some selected) :
-        ExprValid params scope (.quantifiedComparison op quantifier a b)
+        ExprValidCore subqueries params env scope (.quantifiedComparison op quantifier a b)
           (some ⟨.bool, true⟩) (ua ++ ub)
-    | subscript (base : ExprValid params scope a (some ⟨.array element, nullable⟩) ua)
-        (bounds : SubscriptsValid params scope indices ui)
+    | subscript (base : ExprValidCore subqueries params env scope a (some ⟨.array element, nullable⟩) ua)
+        (bounds : SubscriptsValidCore subqueries params env scope indices ui)
         (nonempty : indices ≠ []) (dimensions : indices.length ≤ 6) :
-        ExprValid params scope (.subscript a indices)
+        ExprValidCore subqueries params env scope (.subscript a indices)
           (some ⟨if indices.any Advanced.Subscript.isSlice then .array element else element, true⟩)
           (ua ++ ui)
-    | inList (arg : ExprValid params scope a ta ua) (values : ExprListValid params scope es ts us)
+    | inList (arg : ExprValidCore subqueries params env scope a ta ua) (values : ExprListValidCore subqueries params env scope es ts us)
         (nonempty : es ≠ []) (signature : comparisonListSignature (ta :: ts) = some result) :
-        ExprValid params scope (.inList a es) result (ua ++ us)
-    | between (arg : ExprValid params scope a ta ua) (lower : ExprValid params scope b tb ub)
-        (upper : ExprValid params scope c tc uc)
+        ExprValidCore subqueries params env scope (.inList a es) result (ua ++ us)
+    | exists (query : subqueries env child output uses) :
+        ExprValidCore subqueries params env scope (.exists child) (some ⟨.bool, false⟩) uses
+    | scalarQuery (query : subqueries env child [column] uses) :
+        ExprValidCore subqueries params env scope (.scalarQuery child)
+          (some ⟨column.type.base, true⟩) uses
+    | inQuery (arg : ExprValidCore subqueries params env scope a ta ua)
+        (query : subqueries env child [column] uq)
+        (signature : equalityOverload (scalarInput a ta) (.known column.type) = some selected) :
+        ExprValidCore subqueries params env scope (.inQuery a child)
+          (some ⟨.bool, (scalarInput a ta).nullable || column.type.nullable⟩) (ua ++ uq)
+    | between (arg : ExprValidCore subqueries params env scope a ta ua) (lower : ExprValidCore subqueries params env scope b tb ub)
+        (upper : ExprValidCore subqueries params env scope c tc uc)
         (signature : comparisonListSignature [ta, tb, tc] = some result) :
-        ExprValid params scope (.between a b c negated) result (ua ++ ub ++ uc)
+        ExprValidCore subqueries params env scope (.between a b c negated) result (ua ++ ub ++ uc)
 
-  inductive ExprListValid (params : ParameterEnv) (scope : Scope) : List Advanced.Expr → List ExprType → List Parameter → Prop where
-    | nil : ExprListValid params scope [] [] []
-    | cons (head : ExprValid params scope e t u) (tail : ExprListValid params scope es ts us) :
-        ExprListValid params scope (e :: es) (t :: ts) (u ++ us)
+  inductive ExprListValidCore (subqueries : SubqueryJudgment) (params : ParameterEnv) :
+      CTEEnv → Scope → List Advanced.Expr → List ExprType → List Parameter → Prop where
+    | nil : ExprListValidCore subqueries params env scope [] [] []
+    | cons (head : ExprValidCore subqueries params env scope e t u) (tail : ExprListValidCore subqueries params env scope es ts us) :
+        ExprListValidCore subqueries params env scope (e :: es) (t :: ts) (u ++ us)
 
   /-- Target-directed constructor elaboration. The target is the complete
   concrete array type, including its element modifiers. -/
-  inductive ArrayValid (params : ParameterEnv) (scope : Scope) :
+  inductive ArrayValidCore (subqueries : SubqueryJudgment) (params : ParameterEnv) :
+      CTEEnv → Scope →
       ScalarType → List Advanced.Expr → List Parameter → Prop where
-    | targeted (args : ArrayElementsValid params scope target es ts uses)
+    | targeted (args : ArrayElementsValidCore subqueries params env scope target es ts uses)
         (signature : arrayCastSignature target (scalarInputs es ts) = true) :
-        ArrayValid params scope target es uses
+        ArrayValidCore subqueries params env scope target es uses
 
-  inductive ArrayElementsValid (params : ParameterEnv) (scope : Scope) :
+  inductive ArrayElementsValidCore (subqueries : SubqueryJudgment) (params : ParameterEnv) :
+      CTEEnv → Scope →
       ScalarType → List Advanced.Expr → List ExprType → List Parameter → Prop where
-    | nil : ArrayElementsValid params scope target [] [] []
+    | nil : ArrayElementsValidCore subqueries params env scope target [] [] []
     | ordinary (category : OrdinaryArrayElement expr)
-        (head : ExprValid params scope expr type headUses)
-        (tail : ArrayElementsValid params scope target exprs types tailUses) :
-        ArrayElementsValid params scope target (expr :: exprs) (type :: types) (headUses ++ tailUses)
-    | nested (head : ArrayValid params scope target exprs headUses)
-        (tail : ArrayElementsValid params scope target rest types tailUses) :
-        ArrayElementsValid params scope target (.array exprs :: rest)
+        (head : ExprValidCore subqueries params env scope expr type headUses)
+        (tail : ArrayElementsValidCore subqueries params env scope target exprs types tailUses) :
+        ArrayElementsValidCore subqueries params env scope target (expr :: exprs) (type :: types) (headUses ++ tailUses)
+    | nested (head : ArrayValidCore subqueries params env scope target exprs headUses)
+        (tail : ArrayElementsValidCore subqueries params env scope target rest types tailUses) :
+        ArrayElementsValidCore subqueries params env scope target (.array exprs :: rest)
           (some ⟨target, false⟩ :: types) (headUses ++ tailUses)
 
-  inductive OptionalExprValid (params : ParameterEnv) (scope : Scope) :
+  inductive OptionalExprValidCore (subqueries : SubqueryJudgment) (params : ParameterEnv) :
+      CTEEnv → Scope →
       Option Advanced.Expr → ExprType → List Parameter → Prop where
-    | absent : OptionalExprValid params scope none none []
-    | present (typed : ExprValid params scope expr type uses) :
-        OptionalExprValid params scope (some expr) type uses
+    | absent : OptionalExprValidCore subqueries params env scope none none []
+    | present (typed : ExprValidCore subqueries params env scope expr type uses) :
+        OptionalExprValidCore subqueries params env scope (some expr) type uses
 
   /-- Adjacent dimensions belong to one operation. Bounds retain lexical
   lower-before-upper order; omitted endpoints consume no parameters. -/
-  inductive SubscriptsValid (params : ParameterEnv) (scope : Scope) :
+  inductive SubscriptsValidCore (subqueries : SubqueryJudgment) (params : ParameterEnv) :
+      CTEEnv → Scope →
       List Advanced.Subscript → List Parameter → Prop where
-    | nil : SubscriptsValid params scope [] []
-    | index (bound : ExprValid params scope expr type uses)
+    | nil : SubscriptsValidCore subqueries params env scope [] []
+    | index (bound : ExprValidCore subqueries params env scope expr type uses)
         (signature : subscriptBoundSignature (scalarInput expr type) = true)
-        (tail : SubscriptsValid params scope rest remaining) :
-        SubscriptsValid params scope (.index expr :: rest) (uses ++ remaining)
-    | slice (lower : OptionalExprValid params scope lo tl ul)
-        (upper : OptionalExprValid params scope hi th uh)
+        (tail : SubscriptsValidCore subqueries params env scope rest remaining) :
+        SubscriptsValidCore subqueries params env scope (.index expr :: rest) (uses ++ remaining)
+    | slice (lower : OptionalExprValidCore subqueries params env scope lo tl ul)
+        (upper : OptionalExprValidCore subqueries params env scope hi th uh)
         (lowerSignature : optionalSubscriptBoundSignature lo tl = true)
         (upperSignature : optionalSubscriptBoundSignature hi th = true)
-        (tail : SubscriptsValid params scope rest remaining) :
-        SubscriptsValid params scope (.slice lo hi :: rest) (ul ++ uh ++ remaining)
+        (tail : SubscriptsValidCore subqueries params env scope rest remaining) :
+        SubscriptsValidCore subqueries params env scope (.slice lo hi :: rest) (ul ++ uh ++ remaining)
 
   /-- WHEN and THEN occurrences remain interleaved in source order. -/
-  inductive BranchesValid (params : ParameterEnv) (scope : Scope) :
+  inductive BranchesValidCore (subqueries : SubqueryJudgment) (params : ParameterEnv) :
+      CTEEnv → Scope →
       List (Advanced.Expr × Advanced.Expr) → List ExprType → List ExprType → List Parameter → Prop where
-    | nil : BranchesValid params scope [] [] [] []
-    | cons (conditionTyped : ExprValid params scope condition tc uc)
-        (resultTyped : ExprValid params scope result tr ur)
-        (tail : BranchesValid params scope branches conditions results uses) :
-        BranchesValid params scope ((condition, result) :: branches)
+    | nil : BranchesValidCore subqueries params env scope [] [] [] []
+    | cons (conditionTyped : ExprValidCore subqueries params env scope condition tc uc)
+        (resultTyped : ExprValidCore subqueries params env scope result tr ur)
+        (tail : BranchesValidCore subqueries params env scope branches conditions results uses) :
+        BranchesValidCore subqueries params env scope ((condition, result) :: branches)
           (tc :: conditions) (tr :: results) (uc ++ ur ++ uses)
 end
+
+abbrev ExprValid (params : ParameterEnv) (scope : Scope) (expr : Advanced.Expr) (type : ExprType) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  ExprValidCore subqueries params env scope expr type uses
+
+namespace ExprValid
+export ExprValidCore (int bigInt numericInt decimal minInt32 minInt64 text bool null contextValue parameter column binary concat arrayConcat rowComparison distinctScalar distinctNullLeft distinctNullRight distinctRows distinctRowNullLeft distinctRowNullRight unary isNull isNullRow pattern ilike regex extract jsonAccess jsonExistence containment arrayContainment overlap cast collate array castArray substring defaultCall namedCall call coalesce greatest least nullIf caseExpr quantifiedComparison subscript inList «exists» scalarQuery inQuery between)
+end ExprValid
+
+abbrev ExprListValid (params : ParameterEnv) (scope : Scope) (exprs : List Advanced.Expr) (types : List ExprType) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  ExprListValidCore subqueries params env scope exprs types uses
+
+namespace ExprListValid
+export ExprListValidCore (nil cons)
+end ExprListValid
+
+abbrev ArrayValid (params : ParameterEnv) (scope : Scope) (target : ScalarType) (exprs : List Advanced.Expr) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  ArrayValidCore subqueries params env scope target exprs uses
+
+namespace ArrayValid
+export ArrayValidCore (targeted)
+end ArrayValid
+
+abbrev ArrayElementsValid (params : ParameterEnv) (scope : Scope) (target : ScalarType) (exprs : List Advanced.Expr) (types : List ExprType) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  ArrayElementsValidCore subqueries params env scope target exprs types uses
+
+namespace ArrayElementsValid
+export ArrayElementsValidCore (nil ordinary nested)
+end ArrayElementsValid
+
+abbrev OptionalExprValid (params : ParameterEnv) (scope : Scope) (expr : Option Advanced.Expr) (type : ExprType) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  OptionalExprValidCore subqueries params env scope expr type uses
+
+namespace OptionalExprValid
+export OptionalExprValidCore (absent present)
+end OptionalExprValid
+
+abbrev SubscriptsValid (params : ParameterEnv) (scope : Scope) (indices : List Advanced.Subscript) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  SubscriptsValidCore subqueries params env scope indices uses
+
+namespace SubscriptsValid
+export SubscriptsValidCore (nil index slice)
+end SubscriptsValid
+
+abbrev BranchesValid (params : ParameterEnv) (scope : Scope) (branches : List (Advanced.Expr × Advanced.Expr)) (conditions results : List ExprType) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  BranchesValidCore subqueries params env scope branches conditions results uses
+
+namespace BranchesValid
+export BranchesValidCore (nil cons)
+end BranchesValid
+
 
 
 end SQLean.SelectContract

@@ -389,10 +389,15 @@ class ArrayPredicatesCliTests(unittest.TestCase):
                 patch.object(checker, "invoke", return_value=good) as invoke:
             self.assertEqual(checker.boundaries(), 41)
         self.assertEqual(sum(call.args[1] == "invalid" for call in reports.call_args_list), 18)
-        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 12)
-        self.assertEqual(sum(call.args[1] == "valid" for call in reports.call_args_list), 4)
+        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 9)
+        self.assertEqual(sum(call.args[1] == "valid" for call in reports.call_args_list), 7)
         self.assertEqual(sum(call.args[1] == "rejected" for call in reports.call_args_list), 3)
         self.assertEqual(len(invoke.call_args_list), 4)
+        scalar_calls = [call for call in reports.call_args_list
+                        if call.args[0][-1].endswith("(SELECT ARRAY[1])")]
+        self.assertEqual(len(scalar_calls), 3)
+        self.assertTrue(all(call.args[1:] == ("valid", "contract", (("?column?", "bool", True),))
+                            for call in scalar_calls))
         bad = subprocess.CompletedProcess([], 3, json.dumps({
             "status": "unsupported", "diagnostic": {"code": "input.parse"}}), "")
         with patch.object(checker, "assert_report"), patch.object(checker, "invoke", return_value=bad), \

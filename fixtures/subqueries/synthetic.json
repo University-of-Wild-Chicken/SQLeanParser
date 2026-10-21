@@ -1,0 +1,7387 @@
+[
+  {
+    "id": "scalar_subquery-01-integer",
+    "factor": "scalar_subquery",
+    "shape": "integer",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-02-unknown-null",
+    "factor": "scalar_subquery",
+    "shape": "unknown-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT NULL) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-03-unknown-string",
+    "factor": "scalar_subquery",
+    "shape": "unknown-string",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT 'abc') AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "abc"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "abc"
+        ]
+      ],
+      "items_only": [
+        [
+          "abc"
+        ]
+      ],
+      "labels_only": [
+        [
+          "abc"
+        ]
+      ],
+      "both": [
+        [
+          "abc"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-04-typed-null",
+    "factor": "scalar_subquery",
+    "shape": "typed-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT CAST(NULL AS INTEGER)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-05-numeric-modifier",
+    "factor": "scalar_subquery",
+    "shape": "numeric-modifier",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT CAST(1.2345 AS NUMERIC(8,3))) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric(8,3)",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "NUMERIC(8,3)",
+        "postgres_display_type": "numeric(8,3)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "1.235"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "1.235"
+        ]
+      ],
+      "items_only": [
+        [
+          "1.235"
+        ]
+      ],
+      "labels_only": [
+        [
+          "1.235"
+        ]
+      ],
+      "both": [
+        [
+          "1.235"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-06-varchar-modifier",
+    "factor": "scalar_subquery",
+    "shape": "varchar-modifier",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT CAST('abcdefgh' AS VARCHAR(7))) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "varchar(7)",
+        "nullable": true,
+        "collation": "default",
+        "postgres_type": "VARCHAR(7)",
+        "postgres_display_type": "character varying(7)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "abcdefg"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "abcdefg"
+        ]
+      ],
+      "items_only": [
+        [
+          "abcdefg"
+        ]
+      ],
+      "labels_only": [
+        [
+          "abcdefg"
+        ]
+      ],
+      "both": [
+        [
+          "abcdefg"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-07-char-padding",
+    "factor": "scalar_subquery",
+    "shape": "char-padding",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT CAST('a' AS CHAR(4))) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "char(4)",
+        "nullable": true,
+        "collation": "default",
+        "postgres_type": "CHAR(4)",
+        "postgres_display_type": "character(4)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "a   "
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "a   "
+        ]
+      ],
+      "items_only": [
+        [
+          "a   "
+        ]
+      ],
+      "labels_only": [
+        [
+          "a   "
+        ]
+      ],
+      "both": [
+        [
+          "a   "
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-08-name-collation",
+    "factor": "scalar_subquery",
+    "shape": "name-collation",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT CAST('Ada' AS NAME)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "name",
+        "nullable": true,
+        "collation": "C",
+        "postgres_type": "NAME",
+        "postgres_display_type": "name"
+      }
+    ],
+    "expected_rows": [
+      [
+        "Ada"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "Ada"
+        ]
+      ],
+      "items_only": [
+        [
+          "Ada"
+        ]
+      ],
+      "labels_only": [
+        [
+          "Ada"
+        ]
+      ],
+      "both": [
+        [
+          "Ada"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-09-array-null-element",
+    "factor": "scalar_subquery",
+    "shape": "array-null-element",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT ARRAY[1,NULL]) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "integer[]",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER[]",
+        "postgres_display_type": "integer[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{1,NULL}"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{1,NULL}"
+        ]
+      ],
+      "items_only": [
+        [
+          "{1,NULL}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{1,NULL}"
+        ]
+      ],
+      "both": [
+        [
+          "{1,NULL}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-10-array-modifier",
+    "factor": "scalar_subquery",
+    "shape": "array-modifier",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT ARRAY[CAST(1.2345 AS NUMERIC(8,3))]) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric(8,3)[]",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "NUMERIC(8,3)[]",
+        "postgres_display_type": "numeric(8,3)[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{1.235}"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{1.235}"
+        ]
+      ],
+      "items_only": [
+        [
+          "{1.235}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{1.235}"
+        ]
+      ],
+      "both": [
+        [
+          "{1.235}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-11-interval-modifier",
+    "factor": "scalar_subquery",
+    "shape": "interval-modifier",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT INTERVAL '2.1234' SECOND(3)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "interval second(3)",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTERVAL SECOND(3)",
+        "postgres_display_type": "interval second(3)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "00:00:02.123"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "00:00:02.123"
+        ]
+      ],
+      "items_only": [
+        [
+          "00:00:02.123"
+        ]
+      ],
+      "labels_only": [
+        [
+          "00:00:02.123"
+        ]
+      ],
+      "both": [
+        [
+          "00:00:02.123"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-12-date",
+    "factor": "scalar_subquery",
+    "shape": "date",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT DATE '2024-01-02') AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "date",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "DATE",
+        "postgres_display_type": "date"
+      }
+    ],
+    "expected_rows": [
+      [
+        "2024-01-02"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "2024-01-02"
+        ]
+      ],
+      "items_only": [
+        [
+          "2024-01-02"
+        ]
+      ],
+      "labels_only": [
+        [
+          "2024-01-02"
+        ]
+      ],
+      "both": [
+        [
+          "2024-01-02"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-13-time-modifier",
+    "factor": "scalar_subquery",
+    "shape": "time-modifier",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT TIME(2) '12:34:56.1234') AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "time(2)",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "TIME(2)",
+        "postgres_display_type": "time(2) without time zone"
+      }
+    ],
+    "expected_rows": [
+      [
+        "12:34:56.12"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "12:34:56.12"
+        ]
+      ],
+      "items_only": [
+        [
+          "12:34:56.12"
+        ]
+      ],
+      "labels_only": [
+        [
+          "12:34:56.12"
+        ]
+      ],
+      "both": [
+        [
+          "12:34:56.12"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-14-timestamp-modifier",
+    "factor": "scalar_subquery",
+    "shape": "timestamp-modifier",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT TIMESTAMP(3) '2024-01-02 12:34:56.1234') AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "timestamp(3)",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "TIMESTAMP(3)",
+        "postgres_display_type": "timestamp(3) without time zone"
+      }
+    ],
+    "expected_rows": [
+      [
+        "2024-01-02 12:34:56.123"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "2024-01-02 12:34:56.123"
+        ]
+      ],
+      "items_only": [
+        [
+          "2024-01-02 12:34:56.123"
+        ]
+      ],
+      "labels_only": [
+        [
+          "2024-01-02 12:34:56.123"
+        ]
+      ],
+      "both": [
+        [
+          "2024-01-02 12:34:56.123"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-15-jsonb",
+    "factor": "scalar_subquery",
+    "shape": "jsonb",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT '{\"x\":1}'::JSONB) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "jsonb",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "JSONB",
+        "postgres_display_type": "jsonb"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{\"x\": 1}"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{\"x\": 1}"
+        ]
+      ],
+      "items_only": [
+        [
+          "{\"x\": 1}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{\"x\": 1}"
+        ]
+      ],
+      "both": [
+        [
+          "{\"x\": 1}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-16-bytea",
+    "factor": "scalar_subquery",
+    "shape": "bytea",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT '\\x4142'::BYTEA) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bytea",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BYTEA",
+        "postgres_display_type": "bytea"
+      }
+    ],
+    "expected_rows": [
+      [
+        "\\x4142"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "\\x4142"
+        ]
+      ],
+      "items_only": [
+        [
+          "\\x4142"
+        ]
+      ],
+      "labels_only": [
+        [
+          "\\x4142"
+        ]
+      ],
+      "both": [
+        [
+          "\\x4142"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-17-stored-collation",
+    "factor": "scalar_subquery",
+    "shape": "stored-collation",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT 'x' COLLATE \"C\") AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "C",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "x"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "x"
+        ]
+      ],
+      "items_only": [
+        [
+          "x"
+        ]
+      ],
+      "labels_only": [
+        [
+          "x"
+        ]
+      ],
+      "both": [
+        [
+          "x"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-18-inherited-label",
+    "factor": "scalar_subquery",
+    "shape": "inherited-label",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT 7 AS inner_value);",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "inner_value",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        7
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          7
+        ]
+      ],
+      "both": [
+        [
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-19-nested-label",
+    "factor": "scalar_subquery",
+    "shape": "nested-label",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT (SELECT 8 AS deep_name));",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "deep_name",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        8
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          8
+        ]
+      ],
+      "items_only": [
+        [
+          8
+        ]
+      ],
+      "labels_only": [
+        [
+          8
+        ]
+      ],
+      "both": [
+        [
+          8
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-20-cast-inherited-label",
+    "factor": "scalar_subquery",
+    "shape": "cast-inherited-label",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST((SELECT 7 AS inner_value) AS TEXT);",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "inner_value",
+        "type": "text",
+        "nullable": true,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "7"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "7"
+        ]
+      ],
+      "items_only": [
+        [
+          "7"
+        ]
+      ],
+      "labels_only": [
+        [
+          "7"
+        ]
+      ],
+      "both": [
+        [
+          "7"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-21-zero-row-coalesce",
+    "factor": "scalar_subquery",
+    "shape": "zero-row-coalesce",
+    "source_kind": "synthetic",
+    "sql": "SELECT COALESCE((SELECT 7 WHERE FALSE),77) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        77
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          77
+        ]
+      ],
+      "items_only": [
+        [
+          77
+        ]
+      ],
+      "labels_only": [
+        [
+          77
+        ]
+      ],
+      "both": [
+        [
+          77
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-22-zero-row-null-test",
+    "factor": "scalar_subquery",
+    "shape": "zero-row-null-test",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT 7 WHERE FALSE) IS NULL AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-23-array-member",
+    "factor": "scalar_subquery",
+    "shape": "array-member",
+    "source_kind": "synthetic",
+    "sql": "SELECT ARRAY[(SELECT 7 WHERE FALSE)] AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "integer[]",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER[]",
+        "postgres_display_type": "integer[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{NULL}"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{NULL}"
+        ]
+      ],
+      "items_only": [
+        [
+          "{NULL}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{NULL}"
+        ]
+      ],
+      "both": [
+        [
+          "{NULL}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-24-case-member",
+    "factor": "scalar_subquery",
+    "shape": "case-member",
+    "source_kind": "synthetic",
+    "sql": "SELECT CASE WHEN TRUE THEN (SELECT 7) ELSE 8 END AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        7
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          7
+        ]
+      ],
+      "both": [
+        [
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-25-arithmetic-member",
+    "factor": "scalar_subquery",
+    "shape": "arithmetic-member",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT 2)+3 AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        5
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          5
+        ]
+      ],
+      "items_only": [
+        [
+          5
+        ]
+      ],
+      "labels_only": [
+        [
+          5
+        ]
+      ],
+      "both": [
+        [
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-26-boolean",
+    "factor": "scalar_subquery",
+    "shape": "boolean",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT TRUE) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-27-derived-child",
+    "factor": "scalar_subquery",
+    "shape": "derived-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT x FROM (SELECT 3 AS x) d) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          3
+        ]
+      ],
+      "items_only": [
+        [
+          3
+        ]
+      ],
+      "labels_only": [
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-28-outer-cte",
+    "factor": "scalar_subquery",
+    "shape": "outer-cte",
+    "source_kind": "synthetic",
+    "sql": "WITH c AS(SELECT 3 AS x) SELECT (SELECT x FROM c) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          3
+        ]
+      ],
+      "items_only": [
+        [
+          3
+        ]
+      ],
+      "labels_only": [
+        [
+          3
+        ]
+      ],
+      "both": [
+        [
+          3
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-29-cte-shadow",
+    "factor": "scalar_subquery",
+    "shape": "cte-shadow",
+    "source_kind": "synthetic",
+    "sql": "WITH c AS(SELECT 3 AS x) SELECT (WITH c AS(SELECT 4 AS x) SELECT x FROM c) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        4
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          4
+        ]
+      ],
+      "items_only": [
+        [
+          4
+        ]
+      ],
+      "labels_only": [
+        [
+          4
+        ]
+      ],
+      "both": [
+        [
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-30-cte-own-body-outer",
+    "factor": "scalar_subquery",
+    "shape": "cte-own-body-outer",
+    "source_kind": "synthetic",
+    "sql": "WITH c AS(SELECT 3 AS x) SELECT (WITH c AS(SELECT x+1 AS x FROM c) SELECT x FROM c) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        4
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          4
+        ]
+      ],
+      "items_only": [
+        [
+          4
+        ]
+      ],
+      "labels_only": [
+        [
+          4
+        ]
+      ],
+      "both": [
+        [
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-31-set-limit",
+    "factor": "scalar_subquery",
+    "shape": "set-limit",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT 1 UNION ALL SELECT 2 ORDER BY 1 LIMIT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-32-empty-intersect",
+    "factor": "scalar_subquery",
+    "shape": "empty-intersect",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT 1 INTERSECT SELECT 2) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-33-anonymous",
+    "factor": "scalar_subquery",
+    "shape": "anonymous",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        7
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          7
+        ]
+      ],
+      "both": [
+        [
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-34-numbered-reordered",
+    "factor": "scalar_subquery",
+    "shape": "numbered-reordered",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT $2-$1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      2,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        5
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          5
+        ]
+      ],
+      "items_only": [
+        [
+          5
+        ]
+      ],
+      "labels_only": [
+        [
+          5
+        ]
+      ],
+      "both": [
+        [
+          5
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-35-lexical-outer-child",
+    "factor": "scalar_subquery",
+    "shape": "lexical-outer-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT ? AS marker,(SELECT ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      9,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        9,
+        7
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          9,
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          9,
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          9,
+          7
+        ]
+      ],
+      "both": [
+        [
+          9,
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-36-unused-cte-parameters",
+    "factor": "scalar_subquery",
+    "shape": "unused-cte-parameters",
+    "source_kind": "synthetic",
+    "sql": "WITH unused AS(SELECT ? AS x) SELECT (SELECT ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      100,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        7
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          7
+        ]
+      ],
+      "both": [
+        [
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-37-numbered-reuse",
+    "factor": "scalar_subquery",
+    "shape": "numbered-reuse",
+    "source_kind": "synthetic",
+    "sql": "SELECT $1+(SELECT $1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        14
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          14
+        ]
+      ],
+      "items_only": [
+        [
+          14
+        ]
+      ],
+      "labels_only": [
+        [
+          14
+        ]
+      ],
+      "both": [
+        [
+          14
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-38-nullable-parameter",
+    "factor": "scalar_subquery",
+    "shape": "nullable-parameter",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT $1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-39-parameter-explicit-modifier",
+    "factor": "scalar_subquery",
+    "shape": "parameter-explicit-modifier",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT CAST($1 AS NUMERIC(8,3))) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "numeric",
+    "parameter_values": [
+      "1.2345"
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "numeric(8,3)",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "NUMERIC(8,3)",
+        "postgres_display_type": "numeric(8,3)"
+      }
+    ],
+    "expected_rows": [
+      [
+        "1.235"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "1.235"
+        ]
+      ],
+      "items_only": [
+        [
+          "1.235"
+        ]
+      ],
+      "labels_only": [
+        [
+          "1.235"
+        ]
+      ],
+      "both": [
+        [
+          "1.235"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-40-parameter-child-filter",
+    "factor": "scalar_subquery",
+    "shape": "parameter-child-filter",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT ? WHERE ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,bool",
+    "parameter_values": [
+      7,
+      false
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-41-table-first",
+    "factor": "scalar_subquery",
+    "shape": "table-first",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT id FROM items ORDER BY id LIMIT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-42-table-last",
+    "factor": "scalar_subquery",
+    "shape": "table-last",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT id FROM items ORDER BY id DESC LIMIT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        4
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          4
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-43-nullable-table",
+    "factor": "scalar_subquery",
+    "shape": "nullable-table",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT score FROM items WHERE id=2) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-44-table-name",
+    "factor": "scalar_subquery",
+    "shape": "table-name",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT name FROM items WHERE id=1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "Ada"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          "Ada"
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          "Ada"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-45-empty-table-filter",
+    "factor": "scalar_subquery",
+    "shape": "empty-table-filter",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT id FROM items WHERE id=99) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-46-duplicate-source-limit",
+    "factor": "scalar_subquery",
+    "shape": "duplicate-source-limit",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT id FROM labels ORDER BY id LIMIT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-47-duplicate-source-offset",
+    "factor": "scalar_subquery",
+    "shape": "duplicate-source-offset",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT category FROM labels ORDER BY category OFFSET 1 LIMIT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": true,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "B"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          "B"
+        ]
+      ],
+      "both": [
+        [
+          "B"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-48-outer-rows",
+    "factor": "scalar_subquery",
+    "shape": "outer-rows",
+    "source_kind": "synthetic",
+    "sql": "SELECT id,(SELECT id FROM labels ORDER BY id LIMIT 1) AS v FROM items;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          null
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          null
+        ],
+        [
+          4,
+          null
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-49-cte-table-child",
+    "factor": "scalar_subquery",
+    "shape": "cte-table-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT (WITH c AS(SELECT id FROM items) SELECT id FROM c ORDER BY id LIMIT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "scalar_subquery-50-empty-by-offset",
+    "factor": "scalar_subquery",
+    "shape": "empty-by-offset",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT id FROM items ORDER BY id OFFSET 10 LIMIT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-01-one",
+    "factor": "exists_subquery",
+    "shape": "one",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-02-empty",
+    "factor": "exists_subquery",
+    "shape": "empty",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-03-null-projection",
+    "factor": "exists_subquery",
+    "shape": "null-projection",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT NULL) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-04-multiple-projections",
+    "factor": "exists_subquery",
+    "shape": "multiple-projections",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1,2) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-05-many-rows",
+    "factor": "exists_subquery",
+    "shape": "many-rows",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1 UNION ALL SELECT 2) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-06-empty-set",
+    "factor": "exists_subquery",
+    "shape": "empty-set",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1 INTERSECT SELECT 2) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-07-limit-zero",
+    "factor": "exists_subquery",
+    "shape": "limit-zero",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1 LIMIT 0) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-08-offset-one",
+    "factor": "exists_subquery",
+    "shape": "offset-one",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1 OFFSET 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-09-limit-null",
+    "factor": "exists_subquery",
+    "shape": "limit-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1 LIMIT NULL) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-10-array-projection",
+    "factor": "exists_subquery",
+    "shape": "array-projection",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT ARRAY[1,NULL]) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-11-numeric-projection",
+    "factor": "exists_subquery",
+    "shape": "numeric-projection",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT CAST(1.2345 AS NUMERIC(8,3))) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-12-discarded-cardinality",
+    "factor": "exists_subquery",
+    "shape": "discarded-cardinality",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT (SELECT 1 UNION ALL SELECT 2)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-13-discarded-division",
+    "factor": "exists_subquery",
+    "shape": "discarded-division",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1/0) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-14-discarded-distinct-division",
+    "factor": "exists_subquery",
+    "shape": "discarded-distinct-division",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT DISTINCT 1/0) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-15-discarded-sort-division",
+    "factor": "exists_subquery",
+    "shape": "discarded-sort-division",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1/0 ORDER BY 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-16-outer-cte",
+    "factor": "exists_subquery",
+    "shape": "outer-cte",
+    "source_kind": "synthetic",
+    "sql": "WITH c AS(SELECT 3 AS x) SELECT EXISTS(SELECT x FROM c) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-17-inner-cte-shadow",
+    "factor": "exists_subquery",
+    "shape": "inner-cte-shadow",
+    "source_kind": "synthetic",
+    "sql": "WITH c AS(SELECT 3 AS x) SELECT EXISTS(WITH c AS(SELECT 4 AS x) SELECT x FROM c WHERE x=3) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-18-nested-exists",
+    "factor": "exists_subquery",
+    "shape": "nested-exists",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT EXISTS(SELECT 1 WHERE FALSE)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-19-not-empty",
+    "factor": "exists_subquery",
+    "shape": "not-empty",
+    "source_kind": "synthetic",
+    "sql": "SELECT NOT EXISTS(SELECT 1 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-20-cast",
+    "factor": "exists_subquery",
+    "shape": "cast",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST(EXISTS(SELECT 1) AS TEXT) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "true"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "true"
+        ]
+      ],
+      "items_only": [
+        [
+          "true"
+        ]
+      ],
+      "labels_only": [
+        [
+          "true"
+        ]
+      ],
+      "both": [
+        [
+          "true"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-21-array",
+    "factor": "exists_subquery",
+    "shape": "array",
+    "source_kind": "synthetic",
+    "sql": "SELECT ARRAY[EXISTS(SELECT 1)] AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "boolean[]",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN[]",
+        "postgres_display_type": "boolean[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{t}"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{t}"
+        ]
+      ],
+      "items_only": [
+        [
+          "{t}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{t}"
+        ]
+      ],
+      "both": [
+        [
+          "{t}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-22-where",
+    "factor": "exists_subquery",
+    "shape": "where",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 AS v WHERE EXISTS(SELECT 1);",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          1
+        ]
+      ],
+      "items_only": [
+        [
+          1
+        ]
+      ],
+      "labels_only": [
+        [
+          1
+        ]
+      ],
+      "both": [
+        [
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-23-case",
+    "factor": "exists_subquery",
+    "shape": "case",
+    "source_kind": "synthetic",
+    "sql": "SELECT CASE WHEN EXISTS(SELECT 1) THEN 7 ELSE 8 END AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        7
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          7
+        ]
+      ],
+      "both": [
+        [
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-24-scalar-child",
+    "factor": "exists_subquery",
+    "shape": "scalar-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT (SELECT 7)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-25-distinct",
+    "factor": "exists_subquery",
+    "shape": "distinct",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT DISTINCT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-26-intersect",
+    "factor": "exists_subquery",
+    "shape": "intersect",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1 INTERSECT SELECT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-27-except",
+    "factor": "exists_subquery",
+    "shape": "except",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1 EXCEPT SELECT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-28-unknown-set",
+    "factor": "exists_subquery",
+    "shape": "unknown-set",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT NULL UNION ALL SELECT NULL) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-29-empty-ordered",
+    "factor": "exists_subquery",
+    "shape": "empty-ordered",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1 WHERE FALSE ORDER BY 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-30-subquery-limit",
+    "factor": "exists_subquery",
+    "shape": "subquery-limit",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT 1 LIMIT (SELECT 1)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-31-anonymous-target",
+    "factor": "exists_subquery",
+    "shape": "anonymous-target",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-32-nullable-target",
+    "factor": "exists_subquery",
+    "shape": "nullable-target",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT $1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int?",
+    "parameter_values": [
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-33-anonymous-condition",
+    "factor": "exists_subquery",
+    "shape": "anonymous-condition",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT ? WHERE ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,bool",
+    "parameter_values": [
+      7,
+      false
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-34-numbered-reordered",
+    "factor": "exists_subquery",
+    "shape": "numbered-reordered",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT $2 WHERE $1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "bool,int",
+    "parameter_values": [
+      true,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-35-lexical-outer-child",
+    "factor": "exists_subquery",
+    "shape": "lexical-outer-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT ? AS marker,EXISTS(SELECT ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      9,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        9,
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          9,
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          9,
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          9,
+          true
+        ]
+      ],
+      "both": [
+        [
+          9,
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-36-unused-cte-parameters",
+    "factor": "exists_subquery",
+    "shape": "unused-cte-parameters",
+    "source_kind": "synthetic",
+    "sql": "WITH unused AS(SELECT ? AS x) SELECT EXISTS(SELECT ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      100,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-37-items",
+    "factor": "exists_subquery",
+    "shape": "items",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT id FROM items) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-38-items-missing",
+    "factor": "exists_subquery",
+    "shape": "items-missing",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT id FROM items WHERE id=99) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-39-null-score",
+    "factor": "exists_subquery",
+    "shape": "null-score",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT id FROM items WHERE score IS NULL) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-40-score-ten",
+    "factor": "exists_subquery",
+    "shape": "score-ten",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT id FROM items WHERE score=10) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-41-labels",
+    "factor": "exists_subquery",
+    "shape": "labels",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT id FROM labels) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-42-duplicate-labels",
+    "factor": "exists_subquery",
+    "shape": "duplicate-labels",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT id FROM labels WHERE id=1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-43-labels-missing",
+    "factor": "exists_subquery",
+    "shape": "labels-missing",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT id FROM labels WHERE id=99) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-44-join",
+    "factor": "exists_subquery",
+    "shape": "join",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT i.id FROM items i JOIN labels l ON i.id=l.id) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-45-left-join",
+    "factor": "exists_subquery",
+    "shape": "left-join",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT i.id FROM items i LEFT JOIN labels l ON FALSE) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-46-table-page",
+    "factor": "exists_subquery",
+    "shape": "table-page",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT id FROM labels ORDER BY id OFFSET 3 LIMIT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-47-table-empty-page",
+    "factor": "exists_subquery",
+    "shape": "table-empty-page",
+    "source_kind": "synthetic",
+    "sql": "SELECT EXISTS(SELECT id FROM labels ORDER BY id OFFSET 4 LIMIT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-48-outer-item-rows",
+    "factor": "exists_subquery",
+    "shape": "outer-item-rows",
+    "source_kind": "synthetic",
+    "sql": "SELECT id,EXISTS(SELECT id FROM labels) AS v FROM items;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        true
+      ],
+      [
+        2,
+        true
+      ],
+      [
+        3,
+        true
+      ],
+      [
+        4,
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          false
+        ],
+        [
+          2,
+          false
+        ],
+        [
+          3,
+          false
+        ],
+        [
+          4,
+          false
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          true
+        ],
+        [
+          2,
+          true
+        ],
+        [
+          3,
+          true
+        ],
+        [
+          4,
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-49-outer-label-rows",
+    "factor": "exists_subquery",
+    "shape": "outer-label-rows",
+    "source_kind": "synthetic",
+    "sql": "SELECT id,EXISTS(SELECT score FROM items WHERE score IS NULL) AS v FROM labels;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        true
+      ],
+      [
+        1,
+        true
+      ],
+      [
+        3,
+        true
+      ],
+      [
+        5,
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [
+        [
+          1,
+          false
+        ],
+        [
+          1,
+          false
+        ],
+        [
+          3,
+          false
+        ],
+        [
+          5,
+          false
+        ]
+      ],
+      "both": [
+        [
+          1,
+          true
+        ],
+        [
+          1,
+          true
+        ],
+        [
+          3,
+          true
+        ],
+        [
+          5,
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "exists_subquery-50-table-filter",
+    "factor": "exists_subquery",
+    "shape": "table-filter",
+    "source_kind": "synthetic",
+    "sql": "SELECT id AS v FROM items WHERE EXISTS(SELECT id FROM labels);",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          4
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-01-match",
+    "factor": "in_subquery",
+    "shape": "match",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 IN(SELECT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-02-nonmatch",
+    "factor": "in_subquery",
+    "shape": "nonmatch",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 IN(SELECT 2) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-03-empty",
+    "factor": "in_subquery",
+    "shape": "empty",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 IN(SELECT 1 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-04-null-empty",
+    "factor": "in_subquery",
+    "shape": "null-empty",
+    "source_kind": "synthetic",
+    "sql": "SELECT NULL IN(SELECT 1 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-05-null-left",
+    "factor": "in_subquery",
+    "shape": "null-left",
+    "source_kind": "synthetic",
+    "sql": "SELECT NULL IN(SELECT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-06-null-right",
+    "factor": "in_subquery",
+    "shape": "null-right",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 IN(SELECT CAST(NULL AS INTEGER)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-07-both-null",
+    "factor": "in_subquery",
+    "shape": "both-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT NULL IN(SELECT NULL) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-08-unknown-left",
+    "factor": "in_subquery",
+    "shape": "unknown-left",
+    "source_kind": "synthetic",
+    "sql": "SELECT '1' IN(SELECT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-09-cross-numeric",
+    "factor": "in_subquery",
+    "shape": "cross-numeric",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST(1 AS SMALLINT) IN(SELECT CAST(1 AS BIGINT)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-10-char-padding",
+    "factor": "in_subquery",
+    "shape": "char-padding",
+    "source_kind": "synthetic",
+    "sql": "SELECT 'x  ' IN(SELECT CAST('x' AS CHAR(4))) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-11-jsonb",
+    "factor": "in_subquery",
+    "shape": "jsonb",
+    "source_kind": "synthetic",
+    "sql": "SELECT '{}'::JSONB IN(SELECT '{}'::JSONB) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-12-array",
+    "factor": "in_subquery",
+    "shape": "array",
+    "source_kind": "synthetic",
+    "sql": "SELECT ARRAY[1] IN(SELECT ARRAY[1]) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-13-array-null-element",
+    "factor": "in_subquery",
+    "shape": "array-null-element",
+    "source_kind": "synthetic",
+    "sql": "SELECT ARRAY[NULL::INTEGER] IN(SELECT ARRAY[NULL::INTEGER]) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-14-cross-temporal",
+    "factor": "in_subquery",
+    "shape": "cross-temporal",
+    "source_kind": "synthetic",
+    "sql": "SELECT DATE '2024-01-02' IN(SELECT TIMESTAMP '2024-01-02') AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-15-varchar-text",
+    "factor": "in_subquery",
+    "shape": "varchar-text",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST('x' AS VARCHAR(7)) IN(SELECT 'x') AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-16-explicit-over-stored-collation",
+    "factor": "in_subquery",
+    "shape": "explicit-over-stored-collation",
+    "source_kind": "synthetic",
+    "sql": "SELECT 'x' COLLATE \"C\" IN(SELECT 'x' COLLATE \"POSIX\") AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-17-not-empty",
+    "factor": "in_subquery",
+    "shape": "not-empty",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 NOT IN(SELECT 1 WHERE FALSE) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-18-not-null",
+    "factor": "in_subquery",
+    "shape": "not-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 NOT IN(SELECT CAST(NULL AS INTEGER)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-19-match-before-null",
+    "factor": "in_subquery",
+    "shape": "match-before-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 IN(SELECT 1 UNION ALL SELECT NULL::INTEGER) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-20-nonmatch-with-null",
+    "factor": "in_subquery",
+    "shape": "nonmatch-with-null",
+    "source_kind": "synthetic",
+    "sql": "SELECT 2 IN(SELECT 1 UNION ALL SELECT NULL::INTEGER) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-21-duplicate-match",
+    "factor": "in_subquery",
+    "shape": "duplicate-match",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 IN(SELECT 1 UNION ALL SELECT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-22-scalar-left",
+    "factor": "in_subquery",
+    "shape": "scalar-left",
+    "source_kind": "synthetic",
+    "sql": "SELECT (SELECT 1) IN(SELECT 1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-23-nested-in",
+    "factor": "in_subquery",
+    "shape": "nested-in",
+    "source_kind": "synthetic",
+    "sql": "SELECT TRUE IN(SELECT 1 IN(SELECT 1)) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-24-unknown-date",
+    "factor": "in_subquery",
+    "shape": "unknown-date",
+    "source_kind": "synthetic",
+    "sql": "SELECT '2024-01-02' IN(SELECT DATE '2024-01-02') AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-25-negative",
+    "factor": "in_subquery",
+    "shape": "negative",
+    "source_kind": "synthetic",
+    "sql": "SELECT -1 IN(SELECT -1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-26-numeric-modifier",
+    "factor": "in_subquery",
+    "shape": "numeric-modifier",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST(1.234 AS NUMERIC(8,3)) IN(SELECT CAST(1.234 AS NUMERIC(8,3))) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-27-cast",
+    "factor": "in_subquery",
+    "shape": "cast",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST(1 IN(SELECT 1) AS TEXT) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "text",
+        "nullable": false,
+        "collation": "default",
+        "postgres_type": "TEXT",
+        "postgres_display_type": "text"
+      }
+    ],
+    "expected_rows": [
+      [
+        "true"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "true"
+        ]
+      ],
+      "items_only": [
+        [
+          "true"
+        ]
+      ],
+      "labels_only": [
+        [
+          "true"
+        ]
+      ],
+      "both": [
+        [
+          "true"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-28-case",
+    "factor": "in_subquery",
+    "shape": "case",
+    "source_kind": "synthetic",
+    "sql": "SELECT CASE WHEN 1 IN(SELECT 1) THEN 7 ELSE 8 END AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        7
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          7
+        ]
+      ],
+      "items_only": [
+        [
+          7
+        ]
+      ],
+      "labels_only": [
+        [
+          7
+        ]
+      ],
+      "both": [
+        [
+          7
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-29-array-member",
+    "factor": "in_subquery",
+    "shape": "array-member",
+    "source_kind": "synthetic",
+    "sql": "SELECT ARRAY[1 IN(SELECT 1)] AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "boolean[]",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN[]",
+        "postgres_display_type": "boolean[]"
+      }
+    ],
+    "expected_rows": [
+      [
+        "{t}"
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          "{t}"
+        ]
+      ],
+      "items_only": [
+        [
+          "{t}"
+        ]
+      ],
+      "labels_only": [
+        [
+          "{t}"
+        ]
+      ],
+      "both": [
+        [
+          "{t}"
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-30-null-test",
+    "factor": "in_subquery",
+    "shape": "null-test",
+    "source_kind": "synthetic",
+    "sql": "SELECT (1 IN(SELECT NULL::INTEGER)) IS NULL AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-31-anonymous-order",
+    "factor": "in_subquery",
+    "shape": "anonymous-order",
+    "source_kind": "synthetic",
+    "sql": "SELECT ? IN(SELECT ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      7,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-32-numbered-reorder",
+    "factor": "in_subquery",
+    "shape": "numbered-reorder",
+    "source_kind": "synthetic",
+    "sql": "SELECT $2 IN(SELECT $1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int",
+    "parameter_values": [
+      2,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-33-numbered-reuse",
+    "factor": "in_subquery",
+    "shape": "numbered-reuse",
+    "source_kind": "synthetic",
+    "sql": "SELECT $1 IN(SELECT $1) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int",
+    "parameter_values": [
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-34-nullable-left-parameter",
+    "factor": "in_subquery",
+    "shape": "nullable-left-parameter",
+    "source_kind": "synthetic",
+    "sql": "SELECT $1 IN(SELECT $2) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int?,int",
+    "parameter_values": [
+      null,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-35-nullable-right-parameter",
+    "factor": "in_subquery",
+    "shape": "nullable-right-parameter",
+    "source_kind": "synthetic",
+    "sql": "SELECT CAST($1 AS INTEGER) IN(SELECT $2) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int?",
+    "parameter_values": [
+      7,
+      null
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          null
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          null
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-36-child-where-parameter",
+    "factor": "in_subquery",
+    "shape": "child-where-parameter",
+    "source_kind": "synthetic",
+    "sql": "SELECT ? IN(SELECT ? WHERE ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int,bool",
+    "parameter_values": [
+      7,
+      7,
+      false
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-37-unused-cte-parameters",
+    "factor": "in_subquery",
+    "shape": "unused-cte-parameters",
+    "source_kind": "synthetic",
+    "sql": "WITH unused AS(SELECT ? AS x) SELECT ? IN(SELECT ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      100,
+      7,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-38-lexical-outer-child",
+    "factor": "in_subquery",
+    "shape": "lexical-outer-child",
+    "source_kind": "synthetic",
+    "sql": "SELECT ? AS marker,? IN(SELECT ?) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "int,int,int",
+    "parameter_values": [
+      9,
+      7,
+      7
+    ],
+    "output_columns": [
+      {
+        "name": "marker",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        9,
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          9,
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          9,
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          9,
+          true
+        ]
+      ],
+      "both": [
+        [
+          9,
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-39-item-membership",
+    "factor": "in_subquery",
+    "shape": "item-membership",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 IN(SELECT id FROM items) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-40-missing-item",
+    "factor": "in_subquery",
+    "shape": "missing-item",
+    "source_kind": "synthetic",
+    "sql": "SELECT 99 IN(SELECT id FROM items) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-41-duplicate-membership",
+    "factor": "in_subquery",
+    "shape": "duplicate-membership",
+    "source_kind": "synthetic",
+    "sql": "SELECT 1 IN(SELECT id FROM labels) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-42-nullable-scores",
+    "factor": "in_subquery",
+    "shape": "nullable-scores",
+    "source_kind": "synthetic",
+    "sql": "SELECT 20 IN(SELECT score FROM items) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-43-score-match",
+    "factor": "in_subquery",
+    "shape": "score-match",
+    "source_kind": "synthetic",
+    "sql": "SELECT 10 IN(SELECT score FROM items) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-44-not-nullable-scores",
+    "factor": "in_subquery",
+    "shape": "not-nullable-scores",
+    "source_kind": "synthetic",
+    "sql": "SELECT 20 NOT IN(SELECT score FROM items) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          true
+        ]
+      ],
+      "items_only": [
+        [
+          null
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-45-text-membership",
+    "factor": "in_subquery",
+    "shape": "text-membership",
+    "source_kind": "synthetic",
+    "sql": "SELECT 'Ada' IN(SELECT name FROM items) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          true
+        ]
+      ],
+      "labels_only": [
+        [
+          false
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-46-category-membership",
+    "factor": "in_subquery",
+    "shape": "category-membership",
+    "source_kind": "synthetic",
+    "sql": "SELECT 'B' IN(SELECT category FROM labels) AS v;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        true
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [
+        [
+          false
+        ]
+      ],
+      "items_only": [
+        [
+          false
+        ]
+      ],
+      "labels_only": [
+        [
+          true
+        ]
+      ],
+      "both": [
+        [
+          true
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-47-outer-items",
+    "factor": "in_subquery",
+    "shape": "outer-items",
+    "source_kind": "synthetic",
+    "sql": "SELECT id,id IN(SELECT id FROM labels) AS v FROM items;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        true
+      ],
+      [
+        2,
+        false
+      ],
+      [
+        3,
+        true
+      ],
+      [
+        4,
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          false
+        ],
+        [
+          2,
+          false
+        ],
+        [
+          3,
+          false
+        ],
+        [
+          4,
+          false
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          true
+        ],
+        [
+          2,
+          false
+        ],
+        [
+          3,
+          true
+        ],
+        [
+          4,
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-48-outer-nullable",
+    "factor": "in_subquery",
+    "shape": "outer-nullable",
+    "source_kind": "synthetic",
+    "sql": "SELECT id,score IN(SELECT id FROM labels) AS v FROM items;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        false
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        3,
+        false
+      ],
+      [
+        4,
+        false
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [
+        [
+          1,
+          false
+        ],
+        [
+          2,
+          false
+        ],
+        [
+          3,
+          false
+        ],
+        [
+          4,
+          false
+        ]
+      ],
+      "labels_only": [],
+      "both": [
+        [
+          1,
+          false
+        ],
+        [
+          2,
+          null
+        ],
+        [
+          3,
+          false
+        ],
+        [
+          4,
+          false
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-49-outer-labels",
+    "factor": "in_subquery",
+    "shape": "outer-labels",
+    "source_kind": "synthetic",
+    "sql": "SELECT id,id IN(SELECT score FROM items) AS v FROM labels;",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "id",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      },
+      {
+        "name": "v",
+        "type": "bool",
+        "nullable": true,
+        "collation": null,
+        "postgres_type": "BOOLEAN",
+        "postgres_display_type": "boolean"
+      }
+    ],
+    "expected_rows": [
+      [
+        1,
+        null
+      ],
+      [
+        1,
+        null
+      ],
+      [
+        3,
+        null
+      ],
+      [
+        5,
+        null
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [
+        [
+          1,
+          false
+        ],
+        [
+          1,
+          false
+        ],
+        [
+          3,
+          false
+        ],
+        [
+          5,
+          false
+        ]
+      ],
+      "both": [
+        [
+          1,
+          null
+        ],
+        [
+          1,
+          null
+        ],
+        [
+          3,
+          null
+        ],
+        [
+          5,
+          null
+        ]
+      ]
+    }
+  },
+  {
+    "id": "in_subquery-50-where-membership",
+    "factor": "in_subquery",
+    "shape": "where-membership",
+    "source_kind": "synthetic",
+    "sql": "SELECT id AS v FROM items WHERE id IN(SELECT id FROM labels);",
+    "catalogFile": "fixtures/subqueries/schema.json",
+    "parameter_types": "",
+    "parameter_values": [],
+    "output_columns": [
+      {
+        "name": "v",
+        "type": "int32",
+        "nullable": false,
+        "collation": null,
+        "postgres_type": "INTEGER",
+        "postgres_display_type": "integer"
+      }
+    ],
+    "expected_rows": [
+      [
+        1
+      ],
+      [
+        3
+      ]
+    ],
+    "expected_rows_by_state": {
+      "empty": [],
+      "items_only": [],
+      "labels_only": [],
+      "both": [
+        [
+          1
+        ],
+        [
+          3
+        ]
+      ]
+    }
+  }
+]

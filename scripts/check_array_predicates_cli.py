@@ -157,7 +157,7 @@ def boundaries():
     unsupported = [
         f"SELECT {left} {operator} {right}" for operator in ("@>", "<@", "&&") for left, right in (
             ("ARRAY[]::JSON[]", "ARRAY[]::JSON[]"), ("NULL::JSON[]", "'{}'"),
-            ("ARRAY[1]", "(SELECT ARRAY[1])"), ("unknown_function()", "ARRAY[1]"),
+            ("unknown_function()", "ARRAY[1]"),
         )
     ]
     valid = ["SELECT ARRAY[1] && '{1}'", "SELECT '{1}' && ARRAY[1]",
@@ -165,6 +165,10 @@ def boundaries():
     for status, queries in (("invalid", invalid), ("unsupported", unsupported), ("valid", valid)):
         for sql in queries:
             assert_report(["--assurance", "contract", sql], status, "contract")
+    scalar_arrays = [f"SELECT ARRAY[1] {operator} (SELECT ARRAY[1])" for operator in ("@>", "<@", "&&")]
+    for sql in scalar_arrays:
+        assert_report(["--assurance", "contract", sql], "valid", "contract",
+                      (("?column?", "bool", True),))
     syntax = ["SELECT ARRAY[1]&&-1", "SELECT ARRAY[1] &&", "SELECT && ARRAY[1]",
               "SELECT ARRAY[1] &&& ARRAY[1]"]
     for sql in syntax:
@@ -175,7 +179,7 @@ def boundaries():
     for operator in ("@>", "<@", "&&"):
         assert_report(["--assurance", "checked", f"SELECT ARRAY[1] {operator} ARRAY[1]"],
                       "rejected", "checked")
-    return len(invalid) + len(unsupported) + len(valid) + len(syntax) + 3
+    return len(invalid) + len(unsupported) + len(valid) + len(scalar_arrays) + len(syntax) + 3
 
 
 def main():

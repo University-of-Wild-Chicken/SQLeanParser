@@ -15,14 +15,14 @@ from check_pagination_cli import ROOT, replay
 from check_postgresql_cli import connection, run, sql_literal
 
 FIXTURE = ROOT / "fixtures/recursive_contract/boundaries.json"
-DIGEST = "f9e072cd60d6d0600ee7874a18ea51c3a6f1e5ca6a7f229adde41e991646d74d"
+DIGEST = "5324590dc4f0d8c2ad244e62b3198088b569e4edc5b22dbd10766d93caaf451f"
 
 
 def load_cases():
     rows = json.loads(FIXTURE.read_text())
     assert hashlib.sha256(json.dumps(rows, sort_keys=True, separators=(",", ":")).encode()).hexdigest() == DIGEST
     assert len(rows) == len({r["id"] for r in rows}) == len({r["sql"] for r in rows}) == 85
-    assert Counter(r["expected_status"] for r in rows) == {"valid": 42, "invalid": 35, "unsupported": 8}
+    assert Counter(r["expected_status"] for r in rows) == {"valid": 42, "invalid": 38, "unsupported": 5}
     assert Counter(r["postgres_sqlstate"] for r in rows) == {
         "00000": 45, "42P19": 15, "42P21": 11, "42804": 9, "0A000": 5}
     assert sum(len(r["postgres_columns"] or []) for r in rows) == 47
@@ -101,7 +101,7 @@ def main():
         assert 160000 <= version < 170000, "recursive boundary observations target PostgreSQL 16"
         result = run([*psql, "-X", "-qAt", "-v", "ON_ERROR_STOP=1"], input=script, timeout=120)
         validate_native(result.stdout, expected)
-    print("PASS: 85 authored recursive boundaries: 42 exact static outputs, 35 Invalid, 8 Unsupported")
+    print("PASS: 85 authored recursive boundaries: 42 exact static outputs, 38 Invalid, 5 Unsupported")
     print("PASS: PostgreSQL 16: 170 source/canonical PREPARE outcomes; 90 prepared result descriptions")
     print("Scope: analysis-only evidence; no recursive query values, termination, or downloaded SQL execution claimed.")
 

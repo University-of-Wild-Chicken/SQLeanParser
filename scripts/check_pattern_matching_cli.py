@@ -137,9 +137,15 @@ def boundaries():
         )
     ]
     unsupported = [
-        "SELECT (SELECT 'x') ~ 'x'", "SELECT 'x' ILIKE (SELECT 'x')",
-        "SELECT ROW('x') ~ 'x'", "SELECT unknown_function() ILIKE 'x'",
+        "SELECT ROW('x') ~ 'x'",
+        "SELECT unknown_function() ILIKE 'x'",
     ]
+    promoted = [
+        ("SELECT (SELECT 'x') ~ 'x'", (('?column?', 'bool', True),)),
+        ("SELECT 'x' ILIKE (SELECT 'x')", (('?column?', 'bool', True),)),
+    ]
+    for sql, columns in promoted:
+        assert_report(["--assurance", "contract", sql], "valid", "contract", columns)
     syntax = [
         "SELECT 'x' ~", "SELECT ~ 'x'", "SELECT 'x' !~*",
         "SELECT 'x' ~** 'y'", "SELECT 'x' !~~ 'y'",
@@ -155,7 +161,7 @@ def boundaries():
             1, "invalid", "input.parse"), report
     # Coarse expanded typing must not silently erase the exact regex signature.
     assert_report(["--assurance", "checked", "SELECT 'x' ~ 'x'"], "rejected", "checked")
-    return len(invalid) + len(unsupported) + len(syntax) + 1
+    return len(invalid) + len(unsupported) + len(syntax) + 1 + len(promoted)
 
 
 def main():

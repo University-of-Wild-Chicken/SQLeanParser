@@ -112,7 +112,7 @@ def boundary_cases():
         add(factor, "left-arm-lock", f"(SELECT id FROM items FOR SHARE) {op} SELECT id FROM labels", "invalid", "0A000")
         add(factor, "right-arm-lock", f"SELECT id FROM items {op} (SELECT id FROM labels FOR KEY SHARE)", "invalid", "0A000")
         add(factor, "aggregation", f"SELECT COUNT(*) FROM items {op} SELECT CAST(1 AS BIGINT)", "unsupported", "00000")
-        add(factor, "scalar-subquery", f"SELECT (SELECT 1) {op} SELECT 1", "unsupported", "00000")
+        add(factor, "scalar-subquery", f"SELECT (SELECT 1) {op} SELECT 1", "valid", "00000")
         add(factor, "recursive", f"WITH RECURSIVE c AS (SELECT 1 AS x) SELECT x FROM c {op} SELECT 1", "valid", "00000")
         add(factor, "lateral", f"SELECT d.x FROM LATERAL (SELECT 1 AS x) d {op} SELECT 1", "unsupported", "00000")
         # Existing contracts certify type/coercion admissibility, not literal
@@ -126,7 +126,7 @@ def boundaries():
         label = "x" if row["id"].endswith("-recursive") else "?column?"
         assert_report(["--assurance", "contract", "--schema", str(FIXTURES / "schema.json"), row["sql"]],
                       row["status"], "contract",
-                      ((label, "int32", False),) if row["status"] == "valid" else None)
+                      ((label, "int32", row["id"].endswith("-scalar-subquery")),) if row["status"] == "valid" else None)
     for sql in ("SELECT ? AS v UNION SELECT 1", "SELECT 1 INTERSECT SELECT $1"):
         assert_report(["--assurance", "contract", sql], "invalid", "contract")
     return len(boundary_cases()) + 2

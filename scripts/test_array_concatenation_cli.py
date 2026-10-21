@@ -375,12 +375,12 @@ class ArrayConcatenationCliTests(unittest.TestCase):
                 patch.object(checker, "invoke", return_value=good) as invoke:
             self.assertEqual(checker.boundaries(), 15)
         self.assertEqual(sum(call.args[1] == "invalid" for call in reports.call_args_list), 5)
-        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 3)
-        self.assertEqual(sum(call.args[1] == "valid" for call in reports.call_args_list), 3)
+        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 2)
+        self.assertEqual(sum(call.args[1] == "valid" for call in reports.call_args_list), 4)
         self.assertEqual(sum(call.args[1:] == ("rejected", "checked") for call in reports.call_args_list), 3)
         self.assertEqual(len(invoke.call_args_list), 1)
         valid_columns = [call.args[3] for call in reports.call_args_list if call.args[1] == "valid"]
-        self.assertEqual(valid_columns, [(("v", "text", False),), (("v", "text", True),),
+        self.assertEqual(valid_columns, [(("?column?", "integer[]", False),), (("v", "text", False),), (("v", "text", True),),
                                          (("v", "integer[]", False),)])
         for code, status, diagnostic in ((0, "rendered", "input.parse"),
                                          (1, "invalid", "coverage.concat"),

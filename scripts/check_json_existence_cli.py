@@ -186,9 +186,13 @@ def boundaries():
     for sql, status, _ in analysis_boundaries():
         assert_report(["--assurance", "contract", sql], status, "contract")
     unsupported = [
-        "SELECT (SELECT '{}'::JSONB) ? 'a'",
         "SELECT unknown_function() ?& ARRAY['a']",
     ]
+    promoted = [
+        ("SELECT (SELECT '{}'::JSONB) ? 'a'", (('?column?', 'bool', True),)),
+    ]
+    for sql, columns in promoted:
+        assert_report(["--assurance", "contract", sql], "valid", "contract", columns)
     for sql in unsupported:
         assert_report(["--assurance", "contract", sql], "unsupported", "contract")
     malformed = [
@@ -203,7 +207,7 @@ def boundaries():
         assert (result.returncode, report["status"], report["diagnostic"]["code"]) == (
             1, "invalid", "input.parse"), (sql, report)
     assert_report(["--assurance", "checked", "SELECT '{}'::JSONB ? 'a'"], "rejected", "checked")
-    return len(analysis_boundaries()) + len(unsupported) + len(malformed) + 1
+    return len(analysis_boundaries()) + len(unsupported) + len(malformed) + 1 + len(promoted)
 
 
 def main():

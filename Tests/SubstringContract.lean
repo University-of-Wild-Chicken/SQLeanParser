@@ -164,9 +164,12 @@ def substringContractTests : IO Nat := do
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"SUBSTRING invalid arity or type: {sql}")
     count := count + 1
-  for sql in [
-      "SELECT SUBSTRING((SELECT 'abc') FROM 1)",
-      "SELECT SUBSTRING(unregistered_subject() FOR 2)"] do
+  SQLean.Tests.assert (sameOutputTypes
+    (← substringOutput "SELECT SUBSTRING((SELECT 'abc') FROM 1)")
+    [{name := "substring", type := ⟨.text, true⟩}])
+    "scalar subquery subject preserves SUBSTRING output and possible empty-result NULL"
+  count := count + 1
+  for sql in ["SELECT SUBSTRING(unregistered_subject() FOR 2)"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()

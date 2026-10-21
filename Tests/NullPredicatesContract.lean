@@ -159,13 +159,17 @@ def nullPredicatesContractTests : IO Nat := do
           SQLean.Tests.assert (diagnostic.code == code) s!"exact DISTINCT failure for {expr}"
       | _ => throw (IO.userError s!"invalid DISTINCT expression acquired a certificate: {expr}")
       count := count + 1
+    SQLean.Tests.assert (sameOutputTypes (← nullOutput s!"SELECT (SELECT 1) {op} NULL")
+      [{name := "?column?", type := ⟨.bool, false⟩}])
+      "null-safe scalar subquery comparison always returns nonnullable Boolean"
+    count := count + 1
     for expr in [s!"ROW(ROW(1)) {op} ROW(ROW(1))", s!"ROW(ROW(1)) {op} NULL",
-        s!"ROW(1) {op} 'record input'", s!"(SELECT 1) {op} NULL",
+        s!"ROW(1) {op} 'record input'",
         s!"'{"{}"}'::JSON[] {op} '{"{}"}'::JSON[]"] do
       let query ← expectOk expr (Advanced.parseQuery s!"SELECT {expr}")
       match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.unsupported _) => pure ()
-      | _ => throw (IO.userError s!"unmodeled composite/subquery/equality dependency accepted: {expr}")
+      | _ => throw (IO.userError s!"unmodeled composite/equality dependency accepted: {expr}")
       count := count + 1
   for spelling in ["ISNULL", "NOTNULL", "IS NULL", "IS NOT NULL"] do
     for declaration in nullDeclarations do
@@ -178,11 +182,15 @@ def nullPredicatesContractTests : IO Nat := do
         "ROW(NULL::JSON,'{}'::JSON)", "ROW(ARRAY[NULL]::INTEGER[],NULL)"] do
       SQLean.Tests.assert (sameOutputTypes (← nullOutput s!"SELECT {expr} {spelling} AS v") [{name := "v", type := ⟨.bool, false⟩}]) "flat-row field-sensitive null tests"
       count := count + 1
-    for expr in ["ROW(ROW(1))", "(SELECT 1)"] do
+    SQLean.Tests.assert (sameOutputTypes (← nullOutput s!"SELECT (SELECT 1) {spelling}")
+      [{name := "?column?", type := ⟨.bool, false⟩}])
+      "scalar subquery null test always returns nonnullable Boolean"
+    count := count + 1
+    for expr in ["ROW(ROW(1))"] do
       let query ← expectOk expr (Advanced.parseQuery s!"SELECT {expr} {spelling}")
       match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.unsupported _) => pure ()
-      | _ => throw (IO.userError "null test acquired unsupported composite/subquery evidence")
+      | _ => throw (IO.userError "null test acquired unsupported composite evidence")
       count := count + 1
   for (sql, label, type) in [
       ("SELECT 1 IS DISTINCT FROM 2", "?column?", SelectContract.ScalarType.bool),

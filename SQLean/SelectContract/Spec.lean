@@ -3,6 +3,8 @@ import SQLean.SelectContract.CollationRules
 /-! Independent query, source, and namespace judgments. Scalar typing and
 collation derivations are separate prerequisites of every expression context. -/
 namespace SQLean.SelectContract
+
+set_option inductive.autoPromoteIndices false
 open Advanced
 
 /-- Constructor-derived labels survive explicit cast chains. -/
@@ -32,6 +34,7 @@ def outputLabel : Advanced.Expr → Nat × Name
   | .contextValue value => (2, contextValueLabel value)
   | .array _ => (2, "array")
   | .row _ => (2, "row")
+  | .exists .. => (2, "exists")
   | .extract .. => (2, "extract")
   | .substring .. => (2, "substring")
   | .cast arg target =>
@@ -54,19 +57,47 @@ ordered outputs, and an explicit alias overrides every inferred label. -/
 def outputName (expr : Advanced.Expr) (alias : Option Name) : Name :=
   alias.getD (outputLabel expr).2
 
-inductive ItemsValid (profile : Profile) (params : ParameterEnv) (scope : Scope) :
+/-- Only these label-inheriting paths require a child query's certified row. -/
+def labelNeedsSubquery : Advanced.Expr → Bool
+  | .scalarQuery _ => true
+  | .cast arg _ | .subscript arg _ | .collate arg _ => labelNeedsSubquery arg
+  | .caseExpr _ _ otherwise => match otherwise with
+    | none => false
+    | some arg => labelNeedsSubquery arg
+  | _ => false
+
+inductive ExprLabelValidCore (subqueries : SubqueryJudgment) :
+    CTEEnv → Advanced.Expr → (Nat × Name) → Prop where
+  | ordinary (closed : labelNeedsSubquery expr = false) :
+      ExprLabelValidCore subqueries env expr (outputLabel expr)
+  | scalarQuery (query : subqueries env child [column] uses) :
+      ExprLabelValidCore subqueries env (.scalarQuery child) (2, column.name)
+  | cast (child : ExprLabelValidCore subqueries env arg label) :
+      ExprLabelValidCore subqueries env (.cast arg target)
+        (if label.1 ≤ 1 then (1, typeNameLabel target.name) else label)
+  | subscript (child : ExprLabelValidCore subqueries env arg label) :
+      ExprLabelValidCore subqueries env (.subscript arg indices) label
+  | collate (child : ExprLabelValidCore subqueries env arg label) :
+      ExprLabelValidCore subqueries env (.collate arg name) label
+  | caseExpr (child : ExprLabelValidCore subqueries env arg label) :
+      ExprLabelValidCore subqueries env (.caseExpr operand branches (some arg))
+        (if label.1 ≤ 1 then (1, "case") else label)
+
+inductive ItemsValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+    CTEEnv → Scope →
     List Advanced.SelectItem → List OutputColumn → List Parameter → Prop where
-  | nil : ItemsValid profile params scope [] [] []
-  | expression (typed : ExprValid params scope expr type uses)
-      (collation : ExprCollationValid profile params scope expr type derivation)
+  | nil : ItemsValidCore subqueries profile params env scope [] [] []
+  | expression (typed : ExprValidCore subqueries params env scope expr type uses)
+      (collation : ExprCollationValidCore subqueries profile params env scope expr type derivation)
+      (labelValid : ExprLabelValidCore subqueries env expr label)
       (aliasValid : ∀ name ∈ alias, name ≠ "")
-      (tail : ItemsValid profile params scope items output remaining) :
-      ItemsValid profile params scope (.expression expr alias :: items)
-        (⟨outputName expr alias, projectedType type, projectedCollation expr type derivation⟩ :: output) (uses ++ remaining)
+      (tail : ItemsValidCore subqueries profile params env scope items output remaining) :
+      ItemsValidCore subqueries profile params env scope (.expression expr alias :: items)
+        (⟨alias.getD label.2, projectedType type, projectedCollation expr type derivation⟩ :: output) (uses ++ remaining)
   | all (bindings : scope.columns qualifier schema = selected)
       (nonempty : selected ≠ [])
-      (tail : ItemsValid profile params scope items output uses) :
-      ItemsValid profile params scope (.all qualifier schema :: items) (selected ++ output) uses
+      (tail : ItemsValidCore subqueries profile params env scope items output uses) :
+      ItemsValidCore subqueries profile params env scope (.all qualifier schema :: items) (selected ++ output) uses
 
 /-- A set operand retains raw unknown literal inputs until its containing
 binary set operation selects a type. Complete derived/CTE outputs are known. -/
@@ -81,26 +112,29 @@ structure PendingColumn where
 def knownColumns (output : List OutputColumn) : List PendingColumn :=
   output.map fun column => ⟨column.name, .known column.type, .stored column.collation, .known, none⟩
 
-inductive ItemsInputValid (profile : Profile) (params : ParameterEnv) (scope : Scope) :
+inductive ItemsInputValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+    CTEEnv → Scope →
     List Advanced.SelectItem → List PendingColumn → List Parameter → Prop where
-  | nil : ItemsInputValid profile params scope [] [] []
-  | expression (typed : ExprValid params scope expr type uses)
-      (collation : ExprCollationValid profile params scope expr type derivation)
+  | nil : ItemsInputValidCore subqueries profile params env scope [] [] []
+  | expression (typed : ExprValidCore subqueries params env scope expr type uses)
+      (collation : ExprCollationValidCore subqueries profile params env scope expr type derivation)
+      (labelValid : ExprLabelValidCore subqueries env expr label)
       (aliasValid : ∀ name ∈ alias, name ≠ "")
-      (tail : ItemsInputValid profile params scope items output remaining) :
-      ItemsInputValid profile params scope (.expression expr alias :: items)
-        (⟨outputName expr alias, scalarInput expr type, derivation, pendingOrigin expr type, unknownCollationSortKey profile expr⟩ :: output) (uses ++ remaining)
+      (tail : ItemsInputValidCore subqueries profile params env scope items output remaining) :
+      ItemsInputValidCore subqueries profile params env scope (.expression expr alias :: items)
+        (⟨alias.getD label.2, scalarInput expr type, derivation, pendingOrigin expr type, unknownCollationSortKey profile expr⟩ :: output) (uses ++ remaining)
   | all (bindings : scope.columns qualifier schema = selected)
       (nonempty : selected ≠ [])
-      (tail : ItemsInputValid profile params scope items output uses) :
-      ItemsInputValid profile params scope (.all qualifier schema :: items)
+      (tail : ItemsInputValidCore subqueries profile params env scope items output uses) :
+      ItemsInputValidCore subqueries profile params env scope (.all qualifier schema :: items)
         (knownColumns selected ++ output) uses
 
-inductive PredicateValid (profile : Profile) (params : ParameterEnv) (scope : Scope) : Option Advanced.Expr → List Parameter → Prop where
-  | absent : PredicateValid profile params scope none []
-  | present (typed : ExprValid params scope expr type uses)
-      (collation : ExprCollationValid profile params scope expr type derivation) (boolean : acceptsBase .bool type = true) :
-      PredicateValid profile params scope (some expr) uses
+inductive PredicateValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+    CTEEnv → Scope → Option Advanced.Expr → List Parameter → Prop where
+  | absent : PredicateValidCore subqueries profile params env scope none []
+  | present (typed : ExprValidCore subqueries params env scope expr type uses)
+      (collation : ExprCollationValidCore subqueries profile params env scope expr type derivation) (boolean : acceptsBase .bool type = true) :
+      PredicateValidCore subqueries profile params env scope (some expr) uses
 
 /-- Outer joins add possible NULL rows without changing names, order, concrete
 types, or declaration modifiers. Existing nullability is retained. -/
@@ -254,13 +288,10 @@ def DistinctAllowed (distinct : Bool) (output : List OutputColumn) : Prop :=
 instance (distinct : Bool) (output : List OutputColumn) : Decidable (DistinctAllowed distinct output) :=
   inferInstanceAs (Decidable (_ ∨ _))
 
-def projectionExpressions (items : List Advanced.SelectItem) (name : Name) : List Advanced.Expr :=
-  match items with
-  | [] => []
-  | .expression expr alias :: rest =>
-      if outputName expr alias == name then expr :: projectionExpressions rest name
-      else projectionExpressions rest name
-  | .all .. :: rest => projectionExpressions rest name
+def projectionExpressions (items : List Advanced.SelectItem) (names : List Name) (name : Name) : List Advanced.Expr :=
+  (items.zip names).filterMap fun (item, outputName) => match item with
+    | .expression expr _ => if outputName == name then some expr else none
+    | .all .. => none
 
 def pureProjection (items : List Advanced.SelectItem) : Bool :=
   items.all fun item => match item with | .expression .. => true | .all .. => false
@@ -268,9 +299,9 @@ def pureProjection (items : List Advanced.SelectItem) : Bool :=
 /-- Syntactic identity and exact normalized unknown COLLATE trees justify
 PostgreSQL's repeated-target-name exception. Other transformed identities
 remain outside coverage. -/
-def SameOutputExpressions (profile : Profile) (items : List Advanced.SelectItem) (name : Name) : Prop :=
+def SameOutputExpressions (profile : Profile) (items : List Advanced.SelectItem) (output : List OutputColumn) (name : Name) : Prop :=
   pureProjection items = true ∧
-    match projectionExpressions items name with
+    match projectionExpressions items (output.map OutputColumn.name) name with
     | [] => False
     | first :: rest => ∀ expr ∈ rest, expr = first ∨
         ((unknownCollationSortKey profile expr).isSome = true ∧
@@ -278,26 +309,27 @@ def SameOutputExpressions (profile : Profile) (items : List Advanced.SelectItem)
 
 /-- Output-name lookup takes precedence only for a bare name. Repeated names
 need projection identity; compound expressions see input bindings, not aliases. -/
-inductive SortValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn) (distinct : Bool) :
+inductive SortValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+    CTEEnv → Scope → List Advanced.SelectItem → List OutputColumn → Bool →
     Advanced.Expr → List Parameter → Prop where
   | ordinal (constant : sortSyntax expr = .integer position)
       (positive : 0 < position) (inRange : position.toNat ≤ output.length)
       (orderable : OrdinalOrderable output position.toNat) :
-      SortValid profile params scope projection output distinct expr []
+      SortValidCore subqueries profile params env scope projection output distinct expr []
   | outputName (resolved : output.filter (·.name == name) = [column])
       (orderable : column.type.base.orderable = true) :
-      SortValid profile params scope projection output distinct (.column none name) []
-  | repeatedName (same : SameOutputExpressions profile projection name)
+      SortValidCore subqueries profile params env scope projection output distinct (.column none name) []
+  | repeatedName (same : SameOutputExpressions profile projection output name)
       (resolved : output.filter (·.name == name) = column :: remaining)
       (orderable : column.type.base.orderable = true) :
-      SortValid profile params scope projection output distinct (.column none name) []
+      SortValidCore subqueries profile params env scope projection output distinct (.column none name) []
   | inputName (noOutput : output.filter (·.name == name) = []) (ordinary : distinct = false)
-      (typed : ExprValid params scope (.column none name) type uses)
+      (typed : ExprValidCore subqueries params env scope (.column none name) type uses)
       (orderable : type.orderable = true) :
-      SortValid profile params scope projection output distinct (.column none name) uses
-  | expression (ordinary : distinct = false) (typed : ExprValid params scope expr type uses)
+      SortValidCore subqueries profile params env scope projection output distinct (.column none name) uses
+  | expression (ordinary : distinct = false) (typed : ExprValidCore subqueries params env scope expr type uses)
       (category : SortExpression expr) (orderable : type.orderable = true) :
-      SortValid profile params scope projection output distinct expr uses
+      SortValidCore subqueries profile params env scope projection output distinct expr uses
 
 /-- Raw unknown identity survives until its particular target entry is sorted.
 The outer option distinguishes known expressions; the inner distinguishes NULL
@@ -305,10 +337,11 @@ from an unknown string payload. -/
 def unknownSortKey (profile : Profile) (expr : Advanced.Expr) : Option UnknownSortValue :=
   unknownCollationSortKey profile expr
 
-def projectionSortKeys (profile : Profile) (items : List Advanced.SelectItem) : List (Name × Option UnknownSortValue) :=
-  items.map fun item => match item with
-    | .expression expr alias => (outputName expr alias, unknownSortKey profile expr)
-    | .all .. => ("", none)
+def projectionSortKeys (profile : Profile) (items : List Advanced.SelectItem)
+    (output : List OutputColumn) : List (Name × Option UnknownSortValue) :=
+  (items.zip output).map fun (item, column) => match item with
+    | .expression expr _ => (column.name, unknownSortKey profile expr)
+    | .all .. => (column.name, none)
 
 def firstSortIndex (keys : List (Name × Option UnknownSortValue)) (name : Name) : Option Nat :=
   match keys with
@@ -360,53 +393,55 @@ def orderSequenceSafe (profile : Profile) (keys : List (Name × Option UnknownSo
     safe && orderSequenceSafe profile keys
       (match sortTargetIndex profile keys resolved order.expr with | none => resolved | some index => index :: resolved) rest
 
-def OrderSequenceSafe (profile : Profile) (projection : List Advanced.SelectItem) (orders : List Advanced.OrderBy) : Prop :=
-  pureProjection projection = false ∨ orderSequenceSafe profile (projectionSortKeys profile projection) [] orders = true
+def OrderSequenceSafe (profile : Profile) (projection : List Advanced.SelectItem) (output : List OutputColumn) (orders : List Advanced.OrderBy) : Prop :=
+  pureProjection projection = false ∨ orderSequenceSafe profile (projectionSortKeys profile projection output) [] orders = true
 
-instance (profile : Profile) (projection : List Advanced.SelectItem) (orders : List Advanced.OrderBy) :
-    Decidable (OrderSequenceSafe profile projection orders) :=
+instance (profile : Profile) (projection : List Advanced.SelectItem) (output : List OutputColumn) (orders : List Advanced.OrderBy) :
+    Decidable (OrderSequenceSafe profile projection output orders) :=
   inferInstanceAs (Decidable (_ ∨ _))
 
-inductive SortListValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn) (distinct : Bool) :
+inductive SortListValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+    CTEEnv → Scope → List Advanced.SelectItem → List OutputColumn → Bool →
     List Advanced.OrderBy → List Parameter → Prop where
-  | nil : SortListValid profile params scope projection output distinct [] []
-  | cons (head : SortValid profile params scope projection output distinct item.expr uses)
-      (tail : SortListValid profile params scope projection output distinct items remaining) :
-      SortListValid profile params scope projection output distinct (item :: items) (uses ++ remaining)
+  | nil : SortListValidCore subqueries profile params env scope projection output distinct [] []
+  | cons (head : SortValidCore subqueries profile params env scope projection output distinct item.expr uses)
+      (tail : SortListValidCore subqueries profile params env scope projection output distinct items remaining) :
+      SortListValidCore subqueries profile params env scope projection output distinct (item :: items) (uses ++ remaining)
 
-inductive OrdersValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem)
-    (output : List OutputColumn) (distinct : Bool) : List Advanced.OrderBy → List Parameter → Prop where
-  | nil : OrdersValid profile params scope projection output distinct [] []
-  | checked (items : SortListValid profile params scope projection output distinct orders uses)
-      (sequence : OrderSequenceSafe profile projection orders) :
-      OrdersValid profile params scope projection output distinct orders uses
+inductive OrdersValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+    CTEEnv → Scope → List Advanced.SelectItem →
+    List OutputColumn → Bool → List Advanced.OrderBy → List Parameter → Prop where
+  | nil : OrdersValidCore subqueries profile params env scope projection output distinct [] []
+  | checked (items : SortListValidCore subqueries profile params env scope projection output distinct orders uses)
+      (sequence : OrderSequenceSafe profile projection output orders) :
+      OrdersValidCore subqueries profile params env scope projection output distinct orders uses
 
 /-- A direct sort sees the derivation of its target expression. A stored
 relation column has already lost explicit/conflict strength at its query boundary. -/
-inductive SortCollationValid (profile : Profile) (params : ParameterEnv) (scope : Scope)
-    (pending : List PendingColumn) : Advanced.Expr → Prop where
+inductive SortCollationValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+    CTEEnv → Scope → List PendingColumn → Advanced.Expr → Prop where
   | ordinal (constant : sortSyntax expr = .integer position)
       (resolved : pending[position.toNat - 1]? = some column)
       (determinate : column.derivation.determinate = true) :
-      SortCollationValid profile params scope pending expr
+      SortCollationValidCore subqueries profile params env scope pending expr
   | outputName (resolved : pending.find? (fun column => column.name == name) = some column)
       (determinate : column.derivation.determinate = true) :
-      SortCollationValid profile params scope pending (.column none name)
+      SortCollationValidCore subqueries profile params env scope pending (.column none name)
   | inputName (noOutput : pending.find? (fun column => column.name == name) = none)
-      (collation : ExprCollationValid profile params scope (.column none name) type derivation)
+      (collation : ExprCollationValidCore subqueries profile params env scope (.column none name) type derivation)
       (determinate : derivation.determinate = true) :
-      SortCollationValid profile params scope pending (.column none name)
+      SortCollationValidCore subqueries profile params env scope pending (.column none name)
   | expression (category : SortExpression expr)
-      (collation : ExprCollationValid profile params scope expr type derivation)
+      (collation : ExprCollationValidCore subqueries profile params env scope expr type derivation)
       (determinate : derivation.determinate = true) :
-      SortCollationValid profile params scope pending expr
+      SortCollationValidCore subqueries profile params env scope pending expr
 
-inductive OrdersCollationValid (profile : Profile) (params : ParameterEnv) (scope : Scope)
-    (pending : List PendingColumn) : List Advanced.OrderBy → Prop where
-  | nil : OrdersCollationValid profile params scope pending []
-  | cons (head : SortCollationValid profile params scope pending item.expr)
-      (tail : OrdersCollationValid profile params scope pending items) :
-      OrdersCollationValid profile params scope pending (item :: items)
+inductive OrdersCollationValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+    CTEEnv → Scope → List PendingColumn → List Advanced.OrderBy → Prop where
+  | nil : OrdersCollationValidCore subqueries profile params env scope pending []
+  | cons (head : SortCollationValidCore subqueries profile params env scope pending item.expr)
+      (tail : OrdersCollationValidCore subqueries profile params env scope pending items) :
+      OrdersCollationValidCore subqueries profile params env scope pending (item :: items)
 
 def DistinctCollations (distinct : Bool) (pending : List PendingColumn) : Prop :=
   distinct = false ∨ ∀ column ∈ pending, column.derivation.determinate = true
@@ -495,13 +530,14 @@ theorem int32_row_count_widening (value : Int)
 This is a static typing judgment. Expression evaluation may still fail, and
 non-NULL runtime values must satisfy PaginationValueAllowed. In PostgreSQL,
 NULL LIMIT means no bound, and NULL OFFSET means zero. -/
-inductive PaginationValid (profile : Profile) (params : ParameterEnv) :
+inductive PaginationValidCore (subqueries : SubqueryJudgment) (profile : Profile) (params : ParameterEnv) :
+    CTEEnv →
     Option Advanced.Expr → List Parameter → Prop where
-  | absent : PaginationValid profile params none []
-  | present (typed : ExprValid params .empty expr type uses)
-      (collation : ExprCollationValid profile params .empty expr type derivation)
+  | absent : PaginationValidCore subqueries profile params env none []
+  | present (typed : ExprValidCore subqueries params env .empty expr type uses)
+      (collation : ExprCollationValidCore subqueries profile params env .empty expr type derivation)
       (coercion : RowCountCoercion type) :
-      PaginationValid profile params (some expr) uses
+      PaginationValidCore subqueries profile params env (some expr) uses
 
 /-- A separate execution obligation on an evaluated row count. A static
 certificate does not prove this predicate or successful expression evaluation. -/
@@ -518,8 +554,8 @@ inductive PaginationBoundsValid (profile : Profile) (params : ParameterEnv)
     (query : Advanced.Query) : List Parameter → List Parameter → Prop where
   | bounds (environment : ParametersWellFormed params)
       (collations : profile.collations.WellFormed)
-      (limit : PaginationValid profile params query.limit limitUses)
-      (offset : PaginationValid profile params query.offset offsetUses) :
+      (limit : PaginationValidCore NoSubqueries profile params [] query.limit limitUses)
+      (offset : PaginationValidCore NoSubqueries profile params [] query.offset offsetUses) :
       PaginationBoundsValid profile params query limitUses offsetUses
 
 structure PaginationBoundsCertificate (profile : Profile) (params : ParameterEnv)
@@ -576,6 +612,70 @@ parameter order. -/
 def withoutWith (query : Advanced.Query) : Advanced.Query :=
   {query with ctes := [], recursive := false}
 
+
+abbrev ItemsValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (items : List Advanced.SelectItem) (output : List OutputColumn) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  ItemsValidCore subqueries profile params env scope items output uses
+namespace ItemsValid
+export ItemsValidCore (nil expression all)
+end ItemsValid
+
+abbrev ItemsInputValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (items : List Advanced.SelectItem) (output : List PendingColumn) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  ItemsInputValidCore subqueries profile params env scope items output uses
+namespace ItemsInputValid
+export ItemsInputValidCore (nil expression all)
+end ItemsInputValid
+
+abbrev PredicateValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (expr : Option Advanced.Expr) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  PredicateValidCore subqueries profile params env scope expr uses
+namespace PredicateValid
+export PredicateValidCore (absent present)
+end PredicateValid
+
+abbrev SortValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn) (distinct : Bool) (expr : Advanced.Expr) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  SortValidCore subqueries profile params env scope projection output distinct expr uses
+namespace SortValid
+export SortValidCore (ordinal outputName repeatedName inputName expression)
+end SortValid
+
+abbrev SortListValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn) (distinct : Bool) (orders : List Advanced.OrderBy) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  SortListValidCore subqueries profile params env scope projection output distinct orders uses
+namespace SortListValid
+export SortListValidCore (nil cons)
+end SortListValid
+
+abbrev OrdersValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn) (distinct : Bool) (orders : List Advanced.OrderBy) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  OrdersValidCore subqueries profile params env scope projection output distinct orders uses
+namespace OrdersValid
+export OrdersValidCore (nil checked)
+end OrdersValid
+
+abbrev SortCollationValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (pending : List PendingColumn) (expr : Advanced.Expr)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  SortCollationValidCore subqueries profile params env scope pending expr
+namespace SortCollationValid
+export SortCollationValidCore (ordinal outputName inputName expression)
+end SortCollationValid
+
+abbrev OrdersCollationValid (profile : Profile) (params : ParameterEnv) (scope : Scope) (pending : List PendingColumn) (orders : List Advanced.OrderBy)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  OrdersCollationValidCore subqueries profile params env scope pending orders
+namespace OrdersCollationValid
+export OrdersCollationValidCore (nil cons)
+end OrdersCollationValid
+
+abbrev PaginationValid (profile : Profile) (params : ParameterEnv) (expr : Option Advanced.Expr) (uses : List Parameter)
+    (subqueries : SubqueryJudgment := NoSubqueries) (env : CTEEnv := []) : Prop :=
+  PaginationValidCore subqueries profile params env expr uses
+namespace PaginationValid
+export PaginationValidCore (absent present)
+end PaginationValid
+
 mutual
   /-- Every ON predicate sees exactly its two child scopes, before this join's
   own NULL extension. Parameters are visited left source, right source, then ON.
@@ -611,7 +711,7 @@ mutual
         (rightValid : SourceValid profile catalog params env (some right) rightScope rightUses)
         (aliases : JoinAliasesDistinct leftScope rightScope)
         (kindValid : kind ≠ .cross)
-        (condition : PredicateValid profile params (leftScope ++ rightScope) (some expr) onUses) :
+        (condition : PredicateValidCore (QueryValid profile catalog params) profile params env (leftScope ++ rightScope) (some expr) onUses) :
         SourceValid profile catalog params env (some (.join kind left right (.on expr)))
           (joinScope kind leftScope rightScope) (leftUses ++ rightUses ++ onUses)
     | using (leftValid : SourceValid profile catalog params env (some left) leftScope leftUses)
@@ -645,16 +745,16 @@ mutual
         (names : CTENamesValid ctes)
         (definitions : CTEsValid profile catalog params env ctes visible cteUses)
         (source : SourceValid profile catalog params visible select.source scope sourceUses)
-        (items : ItemsValid profile params scope select.items output selectUses)
-        (inputs : ItemsInputValid profile params scope select.items pending selectUses)
+        (items : ItemsValidCore (QueryValid profile catalog params) profile params visible scope select.items output selectUses)
+        (inputs : ItemsInputValidCore (QueryValid profile catalog params) profile params visible scope select.items pending selectUses)
         (nonempty : output ≠ [])
         (distinctComparable : DistinctAllowed select.distinct output)
         (distinctCollations : DistinctCollations select.distinct pending)
-        (predicate : PredicateValid profile params scope select.whereClause whereUses)
-        (orders : OrdersValid profile params scope select.items output select.distinct orderBy orderUses)
-        (orderCollations : OrdersCollationValid profile params scope pending orderBy)
-        (limitValid : PaginationValid profile params limit limitUses)
-        (offsetValid : PaginationValid profile params offset offsetUses)
+        (predicate : PredicateValidCore (QueryValid profile catalog params) profile params visible scope select.whereClause whereUses)
+        (orders : OrdersValidCore (QueryValid profile catalog params) profile params visible scope select.items output select.distinct orderBy orderUses)
+        (orderCollations : OrdersCollationValidCore (QueryValid profile catalog params) profile params visible scope pending orderBy)
+        (limitValid : PaginationValidCore (QueryValid profile catalog params) profile params visible limit limitUses)
+        (offsetValid : PaginationValidCore (QueryValid profile catalog params) profile params visible offset offsetUses)
         (lockingValid : LockingValid scope select.distinct locking)
         (noGrouping : select.groupBy = []) (noHaving : select.having = none)
         (noDistinctOn : select.distinctOn = []) :
@@ -670,8 +770,8 @@ mutual
         (columns : SetColumnsValid op all leftInputs rightInputs output)
         (nonempty : output ≠ [])
         (orders : SetOrdersValid output orderBy)
-        (limitValid : PaginationValid profile params limit limitUses)
-        (offsetValid : PaginationValid profile params offset offsetUses) :
+        (limitValid : PaginationValidCore (QueryValid profile catalog params) profile params visible limit limitUses)
+        (offsetValid : PaginationValidCore (QueryValid profile catalog params) profile params visible offset offsetUses) :
         QueryValid profile catalog params env
           ⟨.set op all left right, ctes, false, orderBy, limit, offset, [], offsetFirst⟩ output
           (cteUses ++ leftUses ++ rightUses ++
@@ -694,16 +794,16 @@ mutual
         (names : CTENamesValid ctes)
         (definitions : CTEsValid profile catalog params env ctes visible cteUses)
         (source : SourceValid profile catalog params visible select.source scope sourceUses)
-        (items : ItemsValid profile params scope select.items output selectUses)
-        (inputs : ItemsInputValid profile params scope select.items pending selectUses)
+        (items : ItemsValidCore (QueryValid profile catalog params) profile params visible scope select.items output selectUses)
+        (inputs : ItemsInputValidCore (QueryValid profile catalog params) profile params visible scope select.items pending selectUses)
         (nonempty : output ≠ [])
         (distinctComparable : DistinctAllowed select.distinct output)
         (distinctCollations : DistinctCollations select.distinct pending)
-        (predicate : PredicateValid profile params scope select.whereClause whereUses)
-        (orders : OrdersValid profile params scope select.items output select.distinct orderBy orderUses)
-        (orderCollations : OrdersCollationValid profile params scope pending orderBy)
-        (limitValid : PaginationValid profile params limit limitUses)
-        (offsetValid : PaginationValid profile params offset offsetUses)
+        (predicate : PredicateValidCore (QueryValid profile catalog params) profile params visible scope select.whereClause whereUses)
+        (orders : OrdersValidCore (QueryValid profile catalog params) profile params visible scope select.items output select.distinct orderBy orderUses)
+        (orderCollations : OrdersCollationValidCore (QueryValid profile catalog params) profile params visible scope pending orderBy)
+        (limitValid : PaginationValidCore (QueryValid profile catalog params) profile params visible limit limitUses)
+        (offsetValid : PaginationValidCore (QueryValid profile catalog params) profile params visible offset offsetUses)
         (lockingValid : LockingValid scope select.distinct locking)
         (noGrouping : select.groupBy = []) (noHaving : select.having = none)
         (noDistinctOn : select.distinctOn = []) :

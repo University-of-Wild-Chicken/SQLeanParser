@@ -1,0 +1,56 @@
+[
+  {
+    "id": "scalar-explicit-conflict",
+    "sql": "SELECT 'x' IN((SELECT 'x') COLLATE \"C\",(SELECT 'y') COLLATE \"POSIX\")",
+    "prepare": "42P21",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "scalar-implicit-conflict",
+    "sql": "SELECT 'x' IN((SELECT 'x' COLLATE \"C\"),(SELECT 'y' COLLATE \"POSIX\"))",
+    "prepare": "00000",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "scalar-implicit-left-explicit",
+    "sql": "SELECT 'x' COLLATE \"C\" IN((SELECT 'x' COLLATE \"C\"),(SELECT 'y' COLLATE \"POSIX\"))",
+    "prepare": "00000",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "scalar-same-explicit",
+    "sql": "SELECT 'x' IN((SELECT 'x') COLLATE \"C\",(SELECT 'y') COLLATE \"C\")",
+    "prepare": "00000",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "scalar-variable-pairwise",
+    "sql": "SELECT 'x' IN(d.x COLLATE \"C\",(SELECT 'y') COLLATE \"POSIX\") FROM(SELECT 'x' AS x)d",
+    "prepare": "00000",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "scalar-column-child-conflict",
+    "sql": "SELECT 'x' IN((SELECT x FROM(SELECT 'x' AS x)d) COLLATE \"C\",(SELECT 'y') COLLATE \"POSIX\")",
+    "prepare": "42P21",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "exists-wrapped-conflict",
+    "sql": "SELECT 'true' IN(CAST(EXISTS(SELECT 1) AS TEXT) COLLATE \"C\",CAST(EXISTS(SELECT 2) AS TEXT) COLLATE \"POSIX\")",
+    "prepare": "42P21",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "inquery-wrapped-conflict",
+    "sql": "SELECT 'true' IN(CAST(1 IN(SELECT 1) AS TEXT) COLLATE \"C\",CAST(2 IN(SELECT 2) AS TEXT) COLLATE \"POSIX\")",
+    "prepare": "42P21",
+    "source_kind": "synthetic"
+  },
+  {
+    "id": "inquery-variable-pairwise",
+    "sql": "SELECT 'true' IN(CAST(d.n IN(SELECT 1) AS TEXT) COLLATE \"C\",CAST(2 IN(SELECT 2) AS TEXT) COLLATE \"POSIX\") FROM(SELECT 1 AS n)d",
+    "prepare": "00000",
+    "source_kind": "synthetic"
+  }
+]

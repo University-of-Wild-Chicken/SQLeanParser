@@ -301,7 +301,10 @@ class ArrayQuantifiedCliTests(unittest.TestCase):
         self.assertTrue(all(call.args[0][:2] == ["--render-assurance", "identity"]
                             for call in invoke.call_args_list))
         self.assertEqual(sum(call.args[1] == "invalid" for call in reports.call_args_list), 10)
-        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 1)
+        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 0)
+        scalar_calls = [call for call in reports.call_args_list if "(SELECT ARRAY[1])" in call.args[0][-1]]
+        self.assertEqual(len(scalar_calls), 1)
+        self.assertEqual(scalar_calls[0].args[1:], ("valid", "contract", (("?column?", "bool", True),)))
         self.assertEqual(reports.call_args_list[-1].args[1:3], ("rejected", "checked"))
 
     def test_subquery_collision_cannot_pass_on_options_resources_or_success(self):

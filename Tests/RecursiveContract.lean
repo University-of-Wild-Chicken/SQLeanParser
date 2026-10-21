@@ -24,8 +24,8 @@ private theorem recAnchor_valid : QueryValid .basicV32 [] [] [] recAnchor recAnc
     (scope := .empty) (sourceUses := []) (selectUses := []) (whereUses := [])
     (orderUses := []) (limitUses := []) (offsetUses := [])
   · exact .empty
-  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
-  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by simp) .nil
   · decide
   · decide
   · exact Or.inl rfl
@@ -45,8 +45,8 @@ private theorem recAnchor_inputs : SetOperandValid .basicV32 [] [] [] recAnchor 
     (orderUses := []) (limitUses := []) (offsetUses := [])
     (output := recAnchorColumns) (pending := recInputs)
   · exact .empty
-  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
-  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by simp) .nil
   · decide
   · decide
   · exact Or.inl rfl
@@ -66,8 +66,8 @@ private theorem recStep_inputs : SetOperandValid .basicV32 [] [] recEnv recStep 
     (orderUses := []) (limitUses := []) (offsetUses := [])
     (output := recAnchorColumns) (pending := recInputs)
   · exact .cte (binding := ⟨"r", recColumns⟩) rfl (by simp) (by decide) (Or.inl rfl)
-  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
-  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by simp) .nil
   · decide
   · decide
   · exact Or.inl rfl
@@ -92,8 +92,12 @@ private theorem recDefinition_valid :
   · simp
   · simp [recursiveCTEReferences]
   · exact .nil
-  · simp [recAnchor, recursiveReferences, recursiveCTEReferences, RecursiveReferences.append]
-  · simp [recStep, recursiveReferences, recursiveCTEReferences, recursiveSourceReferences,
+  · simp [recAnchor, recursiveReferences, recursiveCTEReferences, recursiveSelectReferences,
+      recursiveItemReferences, recursiveExprReferences, recursiveExprsReferences,
+      recursiveOrderReferences, recursiveOptionalExprReferences, RecursiveReferences.append]
+  · simp [recStep, recursiveReferences, recursiveCTEReferences, recursiveSelectReferences,
+      recursiveSourceReferences, recursiveItemReferences, recursiveExprReferences,
+      recursiveExprsReferences, recursiveOrderReferences, recursiveOptionalExprReferences,
       RecursiveReferences.append]
   · exact recAnchor_valid
   · exact recAnchor_inputs
@@ -204,7 +208,8 @@ def recursiveContractTests : IO Nat := do
     "WITH RECURSIVE r AS (SELECT 'a'::VARCHAR(3) AS x UNION ALL SELECT x::VARCHAR(4) FROM r) SELECT * FROM r",
     "WITH RECURSIVE r AS (SELECT '1'::JSON AS x UNION SELECT x FROM r) SELECT * FROM r",
     "WITH RECURSIVE r AS (SELECT ARRAY['1'::JSON] AS x UNION SELECT x FROM r) SELECT * FROM r",
-    "WITH RECURSIVE r(z,z) AS (SELECT 1,2 UNION ALL SELECT z,z FROM r) SELECT * FROM r"]
+    "WITH RECURSIVE r(z,z) AS (SELECT 1,2 UNION ALL SELECT z,z FROM r) SELECT * FROM r",
+    "WITH RECURSIVE r AS (SELECT 1 AS x UNION ALL SELECT (SELECT x FROM r)) SELECT * FROM r"]
   for sql in invalid do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with
@@ -214,8 +219,7 @@ def recursiveContractTests : IO Nat := do
     "WITH RECURSIVE a AS (SELECT x FROM b), b AS (SELECT 1 AS x) SELECT * FROM a",
     "WITH RECURSIVE a AS (SELECT 1 AS x UNION ALL SELECT x FROM b), b AS (SELECT 1 AS x UNION ALL SELECT x FROM a) SELECT * FROM a",
     "WITH RECURSIVE r AS (SELECT 1 AS x UNION ALL SELECT MAX(x) FROM r) SELECT * FROM r",
-    "WITH RECURSIVE r AS (SELECT 1 AS x UNION ALL SELECT x FROM r GROUP BY x) SELECT * FROM r",
-    "WITH RECURSIVE r AS (SELECT 1 AS x UNION ALL SELECT (SELECT x FROM r)) SELECT * FROM r"]
+    "WITH RECURSIVE r AS (SELECT 1 AS x UNION ALL SELECT x FROM r GROUP BY x) SELECT * FROM r"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with

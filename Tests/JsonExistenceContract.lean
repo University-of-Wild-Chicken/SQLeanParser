@@ -180,9 +180,11 @@ def jsonExistenceContractTests : IO Nat := do
     | .error (.invalid _) => pure ()
     | _ => throw (IO.userError s!"expected invalid existence signature: {sql}")
     count := count + 1
-  for sql in [
-      "SELECT (SELECT '{}'::JSONB) ? 'a'", "SELECT '{}'::JSONB ? (SELECT 'a')",
-      "SELECT unknown_function() ?& ARRAY['a']", "SELECT ROW(1,2) ? 'a'"] do
+  for sql in ["SELECT (SELECT '{}'::JSONB) ? 'a'", "SELECT '{}'::JSONB ? (SELECT 'a')"] do
+    SQLean.Tests.assert (sameOutputTypes (← existenceOutput sql)
+      [{name := "?column?", type := ⟨.bool, true⟩}]) s!"nullable subquery existence operand: {sql}"
+    count := count + 1
+  for sql in ["SELECT unknown_function() ?& ARRAY['a']", "SELECT ROW(1,2) ? 'a'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()

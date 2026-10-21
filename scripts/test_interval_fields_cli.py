@@ -408,7 +408,7 @@ class IntervalFieldsCliTests(unittest.TestCase):
         with patch.object(checker, "assert_report") as report, patch.object(checker, "invoke", return_value=good) as invoke:
             self.assertEqual(checker.boundaries(), 20)
         self.assertEqual([sum(call.args[1] == status for call in report.call_args_list)
-                          for status in ("invalid", "unsupported")], [3, 5])
+                          for status in ("invalid", "unsupported")], [3, 4])
         self.assertEqual(len(invoke.call_args_list), 12)
         self.assertTrue(any("SECOND(7)" in call.args[0][-1] and call.args[1] == "unsupported"
                             for call in report.call_args_list))

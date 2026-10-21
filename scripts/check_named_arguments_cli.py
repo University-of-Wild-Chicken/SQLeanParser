@@ -200,10 +200,17 @@ def boundaries():
     for sql, status, _ in analysis_boundaries():
         assert_report(["--assurance", "contract", sql], status, "contract")
     unsupported = [
-        "SELECT custom_fn(x => 1)", "SELECT app.make_interval(days => 1)",
-        'SELECT "MAKE_INTERVAL"(days => 1)', "SELECT make_interval(days => (SELECT 1))",
-        "SELECT make_interval(days => unknown_fn())", "SELECT lower(string => 'X')",
+        'SELECT custom_fn(x => 1)',
+        'SELECT app.make_interval(days => 1)',
+        'SELECT "MAKE_INTERVAL"(days => 1)',
+        'SELECT make_interval(days => unknown_fn())',
+        "SELECT lower(string => 'X')",
     ]
+    promoted = [
+        ('SELECT make_interval(days => (SELECT 1))', (('make_interval', 'interval', True),)),
+    ]
+    for sql, columns in promoted:
+        assert_report(["--assurance", "contract", sql], "valid", "contract", columns)
     for sql in unsupported:
         assert_report(["--assurance", "contract", sql], "unsupported", "contract")
     malformed = [
@@ -217,7 +224,7 @@ def boundaries():
         report = json.loads(result.stdout)
         assert (result.returncode, report["status"], report["diagnostic"]["code"]) == (
             1, "invalid", "input.parse"), report
-    return len(analysis_boundaries()) + len(unsupported) + len(malformed)
+    return len(analysis_boundaries()) + len(unsupported) + len(malformed) + len(promoted)
 
 
 def sqlite_expectation(case):

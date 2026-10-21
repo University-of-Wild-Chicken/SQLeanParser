@@ -95,6 +95,7 @@ jobs:
           python3 scripts/extract_set_operation_corpus.py --check
           python3 scripts/extract_recursive_contract_corpus.py --check
           python3 scripts/extract_collation_corpus.py --check
+          python3 scripts/extract_subquery_corpus.py --check
           python3 scripts/generate_collation_examples.py --check
           python3 scripts/extract_statement_corpus.py --check
 
@@ -257,6 +258,8 @@ jobs:
         run: python3 scripts/check_collations_cli.py --local-bin /usr/lib/postgresql/16/bin
       - name: Verify collation static, analysis, and metadata boundaries
         run: python3 scripts/check_collation_boundaries_cli.py --local-bin /usr/lib/postgresql/16/bin
+      - name: Verify scalar, EXISTS and IN subquery contracts and native observations
+        run: python3 scripts/check_subqueries_cli.py --local-bin /usr/lib/postgresql/16/bin --source-registry
 
       - name: Check exact scalar types and native PostgreSQL type results
         run: python3 scripts/check_extended_types_cli.py --local-bin /usr/lib/postgresql/16/bin

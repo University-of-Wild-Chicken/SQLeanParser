@@ -266,7 +266,7 @@ mutual
     | column qualifier name schema => simp only [translateExpr, collationNoVarExpr]
     | countAll => simp only [translateExpr, collationNoVarExpr]
     | collate arg name => simp only [translateExpr, collationNoVarExpr, collation_no_var_expr_translated arg]
-    | inQuery arg query => simp only [translateExpr, collationNoVarExpr]
+    | inQuery arg query => simp only [translateExpr, collationNoVarExpr, collation_no_var_expr_translated arg]
     | «exists» query => simp only [translateExpr, collationNoVarExpr]
     | scalarQuery query => simp only [translateExpr, collationNoVarExpr]
     | binary op left right =>

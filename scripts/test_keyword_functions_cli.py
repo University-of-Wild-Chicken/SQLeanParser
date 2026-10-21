@@ -275,7 +275,7 @@ class KeywordFunctionsCliTests(unittest.TestCase):
                 patch.object(checker, "invoke", return_value=failure) as invoke:
             self.assertEqual(checker.boundaries(), 1279)
         self.assertEqual(Counter(c.args[1] for c in reports.call_args_list),
-                         {"valid": 26, "invalid": 1240, "unsupported": 7})
+                         {"valid": 27, "invalid": 1240, "unsupported": 6})
         self.assertEqual(invoke.call_count, 6)
         for status, code, diagnostic in (("rendered", 0, "input.parse"), ("unsupported", 3, "input.parse"),
                                          ("invalid", 1, "coverage.other")):

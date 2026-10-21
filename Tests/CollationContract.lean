@@ -125,10 +125,25 @@ def collationContractTests : IO Nat := do
     SQLean.Tests.assert (diagnostic.code == "invalid_collation_environment")
       "standalone pagination validates its collation environment"
   | _ => throw (IO.userError "standalone pagination accepted an incomplete collation snapshot")
+  let subqueryCases : List (String × String × ScalarType × Bool) := [
+    ("SELECT (SELECT 1)", "?column?", .int32, true),
+    ("SELECT EXISTS (SELECT 1)", "exists", .bool, false),
+    ("SELECT 1 IN (SELECT 1)", "?column?", .bool, false)]
+  for (sql, name, type, nullable) in subqueryCases do
+    let query ← expectOk sql (Advanced.parseQuery sql)
+    let expr ← match query.body with
+      | .select select => match select.items with
+        | [.expression expr _] => pure expr
+        | _ => throw (IO.userError s!"expected one subquery projection: {sql}")
+      | _ => throw (IO.userError s!"expected subquery SELECT: {sql}")
+    match checkExpr 1024 [] .empty expr with
+    | .error (.unsupported original) =>
+      SQLean.Tests.assert (original.code == "subquery") "closed expression API has no child-query capability"
+    | _ => throw (IO.userError s!"expected closed-expression capability boundary: {sql}")
+    let certificate ← expectOk sql ((SelectContract.checkQuery .basicV33 [] [] query).mapError reprStr)
+    SQLean.Tests.assert (certificate.output == [⟨name, ⟨type, nullable⟩, none⟩])
+      s!"complete query independently checks child subquery: {sql}"
   let diagnosticCases := [
-    ("SELECT (SELECT 1)", "subquery"),
-    ("SELECT EXISTS (SELECT 1)", "subquery"),
-    ("SELECT 1 IN (SELECT 1)", "subquery"),
     ("SELECT COUNT(*)", "aggregate"),
     ("SELECT SUM(1) FILTER (WHERE TRUE)", "aggregate"),
     ("SELECT ROW(1)", "record_value")]
@@ -145,6 +160,6 @@ def collationContractTests : IO Nat := do
       SQLean.Tests.assert (original.code == expectedCode && complete == original)
         s!"collation checking must preserve the original unsupported diagnostic: {sql}"
     | _, _ => throw (IO.userError s!"expected unsupported diagnostic parity: {sql}")
-  pure (ids.length + 2 + diagnosticCases.length)
+  pure (ids.length + 2 + subqueryCases.length + diagnosticCases.length)
 
 end SQLean.Tests

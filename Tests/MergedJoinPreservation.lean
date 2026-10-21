@@ -133,13 +133,13 @@ private def nestedSource : Advanced.From := .join .inner usingSource auxSource (
 private def nestedScope : Scope := usingScope.append auxScope
 
 private theorem nested_condition_valid :
-    ExprValid params nestedScope nestedCondition (some ⟨.bool, true⟩) [.anonymous 2] :=
+    ExprValid (subqueries := QueryValid .basicV32 catalog params) params nestedScope nestedCondition (some ⟨.bool, true⟩) [.anonymous 2] :=
   .binary (.column (scope := nestedScope) (qualifier := none) (schema := none) (name := "k")
     (column := {name := "k", type := ⟨.int64, true⟩}) rfl)
     (.parameter (binding := ⟨2, ⟨.bigInt, []⟩, false⟩) (by simp [params]) rfl rfl) rfl
 
 private theorem nested_condition_collation :
-    ExprCollationValid .basicV32 params nestedScope nestedCondition
+    ExprCollationValid (subqueries := QueryValid .basicV32 catalog params) .basicV32 params nestedScope nestedCondition
       (some ⟨.bool, true⟩) .none :=
   .application nested_condition_valid
     (.cons (.column (scope := nestedScope) (qualifier := none) (schema := none) (name := "k")
@@ -173,11 +173,11 @@ private theorem query_derivation :
   · exact .expression (expr := .parameter (.anonymous 1)) (alias := some "selected")
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
-      (by simp) (.all (qualifier := none) (selected := nestedScope.output) rfl (by decide) .nil)
+      (.ordinary rfl) (by simp) (.all (qualifier := none) (selected := nestedScope.output) rfl (by decide) .nil)
   · exact .expression (expr := .parameter (.anonymous 1)) (alias := some "selected")
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
-      (by simp) (.all (qualifier := none) (selected := nestedScope.output) rfl (by decide) .nil)
+      (.ordinary rfl) (by simp) (.all (qualifier := none) (selected := nestedScope.output) rfl (by decide) .nil)
   · decide
   · exact Or.inl rfl
   · exact Or.inl rfl

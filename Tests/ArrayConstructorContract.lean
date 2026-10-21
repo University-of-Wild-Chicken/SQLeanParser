@@ -49,6 +49,7 @@ private def constructorOutput (sql : String) (parameterTypes : String := "") :
 def arrayConstructorContractTests : IO Nat := do
   let exact : List (String × SelectContract.ScalarType) := [
     ("ARRAY[1,2,3]", .array .int32),
+    ("ARRAY[(SELECT 1)]", .array .int32),
     ("ARRAY[NULL]", .array .text),
     ("ARRAY[NULL,NULL]", .array .text),
     ("ARRAY['a',NULL]", .array .text),
@@ -129,7 +130,6 @@ def arrayConstructorContractTests : IO Nat := do
     "SELECT ARRAY[NULL::JSON] = ARRAY[NULL::JSON]",
     "SELECT DISTINCT ARRAY[NULL::JSON]",
     "SELECT array_length(ARRAY[1],1)",
-    "SELECT ARRAY[(SELECT 1)]",
     "SELECT ARRAY[COUNT(*)]"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)

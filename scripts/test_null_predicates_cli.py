@@ -324,7 +324,7 @@ class NullPredicatesCliTests(unittest.TestCase):
                 patch.object(checker, "invoke", return_value=failure) as invoke:
             self.assertEqual(checker.boundaries(), 3506)
         self.assertEqual(Counter(c.args[1] for c in reports.call_args_list),
-                         {"valid": 659, "invalid": 2828, "unsupported": 11})
+                         {"valid": 660, "invalid": 2828, "unsupported": 10})
         self.assertEqual(invoke.call_count, 8)
         for status, exit_, diagnostic in (("rendered", 0, "input.parse"),
                                          ("unsupported", 3, "input.parse"), ("invalid", 1, "coverage.other")):

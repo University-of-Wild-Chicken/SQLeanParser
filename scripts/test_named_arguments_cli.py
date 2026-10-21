@@ -294,7 +294,7 @@ class NamedArgumentsCliTests(unittest.TestCase):
                 patch.object(checker, "invoke", return_value=failure) as invoke:
             self.assertEqual(checker.boundaries(), 173)
         self.assertEqual(Counter(c.args[1] for c in reports.call_args_list),
-                         {"valid": 22, "invalid": 137, "unsupported": 6})
+                         {"valid": 23, "invalid": 137, "unsupported": 5})
         self.assertEqual(invoke.call_count, 8)
         for status, code, diagnostic in (("rendered", 0, "input.parse"), ("unsupported", 3, "input.parse"),
                                          ("invalid", 1, "coverage.other")):

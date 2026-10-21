@@ -196,9 +196,13 @@ def namedArgumentsContractTests : IO Nat := do
         SQLean.Tests.assert (diagnostic.code == expectedCode) s!"exact named-binding failure: {sql}"
     | _ => throw (IO.userError s!"malformed argument binding acquired a certificate: {sql}")
     count := count + 1
+  SQLean.Tests.assert (sameOutputTypes
+    (← namedOutput "SELECT make_interval(days=>(SELECT 1))")
+    [{name := "make_interval", type := ⟨.interval [], true⟩}])
+    "named scalar subquery argument retains interval output and possible NULL"
+  count := count + 1
   for sql in ["SELECT application.make_interval(days=>1)", "SELECT f(a=>1)",
-      "SELECT abs(x=>1)", "SELECT make_date(year=>2024,month=>1,day=>2)",
-      "SELECT make_interval(days=>(SELECT 1))"] do
+      "SELECT abs(x=>1)", "SELECT make_date(year=>2024,month=>1,day=>2)"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()

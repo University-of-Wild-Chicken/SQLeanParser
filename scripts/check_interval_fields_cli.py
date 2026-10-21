@@ -152,11 +152,15 @@ def boundaries():
     ]
     unsupported = [
         "SELECT INTERVAL '1' SECOND(7)",
-        "SELECT NULL::INTERVAL DAY TO SECOND(7)[]",
-        "SELECT (SELECT INTERVAL '1' DAY)",
+        'SELECT NULL::INTERVAL DAY TO SECOND(7)[]',
         "SELECT unknown_function(INTERVAL '1' YEAR)",
         "SELECT INTERVAL '1' MONTH + TRUE",
     ]
+    promoted = [
+        ("SELECT (SELECT INTERVAL '1' DAY)", (('interval', 'interval day', True),)),
+    ]
+    for sql, columns in promoted:
+        assert_report(["--assurance", "contract", sql], "valid", "contract", columns)
     for status, queries in (("invalid", invalid), ("unsupported", unsupported)):
         for sql in queries:
             assert_report(["--assurance", "contract", sql], status, "contract")
@@ -173,7 +177,7 @@ def boundaries():
         report = json.loads(result.stdout)
         assert (result.returncode, report["status"], report["diagnostic"]["code"]) == (
             1, "invalid", "input.parse"), report
-    return len(invalid) + len(unsupported) + len(syntax)
+    return len(invalid) + len(unsupported) + len(syntax) + len(promoted)
 
 
 def main():

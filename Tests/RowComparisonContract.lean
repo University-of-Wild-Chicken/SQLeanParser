@@ -127,7 +127,8 @@ def rowComparisonContractTests : IO Nat := do
     "SELECT NOT (ROW(1,2) = ROW(1,3)) AS v",
     "SELECT (ROW(1,2) < ROW(2,1)) AND TRUE AS v",
     "SELECT (1,2) < (2,1) AS v WHERE (3,4) > (2,1)",
-    "SELECT d.v FROM (SELECT ROW(1,2) = ROW(1,2) AS v) d"]
+    "SELECT d.v FROM (SELECT ROW(1,2) = ROW(1,2) AS v) d",
+    "SELECT ROW((SELECT 1),1) = ROW(1,1) AS v"]
   for sql in valid do
     let actual ← rowOutput sql
     SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨.bool, true⟩}]) s!"row comparison output: {sql}"
@@ -158,7 +159,6 @@ def rowComparisonContractTests : IO Nat := do
     "SELECT ROW(1,2) = NULL",
     "SELECT ROW(ARRAY['1'::JSON],1) = ROW(ARRAY['1'::JSON],1)",
     "SELECT ROW(unknown_function(),1) = ROW(1,1)",
-    "SELECT ROW((SELECT 1),1) = ROW(1,1)",
     "SELECT ROW(COUNT(*),1) = ROW(1,1)"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)

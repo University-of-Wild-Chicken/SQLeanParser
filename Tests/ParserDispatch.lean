@@ -1,4 +1,5 @@
 import SQLean.Parser
+import SQLean.AdvancedEquality
 import Tests.Support
 
 namespace SQLean.Tests
@@ -56,6 +57,27 @@ def parserDispatchTests : IO Nat := do
   for sql in ["SELECT \"collate\" FROM users", "SELECT id AS \"collate\" FROM users",
       "SELECT id AS collate FROM users", "SELECT id FROM users /* COLLATE */"] do
     let _ ← expectOk sql (parseStatement sql)
-  pure (3 * (special.length + contextValues.length) + predicates.length + quoted.length + rows.length + 10)
+  -- KEY is UNRESERVED_KEYWORD in the pinned PostgreSQL grammar. A legacy
+  -- clause list must not reject genuine projection/source references.
+  let keyQuery : Advanced.Query := {body := .select {
+    items := [.expression (.column none "key")], source := some (.table "key")}}
+  for (source, expected) in [
+      ("key", Advanced.Expr.column none "key"),
+      ("KEY", .column none "key"),
+      ("key.value", .column (some "key") "value"),
+      ("s.key.key", .column (some "key") "key" (some "s")),
+      ("key IN(SELECT key FROM key)", .inQuery (.column none "key") keyQuery)] do
+    let parsed ← expectOk source (Advanced.parseExpression source)
+    SQLean.Tests.assert (decide (parsed = expected)) s!"unreserved identifier AST changed: {source}"
+  for (source, expected) in [
+      ("SELECT key FROM key", keyQuery),
+      ("SELECT key.* FROM key", {body := .select {
+        items := [.all (some "key")], source := some (.table "key")}})] do
+    let parsed ← expectOk source (Advanced.parseQuery source)
+    SQLean.Tests.assert (decide (parsed = expected)) s!"unreserved query AST changed: {source}"
+  for source in ["SELECT FROM t", "SELECT key FROM WHERE", "SELECT left FROM t", "SELECT cross FROM t"] do
+    expectError source (Advanced.parseQuery source)
+  expectError "SQLite KEY boundary" (Advanced.parseSQLiteQuery "SELECT key FROM t")
+  pure (3 * (special.length + contextValues.length) + predicates.length + quoted.length + rows.length + 22)
 
 end SQLean.Tests

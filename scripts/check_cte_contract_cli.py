@@ -95,7 +95,7 @@ def boundary_cases():
         ("WITH RECURSIVE c AS (SELECT 1 AS x) SELECT x FROM c", "valid", "00000", "00000"),
         ("WITH c AS (SELECT COUNT(*) AS n FROM items) SELECT n FROM c", "unsupported", "00000", "00000"),
         ("WITH c AS (SELECT 1 AS x UNION ALL SELECT 2) SELECT x FROM c", "valid", "00000", "00000"),
-        ("WITH c AS (SELECT (SELECT 1) AS x) SELECT x FROM c", "unsupported", "00000", "00000"),
+        ("WITH c AS (SELECT (SELECT 1) AS x) SELECT x FROM c", "valid", "00000", "00000"),
         ("WITH c AS (SELECT 1 AS x) SELECT d.x FROM c CROSS JOIN LATERAL (SELECT c.x) d",
          "unsupported", "00000", "00000"),
         ("WITH c AS (SELECT 1 AS x) SELECT d.x FROM c CROSS JOIN (SELECT c.x) d",
@@ -116,6 +116,10 @@ def boundary_cases():
 
 def boundaries():
     for row in boundary_cases():
+        if row["sql"] == "WITH c AS (SELECT (SELECT 1) AS x) SELECT x FROM c":
+            assert_report(["--assurance", "contract", "--schema", str(FIXTURES / "schema.json"), row["sql"]],
+                          row["status"], "contract", (("x", "int32", True),))
+            continue
         if row["sql"].startswith("WITH RECURSIVE"):
             assert_report(["--assurance", "contract", "--schema", str(FIXTURES / "schema.json"), row["sql"]],
                           row["status"], "contract", (("x", "int32", False),))

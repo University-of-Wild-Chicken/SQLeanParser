@@ -1,0 +1,27 @@
+{
+  "tables": [
+    {
+      "name": "test",
+      "columns": [
+        {
+          "name": "a",
+          "type": "int",
+          "nullable": true
+        },
+        {
+          "name": "b",
+          "type": "int",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "kind": "conditional written-declaration snapshot",
+    "context_ids": [
+      "subqueries-context:duckdb:test/sql/subquery/scalar/test_scalar_subquery.test:1264"
+    ],
+    "source_sql_executed": false,
+    "assumption": "Caller supplies these exact table fields/types/nullability; no imported locale or source data assumptions."
+  }
+}

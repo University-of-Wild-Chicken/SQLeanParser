@@ -1,0 +1,22 @@
+{
+  "tables": [
+    {
+      "name": "t",
+      "columns": [
+        {
+          "name": "x",
+          "type": "int",
+          "nullable": true
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "kind": "conditional written-declaration snapshot",
+    "context_ids": [
+      "subqueries-context:risingwave:e2e_test/batch/subquery/scalar_subquery.slt.part:58"
+    ],
+    "source_sql_executed": false,
+    "assumption": "Caller supplies these exact table fields/types/nullability; no imported locale or source data assumptions."
+  }
+}

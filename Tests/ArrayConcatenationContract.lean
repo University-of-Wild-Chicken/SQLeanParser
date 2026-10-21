@@ -200,8 +200,12 @@ def arrayConcatenationContractTests : IO Nat := do
     | _ => throw (IO.userError s!"untyped empty constructors must remain Invalid: {sql}")
     count := count + 1
   for sql in ["SELECT ARRAY[1] || (SELECT ARRAY[2])",
-      "SELECT (SELECT 1) || ARRAY[2]", "SELECT ARRAY[1] || unknown_function()",
-      "SELECT ROW(1,2) || ARRAY[1]"] do
+      "SELECT (SELECT 1) || ARRAY[2]"] do
+    SQLean.Tests.assert (sameOutputTypes (← arrayConcatOutput sql)
+      [{name := "?column?", type := ⟨.array .int32, false⟩}])
+      "non-strict array concatenation with a nonnullable array absorbs scalar subquery NULL"
+    count := count + 1
+  for sql in ["SELECT ARRAY[1] || unknown_function()", "SELECT ROW(1,2) || ARRAY[1]"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()

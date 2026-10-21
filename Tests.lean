@@ -92,6 +92,8 @@ import Tests.RecursiveContractRendering
 import Tests.CollationContract
 import Tests.CollationCorpus
 import Tests.CollationRendering
+import Tests.SubqueryCorpus
+import Tests.SubqueryContract
 import Tests.NullPredicatesContract
 import Tests.NullPredicatesRendering
 
@@ -369,6 +371,10 @@ def run : IO Unit := do
   let pgGrammar ← postgresGrammarTests
   IO.println s!"PASS: {pgGrammar} PostgreSQL grammar derivations and parser boundary checks"
   ScopeContract.run
+  let subqueryCorpus ← subqueryCorpusTests
+  IO.println s!"PASS: {subqueryCorpus} authored scalar, EXISTS and IN-subquery full-query certificates"
+  let subquerySource ← subquerySourceCorpusTests
+  IO.println s!"PASS: {subquerySource} unchanged subquery full-query certificates (all 150 rendered)"
   IO.println "All tests passed. Lean proof examples compiled successfully."
 
 end SQLean.Tests

@@ -246,6 +246,23 @@ def protocol_checks(binary=EXE):
     return len(results) + 1 + 3 + len(requests)
 
 
+def authored_subquery_input(row):
+    """Adapt only SQLean's authored anonymous bind syntax to native PG input.
+
+    The original fixture text remains recorded. This is never applied to a
+    downloaded source statement or used as a source-preservation claim about it.
+    """
+    from check_advanced_cli import question_parameters
+    require(row.get("source_kind") == "synthetic", "only authored SQL may receive a grammar-input adapter")
+    original = row["sql"]
+    sql = question_parameters(original)
+    if sql == original:
+        return row
+    return {**row, "sql": sql, "grammar_input_origin": "authored-sqlean-parameter-fixture",
+            "grammar_original_sql": original,
+            "grammar_input_transformations": ["anonymous ? bind markers numbered in lexical order for PostgreSQL grammar"]}
+
+
 def read_cases(path, expected="grammar-accepted"):
     text = path.read_text()
     rows = json.loads(text) if path.suffix == ".json" else [
@@ -260,6 +277,8 @@ def read_cases(path, expected="grammar-accepted"):
         if "expected_status" in row:
             require(row["expected_status"] == expected, f"fixture status disagrees with category: {path}")
         seen.add(row["id"])
+        if path == ROOT / "fixtures/subqueries/synthetic.json":
+            row = authored_subquery_input(row)
         result.append({**row, "id": path.relative_to(ROOT).as_posix() + ":" + row["id"],
                        "expected": expected, "fixture": path.relative_to(ROOT).as_posix()})
     return result
@@ -280,6 +299,9 @@ def load_cases(include_statement_families=True):
                          "context_values", "named_arguments", "keyword_functions",
                          "distinct_from", "null_predicates", "cte_contract", "set_operations",
                          "recursive_contract", "collations"]],
+        ROOT / "fixtures/subqueries/synthetic.json",
+        *[ROOT / "fixtures/subqueries" / (factor + "_concrete.jsonl")
+          for factor in ["scalar", "exists", "in"]],
     ]
     if include_statement_families:
         paths.append(ROOT / "fixtures/statement_families/concrete.jsonl")
@@ -314,6 +336,9 @@ def main():
         "observed_production_ids": sorted({p for r in all_results for p in r.get("productionIds", [])}),
         "families": dict(sorted(Counter(f for r in all_results for f in r.get("statementFamilies", [])).items())),
         "binary_sha256": hashlib.sha256(args.binary.read_bytes()).hexdigest(),
+        "authored_input_adaptations": [{"id": case["id"], "original_sql": case["grammar_original_sql"],
+                                       "sql": case["sql"], "transformations": case["grammar_input_transformations"]}
+                                      for case in cases if "grammar_input_transformations" in case],
         "inputs": [{"path": path, "sha256": hashlib.sha256((ROOT / path).read_bytes()).hexdigest()}
                    for path in sorted({c["fixture"] for c in cases})],
     }

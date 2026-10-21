@@ -177,10 +177,11 @@ def jsonContainmentContractTests : IO Nat := do
     SQLean.Tests.assert (sameOutputTypes (← containmentOutput sql) [{name := "v", type := ⟨output, nullable⟩}])
       s!"containment composition/output: {sql}"
     count := count + 1
-  for sql in [
-      "SELECT (SELECT '{}'::JSONB) @> '{}'",
-      "SELECT '{}'::JSONB <@ (SELECT '{}'::JSONB)",
-      "SELECT unknown_function() @> '{}'",
+  for sql in ["SELECT (SELECT '{}'::JSONB) @> '{}'", "SELECT '{}'::JSONB <@ (SELECT '{}'::JSONB)"] do
+    SQLean.Tests.assert (sameOutputTypes (← containmentOutput sql)
+      [{name := "?column?", type := ⟨.bool, true⟩}]) s!"nullable subquery containment operand: {sql}"
+    count := count + 1
+  for sql in ["SELECT unknown_function() @> '{}'",
       "SELECT ROW(1,2) <@ '{}'::JSONB"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with

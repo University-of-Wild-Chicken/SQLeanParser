@@ -213,11 +213,18 @@ def boundaries():
     for sql, status, _ in analysis_boundaries():
         assert_report(["--assurance", "contract", sql], status, "contract")
     unsupported = [
-        "SELECT ROW(ROW(1,NULL)) IS DISTINCT FROM ROW(ROW(1,NULL))",
-        "SELECT ROW(ROW(NULL)) ISNULL", "SELECT ROW(1) IS DISTINCT FROM 1",
-        "SELECT (SELECT 1) IS DISTINCT FROM 1", "SELECT unknown_fn() ISNULL",
-        "SELECT isnull(1)", "SELECT notnull(1)",
+        'SELECT ROW(ROW(1,NULL)) IS DISTINCT FROM ROW(ROW(1,NULL))',
+        'SELECT ROW(ROW(NULL)) ISNULL',
+        'SELECT ROW(1) IS DISTINCT FROM 1',
+        'SELECT unknown_fn() ISNULL',
+        'SELECT isnull(1)',
+        'SELECT notnull(1)',
     ]
+    promoted = [
+        ('SELECT (SELECT 1) IS DISTINCT FROM 1', (('?column?', 'bool', False),)),
+    ]
+    for sql, columns in promoted:
+        assert_report(["--assurance", "contract", sql], "valid", "contract", columns)
     for sql in unsupported:
         assert_report(["--assurance", "contract", sql], "unsupported", "contract")
     undeclared = ["SELECT $1 IS DISTINCT FROM NULL", "SELECT NULL IS DISTINCT FROM $1", "SELECT $1 ISNULL"]
@@ -233,7 +240,7 @@ def boundaries():
         report = json.loads(result.stdout)
         assert (result.returncode, report["status"], report["diagnostic"]["code"]) == (
             1, "invalid", "input.parse"), report
-    return len(analysis_boundaries()) + len(unsupported) + len(undeclared) + len(parse_boundaries)
+    return len(analysis_boundaries()) + len(unsupported) + len(undeclared) + len(parse_boundaries) + len(promoted)
 
 
 def sqlite_expectation(case):

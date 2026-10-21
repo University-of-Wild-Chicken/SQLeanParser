@@ -341,8 +341,8 @@ class JsonContainmentCliTests(unittest.TestCase):
                 patch.object(checker, "invoke", return_value=good) as invoke:
             self.assertEqual(checker.boundaries(), 26)
         self.assertEqual(sum(call.args[1] == "invalid" for call in reports.call_args_list), 13)
-        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 2)
-        self.assertEqual(sum(call.args[1] == "valid" for call in reports.call_args_list), 5)
+        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 1)
+        self.assertEqual(sum(call.args[1] == "valid" for call in reports.call_args_list), 6)
         self.assertEqual(sum(call.args[1:] == ("rejected", "checked") for call in reports.call_args_list), 1)
         self.assertEqual(len(invoke.call_args_list), 5)
         for code, status, diagnostic in ((0, "rendered", "input.parse"),

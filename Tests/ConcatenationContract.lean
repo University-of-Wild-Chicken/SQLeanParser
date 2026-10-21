@@ -169,9 +169,12 @@ def concatenationContractTests : IO Nat := do
     SQLean.Tests.assert (sameOutputTypes (← concatOutput sql) [{name := "?column?", type := ⟨element.asArray, false⟩}])
       s!"promoted array concatenation exact output: {sql}"
     count := count + 1
+  SQLean.Tests.assert (sameOutputTypes (← concatOutput "SELECT (SELECT 'x') || 'y'")
+    [{name := "?column?", type := ⟨.text, true⟩}]) "nullable subquery text concatenation"
+  count := count + 1
   for sql in [
       "SELECT ROW(1,2) || 'x'", "SELECT 'x' || ROW(1,2)",
-      "SELECT (SELECT 'x') || 'y'", "SELECT 'x' || unknown_function()"] do
+      "SELECT 'x' || unknown_function()"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()

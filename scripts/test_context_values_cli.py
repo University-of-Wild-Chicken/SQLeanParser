@@ -289,7 +289,7 @@ class ContextValuesCliTests(unittest.TestCase):
                 patch.object(checker, "invoke", return_value=failure) as invoke:
             self.assertEqual(checker.boundaries(), 25)
         self.assertEqual(Counter(c.args[1] for c in reports.call_args_list),
-                         {"invalid": 10, "valid": 3, "unsupported": 3, "checked": 1})
+                         {"invalid": 10, "valid": 4, "unsupported": 2, "checked": 1})
         self.assertEqual(len(invoke.call_args_list), 8)
         for status, code, diagnostic in (("rendered", 0, "input.parse"), ("unsupported", 3, "input.parse"),
                                          ("invalid", 1, "coverage.unsupported")):

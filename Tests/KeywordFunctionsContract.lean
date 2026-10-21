@@ -136,8 +136,13 @@ def keywordFunctionsContractTests : IO Nat := do
           SQLean.Tests.assert (diagnostic.code == "function_signature") "known wrong signature is Invalid"
       | _ => throw (IO.userError s!"{sql}: known incompatible signature accepted")
       count := count + 1
+    SQLean.Tests.assert (sameOutputTypes
+      (← keywordOutput s!"SELECT {name}((SELECT 'abc'),1)")
+      [{name := name, type := ⟨.text, true⟩}])
+      "keyword function scalar subquery input retains its label and nullable TEXT output"
+    count := count + 1
     for sql in [s!"SELECT application.{name}('abc',1)", s!"SELECT \"{name.toUpper}\"('abc',1)",
-        s!"SELECT {name}(string=>'abc',n=>1)", s!"SELECT {name}((SELECT 'abc'),1)"] do
+        s!"SELECT {name}(string=>'abc',n=>1)"] do
       let query ← expectOk sql (Advanced.parseQuery sql)
       match SelectContract.checkQuery .basicV32 [] [] query with
       | .error (.unsupported _) => pure ()

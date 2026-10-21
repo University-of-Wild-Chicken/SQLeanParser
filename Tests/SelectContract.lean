@@ -42,8 +42,8 @@ private theorem literalQuery_valid :
       (scope := .empty) (selectUses := []) (sourceUses := []) (whereUses := []) (orderUses := [])
       (limitUses := []) (offsetUses := [])
     · exact .empty
-    · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by decide) .nil
-    · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by decide) .nil
+    · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by decide) .nil
+    · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by decide) .nil
     · decide
     · decide
     · exact Or.inl rfl
@@ -322,7 +322,7 @@ def selectContractTests : IO Nat := do
       query := { tableQuery with limit := some (.column none "id") } },
     { label := "OFFSET cannot bind projected alias", expected := "invalid",
       query := { literalQuery with offset := some (.column none "seven") } },
-    { label := "pagination scalar subquery remains unsupported", expected := "unsupported",
+    { label := "pagination scalar subquery is independently typed", expected := "valid",
       query := { literalQuery with limit := some (.scalarQuery literalQuery) } },
     { label := "anonymous pagination follows projection", expected := "valid", params := rowCountParams,
       query := { parameterQuery [.anonymous 1] with

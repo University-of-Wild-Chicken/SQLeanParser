@@ -158,10 +158,14 @@ def boundaries():
         "SELECT (ARRAY[1] || ARRAY[2]) + 3",
     ]
     unsupported = [
-        "SELECT ARRAY[1] || (SELECT ARRAY[2])",
-        "SELECT unknown_function() || ARRAY[1]",
+        'SELECT unknown_function() || ARRAY[1]',
         "SELECT DISTINCT ARRAY['1'::JSON] || ARRAY['2'::JSON]",
     ]
+    promoted = [
+        ('SELECT ARRAY[1] || (SELECT ARRAY[2])', (('?column?', 'integer[]', False),)),
+    ]
+    for sql, columns in promoted:
+        assert_report(["--assurance", "contract", sql], "valid", "contract", columns)
     for status, queries in (("invalid", invalid), ("unsupported", unsupported)):
         for sql in queries:
             assert_report(["--assurance", "contract", sql], status, "contract")
@@ -177,7 +181,7 @@ def boundaries():
         1, "invalid", "input.parse"), report
     for sql in ("SELECT ARRAY[1] || ARRAY[2]", "SELECT ARRAY[1] || 2", "SELECT 1 || ARRAY[2]"):
         assert_report(["--assurance", "checked", sql], "rejected", "checked")
-    return len(invalid) + len(unsupported) + 7
+    return len(invalid) + len(unsupported) + 7 + len(promoted)
 
 
 def main():

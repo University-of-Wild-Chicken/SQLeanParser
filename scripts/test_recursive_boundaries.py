@@ -23,7 +23,7 @@ class RecursiveBoundaryTests(unittest.TestCase):
     def test_fixed_85_authored_cases_keep_analysis_and_profile_classifications_separate(self):
         self.assertEqual(len(self.rows), 85)
         self.assertEqual(Counter(r["expected_status"] for r in self.rows),
-                         {"valid": 42, "invalid": 35, "unsupported": 8})
+                         {"valid": 42, "invalid": 38, "unsupported": 5})
         for row in self.rows:
             self.assertEqual(row["source_kind"], "synthetic")
             self.assertEqual(row["postgres_columns"] is not None, row["postgres_sqlstate"] == "00000")
@@ -44,7 +44,9 @@ class RecursiveBoundaryTests(unittest.TestCase):
             "recursive-boundary-two-ref": ("invalid", "42P19", "recursive_reference"),
             "recursive-boundary-unused-second-ref": ("invalid", "42P19", "recursive_reference"),
             "recursive-boundary-left-nullable": ("invalid", "42P19", "recursive_reference"),
-            "recursive-boundary-scalar-sublink": ("unsupported", "42P19", "subquery"),
+            "recursive-boundary-scalar-sublink": ("invalid", "42P19", "recursive_reference"),
+            "recursive-boundary-exists-sublink": ("invalid", "42P19", "recursive_reference"),
+            "recursive-boundary-in-sublink": ("invalid", "42P19", "recursive_reference"),
             "recursive-boundary-forward": ("unsupported", "00000", "recursive_dependency"),
             "recursive-boundary-step-group": ("unsupported", "00000", "group_by"),
             "recursive-boundary-step-order": ("valid", "00000", None),

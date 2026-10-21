@@ -84,7 +84,7 @@ def boundary_checks():
         ("SELECT id FROM page_rows LIMIT CAST('2' AS TEXT)", "", "invalid"),
         ("SELECT id FROM page_rows LIMIT '2'", "", "unsupported"),
         ("SELECT id FROM page_rows LIMIT CAST(2 AS BIGINT)", "", "valid"),
-        ("SELECT id FROM page_rows LIMIT (SELECT 2)", "", "unsupported"),
+        ("SELECT id FROM page_rows LIMIT (SELECT 2)", "", "valid"),
         ("SELECT id FROM page_rows LIMIT COUNT(*)", "", "unsupported"),
     ]
     for sql, types, status in checks:

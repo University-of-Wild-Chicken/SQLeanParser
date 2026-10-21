@@ -279,8 +279,15 @@ def boundaries():
     for sql, status, _ in analysis_boundaries():
         if status != "parse":
             assert_report(["--assurance", "contract", sql], status, "contract")
-    unsupported = ['SELECT "CURRENT_USER"()', "SELECT app.current_schema()",
-                   "SELECT CURRENT_SCHEMA = (SELECT CURRENT_SCHEMA)"]
+    unsupported = [
+        'SELECT "CURRENT_USER"()',
+        'SELECT app.current_schema()',
+    ]
+    promoted = [
+        ('SELECT CURRENT_SCHEMA = (SELECT CURRENT_SCHEMA)', (('?column?', 'bool', True),)),
+    ]
+    for sql, columns in promoted:
+        assert_report(["--assurance", "contract", sql], "valid", "contract", columns)
     for sql in unsupported:
         assert_report(["--assurance", "contract", sql], "unsupported", "contract")
     malformed = ["SELECT " + word + "()" for word in (
@@ -294,7 +301,7 @@ def boundaries():
     # The expanded tier retains NAME as its own opaque family for direct
     # context results; it does not erase the value to TEXT.
     assert_report(["--assurance", "checked", "SELECT CURRENT_SCHEMA"], "checked", "checked")
-    return sum(status != "parse" for _, status, _ in analysis_boundaries()) + len(unsupported) + len(malformed) + 1
+    return sum(status != "parse" for _, status, _ in analysis_boundaries()) + len(unsupported) + len(malformed) + 1 + len(promoted)
 
 
 def main():

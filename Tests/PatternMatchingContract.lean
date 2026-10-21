@@ -164,8 +164,11 @@ def patternMatchingContractTests : IO Nat := do
         | .error (.invalid _) => pure ()
         | _ => throw (IO.userError s!"nonstring pattern input must be Invalid: {sql}")
         count := count + 1
-  for sql in ["SELECT (SELECT 'a') ILIKE 'a'", "SELECT 'a' ~ (SELECT 'a')",
-      "SELECT unknown_function() ~ 'a'", "SELECT ROW('a') ILIKE 'a'"] do
+  for sql in ["SELECT (SELECT 'a') ILIKE 'a'", "SELECT 'a' ~ (SELECT 'a')"] do
+    SQLean.Tests.assert (sameOutputTypes (← patternOutput sql)
+      [{name := "?column?", type := ⟨.bool, true⟩}]) s!"nullable subquery pattern operand: {sql}"
+    count := count + 1
+  for sql in ["SELECT unknown_function() ~ 'a'", "SELECT ROW('a') ILIKE 'a'"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()

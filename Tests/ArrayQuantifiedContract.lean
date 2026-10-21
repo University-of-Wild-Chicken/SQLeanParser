@@ -139,7 +139,8 @@ def arrayQuantifiedContractTests : IO Nat := do
     "SELECT NOT (2 = ANY(ARRAY[1,NULL])) AS v",
     "SELECT (2 = ANY(ARRAY[1,NULL])) AND TRUE AS v",
     "SELECT 1 = ALL(ARRAY[]::INTEGER[]) AS v WHERE 2 = SOME(ARRAY[2])",
-    "SELECT d.v FROM (SELECT 2 = ANY(ARRAY[1,2]) AS v) d"]
+    "SELECT d.v FROM (SELECT 2 = ANY(ARRAY[1,2]) AS v) d",
+    "SELECT 1 = ANY((SELECT ARRAY[1])::INTEGER[]) AS v"]
   for sql in ordinary do
     let actual ← quantifiedOutput sql
     SQLean.Tests.assert (sameOutputTypes actual [{name := "v", type := ⟨.bool, true⟩}]) s!"quantified output: {sql}"
@@ -162,7 +163,6 @@ def arrayQuantifiedContractTests : IO Nat := do
     | _ => throw (IO.userError s!"expected Invalid quantified-array query: {sql}")
     count := count + 1
   for sql in [
-      "SELECT 1 = ANY((SELECT ARRAY[1])::INTEGER[])",
       "SELECT 1 = ANY(unknown_array_function())",
       "SELECT 1 = ANY(ARRAY[COUNT(*)])"] do
     let query ← expectOk sql (Advanced.parseQuery sql)

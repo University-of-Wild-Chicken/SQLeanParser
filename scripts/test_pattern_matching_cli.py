@@ -347,7 +347,7 @@ class PatternMatchingCliTests(unittest.TestCase):
                 patch.object(checker, "invoke", return_value=good) as invoke:
             self.assertEqual(checker.boundaries(), 41)
         self.assertEqual(sum(call.args[1] == "invalid" for call in reports.call_args_list), 30)
-        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 4)
+        self.assertEqual(sum(call.args[1] == "unsupported" for call in reports.call_args_list), 2)
         self.assertEqual(sum(call.args[1:] == ("rejected", "checked") for call in reports.call_args_list), 1)
         self.assertEqual(len(invoke.call_args_list), 6)
         for code, status, diagnostic in ((0, "rendered", "input.parse"),

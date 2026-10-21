@@ -54,56 +54,60 @@ private def checkJoinKeys (kind : JoinKind) (left right : List OutputColumn)
         | _ => .error (invalid "join_key_binding" s!"JOIN key '{key}' must occur exactly once in the right exposed row")
       | _ => .error (invalid "join_key_binding" s!"JOIN key '{key}' must occur exactly once in the left exposed row")
 
-structure ItemsCertificate (profile : Profile) (params : ParameterEnv) (scope : Scope) (items : List Advanced.SelectItem) where
+structure ItemsCertificateCore (subqueries : SubqueryJudgment) (env : CTEEnv) (profile : Profile) (params : ParameterEnv) (scope : Scope) (items : List Advanced.SelectItem) where
   output : List OutputColumn
   uses : List Parameter
-  valid : ItemsValid profile params scope items output uses
+  valid : ItemsValidCore subqueries profile params env scope items output uses
 
-private structure ItemsAnalysis (profile : Profile) (params : ParameterEnv) (scope : Scope) (items : List Advanced.SelectItem)
-    extends ItemsCertificate profile params scope items where
+private structure ItemsAnalysisCore (subqueries : SubqueryJudgment) (env : CTEEnv) (profile : Profile) (params : ParameterEnv) (scope : Scope) (items : List Advanced.SelectItem)
+    extends ItemsCertificateCore subqueries env profile params scope items where
   inputs : List PendingColumn
-  inputValid : ItemsInputValid profile params scope items inputs uses
+  inputValid : ItemsInputValidCore subqueries profile params env scope items inputs uses
 
-private def checkItems (fuel : Nat) (profile : Profile) (params : ParameterEnv) (scope : Scope) (items : List Advanced.SelectItem) :
-    Except Failure (ItemsAnalysis profile params scope items) :=
+private def checkItemsCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+    (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (profile : Profile) (params : ParameterEnv) (scope : Scope) (items : List Advanced.SelectItem) :
+    Except Failure (ItemsAnalysisCore subqueries env profile params scope items) :=
   match fuel with
   | 0 => .error exhausted
   | fuel + 1 => match items with
     | [] => .ok ⟨⟨[], [], .nil⟩, [], .nil⟩
     | .expression expr alias :: items => do
         if goodAlias : ∀ name ∈ alias, name ≠ "" then
-          let item ← checkCompleteExpr fuel profile params scope expr
-          let tail ← checkItems fuel profile params scope items
-          .ok ⟨⟨⟨outputName expr alias, projectedType item.type, projectedCollation expr item.type item.derivation⟩ :: tail.output, item.uses ++ tail.uses,
-            .expression item.valid item.collationValid goodAlias tail.valid⟩,
-            ⟨outputName expr alias, scalarInput expr item.type, item.derivation, pendingOrigin expr item.type, unknownCollationSortKey profile expr⟩ :: tail.inputs,
-            .expression item.valid item.collationValid goodAlias tail.inputValid⟩
+          let item ← checkCompleteExprCore subqueries env checkSubquery fuel profile params scope expr
+          let label ← checkExprLabel subqueries env checkSubquery fuel expr
+          let tail ← checkItemsCore subqueries env checkSubquery fuel profile params scope items
+          .ok ⟨⟨⟨alias.getD label.label.2, projectedType item.type, projectedCollation expr item.type item.derivation⟩ :: tail.output, item.uses ++ tail.uses,
+            .expression item.valid item.collationValid label.valid goodAlias tail.valid⟩,
+            ⟨alias.getD label.label.2, scalarInput expr item.type, item.derivation, pendingOrigin expr item.type, unknownCollationSortKey profile expr⟩ :: tail.inputs,
+            .expression item.valid item.collationValid label.valid goodAlias tail.inputValid⟩
         else .error (invalid "empty_alias" "A projection alias must be nonempty")
     | .all qualifier schema :: items => do
         checkNamespace scope qualifier schema
         let selected := scope.columns qualifier schema
         if nonempty : selected ≠ [] then
-          let tail ← checkItems fuel profile params scope items
+          let tail ← checkItemsCore subqueries env checkSubquery fuel profile params scope items
           .ok ⟨⟨selected ++ tail.output, tail.uses, .all rfl nonempty tail.valid⟩,
             knownColumns selected ++ tail.inputs, .all rfl nonempty tail.inputValid⟩
         else .error (invalid "wildcard_binding" "Wildcard must identify a nonempty visible input scope")
 
-private def checkPredicate (fuel : Nat) (profile : Profile) (params : ParameterEnv) (scope : Scope) (expr : Option Advanced.Expr) :
-    Except Failure {uses : List Parameter // PredicateValid profile params scope expr uses} :=
+private def checkPredicateCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+    (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (profile : Profile) (params : ParameterEnv) (scope : Scope) (expr : Option Advanced.Expr) :
+    Except Failure {uses : List Parameter // PredicateValidCore subqueries profile params env scope expr uses} :=
   match expr with
   | none => .ok ⟨[], .absent⟩
   | some expr => do
       if uncontextualizedString expr then
         throw (unsupported "predicate_string_coercion"
           "Contextual Boolean conversion of an unknown string literal is not implemented yet")
-      let arg ← checkCompleteExpr fuel profile params scope expr
+      let arg ← checkCompleteExprCore subqueries env checkSubquery fuel profile params scope expr
       if boolean : acceptsBase .bool arg.type = true then
         .ok ⟨arg.uses, .present arg.valid arg.collationValid boolean⟩
       else .error (invalid "predicate_type" "WHERE requires a Boolean expression")
 
-private def checkSort (fuel : Nat) (profile : Profile) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn)
+private def checkSortCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+    (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (profile : Profile) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn)
     (distinct : Bool) (expr : Advanced.Expr) :
-    Except Failure {uses : List Parameter // SortValid profile params scope projection output distinct expr uses} :=
+    Except Failure {uses : List Parameter // SortValidCore subqueries profile params env scope projection output distinct expr uses} :=
   match category : sortSyntax expr with
   | .integer position =>
       if positive : 0 < position then
@@ -125,14 +129,14 @@ private def checkSort (fuel : Nat) (profile : Profile) (params : ParameterEnv) (
                 "order_type" "ORDER BY output type has no PostgreSQL ordering operator")
         | [] => do
             if ordinary : distinct = false then
-              let typed ← checkExpr fuel params scope (.column none name)
+              let typed ← checkExprCore subqueries env checkSubquery fuel params scope (.column none name)
               if orderable : typed.type.orderable = true then
                 .ok ⟨typed.uses, .inputName found ordinary typed.valid orderable⟩
               else .error (operatorFailure [typed.type] false
                   "order_type" "ORDER BY input type has no PostgreSQL ordering operator")
             else .error (unsupported "distinct_order_expression" "DISTINCT ordering by an input name requires projected-expression identity rules; use an output label or position")
         | column :: _remaining =>
-            if same : SameOutputExpressions profile projection name then
+            if same : SameOutputExpressions profile projection output name then
               if orderable : column.type.base.orderable = true then
                 .ok ⟨[], .repeatedName same found orderable⟩
               else .error (operatorFailure [some column.type] false
@@ -142,38 +146,41 @@ private def checkSort (fuel : Nat) (profile : Profile) (params : ParameterEnv) (
     | expr => do
         if ordinary : distinct = false then
           if category : SortExpression expr then
-            let typed ← checkExpr fuel params scope expr
+            let typed ← checkExprCore subqueries env checkSubquery fuel params scope expr
             if orderable : typed.type.orderable = true then
               .ok ⟨typed.uses, .expression ordinary typed.valid category orderable⟩
             else .error (operatorFailure [typed.type] false
                 "order_type" "ORDER BY expression type has no PostgreSQL ordering operator")
           else .error (invalid "order_category" "Unclassified ORDER BY syntax")
         else .error (unsupported "distinct_order_expression" "This milestone supports DISTINCT ordering by output name or position")
-private def checkSortList (fuel : Nat) (profile : Profile) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn)
+private def checkSortListCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+    (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (profile : Profile) (params : ParameterEnv) (scope : Scope) (projection : List Advanced.SelectItem) (output : List OutputColumn)
     (distinct : Bool) (items : List Advanced.OrderBy) :
-    Except Failure {uses : List Parameter // SortListValid profile params scope projection output distinct items uses} :=
+    Except Failure {uses : List Parameter // SortListValidCore subqueries profile params env scope projection output distinct items uses} :=
   match fuel with
   | 0 => .error exhausted
   | fuel + 1 => match items with
     | [] => .ok ⟨[], .nil⟩
     | item :: items => do
-        let head ← checkSort fuel profile params scope projection output distinct item.expr
-        let tail ← checkSortList fuel profile params scope projection output distinct items
+        let head ← checkSortCore subqueries env checkSubquery fuel profile params scope projection output distinct item.expr
+        let tail ← checkSortListCore subqueries env checkSubquery fuel profile params scope projection output distinct items
         .ok ⟨head.val ++ tail.val, .cons head.property tail.property⟩
 
-private def checkOrders (fuel : Nat) (profile : Profile) (params : ParameterEnv) (scope : Scope)
+private def checkOrdersCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+    (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (profile : Profile) (params : ParameterEnv) (scope : Scope)
     (projection : List Advanced.SelectItem) (output : List OutputColumn) (distinct : Bool)
     (items : List Advanced.OrderBy) :
-    Except Failure {uses : List Parameter // OrdersValid profile params scope projection output distinct items uses} := do
-  if sequence : OrderSequenceSafe profile projection items then
-    let checked ← checkSortList fuel profile params scope projection output distinct items
+    Except Failure {uses : List Parameter // OrdersValidCore subqueries profile params env scope projection output distinct items uses} := do
+  if sequence : OrderSequenceSafe profile projection output items then
+    let checked ← checkSortListCore subqueries env checkSubquery fuel profile params scope projection output distinct items
     .ok ⟨checked.val, .checked checked.property sequence⟩
   else .error (invalid "ambiguous_output"
     "Earlier ORDER BY entries resolved only some identical unknown targets; the repeated name is ambiguous")
 
-private def checkSortCollation (fuel : Nat) (profile : Profile) (params : ParameterEnv)
+private def checkSortCollationCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+    (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (profile : Profile) (params : ParameterEnv)
     (scope : Scope) (pending : List PendingColumn) (expr : Advanced.Expr) :
-    Except Failure {_u : Unit // SortCollationValid profile params scope pending expr} := do
+    Except Failure {_u : Unit // SortCollationValidCore subqueries profile params env scope pending expr} := do
   match category : sortSyntax expr with
   | .integer position =>
       match resolved : pending[position.toNat - 1]? with
@@ -192,28 +199,29 @@ private def checkSortCollation (fuel : Nat) (profile : Profile) (params : Parame
           .ok ⟨(), by rw [exprEq]; exact .outputName resolved determinate⟩
         else .error (invalid "collation_conflict" "ORDER BY target has an indeterminate collation")
       | none => do
-        let typed ← checkCompleteExpr fuel profile params scope (.column none name)
+        let typed ← checkCompleteExprCore subqueries env checkSubquery fuel profile params scope (.column none name)
         if determinate : typed.derivation.determinate = true then
           .ok ⟨(), by rw [exprEq]; exact .inputName resolved typed.collationValid determinate⟩
         else .error (invalid "collation_conflict" "ORDER BY input has an indeterminate collation")
     | expr =>
       if expression : SortExpression expr then
-        let typed ← checkCompleteExpr fuel profile params scope expr
+        let typed ← checkCompleteExprCore subqueries env checkSubquery fuel profile params scope expr
         if determinate : typed.derivation.determinate = true then
           .ok ⟨(), by rw [exprEq]; exact .expression expression typed.collationValid determinate⟩
         else .error (invalid "collation_conflict" "ORDER BY expression has an indeterminate collation")
       else .error (invalid "order_category" "Unclassified ORDER BY syntax")
 
-private def checkOrdersCollation (fuel : Nat) (profile : Profile) (params : ParameterEnv)
+private def checkOrdersCollationCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+    (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (profile : Profile) (params : ParameterEnv)
     (scope : Scope) (pending : List PendingColumn) (items : List Advanced.OrderBy) :
-    Except Failure {_u : Unit // OrdersCollationValid profile params scope pending items} :=
+    Except Failure {_u : Unit // OrdersCollationValidCore subqueries profile params env scope pending items} :=
   match fuel with
   | 0 => .error exhausted
   | fuel + 1 => match items with
     | [] => .ok ⟨(), .nil⟩
     | item :: items => do
-      let head ← checkSortCollation fuel profile params scope pending item.expr
-      let tail ← checkOrdersCollation fuel profile params scope pending items
+      let head ← checkSortCollationCore subqueries env checkSubquery fuel profile params scope pending item.expr
+      let tail ← checkOrdersCollationCore subqueries env checkSubquery fuel profile params scope pending items
       .ok ⟨(), .cons head.property tail.property⟩
 
 private def checkSetColumns (fuel : Nat) (op : SetOp) (all : Bool)
@@ -282,8 +290,9 @@ private def checkSetOrders (fuel : Nat) (output : List OutputColumn) (items : Li
 
 /-- Check one pagination expression in an empty local scope. This proves a
 static coercion to a row count, not nonnegativity of its eventual runtime value. -/
-def checkPagination (fuel : Nat) (profile : Profile) (params : ParameterEnv) (expr : Option Advanced.Expr) :
-    Except Failure {uses : List Parameter // PaginationValid profile params expr uses} :=
+def checkPaginationCore (subqueries : SubqueryJudgment) (env : CTEEnv)
+    (checkSubquery : SubqueryChecker subqueries env) (fuel : Nat) (profile : Profile) (params : ParameterEnv) (expr : Option Advanced.Expr) :
+    Except Failure {uses : List Parameter // PaginationValidCore subqueries profile params env expr uses} :=
   match fuel with
   | 0 => .error exhausted
   | fuel + 1 => match expr with
@@ -291,7 +300,7 @@ def checkPagination (fuel : Nat) (profile : Profile) (params : ParameterEnv) (ex
     | some expr => do
         if uncontextualizedString expr then
           throw (unsupported "pagination_string_literal" "Contextual conversion of an unknown string literal to a row count is outside this profile")
-        let arg ← checkCompleteExpr fuel profile params .empty expr
+        let arg ← checkCompleteExprCore subqueries env checkSubquery fuel profile params .empty expr
         match typeEq : arg.type with
         | none =>
             .ok ⟨arg.uses, .present (by simpa only [typeEq] using arg.valid) (by simpa only [typeEq] using arg.collationValid) .unknownNull⟩
@@ -309,6 +318,9 @@ def checkPagination (fuel : Nat) (profile : Profile) (params : ParameterEnv) (ex
             .ok ⟨arg.uses, .present (by simpa only [typeEq] using arg.valid) (by simpa only [typeEq] using arg.collationValid) (.doubleAssignment nullable)⟩
         | some _ =>
             .error (invalid "pagination_type" "Pagination requires a numeric expression assignable to INT8 or untyped NULL")
+
+abbrev ItemsCertificate := ItemsCertificateCore NoSubqueries []
+abbrev checkPagination := checkPaginationCore NoSubqueries [] noSubqueryChecker
 
 /-- Certify only the outer LIMIT/OFFSET expressions of an exact query.
 The body may be outside the basic SELECT fragment. This API does not establish
@@ -438,6 +450,25 @@ private structure RecursiveCTECertificate (profile : Profile) (catalog : Catalog
   uses : List Parameter
   valid : RecursiveCTEValid profile catalog params env cte output uses
 
+private def expressionSubqueryResult
+    (result : Except Failure (QueryAnalysis profile catalog params env query)) :
+    Except Failure (SubqueryCertificate (QueryValid profile catalog params) env query) :=
+  match result with
+  | .ok checked => .ok ⟨checked.output, checked.uses, checked.valid⟩
+  | .error (.invalid diagnostic) =>
+    if ["column_binding", "relation_reference"].contains diagnostic.code then
+      .error (unsupported "subquery_correlation"
+        "A nested name may resolve to an outer row; correlated expression subqueries require a separate scope rule")
+    else if diagnostic.code == "empty_projection" then
+      .error (unsupported "subquery_projection"
+        "A zero-column subquery requires an independent empty-output query rule")
+    else if diagnostic.code == "locking_nullable" then
+      .error (unsupported "subquery_planning_lock"
+        "Nullable-side locking in a subquery depends on whether its plan is evaluated")
+    else .error (.invalid diagnostic)
+  | .error failure => .error failure
+
+
 mutual
   private def checkSource (fuel : Nat) (profile : Profile) (catalog : Catalog) (params : ParameterEnv)
       (env : CTEEnv) (source : Option Advanced.From) :
@@ -547,7 +578,9 @@ mutual
             let leftValid ← checkSource fuel profile catalog params env (some left)
             let rightValid ← checkSource fuel profile catalog params env (some right)
             if aliases : JoinAliasesDistinct leftValid.scope rightValid.scope then
-              let predicate ← checkCompleteExpr fuel profile params (leftValid.scope ++ rightValid.scope) expr
+              let predicate ← checkCompleteExprCore (QueryValid profile catalog params) env
+                (fun child => expressionSubqueryResult (checkQueryCore fuel profile catalog params env child))
+                fuel profile params (leftValid.scope ++ rightValid.scope) expr
               if boolean : acceptsBase .bool predicate.type = true then
                 .ok ⟨joinScope kind leftValid.scope rightValid.scope,
                   leftValid.uses ++ rightValid.uses ++ predicate.uses,
@@ -572,6 +605,8 @@ mutual
         if noRecursive : recursive = false then
           if namesValid : CTENamesValid ctes then
             let definitions ← checkCTEs fuel profile catalog params env ctes
+            let checkSubquery : SubqueryChecker (QueryValid profile catalog params) definitions.visible :=
+              fun child => expressionSubqueryResult (checkQueryCore fuel profile catalog params definitions.visible child)
             match bodyEq : body with
             | .set op all left right =>
               if unlocked : locking = [] then
@@ -582,8 +617,8 @@ mutual
                     let columns ← checkSetColumns fuel op all l.inputs r.inputs
                     if nonempty : columns.val ≠ [] then
                       let orders ← checkSetOrders fuel columns.val orderBy
-                      let checkedLimit ← checkPagination fuel profile params limit
-                      let checkedOffset ← checkPagination fuel profile params offset
+                      let checkedLimit ← checkPaginationCore (QueryValid profile catalog params) definitions.visible checkSubquery fuel profile params limit
+                      let checkedOffset ← checkPaginationCore (QueryValid profile catalog params) definitions.visible checkSubquery fuel profile params offset
                       let uses := definitions.uses ++ l.uses ++ r.uses ++
                         if offsetFirst then checkedOffset.val ++ checkedLimit.val else checkedLimit.val ++ checkedOffset.val
                       have complete : QueryValid profile catalog params env query columns.val uses := by
@@ -604,15 +639,15 @@ mutual
                 if noHaving : select.having = none then
                   if noDistinctOn : select.distinctOn = [] then
                     let source ← checkSource fuel profile catalog params definitions.visible select.source
-                    let items ← checkItems fuel profile params source.scope select.items
+                    let items ← checkItemsCore (QueryValid profile catalog params) definitions.visible checkSubquery fuel profile params source.scope select.items
                     if nonempty : items.output ≠ [] then
                       if distinctComparable : DistinctAllowed select.distinct items.output then
                         if distinctCollations : DistinctCollations select.distinct items.inputs then
-                          let predicate ← checkPredicate fuel profile params source.scope select.whereClause
-                          let orders ← checkOrders fuel profile params source.scope select.items items.output select.distinct orderBy
-                          let orderCollations ← checkOrdersCollation fuel profile params source.scope items.inputs orderBy
-                          let checkedLimit ← checkPagination fuel profile params limit
-                          let checkedOffset ← checkPagination fuel profile params offset
+                          let predicate ← checkPredicateCore (QueryValid profile catalog params) definitions.visible checkSubquery fuel profile params source.scope select.whereClause
+                          let orders ← checkOrdersCore (QueryValid profile catalog params) definitions.visible checkSubquery fuel profile params source.scope select.items items.output select.distinct orderBy
+                          let orderCollations ← checkOrdersCollationCore (QueryValid profile catalog params) definitions.visible checkSubquery fuel profile params source.scope items.inputs orderBy
+                          let checkedLimit ← checkPaginationCore (QueryValid profile catalog params) definitions.visible checkSubquery fuel profile params limit
+                          let checkedOffset ← checkPaginationCore (QueryValid profile catalog params) definitions.visible checkSubquery fuel profile params offset
                           let checkedLocking ← checkLocking source.scope select.distinct locking
                           .ok ⟨⟨items.output,
                             (definitions.uses ++ if offsetFirst then items.uses ++ source.uses ++ predicate.val ++ orders.val ++ checkedOffset.val ++ checkedLimit.val

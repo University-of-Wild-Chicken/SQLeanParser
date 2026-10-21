@@ -282,7 +282,13 @@ private def reserved : List String :=
 private def identifier : Parser Name := do
   match (← pop).kind with
   | .quoted s => pure s
-  | .word s => if reserved.contains s.toLower then fail s!"reserved identifier {s}" else pure s
+  | .word s =>
+      -- The legacy clause-boundary list also contains ordinary PostgreSQL
+      -- identifiers such as KEY, ADD and TYPE. Use the pinned grammar category
+      -- for these words; SQLite retains its existing identifier boundary.
+      let unreserved := !(← read) && (SQLean.PostgresGrammar.Generated.keyword s.toLower).any
+        (fun keyword => keyword.category == "UNRESERVED_KEYWORD")
+      if reserved.contains s.toLower && !unreserved then fail s!"reserved identifier {s}" else pure s
   | _ => fail "expected identifier"
 
 /-- PostgreSQL's `attr_name = ColLabel` permits keywords after a dot.

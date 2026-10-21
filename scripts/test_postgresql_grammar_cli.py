@@ -147,6 +147,37 @@ class ReportTests(unittest.TestCase):
                     cli.read_cases(path)
 
 
+class AuthoredSubqueryInputTests(unittest.TestCase):
+    def test_anonymous_markers_preserve_lexical_order_and_source_evidence(self):
+        sql = "WITH c AS(SELECT ? x) SELECT ?,(SELECT ?)"
+        row = {"id": "a", "source_kind": "synthetic", "sql": sql}
+        actual = cli.authored_subquery_input(row)
+        self.assertEqual(actual["sql"], "WITH c AS(SELECT $1 x) SELECT $2,(SELECT $3)")
+        self.assertEqual(actual["grammar_original_sql"], sql)
+        self.assertEqual(row["sql"], sql)
+        self.assertEqual(len(actual["grammar_input_transformations"]), 1)
+
+    def test_literals_and_json_operators_are_not_rewritten_as_bind_slots(self):
+        sql = "SELECT '?' AS t, '{}'::jsonb ? 'x', (SELECT ?)"
+        actual = cli.authored_subquery_input({"source_kind": "synthetic", "sql": sql})
+        self.assertEqual(actual["sql"], "SELECT '?' AS t, '{}'::jsonb ? 'x', (SELECT $1)")
+        unchanged = {"source_kind": "synthetic", "sql": "SELECT (SELECT $2),$1"}
+        self.assertIs(cli.authored_subquery_input(unchanged), unchanged)
+        with self.assertRaisesRegex(AssertionError, "only authored"):
+            cli.authored_subquery_input({"source_kind": "engine-regression", "sql": sql})
+
+    def test_exact_new_population_has_twelve_adaptations_and_untouched_originals(self):
+        authored = cli.read_cases(cli.ROOT / "fixtures/subqueries/synthetic.json")
+        changed = [r for r in authored if "grammar_input_transformations" in r]
+        self.assertEqual(len(authored), 150)
+        self.assertEqual(len(changed), 12)
+        for factor in ("scalar", "exists", "in"):
+            original = cli.read_cases(cli.ROOT / "fixtures/subqueries" / (factor + "_concrete.jsonl"))
+            self.assertEqual(len(original), 50)
+            self.assertTrue(all(r["sql"] == r["raw_sql"] and r["transformations"] == [] for r in original))
+            self.assertFalse(any("grammar_input_transformations" in r for r in original))
+
+
 class SyntheticCoverageTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

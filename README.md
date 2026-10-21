@@ -27,6 +27,15 @@ available as `SQLean.PostgresGrammar.parse`, `sqlean --postgres-grammar`, and
 PostgreSQL's C semantic actions and static SQL validity unchecked. Full grammar
 data does not expand the typed AST or certify every PostgreSQL statement.
 
+The [v0.33 expression-subquery increment](docs/subquery-contract-v0.33.md)
+adds independent validity for uncorrelated scalar subqueries, EXISTS and scalar
+IN-subquery comparisons, including child output labels, types, collation and
+complete-statement parameter preservation. Each class has fifty authored and
+fifty unchanged source examples. A fixed, independently reviewed subset of
+78 source queries has complete static certificates under its declared
+environment; all 150 sources receive checked rendering. Scalar cardinality and
+evaluation remain runtime obligations. Correlation remains a separate milestone.
+
 The [v0.32 collation increment](docs/collation-contract-v0.32.md) adds explicit
 `COLLATE` syntax and independent collation provenance through scalar expressions,
 joins, derived tables, CTEs and set operations. Exact recursive output collation
@@ -273,8 +282,9 @@ adds recursively nested non-LATERAL SELECT sources and positional column
 renaming. Independent derivations retain exact output types, modifiers,
 nullability and duplicate labels, and check parameter notation once over the
 complete query. It includes 50 synthetic full-query certificates and 50
-unchanged source rendering examples. Correlation, expression subqueries and
-outer locking of derived sources remain separate obligations.
+unchanged source rendering examples. Uncorrelated expression subqueries are
+covered by v0.33; correlation and outer locking of derived sources remain
+separate obligations.
 
 The [v0.7 merged-join increment](docs/merged-joins-contract-v0.7.md) adds
 USING and NATURAL joins with independent rules for merged columns, qualified
@@ -510,7 +520,7 @@ The CLI prints canonical SQL; `--ast` selects AST output. `--schema` additionall
 SELECT assurance is opt-in, so existing CLI output and all earlier parser APIs
 keep their behavior. Choose one tier before checking:
 
-- `--assurance contract` uses `sqlean-basic-select-v0.32` with its declared
+- `--assurance contract` uses `sqlean-basic-select-v0.33` with its declared
   collation snapshot.
   `valid` carries an independent declarative derivation in the Lean API.
   `invalid` reports a violated profile condition, `unsupported` reports a
@@ -647,8 +657,11 @@ columns. Definitions without actual recursion retain ordinary type resolution.
 Collation derivations retain native coercions and query-boundary behavior.
 Forward dependencies remain Unsupported.
 
-Independent rules for grouping/aggregates, correlation, LATERAL and expression
-subqueries remain future milestones.
+Uncorrelated scalar subqueries, EXISTS and scalar IN-subqueries reuse the complete
+child-query judgment under the visible CTE environment. Child row scopes do not
+inherit parent columns. Scalar output is nullable; IN uses the child's finalized
+single-column type. Independent rules for grouping/aggregates, correlation,
+LATERAL, row-valued IN and quantified query comparisons remain future milestones.
 DISTINCT ON also requires a separate rule. These forms
 remain supported by the expanded parser/checker. The contract draft remains the
 target for the general SELECT family; the first implementation does not claim

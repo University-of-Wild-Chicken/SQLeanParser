@@ -14,12 +14,15 @@ structure Profile where
   collations : CollationEnv := .builtin
   deriving Repr, BEq, DecidableEq, Inhabited
 
-def Profile.basicV32 : Profile := {}
+def Profile.basicV33 : Profile := {}
+
+/-- Compatibility spelling for clients migrating the explicit profile name. -/
+abbrev Profile.basicV32 : Profile := .basicV33
 
 def Profile.withCollations (profile : Profile) (collations : CollationEnv) : Profile :=
   {profile with collations}
 
-def Profile.name (_profile : Profile) : String := "sqlean-basic-select-v0.32"
+def Profile.name (_profile : Profile) : String := "sqlean-basic-select-v0.33"
 
 /-- Concrete PostgreSQL built-ins. Modifiers are retained on declarations and
 casts; operator-result types deliberately discard modifiers. Bare CHAR denotes

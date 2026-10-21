@@ -241,8 +241,13 @@ def contextValuesContractTests : IO Nat := do
     | .error (.invalid _) => pure ()
     | other => throw (IO.userError s!"expected Invalid for concrete incompatible NAME query {sql}: {reprStr (other.map (fun _ => ())) }")
     count := count + 1
+  SQLean.Tests.assert (sameOutputTypes
+    (← contextOutput "SELECT CURRENT_USER = (SELECT CURRENT_USER)")
+    [{name := "?column?", type := ⟨.bool, true⟩}])
+    "NAME comparison with scalar subquery retains Boolean output and possible NULL"
+  count := count + 1
   for sql in ["SELECT application.current_schema()", "SELECT current_setting('role')",
-      "SELECT version()", "SELECT CURRENT_USER = (SELECT CURRENT_USER)"] do
+      "SELECT version()"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with
     | .error (.unsupported _) => pure ()

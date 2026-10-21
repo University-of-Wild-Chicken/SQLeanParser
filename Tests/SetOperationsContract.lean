@@ -23,8 +23,8 @@ private theorem nullArm_valid :
     (output := [{name := "?column?", type := ⟨.text, true⟩}])
     (pending := [{name := "?column?", input := .unknown true, origin := .unknownConstant, sortKey := some (none, [])}])
   · exact .empty
-  · exact .expression .null (.atom .null .null) (by simp) .nil
-  · exact .expression .null (.atom .null .null) (by simp) .nil
+  · exact .expression .null (.atom .null .null) (.ordinary rfl) (by simp) .nil
+  · exact .expression .null (.atom .null .null) (.ordinary rfl) (by simp) .nil
   · decide
   · decide
   · exact Or.inl rfl
@@ -47,8 +47,8 @@ private theorem integerArm_valid :
     (output := [{name := "?column?", type := ⟨.int32, false⟩}])
     (pending := [{name := "?column?", input := .known ⟨.int32, false⟩}])
   · exact .empty
-  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
-  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by simp) .nil
+  · exact .expression (.int (by decide)) (.atom (.int (by decide)) .int) (.ordinary rfl) (by simp) .nil
   · decide
   · decide
   · exact Or.inl rfl
@@ -145,7 +145,8 @@ def setOperationsContractTests : IO Nat := do
     ("WITH RECURSIVE c AS (SELECT 1 UNION SELECT 2) SELECT * FROM c", [{name := "?column?", type := ⟨.int32, false⟩}]),
     ("WITH c AS (SELECT NULL UNION SELECT 1) SELECT * FROM c", [{name := "?column?", type := ⟨.int32, true⟩}]),
     ("SELECT * FROM (SELECT 1 AS x FOR UPDATE) d UNION SELECT 2", [{name := "x", type := ⟨.int32, false⟩}]),
-    ("WITH c AS (SELECT 1 AS x UNION SELECT 2) SELECT * FROM c FOR UPDATE", [{name := "x", type := ⟨.int32, false⟩}])]
+    ("WITH c AS (SELECT 1 AS x UNION SELECT 2) SELECT * FROM c FOR UPDATE", [{name := "x", type := ⟨.int32, false⟩}]),
+    ("SELECT (SELECT 1) UNION SELECT 2", [{name := "?column?", type := ⟨.int32, true⟩}])]
   for (sql, output) in valid do
     SQLean.Tests.assert (sameOutputTypes (← setOutput sql) output) s!"set exact metadata {sql}"
   let invalid := [
@@ -175,8 +176,7 @@ def setOperationsContractTests : IO Nat := do
   let unsupported := [
     "SELECT 1 AS x,CAST(1 AS INTEGER) AS x ORDER BY x",
     "(SELECT 1 AS x,2 AS x ORDER BY x) UNION SELECT 1,2",
-    "SELECT COUNT(*) UNION SELECT 1",
-    "SELECT (SELECT 1) UNION SELECT 2"]
+    "SELECT COUNT(*) UNION SELECT 1"]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with

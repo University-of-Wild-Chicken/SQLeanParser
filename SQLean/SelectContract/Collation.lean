@@ -147,7 +147,8 @@ instance (profile : Profile) (catalog : Catalog) : Decidable (CollationEnvironme
   infer_instance
 
 /- Level-zero Var-free expressions form the scalar-array subset of IN.
-Subqueries are excluded by the independent scalar profile. -/
+Uncorrelated SubLinks have no parent-level Vars; their test expression is
+still visited for scalar IN. -/
 mutual
   def collationNoVarExpr (expr : Advanced.Expr) : Bool :=
     match expr with
@@ -174,7 +175,8 @@ mutual
     | .inList arg values => collationNoVarExpr arg && collationNoVarExprs values
     | .between arg lower upper _ => collationNoVarExpr arg && collationNoVarExpr lower && collationNoVarExpr upper
     | .countAll => true
-    | .inQuery .. | .exists _ | .scalarQuery _ => false
+    | .exists _ | .scalarQuery _ => true
+    | .inQuery arg _ => collationNoVarExpr arg
   termination_by sizeOf expr
   decreasing_by all_goals (simp_all <;> omega)
 

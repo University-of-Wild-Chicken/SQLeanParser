@@ -39,7 +39,8 @@ private theorem right_valid :
   .table (table := rightTable) (Or.inr rfl) (by simp [catalog]) rfl (by simp) (.cons rfl .nil)
 
 private theorem on_valid (scope : Scope) :
-    PredicateValid .basicV32 params scope (some (anon 2)) [.anonymous 2] :=
+    PredicateValidCore (QueryValid .basicV32 catalog params) .basicV32 params [] scope
+      (some (anon 2)) [.anonymous 2] :=
   .present (.parameter (binding := ⟨2, ⟨.bool, []⟩, false⟩)
     (by simp [params]) rfl rfl)
     (.parameter (binding := ⟨2, ⟨.bool, []⟩, false⟩) (by simp [params]) rfl rfl) rfl
@@ -108,12 +109,12 @@ private theorem query_derivation :
   · exact .expression (expr := anon 1) (alias := some "selected")
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
-      (by simp) (.all (qualifier := none) (selected := (leftScope.append nullableRight).output)
+      (.ordinary rfl) (by simp) (.all (qualifier := none) (selected := (leftScope.append nullableRight).output)
         rfl (by decide) .nil)
   · exact .expression (expr := anon 1) (alias := some "selected")
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
-      (by simp) (.all (qualifier := none) (selected := (leftScope.append nullableRight).output)
+      (.ordinary rfl) (by simp) (.all (qualifier := none) (selected := (leftScope.append nullableRight).output)
         rfl (by decide) .nil)
   · decide
   · exact Or.inl rfl

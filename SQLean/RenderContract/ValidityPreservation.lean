@@ -1,4 +1,5 @@
 import SQLean.RenderContract.ExpressionCollationPreservation
+import SQLean.RenderContract.LabelPreservation
 import SQLean.RenderContract.RecursionPreservation
 import SQLean.SelectContract.Spec
 
@@ -15,61 +16,60 @@ set_option maxHeartbeats 1000000
 termination_by sizeOf expr
 decreasing_by all_goals (simp_all <;> omega)
 
-@[simp] theorem output_label_translated (expr : Advanced.Expr) :
-    outputLabel (translateExpr expr) = outputLabel expr := by
-  cases expr with
-  | cast arg target =>
-      simp only [translateExpr, outputLabel, output_label_translated arg]
-  | collate arg name =>
-      simp only [translateExpr, outputLabel, output_label_translated arg]
-  | subscript arg indices =>
-      simp only [translateExpr, outputLabel, output_label_translated arg]
-  | caseExpr operand branches otherwise =>
-      cases otherwise with
-      | none =>
-          simp only [translateExpr_case, outputLabel, Option.map_none]
-      | some arg =>
-          simp only [translateExpr_case, outputLabel, Option.map_some,
-            output_label_translated arg]
-  | _ => simp only [translateExpr, outputLabel]
-termination_by sizeOf expr
-decreasing_by all_goals (simp_all <;> omega)
-
 @[simp] theorem translated_output_name (expr : Advanced.Expr) (alias : Option Name) :
     outputName (translateExpr expr) alias = outputName expr alias := by
   simp only [outputName, output_label_translated]
 
-theorem items_valid_translated (valid : ItemsValid profile params scope items output uses) :
-    ItemsValid profile params scope (items.map translateSelectItem) output
+theorem items_valid_translated_core
+    (preserved : SubqueriesTranslated sq ceiling) (valid : ItemsValidCore sq profile params env scope items output uses)
+    (small : sizeOf items ≤ ceiling := by simp_all <;> omega) :
+    ItemsValidCore sq profile params env scope (items.map translateSelectItem) output
       (uses.map translateParameter) := by
-  induction valid with
+  cases valid with
   | nil => exact ItemsValid.nil
-  | expression typed collation aliasValid tail ih =>
+  | expression typed collation labelValid aliasValid tail =>
       simpa only [List.map_cons, translateSelectItem, List.map_append, translated_output_name, projected_collation_translated] using
-        ItemsValid.expression (expr_valid_translated typed) (expr_collation_valid_translated collation) aliasValid ih
-  | all bindings nonempty tail ih =>
-      simpa only [List.map_cons, translateSelectItem] using ItemsValid.all bindings nonempty ih
+        ItemsValid.expression (expr_valid_translated_core preserved typed) (expr_collation_valid_translated_core preserved collation) (expr_label_valid_translated_core preserved labelValid) aliasValid (items_valid_translated_core preserved tail)
+  | all bindings nonempty tail =>
+      simpa only [List.map_cons, translateSelectItem] using ItemsValid.all bindings nonempty (items_valid_translated_core preserved tail)
+termination_by sizeOf items
+decreasing_by all_goals subst_vars; all_goals (try simp); all_goals omega
 
-theorem items_input_valid_translated (valid : ItemsInputValid profile params scope items output uses) :
-    ItemsInputValid profile params scope (items.map translateSelectItem) output
+
+theorem items_input_valid_translated_core
+    (preserved : SubqueriesTranslated sq ceiling) (valid : ItemsInputValidCore sq profile params env scope items output uses)
+    (small : sizeOf items ≤ ceiling := by simp_all <;> omega) :
+    ItemsInputValidCore sq profile params env scope (items.map translateSelectItem) output
       (uses.map translateParameter) := by
-  induction valid with
+  cases valid with
   | nil => exact .nil
-  | expression typed collation aliasValid tail ih =>
+  | expression typed collation labelValid aliasValid tail =>
       simpa only [List.map_cons, translateSelectItem, List.map_append,
         translated_output_name, scalar_input_translated, pending_origin_translated,
         unknown_collation_sort_key_translated] using
-        ItemsInputValid.expression (expr_valid_translated typed) (expr_collation_valid_translated collation) aliasValid ih
-  | all bindings nonempty tail ih =>
-      simpa only [List.map_cons, translateSelectItem] using ItemsInputValid.all bindings nonempty ih
+        ItemsInputValid.expression (expr_valid_translated_core preserved typed) (expr_collation_valid_translated_core preserved collation) (expr_label_valid_translated_core preserved labelValid) aliasValid (items_input_valid_translated_core preserved tail)
+  | all bindings nonempty tail =>
+      simpa only [List.map_cons, translateSelectItem] using ItemsInputValid.all bindings nonempty (items_input_valid_translated_core preserved tail)
+termination_by sizeOf items
+decreasing_by all_goals subst_vars; all_goals (try simp); all_goals omega
 
-@[simp] theorem projection_expressions_translated (items : List Advanced.SelectItem) (name : Name) :
-    projectionExpressions (items.map translateSelectItem) name =
-      (projectionExpressions items name).map translateExpr := by
-  induction items with
+
+@[simp] theorem projection_expressions_translated (items : List Advanced.SelectItem) (names : List Name) (name : Name) :
+    projectionExpressions (items.map translateSelectItem) names name =
+      (projectionExpressions items names name).map translateExpr := by
+  induction items generalizing names with
   | nil => rfl
   | cons item items ih =>
-    cases item <;> simp [projectionExpressions, translateSelectItem, ih, apply_ite]
+    cases names with
+    | nil => rfl
+    | cons column names =>
+      simp [projectionExpressions] at ih
+      cases item with
+      | all qualifier schema =>
+        simpa [projectionExpressions, translateSelectItem] using ih names
+      | expression expr alias =>
+        by_cases matched : column = name <;>
+          simp [projectionExpressions, translateSelectItem, ih, matched]
 
 @[simp] theorem pure_projection_translated (items : List Advanced.SelectItem) :
     pureProjection (items.map translateSelectItem) = pureProjection items := by
@@ -78,12 +78,12 @@ theorem items_input_valid_translated (valid : ItemsInputValid profile params sco
   | cons item items ih =>
     cases item <;> simp_all [pureProjection, translateSelectItem]
 
-theorem same_output_expressions_translated (same : SameOutputExpressions profile items name) :
-    SameOutputExpressions profile (items.map translateSelectItem) name := by
+theorem same_output_expressions_translated (same : SameOutputExpressions profile items output name) :
+    SameOutputExpressions profile (items.map translateSelectItem) output name := by
   obtain ⟨pure, same⟩ := same
   refine ⟨by simpa using pure, ?_⟩
   rw [projection_expressions_translated]
-  cases found : projectionExpressions items name with
+  cases found : projectionExpressions items (output.map OutputColumn.name) name with
   | nil => simp_all
   | cons first rest =>
     simp only [found] at same
@@ -94,13 +94,15 @@ theorem same_output_expressions_translated (same : SameOutputExpressions profile
     · exact Or.inl (congrArg translateExpr identical)
     · exact Or.inr (by simpa only [unknown_collation_sort_key_translated] using normalized)
 
-theorem predicate_valid_translated (valid : PredicateValid profile params scope predicate uses) :
-    PredicateValid profile params scope (predicate.map translateExpr)
+theorem predicate_valid_translated_core
+    (preserved : SubqueriesTranslated sq ceiling) (valid : PredicateValidCore sq profile params env scope predicate uses)
+    (small : sizeOf predicate ≤ ceiling := by simp_all <;> omega) :
+    PredicateValidCore sq profile params env scope (predicate.map translateExpr)
       (uses.map translateParameter) := by
   cases valid with
   | absent => exact PredicateValid.absent
   | present typed collation boolean =>
-      exact PredicateValid.present (expr_valid_translated typed) (expr_collation_valid_translated collation) boolean
+      exact PredicateValid.present (expr_valid_translated_core preserved typed) (expr_collation_valid_translated_core preserved collation) boolean
 
 /-- Relation identity and NULL-extension ancestry do not depend on parameter
 notation, including for sources outside the independent validity fragment. -/
@@ -150,8 +152,10 @@ termination_by sizeOf expr
   cases expr <;> simp only [translateExpr, translateExpr_case]
 
 
-theorem sort_valid_translated (valid : SortValid profile params scope projection output distinct expr uses) :
-    SortValid profile params scope (projection.map translateSelectItem) output distinct (translateExpr expr)
+theorem sort_valid_translated_core
+    (preserved : SubqueriesTranslated sq ceiling) (valid : SortValidCore sq profile params env scope projection output distinct expr uses)
+    (small : sizeOf expr ≤ ceiling := by simp_all <;> omega) :
+    SortValidCore sq profile params env scope (projection.map translateSelectItem) output distinct (translateExpr expr)
       (uses.map translateParameter) := by
   cases valid with
   | ordinal constant positive inRange orderable =>
@@ -165,14 +169,16 @@ theorem sort_valid_translated (valid : SortValid profile params scope projection
   | inputName noOutput ordinary typed orderable =>
       simpa only [translateExpr] using
         SortValid.inputName noOutput ordinary
-          (by simpa only [translateExpr] using expr_valid_translated typed) orderable
+          (by simpa only [translateExpr] using expr_valid_translated_core preserved typed) orderable
   | expression ordinary typed category orderable =>
-      exact SortValid.expression ordinary (expr_valid_translated typed)
+      exact SortValid.expression ordinary (expr_valid_translated_core preserved typed)
         ((translated_sort_expression _).mpr category) orderable
 
-theorem sort_collation_valid_translated
-    (valid : SortCollationValid profile params scope pending expr) :
-    SortCollationValid profile params scope pending (translateExpr expr) := by
+theorem sort_collation_valid_translated_core
+    (preserved : SubqueriesTranslated sq ceiling)
+    (valid : SortCollationValidCore sq profile params env scope pending expr)
+    (small : sizeOf expr ≤ ceiling := by simp_all <;> omega) :
+    SortCollationValidCore sq profile params env scope pending (translateExpr expr) := by
   cases valid with
   | ordinal constant resolved determinate =>
       exact .ordinal (by simpa only [sort_syntax_translated] using constant) resolved determinate
@@ -180,31 +186,41 @@ theorem sort_collation_valid_translated
       simpa only [translateExpr] using SortCollationValid.outputName resolved determinate
   | inputName noOutput collation determinate =>
       simpa only [translateExpr] using SortCollationValid.inputName noOutput
-        (by simpa only [translateExpr] using expr_collation_valid_translated collation) determinate
+        (by simpa only [translateExpr] using expr_collation_valid_translated_core preserved collation) determinate
   | expression category collation determinate =>
       exact .expression ((translated_sort_expression _).mpr category)
-        (expr_collation_valid_translated collation) determinate
+        (expr_collation_valid_translated_core preserved collation) determinate
 
-theorem orders_collation_valid_translated
-    (valid : OrdersCollationValid profile params scope pending orders) :
-    OrdersCollationValid profile params scope pending (orders.map translateOrderBy) := by
-  induction valid with
+theorem orders_collation_valid_translated_core
+    (preserved : SubqueriesTranslated sq ceiling)
+    (valid : OrdersCollationValidCore sq profile params env scope pending orders)
+    (small : sizeOf orders ≤ ceiling := by simp_all <;> omega) :
+    OrdersCollationValidCore sq profile params env scope pending (orders.map translateOrderBy) := by
+  cases valid with
   | nil => exact .nil
-  | cons head tail ih =>
+  | @cons _ _ _ _ item head tail =>
+      cases item
       simpa only [List.map_cons, translateOrderBy] using
-        OrdersCollationValid.cons (sort_collation_valid_translated head) ih
+        OrdersCollationValid.cons (sort_collation_valid_translated_core preserved head) (orders_collation_valid_translated_core preserved tail)
+termination_by sizeOf orders
+decreasing_by all_goals subst_vars; all_goals (try simp); all_goals omega
+
 
 @[simp] theorem unknown_sort_key_translated (profile : Profile) (expr : Advanced.Expr) :
     unknownSortKey profile (translateExpr expr) = unknownSortKey profile expr := by
   exact unknown_collation_sort_key_translated profile expr
 
-@[simp] theorem projection_sort_keys_translated (profile : Profile) (items : List Advanced.SelectItem) :
-    projectionSortKeys profile (items.map translateSelectItem) = projectionSortKeys profile items := by
-  induction items with
+@[simp] theorem projection_sort_keys_translated (profile : Profile) (items : List Advanced.SelectItem)
+    (output : List OutputColumn) :
+    projectionSortKeys profile (items.map translateSelectItem) output = projectionSortKeys profile items output := by
+  induction items generalizing output with
   | nil => rfl
   | cons item items ih =>
-    cases item <;> simp only [projectionSortKeys, List.map_cons, translateSelectItem,
-      translated_output_name, unknown_sort_key_translated] at ih ⊢ <;> rw [ih]
+    cases output with
+    | nil => rfl
+    | cons column output =>
+      simp only [projectionSortKeys] at ih
+      cases item <;> simp [projectionSortKeys, translateSelectItem, unknown_sort_key_translated, ih]
 
 @[simp] theorem sort_target_index_translated (profile : Profile)
     (keys : List (Name × Option UnknownSortValue)) (resolved : List Nat)
@@ -238,27 +254,35 @@ theorem orders_collation_valid_translated
   | cons order orders ih =>
     simp only [List.map_cons, orderResolvedIndices, translateOrderBy, sort_target_index_translated, ih]
 
-theorem order_sequence_valid_translated (safe : OrderSequenceSafe profile projection orders) :
-    OrderSequenceSafe profile (projection.map translateSelectItem) (orders.map translateOrderBy) := by
+theorem order_sequence_valid_translated (safe : OrderSequenceSafe profile projection output orders) :
+    OrderSequenceSafe profile (projection.map translateSelectItem) output (orders.map translateOrderBy) := by
   simpa only [OrderSequenceSafe, pure_projection_translated, projection_sort_keys_translated,
     order_sequence_safe_translated] using safe
 
-theorem sort_list_valid_translated (valid : SortListValid profile params scope projection output distinct orders uses) :
-    SortListValid profile params scope (projection.map translateSelectItem) output distinct (orders.map translateOrderBy)
+theorem sort_list_valid_translated_core
+    (preserved : SubqueriesTranslated sq ceiling) (valid : SortListValidCore sq profile params env scope projection output distinct orders uses)
+    (small : sizeOf orders ≤ ceiling := by simp_all <;> omega) :
+    SortListValidCore sq profile params env scope (projection.map translateSelectItem) output distinct (orders.map translateOrderBy)
       (uses.map translateParameter) := by
-  induction valid with
+  cases valid with
   | nil => exact .nil
-  | cons head tail ih =>
+  | @cons _ _ _ _ _ _ _ _ item head tail =>
+      cases item
       simpa only [List.map_cons, List.map_append, translateOrderBy] using
-        SortListValid.cons (sort_valid_translated head) ih
+        SortListValid.cons (sort_valid_translated_core preserved head) (sort_list_valid_translated_core preserved tail)
+termination_by sizeOf orders
+decreasing_by all_goals subst_vars; all_goals (try simp); all_goals omega
 
-theorem orders_valid_translated (valid : OrdersValid profile params scope projection output distinct orders uses) :
-    OrdersValid profile params scope (projection.map translateSelectItem) output distinct (orders.map translateOrderBy)
+
+theorem orders_valid_translated_core
+    (preserved : SubqueriesTranslated sq ceiling) (valid : OrdersValidCore sq profile params env scope projection output distinct orders uses)
+    (small : sizeOf orders ≤ ceiling := by simp_all <;> omega) :
+    OrdersValidCore sq profile params env scope (projection.map translateSelectItem) output distinct (orders.map translateOrderBy)
       (uses.map translateParameter) := by
   cases valid with
   | nil => exact .nil
   | checked items sequence =>
-    exact .checked (sort_list_valid_translated items) (order_sequence_valid_translated sequence)
+    exact .checked (sort_list_valid_translated_core preserved items) (order_sequence_valid_translated sequence)
 
 @[simp] theorem resolve_leaf_inputs_translated (profile : Profile) (distinct : Bool)
     (orders : List Advanced.OrderBy) (columns : List PendingColumn) :
@@ -297,12 +321,20 @@ theorem parameter_order_translated (ordered : ParameterOrder uses) :
     omega
 
 /-- Translation preserves closed pagination typing and its contextual widening. -/
-theorem pagination_valid_translated (valid : PaginationValid profile params bound uses) :
-    PaginationValid profile params (bound.map translateExpr) (uses.map translateParameter) := by
+theorem pagination_valid_translated_core
+    (preserved : SubqueriesTranslated sq ceiling) (valid : PaginationValidCore sq profile params env bound uses)
+    (small : sizeOf bound ≤ ceiling := by simp_all <;> omega) :
+    PaginationValidCore sq profile params env (bound.map translateExpr) (uses.map translateParameter) := by
   cases valid with
   | absent => exact .absent
   | present typed collation coercion =>
-      exact .present (expr_valid_translated typed) (expr_collation_valid_translated collation) coercion
+      exact .present (expr_valid_translated_core preserved typed) (expr_collation_valid_translated_core preserved collation) coercion
+
+theorem pagination_valid_translated (valid : PaginationValid profile params bound uses) :
+    PaginationValid profile params (bound.map translateExpr) (uses.map translateParameter) :=
+  pagination_valid_translated_core
+    (by intro env query output uses small impossible; exact False.elim impossible)
+    valid (Nat.le_refl (sizeOf bound))
 
 /-- The local pagination certificate remains useful independently of coverage
 for the query body, while parameter identities and occurrence order survive. -/
@@ -319,6 +351,46 @@ theorem pagination_bounds_valid_translated
       · have translated := pagination_valid_translated offsetValid
         simp only [translateParameters]
         split <;> simp_all
+
+private theorem closed_subqueries_translated (ceiling : Nat) :
+    SubqueriesTranslated NoSubqueries ceiling := by
+  intro env query output uses small impossible
+  exact False.elim impossible
+
+theorem items_valid_translated (valid : ItemsValid profile params scope items output uses) :
+    ItemsValid profile params scope (items.map translateSelectItem) output (uses.map translateParameter) :=
+  items_valid_translated_core (closed_subqueries_translated (sizeOf items)) valid
+
+theorem items_input_valid_translated (valid : ItemsInputValid profile params scope items output uses) :
+    ItemsInputValid profile params scope (items.map translateSelectItem) output (uses.map translateParameter) :=
+  items_input_valid_translated_core (closed_subqueries_translated (sizeOf items)) valid
+
+theorem predicate_valid_translated (valid : PredicateValid profile params scope predicate uses) :
+    PredicateValid profile params scope (predicate.map translateExpr) (uses.map translateParameter) :=
+  predicate_valid_translated_core (closed_subqueries_translated (sizeOf predicate)) valid
+
+theorem sort_valid_translated (valid : SortValid profile params scope projection output distinct expr uses) :
+    SortValid profile params scope (projection.map translateSelectItem) output distinct (translateExpr expr)
+      (uses.map translateParameter) :=
+  sort_valid_translated_core (closed_subqueries_translated (sizeOf expr)) valid
+
+theorem sort_collation_valid_translated (valid : SortCollationValid profile params scope pending expr) :
+    SortCollationValid profile params scope pending (translateExpr expr) :=
+  sort_collation_valid_translated_core (closed_subqueries_translated (sizeOf expr)) valid
+
+theorem orders_collation_valid_translated (valid : OrdersCollationValid profile params scope pending orders) :
+    OrdersCollationValid profile params scope pending (orders.map translateOrderBy) :=
+  orders_collation_valid_translated_core (closed_subqueries_translated (sizeOf orders)) valid
+
+theorem sort_list_valid_translated (valid : SortListValid profile params scope projection output distinct orders uses) :
+    SortListValid profile params scope (projection.map translateSelectItem) output distinct
+      (orders.map translateOrderBy) (uses.map translateParameter) :=
+  sort_list_valid_translated_core (closed_subqueries_translated (sizeOf orders)) valid
+
+theorem orders_valid_translated (valid : OrdersValid profile params scope projection output distinct orders uses) :
+    OrdersValid profile params scope (projection.map translateSelectItem) output distinct
+      (orders.map translateOrderBy) (uses.map translateParameter) :=
+  orders_valid_translated_core (closed_subqueries_translated (sizeOf orders)) valid
 
 /- Source transport below preserves the exact scope, including namespace
 identity, aliases, order and NULL-extension flags. Locking premises therefore
@@ -371,6 +443,9 @@ mutual
   theorem source_valid_translated (valid : SourceValid profile catalog params env source scope uses) :
       SourceValid profile catalog params env (source.map translateSource) scope
         (uses.map translateParameter) := by
+    have preserved : SubqueriesTranslated (QueryValid profile catalog params) (sizeOf source) := by
+      intro childEnv child childOutput childUses smaller childValid
+      exact query_valid_translated childValid
     cases valid with
     | empty => exact SourceValid.empty
     | table unshadowed present sameName aliasValid columns =>
@@ -390,7 +465,7 @@ mutual
         simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
           SourceValid.on (source_valid_translated leftValid) (source_valid_translated rightValid)
             aliases
-            kindValid (predicate_valid_translated condition)
+            kindValid (predicate_valid_translated_core preserved condition)
     | «using» leftValid rightValid aliases kindValid nonempty unique keysValid =>
         simpa only [Option.map_some, translateSource, translateJoinCondition, List.map_append] using
           SourceValid.using (source_valid_translated leftValid) (source_valid_translated rightValid)
@@ -413,10 +488,15 @@ mutual
       (valid : QueryValid profile catalog params env query output uses) :
       QueryValid profile catalog params env (translateParameters query) output
         (uses.map translateParameter) := by
+    have preserved : SubqueriesTranslated (QueryValid profile catalog params) (sizeOf query) := by
+      intro childEnv child childOutput childUses smaller childValid
+      exact query_valid_translated childValid
     cases valid with
     | @basic ctes env visible cteUses scope sourceUses output selectUses pending whereUses orderBy orderUses limit limitUses
         offset offsetUses locking offsetFirst select names definitions source items inputs nonempty distinctComparable distinctCollations
         predicate orders orderCollations limitValid offsetValid lockingValid noGrouping noHaving noDistinctOn =>
+      have itemSize : sizeOf select.items < sizeOf select := by cases select; simp; omega
+      have whereSize : sizeOf select.whereClause < sizeOf select := by cases select; simp; omega
       cases offsetFirst <;>
         simp only [translateParameters, translateQueryBody, List.attach_map_val,
           Bool.false_eq_true, ↓reduceIte, List.map_append]
@@ -427,19 +507,19 @@ mutual
         · have translated := source_valid_translated source
           simp only [translateSelect]
           cases relation : select.source <;> simpa [relation] using translated
-        · simpa only [translateSelect, List.attach_map_val] using items_valid_translated items
-        · simpa only [translateSelect, List.attach_map_val] using items_input_valid_translated inputs
+        · simpa only [translateSelect, List.attach_map_val] using items_valid_translated_core preserved items
+        · simpa only [translateSelect, List.attach_map_val] using items_input_valid_translated_core preserved inputs
         · exact nonempty
         · simpa only [translateSelect] using distinctComparable
         · simpa only [translateSelect] using distinctCollations
-        · have translated := predicate_valid_translated predicate
+        · have translated := predicate_valid_translated_core preserved predicate
           simp only [translateSelect]
           cases condition : select.whereClause <;> simpa [condition] using translated
-        · simpa only [translateSelect, List.attach_map_val] using orders_valid_translated orders
-        · exact orders_collation_valid_translated orderCollations
-        · have translated := pagination_valid_translated limitValid
+        · simpa only [translateSelect, List.attach_map_val] using orders_valid_translated_core preserved orders
+        · exact orders_collation_valid_translated_core preserved orderCollations
+        · have translated := pagination_valid_translated_core preserved limitValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
-        · have translated := pagination_valid_translated offsetValid
+        · have translated := pagination_valid_translated_core preserved offsetValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
         · simpa only [translateSelect] using lockingValid
         · simp only [translateSelect, List.attach_map_val, noGrouping, List.map_nil]
@@ -463,9 +543,9 @@ mutual
         · exact columns
         · exact nonempty
         · exact set_orders_valid_translated orders
-        · have translated := pagination_valid_translated limitValid
+        · have translated := pagination_valid_translated_core preserved limitValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
-        · have translated := pagination_valid_translated offsetValid
+        · have translated := pagination_valid_translated_core preserved offsetValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
     | @recursiveWith env visible cteUses query output bodyUses nonemptyDefinitions names recursiveFlag definitions body =>
       simp only [List.map_append]
@@ -484,16 +564,21 @@ mutual
     all_goals (try have withoutSize := without_with_size_lt _ nonemptyDefinitions)
     all_goals (try have ctesSize := query_ctes_size_lt query)
     all_goals subst_vars
-    all_goals (try cases select) <;> (try cases query) <;> (try simp at withoutSize) <;> simp <;> omega
+    all_goals (try cases select) <;> (try cases query) <;> (try simp at withoutSize) <;> (try simp at smaller) <;> simp <;> omega
 
   theorem set_operand_valid_translated
       (valid : SetOperandValid profile catalog params env query output uses) :
       SetOperandValid profile catalog params env (translateParameters query) output
         (uses.map translateParameter) := by
+    have preserved : SubqueriesTranslated (QueryValid profile catalog params) (sizeOf query) := by
+      intro childEnv child childOutput childUses smaller childValid
+      exact query_valid_translated childValid
     cases valid with
     | @basic ctes env visible cteUses scope sourceUses output selectUses pending whereUses orderBy orderUses limit limitUses
         offset offsetUses locking offsetFirst select names definitions source items inputs nonempty distinctComparable distinctCollations
         predicate orders orderCollations limitValid offsetValid lockingValid noGrouping noHaving noDistinctOn =>
+      have itemSize : sizeOf select.items < sizeOf select := by cases select; simp; omega
+      have whereSize : sizeOf select.whereClause < sizeOf select := by cases select; simp; omega
       cases offsetFirst <;>
         simp only [translateParameters, translateQueryBody, List.attach_map_val,
           Bool.false_eq_true, ↓reduceIte, List.map_append]
@@ -505,18 +590,18 @@ mutual
         · simpa only [List.attach_map_val] using ctes_valid_translated definitions
         · have translated := source_valid_translated source
           cases relation : select.source <;> simpa [relation] using translated
-        · simpa only [translateSelect, List.attach_map_val] using items_valid_translated items
-        · simpa only [translateSelect, List.attach_map_val] using items_input_valid_translated inputs
+        · simpa only [translateSelect, List.attach_map_val] using items_valid_translated_core preserved items
+        · simpa only [translateSelect, List.attach_map_val] using items_input_valid_translated_core preserved inputs
         · exact nonempty
         · simpa only [translateSelect] using distinctComparable
         · simpa only [translateSelect] using distinctCollations
-        · have translated := predicate_valid_translated predicate
+        · have translated := predicate_valid_translated_core preserved predicate
           cases condition : select.whereClause <;> simpa [condition] using translated
-        · simpa only [translateSelect, List.attach_map_val] using orders_valid_translated orders
-        · exact orders_collation_valid_translated orderCollations
-        · have translated := pagination_valid_translated limitValid
+        · simpa only [translateSelect, List.attach_map_val] using orders_valid_translated_core preserved orders
+        · exact orders_collation_valid_translated_core preserved orderCollations
+        · have translated := pagination_valid_translated_core preserved limitValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
-        · have translated := pagination_valid_translated offsetValid
+        · have translated := pagination_valid_translated_core preserved offsetValid
           split <;> simp_all only [Option.map_none, Option.map_some] <;> exact translated
         · simpa only [translateSelect] using lockingValid
         · simp only [List.attach_map_val, noGrouping, List.map_nil]
@@ -546,7 +631,7 @@ mutual
     all_goals (try have withoutSize := without_with_size_lt _ nonemptyDefinitions)
     all_goals (try have ctesSize := query_ctes_size_lt query)
     all_goals subst_vars
-    all_goals (try cases select) <;> (try cases query) <;> (try simp at withoutSize) <;> simp <;> omega
+    all_goals (try cases select) <;> (try cases query) <;> (try simp at withoutSize) <;> (try simp at smaller) <;> simp <;> omega
 
   /-- Definition order and exposed names are unchanged; each body contributes
   its translated occurrences once, independently of references. -/

@@ -91,7 +91,8 @@ private def subscriptLabelTests : IO Nat := do
     ("SELECT (CASE WHEN TRUE THEN ARRAY[1] ELSE ARRAY[2] END)[1]", "array"),
     ("SELECT CASE WHEN TRUE THEN 1 ELSE COALESCE(2,3) END", "coalesce"),
     ("SELECT CASE WHEN TRUE THEN 1 ELSE CASE WHEN TRUE THEN 2 ELSE a END END FROM (SELECT 3 AS a) d", "a"),
-    ("SELECT ((ARRAY[[1,2],[3,4]])[1:1])[1][2]", "array")]
+    ("SELECT ((ARRAY[[1,2],[3,4]])[1:1])[1][2]", "array"),
+    ("SELECT ((SELECT ARRAY[1]))[1]", "array")]
   for (sql, name) in inherited do
     let actual ← subscriptOutput sql
     SQLean.Tests.assert (actual.map (·.name) == [name]) s!"inherited default name: {sql}"
@@ -156,7 +157,7 @@ def arraySubscriptContractTests : IO Nat := do
     | _ => throw (IO.userError s!"expected Invalid subscript: {sql}")
     count := count + 1
   for sql in ["SELECT ('{}'::JSONB)[1]", "SELECT (ARRAY[1])[1][1][1][1][1][1][1]",
-      "SELECT ((SELECT ARRAY[1]))[1]", "SELECT (unknown_array_function())[1]",
+      "SELECT (unknown_array_function())[1]",
       "SELECT (ARRAY[1])[COUNT(*)]"] do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 [] [] query with

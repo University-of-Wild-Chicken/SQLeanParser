@@ -35,19 +35,19 @@ private def childOutput : List OutputColumn :=
 
 private theorem child_valid :
     QueryValid .basicV32 catalog params [] child childOutput [.anonymous 2, .anonymous 3] := by
-  have first : ExprValid params baseScope (.cast (anon 2) ⟨.varchar, [5]⟩)
+  have first : ExprValid (subqueries := QueryValid .basicV32 catalog params) params baseScope (.cast (anon 2) ⟨.varchar, [5]⟩)
       (some ⟨.varchar [5], true⟩) [.anonymous 2] :=
     .cast (.parameter (binding := ⟨2, ⟨.varchar, [5]⟩, true⟩)
       (by simp [params]) rfl rfl) rfl (by decide) rfl (by trivial)
-  have firstCollation : ExprCollationValid .basicV32 params baseScope
+  have firstCollation : ExprCollationValid (subqueries := QueryValid .basicV32 catalog params) .basicV32 params baseScope
       (.cast (anon 2) ⟨.varchar, [5]⟩) (some ⟨.varchar [5], true⟩)
       (.implicit .databaseDefault) :=
     .cast first (.parameter (binding := ⟨2, ⟨.varchar, [5]⟩, true⟩)
       (by simp [params]) rfl rfl) rfl
-  have second : ExprValid params baseScope (.cast .null ⟨.numeric, [8, 2]⟩)
+  have second : ExprValid (subqueries := QueryValid .basicV32 catalog params) params baseScope (.cast .null ⟨.numeric, [8, 2]⟩)
       (some ⟨.numeric [8, 2], true⟩) [] :=
     .cast .null rfl (by decide) rfl (by trivial)
-  have secondCollation : ExprCollationValid .basicV32 params baseScope
+  have secondCollation : ExprCollationValid (subqueries := QueryValid .basicV32 catalog params) .basicV32 params baseScope
       (.cast .null ⟨.numeric, [8, 2]⟩) (some ⟨.numeric [8, 2], true⟩) .none :=
     .cast second (.atom .null .null) rfl
   apply QueryValid.basic (cteUses := []) (visible := []) (by decide) .nil (scope := baseScope) (sourceUses := [])
@@ -55,19 +55,19 @@ private theorem child_valid :
     (limitUses := [.anonymous 3]) (offsetUses := [])
   · exact base_valid
   · exact .expression (expr := .cast (anon 2) ⟨.varchar, [5]⟩) (alias := some "dup")
-      first firstCollation (by simp)
+      first firstCollation (.ordinary rfl) (by simp)
       (.expression (expr := .cast .null ⟨.numeric, [8, 2]⟩) (alias := some "dup")
-        second secondCollation (by simp)
+        second secondCollation (.ordinary rfl) (by simp)
         (.expression (expr := .column (some "inside") "id") (alias := some "tail")
           (.column (scope := baseScope) (column := {name := "id", type := ⟨.int32, false⟩}) rfl)
-          (.column rfl) (by simp) .nil))
+          (.column rfl) (.ordinary rfl) (by simp) .nil))
   · exact .expression (expr := .cast (anon 2) ⟨.varchar, [5]⟩) (alias := some "dup")
-      first firstCollation (by simp)
+      first firstCollation (.ordinary rfl) (by simp)
       (.expression (expr := .cast .null ⟨.numeric, [8, 2]⟩) (alias := some "dup")
-        second secondCollation (by simp)
+        second secondCollation (.ordinary rfl) (by simp)
         (.expression (expr := .column (some "inside") "id") (alias := some "tail")
           (.column (scope := baseScope) (column := {name := "id", type := ⟨.int32, false⟩}) rfl)
-          (.column rfl) (by simp) .nil))
+          (.column rfl) (.ordinary rfl) (by simp) .nil))
   · decide
   · exact Or.inl rfl
   · exact Or.inl rfl
@@ -160,11 +160,11 @@ private theorem outer_derivation :
   · exact nested_valid
   · exact .expression (expr := anon 1) (alias := some "selected")
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
-      (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl) (by simp)
+      (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl) (.ordinary rfl) (by simp)
       (.all (qualifier := some "q") rfl (by decide) .nil)
   · exact .expression (expr := anon 1) (alias := some "selected")
       (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl)
-      (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl) (by simp)
+      (.parameter (binding := ⟨1, ⟨.int, []⟩, false⟩) (by simp [params]) rfl rfl) (.ordinary rfl) (by simp)
       (.all (qualifier := some "q") rfl (by decide) .nil)
   · decide
   · exact Or.inl rfl

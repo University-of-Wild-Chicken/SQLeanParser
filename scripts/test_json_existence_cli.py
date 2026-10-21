@@ -302,7 +302,7 @@ class JsonExistenceCliTests(unittest.TestCase):
                 patch.object(checker, "invoke", return_value=parse_failure) as invoke:
             self.assertEqual(checker.boundaries(), 45)
         self.assertEqual(Counter(call.args[1] for call in report.call_args_list),
-                         {"invalid": 26, "valid": 6, "unsupported": 2, "rejected": 1})
+                         {"invalid": 26, "valid": 7, "unsupported": 1, "rejected": 1})
         self.assertEqual(len(invoke.call_args_list), 10)
         for code, status, diagnostic in ((3, "unsupported", "input.parse"), (1, "invalid", "coverage.other"),
                                          (0, "rendered", "input.parse")):

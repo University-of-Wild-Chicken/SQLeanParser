@@ -249,7 +249,7 @@ class SetOperationsCliTests(unittest.TestCase):
     def test_analysis_observations_keep_conversion_success_separate_from_typing(self):
         rows = checker.boundary_cases()
         self.assertEqual(len(rows), 90)
-        self.assertEqual(Counter(r["status"] for r in rows), {"invalid": 75, "unsupported": 9, "valid": 6})
+        self.assertEqual(Counter(r["status"] for r in rows), {"invalid": 75, "unsupported": 6, "valid": 9})
         conversion = [r for r in rows if r["id"].endswith("unknown-string-conversion")]
         self.assertEqual(len(conversion), 3)
         self.assertTrue(all(r["status"] == "valid" and r["prepare_state"] == "22P02" for r in conversion))
@@ -264,6 +264,10 @@ class SetOperationsCliTests(unittest.TestCase):
         with patch.object(checker, "assert_report") as report:
             self.assertEqual(checker.boundaries(), 92)
         self.assertEqual([call.args[1] for call in report.call_args_list[-2:]], ["invalid", "invalid"])
+        scalar_calls = [call for call in report.call_args_list if "SELECT (SELECT 1)" in call.args[0][-1]]
+        self.assertEqual(len(scalar_calls), 3)
+        self.assertTrue(all(call.args[1:] == ("valid", "contract", (("?column?", "int32", True),))
+                            for call in scalar_calls))
 
     def test_sqlite_exclusions_require_exact_exit_status_and_diagnostic(self):
         for shape, factor in (("array-widening", "union"), ("branch-local-cte", "union"),

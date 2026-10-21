@@ -63,7 +63,10 @@ def derivedContractTests : IO Nat := do
     ("SELECT q.* FROM (SELECT id, label FROM t) q(label)",
       [{name := "label", type := ⟨.int32, false⟩}, {name := "label", type := ⟨.text, true⟩}]),
     ("SELECT q.* FROM (SELECT id AS a, id AS b FROM t) q(b, a)",
-      [{name := "b", type := ⟨.int32, false⟩}, {name := "a", type := ⟨.int32, false⟩}]) ]
+      [{name := "b", type := ⟨.int32, false⟩}, {name := "a", type := ⟨.int32, false⟩}]),
+    ("SELECT (SELECT id FROM t)", [{name := "id", type := ⟨.int32, true⟩}]),
+    ("SELECT EXISTS (SELECT id FROM t)", [{name := "exists", type := ⟨.bool, false⟩}]),
+    ("SELECT 1 IN (SELECT id FROM t)", [{name := "?column?", type := ⟨.bool, false⟩}]) ]
   for (sql, expected) in exact do
     let actual ← derivedOutput sql
     SQLean.Tests.assert (sameOutputTypes actual expected) s!"derived output metadata: {sql}"
@@ -100,10 +103,7 @@ def derivedContractTests : IO Nat := do
     "SELECT q.id FROM (SELECT id FROM t) q FOR UPDATE",
     "SELECT q.id FROM (SELECT id FROM t) q FOR UPDATE OF q",
     "SELECT t.id FROM t JOIN (SELECT id FROM u) q ON t.id = q.id FOR UPDATE",
-    "SELECT * FROM (SELECT COUNT(*) AS count_value FROM t) q",
-    "SELECT (SELECT id FROM t)",
-    "SELECT EXISTS (SELECT id FROM t)",
-    "SELECT 1 IN (SELECT id FROM t)" ]
+    "SELECT * FROM (SELECT COUNT(*) AS count_value FROM t) q" ]
   for sql in unsupported do
     let query ← expectOk sql (Advanced.parseQuery sql)
     match SelectContract.checkQuery .basicV32 derivedCatalog [] query with
